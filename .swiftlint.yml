@@ -1,0 +1,46 @@
+# Disabled rules
+disabled_rules:
+  - nesting
+
+# Optional Rules
+opt_in_rules:
+  - empty_count
+  - file_header
+  - force_unwrapping
+
+# Customised rules
+force_try:
+  severity: warning
+force_unwrapping:
+  severity: warning
+line_length:
+  warning: 150
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_interpolated_strings: true
+  ignores_urls: true
+file_length:
+  warning: 500
+empty_count:
+  severity: warning
+cyclomatic_complexity:
+  ignores_case_statements: true
+file_header:
+  required_pattern: |
+                    \/\/
+                    \/\/  SWIFTLINT_CURRENT_FILENAME
+                    \/\/  .*?
+                    \/\/
+                    \/\/  Created by .*? on \d{1,2}\.\d{1,2}\.\d{2}\.
+                    \/\/  Copyright © \d{4} HudHud\. All rights reserved\.
+                    \/\/
+custom_rules:
+  disable_fatalError:
+    included: ".*\\.swift"
+    name: "fatalError usage"
+    regex: "fatalError\\((?!\"init)"
+    match_kinds:
+      - keyword
+      - identifier
+    message: "Use assertionFailure() instead"
+    severity: error
