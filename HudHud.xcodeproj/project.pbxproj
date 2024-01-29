@@ -80,6 +80,7 @@
 				CDAE05452B681261003E5196 /* Products */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		CDAE05452B681261003E5196 /* Products */ = {
 			isa = PBXGroup;
@@ -192,6 +193,7 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
 				LastUpgradeCheck = 1520;
+				ORGANIZATIONNAME = HudHud;
 				TargetAttributes = {
 					CDAE05432B681261003E5196 = {
 						CreatedOnToolsVersion = 15.2;
