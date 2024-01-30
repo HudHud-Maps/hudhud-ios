@@ -8,6 +8,9 @@ opt_in_rules:
   - file_header
   - force_unwrapping
 
+excluded: 
+  - Carthage
+
 # Customised rules
 force_try:
   severity: warning
@@ -44,3 +47,4 @@ custom_rules:
       - identifier
     message: "Use assertionFailure() instead"
     severity: error
+    

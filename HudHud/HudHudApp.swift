@@ -13,6 +13,7 @@ struct HudHudApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView()
+				.ignoresSafeArea()
 		}
 	}
 }
