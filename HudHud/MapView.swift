@@ -6,18 +6,14 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
 import MapLibre
+import SwiftUI
 
 struct MapView: UIViewRepresentable {
 
 	func makeUIView(context: Context) -> MLNMapView {
-		// read the key from property list
-		let mapTilerKey = getMapTilerkey()
-		validateKey(mapTilerKey)
-
 		// Build the style url
-		let styleURL = URL(string: "https://api.maptiler.com/maps/streets-v2/style.json?key=\(mapTilerKey)")
+		let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")
 
 		// create the mapview
 		let mapView = MLNMapView(frame: .zero, styleURL: styleURL)
@@ -35,5 +31,29 @@ struct MapView: UIViewRepresentable {
 		return mapView
 	}
 
-	func updateUIView(_ uiView: MGLMapView, context: Context) {}
+	func updateUIView(_ uiView: MLNMapView, context: Context) {}
+
+	func makeCoordinator() -> MapView.Coordinator {
+		Coordinator(self)
+	}
+}
+
+extension MapView {
+
+	class Coordinator: NSObject, MLNMapViewDelegate {
+		var control: MapView
+
+		init(_ control: MapView) {
+			self.control = control
+		}
+
+		func mapViewDidFinishLoadingMap(_ mapView: MLNMapView) {
+			// write your custom code which will be executed
+			// after map has been loaded
+		}
+	}
+}
+
+#Preview {
+	MapView()
 }
