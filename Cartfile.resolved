@@ -1,0 +1,7 @@
+github "ceeK/Solar" "3.0.1"
+github "flitsmeister/Mapbox-directions-swift" "v0.23.1"
+github "flitsmeister/turf-swift" "v0.2.2"
+github "mapbox/MapboxGeocoder.swift" "v0.15.0"
+github "mapbox/mapbox-speech-swift" "v2.1.1"
+github "maplibre/maplibre-navigation-ios" "v2.0.0"
+github "raphaelmor/Polyline" "v5.1.0"

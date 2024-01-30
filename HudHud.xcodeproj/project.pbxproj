@@ -14,6 +14,24 @@
 		CDAE05592B681263003E5196 /* HudHudTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05582B681263003E5196 /* HudHudTests.swift */; };
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05652B681263003E5196 /* HudHudUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */; };
+		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
+		CDAE058C2B691564003E5196 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05842B691564003E5196 /* Turf.xcframework */; };
+		CDAE058D2B691564003E5196 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05842B691564003E5196 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE058E2B691564003E5196 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05852B691564003E5196 /* MapboxDirections.xcframework */; };
+		CDAE058F2B691564003E5196 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05852B691564003E5196 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE05902B691564003E5196 /* MapboxNavigation.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05862B691564003E5196 /* MapboxNavigation.xcframework */; };
+		CDAE05912B691564003E5196 /* MapboxNavigation.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05862B691564003E5196 /* MapboxNavigation.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE05922B691564003E5196 /* MapboxCoreNavigation.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05872B691564003E5196 /* MapboxCoreNavigation.xcframework */; };
+		CDAE05932B691564003E5196 /* MapboxCoreNavigation.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05872B691564003E5196 /* MapboxCoreNavigation.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE05942B691564003E5196 /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05882B691564003E5196 /* MapboxSpeech.xcframework */; };
+		CDAE05952B691564003E5196 /* MapboxSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05882B691564003E5196 /* MapboxSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE05962B691564003E5196 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05892B691564003E5196 /* MapboxGeocoder.xcframework */; };
+		CDAE05972B691564003E5196 /* MapboxGeocoder.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05892B691564003E5196 /* MapboxGeocoder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE05982B691564003E5196 /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058A2B691564003E5196 /* Solar.xcframework */; };
+		CDAE05992B691564003E5196 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058A2B691564003E5196 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE059A2B691564003E5196 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058B2B691564003E5196 /* Polyline.xcframework */; };
+		CDAE059B2B691564003E5196 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058B2B691564003E5196 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE059E2B691BAA003E5196 /* MapView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +51,27 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		CDAE059C2B691564003E5196 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				CDAE05912B691564003E5196 /* MapboxNavigation.xcframework in Embed Frameworks */,
+				CDAE05992B691564003E5196 /* Solar.xcframework in Embed Frameworks */,
+				CDAE05952B691564003E5196 /* MapboxSpeech.xcframework in Embed Frameworks */,
+				CDAE058F2B691564003E5196 /* MapboxDirections.xcframework in Embed Frameworks */,
+				CDAE05932B691564003E5196 /* MapboxCoreNavigation.xcframework in Embed Frameworks */,
+				CDAE05972B691564003E5196 /* MapboxGeocoder.xcframework in Embed Frameworks */,
+				CDAE058D2B691564003E5196 /* Turf.xcframework in Embed Frameworks */,
+				CDAE059B2B691564003E5196 /* Polyline.xcframework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
@@ -44,6 +83,16 @@
 		CDAE055E2B681263003E5196 /* HudHudUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudHudUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05622B681263003E5196 /* HudHudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITests.swift; sourceTree = "<group>"; };
 		CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		CDAE05842B691564003E5196 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Carthage/Build/Turf.xcframework; sourceTree = "<group>"; };
+		CDAE05852B691564003E5196 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
+		CDAE05862B691564003E5196 /* MapboxNavigation.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigation.xcframework; path = Carthage/Build/MapboxNavigation.xcframework; sourceTree = "<group>"; };
+		CDAE05872B691564003E5196 /* MapboxCoreNavigation.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCoreNavigation.xcframework; path = Carthage/Build/MapboxCoreNavigation.xcframework; sourceTree = "<group>"; };
+		CDAE05882B691564003E5196 /* MapboxSpeech.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxSpeech.xcframework; path = Carthage/Build/MapboxSpeech.xcframework; sourceTree = "<group>"; };
+		CDAE05892B691564003E5196 /* MapboxGeocoder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxGeocoder.xcframework; path = Carthage/Build/MapboxGeocoder.xcframework; sourceTree = "<group>"; };
+		CDAE058A2B691564003E5196 /* Solar.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Solar.xcframework; path = Carthage/Build/Solar.xcframework; sourceTree = "<group>"; };
+		CDAE058B2B691564003E5196 /* Polyline.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Polyline.xcframework; path = Carthage/Build/Polyline.xcframework; sourceTree = "<group>"; };
+		CDAE059D2B691579003E5196 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CDAE059E2B691BAA003E5196 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +100,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDAE05942B691564003E5196 /* MapboxSpeech.xcframework in Frameworks */,
+				CDAE05982B691564003E5196 /* Solar.xcframework in Frameworks */,
+				CDAE059A2B691564003E5196 /* Polyline.xcframework in Frameworks */,
+				CDAE058C2B691564003E5196 /* Turf.xcframework in Frameworks */,
+				CDAE05822B690544003E5196 /* MapLibre in Frameworks */,
+				CDAE05962B691564003E5196 /* MapboxGeocoder.xcframework in Frameworks */,
+				CDAE05922B691564003E5196 /* MapboxCoreNavigation.xcframework in Frameworks */,
+				CDAE05902B691564003E5196 /* MapboxNavigation.xcframework in Frameworks */,
+				CDAE058E2B691564003E5196 /* MapboxDirections.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +136,7 @@
 				CDAE05572B681263003E5196 /* HudHudTests */,
 				CDAE05612B681263003E5196 /* HudHudUITests */,
 				CDAE05452B681261003E5196 /* Products */,
+				CDAE05832B691564003E5196 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -95,8 +154,10 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				CDAE059D2B691579003E5196 /* Info.plist */,
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
+				CDAE059E2B691BAA003E5196 /* MapView.swift */,
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
 			);
@@ -128,6 +189,21 @@
 			path = HudHudUITests;
 			sourceTree = "<group>";
 		};
+		CDAE05832B691564003E5196 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CDAE05872B691564003E5196 /* MapboxCoreNavigation.xcframework */,
+				CDAE05852B691564003E5196 /* MapboxDirections.xcframework */,
+				CDAE05892B691564003E5196 /* MapboxGeocoder.xcframework */,
+				CDAE05862B691564003E5196 /* MapboxNavigation.xcframework */,
+				CDAE05882B691564003E5196 /* MapboxSpeech.xcframework */,
+				CDAE058B2B691564003E5196 /* Polyline.xcframework */,
+				CDAE058A2B691564003E5196 /* Solar.xcframework */,
+				CDAE05842B691564003E5196 /* Turf.xcframework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -138,6 +214,7 @@
 				CDAE05402B681261003E5196 /* Sources */,
 				CDAE05412B681261003E5196 /* Frameworks */,
 				CDAE05422B681261003E5196 /* Resources */,
+				CDAE059C2B691564003E5196 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -145,6 +222,9 @@
 				CDAE057A2B681EB6003E5196 /* PBXTargetDependency */,
 			);
 			name = HudHud;
+			packageProductDependencies = (
+				CDAE05812B690544003E5196 /* MapLibre */,
+			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
 			productType = "com.apple.product-type.application";
@@ -220,6 +300,7 @@
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
 				CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
+				CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -264,6 +345,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
+				CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -435,6 +517,8 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HudHud/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -465,6 +549,8 @@
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = HudHud/Info.plist;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -606,6 +692,14 @@
 				minimumVersion = 0.54.0;
 			};
 		};
+		CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -613,6 +707,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";
+		};
+		CDAE05812B690544003E5196 /* MapLibre */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			productName = MapLibre;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
