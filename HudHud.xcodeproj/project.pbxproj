@@ -15,22 +15,6 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05652B681263003E5196 /* HudHudUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */; };
 		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
-		CDAE058C2B691564003E5196 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05842B691564003E5196 /* Turf.xcframework */; };
-		CDAE058D2B691564003E5196 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05842B691564003E5196 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE058E2B691564003E5196 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05852B691564003E5196 /* MapboxDirections.xcframework */; };
-		CDAE058F2B691564003E5196 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05852B691564003E5196 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE05902B691564003E5196 /* MapboxNavigation.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05862B691564003E5196 /* MapboxNavigation.xcframework */; };
-		CDAE05912B691564003E5196 /* MapboxNavigation.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05862B691564003E5196 /* MapboxNavigation.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE05922B691564003E5196 /* MapboxCoreNavigation.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05872B691564003E5196 /* MapboxCoreNavigation.xcframework */; };
-		CDAE05932B691564003E5196 /* MapboxCoreNavigation.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05872B691564003E5196 /* MapboxCoreNavigation.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE05942B691564003E5196 /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05882B691564003E5196 /* MapboxSpeech.xcframework */; };
-		CDAE05952B691564003E5196 /* MapboxSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05882B691564003E5196 /* MapboxSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE05962B691564003E5196 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05892B691564003E5196 /* MapboxGeocoder.xcframework */; };
-		CDAE05972B691564003E5196 /* MapboxGeocoder.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE05892B691564003E5196 /* MapboxGeocoder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE05982B691564003E5196 /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058A2B691564003E5196 /* Solar.xcframework */; };
-		CDAE05992B691564003E5196 /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058A2B691564003E5196 /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CDAE059A2B691564003E5196 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058B2B691564003E5196 /* Polyline.xcframework */; };
-		CDAE059B2B691564003E5196 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CDAE058B2B691564003E5196 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE059E2B691BAA003E5196 /* MapView.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 /* End PBXBuildFile section */
@@ -51,27 +35,6 @@
 			remoteInfo = HudHud;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		CDAE059C2B691564003E5196 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				CDAE05912B691564003E5196 /* MapboxNavigation.xcframework in Embed Frameworks */,
-				CDAE05992B691564003E5196 /* Solar.xcframework in Embed Frameworks */,
-				CDAE05952B691564003E5196 /* MapboxSpeech.xcframework in Embed Frameworks */,
-				CDAE058F2B691564003E5196 /* MapboxDirections.xcframework in Embed Frameworks */,
-				CDAE05932B691564003E5196 /* MapboxCoreNavigation.xcframework in Embed Frameworks */,
-				CDAE05972B691564003E5196 /* MapboxGeocoder.xcframework in Embed Frameworks */,
-				CDAE058D2B691564003E5196 /* Turf.xcframework in Embed Frameworks */,
-				CDAE059B2B691564003E5196 /* Polyline.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,15 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDAE05942B691564003E5196 /* MapboxSpeech.xcframework in Frameworks */,
-				CDAE05982B691564003E5196 /* Solar.xcframework in Frameworks */,
-				CDAE059A2B691564003E5196 /* Polyline.xcframework in Frameworks */,
-				CDAE058C2B691564003E5196 /* Turf.xcframework in Frameworks */,
 				CDAE05822B690544003E5196 /* MapLibre in Frameworks */,
-				CDAE05962B691564003E5196 /* MapboxGeocoder.xcframework in Frameworks */,
-				CDAE05922B691564003E5196 /* MapboxCoreNavigation.xcframework in Frameworks */,
-				CDAE05902B691564003E5196 /* MapboxNavigation.xcframework in Frameworks */,
-				CDAE058E2B691564003E5196 /* MapboxDirections.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,12 +172,10 @@
 				CDAE05402B681261003E5196 /* Sources */,
 				CDAE05412B681261003E5196 /* Frameworks */,
 				CDAE05422B681261003E5196 /* Resources */,
-				CDAE059C2B691564003E5196 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				CDAE057A2B681EB6003E5196 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -383,10 +336,6 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
-		};
-		CDAE057A2B681EB6003E5196 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = CDAE05792B681EB6003E5196 /* SwiftLint */;
 		};
 /* End PBXTargetDependency section */
 
@@ -709,11 +658,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CDAE05792B681EB6003E5196 /* SwiftLint */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
-			productName = "plugin:SwiftLint";
-		};
 		CDAE05812B690544003E5196 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
