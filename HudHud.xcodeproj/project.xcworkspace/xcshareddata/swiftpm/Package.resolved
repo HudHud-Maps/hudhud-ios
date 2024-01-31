@@ -10,12 +10,48 @@
       }
     },
     {
+      "identity" : "maplibre-swift-macros",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b8deecb8adc3b911de311ead5a13b98fbf2d7824"
+      }
+    },
+    {
+      "identity" : "maplibre-swiftui-dsl-playground",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "state" : {
+        "branch" : "circlelayer",
+        "revision" : "72ab59e6aa9aa0954dc9a0b5e0dc8d85eda96b43"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
+      }
+    },
+    {
       "identity" : "swiftlintplugin",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin.git",
       "state" : {
         "revision" : "ea6d3ca895b49910f790e98e4b4ca658e0fe490e",
         "version" : "0.54.0"
+      }
+    },
+    {
+      "identity" : "swiftlocation",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/malcommac/SwiftLocation.git",
+      "state" : {
+        "revision" : "010073e62cea4daefea61042a51b8619d23cdc35",
+        "version" : "6.0.0"
       }
     },
     {
