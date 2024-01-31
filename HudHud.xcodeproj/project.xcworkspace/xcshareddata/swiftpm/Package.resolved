@@ -17,6 +17,15 @@
         "revision" : "ea6d3ca895b49910f790e98e4b4ca658e0fe490e",
         "version" : "0.54.0"
       }
+    },
+    {
+      "identity" : "toursprung",
+      "kind" : "remoteSourceControl",
+      "location" : "https://git.subzero.eu/pkladek/Toursprung.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "e69dcd8de31adf7f5a9fe6f020335dd826f36c65"
+      }
     }
   ],
   "version" : 2

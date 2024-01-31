@@ -17,6 +17,7 @@
 		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
 		CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE059E2B691BAA003E5196 /* MapView.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
+		CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05E82B6A8354003E5196 /* Toursprung */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDAE05822B690544003E5196 /* MapLibre in Frameworks */,
+				CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,6 +164,7 @@
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05812B690544003E5196 /* MapLibre */,
+				CDAE05E82B6A8354003E5196 /* Toursprung */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -239,6 +242,7 @@
 			packageReferences = (
 				CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
+				CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -635,6 +639,14 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://git.subzero.eu/pkladek/Toursprung.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -642,6 +654,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;
+		};
+		CDAE05E82B6A8354003E5196 /* Toursprung */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */;
+			productName = Toursprung;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
