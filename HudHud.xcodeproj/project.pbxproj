@@ -25,6 +25,7 @@
 		CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05FF2B6BDC5A003E5196 /* ApplePOI */; };
 		CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06012B6BDC5A003E5196 /* POIService */; };
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
+		CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06072B6C201E003E5196 /* BottomSheetView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		CDAE05A72B69358E003E5196 /* Terrain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Terrain.json; sourceTree = "<group>"; };
 		CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationButton.swift; sourceTree = "<group>"; };
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
+		CDAE06072B6C201E003E5196 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,6 +122,7 @@
 			children = (
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
+				CDAE06072B6C201E003E5196 /* BottomSheetView.swift */,
 				CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */,
 				CDAE059E2B691BAA003E5196 /* MapView.swift */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
@@ -312,6 +315,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
+				CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
