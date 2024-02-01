@@ -17,6 +17,12 @@
 		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
 		CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE059E2B691BAA003E5196 /* MapView.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
+		CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05E82B6A8354003E5196 /* Toursprung */; };
+		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
+		CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */; };
+		CDAE05F02B6A8AED003E5196 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
+		CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */; };
+		CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +55,8 @@
 		CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CDAE059E2B691BAA003E5196 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		CDAE05A72B69358E003E5196 /* Terrain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Terrain.json; sourceTree = "<group>"; };
+		CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationButton.swift; sourceTree = "<group>"; };
+		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,7 +64,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */,
 				CDAE05822B690544003E5196 /* MapLibre in Frameworks */,
+				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
+				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
+				CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -104,6 +116,7 @@
 			children = (
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
+				CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */,
 				CDAE059E2B691BAA003E5196 /* MapView.swift */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
@@ -115,6 +128,7 @@
 		CDAE054D2B681263003E5196 /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */,
 				CDAE054E2B681263003E5196 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
@@ -162,6 +176,10 @@
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05812B690544003E5196 /* MapLibre */,
+				CDAE05E82B6A8354003E5196 /* Toursprung */,
+				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
+				CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */,
+				CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -239,6 +257,9 @@
 			packageReferences = (
 				CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
+				CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */,
+				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
+				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -256,6 +277,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDAE05F02B6A8AED003E5196 /* Riyadh.gpx in Resources */,
 				CDAE05A82B69358E003E5196 /* Terrain.json in Resources */,
 				CDAE054F2B681263003E5196 /* Preview Assets.xcassets in Resources */,
 				CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */,
@@ -283,6 +305,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
@@ -453,6 +476,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -484,6 +508,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -635,6 +660,30 @@
 				minimumVersion = 6.0.0;
 			};
 		};
+		CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://git.subzero.eu/pkladek/Toursprung.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/malcommac/SwiftLocation.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
+		CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
+			requirement = {
+				branch = circlelayer;
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -642,6 +691,26 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;
+		};
+		CDAE05E82B6A8354003E5196 /* Toursprung */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */;
+			productName = Toursprung;
+		};
+		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
+			productName = SwiftLocation;
+		};
+		CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftDSL;
+		};
+		CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftUI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

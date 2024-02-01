@@ -7,10 +7,22 @@
 //
 
 import SwiftUI
+import CoreLocation
+import MapLibreSwiftUI
+
+private let vienna = CLLocationCoordinate2D(latitude: 48.21, longitude: 16.37)
 
 struct ContentView: View {
+
+	@State private var camera = MapViewCamera.center(vienna, zoom: 12)
+
 	var body: some View {
-		MapView()
+		MapView(camera: $camera)
+			.ignoresSafeArea()
+			.safeAreaInset(edge: .top, alignment: .trailing) {
+				CurrentLocationButton(camera: $camera)
+					.padding()
+			}
 	}
 }
 
