@@ -17,14 +17,12 @@ struct ContentView: View {
 	@State private var camera = MapViewCamera.center(vienna, zoom: 12)
 
 	var body: some View {
-		ZStack(alignment: .topTrailing) {
-			MapView(camera: $camera)
-				.ignoresSafeArea()
-
-			CurrentLocationButton(camera: $camera)
-				.padding(.trailing, 16)
-				.padding(.top, 16)
-		}
+		MapView(camera: $camera)
+			.ignoresSafeArea()
+			.safeAreaInset(edge: .top, alignment: .trailing) {
+				CurrentLocationButton(camera: $camera)
+					.padding()
+			}
 	}
 }
 
