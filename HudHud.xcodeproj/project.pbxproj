@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -17,12 +17,14 @@
 		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
 		CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE059E2B691BAA003E5196 /* MapView.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
-		CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05E82B6A8354003E5196 /* Toursprung */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */; };
 		CDAE05F02B6A8AED003E5196 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */; };
 		CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */; };
+		CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05FF2B6BDC5A003E5196 /* ApplePOI */; };
+		CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06012B6BDC5A003E5196 /* POIService */; };
+		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,9 +68,11 @@
 			files = (
 				CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */,
 				CDAE05822B690544003E5196 /* MapLibre in Frameworks */,
+				CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */,
+				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
 				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
-				CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */,
+				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -176,10 +180,12 @@
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05812B690544003E5196 /* MapLibre */,
-				CDAE05E82B6A8354003E5196 /* Toursprung */,
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
 				CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */,
 				CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */,
+				CDAE05FF2B6BDC5A003E5196 /* ApplePOI */,
+				CDAE06012B6BDC5A003E5196 /* POIService */,
+				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -257,9 +263,9 @@
 			packageReferences = (
 				CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
-				CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */,
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
 				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -643,6 +649,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = POIService;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -658,14 +671,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
-			};
-		};
-		CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://git.subzero.eu/pkladek/Toursprung.git";
-			requirement = {
-				branch = main;
-				kind = branch;
 			};
 		};
 		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
@@ -692,11 +697,6 @@
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;
 		};
-		CDAE05E82B6A8354003E5196 /* Toursprung */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */;
-			productName = Toursprung;
-		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
@@ -711,6 +711,18 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
 			productName = MapLibreSwiftUI;
+		};
+		CDAE05FF2B6BDC5A003E5196 /* ApplePOI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApplePOI;
+		};
+		CDAE06012B6BDC5A003E5196 /* POIService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = POIService;
+		};
+		CDAE06032B6BDC5A003E5196 /* ToursprungPOI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ToursprungPOI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
