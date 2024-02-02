@@ -15,9 +15,9 @@ public struct Address: Codable, Equatable, Sendable {
     public let hamlet: String?
     public let county: String?
     public let state: String?
-    public let iso31662Lvl4: String
-    public let country: String
-    public let countryCode: String
+    public let iso31662Lvl4: String?
+    public let country: String?
+    public let countryCode: String?
     public let town: String?
     public let postcode: String?
     public let village: String?

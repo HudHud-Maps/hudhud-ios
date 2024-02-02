@@ -16,8 +16,9 @@ public protocol POIServiceProtocol {
     func search(term: String) async throws -> [POI]
 }
 
-public struct POI {
+public struct POI: Identifiable {
 
+    public var id: UUID = .init()
     public var name: String
     public var locationCoordinate: CLLocationCoordinate2D
     public var type: String

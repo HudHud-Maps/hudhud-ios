@@ -24,9 +24,14 @@ struct ContentView: View {
 				CurrentLocationButton(camera: $camera)
 					.padding()
 			}
-			.sheet(isPresented: $isShown) {
+			.sheet(isPresented: .constant(true)) {
 				BottomSheetView()
-					.presentationDetents([.height(80), .medium, .large])
+					.presentationDetents([.height(100), .medium, .large])
+					.presentationBackgroundInteraction(
+						.enabled(upThrough: .medium)
+					)
+					.interactiveDismissDisabled()
+					.ignoresSafeArea()
 			}
 	}
 }

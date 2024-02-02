@@ -8,31 +8,72 @@
 
 import Foundation
 import SwiftUI
+import POIService
+import ToursprungPOI
 
 struct BottomSheetView: View {
 	let names = ["Holly", "Josh", "Rhonda", "Ted"]
+	private let toursprung: ToursprungPOI = .init()
 	@State private var searchText = ""
+	@StateObject private var viewModel = SearchViewModel()
+
 
 	var body: some View {
-		NavigationStack {
-			List {
-				ForEach(searchResults, id: \.self) { name in
-					NavigationLink {
-						Text(name)
-					} label: {
-						Text(name)
+		GroupBox {
+			VStack {
+				// Search bar
+				HStack {
+					Image(systemName: "magnifyingglass")
+						.foregroundColor(.gray)
+						.padding(.leading, 8)
+					TextField("Search", text: $searchText)
+						.padding(.vertical, 10)
+						.padding(.horizontal, 0)
+						.cornerRadius(8)
+						.overlay(
+							HStack {
+								Spacer()
+								if !searchText.isEmpty {
+									Button(action: {
+										self.searchText = ""
+									}) {
+										Image(systemName: "multiply.circle.fill")
+											.foregroundColor(.gray)
+											.padding(.vertical)
+									}
+								}
+							}
+								.padding(.horizontal, 8)
+						)
+						.padding(.horizontal, 10)
+				}
+				.background(.white)
+				.cornerRadius(8)
+
+				List(viewModel.items) { item in
+					Text(item.name)
+						.onTapGesture {
+							print(#function)
+						}
+				}
+				.onChange(of: searchText) { newValue in
+					Task {
+						viewModel.searchText = newValue
+						await viewModel.search()
 					}
 				}
+				.listStyle(.plain)
+				.cornerRadius(8.0)
+				.padding(.vertical, 10)
 			}
 		}
-		.searchable(text: $searchText, placement: . navigationBarDrawer(displayMode: .always))
 	}
 
-	var searchResults: [String] {
+	func searchResults() async -> [String] {
 		if searchText.isEmpty {
 			return names
 		} else {
-			return names.filter { $0.contains(searchText) }
+			return try! await self.toursprung.search(term: searchText).map { $0.name }
 		}
 	}
 }

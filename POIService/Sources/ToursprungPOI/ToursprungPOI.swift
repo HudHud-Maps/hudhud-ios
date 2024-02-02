@@ -10,19 +10,23 @@ import Foundation
 import POIService
 import CoreLocation
 
-final class ToursprungPOI: POIServiceProtocol {
+public final class ToursprungPOI: POIServiceProtocol {
 
     enum GeocoderError: Error {
         case buildingURL
         case decodingError
     }
 
-    static let serviceName: String = "Toursprung"
+    public static let serviceName: String = "Toursprung"
     let session: URLSession = .shared
+
+    public init() {
+        
+    }
 
     // MARK: - ToursprungPOI
 
-    func search(term: String) async throws -> [POI] {
+    public func search(term: String) async throws -> [POI] {
         // "https://geocoder.maptoolkit.net/search?<params>"
 
         var components = URLComponents()
@@ -33,7 +37,7 @@ final class ToursprungPOI: POIServiceProtocol {
             URLQueryItem(name: "q", value: term),
             URLQueryItem(name: "countrycodes", value: "sa"),
             URLQueryItem(name: "language", value: "en"),
-            URLQueryItem(name: "limit", value: "10"),
+            URLQueryItem(name: "limit", value: "50"),
             URLQueryItem(name: "api_key", value: "hudhud")
         ]
         guard let url = components.url else {
