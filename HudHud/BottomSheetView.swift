@@ -10,11 +10,13 @@ import Foundation
 import SwiftUI
 import POIService
 import ToursprungPOI
+import MapLibreSwiftUI
 
 struct BottomSheetView: View {
 	let names = ["Holly", "Josh", "Rhonda", "Ted"]
 	private let toursprung: ToursprungPOI = .init()
 	@State private var searchText = ""
+	@Binding var camera: MapViewCamera
 	@StateObject private var viewModel = SearchViewModel()
 
 
@@ -53,7 +55,7 @@ struct BottomSheetView: View {
 				List(viewModel.items) { item in
 					Text(item.name)
 						.onTapGesture {
-							print(#function)
+							self.camera = .center(item.locationCoordinate, zoom: 16)
 						}
 				}
 				.onChange(of: searchText) { newValue in
@@ -80,6 +82,6 @@ struct BottomSheetView: View {
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		BottomSheetView()
+		BottomSheetView(camera: .constant(.center(vienna, zoom: 12)))
 	}
 }

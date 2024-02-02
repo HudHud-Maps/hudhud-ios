@@ -10,7 +10,7 @@ import SwiftUI
 import CoreLocation
 import MapLibreSwiftUI
 
-private let vienna = CLLocationCoordinate2D(latitude: 48.21, longitude: 16.37)
+let vienna = CLLocationCoordinate2D(latitude: 48.21, longitude: 16.37)
 
 struct ContentView: View {
 
@@ -25,7 +25,7 @@ struct ContentView: View {
 					.padding()
 			}
 			.sheet(isPresented: .constant(true)) {
-				BottomSheetView()
+				BottomSheetView(camera: $camera)
 					.presentationDetents([.height(100), .medium, .large])
 					.presentationBackgroundInteraction(
 						.enabled(upThrough: .medium)
