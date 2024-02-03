@@ -10,23 +10,40 @@ import SwiftUI
 import CoreLocation
 import MapLibreSwiftUI
 
-let vienna = CLLocationCoordinate2D(latitude: 48.21, longitude: 16.37)
-
 struct ContentView: View {
 
-	@State private var camera = MapViewCamera.center(vienna, zoom: 12)
+	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
+	@State var selectedDetent: PresentationDetent = .large
 	@State var isShown: Bool = true
 
+	private let availableDetents: [PresentationDetent] = [.medium, .large]
+
 	var body: some View {
-		MapView(camera: $camera)
+#if DEBUG
+		if #available(iOS 17.1, *) {
+			Self._logChanges()
+		}
+#endif
+		return MapView(camera: $camera)
 			.ignoresSafeArea()
 			.safeAreaInset(edge: .top, alignment: .trailing) {
 				CurrentLocationButton(camera: $camera)
 					.padding()
 			}
 			.sheet(isPresented: .constant(true)) {
-				BottomSheetView(camera: $camera)
-					.presentationDetents([.height(100), .medium, .large])
+//				Picker("Selected Detent", selection: .constant(PresentationDetent.medium)) {
+//					ForEach(availableDetents, id: \.self) {
+//						Text(String(reflecting: $0).capitalized)
+//					}
+//				}
+//				.pickerStyle(.segmented)
+//				.padding()
+//				.presentationDetents([.medium, .large], selection: $selectedDetent)
+//				.presentationDragIndicator(.hidden)
+
+				BottomSheetView(camera: $camera, selectedDetent: $selectedDetent)
+					.presentationDetents([.medium, .large], selection: $selectedDetent)
+					.presentationDragIndicator(.hidden)
 					.presentationBackgroundInteraction(
 						.enabled(upThrough: .medium)
 					)
@@ -34,6 +51,14 @@ struct ContentView: View {
 					.ignoresSafeArea()
 			}
 	}
+}
+
+extension PresentationDetent {
+	static let small: PresentationDetent = .height(100)
+}
+
+extension CLLocationCoordinate2D {
+	static let vienna = CLLocationCoordinate2D(latitude: 48.21, longitude: 16.37)
 }
 
 #Preview {

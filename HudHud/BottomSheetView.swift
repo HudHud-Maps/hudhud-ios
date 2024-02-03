@@ -17,6 +17,7 @@ struct BottomSheetView: View {
 	private let toursprung: ToursprungPOI = .init()
 	@State private var searchText = ""
 	@Binding var camera: MapViewCamera
+	@Binding var selectedDetent: PresentationDetent
 	@StateObject private var viewModel = SearchViewModel()
 
 
@@ -55,7 +56,9 @@ struct BottomSheetView: View {
 				List(viewModel.items) { item in
 					Text(item.name)
 						.onTapGesture {
-							self.camera = .center(item.locationCoordinate, zoom: 16)
+							print("tapped")
+							self.selectedDetent = .medium
+//							self.camera = .center(item.locationCoordinate, zoom: 16)
 						}
 				}
 				.onChange(of: searchText) { newValue in
@@ -82,6 +85,6 @@ struct BottomSheetView: View {
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-		BottomSheetView(camera: .constant(.center(vienna, zoom: 12)))
+		BottomSheetView(camera: .constant(.center(.vienna, zoom: 12)), selectedDetent: .constant(.medium))
 	}
 }
