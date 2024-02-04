@@ -19,7 +19,7 @@ struct BottomSheetView: View {
 	@Binding var camera: MapViewCamera
 	@Binding var selectedDetent: PresentationDetent
 	@StateObject private var viewModel = SearchViewModel()
-
+	@FocusState private var searchIsFocused: Bool
 
 	var body: some View {
 		GroupBox {
@@ -30,6 +30,7 @@ struct BottomSheetView: View {
 						.foregroundColor(.gray)
 						.padding(.leading, 8)
 					TextField("Search", text: $searchText)
+						.focused($searchIsFocused)
 						.padding(.vertical, 10)
 						.padding(.horizontal, 0)
 						.cornerRadius(8)
@@ -57,8 +58,9 @@ struct BottomSheetView: View {
 					Text(item.name)
 						.onTapGesture {
 							print("tapped")
+							self.searchIsFocused = false
 							self.selectedDetent = .medium
-//							self.camera = .center(item.locationCoordinate, zoom: 16)
+							self.camera = .center(item.locationCoordinate, zoom: 16)
 						}
 				}
 				.onChange(of: searchText) { newValue in
