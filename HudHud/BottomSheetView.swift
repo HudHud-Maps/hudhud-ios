@@ -37,7 +37,7 @@ struct BottomSheetView: View {
 						.overlay(
 							HStack {
 								Spacer()
-								if !searchText.isEmpty {
+								if !self.searchText.isEmpty {
 									Button(action: {
 										self.searchText = ""
 									}) {
@@ -54,19 +54,18 @@ struct BottomSheetView: View {
 				.background(.white)
 				.cornerRadius(8)
 
-				List(viewModel.items) { item in
-					Text(item.name)
-						.onTapGesture {
-							print("tapped")
-							self.searchIsFocused = false
-							self.selectedDetent = .medium
-							self.camera = .center(item.locationCoordinate, zoom: 16)
-						}
+				List(self.viewModel.items) { item in
+					Button(item.name) {
+						print("tapped")
+						self.searchIsFocused = false
+						self.selectedDetent = .medium
+						self.camera = .center(item.locationCoordinate, zoom: 16)
+					}
 				}
 				.onChange(of: searchText) { newValue in
 					Task {
-						viewModel.searchText = newValue
-						await viewModel.search()
+						self.viewModel.searchText = newValue
+						await self.viewModel.search()
 					}
 				}
 				.listStyle(.plain)
