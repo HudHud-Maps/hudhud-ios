@@ -16,7 +16,7 @@ struct ContentView: View {
 	@State var selectedDetent: PresentationDetent = .large
 	@State var isShown: Bool = true
 
-	private let availableDetents: [PresentationDetent] = [.medium, .large]
+	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
 #if DEBUG
@@ -31,18 +31,8 @@ struct ContentView: View {
 					.padding()
 			}
 			.sheet(isPresented: .constant(true)) {
-//				Picker("Selected Detent", selection: .constant(PresentationDetent.medium)) {
-//					ForEach(availableDetents, id: \.self) {
-//						Text(String(reflecting: $0).capitalized)
-//					}
-//				}
-//				.pickerStyle(.segmented)
-//				.padding()
-//				.presentationDetents([.medium, .large], selection: $selectedDetent)
-//				.presentationDragIndicator(.hidden)
-
 				BottomSheetView(camera: $camera, selectedDetent: $selectedDetent)
-					.presentationDetents([.medium, .large], selection: $selectedDetent)
+					.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
 					.presentationDragIndicator(.hidden)
 					.presentationBackgroundInteraction(
 						.enabled(upThrough: .medium)
@@ -55,6 +45,7 @@ struct ContentView: View {
 
 extension PresentationDetent {
 	static let small: PresentationDetent = .height(100)
+	static let third: PresentationDetent = .fraction(0.33)
 }
 
 extension CLLocationCoordinate2D {

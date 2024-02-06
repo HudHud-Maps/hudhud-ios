@@ -13,13 +13,15 @@ import ToursprungPOI
 import MapLibreSwiftUI
 
 struct BottomSheetView: View {
-	let names = ["Holly", "Josh", "Rhonda", "Ted"]
 	private let toursprung: ToursprungPOI = .init()
-	@State private var searchText = ""
-	@Binding var camera: MapViewCamera
-	@Binding var selectedDetent: PresentationDetent
+
 	@StateObject private var viewModel = SearchViewModel()
 	@FocusState private var searchIsFocused: Bool
+	@State private var isShown: Bool = false
+	@State private var searchText = ""
+
+	@Binding var camera: MapViewCamera
+	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
 		GroupBox {
@@ -60,6 +62,8 @@ struct BottomSheetView: View {
 						self.searchIsFocused = false
 						self.selectedDetent = .medium
 						self.camera = .center(item.locationCoordinate, zoom: 16)
+
+						self.isShown = true
 					}
 				}
 				.onChange(of: searchText) { newValue in
@@ -73,11 +77,24 @@ struct BottomSheetView: View {
 				.padding(.vertical, 10)
 			}
 		}
+		.sheet(isPresented: $isShown) {
+			POISheet {
+				print("start")
+			} onMore: {
+				print("more")
+			}
+			.presentationDetents([.third])
+			.presentationBackgroundInteraction(
+				.enabled(upThrough: .third)
+			)
+			.interactiveDismissDisabled()
+			.ignoresSafeArea()
+		}
 	}
 
 	func searchResults() async -> [String] {
 		if searchText.isEmpty {
-			return names
+			return []
 		} else {
 			return try! await self.toursprung.search(term: searchText).map { $0.name }
 		}
