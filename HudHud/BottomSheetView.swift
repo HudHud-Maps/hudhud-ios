@@ -27,7 +27,6 @@ struct BottomSheetView: View {
 	var body: some View {
 		GroupBox {
 			VStack {
-				// Search bar
 				HStack {
 					Image(systemName: "magnifyingglass")
 						.foregroundColor(.gray)
@@ -37,6 +36,7 @@ struct BottomSheetView: View {
 						.padding(.vertical, 10)
 						.padding(.horizontal, 0)
 						.cornerRadius(8)
+						.autocorrectionDisabled()
 						.overlay(
 							HStack {
 								Spacer()
@@ -59,7 +59,6 @@ struct BottomSheetView: View {
 
 				List(self.viewModel.items) { item in
 					Button(item.name) {
-						print("tapped")
 						self.searchIsFocused = false
 						self.selectedDetent = .medium
 						self.camera = .center(item.locationCoordinate, zoom: 16)
@@ -110,8 +109,3 @@ struct BottomSheetView: View {
 					selectedPOI: .constant(.ketchup), 
 					selectedDetent: .constant(.medium))
 }
-//struct ContentView_Previews: PreviewProvider {
-//	static var previews: some View {
-//
-//	}
-//}
