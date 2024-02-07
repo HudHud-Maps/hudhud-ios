@@ -29,3 +29,9 @@ public struct POI: Identifiable {
         self.type = type
     }
 }
+
+public extension POI {
+	public static let ketchup = POI(name: "Ketch up - Dubai",
+									locationCoordinate: CLLocationCoordinate2D(latitude: 25.077744998955207, longitude: 55.124647403691284),
+									type: "Restaurant")
+}

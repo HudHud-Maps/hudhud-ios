@@ -9,21 +9,18 @@
 import SwiftUI
 import CoreLocation
 import MapLibreSwiftUI
+import POIService
 
 struct ContentView: View {
 
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
+	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .large
 	@State var isShown: Bool = true
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
-#if DEBUG
-		if #available(iOS 17.1, *) {
-			Self._logChanges()
-		}
-#endif
 		return MapView(camera: $camera)
 			.ignoresSafeArea()
 			.safeAreaInset(edge: .top, alignment: .trailing) {
@@ -31,7 +28,9 @@ struct ContentView: View {
 					.padding()
 			}
 			.sheet(isPresented: .constant(true)) {
-				BottomSheetView(camera: $camera, selectedDetent: $selectedDetent)
+				BottomSheetView(camera: $camera,
+								selectedPOI: $selectedPOI,
+								selectedDetent: $selectedDetent)
 					.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
 					.presentationDragIndicator(.hidden)
 					.presentationBackgroundInteraction(

@@ -21,6 +21,7 @@ struct BottomSheetView: View {
 	@State private var searchText = ""
 
 	@Binding var camera: MapViewCamera
+	@Binding var selectedPOI: POI?
 	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
@@ -62,6 +63,7 @@ struct BottomSheetView: View {
 						self.searchIsFocused = false
 						self.selectedDetent = .medium
 						self.camera = .center(item.locationCoordinate, zoom: 16)
+						self.selectedPOI = item
 
 						self.isShown = true
 					}
@@ -78,17 +80,19 @@ struct BottomSheetView: View {
 			}
 		}
 		.sheet(isPresented: $isShown) {
-			POISheet {
-				print("start")
-			} onMore: {
-				print("more")
+			if let poi = self.selectedPOI {
+				POISheet(poi: poi, isShown: $isShown) {
+					print("start")
+				} onMore: {
+					print("more")
+				}
+				.presentationDetents([.third])
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .third)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
 			}
-			.presentationDetents([.third])
-			.presentationBackgroundInteraction(
-				.enabled(upThrough: .third)
-			)
-			.interactiveDismissDisabled()
-			.ignoresSafeArea()
 		}
 	}
 
@@ -101,8 +105,13 @@ struct BottomSheetView: View {
 	}
 }
 
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		BottomSheetView(camera: .constant(.center(.vienna, zoom: 12)), selectedDetent: .constant(.medium))
-	}
+#Preview {
+	BottomSheetView(camera: .constant(.center(.vienna, zoom: 12)),
+					selectedPOI: .constant(.ketchup), 
+					selectedDetent: .constant(.medium))
 }
+//struct ContentView_Previews: PreviewProvider {
+//	static var previews: some View {
+//
+//	}
+//}

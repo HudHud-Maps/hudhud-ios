@@ -8,37 +8,41 @@
 
 import Foundation
 import SwiftUI
+import POIService
+import CoreLocation
 
 struct POISheet: View {
 
-	var onStart: () -> Void
-	var onMore: () -> Void
+	let poi: POI
+	@Binding var isShown: Bool
+	let onStart: () -> Void
+	let onMore: () -> Void
 
 	var body: some View {
 		VStack(alignment: .leading) {
 			HStack(alignment: .top) {
 				VStack {
-					Text("Ketch Up - Dubai")
+					Text(self.poi.name)
 						.font(.title.bold() )
 						.frame(maxWidth: .infinity, alignment: .leading)
 
-					Text("Restaurant")
+					Text(self.poi.type)
 						.font(.footnote)
 						.frame(maxWidth: .infinity, alignment: .leading)
 						.padding(.bottom, 8)
 				}
 				
 				Button(action: {
-					print("close")
+					self.isShown = false
 				}, label: {
 					ZStack {
 						Circle()
-							.fill(.secondary)
+							.fill(.quaternary)
 							.frame(width: 30, height: 30)
 
 						Image(systemName: "xmark")
 							.font(.system(size: 15, weight: .bold, design: .rounded))
-							.foregroundColor(.secondary)
+							.foregroundColor(.white)
 					}
 					.padding(8)
 					.contentShape(Circle())
@@ -48,7 +52,7 @@ struct POISheet: View {
 			}
 
 			HStack {
-				Button(action: onStart) {
+				Button(action: self.onStart) {
 					VStack(spacing: 2) {
 						Image(systemName: "car.fill")
 						Text("Start")
@@ -58,7 +62,7 @@ struct POISheet: View {
 				}
 				.buttonStyle(.borderedProminent)
 
-				Button(action: onMore) {
+				Button(action: self.onMore) {
 					VStack(spacing: 2) {
 						Image(systemName: "phone.fill")
 						Text("Call")
@@ -68,7 +72,7 @@ struct POISheet: View {
 				}
 				.buttonStyle(.bordered)
 
-				Button(action: onMore) {
+				Button(action: self.onMore) {
 					VStack(spacing: 2) {
 						Image(systemName: "safari.fill")
 						Text("Web")
@@ -78,7 +82,7 @@ struct POISheet: View {
 				}
 				.buttonStyle(.bordered)
 
-				Button(action: onMore) {
+				Button(action: self.onMore) {
 					VStack(spacing: 2) {
 						Image(systemName: "phone.fill")
 						Text("More")
@@ -96,7 +100,7 @@ struct POISheet: View {
 }
 
 #Preview {
-	POISheet {
+	POISheet(poi: .ketchup, isShown: .constant(true)) {
 		print("start")
 	} onMore: {
 		print("more")
