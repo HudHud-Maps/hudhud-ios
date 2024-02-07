@@ -6,13 +6,17 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
 import CoreLocation
+import MapLibre
+import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
+import SwiftUI
 
 struct ContentView: View {
 
+	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")
+	
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .large
@@ -21,9 +25,25 @@ struct ContentView: View {
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
-		return MapView(camera: $camera)
-			.ignoresSafeArea()
-			.safeAreaInset(edge: .top, alignment: .trailing) {
+		return MapView(styleURL: styleURL!, camera: $camera) {
+			if let selectedPOI {
+				let pointSource = ShapeSource(identifier: "points") {
+					MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
+				}
+
+				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+					.radius(constant: 16)
+					.color(constant: .systemRed)
+					.strokeWidth(constant: 2)
+					.strokeColor(constant: .white)
+
+				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+					.iconImage(constant: UIImage(systemName: "mappin")!.withRenderingMode(.alwaysTemplate))
+					.iconColor(constant: .white)
+			}
+		}
+		.ignoresSafeArea()
+		.safeAreaInset(edge: .top, alignment: .trailing) {
 				CurrentLocationButton(camera: $camera)
 					.padding()
 			}
