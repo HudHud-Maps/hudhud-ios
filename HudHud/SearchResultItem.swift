@@ -47,5 +47,5 @@ struct SearchResultItem: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)
-	return SearchResultItem(poi: poi)
+	return SearchResultItem(poi: poi!)
 }

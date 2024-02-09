@@ -12,60 +12,71 @@ import CoreLocation
 
 public final class ToursprungPOI: POIServiceProtocol {
 
-    enum GeocoderError: Error {
-        case buildingURL
-        case decodingError
-    }
+	enum GeocoderError: Error, LocalizedError {
+		case buildingURL
+		case decodingError
 
-    public static let serviceName: String = "Toursprung"
-    let session: URLSession = .shared
-
-    public init() {
-        
-    }
-
-    // MARK: - ToursprungPOI
-
-    public func search(term: String) async throws -> [POI] {
-        // "https://geocoder.maptoolkit.net/search?<params>"
-
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "geocoder.maptoolkit.net"
-        components.path = "/search"
-        components.queryItems = [
-            URLQueryItem(name: "q", value: term),
-            URLQueryItem(name: "countrycodes", value: "sa"),
-            URLQueryItem(name: "language", value: "en"),
-            URLQueryItem(name: "limit", value: "50"),
-            URLQueryItem(name: "api_key", value: "hudhud")
-        ]
-        guard let url = components.url else {
-            throw GeocoderError.buildingURL
-        }
-
-        let request = URLRequest(url: url)
-        guard let (data, response) = try await self.session.data(for: request) as? (Data, HTTPURLResponse) else {
-            throw GeocoderError.decodingError
-        }
-        guard response.statusCode == 200 else {
-            // parse error response
-            throw GeocoderError.decodingError
-        }
-
-        let decoder = JSONDecoder()
-        let pois = try decoder.decode([POIElement].self, from: data)
-        return pois.map {
-            return POIService.POI(element: $0)
+		var errorDescription: String? {
+			switch self {
+			case .buildingURL:
+				"Can't transform Input into URL."
+			case .decodingError:
+				"HudHud responded with invalid format."
+			}
 		}
-    }
+	}
+
+	public static let serviceName: String = "Toursprung"
+	let session: URLSession = .shared
+
+	public init() {
+
+	}
+
+	// MARK: - ToursprungPOI
+
+	public func search(term: String) async throws -> [POI] {
+		// "https://geocoder.maptoolkit.net/search?<params>"
+
+		var components = URLComponents()
+		components.scheme = "https"
+		components.host = "geocoder.maptoolkit.net"
+		components.path = "/search"
+		components.queryItems = [
+			URLQueryItem(name: "q", value: term),
+			URLQueryItem(name: "countrycodes", value: "sa"),
+			URLQueryItem(name: "language", value: "en"),
+			URLQueryItem(name: "limit", value: "50"),
+			URLQueryItem(name: "api_key", value: "hudhud")
+		]
+		guard let url = components.url else {
+			throw GeocoderError.buildingURL
+		}
+
+		let request = URLRequest(url: url)
+		guard let (data, response) = try await self.session.data(for: request) as? (Data, HTTPURLResponse) else {
+			throw GeocoderError.decodingError
+		}
+		guard response.statusCode == 200 else {
+			// parse error response
+			throw GeocoderError.decodingError
+		}
+
+		let decoder = JSONDecoder()
+		let pois = try decoder.decode([POIElement].self, from: data)
+		return pois.compactMap {
+			return POIService.POI(element: $0)
+		}
+	}
 }
 
 public extension POI {
 
-	public init(element: POIElement) {
-		let coordinate = CLLocationCoordinate2D(latitude: Double(element.lat) ?? 0.0,
-												longitude: Double(element.lon) ?? 0.0)
+	public init?(element: POIElement) {
+		guard let lat = Double(element.lat),
+			  let lon = Double(element.lon) else { return nil }
+
+		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
 		self.init(name: element.displayName,
 				  subtitle: element.address.description,
@@ -77,34 +88,34 @@ public extension POI {
 public extension POIElement {
 
 	public static let starbucksKualaLumpur = POIElement(placeID: 374426437,
-												 licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
-												 osmType: "node",
-												 osmID: 11363949513,
-												 boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
-												 lat: "3.177246",
-												 lon: "101.7507382",
-												 displayName: "Starbucks, Kuala Lumpur, Malaysia",
-												 poiClass: "amenity",
-												 type: "cafe",
-												 importance: 0.6758606469435616,
-												 address: Address(hamlet: nil,
-																  county: nil,
-																  state: nil,
-																  iso31662Lvl4: "MY-14",
-																  country: "Malaysia",
-																  countryCode: "my",
-																  town: nil,
-																  postcode: "54200",
-																  village: nil,
-																  iso31662Lvl6: nil,
-																  municipality: nil,
-																  region: nil,
-																  natural: nil,
-																  stateDistrict: nil,
-																  city: "Kuala Lumpur",
-																  road: "Jalan Taman Setiawangsa",
-																  quarter: nil,
-																  suburb: "Setiawangsa",
-																  iso31662Lvl3: nil),
-												 category: "poi")
+														licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+														osmType: "node",
+														osmID: 11363949513,
+														boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
+														lat: "3.177246",
+														lon: "101.7507382",
+														displayName: "Starbucks, Kuala Lumpur, Malaysia",
+														poiClass: "amenity",
+														type: "cafe",
+														importance: 0.6758606469435616,
+														address: Address(hamlet: nil,
+																		 county: nil,
+																		 state: nil,
+																		 iso31662Lvl4: "MY-14",
+																		 country: "Malaysia",
+																		 countryCode: "my",
+																		 town: nil,
+																		 postcode: "54200",
+																		 village: nil,
+																		 iso31662Lvl6: nil,
+																		 municipality: nil,
+																		 region: nil,
+																		 natural: nil,
+																		 stateDistrict: nil,
+																		 city: "Kuala Lumpur",
+																		 road: "Jalan Taman Setiawangsa",
+																		 quarter: nil,
+																		 suburb: "Setiawangsa",
+																		 iso31662Lvl3: nil),
+														category: "poi")
 }
