@@ -33,6 +33,7 @@ struct DictionaryView: View {
 					case let convertable as DictionaryConvertable:
 						NavigationLink(destination: {
 							DictionaryView(dictionary: convertable.dictionary())
+								.navigationTitle(key)
 						}, label: {
 							Text(convertable.description)
 						})
