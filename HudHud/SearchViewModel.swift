@@ -10,21 +10,45 @@ import Foundation
 import ToursprungPOI
 import POIService
 
-@MainActor // Ensures UI updates on the main thread.
+@MainActor
 class SearchViewModel: ObservableObject {
 	
+	enum Mode {
+		case live
+		case preview
+	}
+
 	private let toursprung: ToursprungPOI = .init()
+	private let mode: Mode
 
 	@Published var items: [POI] = []
 	@Published var searchText: String = ""
 
-	func search() async {
-		// Simulate an API call
-		let results = await fetchData(query: searchText)
-		self.items = results
+	// MARK: - Lifecycle
+
+	init(mode: Mode = .live) {
+		self.mode = mode
+		if mode == .preview {
+			self.items = [
+				.starbucks,
+				.ketchup
+			]
+		}
 	}
 
-	private func fetchData(query: String) async -> [POI] {
+	// MARK: - SearchViewModel
+
+	func search() async {
+		let results = await self.fetchData(query: self.searchText)
+		self.items = results
+	}
+}
+
+// MARK: - Private
+
+private extension SearchViewModel {
+
+	func fetchData(query: String) async -> [POI] {
 		return try! await toursprung.search(term: query)
 	}
 }

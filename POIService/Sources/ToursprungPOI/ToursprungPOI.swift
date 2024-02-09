@@ -56,10 +56,55 @@ public final class ToursprungPOI: POIServiceProtocol {
         let decoder = JSONDecoder()
         let pois = try decoder.decode([POIElement].self, from: data)
         return pois.map {
-            let coordinate = CLLocationCoordinate2D(latitude: Double($0.lat) ?? 0.0, 
-                                                    longitude: Double($0.lon) ?? 0.0)
-            return POIService.POI(name: $0.displayName,
-                                  locationCoordinate: coordinate,
-                                  type: $0.type) }
+            return POIService.POI(element: $0)
+		}
     }
+}
+
+public extension POI {
+
+	public init(element: POIElement) {
+		let coordinate = CLLocationCoordinate2D(latitude: Double(element.lat) ?? 0.0,
+												longitude: Double(element.lon) ?? 0.0)
+
+		self.init(name: element.displayName,
+				  subtitle: element.address.description,
+				  locationCoordinate: coordinate,
+				  type: element.type)
+	}
+}
+
+public extension POIElement {
+
+	public static let starbucksKualaLumpur = POIElement(placeID: 374426437,
+												 licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+												 osmType: "node",
+												 osmID: 11363949513,
+												 boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
+												 lat: "3.177246",
+												 lon: "101.7507382",
+												 displayName: "Starbucks, Kuala Lumpur, Malaysia",
+												 poiClass: "amenity",
+												 type: "cafe",
+												 importance: 0.6758606469435616,
+												 address: Address(hamlet: nil,
+																  county: nil,
+																  state: nil,
+																  iso31662Lvl4: "MY-14",
+																  country: "Malaysia",
+																  countryCode: "my",
+																  town: nil,
+																  postcode: "54200",
+																  village: nil,
+																  iso31662Lvl6: nil,
+																  municipality: nil,
+																  region: nil,
+																  natural: nil,
+																  stateDistrict: nil,
+																  city: "Kuala Lumpur",
+																  road: "Jalan Taman Setiawangsa",
+																  quarter: nil,
+																  suburb: "Setiawangsa",
+																  iso31662Lvl3: nil),
+												 category: "poi")
 }

@@ -54,25 +54,32 @@ public struct Address: Codable, Equatable, Sendable {
         case iso31662Lvl3 = "ISO3166-2-lvl3"
     }
 
-    public init(hamlet: String?, county: String?, state: String, iso31662Lvl4: String, country: String, countryCode: String, town: String?, postcode: String?, village: String?, iso31662Lvl6: String?, municipality: String?, region: String?, natural: String?, stateDistrict: String?, city: String?, road: String?, quarter: String?, suburb: String?, iso31662Lvl3: String?) {
-        self.hamlet = hamlet
-        self.county = county
-        self.state = state
-        self.iso31662Lvl4 = iso31662Lvl4
-        self.country = country
-        self.countryCode = countryCode
-        self.town = town
-        self.postcode = postcode
-        self.village = village
-        self.iso31662Lvl6 = iso31662Lvl6
-        self.municipality = municipality
-        self.region = region
-        self.natural = natural
-        self.stateDistrict = stateDistrict
-        self.city = city
-        self.road = road
-        self.quarter = quarter
-        self.suburb = suburb
-        self.iso31662Lvl3 = iso31662Lvl3
-    }
+	public init(hamlet: String?, county: String?, state: String?, iso31662Lvl4: String?, country: String?, countryCode: String?, town: String?, postcode: String?, village: String?, iso31662Lvl6: String?, municipality: String?, region: String?, natural: String?, stateDistrict: String?, city: String?, road: String?, quarter: String?, suburb: String?, iso31662Lvl3: String?) {
+		self.hamlet = hamlet
+		self.county = county
+		self.state = state
+		self.iso31662Lvl4 = iso31662Lvl4
+		self.country = country
+		self.countryCode = countryCode
+		self.town = town
+		self.postcode = postcode
+		self.village = village
+		self.iso31662Lvl6 = iso31662Lvl6
+		self.municipality = municipality
+		self.region = region
+		self.natural = natural
+		self.stateDistrict = stateDistrict
+		self.city = city
+		self.road = road
+		self.quarter = quarter
+		self.suburb = suburb
+		self.iso31662Lvl3 = iso31662Lvl3
+	}
+}
+
+extension Address: CustomStringConvertible {
+	
+	public var description: String {
+		return [self.road, self.suburb, self.city, self.postcode, self.country].compactMap { $0 }.joined(separator: ", ")
+	}
 }

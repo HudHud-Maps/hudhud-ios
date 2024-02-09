@@ -15,7 +15,7 @@ import MapLibreSwiftUI
 struct BottomSheetView: View {
 	private let toursprung: ToursprungPOI = .init()
 
-	@StateObject private var viewModel = SearchViewModel()
+	@ObservedObject var viewModel: SearchViewModel
 	@FocusState private var searchIsFocused: Bool
 	@State private var isShown: Bool = false
 	@State private var searchText = ""
@@ -25,58 +25,60 @@ struct BottomSheetView: View {
 	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
-		GroupBox {
-			VStack {
-				HStack {
-					Image(systemName: "magnifyingglass")
-						.foregroundColor(.gray)
-						.padding(.leading, 8)
-					TextField("Search", text: $searchText)
-						.focused($searchIsFocused)
-						.padding(.vertical, 10)
-						.padding(.horizontal, 0)
-						.cornerRadius(8)
-						.autocorrectionDisabled()
-						.overlay(
-							HStack {
-								Spacer()
-								if !self.searchText.isEmpty {
-									Button(action: {
-										self.searchText = ""
-									}) {
-										Image(systemName: "multiply.circle.fill")
-											.foregroundColor(.gray)
-											.padding(.vertical)
-									}
+		VStack {
+			HStack {
+				Image(systemName: "magnifyingglass")
+					.foregroundStyle(.tertiary)
+					.padding(.leading, 8)
+				TextField("Search", text: $searchText)
+					.focused($searchIsFocused)
+					.padding(.vertical, 10)
+					.padding(.horizontal, 0)
+					.cornerRadius(8)
+					.autocorrectionDisabled()
+					.overlay(
+						HStack {
+							Spacer()
+							if !self.searchText.isEmpty {
+								Button(action: {
+									self.searchText = ""
+								}) {
+									Image(systemName: "multiply.circle.fill")
+										.foregroundColor(.gray)
+										.padding(.vertical)
 								}
 							}
-								.padding(.horizontal, 8)
-						)
-						.padding(.horizontal, 10)
-				}
-				.background(.white)
-				.cornerRadius(8)
-
-				List(self.viewModel.items) { item in
-					Button(item.name) {
-						self.searchIsFocused = false
-						self.selectedDetent = .medium
-						self.camera = .center(item.locationCoordinate, zoom: 16)
-						self.selectedPOI = item
-
-						self.isShown = true
-					}
-				}
-				.onChange(of: searchText) { newValue in
-					Task {
-						self.viewModel.searchText = newValue
-						await self.viewModel.search()
-					}
-				}
-				.listStyle(.plain)
-				.cornerRadius(8.0)
-				.padding(.vertical, 10)
+						}
+							.padding(.horizontal, 8)
+					)
+					.padding(.horizontal, 10)
 			}
+			.padding(.horizontal, 12)
+			.padding(.vertical, 8)
+			.background(.white)
+			.cornerRadius(8)
+
+			List(self.viewModel.items) { item in
+				Button(action: {
+					self.searchIsFocused = false
+					self.selectedDetent = .medium
+					self.camera = .center(item.locationCoordinate, zoom: 16)
+					self.selectedPOI = item
+					self.isShown = true
+				}, label: {
+					SearchResultItem(poi: item)
+						.frame(maxWidth: .infinity)
+				})
+				.listRowSeparator(.hidden)
+				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+			}
+			.onChange(of: searchText) { newValue in
+				Task {
+					self.viewModel.searchText = newValue
+					await self.viewModel.search()
+				}
+			}
+			.listStyle(.plain)
 		}
 		.sheet(isPresented: $isShown) {
 			if let poi = self.selectedPOI {
@@ -93,19 +95,14 @@ struct BottomSheetView: View {
 				.ignoresSafeArea()
 			}
 		}
-	}
-
-	func searchResults() async -> [String] {
-		if searchText.isEmpty {
-			return []
-		} else {
-			return try! await self.toursprung.search(term: searchText).map { $0.name }
-		}
+		.padding(.vertical, 8)
 	}
 }
 
 #Preview {
-	BottomSheetView(camera: .constant(.center(.vienna, zoom: 12)),
-					selectedPOI: .constant(.ketchup), 
-					selectedDetent: .constant(.medium))
+	let sheet = BottomSheetView(viewModel: .init(mode: .preview),
+								camera: .constant(.center(.vienna, zoom: 12)),
+								selectedPOI: .constant(nil),
+								selectedDetent: .constant(.medium))
+	return sheet
 }

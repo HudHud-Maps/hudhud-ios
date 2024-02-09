@@ -16,7 +16,7 @@ import SwiftUI
 struct ContentView: View {
 
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")
-	
+
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .large
@@ -40,25 +40,28 @@ struct ContentView: View {
 				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 					.iconImage(constant: UIImage(systemName: "mappin")!.withRenderingMode(.alwaysTemplate))
 					.iconColor(constant: .white)
+			} else {
+				print("clear poi")
 			}
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
-				CurrentLocationButton(camera: $camera)
-					.padding()
-			}
-			.sheet(isPresented: .constant(true)) {
-				BottomSheetView(camera: $camera,
-								selectedPOI: $selectedPOI,
-								selectedDetent: $selectedDetent)
-					.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
-					.presentationDragIndicator(.hidden)
-					.presentationBackgroundInteraction(
-						.enabled(upThrough: .medium)
-					)
-					.interactiveDismissDisabled()
-					.ignoresSafeArea()
-			}
+			CurrentLocationButton(camera: $camera)
+				.padding()
+		}
+		.sheet(isPresented: .constant(true)) {
+			BottomSheetView(viewModel: .init(),
+							camera: $camera,
+							selectedPOI: $selectedPOI,
+							selectedDetent: $selectedDetent)
+			.presentationCornerRadius(21)
+			.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
+			.presentationBackgroundInteraction(
+				.enabled(upThrough: .medium)
+			)
+			.interactiveDismissDisabled()
+			.ignoresSafeArea()
+		}
 	}
 }
 

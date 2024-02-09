@@ -28,7 +28,10 @@ final class ApplePOI: POIServiceProtocol {
         print("Region: \(result.boundingRegion)")
         print("Results: \(result.mapItems)")
         return result.mapItems.map {
-            return POI(name: $0.name ?? "Unknown", locationCoordinate: $0.placemark.coordinate, type: $0.pointOfInterestCategory?.rawValue ?? "Unknown")
+            return POI(name: $0.name ?? "Unknown",
+					   subtitle: "<Address>",
+					   locationCoordinate: $0.placemark.coordinate,
+					   type: $0.pointOfInterestCategory?.rawValue ?? "Unknown")
         }
     }
 }
