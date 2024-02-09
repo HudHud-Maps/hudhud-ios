@@ -24,7 +24,7 @@ public struct POI: Identifiable {
 	public var subtitle: String
     public var locationCoordinate: CLLocationCoordinate2D
     public var type: String
-	public var userInfo: [String: String] = [:]
+	public var userInfo: [String: AnyHashable] = [:]
 
 	public init(id: Int = .random(in: 0...1000000), name: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
@@ -56,6 +56,47 @@ public extension POI {
 									type: "Restaurant")
 	public static let starbucks = POI(name: "Starbucks",
 									  subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
-									locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
-									type: "Cafe")
+									  locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+									  type: "Cafe")
+}
+
+
+public protocol DictionaryConvertable: CustomStringConvertible {
+	func dictionary() -> [String: AnyHashable]
+}
+
+public extension DictionaryConvertable {
+
+	public func dictionary() -> [String: AnyHashable] {
+		var dict = [String: AnyHashable]()
+		let mirror = Mirror(reflecting: self)
+		for child in mirror.children {
+			guard let key = child.label else { continue }
+
+			let childMirror = Mirror(reflecting: child.value)
+			switch childMirror.displayStyle {
+			case .struct, .class:
+				if let childDict = (child.value as? DictionaryConvertable)?.dictionary() {
+					dict[key] = childDict
+				}
+			case .collection:
+				if let childArray = (child.value as? [DictionaryConvertable])?.compactMap({ $0.dictionary() }) {
+					dict[key] = childArray
+				}
+			case .set:
+				if let childArray = (child.value as? Set<AnyHashable>)?.compactMap({ ($0 as? DictionaryConvertable)?.dictionary() }) {
+					dict[key] = childArray
+				}
+			default:
+				if let child = child.value as? CustomStringConvertible {
+					dict[key] = child.description
+				}
+
+				dict[key] = child.value as? AnyHashable
+				break
+			}
+		}
+
+		return dict
+	}
 }

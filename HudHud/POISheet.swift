@@ -9,6 +9,7 @@
 import Foundation
 import SwiftUI
 import POIService
+import ToursprungPOI
 import CoreLocation
 
 struct POISheet: View {
@@ -19,99 +20,86 @@ struct POISheet: View {
 	let onMore: () -> Void
 
 	var body: some View {
-		VStack(alignment: .leading) {
-			HStack(alignment: .top) {
-				VStack {
-					Text(self.poi.name)
-						.font(.title.bold() )
-						.frame(maxWidth: .infinity, alignment: .leading)
+		NavigationStack {
+			VStack(alignment: .leading) {
+				HStack(alignment: .top) {
+					VStack {
+						Text(self.poi.name)
+							.font(.title.bold() )
+							.frame(maxWidth: .infinity, alignment: .leading)
 
-					Text(self.poi.type)
-						.font(.footnote)
-						.frame(maxWidth: .infinity, alignment: .leading)
-						.padding(.bottom, 8)
-				}
-				
-				Button(action: {
-					self.isShown = false
-				}, label: {
-					ZStack {
-						Circle()
-							.fill(.quaternary)
-							.frame(width: 30, height: 30)
-
-						Image(systemName: "xmark")
-							.font(.system(size: 15, weight: .bold, design: .rounded))
-							.foregroundColor(.white)
+						Text(self.poi.type)
+							.font(.footnote)
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.padding(.bottom, 8)
 					}
-					.padding(8)
-					.contentShape(Circle())
-				})
-				.buttonStyle(PlainButtonStyle())
-				.accessibilityLabel(Text("Close"))
+
+					Button(action: {
+						self.isShown = false
+					}, label: {
+						ZStack {
+							Circle()
+								.fill(.quaternary)
+								.frame(width: 30, height: 30)
+
+							Image(systemName: "xmark")
+								.font(.system(size: 15, weight: .bold, design: .rounded))
+								.foregroundColor(.white)
+						}
+						.padding(8)
+						.contentShape(Circle())
+					})
+					.buttonStyle(PlainButtonStyle())
+					.accessibilityLabel(Text("Close"))
+				}
+				.padding([.top, .leading, .trailing])
+
+				HStack {
+					Button(action: self.onStart) {
+						VStack(spacing: 2) {
+							Image(systemName: "car.fill")
+							Text("Start")
+						}
+						.frame(maxWidth: .infinity)
+						.padding(.vertical, 2)
+					}
+					.buttonStyle(.borderedProminent)
+
+					Button(action: self.onMore) {
+						VStack(spacing: 2) {
+							Image(systemName: "phone.fill")
+							Text("Call")
+						}
+						.frame(maxWidth: .infinity)
+						.padding(.vertical, 2)
+					}
+					.buttonStyle(.bordered)
+
+					Button(action: self.onMore) {
+						VStack(spacing: 2) {
+							Image(systemName: "safari.fill")
+							Text("Web")
+						}
+						.frame(maxWidth: .infinity)
+						.padding(.vertical, 2)
+					}
+					.buttonStyle(.bordered)
+
+					Button(action: self.onMore) {
+						VStack(spacing: 2) {
+							Image(systemName: "phone.fill")
+							Text("More")
+						}
+						.frame(maxWidth: .infinity)
+						.padding(.vertical, 2)
+					}
+					.buttonStyle(.bordered)
+				}
+				.padding(.horizontal)
+
+				DictionaryView(dictionary: self.poi.userInfo)
 			}
-
-			HStack {
-				Button(action: self.onStart) {
-					VStack(spacing: 2) {
-						Image(systemName: "car.fill")
-						Text("Start")
-					}
-					.frame(maxWidth: .infinity)
-					.padding(.vertical, 2)
-				}
-				.buttonStyle(.borderedProminent)
-
-				Button(action: self.onMore) {
-					VStack(spacing: 2) {
-						Image(systemName: "phone.fill")
-						Text("Call")
-					}
-					.frame(maxWidth: .infinity)
-					.padding(.vertical, 2)
-				}
-				.buttonStyle(.bordered)
-
-				Button(action: self.onMore) {
-					VStack(spacing: 2) {
-						Image(systemName: "safari.fill")
-						Text("Web")
-					}
-					.frame(maxWidth: .infinity)
-					.padding(.vertical, 2)
-				}
-				.buttonStyle(.bordered)
-
-				Button(action: self.onMore) {
-					VStack(spacing: 2) {
-						Image(systemName: "phone.fill")
-						Text("More")
-					}
-					.frame(maxWidth: .infinity)
-					.padding(.vertical, 2)
-				}
-				.buttonStyle(.bordered)
-			}
-
-			List {
-				ForEach(Array(self.poi.userInfo.keys.sorted()), id: \.self) { key in
-					let value = self.poi.userInfo[key]!
-
-					HStack(alignment: .top) {
-						Text(key)
-							.frame(width: 105, alignment: .trailing)
-							.bold()
-						Text(value)
-					}
-					.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
-						return -viewDimensions.width
-					}
-				}
-			}
-			.listStyle(.plain)
-			.padding(.zero)
 		}
-		.padding()
 	}
 }
 
@@ -123,4 +111,3 @@ struct POISheet: View {
 		print("more")
 	}
 }
-

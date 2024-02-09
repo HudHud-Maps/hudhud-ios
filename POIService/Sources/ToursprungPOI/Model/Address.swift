@@ -11,7 +11,7 @@
 import Foundation
 
 // MARK: - Address
-public struct Address: Codable, Equatable, Sendable {
+public struct Address: Codable, Equatable, Hashable, Sendable {
     public let hamlet: String?
     public let county: String?
     public let state: String?
@@ -80,6 +80,6 @@ public struct Address: Codable, Equatable, Sendable {
 extension Address: CustomStringConvertible {
 	
 	public var description: String {
-		return [self.road, self.suburb, self.city, self.postcode, self.country].compactMap { $0 }.joined(separator: ", ")
+		return [self.road, self.suburb, self.quarter, self.village, self.town, self.city, self.county, self.state, self.postcode, self.country].compactMap { $0 }.joined(separator: ", ")
 	}
 }
