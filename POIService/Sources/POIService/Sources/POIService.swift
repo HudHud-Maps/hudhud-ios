@@ -24,6 +24,7 @@ public struct POI: Identifiable {
 	public var subtitle: String
     public var locationCoordinate: CLLocationCoordinate2D
     public var type: String
+	public var userInfo: [String: String] = [:]
 
 	public init(id: Int = .random(in: 0...1000000), name: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id

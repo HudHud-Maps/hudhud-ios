@@ -92,17 +92,35 @@ struct POISheet: View {
 				}
 				.buttonStyle(.bordered)
 			}
+
+			List {
+				ForEach(Array(self.poi.userInfo.keys.sorted()), id: \.self) { key in
+					let value = self.poi.userInfo[key]!
+
+					HStack(alignment: .top) {
+						Text(key)
+							.frame(width: 105, alignment: .trailing)
+							.bold()
+						Text(value)
+					}
+					.alignmentGuide(.listRowSeparatorLeading) { viewDimensions in
+						return -viewDimensions.width
+					}
+				}
+			}
+			.listStyle(.plain)
+			.padding(.zero)
 		}
 		.padding()
-
-		Spacer()
 	}
 }
 
-#Preview {
-	POISheet(poi: .ketchup, isShown: .constant(true)) {
+@available(iOS 17, *)
+#Preview(traits: .sizeThatFitsLayout) {
+	POISheet(poi: .init(element: .starbucksKualaLumpur)!, isShown: .constant(true)) {
 		print("start")
 	} onMore: {
 		print("more")
 	}
 }
+
