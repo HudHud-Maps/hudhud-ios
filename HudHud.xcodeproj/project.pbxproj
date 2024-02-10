@@ -3,10 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 60;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3893192B6D6A3C005CF8BC /* POISheet.swift */; };
+		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
+		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -15,14 +18,17 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05652B681263003E5196 /* HudHudUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */; };
 		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
-		CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE059E2B691BAA003E5196 /* MapView.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
-		CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05E82B6A8354003E5196 /* Toursprung */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */; };
 		CDAE05F02B6A8AED003E5196 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */; };
 		CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */; };
+		CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05FF2B6BDC5A003E5196 /* ApplePOI */; };
+		CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06012B6BDC5A003E5196 /* POIService */; };
+		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
+		CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06072B6C201E003E5196 /* BottomSheetView.swift */; };
+		CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +49,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CD3893192B6D6A3C005CF8BC /* POISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheet.swift; sourceTree = "<group>"; };
+		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
+		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CDAE05492B681261003E5196 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -53,10 +62,11 @@
 		CDAE055E2B681263003E5196 /* HudHudUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudHudUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05622B681263003E5196 /* HudHudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITests.swift; sourceTree = "<group>"; };
 		CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		CDAE059E2B691BAA003E5196 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		CDAE05A72B69358E003E5196 /* Terrain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Terrain.json; sourceTree = "<group>"; };
 		CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationButton.swift; sourceTree = "<group>"; };
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
+		CDAE06072B6C201E003E5196 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
+		CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,9 +76,11 @@
 			files = (
 				CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */,
 				CDAE05822B690544003E5196 /* MapLibre in Frameworks */,
+				CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */,
+				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
 				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
-				CDAE05E92B6A8354003E5196 /* Toursprung in Frameworks */,
+				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -116,8 +128,12 @@
 			children = (
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
+				CD3893192B6D6A3C005CF8BC /* POISheet.swift */,
+				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
+				CDAE06072B6C201E003E5196 /* BottomSheetView.swift */,
+				CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */,
+				CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */,
 				CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */,
-				CDAE059E2B691BAA003E5196 /* MapView.swift */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
@@ -176,10 +192,12 @@
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05812B690544003E5196 /* MapLibre */,
-				CDAE05E82B6A8354003E5196 /* Toursprung */,
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
 				CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */,
 				CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */,
+				CDAE05FF2B6BDC5A003E5196 /* ApplePOI */,
+				CDAE06012B6BDC5A003E5196 /* POIService */,
+				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -257,9 +275,9 @@
 			packageReferences = (
 				CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
-				CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */,
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
 				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -305,10 +323,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
+				CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */,
 				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
+				CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */,
+				CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
-				CDAE059F2B691BAA003E5196 /* MapView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
+				CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -398,7 +420,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -456,7 +478,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -483,13 +505,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHud;
+				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -515,13 +536,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHud;
+				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -538,7 +558,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHudTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -557,7 +576,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.2;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHudTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -643,6 +661,13 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCLocalSwiftPackageReference section */
+		CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = POIService;
+		};
+/* End XCLocalSwiftPackageReference section */
+
 /* Begin XCRemoteSwiftPackageReference section */
 		CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -658,14 +683,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.0.0;
-			};
-		};
-		CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://git.subzero.eu/pkladek/Toursprung.git";
-			requirement = {
-				branch = main;
-				kind = branch;
 			};
 		};
 		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
@@ -692,11 +709,6 @@
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;
 		};
-		CDAE05E82B6A8354003E5196 /* Toursprung */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05E72B6A8354003E5196 /* XCRemoteSwiftPackageReference "Toursprung" */;
-			productName = Toursprung;
-		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
@@ -711,6 +723,18 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
 			productName = MapLibreSwiftUI;
+		};
+		CDAE05FF2B6BDC5A003E5196 /* ApplePOI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ApplePOI;
+		};
+		CDAE06012B6BDC5A003E5196 /* POIService */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = POIService;
+		};
+		CDAE06032B6BDC5A003E5196 /* ToursprungPOI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ToursprungPOI;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
