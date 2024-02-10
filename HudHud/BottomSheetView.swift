@@ -87,7 +87,7 @@ struct BottomSheetView: View {
 				} onMore: {
 					print("more")
 				}
-				.presentationDetents([.third])
+				.presentationDetents([.third, .large])
 				.presentationBackgroundInteraction(
 					.enabled(upThrough: .third)
 				)

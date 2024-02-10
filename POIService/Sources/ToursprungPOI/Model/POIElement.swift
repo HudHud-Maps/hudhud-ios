@@ -58,3 +58,10 @@ public struct POIElement: Codable, Equatable, Sendable {
         self.category = category
     }
 }
+
+extension POIElement: CustomStringConvertible {
+
+	public var description: String {
+		return "POI Element"
+	}
+}

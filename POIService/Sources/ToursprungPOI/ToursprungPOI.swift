@@ -82,6 +82,13 @@ public extension POI {
 				  subtitle: element.address.description,
 				  locationCoordinate: coordinate,
 				  type: element.type)
+
+		let mirror = Mirror(reflecting: element)
+		mirror.children.forEach { child in
+			guard let label = child.label as? String else { return }
+
+			self.userInfo[label] = child.value as? AnyHashable
+		}
 	}
 }
 
