@@ -101,6 +101,37 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CD59BD642B7A5D3A002C14F6 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				CDAE05A72B69358E003E5196 /* Terrain.json */,
+				CDAE054B2B681263003E5196 /* Assets.xcassets */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		CD59BD652B7A5D54002C14F6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		CD59BD662B7A5D64002C14F6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				CDAE05472B681261003E5196 /* HudHudApp.swift */,
+				CDAE05492B681261003E5196 /* ContentView.swift */,
+				CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */,
+				CD3893192B6D6A3C005CF8BC /* POISheet.swift */,
+				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
+				CDAE06072B6C201E003E5196 /* BottomSheetView.swift */,
+				CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
@@ -126,16 +157,9 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
-				CDAE05472B681261003E5196 /* HudHudApp.swift */,
-				CDAE05492B681261003E5196 /* ContentView.swift */,
-				CD3893192B6D6A3C005CF8BC /* POISheet.swift */,
-				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
-				CDAE06072B6C201E003E5196 /* BottomSheetView.swift */,
-				CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */,
-				CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */,
-				CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */,
-				CDAE05A72B69358E003E5196 /* Terrain.json */,
-				CDAE054B2B681263003E5196 /* Assets.xcassets */,
+				CD59BD662B7A5D64002C14F6 /* Views */,
+				CD59BD652B7A5D54002C14F6 /* Model */,
+				CD59BD642B7A5D3A002C14F6 /* Supporting Files */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
 			);
 			path = HudHud;

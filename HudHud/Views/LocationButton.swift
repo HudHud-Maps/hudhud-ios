@@ -46,7 +46,9 @@ struct CurrentLocationButton: View {
 	}
 }
 
-#Preview {
+@available(iOS 17, *)
+#Preview(traits: .sizeThatFitsLayout) {
 	@State var camera: MapViewCamera = .default()
 	return CurrentLocationButton(camera: $camera)
+		.padding()
 }

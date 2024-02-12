@@ -12,7 +12,7 @@ import POIService
 import ToursprungPOI
 import MapLibreSwiftUI
 
-struct BottomSheetView: View {
+struct BottomSheetView: View {	
 	private let toursprung: ToursprungPOI = .init()
 
 	@ObservedObject var viewModel: SearchViewModel
