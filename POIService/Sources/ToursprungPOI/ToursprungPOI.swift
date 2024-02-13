@@ -72,7 +72,7 @@ public final class ToursprungPOI: POIServiceProtocol {
 
 public extension POI {
 
-	public init?(element: POIElement) {
+	convenience init?(element: POIElement) {
 		guard let lat = Double(element.lat),
 			  let lon = Double(element.lon) else { return nil }
 
@@ -94,7 +94,7 @@ public extension POI {
 
 public extension POIElement {
 
-	public static let starbucksKualaLumpur = POIElement(placeID: 374426437,
+	static let starbucksKualaLumpur = POIElement(placeID: 374426437,
 														licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
 														osmType: "node",
 														osmID: 11363949513,

@@ -10,10 +10,14 @@ import Foundation
 import SwiftUI
 import POIService
 import ToursprungPOI
+import ApplePOI
 import MapLibreSwiftUI
 
-struct BottomSheetView: View {	
-	private let toursprung: ToursprungPOI = .init()
+struct BottomSheetView: View {
+	enum DataProvider {
+		case toursprung
+		case apple
+	}
 
 	@ObservedObject var viewModel: SearchViewModel
 	@FocusState private var searchIsFocused: Bool
@@ -58,7 +62,7 @@ struct BottomSheetView: View {
 			.background(.white)
 			.cornerRadius(8)
 
-			List(self.viewModel.items) { item in
+			List(self.viewModel.items, id: \.self) { item in
 				Button(action: {
 					self.searchIsFocused = false
 					self.selectedDetent = .medium
@@ -75,7 +79,7 @@ struct BottomSheetView: View {
 			.onChange(of: searchText) { newValue in
 				Task {
 					self.viewModel.searchText = newValue
-					await self.viewModel.search()
+					try await self.viewModel.search()
 				}
 			}
 			.listStyle(.plain)
