@@ -46,6 +46,6 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)
-	return SearchResultItem(poi: poi!)
+	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
+	return SearchResultItem(poi: poi)
 }

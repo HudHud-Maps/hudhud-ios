@@ -105,7 +105,8 @@ struct POISheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	POISheet(poi: .init(element: .starbucksKualaLumpur)!, isShown: .constant(true)) {
+	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
+	return POISheet(poi: poi, isShown: .constant(true)) {
 		print("start")
 	} onMore: {
 		print("more")
