@@ -22,6 +22,6 @@ final class HudHudTests: XCTestCase {
 	}
 
 	func testExample() throws {
-		
+
 	}
 }

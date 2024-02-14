@@ -12,27 +12,27 @@ import SwiftUI
 
 public protocol POIServiceProtocol {
 
-    static var serviceName: String { get }
+	static var serviceName: String { get }
 
-    func search(term: String) async throws -> [POI]
+	func search(term: String) async throws -> [POI]
 }
 
 public struct POI: Identifiable {
 
-    public var id: Int
-    public var name: String
+	public var id: Int
+	public var name: String
 	public var subtitle: String
-    public var locationCoordinate: CLLocationCoordinate2D
-    public var type: String
+	public var locationCoordinate: CLLocationCoordinate2D
+	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
 
 	public init(id: Int = .random(in: 0...1000000), name: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
-        self.name = name
+		self.name = name
 		self.subtitle = subtitle
-        self.locationCoordinate = locationCoordinate
-        self.type = type
-    }
+		self.locationCoordinate = locationCoordinate
+		self.type = type
+	}
 }
 
 public extension POI {
@@ -59,7 +59,6 @@ public extension POI {
 									  locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
 									  type: "Cafe")
 }
-
 
 public protocol DictionaryConvertable: CustomStringConvertible {
 	func dictionary() -> [String: AnyHashable]
@@ -93,7 +92,6 @@ public extension DictionaryConvertable {
 				}
 
 				dict[key] = child.value as? AnyHashable
-				break
 			}
 		}
 

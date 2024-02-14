@@ -16,7 +16,7 @@ struct DictionaryView: View {
 	var body: some View {
 		List {
 			ForEach(Array(self.dictionary.keys.sorted()), id: \.self) { key in
-				let value = self.dictionary[key]!
+				let value = self.dictionary[key]!	// swiftlint:disable:this force_unwrapping
 
 				HStack(alignment: .top) {
 					Text(key)
@@ -50,8 +50,6 @@ struct DictionaryView: View {
 	}
 }
 
-
-
 protocol DictionaryConvertable: CustomStringConvertible {
 	func dictionary() -> [String: AnyHashable]
 }
@@ -84,7 +82,6 @@ extension DictionaryConvertable {
 				}
 
 				dict[key] = child.value as? AnyHashable
-				break
 			}
 		}
 

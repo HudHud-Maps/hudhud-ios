@@ -19,7 +19,7 @@ struct CurrentLocationButton: View {
 		Button {
 			Task {
 				do {
-					let location = Location() 
+					let location = Location()
 					try await location.requestPermission(.whenInUse)
 					let userLocation = try await location.requestLocation()
 

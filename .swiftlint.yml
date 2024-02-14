@@ -10,6 +10,7 @@ opt_in_rules:
 
 excluded: 
   - Carthage
+  - POIService/Package.swift
 
 # Customised rules
 force_try:

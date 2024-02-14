@@ -188,6 +188,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CD59BD6D2B7CD659002C14F6 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -354,6 +355,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CD59BD6D2B7CD659002C14F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CD59BD6C2B7CD659002C14F6 /* SwiftLint */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -706,6 +711,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CD59BD6C2B7CD659002C14F6 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
+		};
 		CDAE05812B690544003E5196 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;

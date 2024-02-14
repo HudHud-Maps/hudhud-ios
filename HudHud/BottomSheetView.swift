@@ -42,11 +42,11 @@ struct BottomSheetView: View {
 							if !self.searchText.isEmpty {
 								Button(action: {
 									self.searchText = ""
-								}) {
+								}, label: {
 									Image(systemName: "multiply.circle.fill")
 										.foregroundColor(.gray)
 										.padding(.vertical)
-								}
+								})
 							}
 						}
 							.padding(.horizontal, 8)
@@ -75,7 +75,7 @@ struct BottomSheetView: View {
 			.onChange(of: searchText) { newValue in
 				Task {
 					self.viewModel.searchText = newValue
-					await self.viewModel.search()
+					try await self.viewModel.search()
 				}
 			}
 			.listStyle(.plain)
