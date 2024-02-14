@@ -25,10 +25,6 @@ struct SearchResultItem: View {
 				.overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
 				.layoutPriority(1)
 				.frame(minWidth: .leastNonzeroMagnitude)
-				.task {
-					// NOTE: hack to print content of POI, here name & subtitle already have the same content
-					print(self.poi)
-				}
 
 			VStack(alignment: .leading) {
 				Text(self.poi.name)

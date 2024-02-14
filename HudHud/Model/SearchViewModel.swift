@@ -52,8 +52,6 @@ class SearchViewModel: ObservableObject {
 private extension SearchViewModel {
 
 	func fetchData(query: String) async throws -> [POI] {
-		return try await apple.complete(term: query).map {
-			POI(name: $0.subtitle, subtitle: $0.subtitle, locationCoordinate: .vienna, type: "")
-		}
+		return try await apple.complete(term: query)
 	}
 }
