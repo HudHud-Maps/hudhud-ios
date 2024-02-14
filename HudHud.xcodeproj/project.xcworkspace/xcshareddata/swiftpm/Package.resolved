@@ -48,10 +48,10 @@
     {
       "identity" : "swiftlocation",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/malcommac/SwiftLocation.git",
+      "location" : "https://github.com/hactar/SwiftLocation.git",
       "state" : {
-        "revision" : "010073e62cea4daefea61042a51b8619d23cdc35",
-        "version" : "6.0.0"
+        "branch" : "master",
+        "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
       }
     }
   ],
