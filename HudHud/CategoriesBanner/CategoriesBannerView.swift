@@ -9,31 +9,51 @@
 import SwiftUI
 
 struct CategoriesBannerView: View {
-	
-	var CatagoryBannerData: [CatagoryBannerData]
-	
-	
+	var catagoryBannerData: [CatagoryBannerData]
     var body: some View {
-		VStack{
-			ScrollView(.horizontal){
-				HStack(alignment: .top,spacing: 12){
-					ForEach(self.CatagoryBannerData) { category in
-						Button(category.title ?? "",systemImage: category.icon ?? "") {
-							
-							print("category \(category.title ?? "") pressed")
-								
-						}.buttonStyle(iconButton(backgroundColor: category.textColor ?? .white,foregroundColor: category.textColor ?? .black))
-						
+		VStack {
+			ScrollView(.horizontal) {
+				HStack(alignment: .top, spacing: 12) {
+					ForEach(self.catagoryBannerData) { category in
+						Button(category.title, systemImage: category.iconSystemName) {
+							print("category \(category.title) pressed")
+						}.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
 					}
-				}.padding()
-			}.scrollIndicators(.hidden)
+				}
+				.padding()
+			}
+			.scrollIndicators(.hidden)
 			Spacer()
 		}
     }
 }
 
 #Preview {
-	let cateoryBannerFakeDate = [CatagoryBannerData(buttonColor: .white,textColor: .green, title: "Resturant", icon: "fork.knife"),CatagoryBannerData(buttonColor: .white,textColor: .brown, title: "Shop", icon: "bag.circle.fill"),CatagoryBannerData(buttonColor: .white,textColor: .orange, title: "Hotels", icon: "bed.double.fill"),CatagoryBannerData(buttonColor: .white,textColor: .yellow, title: "Coffee Shop", icon: "cup.and.saucer.fill")]
-	return CategoriesBannerView(CatagoryBannerData: cateoryBannerFakeDate)
+	let cateoryBannerFakeDate = [
+		CatagoryBannerData(
+			buttonColor: Color(UIColor.systemBackground),
+			textColor: .green,
+			title: "Resturant",
+			iconSystemName: "fork.knife"
+		),
+		CatagoryBannerData(
+			buttonColor: Color(UIColor.systemBackground),
+			textColor: .brown,
+			title: "Shop",
+			iconSystemName: "bag.circle.fill"
+		),
+		CatagoryBannerData(
+			buttonColor: Color(UIColor.systemBackground),
+			textColor: .orange,
+			title: "Hotels",
+			iconSystemName: "bed.double.fill"
+		),
+		CatagoryBannerData(
+			buttonColor: Color(UIColor.systemBackground),
+			textColor: .yellow,
+			title: "Coffee Shop",
+			iconSystemName: "cup.and.saucer.fill"
+		)
+	]
+	return CategoriesBannerView(catagoryBannerData: cateoryBannerFakeDate)
 }
-

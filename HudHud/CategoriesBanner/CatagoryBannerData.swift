@@ -9,17 +9,16 @@
 import Foundation
 import SwiftUI
 
-struct CatagoryBannerData:Identifiable {
+struct CatagoryBannerData: Identifiable {
 	let id = UUID()
 	let buttonColor: Color?
 	let textColor: Color?
-	let title: String?
-	let icon: String?
-	
-	init(buttonColor: Color?,textColor: Color?, title: String?, icon: String?) {
+	let title: String
+	let iconSystemName: String
+	init(buttonColor: Color?, textColor: Color?, title: String, iconSystemName: String) {
 		self.buttonColor = buttonColor
 		self.textColor = textColor
 		self.title = title
-		self.icon = icon
+		self.iconSystemName = iconSystemName
 	}
 }

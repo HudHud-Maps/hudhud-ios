@@ -9,18 +9,17 @@
 import Foundation
 import SwiftUI
 
-struct iconButton: ButtonStyle {
-	var backgroundColor: Color = .red
-	var foregroundColor: Color = .black
+struct IconButton: ButtonStyle {
+	let backgroundColor: Color?
+	let foregroundColor: Color?
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
-			.padding()
-			.font(.system(size: 16))
-			.foregroundStyle(backgroundColor)
-			.background(.white)
+			.padding(7)
+			.foregroundStyle(foregroundColor ?? .black)
+			.bold()
+			.background(backgroundColor)
 			.clipShape(Capsule())
 			.shadow(radius: 1)
-		
 	}
 }
