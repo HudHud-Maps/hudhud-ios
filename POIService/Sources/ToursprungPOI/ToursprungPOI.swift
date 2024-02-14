@@ -6,9 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
 import POIService
-import CoreLocation
 
 public final class ToursprungPOI: POIServiceProtocol {
 

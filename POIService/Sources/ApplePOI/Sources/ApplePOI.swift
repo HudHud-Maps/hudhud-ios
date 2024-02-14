@@ -6,10 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
-import POIService
 import CoreLocation
+import Foundation
 import MapKit
+import POIService
 
 final class ApplePOI: POIServiceProtocol {
 

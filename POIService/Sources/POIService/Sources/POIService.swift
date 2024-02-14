@@ -6,10 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
 import CoreLocation
-import SwiftUI
+import Foundation
 import SFSafeSymbols
+import SwiftUI
 
 public protocol POIServiceProtocol {
 

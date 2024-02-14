@@ -11,8 +11,8 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
-import SwiftUI
 import SFSafeSymbols
+import SwiftUI
 
 struct ContentView: View {
 

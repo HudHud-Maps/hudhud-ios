@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import ToursprungPOI
 import POIService
+import ToursprungPOI
 
 @MainActor
 class SearchViewModel: ObservableObject {
