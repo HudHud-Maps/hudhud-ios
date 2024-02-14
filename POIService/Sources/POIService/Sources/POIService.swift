@@ -9,6 +9,7 @@
 import Foundation
 import CoreLocation
 import SwiftUI
+import SFSafeSymbols
 
 public protocol POIServiceProtocol {
 
@@ -40,11 +41,11 @@ public extension POI {
 	public var icon: Image {
 		switch self.type.lowercased() {
 		case "cafe":
-			return Image(systemName: "cup.and.saucer.fill")
+			return Image(systemSymbol: .cupAndSaucerFill)
 		case "restaurant":
-			return Image(systemName: "fork.knife")
+			return Image(systemSymbol: .forkKnife)
 		default:
-			return Image(systemName: "mappin")
+			return Image(systemSymbol: .mappin)
 		}
 	}
 }

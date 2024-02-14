@@ -12,6 +12,7 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SwiftUI
+import SFSafeSymbols
 
 struct ContentView: View {
 
@@ -37,9 +38,8 @@ struct ContentView: View {
 					.color(constant: .systemRed)
 					.strokeWidth(constant: 2)
 					.strokeColor(constant: .white)
-
 				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-					.iconImage(constant: UIImage(systemName: "mappin")!.withRenderingMode(.alwaysTemplate))
+					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(constant: .white)
 			} else {
 				print("clear poi")
