@@ -77,10 +77,7 @@ struct BottomSheetView: View {
 				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 			}
 			.onChange(of: searchText) { newValue in
-				Task {
-					self.viewModel.searchText = newValue
-					try await self.viewModel.search()
-				}
+				self.viewModel.searchText = newValue
 			}
 			.listStyle(.plain)
 		}
