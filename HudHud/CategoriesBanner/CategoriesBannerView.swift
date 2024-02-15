@@ -11,7 +11,6 @@ import SwiftUI
 struct CategoriesBannerView: View {
 	var catagoryBannerData: [CatagoryBannerData]
     var body: some View {
-		VStack {
 			ScrollView(.horizontal) {
 				HStack(alignment: .top, spacing: 12) {
 					ForEach(self.catagoryBannerData) { category in
@@ -23,7 +22,6 @@ struct CategoriesBannerView: View {
 				.padding()
 			}
 			.scrollIndicators(.hidden)
-		}
     }
 }
 
@@ -54,7 +52,7 @@ struct CategoriesBannerView: View {
 			iconSystemName: "cup.and.saucer.fill"
 		)
 	]
-	return VStack{
+	return VStack {
 		CategoriesBannerView(catagoryBannerData: cateoryBannerFakeDate)
 		Spacer()
 	}
