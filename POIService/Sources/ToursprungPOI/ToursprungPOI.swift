@@ -44,7 +44,8 @@ public final class ToursprungPOI: POIServiceProtocol {
 		components.path = "/search"
 		components.queryItems = [
 			URLQueryItem(name: "q", value: term),
-			URLQueryItem(name: "countrycodes", value: "sa"),
+			URLQueryItem(name: "countrycodes", value: "SA"),
+            URLQueryItem(name: "countrycodes", value: "AT"),
 			URLQueryItem(name: "language", value: "en"),
 			URLQueryItem(name: "limit", value: "50"),
 			URLQueryItem(name: "api_key", value: "hudhud")
