@@ -23,7 +23,6 @@ struct CategoriesBannerView: View {
 				.padding()
 			}
 			.scrollIndicators(.hidden)
-			Spacer()
 		}
     }
 }
@@ -55,5 +54,8 @@ struct CategoriesBannerView: View {
 			iconSystemName: "cup.and.saucer.fill"
 		)
 	]
-	return CategoriesBannerView(catagoryBannerData: cateoryBannerFakeDate)
+	return VStack{
+		CategoriesBannerView(catagoryBannerData: cateoryBannerFakeDate)
+		Spacer()
+	}
 }
