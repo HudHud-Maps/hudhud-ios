@@ -28,7 +28,7 @@ class SearchViewModel: ObservableObject {
 	}
 
 	@ObservedObject private var apple: ApplePOI = .init()
-	@ObservedObject private var searchService: LocationSearchService = .init()
+	@ObservedObject private var toursprung: ToursprungPOI = .init()
 	private let mode: Mode
 	private var cancellables: Set<AnyCancellable> = []
 
@@ -37,12 +37,9 @@ class SearchViewModel: ObservableObject {
 		didSet {
 			switch mode {
 			case .live(provider: .apple):
-				self.searchService.searchQuery = self.searchText
+				self.apple.searchQuery = self.searchText
 			case .live(provider: .toursprung):
-				Task {
-					let results = try await self.fetchData(query: self.searchText)
-					self.items = results
-				}
+				self.toursprung.searchQuery = self.searchText
 			case .preview:
 				self.items = [
 					.starbucks,
@@ -58,8 +55,14 @@ class SearchViewModel: ObservableObject {
 		self.mode = mode
 		switch mode {
 		case .live(.apple):
-			self.searchText = self.searchService.searchQuery
-			self.searchService.$completions
+			self.apple.$completions
+				.receive(on: RunLoop.main)
+				.sink { [weak self] completions in
+					self?.items = completions
+				}
+				.store(in: &cancellables)
+		case .live(provider: .toursprung):
+			self.toursprung.$completions
 				.receive(on: RunLoop.main)
 				.sink { [weak self] completions in
 					self?.items = completions
@@ -68,14 +71,5 @@ class SearchViewModel: ObservableObject {
 		default:
 			break
 		}
-	}
-}
-
-// MARK: - Private
-
-private extension SearchViewModel {
-
-	func fetchData(query: String) async throws -> [POI] {
-		return try await apple.complete(term: query)
 	}
 }

@@ -14,10 +14,6 @@ import SwiftUI
 import ToursprungPOI
 
 struct BottomSheetView: View {
-	enum DataProvider {
-		case toursprung
-		case apple
-	}
 
 	@ObservedObject var viewModel: SearchViewModel
 	@FocusState private var searchIsFocused: Bool

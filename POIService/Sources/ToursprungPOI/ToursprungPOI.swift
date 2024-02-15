@@ -26,16 +26,39 @@ public final class ToursprungPOI: POIServiceProtocol {
 		}
 	}
 
-	public static let serviceName: String = "Toursprung"
 	let session: URLSession = .shared
+	public static var serviceName: String = "Apple"
+	public var searchQuery = "" {
+		didSet {
+			if self.searchQuery.isEmpty {
+				self.completions = []
+			} else {
+				Task {
+					do {
+						self.completions = try await self.search(term: self.searchQuery)
+						self.error = nil
+					} catch {
+						self.error = error
+					}
+				}
+			}
+		}
+	}
+	@Published public var completions: [POI] = []
+	@Published public private(set) var error: Error?
+
+	// MARK: - Lifecycle
 
 	public init() {
 
 	}
+}
 
-	// MARK: - ToursprungPOI
+// MARK: - Private
 
-	public func search(term: String) async throws -> [POI] {
+private extension ToursprungPOI {
+
+	func search(term: String) async throws -> [POI] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()

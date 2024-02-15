@@ -11,11 +11,15 @@ import Foundation
 import SFSafeSymbols
 import SwiftUI
 
-public protocol POIServiceProtocol {
+public protocol POIServiceProtocol: ObservableObject {
 
 	static var serviceName: String { get }
 
-	func search(term: String) async throws -> [POI]
+//	func search(term: String) async throws -> [POI]
+
+	var searchQuery: String { get set }
+	var completions: [POI] { get set }
+	var error: Error? { get }
 }
 
 public class POI: Hashable {

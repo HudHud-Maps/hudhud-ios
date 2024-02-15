@@ -51,7 +51,7 @@ struct ContentView: View {
 				.padding()
 		}
 		.sheet(isPresented: .constant(true)) {
-			BottomSheetView(viewModel: .init(mode: .live(provider: .apple)),
+			BottomSheetView(viewModel: .init(mode: .live(provider: .toursprung)),
 							camera: $camera,
 							selectedPOI: $selectedPOI,
 							selectedDetent: $selectedDetent)

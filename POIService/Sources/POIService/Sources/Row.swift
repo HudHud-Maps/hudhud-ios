@@ -33,7 +33,6 @@ public struct Row {
 
 	public init(mapItem: MKMapItem) {
 		self.mapItem = mapItem
-
 		self.title = mapItem.name ?? "Unknown"
 		self.subtitle = mapItem.description
 	}
