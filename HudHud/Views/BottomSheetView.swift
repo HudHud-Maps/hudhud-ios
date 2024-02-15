@@ -71,9 +71,19 @@ struct BottomSheetView: View {
 						self.selectedPOI = item.poi
 						self.isShown = true
 					case .appleCompletion(let completion):
-						self.searchIsFocused = true
-						self.viewModel.update(to: .search)
-						self.searchText = completion.completion.title
+						if let _ = completion.mapItem {
+							self.searchIsFocused = false
+							self.selectedDetent = .medium
+							if let coordinate = item.coordinate {
+								self.camera = .center(coordinate, zoom: 16)
+							}
+							self.selectedPOI = item.poi
+							self.isShown = true
+						} else {
+							self.searchIsFocused = true
+							self.viewModel.update(to: .search)
+							self.searchText = completion.completion.title
+						}
 					case .appleMapItem:
 						self.searchIsFocused = false
 						self.selectedDetent = .medium
