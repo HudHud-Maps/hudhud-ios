@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import Contacts
 import Foundation
 import MapKit
 import SwiftUI
@@ -13,8 +14,8 @@ import SwiftUI
 public struct Row: Hashable {
 
 	public struct Completion: Hashable {
-		let completion: MKLocalSearchCompletion
-		let mapItem: MKMapItem?
+		public let completion: MKLocalSearchCompletion
+		public let mapItem: MKMapItem?
 	}
 
 	public enum Provider: Hashable {
@@ -58,7 +59,7 @@ public struct Row: Hashable {
 		case .appleCompletion(let completion):
 			return completion.completion.subtitle
 		case .appleMapItem(let mapItem):
-			return mapItem.description
+			return mapItem.placemark.formattedAddress ?? ""
 		case .toursprung(let poi):
 			return poi.subtitle
 		}
@@ -205,5 +206,12 @@ extension MKMapItem {
 		default:
 			return Image(systemSymbol: .mappin)
 		}
+	}
+}
+
+extension MKPlacemark {
+	var formattedAddress: String? {
+		guard let postalAddress = postalAddress else { return nil }
+		return CNPostalAddressFormatter.string(from: postalAddress, style: .mailingAddress).replacingOccurrences(of: "\n", with: " ")
 	}
 }

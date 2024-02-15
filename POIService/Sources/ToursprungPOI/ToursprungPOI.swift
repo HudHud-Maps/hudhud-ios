@@ -34,11 +34,11 @@ public final class ToursprungPOI: POIServiceProtocol {
 	public var searchQuery = "" {
 		didSet {
 			if self.searchQuery.isEmpty {
-				self.completions = []
+				self.results = []
 			} else {
 				Task {
 					do {
-						self.completions = try await self.search(term: self.searchQuery)
+						self.results = try await self.search(term: self.searchQuery)
 						self.error = nil
 					} catch {
 						self.error = error
@@ -47,7 +47,7 @@ public final class ToursprungPOI: POIServiceProtocol {
 			}
 		}
 	}
-	@Published public var completions: [Row] = []
+	@Published public var results: [Row] = []
 	@Published public private(set) var error: Error?
 
 	// MARK: - Lifecycle

@@ -15,7 +15,7 @@ public protocol POIServiceProtocol: ObservableObject {
 
 	static var serviceName: String { get }
 	var searchQuery: String { get set }
-	var completions: [Row] { get set }
+	var results: [Row] { get set }
 	var error: Error? { get }
 }
 

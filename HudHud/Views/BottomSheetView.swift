@@ -42,6 +42,7 @@ struct BottomSheetView: View {
 							if !self.searchText.isEmpty {
 								Button(action: {
 									self.searchText = ""
+									self.viewModel.update(to: .completion)
 								}, label: {
 									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
@@ -60,13 +61,29 @@ struct BottomSheetView: View {
 
 			List(self.viewModel.items, id: \.self) { item in
 				Button(action: {
-					self.searchIsFocused = false
-					self.selectedDetent = .medium
-					if let coordinate = item.coordinate {
-						self.camera = .center(coordinate, zoom: 16)
+					switch item.data {
+					case .toursprung:
+						self.searchIsFocused = false
+						self.selectedDetent = .medium
+						if let coordinate = item.coordinate {
+							self.camera = .center(coordinate, zoom: 16)
+						}
+						self.selectedPOI = item.poi
+						self.isShown = true
+					case .appleCompletion(let completion):
+						self.searchIsFocused = true
+						self.viewModel.update(to: .search)
+						self.searchText = completion.completion.title
+					case .appleMapItem:
+						self.searchIsFocused = false
+						self.selectedDetent = .medium
+						if let coordinate = item.coordinate {
+							self.camera = .center(coordinate, zoom: 16)
+						}
+						self.selectedPOI = item.poi
+						self.isShown = true
 					}
-					self.selectedPOI = item.poi
-					self.isShown = true
+
 				}, label: {
 					SearchResultItem(row: item)
 						.frame(maxWidth: .infinity)

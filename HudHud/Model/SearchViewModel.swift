@@ -19,7 +19,7 @@ class SearchViewModel: ObservableObject {
 
 	enum Mode {
 		enum Provider {
-			case apple
+			case apple(state: ApplePOI.State)
 			case toursprung
 		}
 
@@ -29,7 +29,7 @@ class SearchViewModel: ObservableObject {
 
 	@ObservedObject private var apple: ApplePOI = .init()
 	@ObservedObject private var toursprung: ToursprungPOI = .init()
-	private let mode: Mode
+	private var mode: Mode
 	private var cancellables: Set<AnyCancellable> = []
 
 	@Published var items: [Row] = []
@@ -55,20 +55,36 @@ class SearchViewModel: ObservableObject {
 		self.mode = mode
 		switch mode {
 		case .live(.apple):
-			self.apple.$completions
+			self.apple.$results
 				.receive(on: RunLoop.main)
 				.sink { [weak self] completions in
 					self?.items = completions
 				}
 				.store(in: &cancellables)
 		case .live(provider: .toursprung):
-			self.toursprung.$completions
+			self.toursprung.$results
 				.receive(on: RunLoop.main)
 				.sink { [weak self] completions in
 					self?.items = completions
 				}
 				.store(in: &cancellables)
 		default:
+			break
+		}
+	}
+
+	// MARK: - SearchViewModel
+
+	func update(to state: ApplePOI.State) {
+		switch self.mode {
+		case .live(let provider):
+			switch provider {
+			case .apple(let oldState):
+				self.apple.state = state
+			case .toursprung:
+				break
+			}
+		case .preview:
 			break
 		}
 	}
