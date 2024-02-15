@@ -38,7 +38,7 @@ public struct POI: Identifiable {
 
 public extension POI {
 
-	public var icon: Image {
+	var icon: Image {
 		switch self.type.lowercased() {
 		case "cafe":
 			return Image(systemSymbol: .cupAndSaucerFill)
@@ -51,14 +51,14 @@ public extension POI {
 }
 
 public extension POI {
-	public static let ketchup = POI(name: "Ketch up - Dubai",
-									subtitle: "Bluewaters Island - off Jumeirah Beach Residence - Bluewaters Island - Dubai",
-									locationCoordinate: CLLocationCoordinate2D(latitude: 25.077744998955207, longitude: 55.124647403691284),
-									type: "Restaurant")
-	public static let starbucks = POI(name: "Starbucks",
-									  subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
-									  locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
-									  type: "Cafe")
+	static let ketchup = POI(name: "Ketch up - Dubai",
+							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence - Bluewaters Island - Dubai",
+							 locationCoordinate: CLLocationCoordinate2D(latitude: 25.077744998955207, longitude: 55.124647403691284),
+							 type: "Restaurant")
+	static let starbucks = POI(name: "Starbucks",
+							   subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
+							   locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+							   type: "Cafe")
 }
 
 public protocol DictionaryConvertable: CustomStringConvertible {
@@ -67,7 +67,7 @@ public protocol DictionaryConvertable: CustomStringConvertible {
 
 public extension DictionaryConvertable {
 
-	public func dictionary() -> [String: AnyHashable] {
+	func dictionary() -> [String: AnyHashable] {
 		var dict = [String: AnyHashable]()
 		let mirror = Mirror(reflecting: self)
 		for child in mirror.children {

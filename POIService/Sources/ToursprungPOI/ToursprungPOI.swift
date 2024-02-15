@@ -72,7 +72,7 @@ public final class ToursprungPOI: POIServiceProtocol {
 
 public extension POI {
 
-	public init?(element: POIElement) {
+	init?(element: POIElement) {
 		guard let lat = Double(element.lat),
 			  let lon = Double(element.lon) else { return nil }
 
@@ -85,7 +85,7 @@ public extension POI {
 
 		let mirror = Mirror(reflecting: element)
 		mirror.children.forEach { child in
-			guard let label = child.label as? String else { return }
+			guard let label = child.label else { return }
 
 			self.userInfo[label] = child.value as? AnyHashable
 		}
@@ -94,35 +94,35 @@ public extension POI {
 
 public extension POIElement {
 
-	public static let starbucksKualaLumpur = POIElement(placeID: 374426437,
-														licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
-														osmType: "node",
-														osmID: 11363949513,
-														boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
-														lat: "3.177246",
-														lon: "101.7507382",
-														displayName: "Starbucks, Kuala Lumpur, Malaysia",
-														poiClass: "amenity",
-														type: "cafe",
-														importance: 0.6758606469435616,
-														address: Address(hamlet: nil,
-																		 county: nil,
-																		 state: nil,
-																		 iso31662Lvl4: "MY-14",
-																		 country: "Malaysia",
-																		 countryCode: "my",
-																		 town: nil,
-																		 postcode: "54200",
-																		 village: nil,
-																		 iso31662Lvl6: nil,
-																		 municipality: nil,
-																		 region: nil,
-																		 natural: nil,
-																		 stateDistrict: nil,
-																		 city: "Kuala Lumpur",
-																		 road: "Jalan Taman Setiawangsa",
-																		 quarter: nil,
-																		 suburb: "Setiawangsa",
-																		 iso31662Lvl3: nil),
-														category: "poi")
+	static let starbucksKualaLumpur = POIElement(placeID: 374426437,
+												 licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+												 osmType: "node",
+												 osmID: 11363949513,
+												 boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
+												 lat: "3.177246",
+												 lon: "101.7507382",
+												 displayName: "Starbucks, Kuala Lumpur, Malaysia",
+												 poiClass: "amenity",
+												 type: "cafe",
+												 importance: 0.6758606469435616,
+												 address: Address(hamlet: nil,
+																  county: nil,
+																  state: nil,
+																  iso31662Lvl4: "MY-14",
+																  country: "Malaysia",
+																  countryCode: "my",
+																  town: nil,
+																  postcode: "54200",
+																  village: nil,
+																  iso31662Lvl6: nil,
+																  municipality: nil,
+																  region: nil,
+																  natural: nil,
+																  stateDistrict: nil,
+																  city: "Kuala Lumpur",
+																  road: "Jalan Taman Setiawangsa",
+																  quarter: nil,
+																  suburb: "Setiawangsa",
+																  iso31662Lvl3: nil),
+												 category: "poi")
 }
