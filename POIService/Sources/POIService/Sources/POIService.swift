@@ -14,11 +14,8 @@ import SwiftUI
 public protocol POIServiceProtocol: ObservableObject {
 
 	static var serviceName: String { get }
-
-//	func search(term: String) async throws -> [POI]
-
 	var searchQuery: String { get set }
-	var completions: [POI] { get set }
+	var completions: [Row] { get set }
 	var error: Error? { get }
 }
 

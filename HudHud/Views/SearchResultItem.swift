@@ -11,11 +11,11 @@ import SwiftUI
 
 struct SearchResultItem: View {
 
-	let poi: POI
+	let row: Row
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
-			self.poi.icon
+			self.row.icon
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(width: 24, height: 24)
@@ -27,11 +27,11 @@ struct SearchResultItem: View {
 				.frame(minWidth: .leastNonzeroMagnitude)
 
 			VStack(alignment: .leading) {
-				Text(self.poi.name)
+				Text(self.row.title)
 					.foregroundStyle(.primary)
 					.font(.headline)
 					.lineLimit(1)
-				Text(self.poi.subtitle)
+				Text(self.row.subtitle)
 					.foregroundStyle(.secondary)
 					.font(.body)
 					.lineLimit(1)
@@ -47,5 +47,6 @@ struct SearchResultItem: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
-	return SearchResultItem(poi: poi)
+	let row = Row(toursprung: poi)
+	return SearchResultItem(row: row)
 }

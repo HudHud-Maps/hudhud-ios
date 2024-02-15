@@ -32,7 +32,7 @@ class SearchViewModel: ObservableObject {
 	private let mode: Mode
 	private var cancellables: Set<AnyCancellable> = []
 
-	@Published var items: [POI] = []
+	@Published var items: [Row] = []
 	var searchText: String = "" {
 		didSet {
 			switch mode {
@@ -42,8 +42,8 @@ class SearchViewModel: ObservableObject {
 				self.toursprung.searchQuery = self.searchText
 			case .preview:
 				self.items = [
-					.starbucks,
-					.ketchup
+					Row(toursprung: .starbucks),
+					Row(toursprung: .ketchup)
 				]
 			}
 		}

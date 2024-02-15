@@ -62,11 +62,13 @@ struct BottomSheetView: View {
 				Button(action: {
 					self.searchIsFocused = false
 					self.selectedDetent = .medium
-					self.camera = .center(item.locationCoordinate, zoom: 16)
-					self.selectedPOI = item
+					if let coordinate = item.coordinate {
+						self.camera = .center(coordinate, zoom: 16)
+					}
+					self.selectedPOI = item.poi
 					self.isShown = true
 				}, label: {
-					SearchResultItem(poi: item)
+					SearchResultItem(row: item)
 						.frame(maxWidth: .infinity)
 				})
 				.listRowSeparator(.hidden)

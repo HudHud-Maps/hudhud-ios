@@ -26,7 +26,10 @@ public final class ToursprungPOI: POIServiceProtocol {
 		}
 	}
 
-	let session: URLSession = .shared
+	private let session: URLSession = .shared
+
+	// MARK: - Properties
+
 	public static var serviceName: String = "Apple"
 	public var searchQuery = "" {
 		didSet {
@@ -44,7 +47,7 @@ public final class ToursprungPOI: POIServiceProtocol {
 			}
 		}
 	}
-	@Published public var completions: [POI] = []
+	@Published public var completions: [Row] = []
 	@Published public private(set) var error: Error?
 
 	// MARK: - Lifecycle
@@ -58,7 +61,7 @@ public final class ToursprungPOI: POIServiceProtocol {
 
 private extension ToursprungPOI {
 
-	func search(term: String) async throws -> [POI] {
+	func search(term: String) async throws -> [Row] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()
@@ -86,9 +89,12 @@ private extension ToursprungPOI {
 		}
 
 		let decoder = JSONDecoder()
-		let pois = try decoder.decode([POIElement].self, from: data)
-		return pois.compactMap {
+		let poiElementss = try decoder.decode([POIElement].self, from: data)
+		let pois = poiElementss.compactMap {
 			return POIService.POI(element: $0)
+		}
+		return pois.map {
+			return Row(toursprung: $0)
 		}
 	}
 }

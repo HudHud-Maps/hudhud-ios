@@ -12,8 +12,8 @@ import CoreLocation
 import MapKit
 import Combine
 
-public final class ApplePOI: NSObject, POIServiceProtocol {	
-	
+public final class ApplePOI: NSObject, POIServiceProtocol {
+
 	private var completer: MKLocalSearchCompleter
 	private var cancellable: AnyCancellable?
 
@@ -29,7 +29,7 @@ public final class ApplePOI: NSObject, POIServiceProtocol {
 			}
 		}
 	}
-	@Published public var completions: [POI] = []
+	@Published public var completions: [Row] = []
 	@Published public private(set) var error: Error?
 
 	// MARK: - Lifecycle
@@ -47,7 +47,7 @@ extension ApplePOI: MKLocalSearchCompleterDelegate {
 
 	public func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
 		self.completions = completer.results.map {
-			POI(name: $0.title, subtitle: $0.subtitle, locationCoordinate: .init(), type: "")
+			Row(appleCompletion: $0)
 		}
 	}
 
