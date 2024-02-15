@@ -10,6 +10,7 @@ opt_in_rules:
 
 excluded: 
   - Carthage
+  - POIService/Package.swift
 
 # Customised rules
 force_try:
@@ -34,7 +35,7 @@ file_header:
                     \/\/  SWIFTLINT_CURRENT_FILENAME
                     \/\/  .*?
                     \/\/
-                    \/\/  Created by .*? on \d{1,2}\.\d{1,2}\.\d{2}\.
+                    \/\/  Created by .*? on \d{1,2}\.|/\d{1,2}\.|/\d{2,4}\.
                     \/\/  Copyright © \d{4} HudHud\. All rights reserved\.
                     \/\/
 custom_rules:
@@ -47,4 +48,9 @@ custom_rules:
       - identifier
     message: "Use assertionFailure() instead"
     severity: error
+  sf_safe_symbol:
+    name: "Safe SFSymbol"
+    message: "Use `SFSafeSymbols` via `systemSymbol` parameters for type safety."
+    regex: "(Image\\(systemName:)|(NSImage\\(symbolName:)|(Label[^,]+?,\\s*systemImage:)|(UIApplicationShortcutIcon\\(systemImageName:)"
+    severity: warning
     

@@ -6,12 +6,12 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
-import SwiftUI
-import POIService
-import ToursprungPOI
 import ApplePOI
+import Foundation
 import MapLibreSwiftUI
+import POIService
+import SwiftUI
+import ToursprungPOI
 
 struct BottomSheetView: View {
 	enum DataProvider {
@@ -31,7 +31,7 @@ struct BottomSheetView: View {
 	var body: some View {
 		VStack {
 			HStack {
-				Image(systemName: "magnifyingglass")
+				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
 				TextField("Search", text: $searchText)
@@ -46,11 +46,11 @@ struct BottomSheetView: View {
 							if !self.searchText.isEmpty {
 								Button(action: {
 									self.searchText = ""
-								}) {
-									Image(systemName: "multiply.circle.fill")
+								}, label: {
+									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
 										.padding(.vertical)
-								}
+								})
 							}
 						}
 							.padding(.horizontal, 8)

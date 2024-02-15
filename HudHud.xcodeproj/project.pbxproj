@@ -10,6 +10,7 @@
 		CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3893192B6D6A3C005CF8BC /* POISheet.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
+		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -29,6 +30,9 @@
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
 		CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06072B6C201E003E5196 /* BottomSheetView.swift */; };
 		CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */; };
+		CDF4A6DA2B7E4EC6001B3CD7 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF4A6D82B7E4EC6001B3CD7 /* CatagoryBannerData.swift */; };
+		CDF4A6DB2B7E4EC6001B3CD7 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF4A6D92B7E4EC6001B3CD7 /* CategoriesBannerView.swift */; };
+		CDF4A6DE2B7E4ED0001B3CD7 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF4A6DD2B7E4ED0001B3CD7 /* ButtonsStyle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesBannerView.swift; sourceTree = "<group>"; };
+		CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryBannerData.swift; sourceTree = "<group>"; };
+		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
 		CD3893192B6D6A3C005CF8BC /* POISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheet.swift; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
@@ -68,6 +75,9 @@
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
 		CDAE06072B6C201E003E5196 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		CDF4A6D82B7E4EC6001B3CD7 /* CatagoryBannerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatagoryBannerData.swift; sourceTree = "<group>"; };
+		CDF4A6D92B7E4EC6001B3CD7 /* CategoriesBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesBannerView.swift; sourceTree = "<group>"; };
+		CDF4A6DD2B7E4ED0001B3CD7 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -81,6 +91,7 @@
 				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
 				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
+				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
 				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -142,6 +153,7 @@
 				CDAE05612B681263003E5196 /* HudHudUITests */,
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
+				CDF4A6D52B7E4DBB001B3CD7 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -159,6 +171,8 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				CDF4A6DC2B7E4ED0001B3CD7 /* UIStyle */,
+				CDF4A6D72B7E4EC6001B3CD7 /* CategoriesBanner */,
 				CD59BD662B7A5D64002C14F6 /* Views */,
 				CD59BD652B7A5D54002C14F6 /* Model */,
 				CD59BD642B7A5D3A002C14F6 /* Supporting Files */,
@@ -200,6 +214,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		CDF4A6D52B7E4DBB001B3CD7 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */,
+				CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */,
+				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		CDF4A6D72B7E4EC6001B3CD7 /* CategoriesBanner */ = {
+			isa = PBXGroup;
+			children = (
+				CDF4A6D82B7E4EC6001B3CD7 /* CatagoryBannerData.swift */,
+				CDF4A6D92B7E4EC6001B3CD7 /* CategoriesBannerView.swift */,
+			);
+			path = CategoriesBanner;
+			sourceTree = "<group>";
+		};
+		CDF4A6DC2B7E4ED0001B3CD7 /* UIStyle */ = {
+			isa = PBXGroup;
+			children = (
+				CDF4A6DD2B7E4ED0001B3CD7 /* ButtonsStyle.swift */,
+			);
+			path = UIStyle;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -214,6 +255,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CD59BD6D2B7CD659002C14F6 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -224,6 +266,7 @@
 				CDAE05FF2B6BDC5A003E5196 /* ApplePOI */,
 				CDAE06012B6BDC5A003E5196 /* POIService */,
 				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
+				CD59BD702B7CD967002C14F6 /* SFSafeSymbols */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -304,6 +347,7 @@
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
 				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
+				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -352,10 +396,13 @@
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */,
 				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
+				CDF4A6DB2B7E4EC6001B3CD7 /* CategoriesBannerView.swift in Sources */,
 				CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */,
 				CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */,
+				CDF4A6DE2B7E4ED0001B3CD7 /* ButtonsStyle.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
+				CDF4A6DA2B7E4EC6001B3CD7 /* CatagoryBannerData.swift in Sources */,
 				CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -380,6 +427,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CD59BD6D2B7CD659002C14F6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CD59BD6C2B7CD659002C14F6 /* SwiftLint */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -697,6 +748,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.1;
+			};
+		};
 		CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
@@ -715,10 +774,10 @@
 		};
 		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/malcommac/SwiftLocation.git";
+			repositoryURL = "https://github.com/hactar/SwiftLocation.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.0.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 		CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
@@ -732,6 +791,16 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CD59BD6C2B7CD659002C14F6 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
+		};
+		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
+			productName = SFSafeSymbols;
+		};
 		CDAE05812B690544003E5196 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05802B690544003E5196 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;

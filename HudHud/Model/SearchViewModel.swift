@@ -16,7 +16,7 @@ import Combine
 
 @MainActor
 class SearchViewModel: ObservableObject {
-	
+
 	enum Mode {
 		enum Provider {
 			case apple

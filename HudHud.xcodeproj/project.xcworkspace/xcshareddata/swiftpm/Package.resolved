@@ -28,6 +28,15 @@
       }
     },
     {
+      "identity" : "sfsafesymbols",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SFSafeSymbols/SFSafeSymbols.git",
+      "state" : {
+        "revision" : "7cca2d60925876b5953a2cf7341cd80fbeac983c",
+        "version" : "4.1.1"
+      }
+    },
+    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax.git",
@@ -48,10 +57,10 @@
     {
       "identity" : "swiftlocation",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/malcommac/SwiftLocation.git",
+      "location" : "https://github.com/hactar/SwiftLocation.git",
       "state" : {
-        "revision" : "010073e62cea4daefea61042a51b8619d23cdc35",
-        "version" : "6.0.0"
+        "branch" : "master",
+        "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
       }
     }
   ],

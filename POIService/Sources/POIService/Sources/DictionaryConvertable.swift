@@ -14,7 +14,7 @@ public protocol DictionaryConvertable: CustomStringConvertible {
 
 public extension DictionaryConvertable {
 
-	public func dictionary() -> [String: AnyHashable] {
+	func dictionary() -> [String: AnyHashable] {
 		var dict = [String: AnyHashable]()
 		let mirror = Mirror(reflecting: self)
 		for child in mirror.children {
@@ -40,7 +40,6 @@ public extension DictionaryConvertable {
 				}
 
 				dict[key] = child.value as? AnyHashable
-				break
 			}
 		}
 

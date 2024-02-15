@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
 import POIService
+import SwiftUI
 
 struct SearchResultItem: View {
 
@@ -37,7 +37,7 @@ struct SearchResultItem: View {
 					.lineLimit(1)
 			}
 			Spacer()
-			Image(systemName: "chevron.right")
+			Image(systemSymbol: .chevronRight)
 				.foregroundStyle(.tertiary)
 		}
 		.padding(8)
@@ -46,6 +46,6 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)
-	return SearchResultItem(poi: poi!)
+	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
+	return SearchResultItem(poi: poi)
 }

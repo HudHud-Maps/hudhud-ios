@@ -6,10 +6,11 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
-import SwiftLocation
 import MapLibre
 import MapLibreSwiftUI
+import SFSafeSymbols
+import SwiftLocation
+import SwiftUI
 
 struct CurrentLocationButton: View {
 
@@ -19,7 +20,7 @@ struct CurrentLocationButton: View {
 		Button {
 			Task {
 				do {
-					let location = Location() 
+					let location = Location()
 					try await location.requestPermission(.whenInUse)
 					let userLocation = try await location.requestLocation()
 
@@ -35,7 +36,7 @@ struct CurrentLocationButton: View {
 				}
 			}
 		} label: {
-			Image(systemName: "location")
+			Image(systemSymbol: .location)
 		}
 		.padding(12)
 		.frame(minWidth: 44, minHeight: 44)

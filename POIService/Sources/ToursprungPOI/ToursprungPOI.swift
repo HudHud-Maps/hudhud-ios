@@ -85,7 +85,7 @@ public extension POI {
 
 		let mirror = Mirror(reflecting: element)
 		mirror.children.forEach { child in
-			guard let label = child.label as? String else { return }
+			guard let label = child.label else { return }
 
 			self.userInfo[label] = child.value as? AnyHashable
 		}

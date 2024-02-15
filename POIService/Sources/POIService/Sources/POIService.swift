@@ -6,8 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
+import SFSafeSymbols
 import SwiftUI
 
 public protocol POIServiceProtocol {
@@ -18,7 +19,7 @@ public protocol POIServiceProtocol {
 }
 
 public class POI: Hashable {
-	
+
 	public static func == (lhs: POI, rhs: POI) -> Bool {
 		return lhs.name == rhs.name && lhs.subtitle == rhs.subtitle
 	}
@@ -49,11 +50,11 @@ public extension POI {
 	var icon: Image {
 		switch self.type.lowercased() {
 		case "cafe":
-			return Image(systemName: "cup.and.saucer.fill")
+			return Image(systemSymbol: .cupAndSaucerFill)
 		case "restaurant":
-			return Image(systemName: "fork.knife")
+			return Image(systemSymbol: .forkKnife)
 		default:
-			return Image(systemName: "mappin")
+			return Image(systemSymbol: .mappin)
 		}
 	}
 }
