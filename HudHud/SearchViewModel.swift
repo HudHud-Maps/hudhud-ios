@@ -7,12 +7,12 @@
 //
 
 import Foundation
-import ToursprungPOI
 import POIService
+import ToursprungPOI
 
 @MainActor
 class SearchViewModel: ObservableObject {
-	
+
 	enum Mode {
 		case live
 		case preview
@@ -38,8 +38,8 @@ class SearchViewModel: ObservableObject {
 
 	// MARK: - SearchViewModel
 
-	func search() async {
-		let results = await self.fetchData(query: self.searchText)
+	func search() async throws {
+		let results = try await self.fetchData(query: self.searchText)
 		self.items = results
 	}
 }
@@ -48,7 +48,7 @@ class SearchViewModel: ObservableObject {
 
 private extension SearchViewModel {
 
-	func fetchData(query: String) async -> [POI] {
-		return try! await toursprung.search(term: query)
+	func fetchData(query: String) async throws -> [POI] {
+		return try await toursprung.search(term: query)
 	}
 }

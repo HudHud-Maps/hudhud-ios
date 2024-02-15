@@ -1,3 +1,11 @@
+//
+//  ToursprungTests.swift
+//  POIService
+//
+//  Created by Patrick Kladek on 10.02.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import XCTest
 @testable import Toursprung
 

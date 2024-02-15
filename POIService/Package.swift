@@ -20,11 +20,17 @@ let package = Package(
             name: "ApplePOI",
             targets: ["ApplePOI"]),
     ],
+	dependencies: [
+		.package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "4.1.1"),
+	],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "POIService"),
+            name: "POIService",
+			dependencies: [
+				.product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
+			]),
         .target(
             name: "ToursprungPOI",
             dependencies: ["POIService"]),

@@ -6,11 +6,12 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
-import SwiftUI
-import POIService
-import ToursprungPOI
 import CoreLocation
+import Foundation
+import POIService
+import SFSafeSymbols
+import SwiftUI
+import ToursprungPOI
 
 struct POISheet: View {
 
@@ -42,7 +43,7 @@ struct POISheet: View {
 								.fill(.quaternary)
 								.frame(width: 30, height: 30)
 
-							Image(systemName: "xmark")
+							Image(systemSymbol: .xmark)
 								.font(.system(size: 15, weight: .bold, design: .rounded))
 								.foregroundColor(.white)
 						}
@@ -57,7 +58,7 @@ struct POISheet: View {
 				HStack {
 					Button(action: self.onStart) {
 						VStack(spacing: 2) {
-							Image(systemName: "car.fill")
+							Image(systemSymbol: .carFill)
 							Text("Start")
 						}
 						.frame(maxWidth: .infinity)
@@ -67,7 +68,7 @@ struct POISheet: View {
 
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
-							Image(systemName: "phone.fill")
+							Image(systemSymbol: .phoneFill)
 							Text("Call")
 						}
 						.frame(maxWidth: .infinity)
@@ -77,7 +78,7 @@ struct POISheet: View {
 
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
-							Image(systemName: "safari.fill")
+							Image(systemSymbol: .safariFill)
 							Text("Web")
 						}
 						.frame(maxWidth: .infinity)
@@ -87,7 +88,7 @@ struct POISheet: View {
 
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
-							Image(systemName: "phone.fill")
+							Image(systemSymbol: .phoneFill)
 							Text("More")
 						}
 						.frame(maxWidth: .infinity)
@@ -105,7 +106,8 @@ struct POISheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	POISheet(poi: .init(element: .starbucksKualaLumpur)!, isShown: .constant(true)) {
+	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
+	return POISheet(poi: poi, isShown: .constant(true)) {
 		print("start")
 	} onMore: {
 		print("more")

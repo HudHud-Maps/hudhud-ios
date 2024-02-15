@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import SwiftUI
-import POIService
-import ToursprungPOI
 import MapLibreSwiftUI
+import POIService
+import SwiftUI
+import ToursprungPOI
 
 struct BottomSheetView: View {
 	private let toursprung: ToursprungPOI = .init()
@@ -27,7 +27,7 @@ struct BottomSheetView: View {
 	var body: some View {
 		VStack {
 			HStack {
-				Image(systemName: "magnifyingglass")
+				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
 				TextField("Search", text: $searchText)
@@ -42,11 +42,11 @@ struct BottomSheetView: View {
 							if !self.searchText.isEmpty {
 								Button(action: {
 									self.searchText = ""
-								}) {
-									Image(systemName: "multiply.circle.fill")
+								}, label: {
+									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
 										.padding(.vertical)
-								}
+								})
 							}
 						}
 							.padding(.horizontal, 8)
@@ -75,7 +75,7 @@ struct BottomSheetView: View {
 			.onChange(of: searchText) { newValue in
 				Task {
 					self.viewModel.searchText = newValue
-					await self.viewModel.search()
+					try await self.viewModel.search()
 				}
 			}
 			.listStyle(.plain)

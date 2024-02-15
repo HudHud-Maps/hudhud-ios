@@ -11,11 +11,13 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
+import SFSafeSymbols
 import SwiftUI
 
 struct ContentView: View {
 
-	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")
+	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
+	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")!	// swiftlint:disable:this force_unwrapping
 
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
@@ -25,7 +27,7 @@ struct ContentView: View {
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
-		return MapView(styleURL: styleURL!, camera: $camera) {
+		return MapView(styleURL: styleURL, camera: $camera) {
 			if let selectedPOI {
 				let pointSource = ShapeSource(identifier: "points") {
 					MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
@@ -36,9 +38,8 @@ struct ContentView: View {
 					.color(constant: .systemRed)
 					.strokeWidth(constant: 2)
 					.strokeColor(constant: .white)
-
 				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-					.iconImage(constant: UIImage(systemName: "mappin")!.withRenderingMode(.alwaysTemplate))
+					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(constant: .white)
 			} else {
 				print("clear poi")

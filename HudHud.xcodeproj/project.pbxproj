@@ -13,6 +13,7 @@
 		CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3893192B6D6A3C005CF8BC /* POISheet.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
+		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -73,6 +74,7 @@
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
 		CDAE06072B6C201E003E5196 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		CDF4A6CE2B7E3D98001B3CD7 /* POIService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = POIService; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
 				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
+				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
 				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -127,6 +130,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
+				CDF4A6CE2B7E3D98001B3CD7 /* POIService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
 				CDAE05612B681263003E5196 /* HudHudUITests */,
@@ -213,7 +217,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CB3970002B7CDCA400CF9D59 /* PBXTargetDependency */,
+				CD59BD6D2B7CD659002C14F6 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -224,6 +228,7 @@
 				CDAE05FF2B6BDC5A003E5196 /* ApplePOI */,
 				CDAE06012B6BDC5A003E5196 /* POIService */,
 				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
+				CD59BD702B7CD967002C14F6 /* SFSafeSymbols */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -304,6 +309,7 @@
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
 				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
+				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -383,9 +389,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB3970002B7CDCA400CF9D59 /* PBXTargetDependency */ = {
+		CD59BD6D2B7CD659002C14F6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = CB396FFF2B7CDCA400CF9D59 /* SwiftLint */;
+			productRef = CD59BD6C2B7CD659002C14F6 /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -704,6 +710,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.1;
+			};
+		};
 		CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
@@ -739,10 +753,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		CB396FFF2B7CDCA400CF9D59 /* SwiftLint */ = {
+		CD59BD6C2B7CD659002C14F6 /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05732B681DB0003E5196 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";
+		};
+		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
+			productName = SFSafeSymbols;
 		};
 		CDAE05812B690544003E5196 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
