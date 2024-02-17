@@ -1,5 +1,5 @@
 //
-//  BottomSheetView.swift
+//  SearchSheet.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 01.02.24.
@@ -13,7 +13,7 @@ import POIService
 import SwiftUI
 import ToursprungPOI
 
-struct BottomSheetView: View {
+struct SearchSheet: View {
 
 	@ObservedObject var viewModel: SearchViewModel
 	@FocusState private var searchIsFocused: Bool
@@ -42,7 +42,6 @@ struct BottomSheetView: View {
 							if !self.searchText.isEmpty {
 								Button(action: {
 									self.searchText = ""
-									self.viewModel.update(to: .completion)
 								}, label: {
 									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
@@ -61,7 +60,7 @@ struct BottomSheetView: View {
 
 			List(self.viewModel.items, id: \.self) { item in
 				Button(action: {
-					switch item.data {
+					switch item.provider {
 					case .toursprung:
 						self.searchIsFocused = false
 						self.selectedDetent = .medium
@@ -70,19 +69,21 @@ struct BottomSheetView: View {
 						}
 						self.selectedPOI = item.poi
 						self.isShown = true
-					case .appleCompletion(let completion):
-						if let _ = completion.mapItem {
-							self.searchIsFocused = false
-							self.selectedDetent = .medium
-							if let coordinate = item.coordinate {
-								self.camera = .center(coordinate, zoom: 16)
+					case .appleCompletion:
+						self.searchIsFocused = false
+						Task {
+							let items = try await self.viewModel.resolve(prediction: item)
+							if let firstResult = items.first, items.count == 1 {
+								self.searchIsFocused = false
+								self.selectedDetent = .medium
+								if let coordinate = firstResult.coordinate {
+									self.camera = .center(coordinate, zoom: 16)
+								}
+								self.selectedPOI = item.poi
+								self.isShown = true
+							} else {
+								self.viewModel.items = items
 							}
-							self.selectedPOI = item.poi
-							self.isShown = true
-						} else {
-							self.searchIsFocused = true
-							self.viewModel.update(to: .search)
-							self.searchText = completion.completion.title
 						}
 					case .appleMapItem:
 						self.searchIsFocused = false
@@ -93,9 +94,8 @@ struct BottomSheetView: View {
 						self.selectedPOI = item.poi
 						self.isShown = true
 					}
-
 				}, label: {
-					SearchResultItem(row: item)
+					SearchResultItem(prediction: item)
 						.frame(maxWidth: .infinity)
 				})
 				.listRowSeparator(.hidden)
@@ -108,7 +108,7 @@ struct BottomSheetView: View {
 		}
 		.sheet(isPresented: $isShown) {
 			if let poi = self.selectedPOI {
-				POISheet(poi: poi, isShown: $isShown) {
+				POIDetailSheet(poi: poi, isShown: $isShown) {
 					print("start")
 				} onMore: {
 					print("more")
@@ -126,7 +126,7 @@ struct BottomSheetView: View {
 }
 
 #Preview {
-	let sheet = BottomSheetView(viewModel: .init(mode: .preview),
+	let sheet = SearchSheet(viewModel: .init(mode: .preview),
 								camera: .constant(.center(.vienna, zoom: 12)),
 								selectedPOI: .constant(nil),
 								selectedDetent: .constant(.medium))

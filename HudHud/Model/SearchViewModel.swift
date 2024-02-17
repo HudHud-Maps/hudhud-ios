@@ -19,7 +19,7 @@ class SearchViewModel: ObservableObject {
 
 	enum Mode {
 		enum Provider {
-			case apple(state: ApplePOI.State)
+			case apple
 			case toursprung
 		}
 
@@ -35,15 +35,19 @@ class SearchViewModel: ObservableObject {
 	@Published var items: [Row] = []
 	var searchText: String = "" {
 		didSet {
-			switch mode {
+			switch self.mode {
 			case .live(provider: .apple):
-				self.apple.searchQuery = self.searchText
+				Task {
+					self.items = try await self.apple.predict(term: self.searchText)
+				}
 			case .live(provider: .toursprung):
-				self.toursprung.searchQuery = self.searchText
+				Task {
+					self.items = try await self.toursprung.predict(term: self.searchText)
+				}
 			case .preview:
 				self.items = [
-					Row(toursprung: .starbucks),
-					Row(toursprung: .ketchup)
+					.init(toursprung: .starbucks),
+					.init(toursprung: .ketchup)
 				]
 			}
 		}
@@ -53,39 +57,18 @@ class SearchViewModel: ObservableObject {
 
 	init(mode: Mode = .live(provider: .toursprung)) {
 		self.mode = mode
-		switch mode {
-		case .live(.apple):
-			self.apple.$results
-				.receive(on: RunLoop.main)
-				.sink { [weak self] completions in
-					self?.items = completions
-				}
-				.store(in: &cancellables)
-		case .live(provider: .toursprung):
-			self.toursprung.$results
-				.receive(on: RunLoop.main)
-				.sink { [weak self] completions in
-					self?.items = completions
-				}
-				.store(in: &cancellables)
-		default:
-			break
-		}
 	}
 
 	// MARK: - SearchViewModel
 
-	func update(to state: ApplePOI.State) {
-		switch self.mode {
-		case .live(let provider):
-			switch provider {
-			case .apple(let oldState):
-				self.apple.state = state
-			case .toursprung:
-				break
-			}
-		case .preview:
-			break
+	func resolve(prediction: Row) async throws -> [Row] {
+		switch prediction.provider {
+		case .appleCompletion(let completion):
+			return try await self.apple.lookup(prediction: .apple(completion: completion))
+		case .appleMapItem(let mapItem):
+			return [Row(mapItem: mapItem)]
+		case .toursprung(let poi):
+			return [Row(toursprung: poi)]
 		}
 	}
 }

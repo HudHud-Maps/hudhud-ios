@@ -9,6 +9,7 @@
 import Foundation
 import POIService
 import CoreLocation
+import MapKit
 
 public final class ToursprungPOI: POIServiceProtocol {
 
@@ -28,32 +29,22 @@ public final class ToursprungPOI: POIServiceProtocol {
 
 	private let session: URLSession = .shared
 
-	// MARK: - Properties
-
-	public static var serviceName: String = "Apple"
-	public var searchQuery = "" {
-		didSet {
-			if self.searchQuery.isEmpty {
-				self.results = []
-			} else {
-				Task {
-					do {
-						self.results = try await self.search(term: self.searchQuery)
-						self.error = nil
-					} catch {
-						self.error = error
-					}
-				}
-			}
-		}
-	}
-	@Published public var results: [Row] = []
-	@Published public private(set) var error: Error?
-
 	// MARK: - Lifecycle
 
 	public init() {
 
+	}
+
+	// MARK: - POIServiceProtocol
+
+	public static var serviceName: String = "Apple"
+
+	public func predict(term: String) async throws -> [Row] {
+		return try await self.search(term: term)
+	}
+
+	public func lookup(prediction: PredictionResult) async throws -> [Row] {
+		return []
 	}
 }
 
@@ -107,7 +98,7 @@ public extension POI {
 
 		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-		self.init(name: element.displayName,
+		self.init(title: element.displayName,
 				  subtitle: element.address.description,
 				  locationCoordinate: coordinate,
 				  type: element.type)

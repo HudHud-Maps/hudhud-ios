@@ -51,7 +51,7 @@ struct ContentView: View {
 				.padding()
 		}
 		.sheet(isPresented: .constant(true)) {
-			BottomSheetView(viewModel: .init(mode: .live(provider: .apple(state: .completion))),
+			SearchSheet(viewModel: .init(mode: .live(provider: .apple)),
 							camera: $camera,
 							selectedPOI: $selectedPOI,
 							selectedDetent: $selectedDetent)

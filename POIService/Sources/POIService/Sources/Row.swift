@@ -13,51 +13,44 @@ import SwiftUI
 
 public struct Row: Hashable {
 
-	public struct Completion: Hashable {
-		public let completion: MKLocalSearchCompletion
-		public let mapItem: MKMapItem?
-	}
-
 	public enum Provider: Hashable {
-		case appleCompletion(completion: Completion)
+		case appleCompletion(completion: MKLocalSearchCompletion)
 		case appleMapItem(mapItem: MKMapItem)
 		case toursprung(poi: POI)
 	}
-	public let data: Provider
+	public let provider: Provider
 
 	// MARK: - Init
 
 	public init(mapItem: MKMapItem) {
-		self.data = .appleMapItem(mapItem: mapItem)
+		self.provider = .appleMapItem(mapItem: mapItem)
 	}
 
 	public init(appleCompletion: MKLocalSearchCompletion) {
-		let mapItem = appleCompletion.value(forKey: "mapItem") as? MKMapItem
-
-		self.data = .appleCompletion(completion: .init(completion: appleCompletion, mapItem: mapItem))
+		self.provider = .appleCompletion(completion: appleCompletion)
 	}
 
 	public init(toursprung: POI) {
-		self.data = .toursprung(poi: toursprung)
+		self.provider = .toursprung(poi: toursprung)
 	}
 
 	// MARK: - Row
 
 	public var title: String {
-		switch self.data {
+		switch self.provider {
 		case .appleCompletion(let completion):
-			return completion.completion.title
+			return completion.title
 		case .appleMapItem(let mapItem):
 			return mapItem.name ?? "Unknown"
 		case .toursprung(let poi):
-			return poi.name
+			return poi.title
 		}
 	}
 
 	public var subtitle: String {
-		switch self.data {
+		switch self.provider {
 		case .appleCompletion(let completion):
-			return completion.completion.subtitle
+			return completion.subtitle
 		case .appleMapItem(let mapItem):
 			return mapItem.placemark.formattedAddress ?? ""
 		case .toursprung(let poi):
@@ -66,7 +59,7 @@ public struct Row: Hashable {
 	}
 
 	public var icon: Image {
-		switch self.data {
+		switch self.provider {
 		case .toursprung(let poi):
 			switch poi.type.lowercased() {
 			case "cafe":
@@ -78,33 +71,28 @@ public struct Row: Hashable {
 			}
 		case .appleMapItem(let mapItem):
 			return mapItem.icon
-		case .appleCompletion(let completion):
-			return completion.mapItem?.icon ?? Image(systemSymbol: .magnifyingglass)
+		case .appleCompletion:
+			return Image(systemSymbol: .magnifyingglass)
 		}
 	}
 
 	public var coordinate: CLLocationCoordinate2D? {
-		switch self.data {
+		switch self.provider {
 		case .appleMapItem(let mapItem):
 			return mapItem.placemark.coordinate
-		case .appleCompletion(let completion):
-			return completion.mapItem?.placemark.coordinate
+		case .appleCompletion:
+			return nil
 		case .toursprung(let poi):
 			return poi.locationCoordinate
 		}
 	}
 
 	public var poi: POI? {
-		switch self.data {
-		case .appleCompletion(let completion):
-			guard let coordinate = completion.mapItem?.placemark.coordinate else { return nil }
-
-			return POI(name: self.title,
-					   subtitle: self.subtitle,
-					   locationCoordinate: coordinate,
-					   type: "")
+		switch self.provider {
+		case .appleCompletion:
+			return nil
 		case .appleMapItem(let mapItem):
-			return POI(name: self.title,
+			return POI(title: self.title,
 					   subtitle: self.subtitle,
 					   locationCoordinate: mapItem.placemark.coordinate,
 					   type: "")

@@ -8,14 +8,15 @@
 
 import POIService
 import SwiftUI
+import MapKit
 
 struct SearchResultItem: View {
 
-	let row: Row
+	let prediction: Row
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
-			self.row.icon
+			self.prediction.icon
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(width: 24, height: 24)
@@ -27,11 +28,11 @@ struct SearchResultItem: View {
 				.frame(minWidth: .leastNonzeroMagnitude)
 
 			VStack(alignment: .leading) {
-				Text(self.row.title)
+				Text(self.prediction.title)
 					.foregroundStyle(.primary)
 					.font(.headline)
 					.lineLimit(1)
-				Text(self.row.subtitle)
+				Text(self.prediction.subtitle)
 					.foregroundStyle(.secondary)
 					.font(.body)
 					.lineLimit(1)
@@ -46,7 +47,5 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
-	let row = Row(toursprung: poi)
-	return SearchResultItem(row: row)
+	return SearchResultItem(prediction: .init(toursprung: .starbucks))
 }
