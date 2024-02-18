@@ -21,7 +21,7 @@ struct ContentView: View {
 
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
-	@State var selectedDetent: PresentationDetent = .large
+	@State var selectedDetent: PresentationDetent = .small
 	@State var isShown: Bool = true
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
