@@ -32,7 +32,7 @@ final class HudHudUITests: XCTestCase {
 		let searchTextField = app.textFields["Search"]
 		
 		// Assert that the TextField exists
-		XCTAssertTrue(searchTextField.exists, "The TextField with placeholder 'Search' does not exist.")
+		XCTAssertTrue(searchTextField.exists, "The TextField with placeholder 'Search' does not exist on screen.")
 	}
 
 }
