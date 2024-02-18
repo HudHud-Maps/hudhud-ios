@@ -9,6 +9,10 @@
     }
   ],
   "defaultOptions" : {
+    "addressSanitizer" : {
+      "detectStackUseAfterReturn" : true,
+      "enabled" : true
+    },
     "codeCoverage" : false,
     "locationScenario" : {
       "identifier" : "..\/..\/HudHud\/Preview Content\/Riyadh.gpx"
@@ -18,7 +22,8 @@
       "identifier" : "CDAE05432B681261003E5196",
       "name" : "HudHud"
     },
-    "testTimeoutsEnabled" : true
+    "testTimeoutsEnabled" : true,
+    "undefinedBehaviorSanitizerEnabled" : true
   },
   "testTargets" : [
     {
