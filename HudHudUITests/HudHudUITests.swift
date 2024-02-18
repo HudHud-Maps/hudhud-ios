@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import CoreLocation
 
 final class HudHudUITests: XCTestCase {
 
@@ -25,6 +26,8 @@ final class HudHudUITests: XCTestCase {
 
 	func testForSearchField() throws {
 		// UI tests must launch the application that they test.
+		XCUIDevice.shared.location = XCUILocation(location: CLLocation(latitude: 24.65333, longitude: 46.71526))
+
 		let app = XCUIApplication()
 		app.launch()
 
