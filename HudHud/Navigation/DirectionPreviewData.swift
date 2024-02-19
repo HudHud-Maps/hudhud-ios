@@ -7,3 +7,9 @@
 //
 
 import Foundation
+
+struct DirectionPreviewData {
+	var duration: TimeInterval
+	var distance: Measurement<UnitLength>
+	var typeOfRoute: String
+}

@@ -9,19 +9,28 @@
 import SwiftUI
 
 struct DirectionPreview: View {
-	var dir: DirectionPreviewData
+	var directionPreviewData: DirectionPreviewData
     var body: some View {
 		VStack {
 			HStack {
 				VStack(alignment: .leading) {
 					// 20 min AKA duration
-					Text(formatDuration(duration: dir.duration))
+					Text(formatDuration(duration: directionPreviewData.duration))
+						.font(.system(.title2))
 						.bold()
-					HStack(spacing: 8.0) {
+						.lineLimit(1)
+						.minimumScaleFactor(0.5)
+					HStack {
 						// distance
-						Text(formatDistance(distance: dir.distance))
+						Text(formatDistance(distance: directionPreviewData.distance))
+							.font(.system(.body))
+							.lineLimit(1)
+							.minimumScaleFactor(0.5)
 						// type of route
-						Text(dir.typeOfRoute)
+						Text(directionPreviewData.typeOfRoute)
+							.font(.system(.body))
+							.lineLimit(1)
+							.minimumScaleFactor(0.5)
 					}
 				}
 				Spacer()
@@ -30,32 +39,34 @@ struct DirectionPreview: View {
 					print("Starting Direction")
 				} label: {
 					Text("Go")
+						.font(.system(.body))
+						.bold()
+						.lineLimit(1)
+						.minimumScaleFactor(0.5)
 						.foregroundStyle(Color.white)
-						.frame(width: 100, height: 60)
-						.background(Color.green)
+						.padding()
+						.padding(.horizontal)
+						.background(Color("LightGreen"))
 						.cornerRadius(8)
 				}
 			}
 			.padding()
-			.frame(maxWidth: .infinity, maxHeight: 84)
-			.background(Color.gray)
+			.frame(maxWidth: .infinity)
+			.background(Color.secondary.opacity(0.5))
 			.cornerRadius(8)
 		}
 		.padding()
     }
 	func formatDuration(duration: TimeInterval) -> String {
-			let hours = Int(duration / 3600)
-			let minutes = Int((duration.truncatingRemainder(dividingBy: 3600)) / 60)
-			if hours > 0 {
-				if minutes > 0 {
-					return "\(hours) hr \(minutes) min"
+		let formatter = DateComponentsFormatter()
+			   formatter.allowedUnits = [.hour, .minute, .second]
+			   formatter.unitsStyle = .abbreviated
+		if let formattedString = formatter.string(from: duration) {
+					return formattedString
 				} else {
-					return "\(hours) hr"
+					return "Invalid Duration"
 				}
-			} else {
-				return "\(minutes) min"
 			}
-		}
 	func formatDistance(distance: Measurement<UnitLength>) -> String {
 			let formatter = MeasurementFormatter()
 			formatter.unitOptions = .providedUnit
@@ -65,10 +76,5 @@ struct DirectionPreview: View {
 }
 
 #Preview {
-	DirectionPreview(dir: DirectionPreviewData(duration: 1_250, distance: Measurement(value: 4.4, unit: UnitLength.kilometers), typeOfRoute: "Fastest"))
-}
-struct DirectionPreviewData {
-	var duration: TimeInterval
-	var distance: Measurement<UnitLength>
-	var typeOfRoute: String
+	DirectionPreview(directionPreviewData: DirectionPreviewData(duration: 1_200, distance: Measurement(value: 4.4, unit: UnitLength.kilometers), typeOfRoute: "Fastest"))
 }
