@@ -10,6 +10,10 @@ import SwiftUI
 
 @main
 struct HudHudApp: App {
+
+	init() {
+		InstallUncaughtExceptionHandler()
+	}
 	var body: some Scene {
 		WindowGroup {
 			ContentView()

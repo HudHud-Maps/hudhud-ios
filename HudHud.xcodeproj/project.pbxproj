@@ -32,6 +32,7 @@
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
 		CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06072B6C201E003E5196 /* BottomSheetView.swift */; };
 		CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */; };
+		CDEAEA0E2B8350E20038470F /* ExceptionHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = CDEAEA0D2B8350E20038470F /* ExceptionHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,6 +74,9 @@
 		CDAE06072B6C201E003E5196 /* BottomSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomSheetView.swift; sourceTree = "<group>"; };
 		CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		CDEAEA0B2B82B0BB0038470F /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
+		CDEAEA0C2B8350E20038470F /* HudHud-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "HudHud-Bridging-Header.h"; sourceTree = "<group>"; };
+		CDEAEA0D2B8350E20038470F /* ExceptionHandler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ExceptionHandler.m; sourceTree = "<group>"; };
+		CDEAEA0F2B8351000038470F /* ExceptionHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExceptionHandler.h; sourceTree = "<group>"; };
 		CDF4A6CE2B7E3D98001B3CD7 /* POIService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = POIService; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -166,6 +170,9 @@
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
+				CDEAEA0D2B8350E20038470F /* ExceptionHandler.m */,
+				CDEAEA0F2B8351000038470F /* ExceptionHandler.h */,
+				CDEAEA0C2B8350E20038470F /* HudHud-Bridging-Header.h */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
@@ -282,6 +289,7 @@
 				TargetAttributes = {
 					CDAE05432B681261003E5196 = {
 						CreatedOnToolsVersion = 15.2;
+						LastSwiftMigration = 1520;
 					};
 					CDAE05532B681263003E5196 = {
 						CreatedOnToolsVersion = 15.2;
@@ -356,6 +364,7 @@
 			files = (
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
+				CDEAEA0E2B8350E20038470F /* ExceptionHandler.m in Sources */,
 				CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */,
 				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
 				CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */,
@@ -534,6 +543,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
@@ -554,6 +564,8 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "HudHud/HudHud-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -564,6 +576,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
@@ -584,6 +597,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "HudHud/HudHud-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
