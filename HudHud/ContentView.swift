@@ -27,7 +27,6 @@ struct ContentView: View {
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
-		/*
 		MapView(styleURL: styleURL, camera: $camera) {
 			if let selectedPOI {
 				let pointSource = ShapeSource(identifier: "points") {
@@ -51,9 +50,6 @@ struct ContentView: View {
 			CurrentLocationButton(camera: $camera)
 				.padding()
 		}
-		 */
-		Rectangle()
-			.foregroundColor(.blue)
 		.sheet(isPresented: .constant(true)) {
 			BottomSheetView(viewModel: .init(),
 							camera: $camera,
