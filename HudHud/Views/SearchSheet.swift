@@ -17,7 +17,7 @@ struct SearchSheet: View {
 
 	@ObservedObject var viewModel: SearchViewModel
 	@FocusState private var searchIsFocused: Bool
-	@State private var isShown: Bool = false
+	@State private var detailSheetShown: Bool = false
 	@State private var searchText = ""
 
 	@Binding var camera: MapViewCamera
@@ -68,31 +68,19 @@ struct SearchSheet: View {
 							self.camera = .center(coordinate, zoom: 16)
 						}
 						self.selectedPOI = item.poi
-						self.isShown = true
+						self.detailSheetShown = true
 					case .appleCompletion:
 						self.searchIsFocused = false
 						Task {
 							let items = try await self.viewModel.resolve(prediction: item)
 							if let firstResult = items.first, items.count == 1 {
-								self.searchIsFocused = false
-								self.selectedDetent = .medium
-								if let coordinate = firstResult.coordinate {
-									self.camera = .center(coordinate, zoom: 16)
-								}
-								self.selectedPOI = item.poi
-								self.isShown = true
+								self.show(row: firstResult)
 							} else {
 								self.viewModel.items = items
 							}
 						}
 					case .appleMapItem:
-						self.searchIsFocused = false
-						self.selectedDetent = .medium
-						if let coordinate = item.coordinate {
-							self.camera = .center(coordinate, zoom: 16)
-						}
-						self.selectedPOI = item.poi
-						self.isShown = true
+						self.show(row: item)
 					}
 				}, label: {
 					SearchResultItem(prediction: item)
@@ -106,9 +94,9 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(isPresented: $isShown) {
+		.sheet(isPresented: $detailSheetShown) {
 			if let poi = self.selectedPOI {
-				POIDetailSheet(poi: poi, isShown: $isShown) {
+				POIDetailSheet(poi: poi, isShown: $detailSheetShown) {
 					print("start")
 				} onMore: {
 					print("more")
@@ -122,6 +110,16 @@ struct SearchSheet: View {
 			}
 		}
 		.padding(.vertical, 8)
+	}
+
+	func show(row: Row) {
+		self.searchIsFocused = false
+		self.selectedDetent = .medium
+		if let coordinate = row.coordinate {
+			self.camera = .center(coordinate, zoom: 16)
+		}
+		self.selectedPOI = row.poi
+		self.detailSheetShown = true
 	}
 }
 

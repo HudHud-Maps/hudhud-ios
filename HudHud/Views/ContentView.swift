@@ -22,7 +22,7 @@ struct ContentView: View {
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .large
-	@State var isShown: Bool = true
+	@State var searchShown: Bool = true
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
@@ -50,7 +50,7 @@ struct ContentView: View {
 			CurrentLocationButton(camera: $camera)
 				.padding()
 		}
-		.sheet(isPresented: .constant(true)) {
+		.sheet(isPresented: $searchShown) {
 			SearchSheet(viewModel: .init(mode: .live(provider: .apple)),
 							camera: $camera,
 							selectedPOI: $selectedPOI,
