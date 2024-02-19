@@ -124,7 +124,7 @@ struct SearchSheet: View {
 }
 
 #Preview {
-	let sheet = SearchSheet(viewModel: .init(mode: .preview),
+	let sheet = SearchSheet(viewModel: .init(mode: .constant(.preview)),
 								camera: .constant(.center(.vienna, zoom: 12)),
 								selectedPOI: .constant(nil),
 								selectedDetent: .constant(.medium))

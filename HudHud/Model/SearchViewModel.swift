@@ -11,14 +11,12 @@ import Foundation
 import POIService
 import ToursprungPOI
 import SwiftUI
-import MapKit
-import Combine
 
 @MainActor
 class SearchViewModel: ObservableObject {
 
 	enum Mode {
-		enum Provider {
+		enum Provider: CaseIterable {
 			case apple
 			case toursprung
 		}
@@ -27,15 +25,14 @@ class SearchViewModel: ObservableObject {
 		case preview
 	}
 
-	@ObservedObject private var apple: ApplePOI = .init()
-	@ObservedObject private var toursprung: ToursprungPOI = .init()
-	private var mode: Mode
-	private var cancellables: Set<AnyCancellable> = []
+	private var apple: ApplePOI = .init()
+	private var toursprung: ToursprungPOI = .init()
+	var mode: Binding<Mode>
 
 	@Published var items: [Row] = []
 	var searchText: String = "" {
 		didSet {
-			switch self.mode {
+			switch self.mode.wrappedValue {
 			case .live(provider: .apple):
 				Task {
 					self.items = try await self.apple.predict(term: self.searchText)
@@ -55,7 +52,7 @@ class SearchViewModel: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(mode: Mode = .live(provider: .toursprung)) {
+	init(mode: Binding<Mode>) {
 		self.mode = mode
 	}
 

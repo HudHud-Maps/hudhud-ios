@@ -21,8 +21,9 @@ struct ContentView: View {
 
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
-	@State var selectedDetent: PresentationDetent = .large
+	@State var selectedDetent: PresentationDetent = .medium
 	@State var searchShown: Bool = true
+	@State var mode: SearchViewModel.Mode = .live(provider: .apple)
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
@@ -41,17 +42,18 @@ struct ContentView: View {
 				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(constant: .white)
-			} else {
-				print("clear poi")
 			}
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
-			CurrentLocationButton(camera: $camera)
-				.padding()
+			VStack {
+				CurrentLocationButton(camera: $camera)
+					.padding()
+				ProviderButton(mode: $mode)
+			}
 		}
 		.sheet(isPresented: $searchShown) {
-			SearchSheet(viewModel: .init(mode: .live(provider: .apple)),
+			SearchSheet(viewModel: .init(mode: $mode),
 							camera: $camera,
 							selectedPOI: $selectedPOI,
 							selectedDetent: $selectedDetent)

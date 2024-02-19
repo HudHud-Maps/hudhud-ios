@@ -11,6 +11,7 @@
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
+		CD59CB4D2B8389BE00A15214 /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59CB4C2B8389BE00A15214 /* ProviderButton.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -21,7 +22,7 @@
 		CDAE05822B690544003E5196 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05812B690544003E5196 /* MapLibre */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
-		CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */; };
+		CDAE05EE2B6A87F4003E5196 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05ED2B6A87F4003E5196 /* CurrentLocationButton.swift */; };
 		CDAE05F02B6A8AED003E5196 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */; };
 		CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */; };
@@ -30,6 +31,7 @@
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
 		CDAE06082B6C201E003E5196 /* SearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06072B6C201E003E5196 /* SearchSheet.swift */; };
 		CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */; };
+		CDEF50292B838FDB0045ADBD /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEF50282B838FDB0045ADBD /* CaseIterable.swift */; };
 		CDF4A6DA2B7E4EC6001B3CD7 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF4A6D82B7E4EC6001B3CD7 /* CatagoryBannerData.swift */; };
 		CDF4A6DB2B7E4EC6001B3CD7 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF4A6D92B7E4EC6001B3CD7 /* CategoriesBannerView.swift */; };
 		CDF4A6DE2B7E4ED0001B3CD7 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDF4A6DD2B7E4ED0001B3CD7 /* ButtonsStyle.swift */; };
@@ -60,6 +62,7 @@
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CD59BD672B7BC819002C14F6 /* POIService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = POIService; sourceTree = "<group>"; };
+		CD59CB4C2B8389BE00A15214 /* ProviderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CDAE05492B681261003E5196 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,10 +74,11 @@
 		CDAE05622B681263003E5196 /* HudHudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITests.swift; sourceTree = "<group>"; };
 		CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CDAE05A72B69358E003E5196 /* Terrain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Terrain.json; sourceTree = "<group>"; };
-		CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationButton.swift; sourceTree = "<group>"; };
+		CDAE05ED2B6A87F4003E5196 /* CurrentLocationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
 		CDAE06072B6C201E003E5196 /* SearchSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
 		CDAE06092B6CDE94003E5196 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		CDEF50282B838FDB0045ADBD /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		CDF4A6D82B7E4EC6001B3CD7 /* CatagoryBannerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatagoryBannerData.swift; sourceTree = "<group>"; };
 		CDF4A6D92B7E4EC6001B3CD7 /* CategoriesBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesBannerView.swift; sourceTree = "<group>"; };
 		CDF4A6DD2B7E4ED0001B3CD7 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
@@ -135,7 +139,8 @@
 			children = (
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
-				CDAE05ED2B6A87F4003E5196 /* LocationButton.swift */,
+				CDAE05ED2B6A87F4003E5196 /* CurrentLocationButton.swift */,
+				CD59CB4C2B8389BE00A15214 /* ProviderButton.swift */,
 				CD3893192B6D6A3C005CF8BC /* POIDetailSheet.swift */,
 				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
 				CDAE06072B6C201E003E5196 /* SearchSheet.swift */,
@@ -171,6 +176,7 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				CDEF50272B838FD10045ADBD /* Extensions */,
 				CDF4A6DC2B7E4ED0001B3CD7 /* UIStyle */,
 				CDF4A6D72B7E4EC6001B3CD7 /* CategoriesBanner */,
 				CD59BD662B7A5D64002C14F6 /* Views */,
@@ -212,6 +218,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CDEF50272B838FD10045ADBD /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				CDEF50282B838FDB0045ADBD /* CaseIterable.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		CDF4A6D52B7E4DBB001B3CD7 /* Recovered References */ = {
@@ -395,10 +409,12 @@
 			files = (
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */,
-				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
+				CDAE05EE2B6A87F4003E5196 /* CurrentLocationButton.swift in Sources */,
 				CDF4A6DB2B7E4EC6001B3CD7 /* CategoriesBannerView.swift in Sources */,
 				CDAE06082B6C201E003E5196 /* SearchSheet.swift in Sources */,
+				CDEF50292B838FDB0045ADBD /* CaseIterable.swift in Sources */,
 				CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */,
+				CD59CB4D2B8389BE00A15214 /* ProviderButton.swift in Sources */,
 				CDF4A6DE2B7E4ED0001B3CD7 /* ButtonsStyle.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,

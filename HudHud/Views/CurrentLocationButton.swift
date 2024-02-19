@@ -1,5 +1,5 @@
 //
-//  LocationButton.swift
+//  CurrentLocationButton.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 31.01.24.
