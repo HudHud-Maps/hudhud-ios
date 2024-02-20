@@ -18,7 +18,7 @@ struct MapLayersView: View {
 					VStack {
 						Button {
 							currentlySelected = layer.id.uuidString
-						}label: {
+						} label: {
 						AsyncImage(url: URL(string: layer.imageUrl)) { image in
 								image
 									.resizable()
