@@ -25,7 +25,7 @@ struct MainLayersView: View {
 	var layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
 	var layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
 	let layerOne = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
-	let layerTwo = MapLayersData(layerTitle: "Map Detials", layers: [layer, layer1, layer2])
+	let layerTwo = MapLayersData(layerTitle: "Map Details", layers: [layer, layer1, layer2])
 	return VStack(alignment: .center, spacing: 30) {
 		HStack(alignment: .center) {
 			   Spacer()
