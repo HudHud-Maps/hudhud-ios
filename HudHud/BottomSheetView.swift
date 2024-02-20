@@ -101,7 +101,7 @@ struct BottomSheetView: View {
 
 #Preview {
 	let sheet = BottomSheetView(viewModel: .init(mode: .preview),
-								camera: .constant(.center(.vienna, zoom: 12)),
+								camera: .constant(.center(.riyadh, zoom: 12)),
 								selectedPOI: .constant(nil),
 								selectedDetent: .constant(.medium))
 	return sheet
