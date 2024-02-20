@@ -7,12 +7,13 @@
 //
 
 import SwiftUI
+import Firebase
 
 @main
 struct HudHudApp: App {
 
 	init() {
-		InstallUncaughtExceptionHandler()
+		FirebaseApp.configure()
 	}
 	var body: some Scene {
 		WindowGroup {

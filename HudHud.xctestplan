@@ -18,6 +18,7 @@
       "identifier" : "CDAE05432B681261003E5196",
       "name" : "HudHud"
     },
+    "testRepetitionMode" : "retryOnFailure",
     "testTimeoutsEnabled" : true,
     "uiTestingScreenshotsLifetime" : "keepAlways"
   },

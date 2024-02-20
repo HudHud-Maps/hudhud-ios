@@ -50,6 +50,9 @@ struct ContentView: View {
 			CurrentLocationButton(camera: $camera)
 				.padding()
 		}
+		.onAppear {
+			// fatalError("third fatal error") // swiftlint:disable:this disable_fatalError
+		}
 		.sheet(isPresented: .constant(true)) {
 			BottomSheetView(viewModel: .init(),
 							camera: $camera,
