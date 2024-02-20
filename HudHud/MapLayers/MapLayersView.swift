@@ -7,13 +7,12 @@
 //
 
 import SwiftUI
-
 struct MapLayersView: View {
 	var mapLayerData: MapLayersData
-	@State var currentlySelected: String = ""
+	@State var currentlySelected: String?
     var body: some View {
 		VStack(alignment: .leading, spacing: 10) {
-			Text(mapLayerData.layerTitle)
+			Text(mapLayerData.layerTitle)				.foregroundStyle(.secondary)
 			HStack {
 				ForEach(self.mapLayerData.layers) { layer in
 					VStack {
@@ -28,20 +27,19 @@ struct MapLayersView: View {
 								ProgressView()
 							}
 							.frame(width: 110, height: 110)
-							.background(Color.gray)
+							.background(.secondary)
 							.cornerRadius(4.0)
 							.overlay(
-								   RoundedRectangle(cornerRadius: 4).stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 1)
+								   RoundedRectangle(cornerRadius: 4)
+									.stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 2)
 							   )
 						}
 						Text(layer.imageTitle)
-							.foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .gray)
+							.foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .secondary)
 					}
 				}
 			}
 		}
-		.padding(.horizontal, 20)
-		.foregroundStyle(.gray)
     }
 }
 
@@ -51,4 +49,5 @@ struct MapLayersView: View {
 	var layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
 	var mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
 	return MapLayersView(mapLayerData: mapLayerData)
+		.padding(.horizontal, 20)
 }
