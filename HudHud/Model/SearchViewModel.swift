@@ -25,6 +25,7 @@ class SearchViewModel: ObservableObject {
 		case preview
 	}
 
+	private var task: Task<(), Error>?
 	private var apple: ApplePOI = .init()
 	private var toursprung: ToursprungPOI = .init()
 	var mode: Binding<Mode>
@@ -34,11 +35,13 @@ class SearchViewModel: ObservableObject {
 		didSet {
 			switch self.mode.wrappedValue {
 			case .live(provider: .apple):
-				Task {
+				self.task?.cancel()
+				self.task = Task {
 					self.items = try await self.apple.predict(term: self.searchText)
 				}
 			case .live(provider: .toursprung):
-				Task {
+				self.task?.cancel()
+				self.task = Task {
 					self.items = try await self.toursprung.predict(term: self.searchText)
 				}
 			case .preview:
