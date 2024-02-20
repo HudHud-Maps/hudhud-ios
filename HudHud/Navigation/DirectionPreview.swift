@@ -10,6 +10,7 @@ import SwiftUI
 
 struct DirectionPreview: View {
 	var directionPreviewData: DirectionPreviewData
+	@Environment(\.colorScheme) var colorScheme
     var body: some View {
 		VStack {
 			HStack {
@@ -52,7 +53,7 @@ struct DirectionPreview: View {
 			}
 			.padding()
 			.frame(maxWidth: .infinity)
-			.background(Color.secondary.opacity(0.5))
+			.background(colorScheme == .dark ? Color.secondary : Color("LightGrey"))
 			.cornerRadius(8)
 		}
 		.padding()
@@ -76,5 +77,5 @@ struct DirectionPreview: View {
 }
 
 #Preview {
-	DirectionPreview(directionPreviewData: DirectionPreviewData(duration: 1_200, distance: Measurement(value: 4.4, unit: UnitLength.kilometers), typeOfRoute: "Fastest"))
+DirectionPreview(directionPreviewData: DirectionPreviewData(duration: 1_200, distance: Measurement(value: 4.4, unit: UnitLength.kilometers), typeOfRoute: "Fastest"))
 }
