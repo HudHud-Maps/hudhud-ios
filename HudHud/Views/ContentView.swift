@@ -23,7 +23,7 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .medium
 	@State var searchShown: Bool = true
-	@State var mode: SearchViewModel.Mode = .live(provider: .apple)
+	@State var mode: SearchViewModel.Mode = .live(provider: .toursprung)
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
