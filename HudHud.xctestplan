@@ -13,12 +13,13 @@
     "locationScenario" : {
       "identifier" : "..\/..\/HudHud\/Preview Content\/Riyadh.gpx"
     },
+    "maximumTestRepetitions" : 5,
     "targetForVariableExpansion" : {
       "containerPath" : "container:HudHud.xcodeproj",
       "identifier" : "CDAE05432B681261003E5196",
       "name" : "HudHud"
     },
-    "testRepetitionMode" : "retryOnFailure",
+    "testRepetitionMode" : "fixedIterations",
     "testTimeoutsEnabled" : true,
     "uiTestingScreenshotsLifetime" : "keepAlways"
   },

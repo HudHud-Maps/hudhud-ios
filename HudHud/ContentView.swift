@@ -23,48 +23,52 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var isShown: Bool = true
+	let mapMode: Bool = Bool.random()
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
-		MapView(styleURL: styleURL, camera: $camera) {
-			if let selectedPOI {
-				let pointSource = ShapeSource(identifier: "points") {
-					MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
+		if mapMode == true {
+			MapView(styleURL: styleURL, camera: $camera) {
+				if let selectedPOI {
+					let pointSource = ShapeSource(identifier: "points") {
+						MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
+					}
+					CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+						.radius(constant: 16)
+						.color(constant: .systemRed)
+						.strokeWidth(constant: 2)
+						.strokeColor(constant: .white)
+					SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+						.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+						.iconColor(constant: .white)
+				} else {
+					print("clear poi")
 				}
-
-				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-					.radius(constant: 16)
-					.color(constant: .systemRed)
-					.strokeWidth(constant: 2)
-					.strokeColor(constant: .white)
-				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-					.iconColor(constant: .white)
-			} else {
-				print("clear poi")
 			}
-		}
-		.ignoresSafeArea()
-		.safeAreaInset(edge: .top, alignment: .trailing) {
-			CurrentLocationButton(camera: $camera)
-				.padding()
-		}
-		.onAppear {
-			// fatalError("third fatal error") // swiftlint:disable:this disable_fatalError
-		}
-		.sheet(isPresented: .constant(true)) {
-			BottomSheetView(viewModel: .init(),
-							camera: $camera,
-							selectedPOI: $selectedPOI,
-							selectedDetent: $selectedDetent)
-			.presentationCornerRadius(21)
-			.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
-			.presentationBackgroundInteraction(
-				.enabled(upThrough: .medium)
-			)
-			.interactiveDismissDisabled()
 			.ignoresSafeArea()
+			.safeAreaInset(edge: .top, alignment: .trailing) {
+				CurrentLocationButton(camera: $camera)
+					.padding()
+			}
+			.onAppear {
+				// fatalError("third fatal error") // swiftlint:disable:this disable_fatalError
+			}
+			.sheet(isPresented: .constant(true)) {
+				BottomSheetView(viewModel: .init(),
+								camera: $camera,
+								selectedPOI: $selectedPOI,
+								selectedDetent: $selectedDetent)
+				.presentationCornerRadius(21)
+				.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .medium)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
+			}
+		} else {
+			Text("Other mode")
 		}
 	}
 }
