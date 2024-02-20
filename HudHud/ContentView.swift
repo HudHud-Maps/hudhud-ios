@@ -50,9 +50,6 @@ struct ContentView: View {
 			CurrentLocationButton(camera: $camera)
 				.padding()
 		}
-		.onAppear {
-			ExceptionHandler.causeUncaughtException()
-		}
 		.sheet(isPresented: .constant(true)) {
 			BottomSheetView(viewModel: .init(),
 							camera: $camera,
