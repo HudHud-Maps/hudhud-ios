@@ -10,7 +10,6 @@ import SwiftUI
 
 struct DirectionsSummaryView: View {
 	var directionPreviewData: DirectionPreviewData
-	@Environment(\.colorScheme) var colorScheme
     var body: some View {
 			HStack {
 				VStack(alignment: .leading) {
@@ -20,14 +19,11 @@ struct DirectionsSummaryView: View {
 						.bold()
 						.lineLimit(1)
 						.minimumScaleFactor(0.5)
-					
-						// distance
+						// distance • type of route
 					Text("\(formatDistance(distance: directionPreviewData.distance)) • \(directionPreviewData.typeOfRoute)")
 							.font(.system(.body))
 							.lineLimit(1)
 							.minimumScaleFactor(0.5)
-						// type of route
-					
 				}
 				Spacer()
 				// Go button
@@ -55,7 +51,7 @@ struct DirectionsSummaryView: View {
 	func formatDuration(duration: TimeInterval) -> String {
 		let formatter = DateComponentsFormatter()
 			   formatter.allowedUnits = [.hour, .minute, .second]
-			   formatter.unitsStyle = .abbreviated
+			   formatter.unitsStyle = .brief
 		if let formattedString = formatter.string(from: duration) {
 					return formattedString
 				} else {
