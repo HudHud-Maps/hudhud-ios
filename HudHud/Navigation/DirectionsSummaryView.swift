@@ -20,18 +20,14 @@ struct DirectionsSummaryView: View {
 						.bold()
 						.lineLimit(1)
 						.minimumScaleFactor(0.5)
-					HStack {
+					
 						// distance
-						Text(formatDistance(distance: directionPreviewData.distance))
+					Text("\(formatDistance(distance: directionPreviewData.distance)) • \(directionPreviewData.typeOfRoute)")
 							.font(.system(.body))
 							.lineLimit(1)
 							.minimumScaleFactor(0.5)
 						// type of route
-						Text(directionPreviewData.typeOfRoute)
-							.font(.system(.body))
-							.lineLimit(1)
-							.minimumScaleFactor(0.5)
-					}
+					
 				}
 				Spacer()
 				// Go button
@@ -63,7 +59,7 @@ struct DirectionsSummaryView: View {
 		if let formattedString = formatter.string(from: duration) {
 					return formattedString
 				} else {
-					return "Invalid Duration"
+					return "-"
 				}
 			}
 	func formatDistance(distance: Measurement<UnitLength>) -> String {
