@@ -8,11 +8,10 @@
 
 import SwiftUI
 
-struct DirectionPreview: View {
+struct DirectionsSummaryView: View {
 	var directionPreviewData: DirectionPreviewData
 	@Environment(\.colorScheme) var colorScheme
     var body: some View {
-		VStack {
 			HStack {
 				VStack(alignment: .leading) {
 					// 20 min AKA duration
@@ -47,17 +46,16 @@ struct DirectionPreview: View {
 						.foregroundStyle(Color.white)
 						.padding()
 						.padding(.horizontal)
-						.background(Color("LightGreen"))
+						.background(.green)
 						.cornerRadius(8)
 				}
 			}
 			.padding()
 			.frame(maxWidth: .infinity)
-			.background(colorScheme == .dark ? Color.secondary : Color("LightGrey"))
+			.background(.tertiary)
 			.cornerRadius(8)
-		}
-		.padding()
     }
+
 	func formatDuration(duration: TimeInterval) -> String {
 		let formatter = DateComponentsFormatter()
 			   formatter.allowedUnits = [.hour, .minute, .second]
@@ -77,5 +75,15 @@ struct DirectionPreview: View {
 }
 
 #Preview {
-DirectionPreview(directionPreviewData: DirectionPreviewData(duration: 1_200, distance: Measurement(value: 4.4, unit: UnitLength.kilometers), typeOfRoute: "Fastest"))
+	DirectionsSummaryView(
+		directionPreviewData: DirectionPreviewData(
+			duration: 1_200,
+			distance: Measurement(
+				value: 4.4,
+				unit: UnitLength.kilometers
+			),
+			typeOfRoute: "Fastest"
+		)
+	)
+	.padding()
 }
