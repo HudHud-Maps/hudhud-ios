@@ -10,10 +10,7 @@ import SwiftUI
 
 struct PoiTileGridView: View {
 	let poiTileGrid: [PoiTileData]
-	let columns = [
-		GridItem(),
-		GridItem()
-	]
+	let columns = Array(repeating: GridItem(.flexible()), count: 2)
 	var body: some View {
 		ScrollView {
 			LazyVGrid(columns: columns, spacing: 20) {

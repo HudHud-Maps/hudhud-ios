@@ -18,7 +18,6 @@
 		CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970372B85E87300CF9D59 /* PoiTileView.swift */; };
 		CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
-		CB3970442B85F89600CF9D59 /* ShapesStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970432B85F89600CF9D59 /* ShapesStyle.swift */; };
 		CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD3893192B6D6A3C005CF8BC /* POISheet.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
@@ -73,7 +72,6 @@
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
-		CB3970432B85F89600CF9D59 /* ShapesStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapesStyle.swift; sourceTree = "<group>"; };
 		CD3893192B6D6A3C005CF8BC /* POISheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheet.swift; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 			isa = PBXGroup;
 			children = (
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
-				CB3970432B85F89600CF9D59 /* ShapesStyle.swift */,
 			);
 			path = UIStyle;
 			sourceTree = "<group>";
@@ -415,7 +412,6 @@
 				CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */,
 				CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */,
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
-				CB3970442B85F89600CF9D59 /* ShapesStyle.swift in Sources */,
 				90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */,
 				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
 				CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */,
