@@ -20,7 +20,7 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")!	// swiftlint:disable:this force_unwrapping
 
-	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
+	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
@@ -75,7 +75,7 @@ extension PresentationDetent {
 }
 
 extension CLLocationCoordinate2D {
-	static let vienna = CLLocationCoordinate2D(latitude: 48.21, longitude: 16.37)
+	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
 }
 
 #Preview {
