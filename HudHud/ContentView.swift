@@ -23,12 +23,10 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var isShown: Bool = true
-	let mapMode: Bool = Bool.random()
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {
-		if mapMode == true {
 			MapView(styleURL: styleURL, camera: $camera) {
 				if let selectedPOI {
 					let pointSource = ShapeSource(identifier: "points") {
@@ -67,9 +65,6 @@ struct ContentView: View {
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
 			}
-		} else {
-			Text("Other mode")
-		}
 	}
 }
 

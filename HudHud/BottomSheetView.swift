@@ -30,7 +30,7 @@ struct BottomSheetView: View {
 				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
-				TextField("Spearch", text: $searchText)
+				TextField("Search", text: $searchText)
 					.focused($searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
