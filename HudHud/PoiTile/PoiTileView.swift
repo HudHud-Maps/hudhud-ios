@@ -53,7 +53,7 @@ struct PoiTileView: View {
 					.font(.subheadline)
 				HStack {
 					Text("\(poiTileData.poiType) \u{2022} \(poiTileData.locationDistance ?? "") \u{2022} \(poiTileData.pricing?.rawValue ?? "")")
-						.font(.callout)
+						.font(.caption)
 						.foregroundStyle(.secondary)
 				 }
 			}
