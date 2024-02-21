@@ -44,10 +44,10 @@ struct MapLayersView: View {
 }
 
 #Preview {
-	var layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
-	var layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-	var layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-	var mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
+	let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
+	let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
+	let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
+	let mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
 	return MapLayersView(mapLayerData: mapLayerData)
 		.padding(.horizontal, 20)
 }
