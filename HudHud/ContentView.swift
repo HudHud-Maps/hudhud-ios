@@ -17,7 +17,7 @@ import SwiftUI
 struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")!	// swiftlint:disable:this force_unwrapping
+	private let styleURL = URL(string: "https://www.wien.gv.at/live/app/json/styles-basemap.json")!	// swiftlint:disable:this force_unwrapping
 
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
