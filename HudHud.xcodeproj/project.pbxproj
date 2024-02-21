@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		90CBC0532B85C4FB009ADD79 /* FavoritesCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0522B85C4FB009ADD79 /* FavoritesCategoriesView.swift */; };
+		90CBC0562B85C6DC009ADD79 /* FavCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0552B85C6DC009ADD79 /* FavCategoriesButton.swift */; };
+		90CBC0582B85C6F3009ADD79 /* FavCategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0572B85C6F3009ADD79 /* FavCategoriesData.swift */; };
 		CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */; };
 		CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */; };
 		CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */; };
@@ -53,6 +56,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		90CBC0522B85C4FB009ADD79 /* FavoritesCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesCategoriesView.swift; sourceTree = "<group>"; };
+		90CBC0552B85C6DC009ADD79 /* FavCategoriesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavCategoriesButton.swift; sourceTree = "<group>"; };
+		90CBC0572B85C6F3009ADD79 /* FavCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavCategoriesData.swift; sourceTree = "<group>"; };
 		CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesBannerView.swift; sourceTree = "<group>"; };
 		CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryBannerData.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
@@ -110,6 +116,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		90CBC0542B85C682009ADD79 /* FavoritesCategories */ = {
+			isa = PBXGroup;
+			children = (
+				90CBC0522B85C4FB009ADD79 /* FavoritesCategoriesView.swift */,
+				90CBC0552B85C6DC009ADD79 /* FavCategoriesButton.swift */,
+				90CBC0572B85C6F3009ADD79 /* FavCategoriesData.swift */,
+			);
+			path = FavoritesCategories;
+			sourceTree = "<group>";
+		};
 		CB396FF92B7C1A5300CF9D59 /* CategoriesBanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -153,6 +169,7 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				90CBC0542B85C682009ADD79 /* FavoritesCategories */,
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
 				CD3893192B6D6A3C005CF8BC /* POISheet.swift */,
@@ -358,11 +375,14 @@
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
 				CDAE060A2B6CDE94003E5196 /* SearchViewModel.swift in Sources */,
+				90CBC0582B85C6F3009ADD79 /* FavCategoriesData.swift in Sources */,
 				CDAE05EE2B6A87F4003E5196 /* LocationButton.swift in Sources */,
 				CDAE06082B6C201E003E5196 /* BottomSheetView.swift in Sources */,
+				90CBC0532B85C4FB009ADD79 /* FavoritesCategoriesView.swift in Sources */,
 				CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */,
 				CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
+				90CBC0562B85C6DC009ADD79 /* FavCategoriesButton.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
 				CD38931A2B6D6A3C005CF8BC /* POISheet.swift in Sources */,
