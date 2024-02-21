@@ -11,7 +11,7 @@ import POIService
 import CoreLocation
 import MapKit
 
-public final class ToursprungPOI: POIServiceProtocol {
+public actor ToursprungPOI: POIServiceProtocol {
 
 	enum GeocoderError: Error, LocalizedError {
 		case buildingURL

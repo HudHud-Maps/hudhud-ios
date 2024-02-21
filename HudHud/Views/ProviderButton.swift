@@ -10,18 +10,18 @@ import SwiftUI
 
 struct ProviderButton: View {
 
-	@Binding var mode: SearchViewModel.Mode
+	@ObservedObject var searchViewModel: SearchViewModel
 
 	var body: some View {
 		Button {
-			switch mode {
+			switch searchViewModel.mode {
 			case .live(let provider):
-				mode = .live(provider: provider.next())
+				self.searchViewModel.mode = .live(provider: provider.next())
 			case .preview:
-				mode = .preview
+				self.searchViewModel.mode = .preview
 			}
 		} label: {
-			switch mode {
+			switch self.searchViewModel.mode {
 			case .live(.apple):
 				Image(systemSymbol: .appleLogo)
 			case .live(.toursprung):
@@ -41,12 +41,12 @@ struct ProviderButton: View {
 
 @available(iOS 17, *)
 #Preview("Apple", traits: .sizeThatFitsLayout) {
-	ProviderButton(mode: .constant(.live(provider: .apple)))
+	ProviderButton(searchViewModel: .init(mode: .live(provider: .apple)))
 		.padding()
 }
 
 @available(iOS 17, *)
 #Preview("Toursprung", traits: .sizeThatFitsLayout) {
-	ProviderButton(mode: .constant(.live(provider: .toursprung)))
+	ProviderButton(searchViewModel: .init(mode: .live(provider: .toursprung)))
 		.padding()
 }

@@ -18,19 +18,18 @@ struct SearchSheet: View {
 	@ObservedObject var viewModel: SearchViewModel
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
-	@State private var searchText = ""
 
 	@Binding var camera: MapViewCamera
 	@Binding var selectedPOI: POI?
 	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
-		VStack {
+		return VStack {
 			HStack {
 				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
-				TextField("Search", text: $searchText)
+				TextField("Search", text: self.$viewModel.searchText)
 					.focused($searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
@@ -39,9 +38,9 @@ struct SearchSheet: View {
 					.overlay(
 						HStack {
 							Spacer()
-							if !self.searchText.isEmpty {
+							if !self.viewModel.searchText.isEmpty {
 								Button(action: {
-									self.searchText = ""
+									self.viewModel.searchText = ""
 								}, label: {
 									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
@@ -89,9 +88,6 @@ struct SearchSheet: View {
 				.listRowSeparator(.hidden)
 				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 			}
-			.onChange(of: searchText) { newValue in
-				self.viewModel.searchText = newValue
-			}
 			.listStyle(.plain)
 		}
 		.sheet(isPresented: $detailSheetShown) {
@@ -124,9 +120,9 @@ struct SearchSheet: View {
 }
 
 #Preview {
-	let sheet = SearchSheet(viewModel: .init(mode: .constant(.preview)),
-								camera: .constant(.center(.vienna, zoom: 12)),
-								selectedPOI: .constant(nil),
-								selectedDetent: .constant(.medium))
+	let sheet = SearchSheet(viewModel: .init(mode: .preview),
+							camera: .constant(.center(.vienna, zoom: 12)),
+							selectedPOI: .constant(nil),
+							selectedDetent: .constant(.medium))
 	return sheet
 }

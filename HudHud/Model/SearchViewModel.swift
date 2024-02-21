@@ -7,12 +7,13 @@
 //
 
 import ApplePOI
+import Combine
 import Foundation
 import POIService
-import ToursprungPOI
 import SwiftUI
+import ToursprungPOI
 
-@MainActor
+@MainActor	// TODO: check what this does exactly
 class SearchViewModel: ObservableObject {
 
 	enum Mode {
@@ -28,12 +29,19 @@ class SearchViewModel: ObservableObject {
 	private var task: Task<(), Error>?
 	private var apple: ApplePOI = .init()
 	private var toursprung: ToursprungPOI = .init()
-	var mode: Binding<Mode>
+	private var cancellable: AnyCancellable?
+	@Published var mode: Mode {
+		didSet {
+			self.searchText = ""
+			self.items = []
+		}
+	}
 
 	@Published var items: [Row] = []
-	var searchText: String = "" {
+	@Published var searchText: String = "" /*{
 		didSet {
-			switch self.mode.wrappedValue {
+			print("searchText = \(self.searchText)")
+			switch self.mode {
 			case .live(provider: .apple):
 				self.task?.cancel()
 				self.task = Task {
@@ -51,15 +59,35 @@ class SearchViewModel: ObservableObject {
 				]
 			}
 		}
-	}
+	}*/
 
 	// MARK: - Lifecycle
 
-	init(mode: Binding<Mode>) {
+	init(mode: Mode) {
 		self.mode = mode
-	}
 
-	// MARK: - SearchViewModel
+		self.cancellable = $searchText
+			.removeDuplicates()
+			.sink { newValue in
+				switch self.mode {
+				case .live(provider: .apple):
+					self.task?.cancel()
+					self.task = Task {
+						self.items = try await self.apple.predict(term: newValue)
+					}
+				case .live(provider: .toursprung):
+					self.task?.cancel()
+					self.task = Task {
+						self.items = try await self.toursprung.predict(term: newValue)
+					}
+				case .preview:
+					self.items = [
+						.init(toursprung: .starbucks),
+						.init(toursprung: .ketchup)
+					]
+				}
+			}
+	}
 
 	func resolve(prediction: Row) async throws -> [Row] {
 		switch prediction.provider {

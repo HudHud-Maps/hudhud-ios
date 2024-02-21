@@ -14,6 +14,7 @@ import POIService
 import SFSafeSymbols
 import SwiftUI
 
+@MainActor
 struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
@@ -23,7 +24,7 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .medium
 	@State var searchShown: Bool = true
-	@State var mode: SearchViewModel.Mode = .live(provider: .toursprung)
+	@StateObject var searchViewModel: SearchViewModel = .init(mode: .live(provider: .apple)) 	// TODO: revert back to .apple
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
@@ -49,14 +50,14 @@ struct ContentView: View {
 			VStack {
 				CurrentLocationButton(camera: $camera)
 					.padding()
-				ProviderButton(mode: $mode)
+				ProviderButton(searchViewModel: searchViewModel)
 			}
 		}
 		.sheet(isPresented: $searchShown) {
-			SearchSheet(viewModel: .init(mode: $mode),
-							camera: $camera,
-							selectedPOI: $selectedPOI,
-							selectedDetent: $selectedDetent)
+			SearchSheet(viewModel: searchViewModel,
+						camera: $camera,
+						selectedPOI: $selectedPOI,
+						selectedDetent: $selectedDetent)
 			.presentationCornerRadius(21)
 			.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
 			.presentationBackgroundInteraction(
@@ -78,5 +79,5 @@ extension CLLocationCoordinate2D {
 }
 
 #Preview {
-	ContentView()
+	ContentView(searchViewModel: .init(mode: .preview))
 }

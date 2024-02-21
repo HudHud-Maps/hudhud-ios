@@ -13,19 +13,22 @@ import MapKit
 import Combine
 import SwiftUI
 
-public final class ApplePOI: NSObject, POIServiceProtocol {
+public final actor ApplePOI: NSObject, POIServiceProtocol {
 
 	private var localSearch: MKLocalSearch?
 	private var completer: MKLocalSearchCompleter
 	private var cancellable: AnyCancellable?
 	private var continuation: CheckedContinuation<[Row], Error>?
+	private let delegate: DelegateWrapper
 
 	// MARK: - Lifecycle
 
 	public override init() {
 		self.completer = MKLocalSearchCompleter()
+		self.delegate = .init()
 		super.init()
-		self.completer.delegate = self
+		self.delegate.poi = self
+		self.completer.delegate = self.delegate
 	}
 
 	// MARK: - POIServiceProtocol
@@ -69,28 +72,49 @@ public final class ApplePOI: NSObject, POIServiceProtocol {
 				self.continuation = nil
 			}
 
+			if term.isEmpty {
+				continuation.resume(returning: [])
+				return
+			}
+
 			self.continuation = continuation
 			DispatchQueue.main.sync {
 				self.completer.queryFragment = term
 			}
 		}
 	}
-}
 
-// MARK: - MKLocalSearchCompleterDelegate
-
-extension ApplePOI: MKLocalSearchCompleterDelegate {
-
-	public func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-		let results = completer.results.map {
-			Row(appleCompletion: $0)
-		}
+	func update(results: [Row]) async {
 		self.continuation?.resume(returning: results)
 		self.continuation = nil
 	}
 
-	public func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+	func update(error: Error) async {
 		self.continuation?.resume(throwing: error)
 		self.continuation = nil
+	}
+}
+
+// MARK: - Delegate
+
+private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
+
+	weak var poi: ApplePOI?
+
+	// MARK: - MKLocalSearchCompleterDelegate
+
+	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+		let results = completer.results.map {
+			Row(appleCompletion: $0)
+		}
+		Task {
+			await self.poi?.update(results: results)
+		}
+	}
+
+	func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+		Task {
+			await self.poi?.update(error: error)
+		}
 	}
 }
