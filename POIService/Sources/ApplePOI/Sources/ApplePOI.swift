@@ -13,22 +13,22 @@ import MapKit
 import Combine
 import SwiftUI
 
-public final actor ApplePOI: NSObject, POIServiceProtocol {
+public actor ApplePOI: POIServiceProtocol {
 
 	private var localSearch: MKLocalSearch?
 	private var completer: MKLocalSearchCompleter
-	private var cancellable: AnyCancellable?
 	private var continuation: CheckedContinuation<[Row], Error>?
 	private let delegate: DelegateWrapper
 
 	// MARK: - Lifecycle
 
-	public override init() {
+	public init() {
 		self.completer = MKLocalSearchCompleter()
 		self.delegate = .init()
-		super.init()
 		self.delegate.poi = self
-		self.completer.delegate = self.delegate
+		Task {
+			await self.completer.delegate = self.delegate
+		}
 	}
 
 	// MARK: - POIServiceProtocol

@@ -61,14 +61,9 @@ struct SearchSheet: View {
 				Button(action: {
 					switch item.provider {
 					case .toursprung:
-						self.searchIsFocused = false
-						self.selectedDetent = .medium
-						if let coordinate = item.coordinate {
-							self.camera = .center(coordinate, zoom: 16)
-						}
-						self.selectedPOI = item.poi
-						self.detailSheetShown = true
+						self.show(row: item)
 					case .appleCompletion:
+						self.selectedDetent = .large
 						self.searchIsFocused = false
 						Task {
 							let items = try await self.viewModel.resolve(prediction: item)
@@ -90,27 +85,26 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(isPresented: $detailSheetShown) {
-			if let poi = self.selectedPOI {
-				POIDetailSheet(poi: poi, isShown: $detailSheetShown) {
-					print("start")
-				} onMore: {
-					print("more")
-				}
-				.presentationDetents([.third, .large])
-				.presentationBackgroundInteraction(
-					.enabled(upThrough: .third)
-				)
-				.interactiveDismissDisabled()
-				.ignoresSafeArea()
+		.sheet(item: $selectedPOI) {
+			self.selectedDetent = .medium
+		} content: { _ in
+			POIDetailSheet(poi: $selectedPOI, isShown: $detailSheetShown) {
+				print("start")
+			} onMore: {
+				print("more")
 			}
+			.presentationDetents([.third, .large])
+			.presentationBackgroundInteraction(
+				.enabled(upThrough: .third)
+			)
+			.interactiveDismissDisabled()
+			.ignoresSafeArea()
 		}
-		.padding(.vertical, 8)
 	}
 
 	func show(row: Row) {
 		self.searchIsFocused = false
-		self.selectedDetent = .medium
+		self.selectedDetent = .small
 		if let coordinate = row.coordinate {
 			self.camera = .center(coordinate, zoom: 16)
 		}

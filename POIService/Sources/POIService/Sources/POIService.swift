@@ -24,7 +24,7 @@ public enum PredictionResult: Hashable {
 	case toursprung(result: Row)
 }
 
-public class POI: Hashable {
+public class POI: Hashable, Identifiable {
 
 	public static func == (lhs: POI, rhs: POI) -> Bool {
 		return lhs.title == rhs.title && lhs.subtitle == rhs.subtitle

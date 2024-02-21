@@ -13,7 +13,7 @@ import POIService
 import SwiftUI
 import ToursprungPOI
 
-@MainActor	// TODO: check what this does exactly
+@MainActor
 class SearchViewModel: ObservableObject {
 
 	enum Mode {
@@ -30,36 +30,17 @@ class SearchViewModel: ObservableObject {
 	private var apple: ApplePOI = .init()
 	private var toursprung: ToursprungPOI = .init()
 	private var cancellable: AnyCancellable?
+
+	// MARK: - Properties
+
+	@Published var items: [Row] = []
+	@Published var searchText: String = ""
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
 			self.items = []
 		}
 	}
-
-	@Published var items: [Row] = []
-	@Published var searchText: String = "" /*{
-		didSet {
-			print("searchText = \(self.searchText)")
-			switch self.mode {
-			case .live(provider: .apple):
-				self.task?.cancel()
-				self.task = Task {
-					self.items = try await self.apple.predict(term: self.searchText)
-				}
-			case .live(provider: .toursprung):
-				self.task?.cancel()
-				self.task = Task {
-					self.items = try await self.toursprung.predict(term: self.searchText)
-				}
-			case .preview:
-				self.items = [
-					.init(toursprung: .starbucks),
-					.init(toursprung: .ketchup)
-				]
-			}
-		}
-	}*/
 
 	// MARK: - Lifecycle
 
@@ -88,6 +69,8 @@ class SearchViewModel: ObservableObject {
 				}
 			}
 	}
+
+	// MARK: - SearchViewModel
 
 	func resolve(prediction: Row) async throws -> [Row] {
 		switch prediction.provider {

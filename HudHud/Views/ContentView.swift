@@ -22,9 +22,9 @@ struct ContentView: View {
 
 	@State private var camera = MapViewCamera.center(.vienna, zoom: 12)
 	@State private var selectedPOI: POI?
-	@State var selectedDetent: PresentationDetent = .medium
+	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
-	@StateObject var searchViewModel: SearchViewModel = .init(mode: .live(provider: .apple)) 	// TODO: revert back to .apple
+	@StateObject var searchViewModel: SearchViewModel = .init(mode: .live(provider: .toursprung))
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
