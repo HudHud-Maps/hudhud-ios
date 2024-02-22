@@ -3,7 +3,7 @@
 --anonymousforeach convert
 --assetliterals visual-width
 --asynccapturing 
---beforemarks enum,let,var
+--beforemarks enum,let,typealias,var
 --binarygrouping 4,8
 --categorymark "MARK: - %c"
 --classthreshold 0
@@ -26,7 +26,7 @@
 --funcattributes preserve
 --generictypes 
 --groupedextension "MARK: %c"
---guardelse auto
+--guardelse same-line
 --header ignore
 --hexgrouping 4,8
 --hexliteralcase uppercase
