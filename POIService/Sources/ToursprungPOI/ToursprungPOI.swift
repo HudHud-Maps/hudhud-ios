@@ -6,11 +6,12 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import CoreLocation
 import Foundation
 import POIService
+import CoreLocation
+import MapKit
 
-public final class ToursprungPOI: POIServiceProtocol {
+public actor ToursprungPOI: POIServiceProtocol {
 
 	enum GeocoderError: Error, LocalizedError {
 		case buildingURL
@@ -26,16 +27,36 @@ public final class ToursprungPOI: POIServiceProtocol {
 		}
 	}
 
-	public static let serviceName: String = "Toursprung"
-	let session: URLSession = .shared
+	private let session: URLSession
+	private let debouncer: AsyncDebouncer<String, [Row]>
+
+	// MARK: - Lifecycle
 
 	public init() {
-
+		self.session = .shared
+		self.debouncer = .init()
 	}
 
-	// MARK: - ToursprungPOI
+	// MARK: - POIServiceProtocol
 
-	public func search(term: String) async throws -> [POI] {
+	public static var serviceName: String = "Apple"
+
+	public func predict(term: String) async throws -> [Row] {
+		return try await debouncer.debounce(input: term) { input in
+			return try await self.search(term: input)
+		}
+	}
+
+	public func lookup(prediction: PredictionResult) async throws -> [Row] {
+		return []
+	}
+}
+
+// MARK: - Private
+
+private extension ToursprungPOI {
+
+	func search(term: String) async throws -> [Row] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()
@@ -63,22 +84,26 @@ public final class ToursprungPOI: POIServiceProtocol {
 		}
 
 		let decoder = JSONDecoder()
-		let pois = try decoder.decode([POIElement].self, from: data)
-		return pois.compactMap {
+		let poiElementss = try decoder.decode([POIElement].self, from: data)
+		let pois = poiElementss.compactMap {
 			return POIService.POI(element: $0)
+		}
+		return pois.map {
+			return Row(toursprung: $0)
 		}
 	}
 }
 
 public extension POI {
 
-	init?(element: POIElement) {
+	convenience init?(element: POIElement) {
 		guard let lat = Double(element.lat),
 			  let lon = Double(element.lon) else { return nil }
 
 		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-		self.init(name: element.displayName,
+		self.init(id: element.placeID,
+				  title: element.displayName,
 				  subtitle: element.address.description,
 				  locationCoordinate: coordinate,
 				  type: element.type)
@@ -95,34 +120,34 @@ public extension POI {
 public extension POIElement {
 
 	static let starbucksKualaLumpur = POIElement(placeID: 374426437,
-												 licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
-												 osmType: "node",
-												 osmID: 11363949513,
-												 boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
-												 lat: "3.177246",
-												 lon: "101.7507382",
-												 displayName: "Starbucks, Kuala Lumpur, Malaysia",
-												 poiClass: "amenity",
-												 type: "cafe",
-												 importance: 0.6758606469435616,
-												 address: Address(hamlet: nil,
-																  county: nil,
-																  state: nil,
-																  iso31662Lvl4: "MY-14",
-																  country: "Malaysia",
-																  countryCode: "my",
-																  town: nil,
-																  postcode: "54200",
-																  village: nil,
-																  iso31662Lvl6: nil,
-																  municipality: nil,
-																  region: nil,
-																  natural: nil,
-																  stateDistrict: nil,
-																  city: "Kuala Lumpur",
-																  road: "Jalan Taman Setiawangsa",
-																  quarter: nil,
-																  suburb: "Setiawangsa",
-																  iso31662Lvl3: nil),
-												 category: "poi")
+														licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+														osmType: "node",
+														osmID: 11363949513,
+														boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
+														lat: "3.177246",
+														lon: "101.7507382",
+														displayName: "Starbucks, Kuala Lumpur, Malaysia",
+														poiClass: "amenity",
+														type: "cafe",
+														importance: 0.6758606469435616,
+														address: Address(hamlet: nil,
+																		 county: nil,
+																		 state: nil,
+																		 iso31662Lvl4: "MY-14",
+																		 country: "Malaysia",
+																		 countryCode: "my",
+																		 town: nil,
+																		 postcode: "54200",
+																		 village: nil,
+																		 iso31662Lvl6: nil,
+																		 municipality: nil,
+																		 region: nil,
+																		 natural: nil,
+																		 stateDistrict: nil,
+																		 city: "Kuala Lumpur",
+																		 road: "Jalan Taman Setiawangsa",
+																		 quarter: nil,
+																		 suburb: "Setiawangsa",
+																		 iso31662Lvl3: nil),
+														category: "poi")
 }
