@@ -27,7 +27,7 @@ struct ProviderButton: View {
 			case .live(.toursprung):
 				Text("MTK")
 			case .preview:
-				Text("Preview")
+				Image(systemSymbol: .pCircle)
 			}
 		}
 		.frame(minWidth: 44, minHeight: 44)
