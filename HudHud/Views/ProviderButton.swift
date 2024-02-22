@@ -10,7 +10,7 @@ import SwiftUI
 
 struct ProviderButton: View {
 
-	@ObservedObject var searchViewModel: SearchViewModel
+	@ObservedObject var searchViewModel: SearchViewStore
 
 	var body: some View {
 		Button {

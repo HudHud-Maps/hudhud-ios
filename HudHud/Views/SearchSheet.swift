@@ -15,7 +15,7 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-	@ObservedObject var viewModel: SearchViewModel
+	@ObservedObject var viewModel: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
 

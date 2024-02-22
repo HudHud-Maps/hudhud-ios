@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
 		CD59CB4D2B8389BE00A15214 /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59CB4C2B8389BE00A15214 /* ProviderButton.swift */; };
-		CD5A598D2B84C7E200177C04 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5A598C2B84C7E200177C04 /* SearchViewModel.swift */; };
+		CD5A598D2B84C7E200177C04 /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5A598C2B84C7E200177C04 /* SearchViewStore.swift */; };
 		CD5A59952B84C7F000177C04 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5A598E2B84C7F000177C04 /* SearchResultItem.swift */; };
 		CD5A59962B84C7F000177C04 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5A598F2B84C7F000177C04 /* HudHudApp.swift */; };
 		CD5A59972B84C7F000177C04 /* SearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5A59902B84C7F000177C04 /* SearchSheet.swift */; };
@@ -62,7 +62,7 @@
 /* Begin PBXFileReference section */
 		CD59BD672B7BC819002C14F6 /* POIService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = POIService; sourceTree = "<group>"; };
 		CD59CB4C2B8389BE00A15214 /* ProviderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
-		CD5A598C2B84C7E200177C04 /* SearchViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
+		CD5A598C2B84C7E200177C04 /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
 		CD5A598E2B84C7F000177C04 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD5A598F2B84C7F000177C04 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CD5A59902B84C7F000177C04 /* SearchSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 		CD59BD652B7A5D54002C14F6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CD5A598C2B84C7E200177C04 /* SearchViewModel.swift */,
+				CD5A598C2B84C7E200177C04 /* SearchViewStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -427,7 +427,7 @@
 				CD5A599B2B84C7F000177C04 /* ContentView.swift in Sources */,
 				CD5A59952B84C7F000177C04 /* SearchResultItem.swift in Sources */,
 				CD5A59B62B8639EB00177C04 /* MapLayersData.swift in Sources */,
-				CD5A598D2B84C7E200177C04 /* SearchViewModel.swift in Sources */,
+				CD5A598D2B84C7E200177C04 /* SearchViewStore.swift in Sources */,
 				CD5A59B72B8639EB00177C04 /* MainLayersView.swift in Sources */,
 				CD5A59B32B8639EB00177C04 /* DirectionsSummaryView.swift in Sources */,
 				CD5A59B52B8639EB00177C04 /* MapLayersView.swift in Sources */,

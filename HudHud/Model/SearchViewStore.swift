@@ -1,5 +1,5 @@
 //
-//  SearchViewModel.swift
+//  SearchViewStore.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 02.02.24.
@@ -14,7 +14,7 @@ import SwiftUI
 import ToursprungPOI
 
 @MainActor
-class SearchViewModel: ObservableObject {
+class SearchViewStore: ObservableObject {
 
 	enum Mode {
 		enum Provider: CaseIterable {
