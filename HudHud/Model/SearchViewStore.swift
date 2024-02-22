@@ -70,7 +70,7 @@ class SearchViewStore: ObservableObject {
 			}
 	}
 
-	// MARK: - SearchViewModel
+	// MARK: - SearchViewStore
 
 	func resolve(prediction: Row) async throws -> [Row] {
 		switch prediction.provider {
