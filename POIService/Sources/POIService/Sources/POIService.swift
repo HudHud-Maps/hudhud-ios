@@ -12,7 +12,7 @@ import SFSafeSymbols
 import SwiftUI
 import MapKit
 
-public protocol POIServiceProtocol: ObservableObject {
+public protocol POIServiceProtocol {
 
 	static var serviceName: String { get }
 	func lookup(prediction: PredictionResult) async throws -> [Row]
