@@ -14,27 +14,29 @@ import POIService
 import SFSafeSymbols
 import SwiftUI
 
+// MARK: - ContentView
+
 @MainActor
 struct ContentView: View {
-	
+
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")!	// swiftlint:disable:this force_unwrapping
-	
+	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+
 	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
 	@StateObject var searchViewModel: SearchViewStore = .init(mode: .live(provider: .toursprung))
-	
+
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
-	
+
 	var body: some View {
-		return MapView(styleURL: styleURL, camera: $camera) {
+		return MapView(styleURL: self.styleURL, camera: self.$camera) {
 			if let selectedPOI {
 				let pointSource = ShapeSource(identifier: "points") {
 					MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
 				}
-				
+
 				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
 					.radius(constant: 16)
 					.color(constant: .systemRed)
@@ -48,23 +50,23 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
 			VStack {
-				CurrentLocationButton(camera: $camera)
+				CurrentLocationButton(camera: self.$camera)
 					.padding()
-				ProviderButton(searchViewModel: searchViewModel)
+				ProviderButton(searchViewModel: self.searchViewModel)
 			}
 		}
-		.sheet(isPresented: $searchShown) {
-			SearchSheet(viewModel: searchViewModel,
-						camera: $camera,
-						selectedPOI: $selectedPOI,
-						selectedDetent: $selectedDetent)
-			.presentationCornerRadius(21)
-			.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
-			.presentationBackgroundInteraction(
-				.enabled(upThrough: .medium)
-			)
-			.interactiveDismissDisabled()
-			.ignoresSafeArea()
+		.sheet(isPresented: self.$searchShown) {
+			SearchSheet(viewModel: self.searchViewModel,
+						camera: self.$camera,
+						selectedPOI: self.$selectedPOI,
+						selectedDetent: self.$selectedDetent)
+				.presentationCornerRadius(21)
+				.presentationDetents([.small, .medium, .large], selection: self.$selectedDetent)
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .medium)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
 		}
 	}
 }

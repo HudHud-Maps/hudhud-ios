@@ -6,10 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+@testable import HudHud
 import POIService
 import ToursprungPOI
 import XCTest
-@testable import HudHud
 
 final class HudHudTests: XCTestCase {
 
@@ -21,7 +21,5 @@ final class HudHudTests: XCTestCase {
 		// Put teardown code here. This method is called after the invocation of each test method in the class.
 	}
 
-	func testExample() throws {
-
-	}
+	func testExample() throws {}
 }

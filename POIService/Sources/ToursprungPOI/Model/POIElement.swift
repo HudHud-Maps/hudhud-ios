@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - POIElement
+
 public struct POIElement: Codable, Equatable, Sendable {
 	public let placeID: Int
 	public let licence: String
@@ -25,19 +27,21 @@ public struct POIElement: Codable, Equatable, Sendable {
 
 	enum CodingKeys: String, CodingKey {
 		case placeID = "place_id"
-		case licence = "licence"
+		case licence
 		case osmType = "osm_type"
 		case osmID = "osm_id"
-		case boundingbox = "boundingbox"
-		case lat = "lat"
-		case lon = "lon"
+		case boundingbox
+		case lat
+		case lon
 		case displayName = "display_name"
 		case poiClass = "class"
-		case type = "type"
-		case importance = "importance"
-		case address = "address"
-		case category = "category"
+		case type
+		case importance
+		case address
+		case category
 	}
+
+	// MARK: - Lifecycle
 
 	public init(placeID: Int, licence: String, osmType: String, osmID: Int, boundingbox: [String], lat: String, lon: String, displayName: String, poiClass: String, type: String, importance: Double, address: Address, category: String) {
 		self.placeID = placeID
@@ -55,6 +59,8 @@ public struct POIElement: Codable, Equatable, Sendable {
 		self.category = category
 	}
 }
+
+// MARK: CustomStringConvertible
 
 extension POIElement: CustomStringConvertible {
 

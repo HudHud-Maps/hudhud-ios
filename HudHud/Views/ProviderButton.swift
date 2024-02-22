@@ -14,8 +14,8 @@ struct ProviderButton: View {
 
 	var body: some View {
 		Button {
-			switch searchViewModel.mode {
-			case .live(let provider):
+			switch self.searchViewModel.mode {
+			case let .live(provider):
 				self.searchViewModel.mode = .live(provider: provider.next())
 			case .preview:
 				self.searchViewModel.mode = .preview

@@ -26,7 +26,7 @@ struct POIDetailSheet: View {
 				HStack(alignment: .top) {
 					VStack {
 						Text(self.poi?.title ?? "")
-							.font(.title.bold() )
+							.font(.title.bold())
 							.frame(maxWidth: .infinity, alignment: .leading)
 
 						Text(self.poi?.type ?? "")
@@ -109,7 +109,7 @@ struct POIDetailSheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
+	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
 	return POIDetailSheet(poi: .constant(poi), isShown: .constant(true)) {
 		print("start")
 	} onMore: {
