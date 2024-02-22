@@ -39,6 +39,7 @@
 		CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05FF2B6BDC5A003E5196 /* ApplePOI */; };
 		CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06012B6BDC5A003E5196 /* POIService */; };
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
+		CDCE17B32B8779DF00EC1571 /* MapItemState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17B22B8779DF00EC1571 /* MapItemState.swift */; };
 		CDEF50292B838FDB0045ADBD /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDEF50282B838FDB0045ADBD /* CaseIterable.swift */; };
 /* End PBXBuildFile section */
 
@@ -88,6 +89,7 @@
 		CDAE05622B681263003E5196 /* HudHudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITests.swift; sourceTree = "<group>"; };
 		CDAE05642B681263003E5196 /* HudHudUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
+		CDCE17B22B8779DF00EC1571 /* MapItemState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapItemState.swift; sourceTree = "<group>"; };
 		CDEF50282B838FDB0045ADBD /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -137,6 +139,7 @@
 			isa = PBXGroup;
 			children = (
 				CD5A598C2B84C7E200177C04 /* SearchViewStore.swift */,
+				CDCE17B22B8779DF00EC1571 /* MapItemState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -439,6 +442,7 @@
 				CD5A59992B84C7F000177C04 /* POIDetailSheet.swift in Sources */,
 				CD5A59972B84C7F000177C04 /* SearchSheet.swift in Sources */,
 				CD5A59BA2B8639EB00177C04 /* CategoriesBannerView.swift in Sources */,
+				CDCE17B32B8779DF00EC1571 /* MapItemState.swift in Sources */,
 				CD5A59B82B8639EB00177C04 /* ButtonsStyle.swift in Sources */,
 				CD59CB4D2B8389BE00A15214 /* ProviderButton.swift in Sources */,
 				CD5A59962B84C7F000177C04 /* HudHudApp.swift in Sources */,
