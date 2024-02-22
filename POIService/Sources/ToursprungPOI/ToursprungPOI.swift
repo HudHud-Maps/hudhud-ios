@@ -27,12 +27,14 @@ public actor ToursprungPOI: POIServiceProtocol {
 		}
 	}
 
-	private let session: URLSession = .shared
+	private let session: URLSession
+	private let debouncer: AsyncDebouncer<String, [Row]>
 
 	// MARK: - Lifecycle
 
 	public init() {
-
+		self.session = .shared
+		self.debouncer = .init()
 	}
 
 	// MARK: - POIServiceProtocol
@@ -40,7 +42,9 @@ public actor ToursprungPOI: POIServiceProtocol {
 	public static var serviceName: String = "Apple"
 
 	public func predict(term: String) async throws -> [Row] {
-		return try await self.search(term: term)
+		return try await debouncer.debounce(input: term) { input in
+			return try await self.search(term: input)
+		}
 	}
 
 	public func lookup(prediction: PredictionResult) async throws -> [Row] {
@@ -98,7 +102,8 @@ public extension POI {
 
 		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-		self.init(title: element.displayName,
+		self.init(id: element.placeID,
+				  title: element.displayName,
 				  subtitle: element.address.description,
 				  locationCoordinate: coordinate,
 				  type: element.type)
