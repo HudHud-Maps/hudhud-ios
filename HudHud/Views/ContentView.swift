@@ -47,7 +47,7 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
-			VStack(alignment: .leading) {
+			VStack(alignment: .trailing) {
 				CurrentLocationButton(camera: $camera)
 				ProviderButton(searchViewStore: searchViewStore)
 			}
