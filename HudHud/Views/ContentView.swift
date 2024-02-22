@@ -16,57 +16,56 @@ import SwiftUI
 
 @MainActor
 struct ContentView: View {
-
+	
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")!	// swiftlint:disable:this force_unwrapping
-
+	
 	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
 	@StateObject var searchViewModel: SearchViewStore = .init(mode: .live(provider: .toursprung))
-
+	
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
-
+	
 	var body: some View {
-			MapView(styleURL: styleURL, camera: $camera) {
-				if let selectedPOI {
-					let pointSource = ShapeSource(identifier: "points") {
-						MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
-					}
-					CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-						.radius(constant: 16)
-						.color(constant: .systemRed)
-						.strokeWidth(constant: 2)
-						.strokeColor(constant: .white)
-					SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-						.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-						.iconColor(constant: .white)
-				} else {
-					print("clear poi")
+		return MapView(styleURL: styleURL, camera: $camera) {
+			if let selectedPOI {
+				let pointSource = ShapeSource(identifier: "points") {
+					MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
 				}
+				
+				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+					.radius(constant: 16)
+					.color(constant: .systemRed)
+					.strokeWidth(constant: 2)
+					.strokeColor(constant: .white)
+				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(constant: .white)
 			}
-			.ignoresSafeArea()
-			.safeAreaInset(edge: .top, alignment: .trailing) {
+		}
+		.ignoresSafeArea()
+		.safeAreaInset(edge: .top, alignment: .trailing) {
+			VStack {
 				CurrentLocationButton(camera: $camera)
 					.padding()
+				ProviderButton(searchViewModel: searchViewModel)
 			}
-			.onAppear {
-				// fatalError("third fatal error") // swiftlint:disable:this disable_fatalError
-			}
-			.sheet(isPresented: .constant(true)) {
-				BottomSheetView(viewModel: .init(),
-								camera: $camera,
-								selectedPOI: $selectedPOI,
-								selectedDetent: $selectedDetent)
-				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
-				.presentationBackgroundInteraction(
-					.enabled(upThrough: .medium)
-				)
-				.interactiveDismissDisabled()
-				.ignoresSafeArea()
-			}
+		}
+		.sheet(isPresented: $searchShown) {
+			SearchSheet(viewModel: searchViewModel,
+						camera: $camera,
+						selectedPOI: $selectedPOI,
+						selectedDetent: $selectedDetent)
+			.presentationCornerRadius(21)
+			.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
+			.presentationBackgroundInteraction(
+				.enabled(upThrough: .medium)
+			)
+			.interactiveDismissDisabled()
+			.ignoresSafeArea()
+		}
 	}
 }
 
