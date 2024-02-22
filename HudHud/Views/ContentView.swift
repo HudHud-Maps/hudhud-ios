@@ -14,6 +14,7 @@ import POIService
 import SFSafeSymbols
 import SwiftUI
 
+@MainActor
 struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
@@ -21,8 +22,9 @@ struct ContentView: View {
 
 	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@State private var selectedPOI: POI?
-	@State var selectedDetent: PresentationDetent = .large
-	@State var isShown: Bool = true
+	@State var selectedDetent: PresentationDetent = .small
+	@State var searchShown: Bool = true
+	@StateObject var searchViewModel: SearchViewStore = .init(mode: .live(provider: .toursprung))
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
@@ -41,20 +43,21 @@ struct ContentView: View {
 				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(constant: .white)
-			} else {
-				print("clear poi")
 			}
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
-			CurrentLocationButton(camera: $camera)
-				.padding()
+			VStack {
+				CurrentLocationButton(camera: $camera)
+					.padding()
+				ProviderButton(searchViewModel: searchViewModel)
+			}
 		}
-		.sheet(isPresented: .constant(true)) {
-			BottomSheetView(viewModel: .init(),
-							camera: $camera,
-							selectedPOI: $selectedPOI,
-							selectedDetent: $selectedDetent)
+		.sheet(isPresented: $searchShown) {
+			SearchSheet(viewModel: searchViewModel,
+						camera: $camera,
+						selectedPOI: $selectedPOI,
+						selectedDetent: $selectedDetent)
 			.presentationCornerRadius(21)
 			.presentationDetents([.small, .medium, .large], selection: $selectedDetent)
 			.presentationBackgroundInteraction(
@@ -76,5 +79,5 @@ extension CLLocationCoordinate2D {
 }
 
 #Preview {
-	ContentView()
+	ContentView(searchViewModel: .init(mode: .preview))
 }

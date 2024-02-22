@@ -6,32 +6,115 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import CoreLocation
 import Foundation
-import MapKit
 import POIService
+import CoreLocation
+import MapKit
+import Combine
+import SwiftUI
 
-final class ApplePOI: POIServiceProtocol {
+public actor ApplePOI: POIServiceProtocol {
 
-	static let serviceName: String = "Apple"
+	private var localSearch: MKLocalSearch?
+	private var completer: MKLocalSearchCompleter
+	private var continuation: CheckedContinuation<[Row], Error>?
+	private let delegate: DelegateWrapper
 
-	func search(term: String) async throws -> [POI] {
-		let coordinate = CLLocationCoordinate2D(latitude: 24.774265, longitude: 46.738586)
+	// MARK: - Lifecycle
 
-		let request = MKLocalSearch.Request()
-		request.naturalLanguageQuery = term
-		request.region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 100, longitudinalMeters: 100)
+	public init() {
+		self.completer = MKLocalSearchCompleter()
+		self.delegate = .init()
+		self.delegate.poi = self
+		Task {
+			await self.completer.delegate = self.delegate
+		}
+	}
 
-		let search = MKLocalSearch(request: request)
-		let result = try await search.start()
+	// MARK: - POIServiceProtocol
 
-		print("Region: \(result.boundingRegion)")
-		print("Results: \(result.mapItems)")
-		return result.mapItems.map {
-			return POI(name: $0.name ?? "Unknown",
-					   subtitle: "<Address>",
-					   locationCoordinate: $0.placemark.coordinate,
-					   type: $0.pointOfInterestCategory?.rawValue ?? "Unknown")
+	public static var serviceName: String = "Apple"
+
+	public func lookup(prediction: PredictionResult) async throws -> [Row] {
+		guard case .apple(let completion) = prediction else {
+			return []
+		}
+
+		let searchRequest = MKLocalSearch.Request(completion: completion)
+		searchRequest.resultTypes = .pointOfInterest
+
+		return try await withCheckedThrowingContinuation { continuation in
+			self.localSearch = MKLocalSearch(request: searchRequest)
+			self.localSearch?.start { response, error in
+				if let error {
+					continuation.resume(throwing: error)
+					return
+				}
+
+				guard let mapItems = response?.mapItems else {
+					continuation.resume(returning: [])
+					return
+				}
+
+				let rows = mapItems.map {
+					Row(mapItem: $0)
+				}
+				continuation.resume(returning: rows)
+			}
+		}
+	}
+
+	public func predict(term: String) async throws -> [Row] {
+		return try await withCheckedThrowingContinuation { continuation in
+			if let continuation = self.continuation {
+				self.completer.cancel()
+				continuation.resume(returning: [])
+				self.continuation = nil
+			}
+
+			if term.isEmpty {
+				continuation.resume(returning: [])
+				return
+			}
+
+			self.continuation = continuation
+			DispatchQueue.main.sync {
+				self.completer.queryFragment = term
+			}
+		}
+	}
+
+	func update(results: [Row]) async {
+		self.continuation?.resume(returning: results)
+		self.continuation = nil
+	}
+
+	func update(error: Error) async {
+		self.continuation?.resume(throwing: error)
+		self.continuation = nil
+	}
+}
+
+// MARK: - Delegate
+
+private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
+
+	weak var poi: ApplePOI?
+
+	// MARK: - MKLocalSearchCompleterDelegate
+
+	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+		let results = completer.results.map {
+			Row(appleCompletion: $0)
+		}
+		Task {
+			await self.poi?.update(results: results)
+		}
+	}
+
+	func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+		Task {
+			await self.poi?.update(error: error)
 		}
 	}
 }

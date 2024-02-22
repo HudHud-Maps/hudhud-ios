@@ -1,5 +1,5 @@
 //
-//  POISheet.swift
+//  POIDetailSheet.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 02.02.24.
@@ -13,9 +13,9 @@ import SFSafeSymbols
 import SwiftUI
 import ToursprungPOI
 
-struct POISheet: View {
+struct POIDetailSheet: View {
 
-	let poi: POI
+	@Binding var poi: POI?
 	@Binding var isShown: Bool
 	let onStart: () -> Void
 	let onMore: () -> Void
@@ -25,11 +25,11 @@ struct POISheet: View {
 			VStack(alignment: .leading) {
 				HStack(alignment: .top) {
 					VStack {
-						Text(self.poi.name)
+						Text(self.poi?.title ?? "")
 							.font(.title.bold() )
 							.frame(maxWidth: .infinity, alignment: .leading)
 
-						Text(self.poi.type)
+						Text(self.poi?.type ?? "")
 							.font(.footnote)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.padding(.bottom, 8)
@@ -37,6 +37,7 @@ struct POISheet: View {
 
 					Button(action: {
 						self.isShown = false
+						self.poi = nil
 					}, label: {
 						ZStack {
 							Circle()
@@ -98,7 +99,9 @@ struct POISheet: View {
 				}
 				.padding(.horizontal)
 
-				DictionaryView(dictionary: self.poi.userInfo)
+				if let poi {
+					DictionaryView(dictionary: poi.userInfo)
+				}
 			}
 		}
 	}
@@ -107,7 +110,7 @@ struct POISheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
-	return POISheet(poi: poi, isShown: .constant(true)) {
+	return POIDetailSheet(poi: .constant(poi), isShown: .constant(true)) {
 		print("start")
 	} onMore: {
 		print("more")
