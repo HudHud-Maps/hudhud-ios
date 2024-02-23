@@ -6,9 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import MapKit
 import POIService
 import SwiftUI
-import MapKit
 
 struct SearchResultItem: View {
 

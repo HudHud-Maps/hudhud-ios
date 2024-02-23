@@ -8,9 +8,11 @@
 
 import CoreLocation
 import Foundation
+import MapKit
 import SFSafeSymbols
 import SwiftUI
-import MapKit
+
+// MARK: - POIServiceProtocol
 
 public protocol POIServiceProtocol {
 
@@ -19,21 +21,16 @@ public protocol POIServiceProtocol {
 	func predict(term: String) async throws -> [Row]
 }
 
+// MARK: - PredictionResult
+
 public enum PredictionResult: Hashable {
 	case apple(completion: MKLocalSearchCompletion)
 	case toursprung(result: Row)
 }
 
+// MARK: - POI
+
 public class POI: Hashable, Identifiable {
-
-	public static func == (lhs: POI, rhs: POI) -> Bool {
-		return lhs.title == rhs.title && lhs.subtitle == rhs.subtitle
-	}
-
-	public func hash(into hasher: inout Hasher) {
-		hasher.combine(title)
-		hasher.combine(subtitle)
-	}
 
 	public var id: Int
 	public var title: String
@@ -42,13 +39,27 @@ public class POI: Hashable, Identifiable {
 	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
 
-	public init(id: Int = .random(in: 0...1000000), title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
+	// MARK: - Lifecycle
+
+	public init(id: Int = .random(in: 0 ... 1_000_000), title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
 		self.locationCoordinate = locationCoordinate
 		self.type = type
 	}
+
+	// MARK: - Public
+
+	public static func == (lhs: POI, rhs: POI) -> Bool {
+		return lhs.title == rhs.title && lhs.subtitle == rhs.subtitle
+	}
+
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(self.title)
+		hasher.combine(self.subtitle)
+	}
+
 }
 
 public extension POI {
@@ -64,6 +75,8 @@ public extension POI {
 		}
 	}
 }
+
+// MARK: CustomStringConvertible
 
 extension POI: CustomStringConvertible {
 	public var description: String {

@@ -7,19 +7,21 @@
 //
 
 import SwiftUI
+
 struct MapLayersView: View {
 	var mapLayerData: MapLayersData
 	@State var currentlySelected: String?
-    var body: some View {
+
+	var body: some View {
 		VStack(alignment: .leading, spacing: 10) {
-			Text(mapLayerData.layerTitle)				.foregroundStyle(.secondary)
+			Text(self.mapLayerData.layerTitle).foregroundStyle(.secondary)
 			HStack {
 				ForEach(self.mapLayerData.layers) { layer in
 					VStack {
 						Button {
-							currentlySelected = layer.id.uuidString
+							self.currentlySelected = layer.id.uuidString
 						} label: {
-						AsyncImage(url: URL(string: layer.imageUrl)) { image in
+							AsyncImage(url: URL(string: layer.imageUrl)) { image in
 								image
 									.resizable()
 									.scaledToFill()
@@ -30,9 +32,9 @@ struct MapLayersView: View {
 							.background(.secondary)
 							.cornerRadius(4.0)
 							.overlay(
-								   RoundedRectangle(cornerRadius: 4)
+								RoundedRectangle(cornerRadius: 4)
 									.stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 2)
-							   )
+							)
 						}
 						Text(layer.imageTitle)
 							.foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .secondary)
@@ -40,7 +42,7 @@ struct MapLayersView: View {
 				}
 			}
 		}
-    }
+	}
 }
 
 #Preview {

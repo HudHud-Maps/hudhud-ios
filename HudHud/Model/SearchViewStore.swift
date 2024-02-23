@@ -26,7 +26,7 @@ class SearchViewStore: ObservableObject {
 		case preview
 	}
 
-	private var task: Task<(), Error>?
+	private var task: Task<Void, Error>?
 	private var apple: ApplePOI = .init()
 	private var toursprung: ToursprungPOI = .init()
 	private var cancellable: AnyCancellable?
@@ -35,6 +35,7 @@ class SearchViewStore: ObservableObject {
 
 	@Published var items: [Row] = []
 	@Published var searchText: String = ""
+
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
@@ -47,7 +48,7 @@ class SearchViewStore: ObservableObject {
 	init(mode: Mode) {
 		self.mode = mode
 
-		self.cancellable = $searchText
+		self.cancellable = self.$searchText
 			.removeDuplicates()
 			.sink { newValue in
 				switch self.mode {
@@ -70,15 +71,17 @@ class SearchViewStore: ObservableObject {
 			}
 	}
 
+	// MARK: - Internal
+
 	// MARK: - SearchViewStore
 
 	func resolve(prediction: Row) async throws -> [Row] {
 		switch prediction.provider {
-		case .appleCompletion(let completion):
+		case let .appleCompletion(completion):
 			return try await self.apple.lookup(prediction: .apple(completion: completion))
-		case .appleMapItem(let mapItem):
+		case let .appleMapItem(mapItem):
 			return [Row(mapItem: mapItem)]
-		case .toursprung(let poi):
+		case let .toursprung(poi):
 			return [Row(toursprung: poi)]
 		}
 	}

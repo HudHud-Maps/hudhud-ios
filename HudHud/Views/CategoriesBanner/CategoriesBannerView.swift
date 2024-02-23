@@ -10,19 +10,20 @@ import SwiftUI
 
 struct CategoriesBannerView: View {
 	var catagoryBannerData: [CatagoryBannerData]
-    var body: some View {
-			ScrollView(.horizontal) {
-				HStack(alignment: .top, spacing: 12) {
-					ForEach(self.catagoryBannerData) { category in
-						Button(category.title, systemImage: category.iconSystemName) {
-							print("category \(category.title) pressed")
-						}.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
-					}
+
+	var body: some View {
+		ScrollView(.horizontal) {
+			HStack(alignment: .top, spacing: 12) {
+				ForEach(self.catagoryBannerData) { category in
+					Button(category.title, systemImage: category.iconSystemName) {
+						print("category \(category.title) pressed")
+					}.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
 				}
-				.padding()
 			}
-			.scrollIndicators(.hidden)
-    }
+			.padding()
+		}
+		.scrollIndicators(.hidden)
+	}
 }
 
 #Preview {

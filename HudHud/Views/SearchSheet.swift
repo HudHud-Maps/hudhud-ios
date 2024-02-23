@@ -30,7 +30,7 @@ struct SearchSheet: View {
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
 				TextField("Search", text: self.$viewStore.searchText)
-					.focused($searchIsFocused)
+					.focused(self.$searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
 					.cornerRadius(8)
@@ -48,7 +48,7 @@ struct SearchSheet: View {
 								})
 							}
 						}
-							.padding(.horizontal, 8)
+						.padding(.horizontal, 8)
 					)
 					.padding(.horizontal, 10)
 			}
@@ -85,10 +85,10 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(item: $selectedPOI) {
+		.sheet(item: self.$selectedPOI) {
 			self.selectedDetent = .medium
 		} content: { _ in
-			POIDetailSheet(poi: $selectedPOI, isShown: $detailSheetShown) {
+			POIDetailSheet(poi: self.$selectedPOI, isShown: self.$detailSheetShown) {
 				print("start")
 			} onMore: {
 				print("more")
@@ -101,6 +101,8 @@ struct SearchSheet: View {
 			.ignoresSafeArea()
 		}
 	}
+
+	// MARK: - Internal
 
 	func show(row: Row) {
 		self.searchIsFocused = false
