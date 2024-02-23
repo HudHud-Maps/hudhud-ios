@@ -27,10 +27,11 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
-	@State var showsUserLocation: Bool = false
+	@State var showUserLocation: Bool = false
 	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
+	let locationManager = Location()
 
 	var body: some View {
 		return MapView(styleURL: self.styleURL, camera: self.$camera) {
@@ -50,17 +51,21 @@ struct ContentView: View {
 			}
 		}
 		.unsafeMapViewModifier { mapView in
-			mapView.showsUserLocation = self.showsUserLocation
+			mapView.showsUserLocation = self.showUserLocation
 		}
-		.onAppear(perform: {
-			Task {
-				self.showsUserLocation = Location().authorizationStatus.allowed
+		.task {
+			for await event in await self.locationManager.startMonitoringAuthorization() {
+				print("Authorization status did change: \(event.authorizationStatus)")
+				showUserLocation = event.authorizationStatus.allowed
 			}
-		})
+		}
+		.task {
+			showUserLocation = locationManager.authorizationStatus == .authorizedWhenInUse
+		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
 			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$camera, showsUserLocation: self.$showsUserLocation)
+				CurrentLocationButton(camera: self.$camera)
 				ProviderButton(searchViewStore: self.searchViewStore)
 			}
 			.padding()
