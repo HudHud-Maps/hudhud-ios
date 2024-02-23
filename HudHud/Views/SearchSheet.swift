@@ -15,7 +15,7 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-	@ObservedObject var viewModel: SearchViewStore
+	@ObservedObject var viewStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
 
@@ -29,7 +29,7 @@ struct SearchSheet: View {
 				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
-				TextField("Search", text: self.$viewModel.searchText)
+				TextField("Search", text: self.$viewStore.searchText)
 					.focused($searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
@@ -38,9 +38,9 @@ struct SearchSheet: View {
 					.overlay(
 						HStack {
 							Spacer()
-							if !self.viewModel.searchText.isEmpty {
+							if !self.viewStore.searchText.isEmpty {
 								Button(action: {
-									self.viewModel.searchText = ""
+									self.viewStore.searchText = ""
 								}, label: {
 									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
@@ -54,10 +54,10 @@ struct SearchSheet: View {
 			}
 			.padding(.horizontal, 12)
 			.padding(.vertical, 8)
-			.background(.white)
+			.background(.background)
 			.cornerRadius(8)
 
-			List(self.viewModel.items, id: \.self) { item in
+			List(self.viewStore.items, id: \.self) { item in
 				Button(action: {
 					switch item.provider {
 					case .toursprung:
@@ -66,11 +66,11 @@ struct SearchSheet: View {
 						self.selectedDetent = .large
 						self.searchIsFocused = false
 						Task {
-							let items = try await self.viewModel.resolve(prediction: item)
+							let items = try await self.viewStore.resolve(prediction: item)
 							if let firstResult = items.first, items.count == 1 {
 								self.show(row: firstResult)
 							} else {
-								self.viewModel.items = items
+								self.viewStore.items = items
 							}
 						}
 					case .appleMapItem:
@@ -114,7 +114,7 @@ struct SearchSheet: View {
 }
 
 #Preview {
-	let sheet = SearchSheet(viewModel: .init(mode: .preview),
+	let sheet = SearchSheet(viewStore: .init(mode: .preview),
 							camera: .constant(.center(.riyadh, zoom: 12)),
 							selectedPOI: .constant(nil),
 							selectedDetent: .constant(.medium))

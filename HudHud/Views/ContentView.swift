@@ -24,8 +24,8 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
-	@StateObject var searchViewModel: SearchViewStore = .init(mode: .live(provider: .toursprung))
-	
+	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
+
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 	
 	var body: some View {
@@ -47,14 +47,14 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
-			VStack {
+			VStack(alignment: .trailing) {
 				CurrentLocationButton(camera: $camera)
-					.padding()
-				ProviderButton(searchViewModel: searchViewModel)
+				ProviderButton(searchViewStore: searchViewStore)
 			}
+			.padding()
 		}
 		.sheet(isPresented: $searchShown) {
-			SearchSheet(viewModel: searchViewModel,
+			SearchSheet(viewStore: searchViewStore,
 						camera: $camera,
 						selectedPOI: $selectedPOI,
 						selectedDetent: $selectedDetent)
@@ -79,5 +79,6 @@ extension CLLocationCoordinate2D {
 }
 
 #Preview {
-	ContentView(searchViewModel: .init(mode: .preview))
+	@StateObject var store: SearchViewStore = .init(mode: .preview)
+	return ContentView(searchViewStore: store)
 }
