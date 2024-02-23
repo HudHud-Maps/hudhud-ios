@@ -21,7 +21,6 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")!	// swiftlint:disable:this force_unwrapping
 	
 	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
-//	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
 	@StateObject var searchViewModel: SearchViewStore = .init(mode: .live(provider: .toursprung))

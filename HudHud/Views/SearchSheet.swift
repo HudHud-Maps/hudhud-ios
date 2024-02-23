@@ -20,7 +20,6 @@ struct SearchSheet: View {
 	@State private var detailSheetShown: Bool = false
 
 	@Binding var camera: MapViewCamera
-//	@Binding var selectedPOI: POI?
 	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
