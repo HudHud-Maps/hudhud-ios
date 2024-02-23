@@ -21,7 +21,7 @@ struct CurrentLocationButton: View {
 			Task {
 				do {
 					let location = Location()
-					let status = try await location.requestPermission(.whenInUse)
+					try await location.requestPermission(.whenInUse)
 					let userLocation = try await location.requestLocation()
 
 					if let coordinates = userLocation.location?.coordinate {
