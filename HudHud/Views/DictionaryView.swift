@@ -9,6 +9,8 @@
 import SwiftUI
 import ToursprungPOI
 
+// MARK: - DictionaryView
+
 struct DictionaryView: View {
 
 	let dictionary: [String: AnyHashable]
@@ -16,7 +18,7 @@ struct DictionaryView: View {
 	var body: some View {
 		List {
 			ForEach(Array(self.dictionary.keys.sorted()), id: \.self) { key in
-				let value = self.dictionary[key]!	// swiftlint:disable:this force_unwrapping
+				let value = self.dictionary[key]! // swiftlint:disable:this force_unwrapping
 
 				HStack(alignment: .top) {
 					Text(key)
@@ -49,6 +51,8 @@ struct DictionaryView: View {
 		.listStyle(.plain)
 	}
 }
+
+// MARK: - DictionaryConvertable
 
 protocol DictionaryConvertable: CustomStringConvertible {
 	func dictionary() -> [String: AnyHashable]

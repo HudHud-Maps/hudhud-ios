@@ -23,13 +23,15 @@ public actor AsyncDebouncer<Input, Output> {
 		self.delay = delay
 	}
 
+	// MARK: - Public
+
 	// MARK: - AsyncDebouncer
 
 	public func debounce(input: Input, action: @escaping (Input) async throws -> Output) async throws -> Output {
 		self.task?.cancel()
 
 		let localTask = Task {
-			try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+			try? await Task.sleep(nanoseconds: UInt64(self.delay * 1_000_000_000))
 
 			guard !Task.isCancelled else {
 				throw DebouncerError.taskCanceled

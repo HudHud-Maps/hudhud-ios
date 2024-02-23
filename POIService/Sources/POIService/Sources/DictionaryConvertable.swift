@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - DictionaryConvertable
+
 public protocol DictionaryConvertable: CustomStringConvertible {
 	func dictionary() -> [String: AnyHashable]
 }

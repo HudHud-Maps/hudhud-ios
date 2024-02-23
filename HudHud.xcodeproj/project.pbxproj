@@ -61,6 +61,9 @@
 /* Begin PBXFileReference section */
 		19D12C9D1880D4D83B414751 /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
+		CD518BC72B88964700A5AFFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
+		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE054B2B681263003E5196 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDAE054E2B681263003E5196 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -167,6 +170,7 @@
 			isa = PBXGroup;
 			children = (
 				CDCE17B62B879CEC00EC1571 /* Views */,
+				CD518BC72B88964700A5AFFF /* Info.plist */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				1EE5DBC593F92233EBD0111A /* Extensions */,
 				D360F2715C6B016AF539FA2D /* Model */,
@@ -617,6 +621,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = HudHud/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -649,6 +654,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
+				INFOPLIST_FILE = HudHud/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;

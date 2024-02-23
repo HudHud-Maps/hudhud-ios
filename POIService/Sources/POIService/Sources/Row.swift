@@ -11,6 +11,8 @@ import Foundation
 import MapKit
 import SwiftUI
 
+// MARK: - Row
+
 public struct Row: Hashable {
 
 	public enum Provider: Hashable {
@@ -18,7 +20,77 @@ public struct Row: Hashable {
 		case appleMapItem(mapItem: MKMapItem)
 		case toursprung(poi: POI)
 	}
+
 	public let provider: Provider
+
+	// MARK: - Row
+
+	public var title: String {
+		switch self.provider {
+		case let .appleCompletion(completion):
+			return completion.title
+		case let .appleMapItem(mapItem):
+			return mapItem.name ?? "Unknown"
+		case let .toursprung(poi):
+			return poi.title
+		}
+	}
+
+	public var subtitle: String {
+		switch self.provider {
+		case let .appleCompletion(completion):
+			return completion.subtitle
+		case let .appleMapItem(mapItem):
+			return mapItem.placemark.formattedAddress ?? ""
+		case let .toursprung(poi):
+			return poi.subtitle
+		}
+	}
+
+	public var icon: Image {
+		switch self.provider {
+		case let .toursprung(poi):
+			switch poi.type.lowercased() {
+			case "cafe":
+				return Image(systemSymbol: .cupAndSaucerFill)
+			case "restaurant":
+				return Image(systemSymbol: .forkKnife)
+			default:
+				return Image(systemSymbol: .mappin)
+			}
+		case let .appleMapItem(mapItem):
+			return mapItem.icon
+		case .appleCompletion:
+			return Image(systemSymbol: .magnifyingglass)
+		}
+	}
+
+	public var coordinate: CLLocationCoordinate2D? {
+		switch self.provider {
+		case let .appleMapItem(mapItem):
+			return mapItem.placemark.coordinate
+		case .appleCompletion:
+			return nil
+		case let .toursprung(poi):
+			return poi.locationCoordinate
+		}
+	}
+
+	public var poi: POI? {
+		switch self.provider {
+		case .appleCompletion:
+			return nil
+		case let .appleMapItem(mapItem):
+			return POI(title: self.title,
+					   subtitle: self.subtitle,
+					   locationCoordinate: mapItem.placemark.coordinate,
+					   type: "")
+		case let .toursprung(poi):
+			return poi
+		}
+	}
+
+	// MARK: - Lifecycle
 
 	// MARK: - Init
 
@@ -34,72 +106,6 @@ public struct Row: Hashable {
 		self.provider = .toursprung(poi: toursprung)
 	}
 
-	// MARK: - Row
-
-	public var title: String {
-		switch self.provider {
-		case .appleCompletion(let completion):
-			return completion.title
-		case .appleMapItem(let mapItem):
-			return mapItem.name ?? "Unknown"
-		case .toursprung(let poi):
-			return poi.title
-		}
-	}
-
-	public var subtitle: String {
-		switch self.provider {
-		case .appleCompletion(let completion):
-			return completion.subtitle
-		case .appleMapItem(let mapItem):
-			return mapItem.placemark.formattedAddress ?? ""
-		case .toursprung(let poi):
-			return poi.subtitle
-		}
-	}
-
-	public var icon: Image {
-		switch self.provider {
-		case .toursprung(let poi):
-			switch poi.type.lowercased() {
-			case "cafe":
-				return Image(systemSymbol: .cupAndSaucerFill)
-			case "restaurant":
-				return Image(systemSymbol: .forkKnife)
-			default:
-				return Image(systemSymbol: .mappin)
-			}
-		case .appleMapItem(let mapItem):
-			return mapItem.icon
-		case .appleCompletion:
-			return Image(systemSymbol: .magnifyingglass)
-		}
-	}
-
-	public var coordinate: CLLocationCoordinate2D? {
-		switch self.provider {
-		case .appleMapItem(let mapItem):
-			return mapItem.placemark.coordinate
-		case .appleCompletion:
-			return nil
-		case .toursprung(let poi):
-			return poi.locationCoordinate
-		}
-	}
-
-	public var poi: POI? {
-		switch self.provider {
-		case .appleCompletion:
-			return nil
-		case .appleMapItem(let mapItem):
-			return POI(title: self.title,
-					   subtitle: self.subtitle,
-					   locationCoordinate: mapItem.placemark.coordinate,
-					   type: "")
-		case .toursprung(let poi):
-			return poi
-		}
-	}
 }
 
 extension MKMapItem {
@@ -199,7 +205,7 @@ extension MKMapItem {
 
 extension MKPlacemark {
 	var formattedAddress: String? {
-		guard let postalAddress = postalAddress else { return nil }
+		guard let postalAddress else { return nil }
 		return CNPostalAddressFormatter.string(from: postalAddress, style: .mailingAddress).replacingOccurrences(of: "\n", with: " ")
 	}
 }

@@ -6,12 +6,14 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
-import POIService
-import CoreLocation
-import MapKit
 import Combine
+import CoreLocation
+import Foundation
+import MapKit
+import POIService
 import SwiftUI
+
+// MARK: - ApplePOI
 
 public actor ApplePOI: POIServiceProtocol {
 
@@ -19,6 +21,10 @@ public actor ApplePOI: POIServiceProtocol {
 	private var completer: MKLocalSearchCompleter
 	private var continuation: CheckedContinuation<[Row], Error>?
 	private let delegate: DelegateWrapper
+
+	// MARK: - POIServiceProtocol
+
+	public static var serviceName: String = "Apple"
 
 	// MARK: - Lifecycle
 
@@ -31,12 +37,10 @@ public actor ApplePOI: POIServiceProtocol {
 		}
 	}
 
-	// MARK: - POIServiceProtocol
-
-	public static var serviceName: String = "Apple"
+	// MARK: - Public
 
 	public func lookup(prediction: PredictionResult) async throws -> [Row] {
-		guard case .apple(let completion) = prediction else {
+		guard case let .apple(completion) = prediction else {
 			return []
 		}
 
@@ -84,6 +88,8 @@ public actor ApplePOI: POIServiceProtocol {
 		}
 	}
 
+	// MARK: - Internal
+
 	func update(results: [Row]) async {
 		self.continuation?.resume(returning: results)
 		self.continuation = nil
@@ -95,11 +101,13 @@ public actor ApplePOI: POIServiceProtocol {
 	}
 }
 
-// MARK: - Delegate
+// MARK: - DelegateWrapper
 
 private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
 	weak var poi: ApplePOI?
+
+	// MARK: - Internal
 
 	// MARK: - MKLocalSearchCompleterDelegate
 
@@ -112,7 +120,7 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 		}
 	}
 
-	func completer(_ completer: MKLocalSearchCompleter, didFailWithError error: Error) {
+	func completer(_: MKLocalSearchCompleter, didFailWithError error: Error) {
 		Task {
 			await self.poi?.update(error: error)
 		}

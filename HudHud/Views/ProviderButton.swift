@@ -10,27 +10,26 @@ import SwiftUI
 
 struct ProviderButton: View {
 
-	@ObservedObject var searchViewModel: SearchViewStore
+	@ObservedObject var searchViewStore: SearchViewStore
 
 	var body: some View {
 		Button {
-			switch searchViewModel.mode {
-			case .live(let provider):
-				self.searchViewModel.mode = .live(provider: provider.next())
+			switch self.searchViewStore.mode {
+			case let .live(provider):
+				self.searchViewStore.mode = .live(provider: provider.next())
 			case .preview:
-				self.searchViewModel.mode = .preview
+				self.searchViewStore.mode = .live(provider: .toursprung)
 			}
 		} label: {
-			switch self.searchViewModel.mode {
+			switch self.searchViewStore.mode {
 			case .live(.apple):
 				Image(systemSymbol: .appleLogo)
 			case .live(.toursprung):
 				Text("MTK")
 			case .preview:
-				Text("Preview")
+				Image(systemSymbol: .pCircle)
 			}
 		}
-		.padding(12)
 		.frame(minWidth: 44, minHeight: 44)
 		.background {
 			RoundedRectangle(cornerRadius: 10)
@@ -41,12 +40,12 @@ struct ProviderButton: View {
 
 @available(iOS 17, *)
 #Preview("Apple", traits: .sizeThatFitsLayout) {
-	ProviderButton(searchViewModel: .init(mode: .live(provider: .apple)))
+	ProviderButton(searchViewStore: .init(mode: .live(provider: .apple)))
 		.padding()
 }
 
 @available(iOS 17, *)
 #Preview("Toursprung", traits: .sizeThatFitsLayout) {
-	ProviderButton(searchViewModel: .init(mode: .live(provider: .toursprung)))
+	ProviderButton(searchViewStore: .init(mode: .live(provider: .toursprung)))
 		.padding()
 }

@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import XCTest
 import CoreLocation
+import XCTest
 
 final class HudHudUITests: XCTestCase {
 
