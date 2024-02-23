@@ -109,10 +109,7 @@ struct SearchSheet: View {
 		if let coordinate = row.coordinate {
 			self.camera = .center(coordinate, zoom: 16)
 		}
-//		self.selectedPOI = row.poi
-
-		let index = self.viewStore.mapItemsState.mapItems.firstIndex(of: row)
-		self.viewStore.mapItemsState.selectedIndex = index
+		self.viewStore.mapItemsState.selectedItem = row.poi
 		self.detailSheetShown = true
 	}
 }

@@ -33,7 +33,7 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Properties
 
-	@Published var mapItemsState = MapItemsState(selectedIndex: nil, mapItems: [])
+	@Published var mapItemsState = MapItemsState(selectedItem: nil, mapItems: [])
 	@Published var searchText: String = ""
 
 	@Published var mode: Mode {
