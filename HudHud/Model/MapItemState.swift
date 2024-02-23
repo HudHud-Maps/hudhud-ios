@@ -11,6 +11,9 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
+import SwiftUI
+
+// MARK: - MapItemsState
 
 struct MapItemsState {
 
@@ -33,10 +36,20 @@ struct MapItemsState {
 		}
 	}
 
+	static var empty: MapItemsState {
+		.init(selectedItem: nil, mapItems: [])
+	}
+
 	// MARK: - Lifecycle
 
 	init(selectedItem: POI?, mapItems: [Row]) {
 		self.selectedItem = selectedItem
 		self.mapItems = mapItems
+	}
+}
+
+extension Binding {
+	static var preview: Binding<MapItemsState> {
+		.constant(.init(selectedItem: nil, mapItems: []))
 	}
 }

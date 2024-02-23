@@ -115,7 +115,7 @@ struct SearchSheet: View {
 }
 
 #Preview {
-	let sheet = SearchSheet(viewStore: .init(mode: .preview),
+	let sheet = SearchSheet(viewStore: .init(mode: .preview, mapItemsState: .preview),
 							camera: .constant(.center(.riyadh, zoom: 12)),
 							selectedDetent: .constant(.medium))
 	return sheet

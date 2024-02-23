@@ -25,8 +25,8 @@ struct ContentView: View {
 	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
-	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
-
+	@State var mapItemState: MapItemsState = .init(selectedItem: nil, mapItems: [])
+	@StateObject var searchViewStore: SearchViewStore
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
 
 	var body: some View {

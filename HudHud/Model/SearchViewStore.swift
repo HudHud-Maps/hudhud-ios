@@ -13,6 +13,8 @@ import POIService
 import SwiftUI
 import ToursprungPOI
 
+// MARK: - SearchViewStore
+
 @MainActor
 class SearchViewStore: ObservableObject {
 
@@ -33,7 +35,7 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Properties
 
-	@Published var mapItemsState = MapItemsState(selectedItem: nil, mapItems: [])
+	@Binding var mapItemsState: MapItemsState
 	@Published var searchText: String = ""
 
 	@Published var mode: Mode {
@@ -45,8 +47,9 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(mode: Mode) {
+	init(mode: Mode, mapItemsState: Binding<MapItemsState>) {
 		self.mode = mode
+		self._mapItemsState = mapItemsState
 
 		self.cancellable = self.$searchText
 			.removeDuplicates()
@@ -84,5 +87,11 @@ class SearchViewStore: ObservableObject {
 		case let .toursprung(poi):
 			return [Row(toursprung: poi)]
 		}
+	}
+}
+
+extension SearchViewStore {
+	static var preview: SearchViewStore {
+		.init(mode: .preview, mapItemsState: .preview)
 	}
 }

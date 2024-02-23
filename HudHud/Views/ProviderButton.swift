@@ -40,12 +40,14 @@ struct ProviderButton: View {
 
 @available(iOS 17, *)
 #Preview("Apple", traits: .sizeThatFitsLayout) {
-	ProviderButton(searchViewStore: .init(mode: .live(provider: .apple)))
+	ProviderButton(searchViewStore: .init(mode: .live(provider: .apple),
+										  mapItemsState: .preview))
 		.padding()
 }
 
 @available(iOS 17, *)
 #Preview("Toursprung", traits: .sizeThatFitsLayout) {
-	ProviderButton(searchViewStore: .init(mode: .live(provider: .toursprung)))
+	ProviderButton(searchViewStore: .init(mode: .live(provider: .toursprung),
+										  mapItemsState: .preview))
 		.padding()
 }
