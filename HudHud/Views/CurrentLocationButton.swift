@@ -15,13 +15,14 @@ import SwiftUI
 struct CurrentLocationButton: View {
 
 	@Binding var camera: MapViewCamera
+	@Binding var showsUserLocation: Bool
 
 	var body: some View {
 		Button {
 			Task {
 				do {
 					let location = Location()
-					try await location.requestPermission(.whenInUse)
+					let status = try await location.requestPermission(.whenInUse)
 					let userLocation = try await location.requestLocation()
 
 					if let coordinates = userLocation.location?.coordinate {
@@ -31,6 +32,7 @@ struct CurrentLocationButton: View {
 					} else {
 						print("location error: got no coordinates")
 					}
+					self.showsUserLocation = status.allowed
 				} catch {
 					print("location error: \(error)")
 				}
@@ -50,6 +52,6 @@ struct CurrentLocationButton: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	@State var camera: MapViewCamera = .default()
-	return CurrentLocationButton(camera: $camera)
+	return CurrentLocationButton(camera: $camera, showsUserLocation: .constant(false))
 		.padding()
 }

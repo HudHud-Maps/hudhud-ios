@@ -12,6 +12,7 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SFSafeSymbols
+import SwiftLocation
 import SwiftUI
 
 // MARK: - ContentView
@@ -26,6 +27,7 @@ struct ContentView: View {
 	@State private var selectedPOI: POI?
 	@State var selectedDetent: PresentationDetent = .small
 	@State var searchShown: Bool = true
+	@State var showsUserLocation: Bool = false
 	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
 
 	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
@@ -47,10 +49,18 @@ struct ContentView: View {
 					.iconColor(constant: .white)
 			}
 		}
+		.unsafeMapViewModifier { mapView in
+			mapView.showsUserLocation = self.showsUserLocation
+		}
+		.onAppear(perform: {
+			Task {
+				self.showsUserLocation = Location().authorizationStatus.allowed
+			}
+		})
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
 			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$camera)
+				CurrentLocationButton(camera: self.$camera, showsUserLocation: self.$showsUserLocation)
 				ProviderButton(searchViewStore: self.searchViewStore)
 			}
 			.padding()
