@@ -56,11 +56,11 @@ struct ContentView: View {
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
 				print("Authorization status did change: \(event.authorizationStatus)")
-				showUserLocation = event.authorizationStatus.allowed
+				self.showUserLocation = event.authorizationStatus.allowed
 			}
 		}
 		.task {
-			showUserLocation = locationManager.authorizationStatus == .authorizedWhenInUse
+			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
