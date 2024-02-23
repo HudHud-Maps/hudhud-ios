@@ -20,7 +20,7 @@ struct SearchSheet: View {
 	@State private var detailSheetShown: Bool = false
 
 	@Binding var camera: MapViewCamera
-	@Binding var selectedPOI: POI?
+//	@Binding var selectedPOI: POI?
 	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
@@ -57,27 +57,27 @@ struct SearchSheet: View {
 			.background(.white)
 			.cornerRadius(8)
 
-			List(self.viewModel.items, id: \.self) { item in
+			List(self.$viewModel.mapItemsState.mapItems, id: \.self) { item in
 				Button(action: {
-					switch item.provider {
+					switch item.wrappedValue.provider {
 					case .toursprung:
-						self.show(row: item)
+						self.show(row: item.wrappedValue)
 					case .appleCompletion:
 						self.selectedDetent = .large
 						self.searchIsFocused = false
 						Task {
-							let items = try await self.viewModel.resolve(prediction: item)
+							let items = try await self.viewModel.resolve(prediction: item.wrappedValue)
 							if let firstResult = items.first, items.count == 1 {
 								self.show(row: firstResult)
 							} else {
-								self.viewModel.items = items
+								self.viewModel.mapItemsState.mapItems = items
 							}
 						}
 					case .appleMapItem:
-						self.show(row: item)
+						self.show(row: item.wrappedValue)
 					}
 				}, label: {
-					SearchResultItem(prediction: item)
+					SearchResultItem(prediction: item.wrappedValue)
 						.frame(maxWidth: .infinity)
 				})
 				.listRowSeparator(.hidden)
@@ -85,10 +85,10 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(item: $selectedPOI) {
+		.sheet(item: .constant(self.viewModel.mapItemsState.selectedItem)) {
 			self.selectedDetent = .medium
 		} content: { _ in
-			POIDetailSheet(poi: $selectedPOI, isShown: $detailSheetShown) {
+			POIDetailSheet(poi: .constant(self.viewModel.mapItemsState.selectedItem), isShown: $detailSheetShown) {
 				print("start")
 			} onMore: {
 				print("more")
@@ -108,7 +108,10 @@ struct SearchSheet: View {
 		if let coordinate = row.coordinate {
 			self.camera = .center(coordinate, zoom: 16)
 		}
-		self.selectedPOI = row.poi
+//		self.selectedPOI = row.poi
+		
+		let index = self.viewModel.mapItemsState.mapItems.firstIndex(of: row)
+		self.viewModel.mapItemsState.selectedIndex = index
 		self.detailSheetShown = true
 	}
 }
@@ -116,7 +119,6 @@ struct SearchSheet: View {
 #Preview {
 	let sheet = SearchSheet(viewModel: .init(mode: .preview),
 							camera: .constant(.center(.riyadh, zoom: 12)),
-							selectedPOI: .constant(nil),
 							selectedDetent: .constant(.medium))
 	return sheet
 }

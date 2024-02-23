@@ -33,12 +33,12 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Properties
 
-	@Published var items: [Row] = []
+	@Published var mapItemsState = MapItemsState(selectedIndex: nil, mapItems: [])
 	@Published var searchText: String = ""
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.items = []
+			self.mapItemsState.mapItems = []
 		}
 	}
 
@@ -54,15 +54,15 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
-						self.items = try await self.apple.predict(term: newValue)
+						self.mapItemsState.mapItems = try await self.apple.predict(term: newValue)
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
-						self.items = try await self.toursprung.predict(term: newValue)
+						self.mapItemsState.mapItems = try await self.toursprung.predict(term: newValue)
 					}
 				case .preview:
-					self.items = [
+					self.mapItemsState.mapItems = [
 						.init(toursprung: .starbucks),
 						.init(toursprung: .ketchup)
 					]
