@@ -73,7 +73,7 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Internal
 
-	// MARK: - SearchViewModel
+	// MARK: - SearchViewStore
 
 	func resolve(prediction: Row) async throws -> [Row] {
 		switch prediction.provider {
