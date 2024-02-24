@@ -7,6 +7,7 @@
 //
 
 import ApplePOI
+import Combine
 import Foundation
 import MapLibreSwiftUI
 import POIService
@@ -15,7 +16,9 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-	@ObservedObject var viewStore: SearchViewStore
+	private var cancelables: Set<AnyCancellable> = []
+	@Binding var mapStore: MapStore
+	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
 
@@ -28,7 +31,7 @@ struct SearchSheet: View {
 				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
-				TextField("Search", text: self.$viewStore.searchText)
+				TextField("Search", text: self.$searchStore.searchText)
 					.focused(self.$searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
@@ -37,9 +40,9 @@ struct SearchSheet: View {
 					.overlay(
 						HStack {
 							Spacer()
-							if !self.viewStore.searchText.isEmpty {
+							if !self.searchStore.searchText.isEmpty {
 								Button(action: {
-									self.viewStore.searchText = ""
+									self.searchStore.searchText = ""
 								}, label: {
 									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
@@ -56,7 +59,7 @@ struct SearchSheet: View {
 			.background(.background)
 			.cornerRadius(8)
 
-			List(self.$viewStore.mapItemsState.mapItems, id: \.self) { item in
+			List(self.$searchStore.items, id: \.self) { item in
 				Button(action: {
 					switch item.wrappedValue.provider {
 					case .toursprung:
@@ -65,14 +68,15 @@ struct SearchSheet: View {
 						self.selectedDetent = .large
 						self.searchIsFocused = false
 						Task {
-							let items = try await self.viewStore.resolve(prediction: item.wrappedValue)
+							let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
 							if let firstResult = items.first, items.count == 1 {
 								self.show(row: firstResult)
 							} else {
-								self.viewStore.mapItemsState.mapItems = items
+								self.mapStore.mapItemStore.mapItems = items
 							}
 						}
 					case .appleMapItem:
+
 						self.show(row: item.wrappedValue)
 					}
 				}, label: {
@@ -84,10 +88,10 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(item: .constant(self.viewStore.mapItemsState.selectedItem)) {
+		.sheet(item: .constant(self.mapStore.mapItemStore.selectedItem)) {
 			self.selectedDetent = .medium
 		} content: { _ in
-			POIDetailSheet(poi: .constant(self.viewStore.mapItemsState.selectedItem), isShown: self.$detailSheetShown) {
+			POIDetailSheet(poi: .constant(self.mapStore.mapItemStore.selectedItem), isShown: self.$detailSheetShown) {
 				print("start")
 			} onMore: {
 				print("more")
@@ -101,6 +105,20 @@ struct SearchSheet: View {
 		}
 	}
 
+	// MARK: - Lifecycle
+
+	init(mapStore: Binding<MapStore>, searchStore: SearchViewStore, camera: Binding<MapViewCamera>, selectedDetent: Binding<PresentationDetent>) {
+		self._mapStore = mapStore
+		self.searchStore = searchStore
+		self._camera = camera
+		self._selectedDetent = selectedDetent
+
+		self.searchStore.$items.sink { items in
+			print("Changed: \(items)")
+			self.mapStore.mapItemStore.mapItems = items
+		}.store(in: &self.cancelables)
+	}
+
 	// MARK: - Internal
 
 	func show(row: Row) {
@@ -109,13 +127,14 @@ struct SearchSheet: View {
 		if let coordinate = row.coordinate {
 			self.camera = .center(coordinate, zoom: 16)
 		}
-		self.viewStore.mapItemsState.selectedItem = row.poi
+		self.mapStore.mapItemStore.selectedItem = row.poi
 		self.detailSheetShown = true
 	}
 }
 
 #Preview {
-	let sheet = SearchSheet(viewStore: .init(mode: .preview, mapItemsState: .preview),
+	let sheet = SearchSheet(mapStore: .constant(.init(mapItemStore: .empty)),
+							searchStore: .init(mode: .preview),
 							camera: .constant(.center(.riyadh, zoom: 12)),
 							selectedDetent: .constant(.medium))
 	return sheet

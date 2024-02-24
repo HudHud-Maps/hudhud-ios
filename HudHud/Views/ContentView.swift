@@ -22,16 +22,12 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 
-	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
-	@State var selectedDetent: PresentationDetent = .small
-	@State var searchShown: Bool = true
-	@State var mapItemState: MapItemsState = .init(selectedItem: nil, mapItems: [])
-	@StateObject var searchViewStore: SearchViewStore
-	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
+	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
+	@State var mapStore: MapStore = .init(mapItemStore: .empty)
 
 	var body: some View {
-		return MapView(styleURL: self.styleURL, camera: self.$camera) {
-			let pointSource = self.searchViewStore.mapItemsState.points
+		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+			let pointSource = self.mapStore.mapItemStore.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
 				.radius(constant: 16)
@@ -45,17 +41,18 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
 			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$camera)
+				CurrentLocationButton(camera: self.$mapStore.camera)
 				ProviderButton(searchViewStore: self.searchViewStore)
 			}
 			.padding()
 		}
-		.sheet(isPresented: self.$searchShown) {
-			SearchSheet(viewStore: self.searchViewStore,
-						camera: self.$camera,
-						selectedDetent: self.$selectedDetent)
+		.sheet(isPresented: self.$mapStore.searchShown) {
+			SearchSheet(mapStore: self.$mapStore,
+						searchStore: self.searchViewStore,
+						camera: self.mapStore.$camera,
+						selectedDetent: self.mapStore.$selectedDetent)
 				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$selectedDetent)
+				.presentationDetents([.small, .medium, .large], selection: self.$mapStore.selectedDetent)
 				.presentationBackgroundInteraction(
 					.enabled(upThrough: .medium)
 				)
@@ -75,6 +72,5 @@ extension CLLocationCoordinate2D {
 }
 
 #Preview {
-	@StateObject var store: SearchViewStore = .init(mode: .preview)
-	return ContentView(searchViewStore: store)
+	return ContentView(searchViewStore: .preview, mapStore: .init(mapItemStore: .empty))
 }

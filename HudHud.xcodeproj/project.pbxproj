@@ -38,7 +38,8 @@
 		CDCE17D52B879CEC00EC1571 /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17C62B879CEC00EC1571 /* POIDetailSheet.swift */; };
 		CDCE17D62B879CEC00EC1571 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17C72B879CEC00EC1571 /* ContentView.swift */; };
 		CDCE17D72B879CEC00EC1571 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17C82B879CEC00EC1571 /* DictionaryView.swift */; };
-		CDCE17D92B879DA900EC1571 /* MapItemState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17D82B879DA900EC1571 /* MapItemState.swift */; };
+		CDCE17D92B879DA900EC1571 /* MapItemsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17D82B879DA900EC1571 /* MapItemsStore.swift */; };
+		CDCE17DD2B88DF9700EC1571 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17DC2B88DF9700EC1571 /* MapStore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -86,7 +87,8 @@
 		CDCE17C62B879CEC00EC1571 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
 		CDCE17C72B879CEC00EC1571 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		CDCE17C82B879CEC00EC1571 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
-		CDCE17D82B879DA900EC1571 /* MapItemState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemState.swift; sourceTree = "<group>"; };
+		CDCE17D82B879DA900EC1571 /* MapItemsStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemsStore.swift; sourceTree = "<group>"; };
+		CDCE17DC2B88DF9700EC1571 /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
 		CDEAEA0B2B82B0BB0038470F /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
 		CDF4A6CE2B7E3D98001B3CD7 /* POIService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = POIService; sourceTree = "<group>"; };
 		F112E9EE98644EA8811C2E68 /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
@@ -259,8 +261,9 @@
 		D360F2715C6B016AF539FA2D /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				CDCE17D82B879DA900EC1571 /* MapItemState.swift */,
+				CDCE17D82B879DA900EC1571 /* MapItemsStore.swift */,
 				F112E9EE98644EA8811C2E68 /* SearchViewStore.swift */,
+				CDCE17DC2B88DF9700EC1571 /* MapStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				CDCE17D52B879CEC00EC1571 /* POIDetailSheet.swift in Sources */,
 				CDCE17CF2B879CEC00EC1571 /* MapLayersData.swift in Sources */,
 				CDCE17D02B879CEC00EC1571 /* MainLayersView.swift in Sources */,
+				CDCE17DD2B88DF9700EC1571 /* MapStore.swift in Sources */,
 				CDCE17CE2B879CEC00EC1571 /* MapLayersView.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
 				2ADB20A81A69AD2774096D16 /* SearchViewStore.swift in Sources */,
@@ -440,7 +444,7 @@
 				CDCE17D62B879CEC00EC1571 /* ContentView.swift in Sources */,
 				CDCE17D42B879CEC00EC1571 /* CategoriesBannerView.swift in Sources */,
 				CDCE17D72B879CEC00EC1571 /* DictionaryView.swift in Sources */,
-				CDCE17D92B879DA900EC1571 /* MapItemState.swift in Sources */,
+				CDCE17D92B879DA900EC1571 /* MapItemsStore.swift in Sources */,
 				CDCE17CD2B879CEC00EC1571 /* DirectionPreviewData.swift in Sources */,
 				CDCE17CA2B879CEC00EC1571 /* HudHudApp.swift in Sources */,
 				CDCE17CC2B879CEC00EC1571 /* DirectionsSummaryView.swift in Sources */,

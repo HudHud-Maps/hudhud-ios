@@ -35,21 +35,22 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Properties
 
-	@Binding var mapItemsState: MapItemsState
 	@Published var searchText: String = ""
+
+	@Published var items: [Row]
 
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.mapItemsState.mapItems = []
+			self.items = []
 		}
 	}
 
 	// MARK: - Lifecycle
 
-	init(mode: Mode, mapItemsState: Binding<MapItemsState>) {
+	init(mode: Mode) {
 		self.mode = mode
-		self._mapItemsState = mapItemsState
+		self.items = []
 
 		self.cancellable = self.$searchText
 			.removeDuplicates()
@@ -58,15 +59,15 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
-						self.mapItemsState.mapItems = try await self.apple.predict(term: newValue)
+						self.items = try await self.apple.predict(term: newValue)
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
-						self.mapItemsState.mapItems = try await self.toursprung.predict(term: newValue)
+						self.items = try await self.toursprung.predict(term: newValue)
 					}
 				case .preview:
-					self.mapItemsState.mapItems = [
+					self.items = [
 						.init(toursprung: .starbucks),
 						.init(toursprung: .ketchup)
 					]
@@ -92,6 +93,6 @@ class SearchViewStore: ObservableObject {
 
 extension SearchViewStore {
 	static var preview: SearchViewStore {
-		.init(mode: .preview, mapItemsState: .preview)
+		.init(mode: .preview)
 	}
 }

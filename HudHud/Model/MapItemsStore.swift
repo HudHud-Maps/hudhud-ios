@@ -1,5 +1,5 @@
 //
-//  MapItemState.swift
+//  MapItemsStore.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 22.02.24.
@@ -13,9 +13,9 @@ import MapLibreSwiftUI
 import POIService
 import SwiftUI
 
-// MARK: - MapItemsState
+// MARK: - MapItemsStore
 
-struct MapItemsState {
+struct MapItemsStore {
 
 	var selectedItem: POI?
 	var mapItems: [Row]
@@ -36,7 +36,7 @@ struct MapItemsState {
 		}
 	}
 
-	static var empty: MapItemsState {
+	static var empty: MapItemsStore {
 		.init(selectedItem: nil, mapItems: [])
 	}
 
@@ -49,7 +49,7 @@ struct MapItemsState {
 }
 
 extension Binding {
-	static var preview: Binding<MapItemsState> {
+	static var preview: Binding<MapItemsStore> {
 		.constant(.init(selectedItem: nil, mapItems: []))
 	}
 }
