@@ -65,7 +65,8 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
-						self.items = try await self.apple.predict(term: newValue)
+						let newStatus = MapItemsStatus(selectedItem: nil, mapItems: try await self.apple.predict(term: newValue))
+						self.mapStore.mapItemStatus = newStatus
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
@@ -80,7 +81,7 @@ class SearchViewStore: ObservableObject {
 				}
 			}
 
-		// you might need to set up sinks to self.mapStore.mapItemStatus
+		// you might need to set up sinks to self.mapStore.mapItemStatus to clear searchtext...
 	}
 
 	// MARK: - Internal
