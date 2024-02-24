@@ -23,11 +23,11 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 
 	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
-	@State var mapStore: MapStore = .init(mapItemStore: .empty)
+	@StateObject var mapStore = MapStore()
 
 	var body: some View {
 		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
-			let pointSource = self.mapStore.mapItemStore.points
+			let pointSource = self.mapStore.mapItemStatus.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
 				.radius(constant: 16)
@@ -47,10 +47,8 @@ struct ContentView: View {
 			.padding()
 		}
 		.sheet(isPresented: self.$mapStore.searchShown) {
-			SearchSheet(mapStore: self.$mapStore,
-						searchStore: self.searchViewStore,
-						camera: self.mapStore.$camera,
-						selectedDetent: self.mapStore.$selectedDetent)
+			SearchSheet(mapStore: self.mapStore,
+						searchStore: self.searchViewStore)
 				.presentationCornerRadius(21)
 				.presentationDetents([.small, .medium, .large], selection: self.$mapStore.selectedDetent)
 				.presentationBackgroundInteraction(
@@ -72,5 +70,5 @@ extension CLLocationCoordinate2D {
 }
 
 #Preview {
-	return ContentView(searchViewStore: .preview, mapStore: .init(mapItemStore: .empty))
+	return ContentView(searchViewStore: .preview)
 }

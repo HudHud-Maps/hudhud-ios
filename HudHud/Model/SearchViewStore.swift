@@ -18,6 +18,8 @@ import ToursprungPOI
 @MainActor
 class SearchViewStore: ObservableObject {
 
+	let mapStore: MapStore
+
 	enum Mode {
 		enum Provider: CaseIterable {
 			case apple
@@ -37,20 +39,24 @@ class SearchViewStore: ObservableObject {
 
 	@Published var searchText: String = ""
 
-	@Published var items: [Row]
+
+	// you can't have items in two places, one source of truth only
+	// @Published var items: [Row]
 
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.items = []
+			self.mapStore.mapItemStatus = .empty
 		}
 	}
+
+	// I think this probably belongs here as we might want to show a map at sometime without a search sheet
+	@Published var selectedDetent: PresentationDetent = .small
 
 	// MARK: - Lifecycle
 
 	init(mode: Mode) {
 		self.mode = mode
-		self.items = []
 
 		self.cancellable = self.$searchText
 			.removeDuplicates()
@@ -73,6 +79,8 @@ class SearchViewStore: ObservableObject {
 					]
 				}
 			}
+
+		// you might need to set up sinks to self.mapStore.mapItemStatus
 	}
 
 	// MARK: - Internal

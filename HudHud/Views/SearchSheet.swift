@@ -17,13 +17,15 @@ import ToursprungPOI
 struct SearchSheet: View {
 
 	private var cancelables: Set<AnyCancellable> = []
-	@Binding var mapStore: MapStore
+
+	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
 
-	@Binding var camera: MapViewCamera
-	@Binding var selectedDetent: PresentationDetent
+	// You are observing mapStore already, so you do not need an additional binding
+	// @Binding var camera: MapViewCamera
+	// @Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
 		return VStack {
@@ -65,14 +67,17 @@ struct SearchSheet: View {
 					case .toursprung:
 						self.show(row: item.wrappedValue)
 					case .appleCompletion:
-						self.selectedDetent = .large
+						self.searchStore.selectedDetent = .large
 						self.searchIsFocused = false
 						Task {
 							let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
 							if let firstResult = items.first, items.count == 1 {
 								self.show(row: firstResult)
 							} else {
-								self.mapStore.mapItemStore.mapItems = items
+								// selectedItem might not be in items anymore, so we need to think about what this means for newStatus, I have not added any code here for that
+								let oldStatus = self.mapStore.mapItemStatus
+								let newStatus = MapItemsStatus(selectedItem: oldStatus.selectedItem, mapItems: items)
+								self.mapStore.mapItemStatus = newStatus
 							}
 						}
 					case .appleMapItem:
@@ -88,8 +93,10 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(item: .constant(self.mapStore.mapItemStore.selectedItem)) {
-			self.selectedDetent = .medium
+		// I have never used .constant in my years of SwiftUI... If you are about to use it you are probably doing something wrong.
+		// sheets use bindings because its a two way relationship - if the sheet is dismissed it will clear what is in
+		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
+			self.searchStore.selectedDetent = .medium
 		} content: { _ in
 			POIDetailSheet(poi: .constant(self.mapStore.mapItemStore.selectedItem), isShown: self.$detailSheetShown) {
 				print("start")
@@ -124,6 +131,8 @@ struct SearchSheet: View {
 	func show(row: Row) {
 		self.searchIsFocused = false
 		self.selectedDetent = .small
+
+		// anything to do with camera updates should not be in the SearchSheet code - what if items change while the searchsheet is not showing? MapStore or MapView will need to manage the camera
 		if let coordinate = row.coordinate {
 			self.camera = .center(coordinate, zoom: 16)
 		}

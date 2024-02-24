@@ -15,10 +15,11 @@ import SwiftUI
 
 // MARK: - MapItemsStore
 
-struct MapItemsStore {
+// Anything that is not an ObservableObject is not a Store - I'd usually call this "State" but as this might confuse people for something to do with @State I'm calling it Status here.
+struct MapItemsStatus {
 
-	var selectedItem: POI?
-	var mapItems: [Row]
+	let selectedItem: POI?
+	let mapItems: [Row]
 
 	var points: ShapeSource {
 		if let selectedItem {
@@ -36,7 +37,7 @@ struct MapItemsStore {
 		}
 	}
 
-	static var empty: MapItemsStore {
+	static var empty: MapItemsStatus {
 		.init(selectedItem: nil, mapItems: [])
 	}
 
@@ -45,11 +46,5 @@ struct MapItemsStore {
 	init(selectedItem: POI?, mapItems: [Row]) {
 		self.selectedItem = selectedItem
 		self.mapItems = mapItems
-	}
-}
-
-extension Binding {
-	static var preview: Binding<MapItemsStore> {
-		.constant(.init(selectedItem: nil, mapItems: []))
 	}
 }
