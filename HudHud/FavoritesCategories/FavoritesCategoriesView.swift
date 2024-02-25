@@ -7,9 +7,9 @@
 //
 
 import SwiftUI
+import SFSafeSymbols
 
 struct FavoritesCategoriesView: View {
-	@Environment(\.colorScheme) var colorScheme
 	let favCategoriesData: [FavCategoriesData] = [
 		FavCategoriesData(title: "Home",
 						  sfSymbol: "house.fill",
@@ -24,20 +24,26 @@ struct FavoritesCategoriesView: View {
 									   sfSymbol: "plus.circle.fill",
 									   tintColor: .green)
 	var body: some View {
-			HStack {
-				ForEach(favCategoriesData.prefix(4), id: \.self) { favorite in
-					FavCategoriesButton(favCategoriesData: favorite) {
-						print("\(favorite.title) was pressed")
-					}
+		//		ScrollView(.horizontal) {
+		HStack {
+			ForEach(favCategoriesData.prefix(4), id: \.self) { favorite in
+				Button {
+					print("\(favorite.title) was pressed")
+				} label: {
+					Text(favorite.title)
 				}
-				FavCategoriesButton(favCategoriesData: plusButton) {
-					print("\(plusButton.title) was pressed")
-				}
-				// to give the 4th category a space
-				if favCategoriesData.count < 4 {
-					Text("      ")
-						.padding(.horizontal)
-				}
+				.buttonStyle(FavCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
+			}
+			Button {
+				print("\(plusButton) was pressed")
+			} label: {
+				Text(plusButton.title)
+			}.buttonStyle(FavCategoriesButton(sfSymbol: plusButton.sfSymbol, tintColor: plusButton.tintColor))
+			// to give the 4th category a space
+			if favCategoriesData.count < 4 {
+				Text("      ")
+					.padding(.horizontal)
+			}
 		}
 	}
 }

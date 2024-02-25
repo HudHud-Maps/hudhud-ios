@@ -9,40 +9,39 @@
 import SwiftUI
 import SFSafeSymbols
 
-struct FavCategoriesButton: View {
-	typealias ActionHandled = () -> Void
-	let favCategoriesData: FavCategoriesData
-	let handler: ActionHandled
-	internal init(
-		favCategoriesData: FavCategoriesData,
-		handler: @escaping FavCategoriesButton.ActionHandled
-	) {
-		self.favCategoriesData = favCategoriesData
-		self.handler = handler
-	}
-    var body: some View {
-		Button {
-			handler()
-		} label: {
-			VStack {
-				ZStack {
-					Circle()
-						.tint(.white)
-						.shadow(color: .black.opacity(0.15), radius: 10, y: 10)
-					Image(systemSymbol: SFSymbol(rawValue: favCategoriesData.sfSymbol))
+struct FavCategoriesButton: ButtonStyle {
+	let sfSymbol: String?
+	let tintColor: Color?
+	@State private var wordHeight: CGFloat = 35
+	func makeBody(configuration: Configuration) -> some View {
+		VStack {
+			Circle()
+				.foregroundColor(.white)
+				.shadow(color: .black.opacity(0.15), radius: 10, y: 10)
+				.overlay {
+					Image(systemSymbol: SFSymbol(rawValue: sfSymbol ?? "house.fill"))
 						.resizable()
 						.scaledToFit()
-						.tint(favCategoriesData.tintColor ?? .gray)
-						.padding(20)
+						.foregroundColor(tintColor)
+						.padding(15)
 				}
-				Text("\(favCategoriesData.title)")
-					.tint(.primary)
-					.dynamicTypeSize(.medium)
-			}
+			configuration.label
+				.tint(.primary)
+				.font(.system(.subheadline))
+				.lineLimit(1)
+				.minimumScaleFactor(0.3)
+				.baselineOffset(1)
+				.background(GeometryReader {
+					Color.clear.preference(key: SizePreferenceKey.self, value: $0.size.height)
+				})
+				.frame(maxHeight: wordHeight)
 		}
-    }
-}
-
-#Preview {
-	FavCategoriesButton(favCategoriesData: FavCategoriesData(title: "Home", sfSymbol: "house.fill", tintColor: .secondary)) {}
+			.onPreferenceChange(SizePreferenceKey.self, perform: { wordHeight = $0 })
+	}
+			private struct SizePreferenceKey: PreferenceKey {
+					static var defaultValue: CGFloat = .zero
+					static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+						value = min(value, nextValue())
+				}
+		}
 }
