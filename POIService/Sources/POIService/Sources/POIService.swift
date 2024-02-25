@@ -8,32 +8,58 @@
 
 import CoreLocation
 import Foundation
+import MapKit
 import SFSafeSymbols
 import SwiftUI
+
+// MARK: - POIServiceProtocol
 
 public protocol POIServiceProtocol {
 
 	static var serviceName: String { get }
-
-	func search(term: String) async throws -> [POI]
+	func lookup(prediction: PredictionResult) async throws -> [Row]
+	func predict(term: String) async throws -> [Row]
 }
 
-public struct POI: Identifiable {
+// MARK: - PredictionResult
+
+public enum PredictionResult: Hashable {
+	case apple(completion: MKLocalSearchCompletion)
+	case toursprung(result: Row)
+}
+
+// MARK: - POI
+
+public class POI: Hashable, Identifiable {
 
 	public var id: Int
-	public var name: String
+	public var title: String
 	public var subtitle: String
 	public var locationCoordinate: CLLocationCoordinate2D
 	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
 
-	public init(id: Int = .random(in: 0...1000000), name: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
+	// MARK: - Lifecycle
+
+	public init(id: Int = .random(in: 0 ... 1_000_000), title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
-		self.name = name
+		self.title = title
 		self.subtitle = subtitle
 		self.locationCoordinate = locationCoordinate
 		self.type = type
 	}
+
+	// MARK: - Public
+
+	public static func == (lhs: POI, rhs: POI) -> Bool {
+		return lhs.title == rhs.title && lhs.subtitle == rhs.subtitle
+	}
+
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(self.title)
+		hasher.combine(self.subtitle)
+	}
+
 }
 
 public extension POI {
@@ -50,52 +76,21 @@ public extension POI {
 	}
 }
 
+// MARK: CustomStringConvertible
+
+extension POI: CustomStringConvertible {
+	public var description: String {
+		return "\(self.title) - \(self.subtitle)"
+	}
+}
+
 public extension POI {
-	static let ketchup = POI(name: "Ketch up - Dubai",
+	static let ketchup = POI(title: "Ketch up - Dubai",
 							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence - Bluewaters Island - Dubai",
 							 locationCoordinate: CLLocationCoordinate2D(latitude: 25.077744998955207, longitude: 55.124647403691284),
 							 type: "Restaurant")
-	static let starbucks = POI(name: "Starbucks",
+	static let starbucks = POI(title: "Starbucks",
 							   subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
 							   locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
 							   type: "Cafe")
-}
-
-public protocol DictionaryConvertable: CustomStringConvertible {
-	func dictionary() -> [String: AnyHashable]
-}
-
-public extension DictionaryConvertable {
-
-	func dictionary() -> [String: AnyHashable] {
-		var dict = [String: AnyHashable]()
-		let mirror = Mirror(reflecting: self)
-		for child in mirror.children {
-			guard let key = child.label else { continue }
-
-			let childMirror = Mirror(reflecting: child.value)
-			switch childMirror.displayStyle {
-			case .struct, .class:
-				if let childDict = (child.value as? DictionaryConvertable)?.dictionary() {
-					dict[key] = childDict
-				}
-			case .collection:
-				if let childArray = (child.value as? [DictionaryConvertable])?.compactMap({ $0.dictionary() }) {
-					dict[key] = childArray
-				}
-			case .set:
-				if let childArray = (child.value as? Set<AnyHashable>)?.compactMap({ ($0 as? DictionaryConvertable)?.dictionary() }) {
-					dict[key] = childArray
-				}
-			default:
-				if let child = child.value as? CustomStringConvertible {
-					dict[key] = child.description
-				}
-
-				dict[key] = child.value as? AnyHashable
-			}
-		}
-
-		return dict
-	}
 }

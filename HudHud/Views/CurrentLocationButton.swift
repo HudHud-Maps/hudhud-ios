@@ -1,5 +1,5 @@
 //
-//  LocationButton.swift
+//  CurrentLocationButton.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 31.01.24.
@@ -47,7 +47,9 @@ struct CurrentLocationButton: View {
 	}
 }
 
-#Preview {
+@available(iOS 17, *)
+#Preview(traits: .sizeThatFitsLayout) {
 	@State var camera: MapViewCamera = .default()
 	return CurrentLocationButton(camera: $camera)
+		.padding()
 }

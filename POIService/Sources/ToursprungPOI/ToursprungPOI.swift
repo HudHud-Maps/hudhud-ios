@@ -8,9 +8,12 @@
 
 import CoreLocation
 import Foundation
+import MapKit
 import POIService
 
-public final class ToursprungPOI: POIServiceProtocol {
+// MARK: - ToursprungPOI
+
+public actor ToursprungPOI: POIServiceProtocol {
 
 	enum GeocoderError: Error, LocalizedError {
 		case buildingURL
@@ -26,16 +29,38 @@ public final class ToursprungPOI: POIServiceProtocol {
 		}
 	}
 
-	public static let serviceName: String = "Toursprung"
-	let session: URLSession = .shared
+	private let session: URLSession
+	private let debouncer: AsyncDebouncer<String, [Row]>
+
+	// MARK: - POIServiceProtocol
+
+	public static var serviceName: String = "Apple"
+
+	// MARK: - Lifecycle
 
 	public init() {
-
+		self.session = .shared
+		self.debouncer = .init()
 	}
 
-	// MARK: - ToursprungPOI
+	// MARK: - Public
 
-	public func search(term: String) async throws -> [POI] {
+	public func predict(term: String) async throws -> [Row] {
+		return try await self.debouncer.debounce(input: term) { input in
+			return try await self.search(term: input)
+		}
+	}
+
+	public func lookup(prediction _: PredictionResult) async throws -> [Row] {
+		return []
+	}
+}
+
+// MARK: - Private
+
+private extension ToursprungPOI {
+
+	func search(term: String) async throws -> [Row] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()
@@ -63,22 +88,26 @@ public final class ToursprungPOI: POIServiceProtocol {
 		}
 
 		let decoder = JSONDecoder()
-		let pois = try decoder.decode([POIElement].self, from: data)
-		return pois.compactMap {
+		let poiElementss = try decoder.decode([POIElement].self, from: data)
+		let pois = poiElementss.compactMap {
 			return POIService.POI(element: $0)
+		}
+		return pois.map {
+			return Row(toursprung: $0)
 		}
 	}
 }
 
 public extension POI {
 
-	init?(element: POIElement) {
+	convenience init?(element: POIElement) {
 		guard let lat = Double(element.lat),
 			  let lon = Double(element.lon) else { return nil }
 
 		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-		self.init(name: element.displayName,
+		self.init(id: element.placeID,
+				  title: element.displayName,
 				  subtitle: element.address.description,
 				  locationCoordinate: coordinate,
 				  type: element.type)
@@ -94,10 +123,10 @@ public extension POI {
 
 public extension POIElement {
 
-	static let starbucksKualaLumpur = POIElement(placeID: 374426437,
+	static let starbucksKualaLumpur = POIElement(placeID: 374_426_437,
 												 licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
 												 osmType: "node",
-												 osmID: 11363949513,
+												 osmID: 11_363_949_513,
 												 boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
 												 lat: "3.177246",
 												 lon: "101.7507382",

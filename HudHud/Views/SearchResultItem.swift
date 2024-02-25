@@ -6,16 +6,17 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import MapKit
 import POIService
 import SwiftUI
 
 struct SearchResultItem: View {
 
-	let poi: POI
+	let prediction: Row
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
-			self.poi.icon
+			self.prediction.icon
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(width: 24, height: 24)
@@ -27,11 +28,11 @@ struct SearchResultItem: View {
 				.frame(minWidth: .leastNonzeroMagnitude)
 
 			VStack(alignment: .leading) {
-				Text(self.poi.name)
+				Text(self.prediction.title)
 					.foregroundStyle(.primary)
 					.font(.headline)
 					.lineLimit(1)
-				Text(self.poi.subtitle)
+				Text(self.prediction.subtitle)
 					.foregroundStyle(.secondary)
 					.font(.body)
 					.lineLimit(1)
@@ -46,6 +47,5 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)!	// swiftlint:disable:this force_unwrapping
-	return SearchResultItem(poi: poi)
+	return SearchResultItem(prediction: .init(toursprung: .starbucks))
 }

@@ -15,6 +15,9 @@ struct CatagoryBannerData: Identifiable {
 	let textColor: Color?
 	let title: String
 	let iconSystemName: String
+
+	// MARK: - Lifecycle
+
 	init(buttonColor: Color?, textColor: Color?, title: String, iconSystemName: String) {
 		self.buttonColor = buttonColor
 		self.textColor = textColor
