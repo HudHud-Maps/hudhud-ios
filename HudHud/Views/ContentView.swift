@@ -22,7 +22,6 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-	@State private var cancelables: Set<AnyCancellable> = []
 
 	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
 	@StateObject var mapStore = MapStore()
@@ -68,19 +67,9 @@ struct ContentView: View {
 		self._searchViewStore = .init(wrappedValue: searchViewStore)
 		self._mapStore = .init(wrappedValue: mapStore)
 		searchViewStore.mapStore = mapStore
-
-		self.setupSinks()
 	}
 
 	// MARK: - Internal
-
-	func setupSinks() {
-		self.mapStore.mapItemStatus.mapItems.publisher.sink { row in
-			guard let coordinate = row.coordinate else { return }
-
-			self.mapStore.camera = .center(coordinate, zoom: 16)
-		}.store(in: &self.cancelables)
-	}
 }
 
 extension PresentationDetent {
