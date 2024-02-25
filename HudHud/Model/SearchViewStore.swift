@@ -18,7 +18,7 @@ import ToursprungPOI
 @MainActor
 class SearchViewStore: ObservableObject {
 
-	let mapStore: MapStore
+	var mapStore: MapStore = .init()
 
 	enum Mode {
 		enum Provider: CaseIterable {
@@ -38,7 +38,6 @@ class SearchViewStore: ObservableObject {
 	// MARK: - Properties
 
 	@Published var searchText: String = ""
-
 
 	// you can't have items in two places, one source of truth only
 	// @Published var items: [Row]
@@ -65,19 +64,21 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
-						let newStatus = MapItemsStatus(selectedItem: nil, mapItems: try await self.apple.predict(term: newValue))
+						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.apple.predict(term: newValue))
 						self.mapStore.mapItemStatus = newStatus
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
-						self.items = try await self.toursprung.predict(term: newValue)
+						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.toursprung.predict(term: newValue))
+						self.mapStore.mapItemStatus = newStatus
 					}
 				case .preview:
-					self.items = [
+					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
 						.init(toursprung: .starbucks),
 						.init(toursprung: .ketchup)
-					]
+					])
+					self.mapStore.mapItemStatus = newStatus
 				}
 			}
 

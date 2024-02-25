@@ -50,13 +50,23 @@ struct ContentView: View {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
 				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$mapStore.selectedDetent)
+				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
 				.presentationBackgroundInteraction(
 					.enabled(upThrough: .medium)
 				)
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
 		}
+	}
+
+	// MARK: - Lifecycle
+
+	@MainActor
+	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+		self._searchViewStore = .init(wrappedValue: searchViewStore)
+		self._mapStore = .init(wrappedValue: mapStore)
+
+		searchViewStore.mapStore = mapStore
 	}
 }
 

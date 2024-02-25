@@ -61,7 +61,7 @@ struct SearchSheet: View {
 			.background(.background)
 			.cornerRadius(8)
 
-			List(self.$searchStore.items, id: \.self) { item in
+			List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
 				Button(action: {
 					switch item.wrappedValue.provider {
 					case .toursprung:
@@ -81,7 +81,6 @@ struct SearchSheet: View {
 							}
 						}
 					case .appleMapItem:
-
 						self.show(row: item.wrappedValue)
 					}
 				}, label: {
@@ -97,8 +96,8 @@ struct SearchSheet: View {
 		// sheets use bindings because its a two way relationship - if the sheet is dismissed it will clear what is in
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
-		} content: { _ in
-			POIDetailSheet(poi: .constant(self.mapStore.mapItemStore.selectedItem), isShown: self.$detailSheetShown) {
+		} content: { item in
+			POIDetailSheet(poi: item) {
 				print("start")
 			} onMore: {
 				print("more")
@@ -114,37 +113,43 @@ struct SearchSheet: View {
 
 	// MARK: - Lifecycle
 
-	init(mapStore: Binding<MapStore>, searchStore: SearchViewStore, camera: Binding<MapViewCamera>, selectedDetent: Binding<PresentationDetent>) {
-		self._mapStore = mapStore
+	init(mapStore: MapStore, searchStore: SearchViewStore) {
+		self.cancelables = []
+		self.mapStore = mapStore
 		self.searchStore = searchStore
-		self._camera = camera
-		self._selectedDetent = selectedDetent
-
-		self.searchStore.$items.sink { items in
-			print("Changed: \(items)")
-			self.mapStore.mapItemStore.mapItems = items
-		}.store(in: &self.cancelables)
+		self.searchIsFocused = false
+		self.detailSheetShown = false
 	}
+
+//	init(mapStore: Binding<MapStore>, searchStore: SearchViewStore, camera: Binding<MapViewCamera>, selectedDetent: Binding<PresentationDetent>) {
+//		self._mapStore = mapStore
+//		self.searchStore = searchStore
+//		self._camera = camera
+//		self._selectedDetent = selectedDetent
+//
+//		self.searchStore.$items.sink { items in
+//			print("Changed: \(items)")
+//			self.mapStore.mapItemStore.mapItems = items
+//		}.store(in: &self.cancelables)
+//	}
 
 	// MARK: - Internal
 
 	func show(row: Row) {
 		self.searchIsFocused = false
-		self.selectedDetent = .small
+		self.searchStore.selectedDetent = .small
 
 		// anything to do with camera updates should not be in the SearchSheet code - what if items change while the searchsheet is not showing? MapStore or MapView will need to manage the camera
 		if let coordinate = row.coordinate {
-			self.camera = .center(coordinate, zoom: 16)
+			self.mapStore.camera = .center(coordinate, zoom: 16)
 		}
-		self.mapStore.mapItemStore.selectedItem = row.poi
+		self.mapStore.mapItemStatus.selectedItem = row.poi
 		self.detailSheetShown = true
 	}
 }
 
 #Preview {
-	let sheet = SearchSheet(mapStore: .constant(.init(mapItemStore: .empty)),
-							searchStore: .init(mode: .preview),
-							camera: .constant(.center(.riyadh, zoom: 12)),
-							selectedDetent: .constant(.medium))
+	let sheet = SearchSheet(mapStore: .init(),
+							searchStore: .init(mode: .preview))
 	return sheet
 }

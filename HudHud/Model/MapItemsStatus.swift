@@ -1,5 +1,5 @@
 //
-//  MapItemsStore.swift
+//  MapItemsStatus.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 22.02.24.
@@ -18,8 +18,8 @@ import SwiftUI
 // Anything that is not an ObservableObject is not a Store - I'd usually call this "State" but as this might confuse people for something to do with @State I'm calling it Status here.
 struct MapItemsStatus {
 
-	let selectedItem: POI?
-	let mapItems: [Row]
+	var selectedItem: POI?
+	var mapItems: [Row]
 
 	var points: ShapeSource {
 		if let selectedItem {
