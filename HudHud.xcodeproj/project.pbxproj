@@ -800,7 +800,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
 			requirement = {
-				branch = main;
+				branch = "enhancement/camera-bounding-box";
 				kind = branch;
 			};
 		};

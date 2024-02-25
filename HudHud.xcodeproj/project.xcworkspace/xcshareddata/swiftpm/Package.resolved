@@ -21,10 +21,10 @@
     {
       "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
+      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "7b6881dea4a4ea3abcea0abc1eff64c6eb416c01",
-        "version" : "6.1.0"
+        "revision" : "818e1d6b83e4cbe8482eca3e6e57d3f560926157",
+        "version" : "6.1.1"
       }
     },
     {
@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "a41e1b99fd8b71004935f4e8a9419f1207cfaab5"
+        "branch" : "enhancement/camera-bounding-box",
+        "revision" : "16495147417d110bfce3d1ecb9c5f32872160735"
       }
     },
     {
