@@ -23,10 +23,6 @@ struct SearchSheet: View {
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
 
-	// You are observing mapStore already, so you do not need an additional binding
-	// @Binding var camera: MapViewCamera
-	// @Binding var selectedDetent: PresentationDetent
-
 	var body: some View {
 		return VStack {
 			HStack {
@@ -67,17 +63,14 @@ struct SearchSheet: View {
 					case .toursprung:
 						self.show(row: item.wrappedValue)
 					case .appleCompletion:
-						self.searchStore.selectedDetent = .large
+						self.searchStore.selectedDetent = .medium
 						self.searchIsFocused = false
 						Task {
 							let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
 							if let firstResult = items.first, items.count == 1 {
 								self.show(row: firstResult)
 							} else {
-								// selectedItem might not be in items anymore, so we need to think about what this means for newStatus, I have not added any code here for that
-								let oldStatus = self.mapStore.mapItemStatus
-								let newStatus = MapItemsStatus(selectedItem: oldStatus.selectedItem, mapItems: items)
-								self.mapStore.mapItemStatus = newStatus
+								self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
 							}
 						}
 					case .appleMapItem:
@@ -139,10 +132,10 @@ struct SearchSheet: View {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
 
-		// anything to do with camera updates should not be in the SearchSheet code - what if items change while the searchsheet is not showing? MapStore or MapView will need to manage the camera
-		if let coordinate = row.coordinate {
-			self.mapStore.camera = .center(coordinate, zoom: 16)
-		}
+//		// anything to do with camera updates should not be in the SearchSheet code - what if items change while the searchsheet is not showing? MapStore or MapView will need to manage the camera
+//		if let coordinate = row.coordinate {
+//			self.mapStore.camera = .center(coordinate, zoom: 16)
+//		}
 		self.mapStore.mapItemStatus.selectedItem = row.poi
 		self.detailSheetShown = true
 	}
