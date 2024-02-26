@@ -7,17 +7,18 @@
 //
 
 import Foundation
+import CoreLocation
 struct PoiTileData: Identifiable {
 	let id = UUID()
 	let title: String
-	let imageUrl: String?
+	let imageUrl: URL?
 	let poiType: String
-	let locationDistance: String?
+	let locationDistance: CLLocationDistance?
 	let rating: String?
 	let followersNumbers: String?
 	let isFollowed: Bool
 	let pricing: Pricing?
-	init(title: String, imageUrl: String?, poiType: String, locationDistance: String?, rating: String?, followersNumbers: String?, isFollowed: Bool, pricing: Pricing?) {
+	init(title: String, imageUrl: URL?, poiType: String, locationDistance: CLLocationDistance?, rating: String?, followersNumbers: String?, isFollowed: Bool, pricing: Pricing?) {
 		self.title = title
 		self.imageUrl = imageUrl
 		self.poiType = poiType
@@ -31,5 +32,11 @@ struct PoiTileData: Identifiable {
 		case high = "$$$"
 		case medium = "$$"
 		case low = "$"
+	}
+	func grtDistanceString() -> String {
+		let distanceFormatter = MeasurementFormatter()
+		distanceFormatter.unitOptions = .providedUnit
+		let measurement = Measurement(value: self.locationDistance?.magnitude.rounded() ?? 0.0, unit: UnitLength.kilometers)
+		return distanceFormatter.string(from: measurement)
 	}
 }
