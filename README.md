@@ -45,6 +45,61 @@ Ensure the name of your branch contains the ticket number (HHIOS-NNNN) so that t
 
 After completing the feature, submit a pull request to merge it into develop.
 
+### Kintsugi
+
+There is a nice tool to fix Xcode project merge conflicts: https://github.com/Lightricks/Kintsugi. Installing this on an M1 machine is tricky as the preinstalled Ruby installtion has its quirks.
+
+Add this to your `~/.zprofile`
+
+```bash
+export GEM_HOME="$HOME/.gem"
+path+=("$GEM_HOME/bin")
+export PATH
+```
+
+Then install kintsugi by running
+
+```bash
+gem install kintsugi
+```
+
+As a last step its recommended to instruct git to automaically use this for merge conflicts:
+
+```bash
+kintsugi install-driver
+```
+
+##### Optional GUI Git Client
+
+If you use only the command line then your setup is finished here.
+If you use a GUI git client (I recommend https://fork.dev) then this will not work as Fork doesn't know where kintsugi is installed. I fixed this by adjusting my global gitconfig in `~/.gitconfig` as follows:
+
+```bash
+[merge "kintsugi"]
+	name = Kintsugi driver
+	driver = export GEM_HOME="$HOME/.gem" && $GEM_HOME/bin/kintsugi driver %O %A %B %P
+```
+
+If everything is seutp correctly this is how it will look when you encounter a merge conflict. Notice how it says `Kintsugi auto-merged HudHud.xcodeproj/project.pbxproj`.
+
+![](.tools/kintsugi-working.png)
+
+```bash
+POST git-upload-pack (339 bytes)
+From https://github.com/HudHud-Maps/hudhud-ios
+ * branch            develop    → FETCH_HEAD
+ = [up to date]      develop    → origin/develop
+[32mKintsugi auto-merged HudHud.xcodeproj/project.pbxproj[0m
+
+Warning: Trying to add a build file without any file reference to build phase 'FrameworksBuildPhase'
+Auto-merging HudHud.xcodeproj/project.pbxproj
+CONFLICT (modify/delete): HudHud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved deleted in d396af3c1a8f95265ed412e0fa99bfd3cc1603d0 and modified in HEAD.  Version HEAD of HudHud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved left in tree.
+Auto-merging HudHud/Views/ContentView.swift
+CONFLICT (content): Merge conflict in HudHud/Views/ContentView.swift
+Automatic merge failed; fix conflicts and then commit the result.
+```
+
+
 ### Code Style
 
 We use the Ray Wenderlich Code Style: https://github.com/raywenderlich/swift-style-guide. SwiftLint is used to enforce a consistent code style. Before submitting a pull request, ensure your code adheres to the SwiftLint rules. SwiftLint is run automatically as part of the build.
