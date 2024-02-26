@@ -63,7 +63,7 @@ Then install kintsugi by running
 gem install kintsugi
 ```
 
-As a last step its recommended to instruct git to automaically use this for merge conflicts:
+As a last step, it is recommended to instruct git, to use this for merge conflicts:
 
 ```bash
 kintsugi install-driver
