@@ -37,15 +37,6 @@
       }
     },
     {
-      "identity" : "maplibre-swiftui-dsl-playground",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
-      "state" : {
-        "branch" : "enhancement/camera-bounding-box",
-        "revision" : "16495147417d110bfce3d1ecb9c5f32872160735"
-      }
-    },
-    {
       "identity" : "mockable",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
@@ -79,6 +70,15 @@
       "state" : {
         "revision" : "8f4d2753f0e4778c76d5f05ad16c74f707390531",
         "version" : "1.2.3"
+      }
+    },
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "e7b77228b34057041374ebef00c0fd7739d71a2b",
+        "version" : "1.15.3"
       }
     },
     {

@@ -8,6 +8,7 @@
 
 import CoreLocation
 import Foundation
+import MapLibre
 import MapLibreSwiftUI
 import SwiftUI
 
@@ -55,7 +56,7 @@ extension CameraState {
 
 		let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
 		let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
-
-		return .boundingBox(northeast: northeast, southwest: southwest, zoom: 10)
+		let coordinateBounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
+		return .boundingBox(coordinateBounds)
 	}
 }

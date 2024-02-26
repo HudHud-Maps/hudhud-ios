@@ -71,6 +71,7 @@
 		C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
 		CD518BC72B88964700A5AFFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		CD7C78422B8D243B004BC148 /* maplibre-swiftui-dsl-playground */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-swiftui-dsl-playground"; path = "../maplibre-swiftui-dsl-playground"; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE054B2B681263003E5196 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDAE054E2B681263003E5196 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -165,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				CDEAEA0B2B82B0BB0038470F /* HudHud.xctestplan */,
+				CD7C78422B8D243B004BC148 /* maplibre-swiftui-dsl-playground */,
 				CDF4A6CE2B7E3D98001B3CD7 /* POIService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
