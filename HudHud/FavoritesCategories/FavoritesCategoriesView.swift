@@ -10,40 +10,37 @@ import SwiftUI
 import SFSafeSymbols
 
 struct FavoritesCategoriesView: View {
-	let favCategoriesData: [FavCategoriesData] = [
-		FavCategoriesData(title: "Home",
+	let favoriteCategoriesData: [FavoriteCategoriesData] = [
+		FavoriteCategoriesData(title: "Home",
 						  sfSymbol: "house.fill",
 						  tintColor: .gray),
-		FavCategoriesData(title: "Work",
+		FavoriteCategoriesData(title: "Work",
 						  sfSymbol: "bag.fill",
 						  tintColor: .gray),
-		FavCategoriesData(title: "School",
+		FavoriteCategoriesData(title: "School",
 						  sfSymbol: "building.columns.fill",
 						  tintColor: .gray)]
-	let plusButton = FavCategoriesData(title: "Add",
+	let plusButton = FavoriteCategoriesData(title: "Add",
 									   sfSymbol: "plus.circle.fill",
 									   tintColor: .green)
 	var body: some View {
-		//		ScrollView(.horizontal) {
-		HStack {
-			ForEach(favCategoriesData.prefix(4), id: \.self) { favorite in
-				Button {
-					print("\(favorite.title) was pressed")
-				} label: {
-					Text(favorite.title)
+		ScrollView(.horizontal) {
+			HStack {
+				ForEach(favoriteCategoriesData.prefix(4), id: \.self) { favorite in
+					Button {
+						print("\(favorite.title) was pressed")
+					} label: {
+						Text(favorite.title)
+					}
+					.buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
 				}
-				.buttonStyle(FavCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
+				Button {
+					print("\(plusButton.title) was pressed")
+				} label: {
+					Text(plusButton.title)
+				}.buttonStyle(FavoriteCategoriesButton(sfSymbol: plusButton.sfSymbol, tintColor: plusButton.tintColor))
 			}
-			Button {
-				print("\(plusButton) was pressed")
-			} label: {
-				Text(plusButton.title)
-			}.buttonStyle(FavCategoriesButton(sfSymbol: plusButton.sfSymbol, tintColor: plusButton.tintColor))
-			// to give the 4th category a space
-			if favCategoriesData.count < 4 {
-				Text("      ")
-					.padding(.horizontal)
-			}
+				Spacer()
 		}
 	}
 }

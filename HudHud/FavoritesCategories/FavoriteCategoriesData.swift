@@ -9,7 +9,7 @@
 import Foundation
 import SwiftUI
 
-struct FavCategoriesData: Hashable {
+struct FavoriteCategoriesData: Hashable {
 	let title: String
 	let sfSymbol: String
 	let tintColor: Color?
