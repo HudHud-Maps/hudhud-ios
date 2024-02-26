@@ -7,11 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1CE5DFBA3950D698EB0C1689 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D62539A290C5669D6571C51 /* PoiTileData.swift */; };
 		2ADB20A81A69AD2774096D16 /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F112E9EE98644EA8811C2E68 /* SearchViewStore.swift */; };
+		4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */; };
 		5721D3A444A65699386B8141 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D12C9D1880D4D83B414751 /* CaseIterable.swift */; };
+		A5F7FFE8796CFCFFEE1AFC54 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879145F3416437507DB0F310 /* LocationStatus.swift */; };
 		CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */; };
 		CD04451C2B85FCDC00181210 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD04451B2B85FCDC00181210 /* MapLibreSwiftDSL */; };
 		CD04451E2B85FCDC00181210 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD04451D2B85FCDC00181210 /* MapLibreSwiftUI */; };
+		CD2615CD6EDF5CDF145440C6 /* PoiTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
 		CDAE054F2B681263003E5196 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054E2B681263003E5196 /* Preview Assets.xcassets */; };
@@ -61,6 +65,10 @@
 
 /* Begin PBXFileReference section */
 		19D12C9D1880D4D83B414751 /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
+		7D62539A290C5669D6571C51 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
+		879145F3416437507DB0F310 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
+		8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
+		C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
 		CD518BC72B88964700A5AFFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -126,10 +134,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		093421B0F811346CA1DD79A2 /* PoiTile */ = {
+			isa = PBXGroup;
+			children = (
+				8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */,
+				C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */,
+				7D62539A290C5669D6571C51 /* PoiTileData.swift */,
+			);
+			path = PoiTile;
+			sourceTree = "<group>";
+		};
 		1EE5DBC593F92233EBD0111A /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
 				19D12C9D1880D4D83B414751 /* CaseIterable.swift */,
+				879145F3416437507DB0F310 /* LocationStatus.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -176,6 +195,7 @@
 				D360F2715C6B016AF539FA2D /* Model */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
 				E4E05611C58587725674D41D /* Supporting Files */,
+				093421B0F811346CA1DD79A2 /* PoiTile */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
@@ -291,7 +311,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CDEAEA0A2B8276620038470F /* PBXTargetDependency */,
+				27E1EB536794E957DFAAECC0 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -448,6 +468,10 @@
 				CDCE17CD2B879CEC00EC1571 /* DirectionPreviewData.swift in Sources */,
 				CDCE17CA2B879CEC00EC1571 /* HudHudApp.swift in Sources */,
 				CDCE17CC2B879CEC00EC1571 /* DirectionsSummaryView.swift in Sources */,
+				CD2615CD6EDF5CDF145440C6 /* PoiTileView.swift in Sources */,
+				4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */,
+				1CE5DFBA3950D698EB0C1689 /* PoiTileData.swift in Sources */,
+				A5F7FFE8796CFCFFEE1AFC54 /* LocationStatus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,6 +494,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		27E1EB536794E957DFAAECC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -479,10 +506,6 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
-		};
-		CDEAEA0A2B8276620038470F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = CDEAEA092B8276620038470F /* SwiftLintPlugin */;
 		};
 /* End PBXTargetDependency section */
 
@@ -862,11 +885,6 @@
 		CDAE06032B6BDC5A003E5196 /* ToursprungPOI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ToursprungPOI;
-		};
-		CDEAEA092B8276620038470F /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDEAEA082B8276430038470F /* XCRemoteSwiftPackageReference "SwiftLint" */;
-			productName = "plugin:SwiftLintPlugin";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

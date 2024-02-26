@@ -13,6 +13,7 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SFSafeSymbols
+import SwiftLocation
 import SwiftUI
 
 // MARK: - ContentView
@@ -22,9 +23,11 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+	private let locationManager = Location()
 
 	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
 	@StateObject var mapStore = MapStore()
+	@State var showUserLocation: Bool = false
 
 	var body: some View {
 		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -38,6 +41,18 @@ struct ContentView: View {
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 				.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(constant: .white)
+		}
+		.unsafeMapViewModifier { mapView in
+			mapView.showsUserLocation = self.showUserLocation
+		}
+		.task {
+			for await event in await self.locationManager.startMonitoringAuthorization() {
+				print("Authorization status did change: \(event.authorizationStatus)")
+				self.showUserLocation = event.authorizationStatus.allowed
+			}
+		}
+		.task {
+			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
