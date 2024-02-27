@@ -8,9 +8,10 @@
 
 import Foundation
 import SwiftUI
+import SFSafeSymbols
 
 struct FavoriteCategoriesData: Hashable {
 	let title: String
-	let sfSymbol: String
+	let sfSymbol: SFSymbol
 	let tintColor: Color?
 }

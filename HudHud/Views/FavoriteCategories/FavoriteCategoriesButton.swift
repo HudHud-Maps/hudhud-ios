@@ -10,11 +10,11 @@ import SwiftUI
 import SFSafeSymbols
 
 struct FavoriteCategoriesButton: ButtonStyle {
-	let sfSymbol: String?
+	let sfSymbol: SFSymbol?
 	let tintColor: Color?
 	func makeBody(configuration: Configuration) -> some View {
 		VStack {
-			Image(systemSymbol: SFSymbol(rawValue: sfSymbol ?? "house.fill"))
+			Image(systemSymbol: sfSymbol ?? .houseFill)
 				.font(.title)
 				.foregroundColor(tintColor)
 				.padding(15)

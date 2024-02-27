@@ -12,16 +12,16 @@ import SFSafeSymbols
 struct FavoriteCategoriesView: View {
 	let favoriteCategoriesData: [FavoriteCategoriesData] = [
 		FavoriteCategoriesData(title: "Home",
-						  sfSymbol: "house.fill",
+							   sfSymbol: .houseFill,
 						  tintColor: .gray),
 		FavoriteCategoriesData(title: "Work",
-						  sfSymbol: "bag.fill",
+							   sfSymbol: .bagFill,
 						  tintColor: .gray),
 		FavoriteCategoriesData(title: "School",
-						  sfSymbol: "building.columns.fill",
+							   sfSymbol: .buildingColumnsFill,
 						  tintColor: .gray)]
 	let plusButton = FavoriteCategoriesData(title: "Add",
-									   sfSymbol: "plus.circle.fill",
+											sfSymbol: .plusCircleFill,
 									   tintColor: .green)
 	var body: some View {
 		ScrollView(.horizontal) {
