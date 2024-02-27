@@ -1,13 +1,14 @@
 //
-//  poiTileData.swift
+//  PoiTileData.swift
 //  HudHud
 //
 //  Created by Fatima Aljaber on 21/02/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Foundation
 import CoreLocation
+import Foundation
+
 struct PoiTileData: Identifiable {
 	let id = UUID()
 	let title: String
@@ -18,6 +19,15 @@ struct PoiTileData: Identifiable {
 	let followersNumbers: String?
 	let isFollowed: Bool
 	let pricing: Pricing?
+
+	enum Pricing: String {
+		case high = "$$$"
+		case medium = "$$"
+		case low = "$"
+	}
+
+	// MARK: - Lifecycle
+
 	init(title: String, imageUrl: URL?, poiType: String, locationDistance: CLLocationDistance?, rating: String?, followersNumbers: String?, isFollowed: Bool, pricing: Pricing?) {
 		self.title = title
 		self.imageUrl = imageUrl
@@ -28,11 +38,9 @@ struct PoiTileData: Identifiable {
 		self.isFollowed = isFollowed
 		self.pricing = pricing
 	}
-	enum Pricing: String {
-		case high = "$$$"
-		case medium = "$$"
-		case low = "$"
-	}
+
+	// MARK: - Internal
+
 	func grtDistanceString() -> String {
 		let distanceFormatter = MeasurementFormatter()
 		distanceFormatter.unitOptions = .providedUnit
