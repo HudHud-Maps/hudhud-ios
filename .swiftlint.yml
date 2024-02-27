@@ -53,4 +53,9 @@ custom_rules:
     message: "Use `SFSafeSymbols` via `systemSymbol` parameters for type safety."
     regex: "(Image\\(systemName:)|(NSImage\\(symbolName:)|(Label[^,]+?,\\s*systemImage:)|(UIApplicationShortcutIcon\\(systemImageName:)"
     severity: warning
+  sf_symbol_init:
+    name: "SFSymbol init"
+    message: "SFSymbol(rawValue:) usage is discouraged as it removes type safety. Please try to pass SFSymbol around instead of a String."
+    regex: "(SFSymbol\\(rawValue:)|(\\(systemSymbol: .init\\(rawValue:)"
+    severity: warning
     
