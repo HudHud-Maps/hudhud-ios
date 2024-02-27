@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin.git",
       "state" : {
-        "branch" : "fix/#17-xcode-cloud-error",
-        "revision" : "194d6306eb05d9e6882d1d08472e0a58ae7b1518"
+        "branch" : "main",
+        "revision" : "e09a1a50b87d5f262bcf1a246e98404b5b2c0557"
       }
     },
     {
