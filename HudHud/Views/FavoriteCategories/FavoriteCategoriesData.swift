@@ -7,8 +7,8 @@
 //
 
 import Foundation
-import SwiftUI
 import SFSafeSymbols
+import SwiftUI
 
 struct FavoriteCategoriesData: Hashable {
 	let title: String

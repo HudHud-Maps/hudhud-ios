@@ -6,17 +6,20 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
 import SFSafeSymbols
+import SwiftUI
 
 struct FavoriteCategoriesButton: ButtonStyle {
 	let sfSymbol: SFSymbol?
 	let tintColor: Color?
+
+	// MARK: - Internal
+
 	func makeBody(configuration: Configuration) -> some View {
 		VStack {
-			Image(systemSymbol: sfSymbol ?? .houseFill)
+			Image(systemSymbol: self.sfSymbol ?? .houseFill)
 				.font(.title)
-				.foregroundColor(tintColor)
+				.foregroundColor(self.tintColor)
 				.padding(15)
 				.background {
 					Circle()

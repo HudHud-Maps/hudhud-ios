@@ -6,27 +6,29 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
 import SFSafeSymbols
+import SwiftUI
 
 struct FavoriteCategoriesView: View {
 	let favoriteCategoriesData: [FavoriteCategoriesData] = [
 		FavoriteCategoriesData(title: "Home",
 							   sfSymbol: .houseFill,
-						  tintColor: .gray),
+							   tintColor: .gray),
 		FavoriteCategoriesData(title: "Work",
 							   sfSymbol: .bagFill,
-						  tintColor: .gray),
+							   tintColor: .gray),
 		FavoriteCategoriesData(title: "School",
 							   sfSymbol: .buildingColumnsFill,
-						  tintColor: .gray)]
+							   tintColor: .gray)
+	]
 	let plusButton = FavoriteCategoriesData(title: "Add",
 											sfSymbol: .plusCircleFill,
-									   tintColor: .green)
+											tintColor: .green)
+
 	var body: some View {
 		ScrollView(.horizontal) {
 			HStack {
-				ForEach(favoriteCategoriesData.prefix(4), id: \.self) { favorite in
+				ForEach(self.favoriteCategoriesData.prefix(4), id: \.self) { favorite in
 					Button {
 						print("\(favorite.title) was pressed")
 					} label: {
@@ -35,12 +37,12 @@ struct FavoriteCategoriesView: View {
 					.buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
 				}
 				Button {
-					print("\(plusButton.title) was pressed")
+					print("\(self.plusButton.title) was pressed")
 				} label: {
-					Text(plusButton.title)
-				}.buttonStyle(FavoriteCategoriesButton(sfSymbol: plusButton.sfSymbol, tintColor: plusButton.tintColor))
+					Text(self.plusButton.title)
+				}.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
 			}
-				Spacer()
+			Spacer()
 		}
 	}
 }
@@ -62,4 +64,3 @@ struct FavoriteCategoriesView: View {
 	}
 	.padding()
 }
-
