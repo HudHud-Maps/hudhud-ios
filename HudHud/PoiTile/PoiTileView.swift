@@ -65,9 +65,19 @@ struct PoiTileView: View {
 #Preview {
 	let poi = PoiTileData(
 		title: "Laduree",
-		imageUrl: URL(string:"https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/food-photography/CODERED_B1_food-photography_p4b_690x455.jpg.img.jpg"),
+		imageUrl: URL(
+			string: "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/food-photography/CODERED_B1_food-photography_p4b_690x455.jpg.img.jpg"
+		),
 		poiType: "Cafe",
-		locationDistance: CLLocation(latitude: 24.69239471955797, longitude: 46.633261389241845).distance(from: CLLocation(latitude: 24.722823776812756, longitude: 46.626575919314305)),
+		locationDistance: CLLocation(
+			latitude: 24.69239471955797,
+			longitude: 46.633261389241845
+		).distance(
+			from: CLLocation(
+				latitude: 24.722823776812756,
+				longitude: 46.626575919314305
+			)
+		),
 		rating: "4.0",
 		followersNumbers: "20",
 		isFollowed: false,
