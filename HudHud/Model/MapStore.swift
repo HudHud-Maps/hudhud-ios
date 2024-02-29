@@ -35,6 +35,7 @@ class MapStore: ObservableObject {
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
+	@Published var bottomInset: CGFloat = 0
 }
 
 extension CameraState {

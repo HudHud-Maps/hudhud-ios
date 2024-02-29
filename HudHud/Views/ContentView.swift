@@ -25,7 +25,7 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
 
-	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
+	@StateObject var searchViewStore: SearchViewStore
 	@StateObject var mapStore = MapStore()
 	@State var showUserLocation: Bool = false
 
@@ -44,6 +44,7 @@ struct ContentView: View {
 		}
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
+			mapView.contentInset = .init(top: 0, left: 0, bottom: self.mapStore.bottomInset, right: 0)
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
@@ -72,6 +73,7 @@ struct ContentView: View {
 				)
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
+				.modifier(GetHeightModifier(height: self.$mapStore.bottomInset))
 		}
 	}
 
@@ -83,8 +85,6 @@ struct ContentView: View {
 		self._mapStore = .init(wrappedValue: mapStore)
 		searchViewStore.mapStore = mapStore
 	}
-
-	// MARK: - Internal
 }
 
 extension PresentationDetent {
@@ -98,4 +98,24 @@ extension CLLocationCoordinate2D {
 
 #Preview {
 	return ContentView(searchViewStore: .preview)
+}
+
+// MARK: - GetHeightModifier
+
+struct GetHeightModifier: ViewModifier {
+
+	@Binding var height: CGFloat
+
+	// MARK: - Internal
+
+	func body(content: Content) -> some View {
+		content.background(
+			GeometryReader { geo -> Color in
+				DispatchQueue.main.async {
+					self.height = geo.size.height
+				}
+				return Color.clear
+			}
+		)
+	}
 }
