@@ -666,7 +666,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = HudHud/Info.plist;
+				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -699,7 +699,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = HudHud/Info.plist;
+				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
