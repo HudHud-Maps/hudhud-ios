@@ -85,8 +85,6 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		// I have never used .constant in my years of SwiftUI... If you are about to use it you are probably doing something wrong.
-		// sheets use bindings because its a two way relationship - if the sheet is dismissed it will clear what is in
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
@@ -114,28 +112,11 @@ struct SearchSheet: View {
 		self.detailSheetShown = false
 	}
 
-//	init(mapStore: Binding<MapStore>, searchStore: SearchViewStore, camera: Binding<MapViewCamera>, selectedDetent: Binding<PresentationDetent>) {
-//		self._mapStore = mapStore
-//		self.searchStore = searchStore
-//		self._camera = camera
-//		self._selectedDetent = selectedDetent
-//
-//		self.searchStore.$items.sink { items in
-//			print("Changed: \(items)")
-//			self.mapStore.mapItemStore.mapItems = items
-//		}.store(in: &self.cancelables)
-//	}
-
 	// MARK: - Internal
 
 	func show(row: Row) {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
-
-//		// anything to do with camera updates should not be in the SearchSheet code - what if items change while the searchsheet is not showing? MapStore or MapView will need to manage the camera
-//		if let coordinate = row.coordinate {
-//			self.mapStore.camera = .center(coordinate, zoom: 16)
-//		}
 		self.mapStore.mapItemStatus.selectedItem = row.poi
 		self.detailSheetShown = true
 	}

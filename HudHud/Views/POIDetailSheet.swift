@@ -14,12 +14,12 @@ import SwiftUI
 import ToursprungPOI
 
 struct POIDetailSheet: View {
-	// sheets can be dismissed either by by binding and setting the binding to nil or by using the environment if you do not need to bind.
-	@Environment(\.dismiss) var dismiss
 
 	let poi: POI
 	let onStart: () -> Void
 	let onMore: () -> Void
+
+	@Environment(\.dismiss) var dismiss
 
 	var body: some View {
 		NavigationStack {
@@ -99,8 +99,7 @@ struct POIDetailSheet: View {
 				}
 				.padding(.horizontal)
 
-				DictionaryView(dictionary: poi.userInfo)
-
+				DictionaryView(dictionary: self.poi.userInfo)
 			}
 		}
 	}

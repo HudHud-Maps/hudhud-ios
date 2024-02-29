@@ -38,10 +38,6 @@ class SearchViewStore: ObservableObject {
 	// MARK: - Properties
 
 	@Published var searchText: String = ""
-
-	// you can't have items in two places, one source of truth only
-	// @Published var items: [Row]
-
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
@@ -49,7 +45,6 @@ class SearchViewStore: ObservableObject {
 		}
 	}
 
-	// I think this probably belongs here as we might want to show a map at sometime without a search sheet
 	@Published var selectedDetent: PresentationDetent = .small
 
 	// MARK: - Lifecycle
@@ -81,8 +76,6 @@ class SearchViewStore: ObservableObject {
 					self.mapStore.mapItemStatus = newStatus
 				}
 			}
-
-		// you might need to set up sinks to self.mapStore.mapItemStatus to clear searchtext...
 	}
 
 	// MARK: - Internal

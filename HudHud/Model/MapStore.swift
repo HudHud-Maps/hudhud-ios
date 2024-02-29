@@ -14,10 +14,8 @@ import SwiftUI
 
 // MARK: - MapStore
 
-// Anything called "Store" will always be a class and an ObservableObject
 class MapStore: ObservableObject {
 
-	// @Binding and @State is only used in a View, @Published is the only thing you use in ObservableObject
 	@MainActor
 	@Published var mapItemStatus: MapItemsStatus = .empty {
 		didSet {

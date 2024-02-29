@@ -15,7 +15,6 @@ import SwiftUI
 
 // MARK: - MapItemsStore
 
-// Anything that is not an ObservableObject is not a Store - I'd usually call this "State" but as this might confuse people for something to do with @State I'm calling it Status here.
 struct MapItemsStatus {
 
 	var selectedItem: POI?
