@@ -25,7 +25,7 @@
 --fragment false
 --funcattributes preserve
 --generictypes 
---groupedextension "MARK: %c"
+--groupedextension "MARK: - %c"
 --guardelse same-line
 --header ignore
 --hexgrouping 4,8

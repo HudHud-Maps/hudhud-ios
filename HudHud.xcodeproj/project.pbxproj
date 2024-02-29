@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		170E1DDBD6CBDC0675E76214 /* FavoriteCategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02B4F84FC90D84C751222F01 /* FavoriteCategoriesData.swift */; };
+		19828658E5BCEF32A86BE14F /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9424BD9860872EFA3B684203 /* FavoriteCategoriesView.swift */; };
 		1CE5DFBA3950D698EB0C1689 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D62539A290C5669D6571C51 /* PoiTileData.swift */; };
 		2ADB20A81A69AD2774096D16 /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F112E9EE98644EA8811C2E68 /* SearchViewStore.swift */; };
 		4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */; };
@@ -44,6 +46,7 @@
 		CDCE17D72B879CEC00EC1571 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17C82B879CEC00EC1571 /* DictionaryView.swift */; };
 		CDCE17D92B879DA900EC1571 /* MapItemsStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17D82B879DA900EC1571 /* MapItemsStatus.swift */; };
 		CDCE17DD2B88DF9700EC1571 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17DC2B88DF9700EC1571 /* MapStore.swift */; };
+		E69BCDE92060D8DC74C4B40A /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A659ED51430CB22F6F47B1DE /* FavoriteCategoriesButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,10 +67,13 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		02B4F84FC90D84C751222F01 /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
 		19D12C9D1880D4D83B414751 /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		7D62539A290C5669D6571C51 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		879145F3416437507DB0F310 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
 		8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
+		9424BD9860872EFA3B684203 /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
+		A659ED51430CB22F6F47B1DE /* FavoriteCategoriesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesButton.swift; sourceTree = "<group>"; };
 		C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
 		CD518BC72B88964700A5AFFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -151,6 +157,16 @@
 				879145F3416437507DB0F310 /* LocationStatus.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		527E2E93B6D5E3599339E9DD /* FavoriteCategories */ = {
+			isa = PBXGroup;
+			children = (
+				A659ED51430CB22F6F47B1DE /* FavoriteCategoriesButton.swift */,
+				02B4F84FC90D84C751222F01 /* FavoriteCategoriesData.swift */,
+				9424BD9860872EFA3B684203 /* FavoriteCategoriesView.swift */,
+			);
+			path = FavoriteCategories;
 			sourceTree = "<group>";
 		};
 		CB396FFE2B7C1C7300CF9D59 /* UIStyle */ = {
@@ -246,6 +262,7 @@
 				CDCE17B92B879CEC00EC1571 /* ProviderButton.swift */,
 				CDCE17B72B879CEC00EC1571 /* SearchResultItem.swift */,
 				CDCE17C22B879CEC00EC1571 /* SearchSheet.swift */,
+				527E2E93B6D5E3599339E9DD /* FavoriteCategories */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -311,7 +328,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				27E1EB536794E957DFAAECC0 /* PBXTargetDependency */,
+				4CD2A97FF73522D6699FE793 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -401,8 +418,8 @@
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
 				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
 				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
-				CDEAEA082B8276430038470F /* XCRemoteSwiftPackageReference "SwiftLint" */,
 				CD04451A2B85FCDC00181210 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				DD32DBA6700E3708590AB09F /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -472,6 +489,9 @@
 				4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */,
 				1CE5DFBA3950D698EB0C1689 /* PoiTileData.swift in Sources */,
 				A5F7FFE8796CFCFFEE1AFC54 /* LocationStatus.swift in Sources */,
+				170E1DDBD6CBDC0675E76214 /* FavoriteCategoriesData.swift in Sources */,
+				19828658E5BCEF32A86BE14F /* FavoriteCategoriesView.swift in Sources */,
+				E69BCDE92060D8DC74C4B40A /* FavoriteCategoriesButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,7 +514,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		27E1EB536794E957DFAAECC0 /* PBXTargetDependency */ = {
+		4CD2A97FF73522D6699FE793 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
@@ -843,12 +863,12 @@
 				kind = branch;
 			};
 		};
-		CDEAEA082B8276430038470F /* XCRemoteSwiftPackageReference "SwiftLint" */ = {
+		DD32DBA6700E3708590AB09F /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/realm/SwiftLint.git";
+			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.54.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

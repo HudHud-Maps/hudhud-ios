@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import SFSafeSymbols
 import SwiftUI
 
 struct PoiTileView: View {
@@ -65,15 +66,16 @@ struct PoiTileView: View {
 }
 
 #Preview {
-	let poi = PoiTileData(
-		title: "Laduree",
-		imageUrl: URL(string: "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/food-photography/CODERED_B1_food-photography_p4b_690x455.jpg.img.jpg"),
-		poiType: "Cafe",
-		locationDistance: CLLocation(latitude: 24.69239471955797, longitude: 46.633261389241845).distance(from: CLLocation(latitude: 24.722823776812756, longitude: 46.626575919314305)),
-		rating: "4.0",
-		followersNumbers: "20",
-		isFollowed: false,
-		pricing: .medium
-	)
+	let pointA = CLLocation(latitude: 24.69239471955797, longitude: 46.633261389241845)
+	let pointB = CLLocation(latitude: 24.722823776812756, longitude: 46.626575919314305)
+
+	let poi = PoiTileData(title: "Laduree",
+						  imageUrl: URL(string: "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/food-photography/CODERED_B1_food-photography_p4b_690x455.jpg.img.jpg"),
+						  poiType: "Cafe",
+						  locationDistance: pointA.distance(from: pointB),
+						  rating: "4.0",
+						  followersNumbers: "20",
+						  isFollowed: false,
+						  pricing: .medium)
 	return PoiTileView(poiTileData: poi)
 }
