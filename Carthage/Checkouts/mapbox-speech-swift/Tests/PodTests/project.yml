@@ -1,0 +1,9 @@
+name: PodTest
+options:
+  bundleIdPrefix: com.podtest.app
+targets:
+  PodTest:
+    type: application
+    platform: iOS
+    deploymentTarget: "11.0"
+    sources: [PodTest]

@@ -1,0 +1,79 @@
+version: 2
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - ios-build-test
+      - spm
+      - pod
+      
+step-library:
+    - &install-dependencies
+      run:
+        name: Install Dependencies
+        command: |
+          carthage bootstrap --use-xcframeworks
+    
+    - &ios-build-test
+      run:
+        name: Build and Test for iOS
+        command: |
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.5,name=iPhone 11 Pro Max' -project MapboxSpeech.xcodeproj -scheme "MapboxSpeech iOS" clean build test
+    
+    - &macos-build-test
+      run:
+        name: Build and Test for macOS
+        command: |
+          xcodebuild -project MapboxSpeech.xcodeproj -scheme "MapboxSpeech Mac" clean build test
+    
+    - &tvos-build-test
+      run:
+        name: Build and Test for tvOS
+        command: |
+          xcodebuild -destination 'platform=tvOS Simulator,OS=13.4,name=Apple TV 4K (at 1080p)' -project MapboxSpeech.xcodeproj -scheme "MapboxSpeech tvOS" clean build test
+    
+    - &watchos-build
+      run:
+        name: Build for watchOS
+        command: |
+          xcodebuild -destination 'platform=watchOS Simulator,OS=6.2.1,name=Apple Watch Series 5 - 44mm' -project MapboxSpeech.xcodeproj -scheme "MapboxSpeech watchOS" clean build
+    
+    - &publish-codecov
+      run:
+        name: Publish Code Coverage
+        command: bash <(curl -s https://codecov.io/bash)
+
+jobs:
+  ios-build-test:
+    macos:
+      xcode: "12.5.1"
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 0
+    steps:
+      - checkout
+      - *install-dependencies
+      - *ios-build-test
+      - *macos-build-test
+      - *tvos-build-test
+      - *watchos-build
+  spm:
+    macos:
+      xcode: "12.5.1"
+    steps:
+      - checkout
+      - run: swift build
+  pod:
+    macos:
+      xcode: "12.5.1"
+    steps:
+      - checkout
+      - run: 
+          name: ""
+          working_directory: Tests/PodTests
+          command: | 
+            brew install xcodegen
+            xcodegen generate
+            bundle install
+            bundle exec pod install
+            xcodebuild -workspace PodTest.xcworkspace -scheme PodTest -destination 'platform=iOS Simulator,OS=latest,name=iPhone 11 Pro Max' build

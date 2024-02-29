@@ -1,0 +1,9 @@
+ignore:
+  - "Geocoder Example"
+  - "Tests"
+
+coverage:
+  status:
+    project:
+      default:
+        threshold: 1%
