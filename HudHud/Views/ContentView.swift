@@ -25,9 +25,9 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
 
-	@StateObject var searchViewStore: SearchViewStore
-	@StateObject var mapStore = MapStore()
-	@State var showUserLocation: Bool = false
+	@StateObject private var searchViewStore: SearchViewStore
+	@StateObject private var mapStore = MapStore()
+	@State private var showUserLocation: Bool = false
 
 	var body: some View {
 		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
