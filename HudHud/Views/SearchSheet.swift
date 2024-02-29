@@ -7,6 +7,7 @@
 //
 
 import ApplePOI
+import Combine
 import Foundation
 import MapLibreSwiftUI
 import POIService
@@ -15,13 +16,12 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-	@ObservedObject var viewStore: SearchViewStore
+	private var cancelables: Set<AnyCancellable> = []
+
+	@ObservedObject var mapStore: MapStore
+	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
-
-	@Binding var camera: MapViewCamera
-	@Binding var selectedPOI: POI?
-	@Binding var selectedDetent: PresentationDetent
 
 	var body: some View {
 		return VStack {
@@ -29,7 +29,7 @@ struct SearchSheet: View {
 				Image(systemSymbol: .magnifyingglass)
 					.foregroundStyle(.tertiary)
 					.padding(.leading, 8)
-				TextField("Search", text: self.$viewStore.searchText)
+				TextField("Search", text: self.$searchStore.searchText)
 					.focused(self.$searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
@@ -38,9 +38,9 @@ struct SearchSheet: View {
 					.overlay(
 						HStack {
 							Spacer()
-							if !self.viewStore.searchText.isEmpty {
+							if !self.searchStore.searchText.isEmpty {
 								Button(action: {
-									self.viewStore.searchText = ""
+									self.searchStore.searchText = ""
 								}, label: {
 									Image(systemSymbol: .multiplyCircleFill)
 										.foregroundColor(.gray)
@@ -57,27 +57,27 @@ struct SearchSheet: View {
 			.background(.background)
 			.cornerRadius(8)
 
-			List(self.viewStore.items, id: \.self) { item in
+			List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
 				Button(action: {
-					switch item.provider {
+					switch item.wrappedValue.provider {
 					case .toursprung:
-						self.show(row: item)
+						self.show(row: item.wrappedValue)
 					case .appleCompletion:
-						self.selectedDetent = .large
+						self.searchStore.selectedDetent = .medium
 						self.searchIsFocused = false
 						Task {
-							let items = try await self.viewStore.resolve(prediction: item)
+							let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
 							if let firstResult = items.first, items.count == 1 {
 								self.show(row: firstResult)
 							} else {
-								self.viewStore.items = items
+								self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
 							}
 						}
 					case .appleMapItem:
-						self.show(row: item)
+						self.show(row: item.wrappedValue)
 					}
 				}, label: {
-					SearchResultItem(prediction: item)
+					SearchResultItem(prediction: item.wrappedValue)
 						.frame(maxWidth: .infinity)
 				})
 				.listRowSeparator(.hidden)
@@ -85,10 +85,10 @@ struct SearchSheet: View {
 			}
 			.listStyle(.plain)
 		}
-		.sheet(item: self.$selectedPOI) {
-			self.selectedDetent = .medium
-		} content: { _ in
-			POIDetailSheet(poi: self.$selectedPOI, isShown: self.$detailSheetShown) {
+		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
+			self.searchStore.selectedDetent = .medium
+		} content: { item in
+			POIDetailSheet(poi: item) {
 				print("start")
 			} onMore: {
 				print("more")
@@ -102,23 +102,28 @@ struct SearchSheet: View {
 		}
 	}
 
+	// MARK: - Lifecycle
+
+	init(mapStore: MapStore, searchStore: SearchViewStore) {
+		self.cancelables = []
+		self.mapStore = mapStore
+		self.searchStore = searchStore
+		self.searchIsFocused = false
+		self.detailSheetShown = false
+	}
+
 	// MARK: - Internal
 
 	func show(row: Row) {
 		self.searchIsFocused = false
-		self.selectedDetent = .small
-		if let coordinate = row.coordinate {
-			self.camera = .center(coordinate, zoom: 16)
-		}
-		self.selectedPOI = row.poi
+		self.searchStore.selectedDetent = .small
+		self.mapStore.mapItemStatus.selectedItem = row.poi
 		self.detailSheetShown = true
 	}
 }
 
 #Preview {
-	let sheet = SearchSheet(viewStore: .init(mode: .preview),
-							camera: .constant(.center(.riyadh, zoom: 12)),
-							selectedPOI: .constant(nil),
-							selectedDetent: .constant(.medium))
+	let sheet = SearchSheet(mapStore: .init(),
+							searchStore: .init(mode: .preview))
 	return sheet
 }
