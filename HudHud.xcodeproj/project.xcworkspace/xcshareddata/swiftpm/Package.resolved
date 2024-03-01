@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "a41e1b99fd8b71004935f4e8a9419f1207cfaab5"
+        "branch" : "enhancement/camera-bounding-box",
+        "revision" : "9c78e13710f8d32b13ea533fbe7491b5790aedd6"
       }
     },
     {

@@ -13,8 +13,12 @@ import POIService
 import SwiftUI
 import ToursprungPOI
 
+// MARK: - SearchViewStore
+
 @MainActor
 class SearchViewStore: ObservableObject {
+
+	var mapStore: MapStore = .init()
 
 	enum Mode {
 		enum Provider: CaseIterable {
@@ -33,15 +37,15 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Properties
 
-	@Published var items: [Row] = []
 	@Published var searchText: String = ""
-
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.items = []
+			self.mapStore.mapItemStatus = .empty
 		}
 	}
+
+	@Published var selectedDetent: PresentationDetent = .small
 
 	// MARK: - Lifecycle
 
@@ -55,18 +59,21 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
-						self.items = try await self.apple.predict(term: newValue)
+						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.apple.predict(term: newValue))
+						self.mapStore.mapItemStatus = newStatus
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
-						self.items = try await self.toursprung.predict(term: newValue)
+						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.toursprung.predict(term: newValue))
+						self.mapStore.mapItemStatus = newStatus
 					}
 				case .preview:
-					self.items = [
+					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
 						.init(toursprung: .starbucks),
 						.init(toursprung: .ketchup)
-					]
+					])
+					self.mapStore.mapItemStatus = newStatus
 				}
 			}
 	}
@@ -84,5 +91,11 @@ class SearchViewStore: ObservableObject {
 		case let .toursprung(poi):
 			return [Row(toursprung: poi)]
 		}
+	}
+}
+
+extension SearchViewStore {
+	static var preview: SearchViewStore {
+		.init(mode: .preview)
 	}
 }

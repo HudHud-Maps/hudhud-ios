@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import Combine
 import CoreLocation
 import MapLibre
 import MapLibreSwiftDSL
@@ -22,33 +23,24 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+	private let locationManager = Location()
 
-	@State private var camera = MapViewCamera.center(.riyadh, zoom: 10)
-	@State private var selectedPOI: POI?
-	@State var selectedDetent: PresentationDetent = .small
-	@State var searchShown: Bool = true
-	@State var showUserLocation: Bool = false
-	@StateObject var searchViewStore: SearchViewStore = .init(mode: .live(provider: .toursprung))
-
-	private let availableDetents: [PresentationDetent] = [.small, .medium, .large]
-	let locationManager = Location()
+	@StateObject private var searchViewStore: SearchViewStore
+	@StateObject private var mapStore = MapStore()
+	@State private var showUserLocation: Bool = false
 
 	var body: some View {
-		return MapView(styleURL: self.styleURL, camera: self.$camera) {
-			if let selectedPOI {
-				let pointSource = ShapeSource(identifier: "points") {
-					MLNPointFeature(coordinate: selectedPOI.locationCoordinate)
-				}
+		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+			let pointSource = self.mapStore.mapItemStatus.points
 
-				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-					.radius(constant: 16)
-					.color(constant: .systemRed)
-					.strokeWidth(constant: 2)
-					.strokeColor(constant: .white)
-				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-					.iconColor(constant: .white)
-			}
+			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+				.radius(constant: 16)
+				.color(constant: .systemRed)
+				.strokeWidth(constant: 2)
+				.strokeColor(constant: .white)
+			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+				.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+				.iconColor(constant: .white)
 		}
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
@@ -65,18 +57,16 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
 			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$camera)
+				CurrentLocationButton(camera: self.$mapStore.camera)
 				ProviderButton(searchViewStore: self.searchViewStore)
 			}
 			.padding()
 		}
-		.sheet(isPresented: self.$searchShown) {
-			SearchSheet(viewStore: self.searchViewStore,
-						camera: self.$camera,
-						selectedPOI: self.$selectedPOI,
-						selectedDetent: self.$selectedDetent)
+		.sheet(isPresented: self.$mapStore.searchShown) {
+			SearchSheet(mapStore: self.mapStore,
+						searchStore: self.searchViewStore)
 				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$selectedDetent)
+				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
 				.presentationBackgroundInteraction(
 					.enabled(upThrough: .medium)
 				)
@@ -84,6 +74,17 @@ struct ContentView: View {
 				.ignoresSafeArea()
 		}
 	}
+
+	// MARK: - Lifecycle
+
+	@MainActor
+	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+		self._searchViewStore = .init(wrappedValue: searchViewStore)
+		self._mapStore = .init(wrappedValue: mapStore)
+		searchViewStore.mapStore = mapStore
+	}
+
+	// MARK: - Internal
 }
 
 extension PresentationDetent {
@@ -96,6 +97,5 @@ extension CLLocationCoordinate2D {
 }
 
 #Preview {
-	@StateObject var store: SearchViewStore = .init(mode: .preview)
-	return ContentView(searchViewStore: store)
+	return ContentView(searchViewStore: .preview)
 }

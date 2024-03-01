@@ -11,7 +11,9 @@
 		1BB69DF95208C542E1B687DF /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */; };
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
+		467FC54605A6EF6E503C6257 /* MapItemsStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641A222AD9BC659F7DC46F52 /* MapItemsStatus.swift */; };
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
+		825C6676E341DD543C305950 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E21300E9BF61F5A403DE2CE /* MapStore.swift */; };
 		854A602E692EA22AC381F9CA /* FavoriteCategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */; };
 		90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */; };
 		90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */; };
@@ -108,9 +110,11 @@
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
+		641A222AD9BC659F7DC46F52 /* MapItemsStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemsStatus.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
-		6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
+		6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
 		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
+		7E21300E9BF61F5A403DE2CE /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
 		90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsSummaryView.swift; sourceTree = "<group>"; };
 		90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionPreviewData.swift; sourceTree = "<group>"; };
 		912B1ACD8511E9B4FB445AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -200,6 +204,16 @@
 			path = CategoriesBanner;
 			sourceTree = "<group>";
 		};
+		4BC94EC9B506BD539BAA3AC8 /* PoiTile */ = {
+			isa = PBXGroup;
+			children = (
+				CB3970372B85E87300CF9D59 /* PoiTileView.swift */,
+				CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */,
+				CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */,
+			);
+			path = PoiTile;
+			sourceTree = "<group>";
+		};
 		AA1E80A95AFCDC7507E3B613 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
@@ -213,6 +227,8 @@
 			isa = PBXGroup;
 			children = (
 				4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */,
+				641A222AD9BC659F7DC46F52 /* MapItemsStatus.swift */,
+				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -223,16 +239,6 @@
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
 			);
 			path = UIStyle;
-			sourceTree = "<group>";
-		};
-		CB3970392B85E87700CF9D59 /* PoiTile */ = {
-			isa = PBXGroup;
-			children = (
-				CB3970372B85E87300CF9D59 /* PoiTileView.swift */,
-				CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */,
-				CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */,
-			);
-			path = PoiTile;
 			sourceTree = "<group>";
 		};
 		CDAE053B2B681261003E5196 = {
@@ -262,14 +268,12 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
-				CB3970392B85E87700CF9D59 /* PoiTile */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
 				E7744EF283A09BCBB542C54E /* Extensions */,
 				D14C3F8A5C428C7F0A18A65A /* Views */,
 				AC313C27FE655AA88C1E9F69 /* Model */,
 				FB53CF8783EC95AF1ECE21DD /* Supporting Files */,
-				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
@@ -329,6 +333,7 @@
 				DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */,
 				6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */,
 				FDDEE3732E50FB8353018FA8 /* FavoriteCategories */,
+				4BC94EC9B506BD539BAA3AC8 /* PoiTile */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -357,6 +362,7 @@
 			children = (
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
+				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -386,7 +392,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CD7C78472B8DFD06004BC148 /* PBXTargetDependency */,
+				D5B4FCD1A2FDA2142CA5DD25 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -550,6 +556,8 @@
 				854A602E692EA22AC381F9CA /* FavoriteCategoriesData.swift in Sources */,
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
+				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
+				467FC54605A6EF6E503C6257 /* MapItemsStatus.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,10 +580,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CD7C78472B8DFD06004BC148 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = CD7C78462B8DFD06004BC148 /* SwiftLintPlugin */;
-		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -585,6 +589,9 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
+		};
+		D5B4FCD1A2FDA2142CA5DD25 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
 		};
 /* End PBXTargetDependency section */
 
@@ -725,7 +732,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = HudHud/Info.plist;
+				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -758,7 +765,7 @@
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = HudHud/Info.plist;
+				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -934,7 +941,7 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
 			requirement = {
-				branch = main;
+				branch = "enhancement/camera-bounding-box";
 				kind = branch;
 			};
 		};
@@ -950,10 +957,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
 			productName = SFSafeSymbols;
-		};
-		CD7C78462B8DFD06004BC148 /* SwiftLintPlugin */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = "plugin:SwiftLintPlugin";
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
