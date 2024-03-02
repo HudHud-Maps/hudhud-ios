@@ -28,22 +28,9 @@
 		CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
 		CD1BD8AD2B9087C100A591BD /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
-		CD1BD8B62B90921D00A591BD /* MapboxCoreNavigation.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8AE2B90921D00A591BD /* MapboxCoreNavigation.xcframework */; };
-		CD1BD8B72B90921D00A591BD /* MapboxCoreNavigation.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8AE2B90921D00A591BD /* MapboxCoreNavigation.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8B82B90921D00A591BD /* MapboxNavigation.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8AF2B90921D00A591BD /* MapboxNavigation.xcframework */; };
-		CD1BD8B92B90921D00A591BD /* MapboxNavigation.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8AF2B90921D00A591BD /* MapboxNavigation.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8BA2B90921D00A591BD /* MapboxSpeech.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B02B90921D00A591BD /* MapboxSpeech.xcframework */; };
-		CD1BD8BB2B90921D00A591BD /* MapboxSpeech.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B02B90921D00A591BD /* MapboxSpeech.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8BC2B90921D00A591BD /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B12B90921D00A591BD /* Polyline.xcframework */; };
-		CD1BD8BD2B90921D00A591BD /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B12B90921D00A591BD /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8BE2B90921D00A591BD /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B22B90921D00A591BD /* MapboxGeocoder.xcframework */; };
-		CD1BD8BF2B90921D00A591BD /* MapboxGeocoder.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B22B90921D00A591BD /* MapboxGeocoder.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8C02B90921D00A591BD /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B32B90921D00A591BD /* MapboxDirections.xcframework */; };
-		CD1BD8C12B90921D00A591BD /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B32B90921D00A591BD /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8C22B90921D00A591BD /* Solar.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B42B90921D00A591BD /* Solar.xcframework */; };
-		CD1BD8C32B90921D00A591BD /* Solar.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B42B90921D00A591BD /* Solar.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		CD1BD8C42B90921D00A591BD /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B52B90921D00A591BD /* Turf.xcframework */; };
-		CD1BD8C52B90921D00A591BD /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = CD1BD8B52B90921D00A591BD /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		CD1BD91E2B91E53B00A591BD /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD91D2B91E53B00A591BD /* MapboxNavigation */; };
+		CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1BD91F2B91E59200A591BD /* NavigationView.swift */; };
+		CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
@@ -83,27 +70,6 @@
 		};
 /* End PBXContainerItemProxy section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		CD1BD8C62B90921E00A591BD /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				CD1BD8C52B90921D00A591BD /* Turf.xcframework in Embed Frameworks */,
-				CD1BD8BB2B90921D00A591BD /* MapboxSpeech.xcframework in Embed Frameworks */,
-				CD1BD8C32B90921D00A591BD /* Solar.xcframework in Embed Frameworks */,
-				CD1BD8B92B90921D00A591BD /* MapboxNavigation.xcframework in Embed Frameworks */,
-				CD1BD8C12B90921D00A591BD /* MapboxDirections.xcframework in Embed Frameworks */,
-				CD1BD8B72B90921D00A591BD /* MapboxCoreNavigation.xcframework in Embed Frameworks */,
-				CD1BD8BF2B90921D00A591BD /* MapboxGeocoder.xcframework in Embed Frameworks */,
-				CD1BD8BD2B90921D00A591BD /* Polyline.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
-
 /* Begin PBXFileReference section */
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
@@ -128,14 +94,8 @@
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
-		CD1BD8AE2B90921D00A591BD /* MapboxCoreNavigation.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCoreNavigation.xcframework; path = Carthage/Build/MapboxCoreNavigation.xcframework; sourceTree = "<group>"; };
-		CD1BD8AF2B90921D00A591BD /* MapboxNavigation.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigation.xcframework; path = Carthage/Build/MapboxNavigation.xcframework; sourceTree = "<group>"; };
-		CD1BD8B02B90921D00A591BD /* MapboxSpeech.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxSpeech.xcframework; path = Carthage/Build/MapboxSpeech.xcframework; sourceTree = "<group>"; };
-		CD1BD8B12B90921D00A591BD /* Polyline.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Polyline.xcframework; path = Carthage/Build/Polyline.xcframework; sourceTree = "<group>"; };
-		CD1BD8B22B90921D00A591BD /* MapboxGeocoder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxGeocoder.xcframework; path = Carthage/Build/MapboxGeocoder.xcframework; sourceTree = "<group>"; };
-		CD1BD8B32B90921D00A591BD /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
-		CD1BD8B42B90921D00A591BD /* Solar.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Solar.xcframework; path = Carthage/Build/Solar.xcframework; sourceTree = "<group>"; };
-		CD1BD8B52B90921D00A591BD /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Carthage/Build/Turf.xcframework; sourceTree = "<group>"; };
+		CD1BD91F2B91E59200A591BD /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
+		CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewCoordinator.swift; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -159,22 +119,15 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD1BD8BE2B90921D00A591BD /* MapboxGeocoder.xcframework in Frameworks */,
 				CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */,
-				CD1BD8B62B90921D00A591BD /* MapboxCoreNavigation.xcframework in Frameworks */,
+				CD1BD91E2B91E53B00A591BD /* MapboxNavigation in Frameworks */,
 				CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */,
-				CD1BD8C02B90921D00A591BD /* MapboxDirections.xcframework in Frameworks */,
-				CD1BD8BA2B90921D00A591BD /* MapboxSpeech.xcframework in Frameworks */,
 				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
-				CD1BD8B82B90921D00A591BD /* MapboxNavigation.xcframework in Frameworks */,
-				CD1BD8C42B90921D00A591BD /* Turf.xcframework in Frameworks */,
 				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
-				CD1BD8C22B90921D00A591BD /* Solar.xcframework in Frameworks */,
 				CD1BD8AD2B9087C100A591BD /* MapLibre in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
 				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
-				CD1BD8BC2B90921D00A591BD /* Polyline.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,14 +259,6 @@
 		CDAE05832B691564003E5196 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				CD1BD8AE2B90921D00A591BD /* MapboxCoreNavigation.xcframework */,
-				CD1BD8B32B90921D00A591BD /* MapboxDirections.xcframework */,
-				CD1BD8B22B90921D00A591BD /* MapboxGeocoder.xcframework */,
-				CD1BD8AF2B90921D00A591BD /* MapboxNavigation.xcframework */,
-				CD1BD8B02B90921D00A591BD /* MapboxSpeech.xcframework */,
-				CD1BD8B12B90921D00A591BD /* Polyline.xcframework */,
-				CD1BD8B42B90921D00A591BD /* Solar.xcframework */,
-				CD1BD8B52B90921D00A591BD /* Turf.xcframework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -326,6 +271,8 @@
 				AA1E80A95AFCDC7507E3B613 /* Navigation */,
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
+				CD1BD91F2B91E59200A591BD /* NavigationView.swift */,
+				CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */,
 				47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */,
 				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
 				007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */,
@@ -387,12 +334,10 @@
 				CDAE05402B681261003E5196 /* Sources */,
 				CDAE05412B681261003E5196 /* Frameworks */,
 				CDAE05422B681261003E5196 /* Resources */,
-				CD1BD8C62B90921E00A591BD /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				D5B4FCD1A2FDA2142CA5DD25 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -404,6 +349,7 @@
 				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
 				CD59BD702B7CD967002C14F6 /* SFSafeSymbols */,
 				CD1BD8AC2B9087C100A591BD /* MapLibre */,
+				CD1BD91D2B91E53B00A591BD /* MapboxNavigation */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -486,6 +432,7 @@
 				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CD1BD8AB2B9087C100A591BD /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
+				CD1BD91C2B91E53B00A591BD /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -545,6 +492,8 @@
 				CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
+				CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */,
+				CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
 				A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */,
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
@@ -589,9 +538,6 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
-		};
-		D5B4FCD1A2FDA2142CA5DD25 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
 		};
 /* End PBXTargetDependency section */
 
@@ -921,6 +867,14 @@
 				minimumVersion = 6.2.0;
 			};
 		};
+		CD1BD91C2B91E53B00A591BD /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
+			requirement = {
+				branch = "feature/swift-package-manager";
+				kind = branch;
+			};
+		};
 		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
@@ -952,6 +906,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD1BD8AB2B9087C100A591BD /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;
+		};
+		CD1BD91D2B91E53B00A591BD /* MapboxNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD1BD91C2B91E53B00A591BD /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
+			productName = MapboxNavigation;
 		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;
