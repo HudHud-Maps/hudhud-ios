@@ -13,6 +13,8 @@
 		2ADB20A81A69AD2774096D16 /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F112E9EE98644EA8811C2E68 /* SearchViewStore.swift */; };
 		4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */; };
 		5721D3A444A65699386B8141 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D12C9D1880D4D83B414751 /* CaseIterable.swift */; };
+		90B38C2A2B94BE0900225CB6 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C292B94BE0900225CB6 /* MapButtonsView.swift */; };
+		90B38C2C2B94BE5E00225CB6 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C2B2B94BE5E00225CB6 /* MapButtonsData.swift */; };
 		A5F7FFE8796CFCFFEE1AFC54 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879145F3416437507DB0F310 /* LocationStatus.swift */; };
 		CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */; };
 		CD04451C2B85FCDC00181210 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD04451B2B85FCDC00181210 /* MapLibreSwiftDSL */; };
@@ -72,6 +74,8 @@
 		7D62539A290C5669D6571C51 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		879145F3416437507DB0F310 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
 		8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
+		90B38C292B94BE0900225CB6 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
+		90B38C2B2B94BE5E00225CB6 /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
 		9424BD9860872EFA3B684203 /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		A659ED51430CB22F6F47B1DE /* FavoriteCategoriesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesButton.swift; sourceTree = "<group>"; };
 		C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
@@ -169,6 +173,15 @@
 			path = FavoriteCategories;
 			sourceTree = "<group>";
 		};
+		90B38C282B94BDBF00225CB6 /* MapButtons */ = {
+			isa = PBXGroup;
+			children = (
+				90B38C292B94BE0900225CB6 /* MapButtonsView.swift */,
+				90B38C2B2B94BE5E00225CB6 /* MapButtonsData.swift */,
+			);
+			path = MapButtons;
+			sourceTree = "<group>";
+		};
 		CB396FFE2B7C1C7300CF9D59 /* UIStyle */ = {
 			isa = PBXGroup;
 			children = (
@@ -249,6 +262,7 @@
 		CDCE17B62B879CEC00EC1571 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				90B38C282B94BDBF00225CB6 /* MapButtons */,
 				CDCE17C32B879CEC00EC1571 /* CategoriesBanner */,
 				527E2E93B6D5E3599339E9DD /* FavoriteCategories */,
 				CDCE17BD2B879CEC00EC1571 /* MapLayers */,
@@ -465,6 +479,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				90B38C2A2B94BE0900225CB6 /* MapButtonsView.swift in Sources */,
 				CDCE17D12B879CEC00EC1571 /* CurrentLocationButton.swift in Sources */,
 				CDCE17D52B879CEC00EC1571 /* POIDetailSheet.swift in Sources */,
 				CDCE17CF2B879CEC00EC1571 /* MapLayersData.swift in Sources */,
@@ -484,6 +499,7 @@
 				CDCE17D92B879DA900EC1571 /* MapItemsStatus.swift in Sources */,
 				CDCE17CD2B879CEC00EC1571 /* DirectionPreviewData.swift in Sources */,
 				CDCE17CA2B879CEC00EC1571 /* HudHudApp.swift in Sources */,
+				90B38C2C2B94BE5E00225CB6 /* MapButtonsData.swift in Sources */,
 				CDCE17CC2B879CEC00EC1571 /* DirectionsSummaryView.swift in Sources */,
 				CD2615CD6EDF5CDF145440C6 /* PoiTileView.swift in Sources */,
 				4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */,
