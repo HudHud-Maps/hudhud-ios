@@ -23,6 +23,7 @@ struct MapButtonsView: View {
 				if index != mapButtonsData.count - 1 {
 					Divider()
 				}
+				
 			}
 		}
 		.background(Color.white)
