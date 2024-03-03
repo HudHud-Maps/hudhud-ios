@@ -22,7 +22,6 @@ struct MapButtonsView: View {
 				}
 				if index != mapButtonsData.count - 1 {
 					Divider()
-						.frame(maxWidth: 50) // works with all font sizes :))
 				}
 			}
 		}
@@ -30,6 +29,7 @@ struct MapButtonsView: View {
 		.cornerRadius(15)
 		.shadow(color: .black.opacity(0.1), radius: 10, y: 4)
 		.animation(.easeIn, value: mapButtonsData.indices)
+		.fixedSize()
     }
 }
 
