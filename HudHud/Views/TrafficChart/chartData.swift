@@ -15,7 +15,7 @@ struct chartData:Identifiable{
 	var timeEnd: Int
 	var hours: [hoursRange] {
 		var hoursR: [hoursRange] = []
-		for i in 6..<23 {
+		for i in 0..<24 {
 			let formatter = DateFormatter()
 			formatter.dateFormat = "HH"
 			formatter.locale =  Locale(identifier: "ar_AE")

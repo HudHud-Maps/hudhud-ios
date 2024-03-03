@@ -13,7 +13,7 @@ struct TrafficChartView: View {
 		Chart(chartData.getSpecificTraficRange) { shape in
 			BarMark(
 				x: .value("Hours Range", shape.hour,unit: .hour),
-				y: .value("Occupancy Range", shape.trafficRange * 100), width: .inset(40)
+				y: .value("Occupancy Range", shape.trafficRange * 100), width: 15
 			)
 			.foregroundStyle(
 				shape.currentHour ?? false ? Color(
@@ -50,7 +50,7 @@ struct TrafficChartView: View {
 	let data = chartData(
 		usualOccupancy: 0.8,
 		usualOccupancyTime: 60,
-		timeStart:13,
+		timeStart:6,
 		timeEnd: 23
 	)
 	return TrafficChartView(chartData: data)
