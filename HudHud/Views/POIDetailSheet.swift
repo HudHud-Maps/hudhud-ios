@@ -15,29 +15,29 @@ import ToursprungPOI
 
 struct POIDetailSheet: View {
 
-	@Binding var poi: POI?
-	@Binding var isShown: Bool
+	let poi: POI
 	let onStart: () -> Void
 	let onMore: () -> Void
+
+	@Environment(\.dismiss) var dismiss
 
 	var body: some View {
 		NavigationStack {
 			VStack(alignment: .leading) {
 				HStack(alignment: .top) {
 					VStack {
-						Text(self.poi?.title ?? "")
+						Text(self.poi.title)
 							.font(.title.bold())
 							.frame(maxWidth: .infinity, alignment: .leading)
 
-						Text(self.poi?.type ?? "")
+						Text(self.poi.type)
 							.font(.footnote)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.padding(.bottom, 8)
 					}
 
 					Button(action: {
-						self.isShown = false
-						self.poi = nil
+						self.dismiss()
 					}, label: {
 						ZStack {
 							Circle()
@@ -99,9 +99,7 @@ struct POIDetailSheet: View {
 				}
 				.padding(.horizontal)
 
-				if let poi {
-					DictionaryView(dictionary: poi.userInfo)
-				}
+				DictionaryView(dictionary: self.poi.userInfo)
 			}
 		}
 	}
@@ -110,7 +108,7 @@ struct POIDetailSheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
-	return POIDetailSheet(poi: .constant(poi), isShown: .constant(true)) {
+	return POIDetailSheet(poi: poi) {
 		print("start")
 	} onMore: {
 		print("more")
