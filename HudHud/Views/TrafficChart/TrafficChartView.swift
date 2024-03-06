@@ -7,53 +7,52 @@
 //
 import SwiftUI
 import Charts
+import SFSafeSymbols
+
 struct TrafficChartView: View {
-	let chartData: chartData
+	let chartData: TrafficChartData
 	var body: some View {
-		Chart(chartData.getSpecificTraficRange) { shape in
-			BarMark(
-				x: .value("Hours Range", shape.hour,unit: .hour),
-				y: .value("Occupancy Range", shape.trafficRange * 100), width: 15
-			)
-			.foregroundStyle(
-				shape.currentHour ?? false ? Color(
-					UIColor.systemBlue
-				) : Color(
-					UIColor.secondarySystemFill
+		if let trafficRange = chartData.getSpecificTrafficRange {
+			Chart(trafficRange) { shape in
+				BarMark(
+					x: .value("Hours Range", shape.hour.lowerBound, unit: .hour),
+					y: .value("Occupancy Range", shape.traffic), width: .automatic
 				)
-			)
-			RuleMark(
-				y: .value(
-					"usualOccupancy",
-					chartData.usualOccupancy * 100
+				.foregroundStyle(
+					shape.hour.contains(Date()) == true ? .blue
+					: Color(
+						UIColor.secondarySystemFill
+					)
 				)
-			)
-			.foregroundStyle(
-				.orange
-			)
-			.annotation(
-				position: .top,
-				alignment: .bottomLeading
-			) {
-				Text("\((chartData.usualOccupancyTime.formatted())) min")
 			}
+			.chartXAxis(content: {
+				AxisMarks(preset: .aligned, values: AxisMarkValues.stride(by: .hour,
+														count: 3)) { _ in
+					AxisGridLine()
+					AxisValueLabel(format: .dateTime.hour())
+				}
+			})
+			.chartYAxis {
+				AxisMarks(preset: .automatic, position: .automatic, values: [0]) { _ in
+					AxisGridLine()
+				}
+			}
+			.chartYScale(domain: 0...1)
+		} else {
+			Label("Bad Traffic Data", systemImage: "exclamationmark.triangle")
 		}
-		.chartYAxis(.hidden)
-		.chartXAxis(content: {
-			AxisMarks(values: AxisMarkValues.stride(by: .hour,count: 3)) { _ in
-				AxisValueLabel(format: .dateTime.hour(), centered: true)
-			}
-		})
 	}
 }
 #Preview {
-	let data = chartData(
-		usualOccupancy: 0.8,
-		usualOccupancyTime: 60,
-		timeStart:6,
-		timeEnd: 23
-	)
-	return TrafficChartView(chartData: data)
-		.padding(.vertical,300)
-		.padding(.horizontal,2)
+	VStack(alignment: .leading) {
+		Text("Traffic")
+			.font(.title)
+			.frame(width: .infinity)
+		TrafficChartView(chartData: TrafficChartData(date: Date(), traffic: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0, 0.1, 0.1, 0.2, 0.4, 0.9, 0.9, 0.8, 0.8, 0.6, 0.4, 0.0, 0.0, 0.0]))
+			.frame(maxHeight: 200)
+			
+		Spacer()
+	}
+	.padding()
+
 }

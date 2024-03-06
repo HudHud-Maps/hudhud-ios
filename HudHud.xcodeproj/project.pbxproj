@@ -24,7 +24,7 @@
 		CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
 		CBCD197C2B94AD22005DDA0A /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCD197B2B94AD22005DDA0A /* DateFormatter.swift */; };
-		CBCDB5182B91EF5400311C1B /* chartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5172B91EF5400311C1B /* chartData.swift */; };
+		CBCDB5182B91EF5400311C1B /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5172B91EF5400311C1B /* TrafficChartData.swift */; };
 		CBCDB5262B94735A00311C1B /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5252B94735A00311C1B /* TrafficChartView.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
@@ -86,7 +86,7 @@
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CBCD197B2B94AD22005DDA0A /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
-		CBCDB5172B91EF5400311C1B /* chartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = chartData.swift; sourceTree = "<group>"; };
+		CBCDB5172B91EF5400311C1B /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		CBCDB5252B94735A00311C1B /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
@@ -185,7 +185,7 @@
 		CBCDB5192B91EFB400311C1B /* TrafficChart */ = {
 			isa = PBXGroup;
 			children = (
-				CBCDB5172B91EF5400311C1B /* chartData.swift */,
+				CBCDB5172B91EF5400311C1B /* TrafficChartData.swift */,
 				CBCDB5252B94735A00311C1B /* TrafficChartView.swift */,
 			);
 			path = TrafficChart;
@@ -477,7 +477,7 @@
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
 				CBCD197C2B94AD22005DDA0A /* DateFormatter.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
-				CBCDB5182B91EF5400311C1B /* chartData.swift in Sources */,
+				CBCDB5182B91EF5400311C1B /* TrafficChartData.swift in Sources */,
 				A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */,
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
