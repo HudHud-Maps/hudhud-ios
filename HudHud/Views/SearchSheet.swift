@@ -112,7 +112,7 @@ struct SearchSheet: View {
 				options.distanceMeasurementSystem = .metric
 				options.attributeOptions = []
 
-				Toursprung.shared.calculate(options) { _, routes, _ in
+				try? Toursprung.shared.calculate(options) { _, routes, _ in
 					self.route = routes?.first
 				}
 			} onMore: {
