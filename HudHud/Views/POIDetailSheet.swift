@@ -12,6 +12,7 @@ import POIService
 import SFSafeSymbols
 import SwiftUI
 import ToursprungPOI
+import OSLog
 
 struct POIDetailSheet: View {
 
@@ -109,8 +110,8 @@ struct POIDetailSheet: View {
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
 	return POIDetailSheet(poi: poi) {
-		print("start")
+		Logger.searchView.info("Start \(poi)")
 	} onMore: {
-		print("more")
+		Logger.searchView.info("More \(poi)")
 	}
 }

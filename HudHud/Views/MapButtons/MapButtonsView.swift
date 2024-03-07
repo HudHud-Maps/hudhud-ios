@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct MapButtonsView: View {
 	@State var mapButtonsData: [MapButtonData]

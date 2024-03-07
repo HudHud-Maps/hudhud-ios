@@ -15,6 +15,7 @@ import POIService
 import SFSafeSymbols
 import SwiftLocation
 import SwiftUI
+import OSLog
 
 // MARK: - ContentView
 
@@ -47,12 +48,14 @@ struct ContentView: View {
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
-				print("Authorization status did change: \(event.authorizationStatus)")
+				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
 				self.showUserLocation = event.authorizationStatus.allowed
 			}
 		}
 		.task {
 			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
+			Logger.searchView.debug("Authorization status authorizedWhenInUse")
+
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {

@@ -13,7 +13,7 @@ import MapLibreSwiftUI
 import POIService
 import SwiftUI
 import ToursprungPOI
-
+import OSLog
 struct SearchSheet: View {
 
 	private var cancelables: Set<AnyCancellable> = []
@@ -89,9 +89,9 @@ struct SearchSheet: View {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
 			POIDetailSheet(poi: item) {
-				print("start")
+				Logger.searchView.info("Start item \(item)")
 			} onMore: {
-				print("more")
+				Logger.searchView.info("more item \(item))")
 			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(

@@ -7,6 +7,8 @@
 //
 import Foundation
 import SwiftUI
+import OSLog
+
 struct TrafficChartData {
 
 	let date: Date
@@ -14,7 +16,7 @@ struct TrafficChartData {
 
 	var getSpecificTrafficRange: [HourTrafficData]? {
 		guard traffic.count == 24 else {
-			print("Warning: got traffic with unexpected number of elements: \(traffic.count)...")
+			Logger.POIData.info("Warning: got traffic with unexpected number of elements: \(traffic.count)...")
 			return nil
 		}
 		var tempData: [HourTrafficData] = []

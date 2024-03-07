@@ -7,18 +7,21 @@
 //
 
 import SwiftUI
+import OSLog
 
 struct ProviderButton: View {
-
+	
 	@ObservedObject var searchViewStore: SearchViewStore
-
+	
 	var body: some View {
 		Button {
 			switch self.searchViewStore.mode {
 			case let .live(provider):
 				self.searchViewStore.mode = .live(provider: provider.next())
+				Logger.searchView.info("Map Mode live")
 			case .preview:
 				self.searchViewStore.mode = .live(provider: .toursprung)
+				Logger.searchView.info("Map Mode toursprung")
 			}
 		} label: {
 			switch self.searchViewStore.mode {
