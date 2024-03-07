@@ -5,7 +5,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>MGLMapboxAccessToken</key>
-	<string>pk.eyJ1IjoicGF0cmlja2tsYWRlayIsImEiOiJja3Azc2JpZTcwNWFpMndzMXk0N2N2dDU5In0.8jwMMsvPn1uzk4ydP1XJSw</string>
+	<string>NOTAREALACCESSTOKEN</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0.0</string>
 	<key>UIBackgroundModes</key>
