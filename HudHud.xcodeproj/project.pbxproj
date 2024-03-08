@@ -360,7 +360,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				E254F1F58E67D34FF9CD831A /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -585,9 +584,6 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
-		};
-		E254F1F58E67D34FF9CD831A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
 		};
 /* End PBXTargetDependency section */
 
