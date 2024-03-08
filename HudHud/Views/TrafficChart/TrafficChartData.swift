@@ -16,7 +16,7 @@ struct TrafficChartData {
 
 	var getSpecificTrafficRange: [HourTrafficData]? {
 		guard traffic.count == 24 else {
-			Logger.POIData.info("Warning: got traffic with unexpected number of elements: \(traffic.count)...")
+			Logger.POIData.warning("Got traffic with unexpected number of elements: \(traffic.count)...")
 			return nil
 		}
 		var tempData: [HourTrafficData] = []
