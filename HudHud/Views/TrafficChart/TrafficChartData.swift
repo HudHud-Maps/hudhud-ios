@@ -22,9 +22,9 @@ struct TrafficChartData {
 			return nil
 		}
 		var tempData: [HourTrafficData] = []
-		for i in 9 ... 23 {
-			if let dateRange = dateRangeForHour(hour: i) {
-				let hour = HourTrafficData(hour: dateRange, traffic: traffic[i])
+		for index in 9 ... 23 {
+			if let dateRange = dateRangeForHour(hour: index) {
+				let hour = HourTrafficData(hour: dateRange, traffic: traffic[index])
 				tempData.append(hour)
 			}
 		}

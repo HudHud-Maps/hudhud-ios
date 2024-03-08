@@ -15,6 +15,7 @@ struct MapButtonData: Identifiable, Equatable {
 	let action: () -> Void
 
 
+
 		static func == (lhs: MapButtonData, rhs: MapButtonData) -> Bool {
 			return lhs.id == rhs.id
 			&& lhs.sfSymbol == rhs.sfSymbol
