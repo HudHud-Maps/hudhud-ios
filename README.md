@@ -104,6 +104,59 @@ Automatic merge failed; fix conflicts and then commit the result.
 
 We use the Ray Wenderlich Code Style: https://github.com/raywenderlich/swift-style-guide. SwiftLint is used to enforce a consistent code style. Before submitting a pull request, ensure your code adheres to the SwiftLint rules. SwiftLint is run automatically as part of the build.
 
+### SwiftFormat
+
+We use https://github.com/nicklockwood/SwiftFormat to automatically format our swift code when on commit. It runs seamlessly in the background and normally you shouldn't notice it. Only commited files are reformated so your unstaged files are untouched.
+
+If you want to manually start the formating I recommend installing the Xcode Source Editor Extension, however you don't need to as the minimum setup is already done.
+
+##### Install or update the Xcode Source Editor Extension as follows
+
+```bash
+brew install --cask swiftformat-for-xcode
+
+brew upgrade --cask swiftformat-for-xcode
+```
+
+When you installed it for the first time you need to grant it some permissions. Go to /Applications and open `SwiftFormat for Xcode`. 
+Xcode Extensions are sevierly limited in functionality, they don't have access to the current project so you need to import the formatting rules. For this open `SwiftFormat for Xcode`, go to File > Open and select the `.swiftformat` file in the hudhud repo. 
+
+###### NOTE:
+This configuration will apply system wide for all of your projects.
+
+Now you need to Enable the Xcode Extension so it shows up in Xcode. For this Go to 
+
+```
+Settings > Privacy & Security > Extensions > Xcode Source Editor
+```
+
+and make sure SwiftFormat is enabled. 
+
+![](.tools/enable-xcode-extension.png)
+
+Now lets verify the installation was successful by opening a swift file by going to 
+
+```
+Editor > SwiftFormat > Format File
+```
+
+If you see the menu entry then you correctly installed the Source Extension.
+
+![](.tools/source-extension-visible.png)
+
+##### Define a custom Shortcut
+
+Next I would recommend to define a custom shortcut so you can reformat the currently opened file in Xcode with a button press. For this go to 
+
+```
+Xcode > Preferences > Key Bindings
+```
+
+and search for `Format File`, then you can define your prefered Keyboard Shortcut. I personally use the Apple Magic Keyboard with Numeric Keypad which gives me additional Function Keys, thefore I mapped it to F13 Key as this won't interfere with any other predefined shortcut. You can use any other shortcut just make sure its not already used by the system or Xcode, if that happens you will see a yellow alert symbol next to it.
+
+![](.tools/custom-shortcut.png)
+
+
 ### Pull Requests
 
 You should not self merge your branches. Instead after creating your branch via the 'git flow feature ...'
