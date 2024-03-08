@@ -124,7 +124,7 @@ Xcode Extensions are sevierly limited in functionality, they don't have access t
 ###### NOTE:
 This configuration will apply system wide for all of your projects.
 
-Now you need to Enable the Xcode Extension so it shows up in Xcode. For this Go to 
+Now you need to Enable the Xcode Extension so it shows up in Xcode. For this go to 
 
 ```
 Settings > Privacy & Security > Extensions > Xcode Source Editor
@@ -134,7 +134,7 @@ and make sure SwiftFormat is enabled.
 
 ![](.tools/enable-xcode-extension.png)
 
-Now lets verify the installation was successful by opening a swift file by going to 
+Now lets verify the installation was successful by opening a swift file in Xcode by going to 
 
 ```
 Editor > SwiftFormat > Format File
