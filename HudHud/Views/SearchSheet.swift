@@ -98,22 +98,23 @@ struct SearchSheet: View {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
 			POIDetailSheet(poi: item) {
-				print("start")
+				Task {
+					print("start")
 
-				let riyadh = CLLocation(latitude: 24.736054, longitude: 46.718932)
-				let jeddah = CLLocation(latitude: 21.561995, longitude: 39.202545)
-				let waypoints = [
-					riyadh,
-					jeddah
-				].map { Waypoint(location: $0) }
+					let riyadh = CLLocation(latitude: 24.736054, longitude: 46.718932)
+					let jeddah = CLLocation(latitude: 21.561995, longitude: 39.202545)
+					let waypoints = [
+						riyadh,
+						jeddah
+					].map { Waypoint(location: $0) }
 
-				let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
-				options.shapeFormat = .polyline6
-				options.distanceMeasurementSystem = .metric
-				options.attributeOptions = []
+					let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
+					options.shapeFormat = .polyline6
+					options.distanceMeasurementSystem = .metric
+					options.attributeOptions = []
 
-				try? Toursprung.shared.calculate(options) { _, routes, _ in
-					self.route = routes?.first
+					let results = try await Toursprung.shared.calculate(options)
+					self.route = results.routes.first
 				}
 			} onMore: {
 				print("more")

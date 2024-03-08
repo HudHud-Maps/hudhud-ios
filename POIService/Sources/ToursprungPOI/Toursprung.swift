@@ -68,67 +68,40 @@ public class Toursprung {
 
 	// MARK: - Public
 
-	@discardableResult
-	public func calculate(_ options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) throws -> URLSessionDataTask {
-		var components = URLComponents()
-		components.scheme = "https"
-		components.host = "gh.maptoolkit.net"
-		components.path = "/navigate/directions/v5/gh/car/\(options.waypoints[0].coordinate.longitude),\(options.waypoints[0].coordinate.latitude);\(options.waypoints[1].coordinate.longitude),\(options.waypoints[1].coordinate.latitude)"
-		components.queryItems = [
-			URLQueryItem(name: "access_token", value: ""),
-			URLQueryItem(name: "alternatives", value: "false"),
-			URLQueryItem(name: "geometries", value: "polyline6"),
-			URLQueryItem(name: "overview", value: "full"),
-			URLQueryItem(name: "steps", value: "true"),
-			URLQueryItem(name: "continue_straight", value: "true"),
-			URLQueryItem(name: "annotations", value: "congestion,distance"),
-			URLQueryItem(name: "language", value: "ar"),
-			URLQueryItem(name: "roundabout_exits", value: "true"),
-			URLQueryItem(name: "voice_instructions", value: "true"),
-			URLQueryItem(name: "banner_instructions", value: "true"),
-			URLQueryItem(name: "voice_units", value: "metric")
-		]
-		guard let url = components.url else {
-			throw ToursprungError.invalidUrl
-		}
-
-		let task = self.dataTask(with: url) { json in
-			let response = options.response(from: json)
-			if let routes = response.routes {
-				for route in routes {
-					route.routeIdentifier = json["uuid"] as? String
-				}
-			}
-			completionHandler(response.waypoint, response.routes, nil)
-		} errorHandler: { error in
-			completionHandler(nil, nil, error)
-		}
-		task.resume()
-		return task
+	public struct RouteCalculationResult {
+		public let waypoints: [Waypoint]
+		public let routes: [Route]
 	}
 
-	public func preview(from json: JSONDictionary) throws -> Route {
-		let waypoints: [Waypoint] = (json["waypoints"] as? [JSONDictionary] ?? []).compactMap {
-			let waypoint = $0
-			guard let location = waypoint["location"] as? [Double] else {
-				return nil
-			}
+	@discardableResult
+	public func calculate(_ options: RouteOptions) async throws -> RouteCalculationResult {
+		let url = try options.url
 
-			let coordinate = CLLocationCoordinate2D(geoJSON: location)
-			let name: String = (waypoint["name"] as? String) ?? ""
-			return Waypoint(coordinate: coordinate, name: name)
-		}
-		print("waypoints: \(waypoints)")
+		let answer: (data: Data, response: URLResponse) = try await URLSession.shared.data(from: url)
+		let json: JSONDictionary
 
-		let options = RouteOptions(waypoints: waypoints)
-
-		let routes = (json["routes"] as? [JSONDictionary])?.map {
-			Route(json: $0, waypoints: waypoints, options: options)
-		}
-		guard let route = routes?.first else {
+		guard answer.response.mimeType == "application/json" else {
 			throw ToursprungError.invalidResponse
 		}
-		return route
+
+		do {
+			json = try JSONSerialization.jsonObject(with: answer.data, options: []) as? [String: Any] ?? [:]
+		} catch {
+			throw ToursprungError.invalidResponse
+		}
+
+		let apiStatusCode = json["code"] as? String
+		let apiMessage = json["message"] as? String
+		guard (apiStatusCode == nil && apiMessage == nil) || apiStatusCode == "Ok" else {
+			throw ToursprungError.invalidResponse
+		}
+
+		let response = options.response(from: json)
+		for route in response.routes {
+			route.routeIdentifier = json["uuid"] as? String
+		}
+
+		return .init(waypoints: response.waypoint, routes: response.routes)
 	}
 }
 
@@ -166,8 +139,38 @@ private extension Toursprung {
 
 private extension RouteOptions {
 
-	func response(from json: JSONDictionary) -> (waypoint: [Waypoint]?, routes: [Route]?) {
-		var namedWaypoints: [Waypoint]?
+	var url: URL {
+		get throws {
+			let stops = self.waypoints.map { "\($0.coordinate.longitude),\($0.coordinate.latitude)" }.joined(separator: ";")
+
+			var components = URLComponents()
+			components.scheme = "https"
+			components.host = "gh.maptoolkit.net"
+			components.path = "/navigate/directions/v5/gh/car/\(stops)"
+			components.queryItems = [
+				URLQueryItem(name: "access_token", value: ""),
+				URLQueryItem(name: "alternatives", value: "false"),
+				URLQueryItem(name: "geometries", value: "polyline6"),
+				URLQueryItem(name: "overview", value: "full"),
+				URLQueryItem(name: "steps", value: "true"),
+				URLQueryItem(name: "continue_straight", value: "true"),
+				URLQueryItem(name: "annotations", value: "congestion,distance"),
+				URLQueryItem(name: "language", value: "ar"),
+				URLQueryItem(name: "roundabout_exits", value: "true"),
+				URLQueryItem(name: "voice_instructions", value: "true"),
+				URLQueryItem(name: "banner_instructions", value: "true"),
+				URLQueryItem(name: "voice_units", value: "metric")
+			]
+			guard let url = components.url else {
+				throw Toursprung.ToursprungError.invalidUrl
+			}
+
+			return url
+		}
+	}
+
+	func response(from json: JSONDictionary) -> (waypoint: [Waypoint], routes: [Route]) {
+		var namedWaypoints: [Waypoint] = []
 		if let jsonWaypoints = (json["waypoints"] as? [JSONDictionary]) {
 			namedWaypoints = zip(jsonWaypoints, self.waypoints).compactMap { api, local -> Waypoint? in
 				guard let location = api["location"] as? [Double] else {
@@ -181,12 +184,10 @@ private extension RouteOptions {
 			}
 		}
 
-		let waypoints = namedWaypoints ?? self.waypoints
-
-		let routes = (json["routes"] as? [JSONDictionary])?.map {
+		let routes = (json["routes"] as? [JSONDictionary] ?? []).compactMap {
 			Route(json: $0, waypoints: waypoints, options: self)
 		}
-		return (waypoints, routes)
+		return (namedWaypoints, routes)
 	}
 }
 
