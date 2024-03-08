@@ -495,17 +495,21 @@
 /* Begin PBXShellScriptBuildPhase section */
 		CD84A1982B9B33B70078689F /* Setup custom git hooks */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/.git/HEAD",
 			);
 			name = "Setup custom git hooks";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(SRCROOT)/.git/config.lock",
+				"$(SRCROOT)/.git/config",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
