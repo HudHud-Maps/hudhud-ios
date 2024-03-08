@@ -42,7 +42,6 @@ struct SearchSheet: View {
 					.focused(self.$searchIsFocused)
 					.padding(.vertical, 10)
 					.padding(.horizontal, 0)
-					.cornerRadius(8)
 					.autocorrectionDisabled()
 					.overlay(
 						HStack {
@@ -61,10 +60,9 @@ struct SearchSheet: View {
 					)
 					.padding(.horizontal, 10)
 			}
-			.padding(.horizontal, 12)
-			.padding(.vertical, 8)
-			.background(.background)
-			.cornerRadius(8)
+			.background(.quinary)
+			.cornerRadius(12)
+			.padding()
 
 			List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
 				Button(action: {
