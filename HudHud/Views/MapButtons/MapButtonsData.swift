@@ -11,7 +11,7 @@ import SFSafeSymbols
 
 struct MapButtonData: Identifiable, Equatable {
 	let id = UUID()
-	let sfSymbol: SFSymbol
+	let sfSymbol:SFSymbol
 	let action: () -> Void
 
 
