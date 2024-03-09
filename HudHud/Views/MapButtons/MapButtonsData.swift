@@ -11,13 +11,13 @@ import SFSafeSymbols
 
 struct MapButtonData: Identifiable, Equatable {
 	let id = UUID()
-	let sfSymbol:SFSymbol
+	let sfSymbol: SFSymbol
 	let action: () -> Void
 
+	// MARK: - Internal
 
-
-		static func == (lhs: MapButtonData, rhs: MapButtonData) -> Bool {
-			return lhs.id == rhs.id
+	static func == (lhs: MapButtonData, rhs: MapButtonData) -> Bool {
+		return lhs.id == rhs.id
 			&& lhs.sfSymbol == rhs.sfSymbol
-		}
+	}
 }
