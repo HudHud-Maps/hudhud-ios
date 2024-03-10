@@ -8,7 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */; };
+		0AEF80BDC38FA3AD27DF55C7 /* DierctionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CB2C2F4F824A150CFE8E8F /* DierctionModePickerData.swift */; };
 		1625CD45E7AC20E93478D7E5 /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C2DF1E316A7C9F0EE992B6C /* FavoriteCategoriesView.swift */; };
+		17EECB64831122DBABDC5368 /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FEB0EB0E127C1452F00E1A1 /* DirectionModePickerView.swift */; };
 		1BB69DF95208C542E1B687DF /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */; };
 		259626391966DD2298C44774 /* FavoriteCategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8AB16532DFF3C277E7BBA7C /* FavoriteCategoriesData.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
@@ -31,7 +33,6 @@
 		CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
 		CB3FE2502B9A327B00FD6435 /* LoggerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3FE24F2B9A327B00FD6435 /* LoggerSettings.swift */; };
-
 		CBCD197C2B94AD22005DDA0A /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCD197B2B94AD22005DDA0A /* DateFormatter.swift */; };
 		CBCDB5182B91EF5400311C1B /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5172B91EF5400311C1B /* TrafficChartData.swift */; };
 		CBCDB5262B94735A00311C1B /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5252B94735A00311C1B /* TrafficChartView.swift */; };
@@ -54,6 +55,7 @@
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
 		D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */; };
 		FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */; };
+		FF97AB943C7F3F5797FC841D /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 454343A8AAB73E30E2E1BFD6 /* DirectionModeButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,8 +77,11 @@
 
 /* Begin PBXFileReference section */
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
+		0FEB0EB0E127C1452F00E1A1 /* DirectionModePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
+		40CB2C2F4F824A150CFE8E8F /* DierctionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DierctionModePickerData.swift; sourceTree = "<group>"; };
 		453101CB8634C19220B7782E /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
+		454343A8AAB73E30E2E1BFD6 /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
 		54FE822D3A29AAE7408A7F91 /* MapItemsStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemsStatus.swift; sourceTree = "<group>"; };
@@ -98,7 +103,6 @@
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB3FE24F2B9A327B00FD6435 /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
-
 		CBCD197B2B94AD22005DDA0A /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		CBCDB5172B91EF5400311C1B /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		CBCDB5252B94735A00311C1B /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
@@ -315,6 +319,7 @@
 				244F05589726125402920686 /* MapButtons */,
 				1612AE67C583E0A5DE5982AE /* FavoriteCategories */,
 				C7E4E6C659E3AD150B1FED83 /* PoiTile */,
+				FF1B7D3EF2A2D9C33A34AE08 /* DirectionsModePicker */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -324,7 +329,6 @@
 			children = (
 				399B3BCB097127A460F4081C /* CaseIterable.swift */,
 				CB3FE24F2B9A327B00FD6435 /* LoggerSettings.swift */,
-
 				C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */,
 				CBCD197B2B94AD22005DDA0A /* DateFormatter.swift */,
 			);
@@ -349,6 +353,16 @@
 				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
 			);
 			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		FF1B7D3EF2A2D9C33A34AE08 /* DirectionsModePicker */ = {
+			isa = PBXGroup;
+			children = (
+				40CB2C2F4F824A150CFE8E8F /* DierctionModePickerData.swift */,
+				454343A8AAB73E30E2E1BFD6 /* DirectionModeButton.swift */,
+				0FEB0EB0E127C1452F00E1A1 /* DirectionModePickerView.swift */,
+			);
+			path = DirectionsModePicker;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -535,6 +549,9 @@
 				259626391966DD2298C44774 /* FavoriteCategoriesData.swift in Sources */,
 				1625CD45E7AC20E93478D7E5 /* FavoriteCategoriesView.swift in Sources */,
 				66091C578CF0A49E07648816 /* FavoriteCategoriesButton.swift in Sources */,
+				FF97AB943C7F3F5797FC841D /* DirectionModeButton.swift in Sources */,
+				0AEF80BDC38FA3AD27DF55C7 /* DierctionModePickerData.swift in Sources */,
+				17EECB64831122DBABDC5368 /* DirectionModePickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -882,7 +899,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-
 		92F9E8DC39EB24F5D1517F69 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
@@ -907,7 +923,6 @@
 				kind = branch;
 			};
 		};
-
 		CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
@@ -931,13 +946,11 @@
 		};
 		CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;
-
 			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */;
 			productName = MapLibreSwiftDSL;
 		};
 		CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-
 			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */;
 			productName = MapLibreSwiftUI;
 		};
