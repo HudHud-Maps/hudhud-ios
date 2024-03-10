@@ -13,6 +13,8 @@
 		2ADB20A81A69AD2774096D16 /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F112E9EE98644EA8811C2E68 /* SearchViewStore.swift */; };
 		4D1CCDAA1850728C3DC95846 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */; };
 		5721D3A444A65699386B8141 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D12C9D1880D4D83B414751 /* CaseIterable.swift */; };
+		76752ABDB390EB928026A0C7 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 784DEAA8EF694F99B3DE320C /* TrafficChartView.swift */; };
+		845E0A18D6CDEC6D068E948A /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1E4A596A27E8FCB208F0B /* DateFormatter.swift */; };
 		90B38C2A2B94BE0900225CB6 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C292B94BE0900225CB6 /* MapButtonsView.swift */; };
 		90B38C2C2B94BE5E00225CB6 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C2B2B94BE5E00225CB6 /* MapButtonsData.swift */; };
 		90B38C332B95CDCF00225CB6 /* DierctionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C322B95CDCF00225CB6 /* DierctionModePickerData.swift */; };
@@ -51,6 +53,7 @@
 		CDCE17D72B879CEC00EC1571 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17C82B879CEC00EC1571 /* DictionaryView.swift */; };
 		CDCE17D92B879DA900EC1571 /* MapItemsStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17D82B879DA900EC1571 /* MapItemsStatus.swift */; };
 		CDCE17DD2B88DF9700EC1571 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCE17DC2B88DF9700EC1571 /* MapStore.swift */; };
+		D991FA61FC4D0F9E6E8CDFD5 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C74A025EFC03A31D97AA07B /* TrafficChartData.swift */; };
 		E69BCDE92060D8DC74C4B40A /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A659ED51430CB22F6F47B1DE /* FavoriteCategoriesButton.swift */; };
 /* End PBXBuildFile section */
 
@@ -74,6 +77,9 @@
 /* Begin PBXFileReference section */
 		02B4F84FC90D84C751222F01 /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
 		19D12C9D1880D4D83B414751 /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
+		3C74A025EFC03A31D97AA07B /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
+		49C1E4A596A27E8FCB208F0B /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
+		784DEAA8EF694F99B3DE320C /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
 		7D62539A290C5669D6571C51 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		879145F3416437507DB0F310 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
 		8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
@@ -86,7 +92,7 @@
 		A659ED51430CB22F6F47B1DE /* FavoriteCategoriesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesButton.swift; sourceTree = "<group>"; };
 		C40B14D705B7FE1801324C26 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
-		CD518BC72B88964700A5AFFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CD518BC72B88964700A5AFFF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE054B2B681263003E5196 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CDAE054E2B681263003E5196 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -165,8 +171,18 @@
 			children = (
 				19D12C9D1880D4D83B414751 /* CaseIterable.swift */,
 				879145F3416437507DB0F310 /* LocationStatus.swift */,
+				49C1E4A596A27E8FCB208F0B /* DateFormatter.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		2E19F7E4DFFC47E10F795B54 /* TrafficChart */ = {
+			isa = PBXGroup;
+			children = (
+				3C74A025EFC03A31D97AA07B /* TrafficChartData.swift */,
+				784DEAA8EF694F99B3DE320C /* TrafficChartView.swift */,
+			);
+			path = TrafficChart;
 			sourceTree = "<group>";
 		};
 		527E2E93B6D5E3599339E9DD /* FavoriteCategories */ = {
@@ -293,6 +309,7 @@
 				CDCE17B92B879CEC00EC1571 /* ProviderButton.swift */,
 				CDCE17B72B879CEC00EC1571 /* SearchResultItem.swift */,
 				CDCE17C22B879CEC00EC1571 /* SearchSheet.swift */,
+				2E19F7E4DFFC47E10F795B54 /* TrafficChart */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -528,6 +545,9 @@
 				170E1DDBD6CBDC0675E76214 /* FavoriteCategoriesData.swift in Sources */,
 				19828658E5BCEF32A86BE14F /* FavoriteCategoriesView.swift in Sources */,
 				E69BCDE92060D8DC74C4B40A /* FavoriteCategoriesButton.swift in Sources */,
+				845E0A18D6CDEC6D068E948A /* DateFormatter.swift in Sources */,
+				D991FA61FC4D0F9E6E8CDFD5 /* TrafficChartData.swift in Sources */,
+				76752ABDB390EB928026A0C7 /* TrafficChartView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
