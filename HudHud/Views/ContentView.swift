@@ -55,12 +55,20 @@ struct ContentView: View {
 			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
 		}
 		.ignoresSafeArea()
-		.safeAreaInset(edge: .top, alignment: .trailing) {
+		.safeAreaInset(edge: .top, alignment: .center) {
+				VStack {
+					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate,searchStore: self.searchViewStore)
+					Spacer()
+				}
+				.presentationBackground(.thinMaterial)
+			}
+		.safeAreaInset(edge: .bottom, alignment: .trailing) {
 			VStack(alignment: .trailing) {
 				CurrentLocationButton(camera: self.$mapStore.camera)
-				ProviderButton(searchViewStore: self.searchViewStore)
+				ProviderButton(searchViewStore: self.searchViewStore) 
 			}
-			.padding()
+			.padding(.bottom,110)
+			.padding(.trailing)
 		}
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
@@ -72,6 +80,7 @@ struct ContentView: View {
 				)
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
+				.presentationDragIndicator(.hidden)
 		}
 	}
 

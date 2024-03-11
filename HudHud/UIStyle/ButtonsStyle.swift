@@ -23,5 +23,6 @@ struct IconButton: ButtonStyle {
 			.background(self.backgroundColor)
 			.clipShape(Capsule())
 			.shadow(radius: 1)
+			.background(.thickMaterial, in: Capsule())
 	}
 }
