@@ -1,5 +1,5 @@
 //
-//  DierctionModePickerData.swift
+//  DirectionModePickerData.swift
 //  HudHud
 //
 //  Created by Alaa . on 04/03/2024.
@@ -9,21 +9,25 @@
 import Foundation
 import SFSafeSymbols
 
+// MARK: - DirectionModePickerData
+
 struct DirectionModePickerData: Identifiable, Equatable {
 	let mode: DirectionMode
 	let duration: TimeInterval
-	
-	var id: DirectionMode { mode }
+
+	var id: DirectionMode { self.mode }
 }
 
+// MARK: - DirectionMode
+
 enum DirectionMode: Identifiable {
-	
+
 	case car, walk, bus, metro, bicycle
-	
+
 	var id: Self {
-		   return self
-	   }
-	
+		return self
+	}
+
 	var iconName: SFSymbol {
 		switch self {
 		case .car: return .car
@@ -33,6 +37,7 @@ enum DirectionMode: Identifiable {
 		case .bicycle: return .bicycle
 		}
 	}
+
 	var title: String {
 		switch self {
 		case .car: return "car"
@@ -43,4 +48,3 @@ enum DirectionMode: Identifiable {
 		}
 	}
 }
-
