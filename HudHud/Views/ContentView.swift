@@ -92,7 +92,6 @@ struct ContentView: View {
 				}
 				.onPreferenceChange(SizePreferenceKey.self) { value in
 					withAnimation {
-						print(value)
 						sheetSize = value
 					}
 				}
