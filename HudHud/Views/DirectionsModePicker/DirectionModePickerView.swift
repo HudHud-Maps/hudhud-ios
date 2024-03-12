@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct DirectionModePickerView: View {
-	@State var directionModePickerData: [DierctionModePickerData]
-	@State var selectedRoute = DierctionModePickerData(mode: .car, duration: 1200)
+	@State var directionModePickerData: [DirectionModePickerData]
+	@State var selectedRoute = DirectionModePickerData(mode: .car, duration: 1200)
 	var body: some View {
 		HStack {
 			ForEach(directionModePickerData) { mode in
@@ -39,7 +39,7 @@ struct DirectionModePickerView: View {
 			return "-"
 		}
 	}
-	private func switchMode(mode: DierctionModePickerData) {
+	private func switchMode(mode: DirectionModePickerData) {
 		withAnimation(.easeInOut) {
 			selectedRoute = mode
 		}
@@ -48,9 +48,9 @@ struct DirectionModePickerView: View {
 
 #Preview {
     DirectionModePickerView(directionModePickerData: [
-		DierctionModePickerData(mode: .car, duration: 1200),
-		DierctionModePickerData(mode: .bus, duration: 1800),
-		DierctionModePickerData(mode: .walk, duration: 2600),
-		DierctionModePickerData(mode: .bicycle, duration: 2200)])
+		DirectionModePickerData(mode: .car, duration: 1200),
+		DirectionModePickerData(mode: .bus, duration: 1800),
+		DirectionModePickerData(mode: .walk, duration: 2600),
+		DirectionModePickerData(mode: .bicycle, duration: 2200)])
 	.padding()
 }
