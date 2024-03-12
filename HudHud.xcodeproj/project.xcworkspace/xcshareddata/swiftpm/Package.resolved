@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463"
+        "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463",
+        "version" : "0.0.2"
       }
     },
     {
@@ -42,7 +42,7 @@
       "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
       "state" : {
         "branch" : "enhancement/camera-bounding-box",
-        "revision" : "9c78e13710f8d32b13ea533fbe7491b5790aedd6"
+        "revision" : "dfc75263c7ae2b9c5601e28db924ffcf7e7f640f"
       }
     },
     {

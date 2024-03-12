@@ -18,6 +18,7 @@ import MapLibreSwiftUI
 import POIService
 import SwiftUI
 import ToursprungPOI
+import SwiftLocation
 
 // MARK: - SearchSheet
 
@@ -98,13 +99,20 @@ struct SearchSheet: View {
 			POIDetailSheet(poi: item) {
 				Task {
 					print("start")
+					
+					let location = Location()
+					try await location.requestPermission(.whenInUse)
+					guard let userLocation = try await location.requestLocation().location else {
+						return
+					}
 
-					let riyadh = CLLocation(latitude: 24.736054, longitude: 46.718932)
-					let jeddah = CLLocation(latitude: 21.561995, longitude: 39.202545)
+					let waypoint1 = Waypoint(location: userLocation)
+					let waypoint2 = Waypoint(coordinate: item.locationCoordinate)
+					
 					let waypoints = [
-						riyadh,
-						jeddah
-					].map { Waypoint(location: $0) }
+						waypoint1,
+						waypoint2
+					]
 
 					let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
 					options.shapeFormat = .polyline6

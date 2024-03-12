@@ -35,13 +35,13 @@ struct ContentView: View {
 			let pointSource = self.mapStore.mapItemStatus.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-				.radius(constant: 16)
-				.color(constant: .systemRed)
-				.strokeWidth(constant: 2)
-				.strokeColor(constant: .white)
+				.radius(16)
+				.color(.systemRed)
+				.strokeWidth(2)
+				.strokeColor(.white)
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-				.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-				.iconColor(constant: .white)
+				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+				.iconColor(.white)
 		}
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
