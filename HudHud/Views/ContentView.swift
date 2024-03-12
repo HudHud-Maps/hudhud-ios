@@ -53,7 +53,7 @@ struct ContentView: View {
 			}
 		}
 		.task {
-			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
+			self.showUserLocation = self.locationManager.authorizationStatus.allowed
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .trailing) {
