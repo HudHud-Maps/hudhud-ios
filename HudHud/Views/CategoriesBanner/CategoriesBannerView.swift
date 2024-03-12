@@ -14,15 +14,15 @@ struct CategoriesBannerView: View {
 
 	var body: some View {
 		ScrollView(.horizontal) {
-			HStack(alignment: .top, spacing: 12) {
+			HStack(alignment: .top, spacing: 10) {
 				ForEach(self.catagoryBannerData) { category in
 					Button(category.title, systemImage: category.iconSystemName) {
 						searchStore.searchText = category.title
 											searchStore.selectedDetent = .medium
 					}.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
+						
 				}
 			}
-			.padding()
 		}
 		.scrollIndicators(.hidden)
 	}

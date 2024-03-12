@@ -20,59 +20,63 @@ import SwiftUI
 
 @MainActor
 struct ContentView: View {
-
+	
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
-
+	
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
-
+	@State var sheetSize: CGSize = .zero
+	
 	var body: some View {
-		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
-			let pointSource = self.mapStore.mapItemStatus.points
-
-			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-				.radius(constant: 16)
-				.color(constant: .systemRed)
-				.strokeWidth(constant: 2)
-				.strokeColor(constant: .white)
-			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-				.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-				.iconColor(constant: .white)
-		}
-		.unsafeMapViewModifier { mapView in
-			mapView.showsUserLocation = self.showUserLocation
-		}
-		.task {
-			for await event in await self.locationManager.startMonitoringAuthorization() {
-				print("Authorization status did change: \(event.authorizationStatus)")
-				self.showUserLocation = event.authorizationStatus.allowed
+		if #available(iOS 17.0, *) {
+			return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+				let pointSource = self.mapStore.mapItemStatus.points
+				
+				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+					.radius(constant: 16)
+					.color(constant: .systemRed)
+					.strokeWidth(constant: 2)
+					.strokeColor(constant: .white)
+				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(constant: .white)
 			}
-		}
-		.task {
-			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
-		}
-		.ignoresSafeArea()
-		.safeAreaInset(edge: .top, alignment: .center) {
+			.unsafeMapViewModifier { mapView in
+				mapView.showsUserLocation = self.showUserLocation
+			}
+			.task {
+				for await event in await self.locationManager.startMonitoringAuthorization() {
+					print("Authorization status did change: \(event.authorizationStatus)")
+					self.showUserLocation = event.authorizationStatus.allowed
+				}
+			}
+			.task {
+				self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
+			}
+			.ignoresSafeArea()
+			.safeAreaInset(edge: .top, alignment: .center) {
 				VStack {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate,searchStore: self.searchViewStore)
 					Spacer()
 				}
 				.presentationBackground(.thinMaterial)
+				.padding()
 			}
-		.safeAreaInset(edge: .bottom, alignment: .trailing) {
-			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$mapStore.camera)
-				ProviderButton(searchViewStore: self.searchViewStore) 
+			.safeAreaInset(edge: .bottom, alignment: .trailing) {
+				VStack(alignment: .trailing) {
+					CurrentLocationButton(camera: self.$mapStore.camera)
+					ProviderButton(searchViewStore: self.searchViewStore)
+				}
+				.opacity(sheetSize.height > 200 ? 0 : 1)
+				.padding(.trailing)
 			}
-			.padding(.bottom,110)
-			.padding(.trailing)
-		}
-		.sheet(isPresented: self.$mapStore.searchShown) {
-			SearchSheet(mapStore: self.mapStore,
-						searchStore: self.searchViewStore)
+			.safeAreaPadding(.bottom, sheetSize.height)
+			.sheet(isPresented: self.$mapStore.searchShown) {
+				SearchSheet(mapStore: self.mapStore,
+							searchStore: self.searchViewStore)
 				.presentationCornerRadius(21)
 				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
 				.presentationBackgroundInteraction(
@@ -81,6 +85,20 @@ struct ContentView: View {
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
 				.presentationDragIndicator(.hidden)
+				.overlay {
+					GeometryReader { geometry in
+						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+					}
+				}
+				.onPreferenceChange(SizePreferenceKey.self) { value in
+					withAnimation {
+						print(value)
+						sheetSize = value
+					}
+				}
+			}
+		} else {
+			return Text("Available only on ios 17 or newer")
 		}
 	}
 
@@ -97,7 +115,7 @@ struct ContentView: View {
 }
 
 extension PresentationDetent {
-	static let small: PresentationDetent = .height(100)
+	static let small: PresentationDetent = .height(80)
 	static let third: PresentationDetent = .fraction(0.33)
 }
 
@@ -105,6 +123,12 @@ extension CLLocationCoordinate2D {
 	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
 }
 
+struct SizePreferenceKey: PreferenceKey {
+	static var defaultValue: CGSize = .zero
+	static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+		value = nextValue()
+	}
+}
 #Preview {
 	return ContentView(searchViewStore: .preview)
 }
