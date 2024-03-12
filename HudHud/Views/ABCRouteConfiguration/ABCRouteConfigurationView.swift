@@ -8,36 +8,44 @@
 
 import SwiftUI
 import SFSafeSymbols
+import POIService
+import CoreLocation
 
 struct ABCRouteConfigurationView: View {
-	@State var routes: [Route]
+	@State var routeConfigurations: [ABCRouteConfigurationItem]
 	var body: some View {
 		VStack {
 			List {
-				ForEach(routes) { route in
+				ForEach(routeConfigurations, id: \.self) { route in
 					HStack {
-						Image(systemSymbol: route == routes.first ? .location : .mappin)
+						route.icon
+						.font(.title3)
+						.frame(width: .leastNormalMagnitude)
+						.padding(.horizontal, 8)
+						.anchorPreference(key: ItemBoundsKey.self, value: .bounds, transform: { anchor in
+							[route.id: anchor]
+						})
 							Text(route.name)
 								.foregroundColor(.primary)
 								.lineLimit(1)
 								.minimumScaleFactor(0.5)
 							Spacer()
-							Image(systemSymbol: .circleGrid2x2Fill)
+							Image(systemSymbol: .line3Horizontal)
 					}
 					.foregroundColor(.secondary)
 				}
 				// List Adjustments
 				.onMove(perform: moveAction)
 				.onDelete { indexSet in
-					routes.remove(atOffsets: indexSet)
+					routeConfigurations.remove(atOffsets: indexSet)
 				}
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-						routes.append(Route(name: "New Location"))
-				} label: {
+					routeConfigurations.append(.poi(POI(id: .random(in: 0 ... 1_000_000), title: "New Location", subtitle: "h", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911), type: "h")))
+				} label: { //(24.7189756, 46.6468911)
 					HStack {
-						Image(systemName: "plus")
+						Image(systemSymbol: .plus)
 							.foregroundColor(.secondary)
 						Text("Add Location")
 							.foregroundColor(.primary)
@@ -47,16 +55,30 @@ struct ABCRouteConfigurationView: View {
 				}
 				.listRowBackground(Color(.quaternarySystemFill))
 			}
+			.overlayPreferenceValue(ItemBoundsKey.self, { bounds in
+				GeometryReader{ proxy in
+					let pairs = Array(zip(routeConfigurations, routeConfigurations.dropFirst()))
+					ForEach(pairs, id: \.0.id) { (item , next) in
+						if let from = bounds[item.id], let to = bounds[next.id] {
+							Line(from: proxy[from][.bottom], to: proxy[to][.top])
+								.stroke(style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [0.5, 5], dashPhase: 4))
+								.foregroundColor(.secondary)
+						}
+					}
+				}
+			})
 		}
 	}
 	func moveAction(from source: IndexSet, to destination: Int) {
-		routes.move(fromOffsets: source, toOffset: destination)
+		routeConfigurations.move(fromOffsets: source, toOffset: destination)
 	}
 }
 
 #Preview {
-	ABCRouteConfigurationView(routes: [
-			  Route(name: "My Location"),
-			  Route(name: "Second Location"),
-			  Route(name: "Third Location")])
+	ABCRouteConfigurationView(routeConfigurations: [
+		.myLocation,
+		.poi(POI(title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), type: "Coffee")),
+		.poi(POI(title: "The Garage, Riyadh", subtitle: "Work", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), type: "Office"))
+	])
 }
+
