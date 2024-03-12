@@ -17,7 +17,7 @@
 		845E0A18D6CDEC6D068E948A /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C1E4A596A27E8FCB208F0B /* DateFormatter.swift */; };
 		90B38C2A2B94BE0900225CB6 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C292B94BE0900225CB6 /* MapButtonsView.swift */; };
 		90B38C2C2B94BE5E00225CB6 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C2B2B94BE5E00225CB6 /* MapButtonsData.swift */; };
-		90B38C332B95CDCF00225CB6 /* DierctionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C322B95CDCF00225CB6 /* DierctionModePickerData.swift */; };
+		90B38C332B95CDCF00225CB6 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C322B95CDCF00225CB6 /* DirectionModePickerData.swift */; };
 		90B38C352B95CE2800225CB6 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C342B95CE2800225CB6 /* DirectionModeButton.swift */; };
 		90B38C372B95CE5B00225CB6 /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B38C362B95CE5B00225CB6 /* DirectionModePickerView.swift */; };
 		A5F7FFE8796CFCFFEE1AFC54 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879145F3416437507DB0F310 /* LocationStatus.swift */; };
@@ -85,7 +85,7 @@
 		8D177CF7B63BED2BF23FCE24 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		90B38C292B94BE0900225CB6 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
 		90B38C2B2B94BE5E00225CB6 /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
-		90B38C322B95CDCF00225CB6 /* DierctionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DierctionModePickerData.swift; sourceTree = "<group>"; };
+		90B38C322B95CDCF00225CB6 /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
 		90B38C342B95CE2800225CB6 /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
 		90B38C362B95CE5B00225CB6 /* DirectionModePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerView.swift; sourceTree = "<group>"; };
 		9424BD9860872EFA3B684203 /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
@@ -207,7 +207,7 @@
 		90B38C312B95CD9E00225CB6 /* DirectionsModePicker */ = {
 			isa = PBXGroup;
 			children = (
-				90B38C322B95CDCF00225CB6 /* DierctionModePickerData.swift */,
+				90B38C322B95CDCF00225CB6 /* DirectionModePickerData.swift */,
 				90B38C342B95CE2800225CB6 /* DirectionModeButton.swift */,
 				90B38C362B95CE5B00225CB6 /* DirectionModePickerView.swift */,
 			);
@@ -530,7 +530,7 @@
 				CDCE17D62B879CEC00EC1571 /* ContentView.swift in Sources */,
 				90B38C352B95CE2800225CB6 /* DirectionModeButton.swift in Sources */,
 				CDCE17D42B879CEC00EC1571 /* CategoriesBannerView.swift in Sources */,
-				90B38C332B95CDCF00225CB6 /* DierctionModePickerData.swift in Sources */,
+				90B38C332B95CDCF00225CB6 /* DirectionModePickerData.swift in Sources */,
 				CDCE17D72B879CEC00EC1571 /* DictionaryView.swift in Sources */,
 				CDCE17D92B879DA900EC1571 /* MapItemsStatus.swift in Sources */,
 				CDCE17CD2B879CEC00EC1571 /* DirectionPreviewData.swift in Sources */,

@@ -9,7 +9,7 @@
 import Foundation
 import SFSafeSymbols
 
-struct DierctionModePickerData: Identifiable, Equatable {
+struct DirectionModePickerData: Identifiable, Equatable {
 	let mode: DirectionMode
 	let duration: TimeInterval
 	
