@@ -20,30 +20,29 @@ import SwiftUI
 
 @MainActor
 struct ContentView: View {
-	
+
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
-	
+
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
 	@State var sheetSize: CGSize = .zero
-	
+
 	var body: some View {
 		if #available(iOS 17.0, *) {
 			return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 				let pointSource = self.mapStore.mapItemStatus.points
-				
-				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-					.radius(constant: 16)
-					.color(constant: .systemRed)
-					.strokeWidth(constant: 2)
-					.strokeColor(constant: .white)
-				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-					.iconColor(constant: .white)
 
+				CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+					.radius(16)
+					.color(.systemRed)
+					.strokeWidth(2)
+					.strokeColor(.white)
+				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(.white)
 			}
 			.unsafeMapViewModifier { mapView in
 				mapView.showsUserLocation = self.showUserLocation
@@ -60,7 +59,7 @@ struct ContentView: View {
 			.ignoresSafeArea()
 			.safeAreaInset(edge: .top, alignment: .center) {
 				VStack {
-					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate,searchStore: self.searchViewStore)
+					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
 					Spacer()
 				}
 				.presentationBackground(.thinMaterial)
@@ -78,24 +77,24 @@ struct ContentView: View {
 			.sheet(isPresented: self.$mapStore.searchShown) {
 				SearchSheet(mapStore: self.mapStore,
 							searchStore: self.searchViewStore)
-				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-				.presentationBackgroundInteraction(
-					.enabled(upThrough: .medium)
-				)
-				.interactiveDismissDisabled()
-				.ignoresSafeArea()
-				.presentationDragIndicator(.hidden)
-				.overlay {
-					GeometryReader { geometry in
-						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+					.presentationCornerRadius(21)
+					.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+					.presentationBackgroundInteraction(
+						.enabled(upThrough: .medium)
+					)
+					.interactiveDismissDisabled()
+					.ignoresSafeArea()
+					.presentationDragIndicator(.hidden)
+					.overlay {
+						GeometryReader { geometry in
+							Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+						}
 					}
-				}
-				.onPreferenceChange(SizePreferenceKey.self) { value in
-					withAnimation {
-						sheetSize = value
+					.onPreferenceChange(SizePreferenceKey.self) { value in
+						withAnimation {
+							sheetSize = value
+						}
 					}
-				}
 			}
 		} else {
 			return Text("Available only on ios 17 or newer")
@@ -123,12 +122,18 @@ extension CLLocationCoordinate2D {
 	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
 }
 
+// MARK: - SizePreferenceKey
+
 struct SizePreferenceKey: PreferenceKey {
 	static var defaultValue: CGSize = .zero
+
+	// MARK: - Internal
+
 	static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
 		value = nextValue()
 	}
 }
+
 #Preview {
 	return ContentView(searchViewStore: .preview)
 }
