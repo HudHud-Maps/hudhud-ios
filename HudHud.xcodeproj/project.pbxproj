@@ -38,6 +38,8 @@
 		CBCD197C2B94AD22005DDA0A /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCD197B2B94AD22005DDA0A /* DateFormatter.swift */; };
 		CBCDB5182B91EF5400311C1B /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5172B91EF5400311C1B /* TrafficChartData.swift */; };
 		CBCDB5262B94735A00311C1B /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBCDB5252B94735A00311C1B /* TrafficChartView.swift */; };
+		CD01FD1F2BA1E2FF00BE712B /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD01FD1E2BA1E2FF00BE712B /* MapLibreSwiftDSL */; };
+		CD01FD212BA1E2FF00BE712B /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD01FD202BA1E2FF00BE712B /* MapLibreSwiftUI */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
@@ -50,8 +52,6 @@
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDAE05F02B6A8AED003E5196 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
-		CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */; };
-		CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */; };
 		CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05FF2B6BDC5A003E5196 /* ApplePOI */; };
 		CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06012B6BDC5A003E5196 /* POIService */; };
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
@@ -133,13 +133,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */,
+				CD01FD1F2BA1E2FF00BE712B /* MapLibreSwiftDSL in Frameworks */,
 				CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */,
 				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
-				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
 				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
+				CD01FD212BA1E2FF00BE712B /* MapLibreSwiftUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -396,12 +396,12 @@
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
-				CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */,
-				CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */,
 				CDAE05FF2B6BDC5A003E5196 /* ApplePOI */,
 				CDAE06012B6BDC5A003E5196 /* POIService */,
 				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
 				CD59BD702B7CD967002C14F6 /* SFSafeSymbols */,
+				CD01FD1E2BA1E2FF00BE712B /* MapLibreSwiftDSL */,
+				CD01FD202BA1E2FF00BE712B /* MapLibreSwiftUI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -479,10 +479,10 @@
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
-				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
 				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 				92F9E8DC39EB24F5D1517F69 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
+				CD01FD1D2BA1E2FF00BE712B /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -946,6 +946,14 @@
 				kind = branch;
 			};
 		};
+		CD01FD1D2BA1E2FF00BE712B /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
@@ -962,17 +970,19 @@
 				kind = branch;
 			};
 		};
-		CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
-			requirement = {
-				branch = "enhancement/camera-bounding-box";
-				kind = branch;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		CD01FD1E2BA1E2FF00BE712B /* MapLibreSwiftDSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD01FD1D2BA1E2FF00BE712B /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftDSL;
+		};
+		CD01FD202BA1E2FF00BE712B /* MapLibreSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD01FD1D2BA1E2FF00BE712B /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftUI;
+		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
@@ -987,16 +997,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
 			productName = SwiftLocation;
-		};
-		CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
-			productName = MapLibreSwiftDSL;
-		};
-		CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
-			productName = MapLibreSwiftUI;
 		};
 		CDAE05FF2B6BDC5A003E5196 /* ApplePOI */ = {
 			isa = XCSwiftPackageProductDependency;
