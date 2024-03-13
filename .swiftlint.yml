@@ -25,6 +25,8 @@ line_length:
   ignores_urls: true
 file_length:
   warning: 500
+identifier_name:
+  min_length: 0
 empty_count:
   severity: warning
 cyclomatic_complexity:

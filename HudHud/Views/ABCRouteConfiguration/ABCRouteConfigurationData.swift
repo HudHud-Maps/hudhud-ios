@@ -7,57 +7,67 @@
 //
 
 import Foundation
+import POIService
 import SFSafeSymbols
 import SwiftUI
-import POIService
+
+// MARK: - ABCRouteConfigurationItem
 
 enum ABCRouteConfigurationItem: Hashable, Identifiable {
-	
-case myLocation
-case poi(POI)
 
-var id: Self {
+	case myLocation
+	case poi(POI)
 
-	   return self
-   }
+	var id: Self {
+		return self
+	}
 
-var name: String {
-	switch self {
-	case .myLocation:
-		return "My Location"
-	case .poi(let poi):
-		return poi.title
+	var name: String {
+		switch self {
+		case .myLocation:
+			return "My Location"
+		case let .poi(poi):
+			return poi.title
+		}
+	}
+
+	var icon: Image {
+		switch self {
+		case .myLocation:
+			return Image(systemSymbol: .location)
+		case .poi:
+			return Image(systemSymbol: .mappin)
+		}
 	}
 }
 
-var icon: Image {
-	switch self {
-	case .myLocation:
-		return Image(systemSymbol: .location)
-	case .poi:
-		return Image(systemSymbol: .mappin)
-	}
-}
-}
+// MARK: - Line
 
 struct Line: Shape {
 	var from: CGPoint
 	var to: CGPoint
 
-	func path(in rect: CGRect) -> Path {
-		Path { p in
-			p.move(to: from)
-			p.addLine(to: to)
+	// MARK: - Internal
+
+	func path(in _: CGRect) -> Path {
+		Path { path in
+			path.move(to: self.from)
+			path.addLine(to: self.to)
 		}
 	}
 }
 
+// MARK: - ItemBoundsKey
+
 struct ItemBoundsKey: PreferenceKey {
 	static let defaultValue: [ABCRouteConfigurationItem.ID: Anchor<CGRect>] = [:]
-	static func reduce(value: inout [ABCRouteConfigurationItem.ID : Anchor<CGRect>], nextValue: () -> [ABCRouteConfigurationItem.ID : Anchor<CGRect>]) {
+
+	// MARK: - Internal
+
+	static func reduce(value: inout [ABCRouteConfigurationItem.ID: Anchor<CGRect>], nextValue: () -> [ABCRouteConfigurationItem.ID: Anchor<CGRect>]) {
 		value.merge(nextValue(), uniquingKeysWith: { $1 })
 	}
-	
+
 }
 
 extension CGRect {
