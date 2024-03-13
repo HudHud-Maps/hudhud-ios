@@ -1,32 +1,37 @@
 //
-//  chartData.swift
+//  TrafficChartData.swift
 //  HudHud
 //
 //  Created by Fatima Aljaber on 27/02/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
+
 import Foundation
 import SwiftUI
+
+// MARK: - TrafficChartData
+
 struct TrafficChartData {
 
 	let date: Date
 	let traffic: [Double] // 24 items, 0:00 - 1:00 at index 0
 
 	var getSpecificTrafficRange: [HourTrafficData]? {
-		guard traffic.count == 24 else {
-			print("Warning: got traffic with unexpected number of elements: \(traffic.count)...")
+		guard self.traffic.count == 24 else {
+			print("Warning: got traffic with unexpected number of elements: \(self.traffic.count)...")
 			return nil
 		}
 		var tempData: [HourTrafficData] = []
-		for i in 9...23 {
-			if let dateRange = dateRangeForHour(hour: i) {
-				let hour = HourTrafficData(hour: dateRange, traffic: traffic[i])
+		for index in 9 ... 23 {
+			if let dateRange = dateRangeForHour(hour: index) {
+				let hour = HourTrafficData(hour: dateRange, traffic: traffic[index])
 				tempData.append(hour)
 			}
-
 		}
 		return tempData
 	}
+
+	// MARK: - Internal
 
 	func dateRangeForHour(hour: Int) -> Range<Date>? {
 		let calendar = Calendar.current
@@ -54,15 +59,17 @@ struct TrafficChartData {
 			return nil
 		}
 
-		return startDate..<endDate
+		return startDate ..< endDate
 	}
 }
+
+// MARK: - HourTrafficData
+
 struct HourTrafficData: Identifiable {
 	let hour: Range<Date>
 	let traffic: Double
 
 	var id: Range<Date> {
-		return hour
+		return self.hour
 	}
 }
-

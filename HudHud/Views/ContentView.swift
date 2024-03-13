@@ -43,6 +43,7 @@ struct ContentView: View {
 				SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 					.iconImage(constant: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(constant: .white)
+
 			}
 			.unsafeMapViewModifier { mapView in
 				mapView.showsUserLocation = self.showUserLocation
