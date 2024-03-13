@@ -32,17 +32,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "b8deecb8adc3b911de311ead5a13b98fbf2d7824"
+        "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463",
+        "version" : "0.0.2"
       }
     },
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "enhancement/camera-bounding-box",
-        "revision" : "9c78e13710f8d32b13ea533fbe7491b5790aedd6"
+        "branch" : "main",
+        "revision" : "497ab5f9474af1c417cd8d3618ddc69b68f21fb3"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "7af00c08880d375f2742ca55705abd69837fe6c3",
-        "version" : "0.0.2"
+        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
+        "version" : "0.0.3"
       }
     },
     {
@@ -86,8 +86,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax.git",
       "state" : {
-        "revision" : "6ad4ea24b01559dde0773e3d091f1b9e36175036",
-        "version" : "509.0.2"
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {
