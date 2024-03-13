@@ -16,9 +16,9 @@ import MapKit
 import MapLibre
 import MapLibreSwiftUI
 import POIService
+import SwiftLocation
 import SwiftUI
 import ToursprungPOI
-import SwiftLocation
 
 // MARK: - SearchSheet
 
@@ -96,32 +96,8 @@ struct SearchSheet: View {
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-			POIDetailSheet(poi: item) {
-				Task {
-					print("start")
-					
-					let location = Location()
-					try await location.requestPermission(.whenInUse)
-					guard let userLocation = try await location.requestLocation().location else {
-						return
-					}
-
-					let waypoint1 = Waypoint(location: userLocation)
-					let waypoint2 = Waypoint(coordinate: item.locationCoordinate)
-					
-					let waypoints = [
-						waypoint1,
-						waypoint2
-					]
-
-					let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
-					options.shapeFormat = .polyline6
-					options.distanceMeasurementSystem = .metric
-					options.attributeOptions = []
-
-					let results = try await Toursprung.shared.calculate(options)
-					self.route = results.routes.first
-				}
+			POIDetailSheet(poi: item) { routes in
+				self.route = routes.routes.first
 			} onMore: {
 				print("more")
 			}
