@@ -33,7 +33,7 @@ public class Toursprung {
 		var failureReason: String? {
 			switch self {
 			case .invalidUrl:
-				return "Caluclating route failed because url can't be created"
+				return "Calculating route failed because url can't be created"
 			case .invalidResponse:
 				return "Hudhud responded with invalid route"
 			}
@@ -106,36 +106,6 @@ public class Toursprung {
 }
 
 // MARK: - Private
-
-private extension Toursprung {
-
-	func dataTask(with url: URL, data: Data? = nil, completionHandler: @escaping (_ json: [String: Any]) -> Void, errorHandler: @escaping (_ error: Error) -> Void) -> URLSessionDataTask {
-		let request = URLRequest(url: url)
-
-		return URLSession.shared.dataTask(with: request as URLRequest) { data, response, error in
-			var json: [String: Any] = [:]
-			if let data, response?.mimeType == "application/json" {
-				do {
-					json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] ?? [:]
-				} catch {
-					errorHandler(ToursprungError.invalidResponse)
-					return
-				}
-			}
-
-			let apiStatusCode = json["code"] as? String
-			let apiMessage = json["message"] as? String
-			guard data != nil, error == nil, (apiStatusCode == nil && apiMessage == nil) || apiStatusCode == "Ok" else {
-				errorHandler(ToursprungError.invalidResponse)
-				return
-			}
-
-			DispatchQueue.main.async {
-				completionHandler(json)
-			}
-		}
-	}
-}
 
 private extension RouteOptions {
 
