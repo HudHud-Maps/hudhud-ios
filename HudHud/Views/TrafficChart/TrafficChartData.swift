@@ -1,10 +1,11 @@
 //
-//  chartData.swift
+//  TrafficChartData.swift
 //  HudHud
 //
 //  Created by Fatima Aljaber on 27/02/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
+
 import Foundation
 import SwiftUI
 

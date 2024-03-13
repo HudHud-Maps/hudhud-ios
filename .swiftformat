@@ -1,3 +1,4 @@
+--minversion 0.53.3
 --acronyms ID,URL,UUID
 --allman false
 --anonymousforeach convert

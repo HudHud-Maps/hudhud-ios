@@ -5,6 +5,7 @@
 //  Created by Fatima Aljaber on 27/02/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
+
 import Charts
 import SFSafeSymbols
 import SwiftUI
@@ -27,9 +28,7 @@ struct TrafficChartView: View {
 				)
 			}
 			.chartXAxis(content: {
-				AxisMarks(preset: .aligned, values: AxisMarkValues.stride(by: .hour,
-																		  count: 3))
-				{ _ in
+				AxisMarks(preset: .aligned, values: AxisMarkValues.stride(by: .hour, count: 3)) { _ in
 					AxisGridLine()
 					AxisValueLabel(format: .dateTime.hour())
 				}
@@ -41,17 +40,19 @@ struct TrafficChartView: View {
 			}
 			.chartYScale(domain: 0 ... 1)
 		} else {
-			Label("Bad Traffic Data", systemImage: "exclamationmark.triangle")
+			Label("Bad Traffic Data", systemSymbol: .exclamationmarkTriangle)
 		}
 	}
 }
 
 #Preview {
-	VStack(alignment: .leading) {
+	let trafic = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0, 0.1, 0.1, 0.2, 0.4, 0.9, 0.9, 0.8, 0.8, 0.6, 0.4, 0.0, 0.0, 0.0]
+
+	return VStack(alignment: .leading) {
 		Text("Traffic")
 			.font(.title)
 			.frame(width: .infinity)
-		TrafficChartView(chartData: TrafficChartData(date: Date(), traffic: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0, 0.1, 0.1, 0.2, 0.4, 0.9, 0.9, 0.8, 0.8, 0.6, 0.4, 0.0, 0.0, 0.0]))
+		TrafficChartView(chartData: TrafficChartData(date: Date(), traffic: trafic))
 			.frame(maxHeight: 200)
 
 		Spacer()

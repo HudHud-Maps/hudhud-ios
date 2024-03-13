@@ -39,10 +39,10 @@
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "enhancement/camera-bounding-box",
-        "revision" : "dfc75263c7ae2b9c5601e28db924ffcf7e7f640f"
+        "branch" : "main",
+        "revision" : "497ab5f9474af1c417cd8d3618ddc69b68f21fb3"
       }
     },
     {
