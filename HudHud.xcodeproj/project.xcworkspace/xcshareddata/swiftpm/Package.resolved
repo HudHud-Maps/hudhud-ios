@@ -3,10 +3,10 @@
     {
       "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
+      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "7b6881dea4a4ea3abcea0abc1eff64c6eb416c01",
-        "version" : "6.1.0"
+        "revision" : "92505cfbad5c5ed6a93e0f3cd70872aaa98a12ac",
+        "version" : "6.2.0"
       }
     },
     {
@@ -14,17 +14,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "507939d324a6296554894e1a534bb3f9c91a82d8"
+        "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463",
+        "version" : "0.0.2"
       }
     },
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "enhancement/camera-bounding-box",
-        "revision" : "9c78e13710f8d32b13ea533fbe7491b5790aedd6"
+        "branch" : "main",
+        "revision" : "497ab5f9474af1c417cd8d3618ddc69b68f21fb3"
       }
     },
     {
