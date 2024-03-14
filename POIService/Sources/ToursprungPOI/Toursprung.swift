@@ -96,7 +96,7 @@ public class Toursprung {
 			throw ToursprungError.invalidResponse
 		}
 
-		let response = options.response(from: json)
+		let response = try options.response(from: json)
 		for route in response.routes {
 			route.routeIdentifier = json["uuid"] as? String
 		}
@@ -139,15 +139,15 @@ private extension RouteOptions {
 		}
 	}
 
-	func response(from json: JSONDictionary) -> (waypoint: [Waypoint], routes: [Route]) {
+	func response(from json: JSONDictionary) throws -> (waypoint: [Waypoint], routes: [Route]) {
 		var namedWaypoints: [Waypoint] = []
 		if let jsonWaypoints = (json["waypoints"] as? [JSONDictionary]) {
-			namedWaypoints = zip(jsonWaypoints, self.waypoints).compactMap { api, local -> Waypoint? in
+			namedWaypoints = try zip(jsonWaypoints, self.waypoints).compactMap { api, local -> Waypoint? in
 				guard let location = api["location"] as? [Double] else {
 					return nil
 				}
 
-				let coordinate = CLLocationCoordinate2D(geoJSON: location)
+				let coordinate = try CLLocationCoordinate2D(geoJSON: location)
 				let possibleAPIName = api["name"] as? String
 				let apiName = possibleAPIName?.nonEmptyString
 				return Waypoint(coordinate: coordinate, name: local.name ?? apiName)
@@ -163,20 +163,52 @@ private extension RouteOptions {
 
 public extension CLLocationCoordinate2D {
 
-	init(geoJSON array: [Double]) {
-		assert(array.count == 2)
+	enum GeoJSONError: LocalizedError {
+		case invalidCoordinates
+		case invalidType
+
+		public var errorDescription: String? {
+			switch self {
+			case .invalidCoordinates:
+				"Can not read coordinates"
+			case .invalidType:
+				"Expecting different GeoJSON type"
+			}
+		}
+
+		public var failureReason: String? {
+			switch self {
+			case .invalidCoordinates:
+				"data has more or less then 2 coordinates, expecting exactly 2"
+			case .invalidType:
+				"type should be either LineString or Point"
+			}
+		}
+	}
+
+	init(geoJSON array: [Double]) throws {
+		guard array.count == 2 else {
+			throw GeoJSONError.invalidCoordinates
+		}
+
 		self.init(latitude: array[1], longitude: array[0])
 	}
 
-	init(geoJSON point: JSONDictionary) {
-		assert(point["type"] as? String == "Point")
-		self.init(geoJSON: point["coordinates"] as? [Double] ?? [])
+	init(geoJSON point: JSONDictionary) throws {
+		guard point["type"] as? String == "Point" else {
+			throw GeoJSONError.invalidType
+		}
+
+		try self.init(geoJSON: point["coordinates"] as? [Double] ?? [])
 	}
 
-	static func coordinates(geoJSON lineString: JSONDictionary) -> [CLLocationCoordinate2D] {
+	static func coordinates(geoJSON lineString: JSONDictionary) throws -> [CLLocationCoordinate2D] {
 		let type = lineString["type"] as? String
-		assert(type == "LineString" || type == "Point")
+		guard type == "LineString" || type == "Point" else {
+			throw GeoJSONError.invalidType
+		}
+
 		let coordinates = lineString["coordinates"] as? [[Double]] ?? []
-		return coordinates.map { self.init(geoJSON: $0) }
+		return try coordinates.map { try self.init(geoJSON: $0) }
 	}
 }
