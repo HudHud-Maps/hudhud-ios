@@ -15,20 +15,18 @@ class NotificationQueue: ObservableObject {
 
 	var queue: [Notification] = [] {
 		didSet {
-			self.currentNotification = self.queue.first
+			if self.currentNotification != self.queue.first {
+				self.currentNotification = self.queue.first
+			}
 		}
 	}
 
-	@Published var currentNotification: Notification? {
-		didSet {
-			print(#function)
-		}
-	}
+	@Published var currentNotification: Notification?
 }
 
 // MARK: - Notification
 
-struct Notification: Identifiable {
+struct Notification: Identifiable, Equatable {
 	var id: String
 	let error: Error
 
@@ -53,6 +51,12 @@ struct Notification: Identifiable {
 	init(error: Error) {
 		self.error = error
 		self.id = String(describing: error)
+	}
+
+	// MARK: - Internal
+
+	static func == (lhs: Notification, rhs: Notification) -> Bool {
+		return lhs.id == rhs.id
 	}
 }
 

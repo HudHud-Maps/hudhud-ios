@@ -77,12 +77,14 @@ struct ContentView: View {
 				.ignoresSafeArea()
 		}
 		.environmentObject(self.notificationQueue)
-		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification) {
+		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
+			self.notificationQueue.queue.removeFirst()
+		}, content: {
 			if let notification = self.notificationQueue.currentNotification {
 				NotificationBanner(notification: notification)
 					.padding(.horizontal, 8)
 			}
-		}
+		})
 	}
 
 	// MARK: - Lifecycle
