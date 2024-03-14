@@ -30,23 +30,27 @@ class NotificationQueue: ObservableObject {
 
 struct Notification: Identifiable {
 	var id: String
-	let error: LocalizedError
+	let error: Error
 
 	var title: String {
 		self.error.localizedDescription
 	}
 
 	var message: String? {
-		self.error.recoverySuggestion ?? self.error.failureReason
+		guard let error = error as? LocalizedError else { return nil }
+
+		return error.recoverySuggestion ?? error.failureReason
 	}
 
 	var hint: String? {
-		self.error.helpAnchor
+		guard let error = error as? LocalizedError else { return nil }
+
+		return error.helpAnchor
 	}
 
 	// MARK: - Lifecycle
 
-	init(error: LocalizedError) {
+	init(error: Error) {
 		self.error = error
 		self.id = String(describing: error)
 	}
@@ -64,11 +68,11 @@ struct NotificationBanner: View {
 				VStack(alignment: .leading, spacing: 2) {
 					Text(self.notification.title)
 						.bold()
-					if let message = notification.message {
+					if let message = self.notification.message {
 						Text(message)
 							.font(Font.system(size: 15, weight: Font.Weight.light, design: Font.Design.default))
 					}
-					if let hint = notification.hint {
+					if let hint = self.notification.hint {
 						Text(hint)
 							.font(Font.system(size: 12, weight: Font.Weight.light, design: Font.Design.default))
 							.foregroundStyle(.secondary)

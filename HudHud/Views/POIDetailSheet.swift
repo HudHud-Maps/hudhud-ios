@@ -137,10 +137,10 @@ struct POIDetailSheet: View {
 
 				let results = try await Toursprung.shared.calculate(options)
 				self.routes = results
-			} catch let error as LocalizedError {
+			} catch {
 				let notification = Notification(error: error)
 				self.notificationQueue.queue.append(notification)
-			} catch {}
+			}
 		}
 	}
 }
