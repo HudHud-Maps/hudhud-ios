@@ -84,6 +84,7 @@
 /* Begin PBXFileReference section */
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
 		1A4E51E53CFC5BED60CEEF02 /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
+		2A0C7AB3DB5AAC742AACA9C5 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		453101CB8634C19220B7782E /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
@@ -263,6 +264,7 @@
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
+				D0267128BA08EE3AC453206D /* Recovered References */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -331,6 +333,14 @@
 				CB371D6A1FB062B30086E096 /* DirectionModePickerView.swift */,
 			);
 			path = DirectionsModePicker;
+			sourceTree = "<group>";
+		};
+		D0267128BA08EE3AC453206D /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				2A0C7AB3DB5AAC742AACA9C5 /* DateFormatter.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		D14C3F8A5C428C7F0A18A65A /* Views */ = {
