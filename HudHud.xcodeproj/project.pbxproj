@@ -418,6 +418,7 @@
 			dependencies = (
 				5CB543AFA224B64F7B5401D6 /* PBXTargetDependency */,
 				5A98823C79188DFBDDF16D42 /* PBXTargetDependency */,
+				6F6CB97507361CBB16197499 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -432,6 +433,8 @@
 				31A24BF1E1C364F453AEEBE7 /* MapboxNavigation */,
 				E1DA05979324EAFBADF2828B /* MapLibre */,
 				FC228A2C18F3829C46512F1D /* MapboxNavigation */,
+				DBFA9049A6ECF913B615D50B /* MapLibre */,
+				B0FB843F55386ADCA2BBD7BF /* MapboxNavigation */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -519,6 +522,9 @@
 				2C7944DCD063742330A6303E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */,
 				65488B6EA332631DF59CDBA1 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */,
 				E793B047C82CC32027F7E98A /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */,
+				F3AFE1BD9B6AB6BF1526115B /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */,
+				2B0FFAA73CEEEB236410EDDB /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */,
+				4A6C89E58C5EC9F40AC8F5EB /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -657,6 +663,9 @@
 			isa = PBXTargetDependency;
 		};
 		5CB543AFA224B64F7B5401D6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
+		6F6CB97507361CBB16197499 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
@@ -989,12 +998,28 @@
 				kind = branch;
 			};
 		};
+		2B0FFAA73CEEEB236410EDDB /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
+			requirement = {
+				branch = "feature/swift-package-manager";
+				kind = branch;
+			};
+		};
 		2C7944DCD063742330A6303E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.2.0;
+			};
+		};
+		4A6C89E58C5EC9F40AC8F5EB /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 		65488B6EA332631DF59CDBA1 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
@@ -1011,6 +1036,14 @@
 			requirement = {
 				branch = "feature/swift-package-manager";
 				kind = branch;
+			};
+		};
+		8825465E818702D93FA99652 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.0;
 			};
 		};
 		8A7CD7CCE8F7C5F2D7AF03BB /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
@@ -1043,6 +1076,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.2.0;
+			};
+		};
+		B0F4BBDECE2FAACDE8AFB175 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
+			requirement = {
+				branch = "feature/swift-package-manager";
+				kind = branch;
 			};
 		};
 		B75CADC6BE4D8B2AE5124528 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
@@ -1093,6 +1134,14 @@
 				kind = branch;
 			};
 		};
+		F3AFE1BD9B6AB6BF1526115B /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1105,6 +1154,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AD15FF1FE7982C5631F8D62E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
 			productName = MapLibre;
+		};
+		B0FB843F55386ADCA2BBD7BF /* MapboxNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B0F4BBDECE2FAACDE8AFB175 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */;
+			productName = MapboxNavigation;
 		};
 		CD01FD1E2BA1E2FF00BE712B /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1137,6 +1191,11 @@
 		CDAE06032B6BDC5A003E5196 /* ToursprungPOI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ToursprungPOI;
+		};
+		DBFA9049A6ECF913B615D50B /* MapLibre */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8825465E818702D93FA99652 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
+			productName = MapLibre;
 		};
 		E1DA05979324EAFBADF2828B /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
