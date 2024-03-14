@@ -25,10 +25,10 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
-
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
+	@State private var showMapLayar: Bool = false
 	@State var sheetSize: CGSize = .zero
 
 	var body: some View {
@@ -66,12 +66,26 @@ struct ContentView: View {
 			.padding()
 		}
 		.safeAreaInset(edge: .bottom, alignment: .trailing) {
-			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$mapStore.camera)
-				ProviderButton(searchViewStore: self.searchViewStore)
+			HStack(alignment: .bottom) {
+				MapButtonsView(mapButtonsData: [
+					MapButtonData(sfSymbol: .map) {
+						self.showMapLayar.toggle()
+					},
+					MapButtonData(sfSymbol: .location) {
+						print("Location button tapped")
+					},
+					MapButtonData(sfSymbol: .cube) {
+						print("Location button tapped")
+					}
+				])
+				Spacer()
+				VStack(alignment: .trailing) {
+					CurrentLocationButton(camera: self.$mapStore.camera)
+					ProviderButton(searchViewStore: self.searchViewStore)
+				}
 			}
 			.opacity(self.sheetSize.height > 200 ? 0 : 1)
-			.padding(.trailing)
+			.padding(.horizontal)
 		}
 		.backport.safeArea(self.sheetSize.height)
 		.sheet(isPresented: self.$mapStore.searchShown) {
@@ -93,6 +107,26 @@ struct ContentView: View {
 				.onPreferenceChange(SizePreferenceKey.self) { value in
 					withAnimation {
 						self.sheetSize = value
+					}
+				}
+				.sheet(isPresented: self.$showMapLayar) {
+					VStack(alignment: .center, spacing: 30) {
+						HStack(alignment: .center) {
+							Spacer()
+							Text("Layers")
+								.foregroundStyle(.primary)
+							Spacer()
+							Button {
+								self.showMapLayar.toggle()
+							} label: {
+								Image(systemSymbol: .xmark)
+									.foregroundColor(.secondary)
+							}
+						}
+						.padding(.horizontal, 30)
+						MainLayersView(mapLayerData: MapLayersData.getLayers())
+							.presentationCornerRadius(21)
+							.presentationDetents([.medium])
 					}
 				}
 		}
