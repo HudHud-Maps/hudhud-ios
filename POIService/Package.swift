@@ -24,7 +24,8 @@ let package = Package(
 		)
 	],
 	dependencies: [
-		.package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "4.1.1")
+		.package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "4.1.1"),
+		.package(url: "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git", branch: "feature/swift-package-manager")
 	],
 	targets: [
 		// Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -32,7 +33,8 @@ let package = Package(
 		.target(
 			name: "POIService",
 			dependencies: [
-				.product(name: "SFSafeSymbols", package: "SFSafeSymbols")
+				.product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
+				.product(name: "MapboxNavigation", package: "maplibre-navigation-ios")
 			]
 		),
 		.target(
