@@ -9,10 +9,17 @@
 import ApplePOI
 import Combine
 import Foundation
+import MapboxCoreNavigation
+import MapboxDirections
+import MapboxNavigation
+import MapKit
+import MapLibre
 import MapLibreSwiftUI
 import POIService
 import SwiftUI
 import ToursprungPOI
+
+// MARK: - SearchSheet
 
 struct SearchSheet: View {
 
@@ -22,6 +29,8 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
+
+	@State private var route: Route?
 
 	var body: some View {
 		return VStack {
@@ -87,7 +96,24 @@ struct SearchSheet: View {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
 			POIDetailSheet(poi: item) {
-				print("start")
+				Task {
+					print("start")
+
+					let riyadh = CLLocation(latitude: 24.736054, longitude: 46.718932)
+					let jeddah = CLLocation(latitude: 21.561995, longitude: 39.202545)
+					let waypoints = [
+						riyadh,
+						jeddah
+					].map { Waypoint(location: $0) }
+
+					let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
+					options.shapeFormat = .polyline6
+					options.distanceMeasurementSystem = .metric
+					options.attributeOptions = []
+
+					let results = try await Toursprung.shared.calculate(options)
+					self.route = results.routes.first
+				}
 			} onMore: {
 				print("more")
 			}
@@ -97,6 +123,10 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
+			.sheet(item: self.$route) { route in
+				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+				NavigationView(route: route, styleURL: styleURL)
+			}
 		}
 	}
 
@@ -125,3 +155,5 @@ struct SearchSheet: View {
 							searchStore: .init(mode: .preview))
 	return sheet
 }
+
+extension Route: Identifiable {}
