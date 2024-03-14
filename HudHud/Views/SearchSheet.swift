@@ -84,7 +84,7 @@ struct SearchSheet: View {
 						self.show(row: item.wrappedValue)
 					}
 				}, label: {
-					SearchResultItem(prediction: item.wrappedValue)
+					SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
 						.frame(maxWidth: .infinity)
 				})
 				.listRowSeparator(.hidden)

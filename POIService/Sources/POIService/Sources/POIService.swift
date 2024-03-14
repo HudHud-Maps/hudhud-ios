@@ -76,7 +76,21 @@ public extension POI {
 	}
 }
 
-// MARK: CustomStringConvertible
+public extension POI {
+
+	var iconColor: Color {
+		switch self.type.lowercased() {
+		case "cafe":
+			return .brown
+		case "restaurant":
+			return .orange
+		default:
+			return .blue
+		}
+	}
+}
+
+// MARK: - CustomStringConvertible
 
 extension POI: CustomStringConvertible {
 	public var description: String {
@@ -93,4 +107,8 @@ public extension POI {
 							   subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
 							   locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
 							   type: "Cafe")
+	static let publicPlace = POI(title: "publicPlace",
+								 subtitle: "Garden - Alyasmen - Riyadh",
+								 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+								 type: "publicPlace")
 }
