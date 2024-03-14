@@ -65,14 +65,11 @@ struct ContentView: View {
 			.presentationBackground(.thinMaterial)
 			.padding()
 		}
-		.safeAreaInset(edge: .bottom, alignment: .trailing) {
+		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
 				MapButtonsView(mapButtonsData: [
 					MapButtonData(sfSymbol: .map) {
 						self.showMapLayar.toggle()
-					},
-					MapButtonData(sfSymbol: .location) {
-						print("Location button tapped")
 					},
 					MapButtonData(sfSymbol: .cube) {
 						print("Location button tapped")
