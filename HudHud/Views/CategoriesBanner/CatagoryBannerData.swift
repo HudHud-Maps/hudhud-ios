@@ -24,4 +24,33 @@ struct CatagoryBannerData: Identifiable {
 		self.title = title
 		self.iconSystemName = iconSystemName
 	}
+	
+	// MARK: - Test Data
+		
+		static let cateoryBannerFakeDate = [
+			CatagoryBannerData(
+				buttonColor: Color(UIColor.systemBackground),
+				textColor: .green,
+				title: "Resturant",
+				iconSystemName: "fork.knife"
+			),
+			CatagoryBannerData(
+				buttonColor: Color(UIColor.systemBackground),
+				textColor: .brown,
+				title: "Shop",
+				iconSystemName: "bag.circle.fill"
+			),
+			CatagoryBannerData(
+				buttonColor: Color(UIColor.systemBackground),
+				textColor: .orange,
+				title: "Hotels",
+				iconSystemName: "bed.double.fill"
+			),
+			CatagoryBannerData(
+				buttonColor: Color(UIColor.systemBackground),
+				textColor: .yellow,
+				title: "Coffee Shop",
+				iconSystemName: "cup.and.saucer.fill"
+			)
+		]
 }

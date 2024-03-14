@@ -29,6 +29,7 @@ struct ContentView: View {
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
+	@State var sheetSize: CGSize = .zero
 
 	var body: some View {
 		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -56,13 +57,23 @@ struct ContentView: View {
 			self.showUserLocation = self.locationManager.authorizationStatus == .authorizedWhenInUse
 		}
 		.ignoresSafeArea()
-		.safeAreaInset(edge: .top, alignment: .trailing) {
+		.safeAreaInset(edge: .top, alignment: .center) {
+			VStack {
+				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
+				Spacer()
+			}
+			.presentationBackground(.thinMaterial)
+			.padding()
+		}
+		.safeAreaInset(edge: .bottom, alignment: .trailing) {
 			VStack(alignment: .trailing) {
 				CurrentLocationButton(camera: self.$mapStore.camera)
 				ProviderButton(searchViewStore: self.searchViewStore)
 			}
-			.padding()
+			.opacity(self.sheetSize.height > 200 ? 0 : 1)
+			.padding(.trailing)
 		}
+		.backport.safeArea(self.sheetSize.height)
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -73,6 +84,17 @@ struct ContentView: View {
 				)
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
+				.presentationDragIndicator(.hidden)
+				.overlay {
+					GeometryReader { geometry in
+						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+					}
+				}
+				.onPreferenceChange(SizePreferenceKey.self) { value in
+					withAnimation {
+						self.sheetSize = value
+					}
+				}
 		}
 	}
 
@@ -89,12 +111,24 @@ struct ContentView: View {
 }
 
 extension PresentationDetent {
-	static let small: PresentationDetent = .height(100)
+	static let small: PresentationDetent = .height(80)
 	static let third: PresentationDetent = .fraction(0.33)
 }
 
 extension CLLocationCoordinate2D {
 	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
+}
+
+// MARK: - SizePreferenceKey
+
+struct SizePreferenceKey: PreferenceKey {
+	static var defaultValue: CGSize = .zero
+
+	// MARK: - Internal
+
+	static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+		value = nextValue()
+	}
 }
 
 #Preview {
