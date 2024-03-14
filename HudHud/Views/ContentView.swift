@@ -13,6 +13,7 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SFSafeSymbols
+import SimpleToast
 import SwiftLocation
 import SwiftUI
 import ToursprungPOI
@@ -29,6 +30,7 @@ struct ContentView: View {
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
+	@StateObject var notificationQueue: NotificationQueue = .init()
 
 	var body: some View {
 		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -74,6 +76,13 @@ struct ContentView: View {
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
 		}
+		.environmentObject(self.notificationQueue)
+		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification) {
+			if let notification = self.notificationQueue.currentNotification {
+				NotificationBanner(notification: notification)
+					.padding(.horizontal, 8)
+			}
+		}
 	}
 
 	// MARK: - Lifecycle
@@ -95,6 +104,10 @@ extension PresentationDetent {
 
 extension CLLocationCoordinate2D {
 	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
+}
+
+extension SimpleToastOptions {
+	static let notification = SimpleToastOptions(alignment: .top, hideAfter: 5, modifierType: .slide)
 }
 
 #Preview {
