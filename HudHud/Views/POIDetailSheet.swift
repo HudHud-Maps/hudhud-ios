@@ -139,7 +139,7 @@ struct POIDetailSheet: View {
 				self.routes = results
 			} catch {
 				let notification = Notification(error: error)
-				self.notificationQueue.queue.append(notification)
+				self.notificationQueue.add(notification: notification)
 			}
 		}
 	}

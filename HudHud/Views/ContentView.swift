@@ -78,7 +78,7 @@ struct ContentView: View {
 		}
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
-			self.notificationQueue.queue.removeFirst()
+			self.notificationQueue.removeFirst()
 		}, content: {
 			if let notification = self.notificationQueue.currentNotification {
 				NotificationBanner(notification: notification)

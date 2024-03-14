@@ -13,7 +13,7 @@ import ToursprungPOI
 
 class NotificationQueue: ObservableObject {
 
-	var queue: [Notification] = [] {
+	private var queue: [Notification] = [] {
 		didSet {
 			if self.currentNotification != self.queue.first {
 				self.currentNotification = self.queue.first
@@ -22,6 +22,16 @@ class NotificationQueue: ObservableObject {
 	}
 
 	@Published var currentNotification: Notification?
+
+	// MARK: - Internal
+
+	func add(notification: Notification) {
+		self.queue.append(notification)
+	}
+
+	func removeFirst() {
+		self.queue.removeFirst()
+	}
 }
 
 // MARK: - Notification
