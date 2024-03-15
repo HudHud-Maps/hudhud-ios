@@ -17,8 +17,8 @@ struct IconButton: ButtonStyle {
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
-			.padding(.horizontal,15)
-			.padding(.vertical,8)
+			.padding(.horizontal, 15)
+			.padding(.vertical, 8)
 			.foregroundStyle(self.foregroundColor ?? .black)
 			.bold()
 			.background(self.backgroundColor)

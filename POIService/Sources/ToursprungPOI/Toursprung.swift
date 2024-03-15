@@ -17,11 +17,11 @@ public typealias JSONDictionary = [String: Any]
 
 public class Toursprung {
 
-	enum ToursprungError: LocalizedError {
+	public enum ToursprungError: LocalizedError {
 		case invalidUrl
 		case invalidResponse
 
-		var errorDescription: String? {
+		public var errorDescription: String? {
 			switch self {
 			case .invalidUrl:
 				return "Calculating route failed"
@@ -30,7 +30,7 @@ public class Toursprung {
 			}
 		}
 
-		var failureReason: String? {
+		public var failureReason: String? {
 			switch self {
 			case .invalidUrl:
 				return "Calculating route failed because url can't be created"
@@ -39,7 +39,7 @@ public class Toursprung {
 			}
 		}
 
-		var recoverySuggestion: String? {
+		public var recoverySuggestion: String? {
 			switch self {
 			case .invalidUrl:
 				return "Retry with another destination"
@@ -48,7 +48,7 @@ public class Toursprung {
 			}
 		}
 
-		var helpAnchor: String? {
+		public var helpAnchor: String? {
 			switch self {
 			case .invalidUrl:
 				return "Search for another location and start navigation to there"

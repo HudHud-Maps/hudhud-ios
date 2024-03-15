@@ -16,6 +16,7 @@ import MapKit
 import MapLibre
 import MapLibreSwiftUI
 import POIService
+import SwiftLocation
 import SwiftUI
 import ToursprungPOI
 
@@ -95,25 +96,8 @@ struct SearchSheet: View {
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-			POIDetailSheet(poi: item) {
-				Task {
-					print("start")
-
-					let riyadh = CLLocation(latitude: 24.736054, longitude: 46.718932)
-					let jeddah = CLLocation(latitude: 21.561995, longitude: 39.202545)
-					let waypoints = [
-						riyadh,
-						jeddah
-					].map { Waypoint(location: $0) }
-
-					let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
-					options.shapeFormat = .polyline6
-					options.distanceMeasurementSystem = .metric
-					options.attributeOptions = []
-
-					let results = try await Toursprung.shared.calculate(options)
-					self.route = results.routes.first
-				}
+			POIDetailSheet(poi: item) { routes in
+				self.route = routes.routes.first
 			} onMore: {
 				print("more")
 			}
