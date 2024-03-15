@@ -22,6 +22,7 @@ struct CategoriesBannerView: View {
 					}.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
 				}
 			}
+			.padding(.horizontal)
 		}
 		.scrollIndicators(.hidden)
 	}

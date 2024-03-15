@@ -22,7 +22,7 @@ struct CatagoryBannerData: Identifiable {
 		CatagoryBannerData(
 			buttonColor: Color(UIColor.systemBackground),
 			textColor: .green,
-			title: "Resturant",
+			title: "Restaurant",
 			iconSystemName: "fork.knife"
 		),
 		CatagoryBannerData(

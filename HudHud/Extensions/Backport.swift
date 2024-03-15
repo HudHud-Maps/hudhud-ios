@@ -22,11 +22,11 @@ public struct Backport<Content> {
 }
 
 extension Backport where Content: View {
-	@ViewBuilder func safeArea(_ sheetSize: CGFloat) -> some View {
+	@ViewBuilder func safeAreaPadding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> some View {
 		if #available(iOS 17, *) {
-			content.safeAreaPadding(.bottom, sheetSize)
+			content.safeAreaPadding(edges, length)
 		} else {
-			self.content.padding(.bottom, 100)
+			self.content.padding(edges, 100)
 		}
 	}
 }

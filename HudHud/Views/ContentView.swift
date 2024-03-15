@@ -26,11 +26,11 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
-
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
 	@StateObject var notificationQueue: NotificationQueue = .init()
+	@State private var showMapLayer: Bool = false
 	@State var sheetSize: CGSize = .zero
 
 	var body: some View {
@@ -60,22 +60,29 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			VStack {
-				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
+			CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
+				.presentationBackground(.thinMaterial)
+		}
+		.safeAreaInset(edge: .bottom) {
+			HStack(alignment: .bottom) {
+				MapButtonsView(mapButtonsData: [
+					MapButtonData(sfSymbol: .map) {
+						self.showMapLayer.toggle()
+					},
+					MapButtonData(sfSymbol: .cube) {
+						print("Location button tapped")
+					}
+				])
 				Spacer()
+				VStack(alignment: .trailing) {
+					CurrentLocationButton(camera: self.$mapStore.camera)
+					ProviderButton(searchViewStore: self.searchViewStore)
+				}
 			}
-			.presentationBackground(.thinMaterial)
-			.padding()
+			.opacity(self.sheetSize.height > 500 ? 0 : 1)
+			.padding(.horizontal)
 		}
-		.safeAreaInset(edge: .bottom, alignment: .trailing) {
-			VStack(alignment: .trailing) {
-				CurrentLocationButton(camera: self.$mapStore.camera)
-				ProviderButton(searchViewStore: self.searchViewStore)
-			}
-			.opacity(self.sheetSize.height > 200 ? 0 : 1)
-			.padding(.trailing)
-		}
-		.backport.safeArea(self.sheetSize.height)
+		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -95,6 +102,26 @@ struct ContentView: View {
 				.onPreferenceChange(SizePreferenceKey.self) { value in
 					withAnimation {
 						self.sheetSize = value
+					}
+				}
+				.sheet(isPresented: self.$showMapLayer) {
+					VStack(alignment: .center, spacing: 30) {
+						HStack(alignment: .center) {
+							Spacer()
+							Text("Layers")
+								.foregroundStyle(.primary)
+							Spacer()
+							Button {
+								self.showMapLayer.toggle()
+							} label: {
+								Image(systemSymbol: .xmark)
+									.foregroundColor(.secondary)
+							}
+						}
+						.padding(.horizontal, 30)
+						MainLayersView(mapLayerData: MapLayersData.getLayers())
+							.presentationCornerRadius(21)
+							.presentationDetents([.medium])
 					}
 				}
 		}
