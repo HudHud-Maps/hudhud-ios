@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftUI
 
 struct MapButtonsView: View {

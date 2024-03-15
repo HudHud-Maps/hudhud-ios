@@ -8,6 +8,7 @@
 
 import MapLibre
 import MapLibreSwiftUI
+import OSLog
 import SFSafeSymbols
 import SwiftLocation
 import SwiftUI
@@ -29,10 +30,10 @@ struct CurrentLocationButton: View {
 							self.camera = MapViewCamera.center(coordinates, zoom: 10)
 						}
 					} else {
-						print("location error: got no coordinates")
+						Logger.searchView.error("location error: got no coordinates")
 					}
 				} catch {
-					print("location error: \(error)")
+					Logger.searchView.error("location error: \(error)")
 				}
 			}
 		} label: {

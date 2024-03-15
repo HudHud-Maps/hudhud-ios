@@ -10,6 +10,7 @@ import CoreLocation
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
+import OSLog
 import POIService
 import SFSafeSymbols
 import SimpleToast
@@ -149,8 +150,8 @@ struct POIDetailSheet: View {
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
 	return POIDetailSheet(poi: poi) { _ in
-		print("start")
+		Logger.searchView.info("Start \(poi)")
 	} onMore: {
-		print("more")
+		Logger.searchView.info("More \(poi)")
 	}
 }
