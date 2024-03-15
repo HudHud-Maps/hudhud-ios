@@ -6,13 +6,13 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
 import OSLog
+import SwiftUI
 
 struct ProviderButton: View {
-	
+
 	@ObservedObject var searchViewStore: SearchViewStore
-	
+
 	var body: some View {
 		Button {
 			switch self.searchViewStore.mode {
@@ -36,7 +36,7 @@ struct ProviderButton: View {
 		.frame(minWidth: 44, minHeight: 44)
 		.background {
 			RoundedRectangle(cornerRadius: 10)
-				.fill(Material.regular)
+				.fill(Material.thickMaterial)
 		}
 	}
 }

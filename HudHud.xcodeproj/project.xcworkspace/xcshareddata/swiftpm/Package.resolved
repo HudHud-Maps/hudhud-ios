@@ -1,12 +1,30 @@
 {
   "pins" : [
     {
+      "identity" : "mapbox-directions-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
+      "state" : {
+        "revision" : "6c19ecc4e1324887ae3250802b8d13d8d8b3ff2d",
+        "version" : "0.23.3"
+      }
+    },
+    {
       "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution",
+      "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "7b6881dea4a4ea3abcea0abc1eff64c6eb416c01",
-        "version" : "6.1.0"
+        "revision" : "92505cfbad5c5ed6a93e0f3cd70872aaa98a12ac",
+        "version" : "6.2.0"
+      }
+    },
+    {
+      "identity" : "maplibre-navigation-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git",
+      "state" : {
+        "branch" : "feature/swift-package-manager",
+        "revision" : "929d70bbfff3f0d0941084a0b037585d1cb133bc"
       }
     },
     {
@@ -14,17 +32,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "b8deecb8adc3b911de311ead5a13b98fbf2d7824"
+        "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463",
+        "version" : "0.0.2"
       }
     },
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "enhancement/camera-bounding-box",
-        "revision" : "9c78e13710f8d32b13ea533fbe7491b5790aedd6"
+        "branch" : "main",
+        "revision" : "497ab5f9474af1c417cd8d3618ddc69b68f21fb3"
       }
     },
     {
@@ -32,8 +50,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "7af00c08880d375f2742ca55705abd69837fe6c3",
-        "version" : "0.0.2"
+        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
+        "version" : "0.0.3"
+      }
+    },
+    {
+      "identity" : "polyline",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/raphaelmor/Polyline",
+      "state" : {
+        "revision" : "353f80378dcd8f17eefe8550090c6b1ae3c9da23",
+        "version" : "5.1.0"
       }
     },
     {
@@ -46,12 +73,30 @@
       }
     },
     {
+      "identity" : "simpletoast",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sanzaru/SimpleToast",
+      "state" : {
+        "revision" : "8dbc2e7c33cda25c0b2efafd59716cb9820c83eb",
+        "version" : "0.8.1"
+      }
+    },
+    {
+      "identity" : "solar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ceeK/Solar.git",
+      "state" : {
+        "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
+        "version" : "3.0.1"
+      }
+    },
+    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-syntax.git",
       "state" : {
-        "revision" : "6ad4ea24b01559dde0773e3d091f1b9e36175036",
-        "version" : "509.0.2"
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
       }
     },
     {
@@ -70,6 +115,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
+      }
+    },
+    {
+      "identity" : "turf-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/flitsmeister/turf-swift",
+      "state" : {
+        "revision" : "b05b4658d1b48eac4127a0d9ebbb5a6f965a8251",
+        "version" : "0.2.2"
       }
     }
   ],

@@ -8,10 +8,10 @@
 
 import MapLibre
 import MapLibreSwiftUI
+import OSLog
 import SFSafeSymbols
 import SwiftLocation
 import SwiftUI
-import OSLog
 
 struct CurrentLocationButton: View {
 
@@ -43,7 +43,7 @@ struct CurrentLocationButton: View {
 		.frame(minWidth: 44, minHeight: 44)
 		.background {
 			RoundedRectangle(cornerRadius: 10)
-				.fill(Material.regular)
+				.fill(Material.thickMaterial)
 		}
 	}
 }

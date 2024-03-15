@@ -9,11 +9,20 @@
 import ApplePOI
 import Combine
 import Foundation
+import MapboxCoreNavigation
+import MapboxDirections
+import MapboxNavigation
+import MapKit
+import MapLibre
 import MapLibreSwiftUI
+import OSLog
 import POIService
+import SwiftLocation
 import SwiftUI
 import ToursprungPOI
-import OSLog
+
+// MARK: - SearchSheet
+
 struct SearchSheet: View {
 
 	private var cancelables: Set<AnyCancellable> = []
@@ -22,6 +31,8 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
+
+	@State private var route: Route?
 
 	var body: some View {
 		return VStack {
@@ -86,8 +97,10 @@ struct SearchSheet: View {
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-			POIDetailSheet(poi: item) {
+
+			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
+				self.route = routes.routes.first
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			}
@@ -97,6 +110,10 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
+			.sheet(item: self.$route) { route in
+				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+				NavigationView(route: route, styleURL: styleURL)
+			}
 		}
 	}
 
@@ -125,3 +142,5 @@ struct SearchSheet: View {
 							searchStore: .init(mode: .preview))
 	return sheet
 }
+
+extension Route: Identifiable {}

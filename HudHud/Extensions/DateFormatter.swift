@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 import Foundation
+
 extension String {
 	var formattedHour: Date {
 		let formatter = DateFormatter()
