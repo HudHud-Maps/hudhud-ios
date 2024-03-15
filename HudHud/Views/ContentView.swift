@@ -58,12 +58,8 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			VStack {
-				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
-				Spacer()
-			}
-			.presentationBackground(.thinMaterial)
-			.padding()
+			CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
+				.presentationBackground(.thinMaterial)
 		}
 		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
@@ -81,10 +77,10 @@ struct ContentView: View {
 					ProviderButton(searchViewStore: self.searchViewStore)
 				}
 			}
-			.opacity(self.sheetSize.height > 200 ? 0 : 1)
+			.opacity(self.sheetSize.height > 500 ? 0 : 1)
 			.padding(.horizontal)
 		}
-		.backport.safeArea(self.sheetSize.height)
+		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)

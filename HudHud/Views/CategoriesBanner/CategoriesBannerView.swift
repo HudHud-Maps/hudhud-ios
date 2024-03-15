@@ -17,12 +17,12 @@ struct CategoriesBannerView: View {
 			HStack(alignment: .top, spacing: 10) {
 				ForEach(self.catagoryBannerData) { category in
 					Button(category.title, systemImage: category.iconSystemName) {
-						searchStore.searchText = category.title
-											searchStore.selectedDetent = .medium
+						self.searchStore.searchText = category.title
+						self.searchStore.selectedDetent = .medium
 					}.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
-						
 				}
 			}
+			.padding(.horizontal)
 		}
 		.scrollIndicators(.hidden)
 	}
@@ -30,7 +30,7 @@ struct CategoriesBannerView: View {
 
 #Preview {
 	return VStack {
-		CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate,searchStore: .init(mode: .preview))
+		CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: .init(mode: .preview))
 		Spacer()
 	}
 }
