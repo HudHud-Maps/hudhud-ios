@@ -71,7 +71,11 @@ class SearchViewStore: ObservableObject {
 				case .preview:
 					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
 						.init(toursprung: .starbucks),
-						.init(toursprung: .ketchup)
+						.init(toursprung: .ketchup),
+						.init(toursprung: .publicPlace),
+						.init(toursprung: .artwork),
+						.init(toursprung: .pharmacy),
+						.init(toursprung: .supermarket)
 					])
 					self.mapStore.mapItemStatus = newStatus
 				}
