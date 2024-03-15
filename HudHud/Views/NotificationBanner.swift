@@ -11,6 +11,7 @@ import ToursprungPOI
 
 // MARK: - NotificationQueue
 
+@MainActor
 class NotificationQueue: ObservableObject {
 
 	private var queue: [Notification] = [] {
