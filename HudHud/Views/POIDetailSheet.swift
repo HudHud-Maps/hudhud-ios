@@ -149,9 +149,8 @@ struct POIDetailSheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
-	return POIDetailSheet(poi: poi) {
+	return POIDetailSheet(poi: poi) { _ in
 		Logger.searchView.info("Start \(poi)")
-
 	} onMore: {
 		Logger.searchView.info("More \(poi)")
 	}
