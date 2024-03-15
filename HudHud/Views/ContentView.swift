@@ -28,7 +28,7 @@ struct ContentView: View {
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@State private var showUserLocation: Bool = false
-	@State private var showMapLayar: Bool = false
+	@State private var showMapLayer: Bool = false
 	@State var sheetSize: CGSize = .zero
 
 	var body: some View {
@@ -69,7 +69,7 @@ struct ContentView: View {
 			HStack(alignment: .bottom) {
 				MapButtonsView(mapButtonsData: [
 					MapButtonData(sfSymbol: .map) {
-						self.showMapLayar.toggle()
+						self.showMapLayer.toggle()
 					},
 					MapButtonData(sfSymbol: .cube) {
 						print("Location button tapped")
@@ -106,7 +106,7 @@ struct ContentView: View {
 						self.sheetSize = value
 					}
 				}
-				.sheet(isPresented: self.$showMapLayar) {
+				.sheet(isPresented: self.$showMapLayer) {
 					VStack(alignment: .center, spacing: 30) {
 						HStack(alignment: .center) {
 							Spacer()
@@ -114,7 +114,7 @@ struct ContentView: View {
 								.foregroundStyle(.primary)
 							Spacer()
 							Button {
-								self.showMapLayar.toggle()
+								self.showMapLayer.toggle()
 							} label: {
 								Image(systemSymbol: .xmark)
 									.foregroundColor(.secondary)
