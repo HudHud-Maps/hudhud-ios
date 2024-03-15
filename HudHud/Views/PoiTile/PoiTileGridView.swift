@@ -39,7 +39,7 @@ struct PoiTileGridView: View {
 						  pricing: .medium)
 	let poi1 = PoiTileData(title: "Off white",
 						   imageUrl: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77"),
-						   poiType: "Resturant",
+						   poiType: "Restaurant",
 						   locationDistance: pointA.distance(from: pointB),
 						   rating: "2.5",
 						   followersNumbers: "69",
@@ -55,7 +55,7 @@ struct PoiTileGridView: View {
 						   pricing: .low)
 	let poi3 = PoiTileData(title: "Flour & firewood",
 						   imageUrl: URL(string: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3"),
-						   poiType: "Resturant",
+						   poiType: "Restaurant",
 						   locationDistance: pointA.distance(from: pointB),
 						   rating: "5.0",
 						   followersNumbers: "200",

@@ -16,8 +16,8 @@ struct MapButtonsView: View {
 			ForEach(self.mapButtonsData.indices, id: \.self) { index in
 				Button(action: self.mapButtonsData[index].action) {
 					Image(systemSymbol: self.mapButtonsData[index].sfSymbol)
-						.font(.title)
-						.padding(.vertical)
+						.font(.title2)
+						.padding(.vertical, 10)
 						.padding(.horizontal, 10)
 						.foregroundColor(.gray)
 				}
