@@ -50,6 +50,15 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}
+		.onTapMapGesture(onTapChanged: { context in
+			let match = self.mapStore.mapItemStatus.mapItems.first { row in
+				guard let coordinate = row.coordinate else { return false }
+
+				return coordinate.distance(to: context.coordinate) < (200 / self.mapStore.camera.zoom)
+			}
+
+			self.mapStore.mapItemStatus.selectedItem = match?.poi
+		})
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
