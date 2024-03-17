@@ -15,13 +15,14 @@ import SwiftUI
 struct CurrentLocationButton: View {
 
 	@Binding var camera: MapViewCamera
+	let location = Location()
 
 	var body: some View {
 		Button {
 			Task {
 				do {
-					let location = Location()
-					try await location.requestPermission(.whenInUse)
+					self.location.accuracy = .threeKilometers
+					try await self.location.requestPermission(.whenInUse)
 					let userLocation = try await location.requestLocation()
 
 					if let coordinates = userLocation.location?.coordinate {
