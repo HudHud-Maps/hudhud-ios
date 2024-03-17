@@ -15,6 +15,7 @@ import MapboxNavigation
 import MapKit
 import MapLibre
 import MapLibreSwiftUI
+import OSLog
 import POIService
 import SwiftLocation
 import SwiftUI
@@ -85,7 +86,7 @@ struct SearchSheet: View {
 						self.show(row: item.wrappedValue)
 					}
 				}, label: {
-					SearchResultItem(prediction: item.wrappedValue)
+					SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
 						.frame(maxWidth: .infinity)
 				})
 				.listRowSeparator(.hidden)
@@ -96,10 +97,12 @@ struct SearchSheet: View {
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
+
 			POIDetailSheet(poi: item) { routes in
+				Logger.searchView.info("Start item \(item)")
 				self.route = routes.routes.first
 			} onMore: {
-				print("more")
+				Logger.searchView.info("more item \(item))")
 			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(

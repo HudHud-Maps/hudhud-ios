@@ -11,6 +11,7 @@ import CoreLocation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import OSLog
 import POIService
 import SFSafeSymbols
 import SimpleToast
@@ -52,12 +53,13 @@ struct ContentView: View {
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
-				print("Authorization status did change: \(event.authorizationStatus)")
+				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
 				self.showUserLocation = event.authorizationStatus.allowed
 			}
 		}
 		.task {
 			self.showUserLocation = self.locationManager.authorizationStatus.allowed
+			Logger.searchView.debug("Authorization status authorizedAllowed")
 		}
 		.task {
 			do {
