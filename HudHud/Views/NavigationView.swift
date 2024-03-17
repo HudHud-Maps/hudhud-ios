@@ -45,6 +45,7 @@ public struct NavigationView: UIViewControllerRepresentable {
 		let directions = Directions(accessToken: nil, host: "gh.maptoolkit.net")
 		let navigationController = NavigationViewController(for: self.route, directions: directions, voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
+		navigationController.mapView?.logoView.isHidden = true
 
 		return navigationController
 	}
