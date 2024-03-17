@@ -37,13 +37,13 @@ public struct NavigationView: UIViewControllerRepresentable {
 	// MARK: - Public
 
 	public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
-		let simulatedLocationManager = SimulatedLocationManager(route: self.route)
-		simulatedLocationManager.speedMultiplier = 1
+		// let simulatedLocationManager = SimulatedLocationManager(route: self.route)
+		// simulatedLocationManager.speedMultiplier = 1
 
 		let routeVoice = RouteVoiceController()
 
 		let directions = Directions(accessToken: nil, host: "gh.maptoolkit.net")
-		let navigationController = NavigationViewController(for: self.route, directions: directions, locationManager: simulatedLocationManager, voiceController: routeVoice)
+		let navigationController = NavigationViewController(for: self.route, directions: directions, voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 
 		return navigationController
