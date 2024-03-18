@@ -32,20 +32,43 @@ Version tag prefix? []
 
 We follow the Git Flow branching model for development. The main branches are:
 
-master: Represents the production-ready code.
+main: Represents what is currently on the app store.
 develop: Serves as the integration branch for new features.
 For feature development, create a new branch off develop:
 
 ```bash
 git checkout develop
 git pull origin develop
-git checkout -b feature/HHIOS-NNNN-my-awesome-feature
+git flow feature start HHIOS-NNNN-my-awesome-feature
 ```
+It is important to always checkout and pull develop before starting a new feature to ensure that you don't start your branch with merge conflicts.
+
 Ensure the name of your branch contains the ticket number (HHIOS-NNNN) so that the Jira integration can link it.
 
 After completing the feature, submit a pull request to merge it into develop.
 
-### Kintsugi
+### Resolving Merge Conflicts
+
+To be able to merge your pull request, it needs to be uptodate with develop, so you will be asked to merge in develop and resolve merge conflicts if github complains. There are many tools like Fork, Tower, VSCode that can help you resolve conflicts. If you do not want to use tools the raw command line commands you need to run are:
+
+```bash
+git checkout develop
+git fetch
+git pull
+git checkout nameOfYourBranch
+git merge develop
+```
+
+Now resolve any merge conflicts by hand or using a merge conflict resolve tool to help you.
+Once resolved, stage any files that need to be changed. Then:
+
+
+```bash
+git commit -am "resolve merge conflicts"
+git push
+```
+
+#### Resolving Project File Merge Conflicts: Kintsugi
 
 There is a nice tool to fix Xcode project merge conflicts: https://github.com/Lightricks/Kintsugi. Installing this on an M1 machine is tricky as the preinstalled Ruby installtion has its quirks.
 
@@ -63,10 +86,9 @@ Then install kintsugi by running
 gem install kintsugi
 ```
 
-As a last step, it is recommended to instruct git, to use this for merge conflicts:
-
+To run and resolve conflicts in the project file, run the following command from your hudhud directory
 ```bash
-kintsugi install-driver
+kintsugi HudHud.xcodeproj/project.pbxproj
 ```
 
 ##### Optional GUI Git Client
@@ -110,7 +132,7 @@ We use https://github.com/nicklockwood/SwiftFormat to automatically format our s
 
 If you want to manually start the formating I recommend installing the Xcode Source Editor Extension, however you don't need to as the minimum setup is already done.
 
-##### Install or update the Xcode Source Editor Extension as follows
+#### Install or update the Xcode Source Editor Extension as follows
 
 ```bash
 brew install --cask swiftformat-for-xcode
@@ -121,7 +143,7 @@ brew upgrade --cask swiftformat-for-xcode
 When you installed it for the first time you need to grant it some permissions. Go to /Applications and open `SwiftFormat for Xcode`. 
 Xcode Extensions are sevierly limited in functionality, they don't have access to the current project so you need to import the formatting rules. For this open `SwiftFormat for Xcode`, go to File > Open and select the `.swiftformat` file in the hudhud repo. 
 
-###### NOTE:
+##### NOTE:
 This configuration will apply system wide for all of your projects.
 
 Now you need to Enable the Xcode Extension so it shows up in Xcode. For this go to 
