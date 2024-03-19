@@ -178,6 +178,14 @@ and search for `Format File`, then you can define your prefered Keyboard Shortcu
 
 ![](.tools/custom-shortcut.png)
 
+### Logger Structure
+
+ You should use logger structure to handle logging and debugging messages.
+ 
+## Usage
+
+To use the Logger structure, first import OSLog wherever you need to log. Second categorize your loggers in the folder named extensions check the LoggerSettings file. Then call it and use one of the logging methods provided (e.g., debug, info, warn, error)
+Ex: Logger.searchView.debug("Authorization status authorizedAllowed")
 
 ### Pull Requests
 
