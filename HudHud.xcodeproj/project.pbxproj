@@ -27,6 +27,7 @@
 		B7A0E6E9748F03629F8BCC92 /* NavigationViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D46BD937D1E3F8D4C26B33B0 /* NavigationViewCoordinator.swift */; };
 		BD6D372074B8C0F86315F7AA /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93929FB46730CA236867ED47 /* ABCRouteConfigurationData.swift */; };
 		BDC1983F1F8BEDF2F0B6E47F /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB5FD649402576F5CDC4D46 /* MapButtonsView.swift */; };
+		C485AB5B3D95C49712F3B80E /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = E428406940D016BFA8785B29 /* PrivacyInfo.xcprivacy */; };
 		C8D2A07AF114FADA2F4966EA /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A5CE90936942BE2F2DE7838 /* Backport.swift */; };
 		C9B472E38E4C363EE812C1F2 /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7851556F53273A4C33BC266 /* ABCRouteConfigurationView.swift */; };
 		CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */; };
@@ -145,6 +146,7 @@
 		D46BD937D1E3F8D4C26B33B0 /* NavigationViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewCoordinator.swift; sourceTree = "<group>"; };
 		DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
 		E21F674DDEC12B730303BDCC /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
+		E428406940D016BFA8785B29 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		EFB5FD649402576F5CDC4D46 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
 		F8AB16532DFF3C277E7BBA7C /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -397,6 +399,7 @@
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
+				E428406940D016BFA8785B29 /* PrivacyInfo.xcprivacy */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -426,9 +429,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				E254F1F58E67D34FF9CD831A /* PBXTargetDependency */,
-				F1E5D7937A92F6580BD9D57D /* PBXTargetDependency */,
-				A25E270F2AD2138FCE1D85D5 /* PBXTargetDependency */,
+				ACD1818CEB1405FD34D581CC /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -560,6 +561,7 @@
 				CDAE054F2B681263003E5196 /* Preview Assets.xcassets in Resources */,
 				CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */,
 				1943A4EF70E8D2B7B90F953F /* toursprung-navigation-sample.json in Resources */,
+				C485AB5B3D95C49712F3B80E /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -677,6 +679,9 @@
 		A25E270F2AD2138FCE1D85D5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
+		ACD1818CEB1405FD34D581CC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -686,9 +691,6 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
-		};
-		E254F1F58E67D34FF9CD831A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
 		};
 		F1E5D7937A92F6580BD9D57D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

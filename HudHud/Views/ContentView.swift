@@ -33,9 +33,10 @@ struct ContentView: View {
 	@StateObject var notificationQueue: NotificationQueue = .init()
 	@State private var showMapLayer: Bool = false
 	@State var sheetSize: CGSize = .zero
+	@State var didTryToZoomOnUsersLocation = false
 
 	var body: some View {
-		return MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			let pointSource = self.mapStore.mapItemStatus.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
@@ -69,6 +70,31 @@ struct ContentView: View {
 			self.showUserLocation = self.locationManager.authorizationStatus.allowed
 			Logger.searchView.debug("Authorization status authorizedAllowed")
 		}
+		.task {
+			do {
+				guard self.didTryToZoomOnUsersLocation == false else {
+					return
+				}
+				self.didTryToZoomOnUsersLocation = true
+				self.locationManager.accuracy = .threeKilometers
+				let userLocation = try await locationManager.requestLocation()
+				var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
+				if coordinates == nil {
+					// fall back to any location that was found, even if bad
+					// accuracy
+					coordinates = self.locationManager.lastLocation?.coordinate
+				}
+				guard let coordinates else {
+					print("Could not determine user location, will not zoom...")
+					return
+				}
+
+				self.mapStore.camera = MapViewCamera.center(coordinates, zoom: 16)
+
+			} catch {
+				print("location error: \(error)")
+			}
+		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
 			CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
@@ -97,14 +123,15 @@ struct ContentView: View {
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
+				.frame(minWidth: 320)
 				.presentationCornerRadius(21)
 				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
 				.presentationBackgroundInteraction(
-					.enabled(upThrough: .medium)
+					.enabled(upThrough: .large)
 				)
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
-				.presentationDragIndicator(.hidden)
+				.presentationCompactAdaptation(.sheet)
 				.overlay {
 					GeometryReader { geometry in
 						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
