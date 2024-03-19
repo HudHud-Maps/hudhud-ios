@@ -139,8 +139,9 @@ public struct Row: Hashable {
 			}
 		case let .appleMapItem(mapItem):
 			return mapItem.icon
-		case .appleCompletion:
-			return Image(systemSymbol: .magnifyingglass)
+		case let .appleCompletion(completion):
+			let icon = completion.subtitle == "Search Nearby" ? Image(systemSymbol: .magnifyingglass) : Image(systemSymbol: .mappin)
+			return icon
 		}
 	}
 
@@ -157,8 +158,12 @@ public struct Row: Hashable {
 
 	public var poi: POI? {
 		switch self.provider {
-		case .appleCompletion:
-			return nil
+		case let .appleCompletion(completion):
+			let type = completion.subtitle == "Search Nearby" ? "Search Nearby" : "individual"
+			return POI(title: self.title,
+					   subtitle: self.subtitle,
+					   locationCoordinate: self.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
+					   type: "\(type)")
 		case let .appleMapItem(mapItem):
 			return POI(title: self.title,
 					   subtitle: self.subtitle,
