@@ -114,14 +114,15 @@ struct ContentView: View {
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
+				.frame(minWidth: 320)
 				.presentationCornerRadius(21)
 				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
 				.presentationBackgroundInteraction(
-					.enabled(upThrough: .medium)
+					.enabled(upThrough: .large)
 				)
 				.interactiveDismissDisabled()
 				.ignoresSafeArea()
-				.presentationDragIndicator(.hidden)
+				.presentationCompactAdaptation(.sheet)
 				.overlay {
 					GeometryReader { geometry in
 						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
