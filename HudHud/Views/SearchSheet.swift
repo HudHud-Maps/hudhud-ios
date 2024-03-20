@@ -54,34 +54,43 @@ struct SearchSheet: View {
 			.background(.quinary)
 			.cornerRadius(12)
 			.padding()
-
-			List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
-				Button(action: {
-					switch item.wrappedValue.provider {
-					case .toursprung:
-						self.show(row: item.wrappedValue)
-					case .appleCompletion:
-						self.searchStore.selectedDetent = .medium
-						self.searchIsFocused = false
-						Task {
-							let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
-							if let firstResult = items.first, items.count == 1 {
-								self.show(row: firstResult)
-							} else {
-								self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
+			if !self.searchStore.searchText.isEmpty {
+				List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
+					Button(action: {
+						switch item.wrappedValue.provider {
+						case .toursprung:
+							self.show(row: item.wrappedValue)
+						case .appleCompletion:
+							self.searchStore.selectedDetent = .medium
+							self.searchIsFocused = false
+							Task {
+								let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
+								if let firstResult = items.first, items.count == 1 {
+									self.show(row: firstResult)
+								} else {
+									self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
+								}
 							}
+						case .appleMapItem:
+							self.show(row: item.wrappedValue)
 						}
-					case .appleMapItem:
-						self.show(row: item.wrappedValue)
+					}, label: {
+						SearchResultItem(prediction: item.wrappedValue)
+							.frame(maxWidth: .infinity)
+					})
+					.listRowSeparator(.hidden)
+					.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+				}
+				.listStyle(.plain)
+			} else {
+				List {
+					SearchSectionView(title: "Favorites") {
+						FavoriteCategoriesView()
 					}
-				}, label: {
-					SearchResultItem(prediction: item.wrappedValue)
-						.frame(maxWidth: .infinity)
-				})
-				.listRowSeparator(.hidden)
-				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+					.listRowSeparator(.hidden)
+				}
+				.listStyle(.plain)
 			}
-			.listStyle(.plain)
 		}
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
