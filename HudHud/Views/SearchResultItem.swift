@@ -13,6 +13,7 @@ import SwiftUI
 struct SearchResultItem: View {
 
 	let prediction: Row
+	@ObservedObject var searchViewStore: SearchViewStore
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
@@ -20,12 +21,15 @@ struct SearchResultItem: View {
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(width: 24, height: 24)
-				.foregroundStyle(.tertiary)
+				.foregroundStyle(.white)
 				.padding()
 				.clipShape(Circle())
 				.overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
 				.layoutPriority(1)
 				.frame(minWidth: .leastNonzeroMagnitude)
+				.background(
+					self.prediction.poi?.iconColor.mask(Circle())
+				)
 
 			VStack(alignment: .leading) {
 				Text(self.prediction.title)
@@ -38,8 +42,13 @@ struct SearchResultItem: View {
 					.lineLimit(1)
 			}
 			Spacer()
-			Image(systemSymbol: .chevronRight)
-				.foregroundStyle(.tertiary)
+			Button(action: {
+				self.searchViewStore.searchText = self.prediction.title
+			}, label: {
+				Image(systemSymbol: .arrowUpLeft)
+			})
+			.padding(.trailing)
+			.foregroundStyle(.tertiary)
 		}
 		.padding(8)
 	}
@@ -47,5 +56,5 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	return SearchResultItem(prediction: .init(toursprung: .starbucks))
+	return SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .init(mode: .preview))
 }

@@ -9,10 +9,19 @@
 import ApplePOI
 import Combine
 import Foundation
+import MapboxCoreNavigation
+import MapboxDirections
+import MapboxNavigation
+import MapKit
+import MapLibre
 import MapLibreSwiftUI
+import OSLog
 import POIService
+import SwiftLocation
 import SwiftUI
 import ToursprungPOI
+
+// MARK: - SearchSheet
 
 struct SearchSheet: View {
 
@@ -22,6 +31,8 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 	@State private var detailSheetShown: Bool = false
+
+	@State private var route: Route?
 
 	var body: some View {
 		return VStack {
@@ -75,11 +86,11 @@ struct SearchSheet: View {
 							self.show(row: item.wrappedValue)
 						}
 					}, label: {
-						SearchResultItem(prediction: item.wrappedValue)
-							.frame(maxWidth: .infinity)
-					})
-					.listRowSeparator(.hidden)
-					.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+					SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
+						.frame(maxWidth: .infinity)
+				})
+				.listRowSeparator(.hidden)
+				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 				}
 				.listStyle(.plain)
 			} else {
@@ -87,6 +98,7 @@ struct SearchSheet: View {
 					SearchSectionView(title: "Favorites") {
 						FavoriteCategoriesView()
 					}
+
 					.listRowSeparator(.hidden)
 				}
 				.listStyle(.plain)
@@ -95,10 +107,12 @@ struct SearchSheet: View {
 		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-			POIDetailSheet(poi: item) {
-				print("start")
+
+			POIDetailSheet(poi: item) { routes in
+				Logger.searchView.info("Start item \(item)")
+				self.route = routes.routes.first
 			} onMore: {
-				print("more")
+				Logger.searchView.info("more item \(item))")
 			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(
@@ -106,6 +120,10 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
+			.sheet(item: self.$route) { route in
+				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+				NavigationView(route: route, styleURL: styleURL)
+			}
 		}
 	}
 
@@ -134,3 +152,5 @@ struct SearchSheet: View {
 							searchStore: .init(mode: .preview))
 	return sheet
 }
+
+extension Route: Identifiable {}

@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftUI
 
 struct ProviderButton: View {
@@ -17,8 +18,10 @@ struct ProviderButton: View {
 			switch self.searchViewStore.mode {
 			case let .live(provider):
 				self.searchViewStore.mode = .live(provider: provider.next())
+				Logger.searchView.info("Map Mode live")
 			case .preview:
 				self.searchViewStore.mode = .live(provider: .toursprung)
+				Logger.searchView.info("Map Mode toursprung")
 			}
 		} label: {
 			switch self.searchViewStore.mode {
@@ -33,7 +36,7 @@ struct ProviderButton: View {
 		.frame(minWidth: 44, minHeight: 44)
 		.background {
 			RoundedRectangle(cornerRadius: 10)
-				.fill(Material.regular)
+				.fill(Material.thickMaterial)
 		}
 	}
 }

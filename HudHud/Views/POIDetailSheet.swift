@@ -8,18 +8,28 @@
 
 import CoreLocation
 import Foundation
+import MapboxCoreNavigation
+import MapboxDirections
+import OSLog
 import POIService
 import SFSafeSymbols
+import SimpleToast
+import SwiftLocation
 import SwiftUI
 import ToursprungPOI
 
 struct POIDetailSheet: View {
 
 	let poi: POI
-	let onStart: () -> Void
+	let onStart: (Toursprung.RouteCalculationResult) -> Void
 	let onMore: () -> Void
 
+	let location = Location()
+
+	@State var routes: Toursprung.RouteCalculationResult?
+
 	@Environment(\.dismiss) var dismiss
+	@EnvironmentObject var notificationQueue: NotificationQueue
 
 	var body: some View {
 		NavigationStack {
@@ -57,15 +67,20 @@ struct POIDetailSheet: View {
 				.padding([.top, .leading, .trailing])
 
 				HStack {
-					Button(action: self.onStart) {
+					Button(action: {
+						guard let routes else { return }
+
+						self.onStart(routes)
+					}, label: {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
 							Text("Start")
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
-					}
+					})
 					.buttonStyle(.borderedProminent)
+					.disabled(self.routes == nil)
 
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
@@ -102,15 +117,44 @@ struct POIDetailSheet: View {
 				DictionaryView(dictionary: self.poi.userInfo)
 			}
 		}
+		.task {
+			do {
+				// Location may only be inited on main thread, do not init within task.
+				self.location.accuracy = .threeKilometers // Location is extremely slow, unless set to this - returns better accuracy none the less.
+				_ = try await self.location.requestPermission(.whenInUse)
+				guard let userLocation = try await location.requestLocation().location else {
+					return
+				}
+
+				let waypoint1 = Waypoint(location: userLocation)
+				let waypoint2 = Waypoint(coordinate: self.poi.locationCoordinate)
+
+				let waypoints = [
+					waypoint1,
+					waypoint2
+				]
+
+				let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
+				options.shapeFormat = .polyline6
+				options.distanceMeasurementSystem = .metric
+				options.attributeOptions = []
+
+				let results = try await Toursprung.shared.calculate(options)
+				self.routes = results
+			} catch {
+				let notification = Notification(error: error)
+				self.notificationQueue.add(notification: notification)
+			}
+		}
 	}
 }
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
-	return POIDetailSheet(poi: poi) {
-		print("start")
+	return POIDetailSheet(poi: poi) { _ in
+		Logger.searchView.info("Start \(poi)")
 	} onMore: {
-		print("more")
+		Logger.searchView.info("More \(poi)")
 	}
 }

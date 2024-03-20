@@ -17,11 +17,12 @@ struct IconButton: ButtonStyle {
 
 	func makeBody(configuration: Configuration) -> some View {
 		configuration.label
-			.padding(7)
+			.padding(.horizontal, 15)
+			.padding(.vertical, 8)
 			.foregroundStyle(self.foregroundColor ?? .black)
 			.bold()
 			.background(self.backgroundColor)
 			.clipShape(Capsule())
-			.shadow(radius: 1)
+			.background(.thickMaterial, in: Capsule())
 	}
 }

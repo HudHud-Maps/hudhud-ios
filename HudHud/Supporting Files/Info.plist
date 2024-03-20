@@ -6,5 +6,11 @@
 	<false/>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0.0</string>
+	<key>MGLMapboxAccessToken</key>
+	<string>NOTAREALACCESSTOKEN</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>
