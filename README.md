@@ -184,9 +184,13 @@ and search for `Format File`, then you can define your prefered Keyboard Shortcu
  
 ## Usage
 
-To use the Logger structure, first import OSLog wherever you need to log. Second categorize your loggers in the folder named extensions check the LoggerSettings file [a link](https://github.com/HudHud-Maps/hudhud-ios/blob/develop/HudHud/Extensions/LoggerSettings.swift). Then call it and use one of the logging methods provided (e.g., debug, info, warn, error)
-Ex:
+To use the Logger structure, first import OSLog wherever you need to log.
+```bash
+import OSLog
 ```
+Second categorize your loggers in the folder named extensions check the LoggerSettings file [a link](https://github.com/HudHud-Maps/hudhud-ios/blob/develop/HudHud/Extensions/LoggerSettings.swift). Then call it and use one of the logging methods provided (e.g., debug, info, warn, error)
+Ex:
+```bash
 Logger.searchView.debug("Authorization status authorizedAllowed")
 ```
 
