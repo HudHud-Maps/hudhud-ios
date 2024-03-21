@@ -160,9 +160,12 @@ public struct Row: Hashable {
 		switch self.provider {
 		case let .appleCompletion(completion):
 			let type = completion.subtitle == "Search Nearby" ? "Search Nearby" : "individual"
+			guard let coordinate = self.coordinate else {
+				return nil
+			}
 			return POI(title: self.title,
 					   subtitle: self.subtitle,
-					   locationCoordinate: self.coordinate ?? CLLocationCoordinate2D(latitude: 0, longitude: 0),
+					   locationCoordinate: coordinate,
 					   type: "\(type)")
 		case let .appleMapItem(mapItem):
 			return POI(title: self.title,

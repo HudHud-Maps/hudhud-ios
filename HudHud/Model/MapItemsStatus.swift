@@ -21,12 +21,11 @@ struct MapItemsStatus {
 	var mapItems: [Row]
 
 	var points: ShapeSource {
-		if let selectedItem {
+		if let selectedItem, let locationCoordinate = selectedItem.locationCoordinate {
 			return ShapeSource(identifier: "points") {
-				MLNPointFeature(coordinate: selectedItem.locationCoordinate)
+				MLNPointFeature(coordinate: locationCoordinate)
 			}
 		}
-
 		return ShapeSource(identifier: "points") {
 			self.mapItems.compactMap { item in
 				guard let coordinate = item.coordinate else { return nil }

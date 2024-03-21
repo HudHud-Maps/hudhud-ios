@@ -35,7 +35,7 @@ public class POI: Hashable, Identifiable {
 	public var id: Int
 	public var title: String
 	public var subtitle: String
-	public var locationCoordinate: CLLocationCoordinate2D
+	public var locationCoordinate: CLLocationCoordinate2D?
 	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
 

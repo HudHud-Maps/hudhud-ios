@@ -125,9 +125,11 @@ struct POIDetailSheet: View {
 				guard let userLocation = try await location.requestLocation().location else {
 					return
 				}
-
+				guard let locationCoordinate = self.poi.locationCoordinate else {
+					return
+				}
 				let waypoint1 = Waypoint(location: userLocation)
-				let waypoint2 = Waypoint(coordinate: self.poi.locationCoordinate)
+				let waypoint2 = Waypoint(coordinate: locationCoordinate)
 
 				let waypoints = [
 					waypoint1,
