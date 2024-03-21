@@ -180,12 +180,15 @@ and search for `Format File`, then you can define your prefered Keyboard Shortcu
 
 ### Logger Structure
 
- You should use logger structure to handle logging and debugging messages.
+ You should use logger structure to handle logging and debugging messages. because it enables better control over application logging by providing a consistent interface for handling messages, facilitating easier maintenance, debugging, and ensuring the scalability of logging practices as the application grows.
  
 ## Usage
 
-To use the Logger structure, first import OSLog wherever you need to log. Second categorize your loggers in the folder named extensions check the LoggerSettings file. Then call it and use one of the logging methods provided (e.g., debug, info, warn, error)
-Ex: Logger.searchView.debug("Authorization status authorizedAllowed")
+To use the Logger structure, first import OSLog wherever you need to log. Second categorize your loggers in the folder named extensions check the LoggerSettings file [a link](https://github.com/HudHud-Maps/hudhud-ios/blob/develop/HudHud/Extensions/LoggerSettings.swift). Then call it and use one of the logging methods provided (e.g., debug, info, warn, error)
+Ex:
+```
+Logger.searchView.debug("Authorization status authorizedAllowed")
+```
 
 ### Pull Requests
 
