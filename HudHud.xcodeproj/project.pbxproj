@@ -114,7 +114,6 @@
 		90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsSummaryView.swift; sourceTree = "<group>"; };
 		90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionPreviewData.swift; sourceTree = "<group>"; };
 		912B1ACD8511E9B4FB445AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
-		AB5A940FB7C288070A036B0C /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCRouteConfigurationView.swift; sourceTree = "<group>"; };
 		BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerView.swift; sourceTree = "<group>"; };
 		C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
@@ -210,14 +209,6 @@
 			path = PoiTile;
 			sourceTree = "<group>";
 		};
-		83E970FAE27C207550336E65 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				AB5A940FB7C288070A036B0C /* DateFormatter.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		99E435A00BB464A6561C2838 /* MapButtons */ = {
 			isa = PBXGroup;
 			children = (
@@ -264,7 +255,6 @@
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
-				83E970FAE27C207550336E65 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 1;
@@ -540,15 +530,7 @@
 				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CD1BD8AB2B9087C100A591BD /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
 				CD1BD91C2B91E53B00A591BD /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */,
-				00990664D14D12BF0FC17B3C /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
-				519EF2D437C7B259CDD4DC71 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
-				3911B8E6CDA8D4F74C8B1CF9 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */,
-				6FA141C7F251B40D2C036C91 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
-				4C323AB8F2D9BCBDA3550B3C /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
-				E9BD1D674758147EEBEA78C8 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */,
-				7735AF5D5C9F9F6BAE552D86 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
-				9ABCB32E8F3BAAF4CF137F35 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1012,67 +994,11 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		00990664D14D12BF0FC17B3C /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		3911B8E6CDA8D4F74C8B1CF9 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
-			requirement = {
-				branch = "feature/swift-package-manager";
-				kind = branch;
-			};
-		};
-		4C323AB8F2D9BCBDA3550B3C /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.0;
-			};
-		};
-		519EF2D437C7B259CDD4DC71 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.0;
-			};
-		};
-		6FA141C7F251B40D2C036C91 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		7735AF5D5C9F9F6BAE552D86 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		8164278A77C0C2EB43664025 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
 			requirement = {
 				branch = "feature/swift-package-manager";
-				kind = branch;
-			};
-		};
-		9ABCB32E8F3BAAF4CF137F35 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git";
-			requirement = {
-				branch = main;
 				kind = branch;
 			};
 		};
@@ -1154,14 +1080,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.2.0;
-			};
-		};
-		E9BD1D674758147EEBEA78C8 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
-			requirement = {
-				branch = "feature/swift-package-manager";
-				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
