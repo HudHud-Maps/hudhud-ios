@@ -31,7 +31,11 @@ struct MapItemsStatus {
 			self.mapItems.compactMap { item in
 				guard let coordinate = item.coordinate else { return nil }
 
-				return MLNPointFeature(coordinate: coordinate)
+				return MLNPointFeature(coordinate: coordinate) { feature in
+					if let poi = item.poi {
+						feature.attributes["poi_id"] = poi.id
+					}
+				}
 			}
 		}
 	}

@@ -48,18 +48,36 @@ struct ContentView: View {
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
 		}
+		.onTapMapGesture(onTapChanged: { context, mapView in
+			guard context.state == .ended else {
+				return
+			}
+
+			let point = context.point
+			let width = 16.0 * 2.0 // CircleStyleLayer Radius
+			let rect = CGRect(x: point.x - width / 2.0, y: point.y - width / 2.0, width: width, height: width)
+			let features = mapView.visibleFeatures(in: rect, styleLayerIdentifiers: ["simple-circles"])
+
+			// Pick the first feature (which may be a port or a cluster), ideally selecting
+			// the one nearest nearest one to the touch point.
+			guard let feature = features.first,
+				  let placeID = feature.attribute(forKey: "poi_id") as? Int else
+			{
+				return
+			}
+
+			let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
+			let poi = mapItems.first { row in
+				row.poi?.id == placeID
+			}?.poi
+
+			if let poi {
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
+			}
+		})
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}
-		.onTapMapGesture(onTapChanged: { context in
-			let match = self.mapStore.mapItemStatus.mapItems.first { row in
-				guard let coordinate = row.coordinate else { return false }
-
-				return coordinate.distance(to: context.coordinate) < (200 / self.mapStore.camera.zoom)
-			}
-
-			self.mapStore.mapItemStatus.selectedItem = match?.poi
-		})
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
