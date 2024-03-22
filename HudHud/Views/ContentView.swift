@@ -94,17 +94,28 @@ struct ContentView: View {
 		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
 				MapButtonsView(mapButtonsData: [
-					MapButtonData(sfSymbol: .map) {
+					MapButtonData(sfSymbol: .icon(.map)) {
 						self.showMapLayer.toggle()
 					},
-					MapButtonData(sfSymbol: .cube) {
+					MapButtonData(sfSymbol: buttonIcon(searchViewStore: self.searchViewStore)) {
+						switch self.searchViewStore.mode {
+						case let .live(provider):
+							self.searchViewStore.mode = .live(provider: provider.next())
+							Logger.searchView.info("Map Mode live")
+						case .preview:
+							self.searchViewStore.mode = .live(provider: .toursprung)
+							Logger.searchView.info("Map Mode toursprung")
+						}
+						print(buttonIcon(searchViewStore: self.searchViewStore))
+					},
+					MapButtonData(sfSymbol: .icon(.cube)) {
 						print("Location button tapped")
 					}
 				])
 				Spacer()
 				VStack(alignment: .trailing) {
 					CurrentLocationButton(camera: self.$mapStore.camera)
-					ProviderButton(searchViewStore: self.searchViewStore)
+						.buttonStyle(MapButtonStyle(mapButtonData: MapButtonData(sfSymbol: .icon(.location), action: {})))
 				}
 			}
 			.opacity(self.sheetSize.height > 500 ? 0 : 1)
@@ -204,4 +215,15 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	return ContentView(searchViewStore: .preview)
+}
+
+@MainActor func buttonIcon(searchViewStore: SearchViewStore) -> MapButtonData.IconStyle {
+	switch searchViewStore.mode {
+	case .live(.apple):
+		.icon(.appleLogo)
+	case .live(.toursprung):
+		.text("MTK")
+	case .preview:
+		.icon(.pCircle)
+	}
 }

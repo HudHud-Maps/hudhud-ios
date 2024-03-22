@@ -16,11 +16,17 @@ struct MapButtonsView: View {
 		VStack(spacing: 0) {
 			ForEach(self.mapButtonsData.indices, id: \.self) { index in
 				Button(action: self.mapButtonsData[index].action) {
-					Image(systemSymbol: self.mapButtonsData[index].sfSymbol)
-						.font(.title2)
-						.padding(.vertical, 10)
-						.padding(.horizontal, 10)
-						.foregroundColor(.gray)
+					if case let .icon(symbol) = mapButtonsData[index].sfSymbol {
+						Image(systemSymbol: symbol)
+							.font(.title2)
+							.padding(10)
+							.foregroundColor(.gray)
+					} else if case let .text(text) = mapButtonsData[index].sfSymbol {
+						Text(text)
+							.bold()
+							.padding(10)
+							.foregroundColor(.gray)
+					}
 				}
 				if index != self.mapButtonsData.count - 1 {
 					Divider()
@@ -32,17 +38,28 @@ struct MapButtonsView: View {
 		.shadow(color: .black.opacity(0.1), radius: 10, y: 4)
 		.fixedSize()
 	}
+
+	// MARK: - Private
+
+	private func iconView(for style: MapButtonData.IconStyle) -> some View {
+		switch style {
+		case let .icon(symbol):
+			return AnyView(Image(systemSymbol: symbol)) // Wrap Image in AnyView
+		case let .text(text):
+			return AnyView(Text(text)) // Wrap Text in AnyView
+		}
+	}
 }
 
 #Preview {
 	MapButtonsView(mapButtonsData: [
-		MapButtonData(sfSymbol: .map) {
+		MapButtonData(sfSymbol: .icon(.map)) {
 			print("Map button tapped")
 		},
-		MapButtonData(sfSymbol: .location) {
+		MapButtonData(sfSymbol: .icon(.location)) {
 			print("Location button tapped")
 		},
-		MapButtonData(sfSymbol: .cube) {
+		MapButtonData(sfSymbol: .icon(.cube)) {
 			print("Location button tapped")
 		}
 	])

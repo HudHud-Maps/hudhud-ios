@@ -40,12 +40,12 @@ struct CurrentLocationButton: View {
 		} label: {
 			Image(systemSymbol: .location)
 		}
-		.padding(12)
-		.frame(minWidth: 44, minHeight: 44)
-		.background {
-			RoundedRectangle(cornerRadius: 10)
-				.fill(Material.thickMaterial)
-		}
+//		.padding(12)
+//		.frame(minWidth: 44, minHeight: 44)
+//		.background {
+//			RoundedRectangle(cornerRadius: 10)
+//				.fill(Material.thickMaterial)
+//		}
 	}
 }
 
