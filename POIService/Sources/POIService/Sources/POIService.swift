@@ -35,7 +35,7 @@ public class POI: Hashable, Identifiable {
 	public var id: Int
 	public var title: String
 	public var subtitle: String
-	public var locationCoordinate: CLLocationCoordinate2D
+	public var locationCoordinate: CLLocationCoordinate2D?
 	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
 
@@ -164,6 +164,10 @@ public extension POI {
 		// Transport
 		case "boat_sharing", "bus_station", "bus_stop", "car_rental", "car_repair", "car_sharing", "car_wash", "charging_station", "ev_charging", "ferry_terminal", "fuel", "motorcycle_parking", "parking", "parking_entrance", "parking_space", "taxi":
 			return .brown
+		case "individual":
+			return .green
+		case "search nearby":
+			return .blue
 		default:
 			return .blue
 		}
