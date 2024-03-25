@@ -41,16 +41,19 @@ public struct NavigationView: UIViewControllerRepresentable {
 		// simulatedLocationManager.speedMultiplier = 1
 
 		let routeVoice = RouteVoiceController()
-
 		let directions = Directions(accessToken: nil, host: "gh.maptoolkit.net")
-		let navigationController = NavigationViewController(for: self.route, directions: directions, voiceController: routeVoice)
+		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 		navigationController.mapView?.logoView.isHidden = true
+		navigationController.mapView?.prefetchesTiles = false
 
 		return navigationController
 	}
 
 	public func updateUIViewController(_: MapboxNavigation.NavigationViewController, context _: Context) {
+		CancelButton.appearance().setTitle("Finish", for: .normal)
+		CancelButton.appearance().setImage(nil, for: .normal)
+		CancelButton.appearance().textColor = .red
 		print(#function)
 	}
 
