@@ -106,7 +106,6 @@ struct ContentView: View {
 							self.searchViewStore.mode = .live(provider: .toursprung)
 							Logger.searchView.info("Map Mode toursprung")
 						}
-						print(buttonIcon(searchViewStore: self.searchViewStore))
 					},
 					MapButtonData(sfSymbol: .icon(.cube)) {
 						print("Location button tapped")
@@ -115,7 +114,6 @@ struct ContentView: View {
 				Spacer()
 				VStack(alignment: .trailing) {
 					CurrentLocationButton(camera: self.$mapStore.camera)
-						.buttonStyle(MapButtonStyle(mapButtonData: MapButtonData(sfSymbol: .icon(.location), action: {})))
 				}
 			}
 			.opacity(self.sheetSize.height > 500 ? 0 : 1)

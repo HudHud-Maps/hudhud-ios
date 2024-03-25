@@ -16,17 +16,9 @@ struct MapButtonsView: View {
 		VStack(spacing: 0) {
 			ForEach(self.mapButtonsData.indices, id: \.self) { index in
 				Button(action: self.mapButtonsData[index].action) {
-					if case let .icon(symbol) = mapButtonsData[index].sfSymbol {
-						Image(systemSymbol: symbol)
-							.font(.title2)
-							.padding(10)
-							.foregroundColor(.gray)
-					} else if case let .text(text) = mapButtonsData[index].sfSymbol {
-						Text(text)
-							.bold()
-							.padding(10)
-							.foregroundColor(.gray)
-					}
+					self.iconView(for: self.mapButtonsData[index].sfSymbol)
+						.padding(10)
+						.foregroundColor(.gray)
 				}
 				if index != self.mapButtonsData.count - 1 {
 					Divider()
@@ -41,12 +33,13 @@ struct MapButtonsView: View {
 
 	// MARK: - Private
 
+	@ViewBuilder
 	private func iconView(for style: MapButtonData.IconStyle) -> some View {
 		switch style {
 		case let .icon(symbol):
-			return AnyView(Image(systemSymbol: symbol)) // Wrap Image in AnyView
+			Image(systemSymbol: symbol).font(.title2)
 		case let .text(text):
-			return AnyView(Text(text)) // Wrap Text in AnyView
+			Text(text).font(.body).bold()
 		}
 	}
 }
