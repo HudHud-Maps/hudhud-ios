@@ -32,7 +32,7 @@ public enum PredictionResult: Hashable {
 
 public class POI: Hashable, Identifiable {
 
-	public var id: Int
+	public var id: String
 	public var title: String
 	public var subtitle: String
 	public var locationCoordinate: CLLocationCoordinate2D
@@ -41,7 +41,7 @@ public class POI: Hashable, Identifiable {
 
 	// MARK: - Lifecycle
 
-	public init(id: Int = .random(in: 0 ... 1_000_000), title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
+	public init(id: String = UUID().uuidString, title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle

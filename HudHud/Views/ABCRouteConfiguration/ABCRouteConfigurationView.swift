@@ -43,7 +43,7 @@ struct ABCRouteConfigurationView: View {
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-					self.routeConfigurations.append(.poi(POI(id: .random(in: 0 ... 1_000_000), title: "New Location", subtitle: "h", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911), type: "h")))
+					self.routeConfigurations.append(.poi(POI(id: UUID().uuidString, title: "New Location", subtitle: "h", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911), type: "h")))
 				} label: { // (24.7189756, 46.6468911)
 					HStack {
 						Image(systemSymbol: .plus)

@@ -61,8 +61,10 @@ struct ContentView: View {
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
 			// the one nearest nearest one to the touch point.
 			guard let feature = features.first,
-				  let placeID = feature.attribute(forKey: "poi_id") as? Int else
+				  let placeID = feature.attribute(forKey: "poi_id") as? String else
 			{
+				// user tapped nothing - deselect
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
 				return
 			}
 
