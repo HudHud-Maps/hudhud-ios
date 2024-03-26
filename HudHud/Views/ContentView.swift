@@ -138,7 +138,7 @@ struct ContentView: View {
 					}
 				}
 				.onPreferenceChange(SizePreferenceKey.self) { value in
-					withAnimation {
+					withAnimation(.easeOut) {
 						self.sheetSize = value
 					}
 				}

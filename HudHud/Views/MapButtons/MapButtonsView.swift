@@ -10,7 +10,7 @@ import OSLog
 import SwiftUI
 
 struct MapButtonsView: View {
-	@State var mapButtonsData: [MapButtonData]
+	let mapButtonsData: [MapButtonData]
 
 	var body: some View {
 		VStack(spacing: 0) {
@@ -39,7 +39,10 @@ struct MapButtonsView: View {
 		case let .icon(symbol):
 			Image(systemSymbol: symbol).font(.title2)
 		case let .text(text):
-			Text(text).font(.body).bold()
+			Text(text)
+				.font(.title2)
+				.fontWidth(.compressed)
+				.padding(.vertical, -0.8)
 		}
 	}
 }
