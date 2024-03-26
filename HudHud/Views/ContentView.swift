@@ -97,7 +97,7 @@ struct ContentView: View {
 					MapButtonData(sfSymbol: .icon(.map)) {
 						self.showMapLayer.toggle()
 					},
-					MapButtonData(sfSymbol: buttonIcon(searchViewStore: self.searchViewStore)) {
+					MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
 						switch self.searchViewStore.mode {
 						case let .live(provider):
 							self.searchViewStore.mode = .live(provider: provider.next())
@@ -213,15 +213,4 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	return ContentView(searchViewStore: .preview)
-}
-
-@MainActor func buttonIcon(searchViewStore: SearchViewStore) -> MapButtonData.IconStyle {
-	switch searchViewStore.mode {
-	case .live(.apple):
-		.icon(.appleLogo)
-	case .live(.toursprung):
-		.text("MTK")
-	case .preview:
-		.icon(.pCircle)
-	}
 }
