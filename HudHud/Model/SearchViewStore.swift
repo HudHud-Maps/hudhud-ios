@@ -46,6 +46,7 @@ class SearchViewStore: ObservableObject {
 	}
 
 	@Published var selectedDetent: PresentationDetent = .small
+	@Published var isSearching = false
 
 	// MARK: - Lifecycle
 
@@ -59,14 +60,18 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
+						self.isSearching = true
 						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.apple.predict(term: newValue))
 						self.mapStore.mapItemStatus = newStatus
+						self.isSearching = false
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
+						self.isSearching = true
 						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.toursprung.predict(term: newValue))
 						self.mapStore.mapItemStatus = newStatus
+						self.isSearching = false
 					}
 				case .preview:
 					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
