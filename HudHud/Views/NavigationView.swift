@@ -45,7 +45,6 @@ public struct NavigationView: UIViewControllerRepresentable {
 		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 		navigationController.mapView?.logoView.isHidden = true
-		navigationController.mapView?.prefetchesTiles = false
 
 		return navigationController
 	}
