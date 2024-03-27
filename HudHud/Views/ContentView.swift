@@ -51,6 +51,10 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}
+		.overlay(content: {
+			DebugStreetView()
+				.background()
+		})
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
