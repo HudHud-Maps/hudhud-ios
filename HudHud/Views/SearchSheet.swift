@@ -86,11 +86,11 @@ struct SearchSheet: View {
 							self.show(row: item.wrappedValue)
 						}
 					}, label: {
-					SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
-						.frame(maxWidth: .infinity)
-				})
-				.listRowSeparator(.hidden)
-				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+						SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
+							.frame(maxWidth: .infinity)
+					})
+					.listRowSeparator(.hidden)
+					.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 				}
 				.listStyle(.plain)
 			} else {
@@ -120,7 +120,7 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
-			.sheet(item: self.$route) { route in
+			.fullScreenCover(item: self.$route) { route in
 				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 				NavigationView(route: route, styleURL: styleURL)
 			}

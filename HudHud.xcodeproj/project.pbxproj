@@ -17,6 +17,7 @@
 		323D1A5792D1B36CB4DCEDA3 /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F7B47DB3BABA96D703387BE /* NotificationBanner.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
 		4A88DAD1FC1577A9E524BACA /* MapItemsStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FE822D3A29AAE7408A7F91 /* MapItemsStatus.swift */; };
+		4FD3C9B0D973CD7A3C45A272 /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237F24AFDE0101257526DE99 /* MapStyles.swift */; };
 		60CEC0E1346BE7F0DE0F522F /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 453101CB8634C19220B7782E /* MapStore.swift */; };
 		66091C578CF0A49E07648816 /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8B4F4E12064C277F021AC49 /* FavoriteCategoriesButton.swift */; };
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
@@ -99,6 +100,7 @@
 		011046DB14E32CF413FB3B76 /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
 		0FEB0EB0E127C1452F00E1A1 /* DirectionModePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerView.swift; sourceTree = "<group>"; };
 		10DC44AE814A62501B1ADC80 /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
+		237F24AFDE0101257526DE99 /* MapStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStyles.swift; sourceTree = "<group>"; };
 		2F7B47DB3BABA96D703387BE /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		453101CB8634C19220B7782E /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
@@ -373,6 +375,7 @@
 				011046DB14E32CF413FB3B76 /* NavigationView.swift */,
 				D46BD937D1E3F8D4C26B33B0 /* NavigationViewCoordinator.swift */,
 				BD4F6B50D48AAAF951DF3B9D /* SearchSectionView.swift */,
+				237F24AFDE0101257526DE99 /* MapStyles.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -532,12 +535,12 @@
 			);
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
-				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
+				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */,
 				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
-				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
-				92F9E8DC39EB24F5D1517F69 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
+				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */,
+				92F9E8DC39EB24F5D1517F69 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */,
 				CDF5060A1BDF3B0A8D9C59AF /* XCRemoteSwiftPackageReference "SimpleToast" */,
-				CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -654,6 +657,7 @@
 				CD5676F9FD6ED2CF39CA43EA /* View.swift in Sources */,
 				C8D2A07AF114FADA2F4966EA /* Backport.swift in Sources */,
 				9379E12B416564DDA63CFB6D /* SearchSectionView.swift in Sources */,
+				4FD3C9B0D973CD7A3C45A272 /* MapStyles.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1001,7 +1005,7 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		175D64818EED24230620A72D /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
+		175D64818EED24230620A72D /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
 			requirement = {
@@ -1009,7 +1013,7 @@
 				kind = branch;
 			};
 		};
-		3C1BE5A2A3977B4A449410D7 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+		3C1BE5A2A3977B4A449410D7 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
 			requirement = {
@@ -1017,7 +1021,7 @@
 				minimumVersion = 6.2.0;
 			};
 		};
-		4D723E26DBCDEBD5CA64324E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+		4D723E26DBCDEBD5CA64324E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
 			requirement = {
@@ -1033,7 +1037,7 @@
 				minimumVersion = 0.8.1;
 			};
 		};
-		80E898AE4365A4A5732F64ED /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
+		80E898AE4365A4A5732F64ED /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
 			requirement = {
@@ -1041,7 +1045,7 @@
 				kind = branch;
 			};
 		};
-		92F9E8DC39EB24F5D1517F69 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
+		92F9E8DC39EB24F5D1517F69 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
 			requirement = {
@@ -1049,7 +1053,7 @@
 				kind = branch;
 			};
 		};
-		A633EC3F0AE50AC185AF9413 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
+		A633EC3F0AE50AC185AF9413 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
 			requirement = {
@@ -1057,7 +1061,7 @@
 				kind = branch;
 			};
 		};
-		CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+		CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
 			requirement = {
@@ -1065,7 +1069,7 @@
 				kind = branch;
 			};
 		};
-		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
+		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
 			requirement = {
@@ -1073,7 +1077,7 @@
 				minimumVersion = 4.1.1;
 			};
 		};
-		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
+		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/SwiftLocation.git";
 			requirement = {
@@ -1089,7 +1093,7 @@
 				minimumVersion = 0.8.1;
 			};
 		};
-		D7E63002B4564140E3F839BC /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+		D7E63002B4564140E3F839BC /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
 			requirement = {
@@ -1102,17 +1106,17 @@
 /* Begin XCSwiftPackageProductDependency section */
 		257C860E8D3949FF134F994A /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A633EC3F0AE50AC185AF9413 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
+			package = A633EC3F0AE50AC185AF9413 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */;
 			productName = MapboxNavigation;
 		};
 		2EE9582A408F51C58D3F52C2 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = D7E63002B4564140E3F839BC /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			package = D7E63002B4564140E3F839BC /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
 			productName = MapLibre;
 		};
 		6D67BC634BA674EA69A2948F /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 3C1BE5A2A3977B4A449410D7 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			package = 3C1BE5A2A3977B4A449410D7 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
 			productName = MapLibre;
 		};
 		859D1D7C0F914641EC9901BB /* SimpleToast */ = {
@@ -1122,32 +1126,32 @@
 		};
 		B0347F630D77DF6694D36D4A /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 80E898AE4365A4A5732F64ED /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
+			package = 80E898AE4365A4A5732F64ED /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */;
 			productName = MapboxNavigation;
 		};
 		B08FF5E6E22A8D0D4AFA8F83 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 175D64818EED24230620A72D /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
+			package = 175D64818EED24230620A72D /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */;
 			productName = MapboxNavigation;
 		};
 		CD1869432BADC471009BE029 /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			package = CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */;
 			productName = MapLibreSwiftDSL;
 		};
 		CD1869452BADC471009BE029 /* MapLibreSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			package = CD1869422BADC471009BE029 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */;
 			productName = MapLibreSwiftUI;
 		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
+			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */;
 			productName = SFSafeSymbols;
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
+			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */;
 			productName = SwiftLocation;
 		};
 		CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */ = {
@@ -1172,7 +1176,7 @@
 		};
 		F74D6ED7C3EC318580F6F7D8 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 4D723E26DBCDEBD5CA64324E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
+			package = 4D723E26DBCDEBD5CA64324E /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
 			productName = MapLibre;
 		};
 /* End XCSwiftPackageProductDependency section */
