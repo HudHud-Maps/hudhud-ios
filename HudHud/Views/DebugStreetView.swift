@@ -23,11 +23,20 @@ class MotionViewModel: ObservableObject {
 
 		static var zero: MotionViewModel.Position = .init(heading: 0, pitch: 0)
 
+		// MARK: - Lifecycle
+
+		init(heading: Double, pitch: Double) {
+			self.heading = heading.wrap(min: 0, max: 360)
+			self.pitch = Double.minimum(pitch, 180)
+		}
+
 		// MARK: - Internal
 
 		static func + (left: Position, right: Position) -> Position {
+			let pitch = Double.minimum(Double.maximum(left.pitch + right.pitch, 0), 180)
+
 			return Position(heading: left.heading + right.heading,
-							pitch: left.pitch + right.pitch)
+							pitch: pitch)
 		}
 	}
 }
@@ -37,9 +46,6 @@ class MotionViewModel: ObservableObject {
 struct DebugStreetView: View {
 
 	@ObservedObject var viewModel = MotionViewModel()
-
-//	@State private var dragStartOffset: CGSize?
-//	@State var dragOffset: CGSize = .zero
 
 	var body: some View {
 		VStack {
@@ -53,7 +59,7 @@ struct DebugStreetView: View {
 			.onChanged { value in
 				if let dragStartOffset = viewModel.positionOffet {
 					self.viewModel.position = dragStartOffset + MotionViewModel.Position(heading: value.translation.width,
-																						 pitch: value.translation.height)
+																						 pitch: -value.translation.height)
 				} else {
 					self.viewModel.positionOffet = self.viewModel.position
 				}
