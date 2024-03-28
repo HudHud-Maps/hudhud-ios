@@ -10,7 +10,8 @@ import Foundation
 import OSLog
 
 extension Logger {
-	private static var subsystem = Bundle.main.bundleIdentifier!
+	private static var subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping
+
 	static let searchView = Logger(subsystem: subsystem, category: "SearchView")
 	static let POIData = Logger(subsystem: subsystem, category: "POIData")
 }
