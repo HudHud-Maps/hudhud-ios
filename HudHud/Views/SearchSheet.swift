@@ -120,7 +120,7 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
-			.sheet(item: self.$route) { route in
+			.fullScreenCover(item: self.$route) { route in
 				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 				NavigationView(route: route, styleURL: styleURL)
 			}

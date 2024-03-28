@@ -39,13 +39,20 @@ struct CurrentLocationButton: View {
 			}
 		} label: {
 			Image(systemSymbol: .location)
+				.font(.title2)
+				.padding(10)
+				.foregroundColor(.gray)
 		}
-		.padding(12)
-		.frame(minWidth: 44, minHeight: 44)
-		.background {
-			RoundedRectangle(cornerRadius: 10)
-				.fill(Material.thickMaterial)
-		}
+		.background(Color.white)
+		.cornerRadius(15)
+		.shadow(color: .black.opacity(0.1), radius: 10, y: 4)
+		.fixedSize()
+//		.padding(12)
+//		.frame(minWidth: 44, minHeight: 44)
+//		.background {
+//			RoundedRectangle(cornerRadius: 10)
+//				.fill(Material.thickMaterial)
+//		}
 	}
 }
 

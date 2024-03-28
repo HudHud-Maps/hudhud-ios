@@ -98,17 +98,26 @@ struct ContentView: View {
 		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
 				MapButtonsView(mapButtonsData: [
-					MapButtonData(sfSymbol: .map) {
+					MapButtonData(sfSymbol: .icon(.map)) {
 						self.showMapLayer.toggle()
 					},
-					MapButtonData(sfSymbol: .cube) {
+					MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+						switch self.searchViewStore.mode {
+						case let .live(provider):
+							self.searchViewStore.mode = .live(provider: provider.next())
+							Logger.searchView.info("Map Mode live")
+						case .preview:
+							self.searchViewStore.mode = .live(provider: .toursprung)
+							Logger.searchView.info("Map Mode toursprung")
+						}
+					},
+					MapButtonData(sfSymbol: .icon(.cube)) {
 						print("Location button tapped")
 					}
 				])
 				Spacer()
 				VStack(alignment: .trailing) {
 					CurrentLocationButton(camera: self.$mapStore.camera)
-					ProviderButton(searchViewStore: self.searchViewStore)
 				}
 			}
 			.opacity(self.sheetSize.height > 500 ? 0 : 1)
@@ -133,7 +142,7 @@ struct ContentView: View {
 					}
 				}
 				.onPreferenceChange(SizePreferenceKey.self) { value in
-					withAnimation {
+					withAnimation(.easeOut) {
 						self.sheetSize = value
 					}
 				}
