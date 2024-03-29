@@ -34,6 +34,7 @@ struct ContentView: View {
 	@State private var showMapLayer: Bool = false
 	@State var sheetSize: CGSize = .zero
 	@State var didTryToZoomOnUsersLocation = false
+	@State var streetViewVisible: Bool = false
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -51,10 +52,6 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}
-		.overlay(content: {
-			DebugStreetView()
-				.background()
-		})
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
@@ -92,8 +89,12 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
-				.presentationBackground(.thinMaterial)
+			if self.streetViewVisible {
+				DebugStreetView()
+			} else {
+				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+					.presentationBackground(.thinMaterial)
+			}
 		}
 		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
@@ -112,7 +113,7 @@ struct ContentView: View {
 						}
 					},
 					MapButtonData(sfSymbol: .icon(.cube)) {
-						print("Location button tapped")
+						self.streetViewVisible.toggle()
 					}
 				])
 				Spacer()

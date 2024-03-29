@@ -33,7 +33,7 @@ class MotionViewModel: ObservableObject {
 		// MARK: - Internal
 
 		static func + (left: Position, right: Position) -> Position {
-			let pitch = Double.minimum(Double.maximum(left.pitch + right.pitch, 0), 180)
+			let pitch = (left.pitch + right.pitch).limit(upper: 180)
 
 			return Position(heading: left.heading + right.heading,
 							pitch: pitch)
@@ -45,16 +45,32 @@ class MotionViewModel: ObservableObject {
 
 struct DebugStreetView: View {
 
-	@ObservedObject var viewModel = MotionViewModel()
+	@StateObject var viewModel = MotionViewModel()
 
 	var body: some View {
-		VStack {
-			Text("Gyroscope Data")
-			Text("Heading: \(String(format: "%4.1f", self.viewModel.position.heading))")
+		// This here works as expected
+//		RoundedRectangle(cornerRadius: 10)
+//			.fill(Color.yellow)
+//			.frame(height: 300)
+//			.overlay(alignment: .top) {
+//				ZStack {
+//					Color.red
+//					Text("Debug StreetView")
+//						.foregroundColor(.white)
+//				}
+//				.clipShape(RoundedRectangle(cornerRadius: 10))
+//			}
+//			.padding(.horizontal, 20)
+
+		// This is ignoring the safeAreaInsets
+		VStack(alignment: .trailing) {
+			Text("Debug Street View")
+			Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))")
 				.monospaced()
-			Text("Pitch: \(String(format: "%4.1f", self.viewModel.position.pitch))")
+			Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))")
 				.monospaced()
 		}
+		.background(.red)
 		.gesture(DragGesture(minimumDistance: 10, coordinateSpace: .global)
 			.onChanged { value in
 				if let dragStartOffset = viewModel.positionOffet {
