@@ -117,7 +117,7 @@ public class Toursprung {
 		private func errorDescription(message: String?, defaultMessage: String) -> String {
 			var description = defaultMessage
 			if let message {
-				description += "\(message) "
+				description += " \(message)"
 			}
 			return description
 		}
@@ -145,45 +145,43 @@ public class Toursprung {
 		let json: JSONDictionary
 
 		guard answer.response.mimeType == "application/json" else {
-			throw ToursprungError.invalidResponse(message: nil)
+			throw ToursprungError.invalidResponse(message: "MIME Type not matching application/json")
 		}
 
 		do {
 			json = try JSONSerialization.jsonObject(with: answer.data, options: []) as? [String: Any] ?? [:]
-
-			let apiStatusCode = json["code"] as? String
-			let apiMessage = json["message"] as? String
-			guard (apiStatusCode == nil && apiMessage == nil) || apiStatusCode == "Ok" else {
-				switch apiStatusCode {
-				case "InvalidInput":
-					throw ToursprungError.invalidInput(message: apiMessage)
-				case "Not Authorized - No Token":
-					throw ToursprungError.notAuthorized(message: apiMessage)
-				case "Not Authorized - Invalid Token":
-					throw ToursprungError.notAuthorized(message: apiMessage)
-				case "Forbidden":
-					throw ToursprungError.forbidden(message: apiMessage)
-				case "ProfileNotFound":
-					throw ToursprungError.profileNotFound(message: apiMessage)
-				case "NoSegment":
-					throw ToursprungError.noSegment(message: apiMessage)
-				case "NoRoute":
-					throw ToursprungError.noRoute(message: apiMessage)
-				default:
-					throw ToursprungError.invalidResponse(message: nil)
-				}
-			}
-
-			let response = try options.response(from: json)
-			for route in response.routes {
-				route.routeIdentifier = json["uuid"] as? String
-			}
-			return .init(waypoints: response.waypoint, routes: response.routes)
-
 		} catch let error as ToursprungError {
-			Logger().error("Route error occurred: \(error.localizedDescription)")
+			throw ToursprungError.invalidResponse(message: "Route error occurred: \(error.localizedDescription)")
 		}
-		return .init(waypoints: [], routes: [])
+
+		let apiStatusCode = json["code"] as? String
+		let apiMessage = json["message"] as? String
+		guard (apiStatusCode == nil && apiMessage == nil) || apiStatusCode == "Ok" else {
+			switch apiStatusCode {
+			case "InvalidInput":
+				throw ToursprungError.invalidInput(message: apiMessage)
+			case "Not Authorized - No Token":
+				throw ToursprungError.notAuthorized(message: apiMessage)
+			case "Not Authorized - Invalid Token":
+				throw ToursprungError.notAuthorized(message: apiMessage)
+			case "Forbidden":
+				throw ToursprungError.forbidden(message: apiMessage)
+			case "ProfileNotFound":
+				throw ToursprungError.profileNotFound(message: apiMessage)
+			case "NoSegment":
+				throw ToursprungError.noSegment(message: apiMessage)
+			case "NoRoute":
+				throw ToursprungError.noRoute(message: apiMessage)
+			default:
+				throw ToursprungError.invalidResponse(message: nil)
+			}
+		}
+
+		let response = try options.response(from: json)
+		for route in response.routes {
+			route.routeIdentifier = json["uuid"] as? String
+		}
+		return .init(waypoints: response.waypoint, routes: response.routes)
 	}
 }
 
@@ -214,7 +212,7 @@ private extension RouteOptions {
 				URLQueryItem(name: "voice_units", value: "metric")
 			]
 			guard let url = components.url else {
-				throw Toursprung.ToursprungError.invalidUrl(message: nil)
+				throw Toursprung.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
 			}
 
 			return url
