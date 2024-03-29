@@ -28,7 +28,7 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
 	@StateObject private var searchViewStore: SearchViewStore
-	@StateObject private var mapStore = MapStore()
+	@StateObject private var mapStore: MapStore
 	@State private var showUserLocation: Bool = false
 	@StateObject var notificationQueue: NotificationQueue = .init()
 	@State private var showMapLayer: Bool = false
@@ -48,35 +48,37 @@ struct ContentView: View {
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
 		}
-		.onTapMapGesture(onTapChanged: { context, mapView in
-			guard context.state == .ended else {
-				return
-			}
+		/*
+		 .onTapMapGesture(onTapChanged: { context, mapView in
+		 	guard context.state == .ended else {
+		 		return
+		 	}
 
-			let point = context.point
-			let width = 16.0 * 2.0 // CircleStyleLayer Radius
-			let rect = CGRect(x: point.x - width / 2.0, y: point.y - width / 2.0, width: width, height: width)
-			let features = mapView.visibleFeatures(in: rect, styleLayerIdentifiers: ["simple-circles"])
+		 	let point = context.point
+		 	let width = 16.0 * 2.0 // CircleStyleLayer Radius
+		 	let rect = CGRect(x: point.x - width / 2.0, y: point.y - width / 2.0, width: width, height: width)
+		 	let features = mapView.visibleFeatures(in: rect, styleLayerIdentifiers: ["simple-circles"])
 
-			// Pick the first feature (which may be a port or a cluster), ideally selecting
-			// the one nearest nearest one to the touch point.
-			guard let feature = features.first,
-				  let placeID = feature.attribute(forKey: "poi_id") as? String else
-			{
-				// user tapped nothing - deselect
-				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
-				return
-			}
+		 	// Pick the first feature (which may be a port or a cluster), ideally selecting
+		 	// the one nearest nearest one to the touch point.
+		 	guard let feature = features.first,
+		 		  let placeID = feature.attribute(forKey: "poi_id") as? String else
+		 	{
+		 		// user tapped nothing - deselect
+		 		self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
+		 		return
+		 	}
 
-			let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
-			let poi = mapItems.first { row in
-				row.poi?.id == placeID
-			}?.poi
+		 	let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
+		 	let poi = mapItems.first { row in
+		 		row.poi?.id == placeID
+		 	}?.poi
 
-			if let poi {
-				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
-			}
-		})
+		 	if let poi {
+		 		self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
+		 	}
+		 })
+		  */
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}
@@ -206,10 +208,9 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+	init(searchViewStore: SearchViewStore) {
 		self._searchViewStore = .init(wrappedValue: searchViewStore)
-		self._mapStore = .init(wrappedValue: mapStore)
-		searchViewStore.mapStore = mapStore
+		self._mapStore = .init(wrappedValue: searchViewStore.mapStore)
 	}
 
 	// MARK: - Internal
@@ -241,5 +242,12 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	return ContentView(searchViewStore: .preview)
+	ContentView(searchViewStore: .preview)
+}
+
+#Preview("Touch Testing") {
+	let store: SearchViewStore = .preview
+	store.searchText = "shops"
+	store.selectedDetent = .medium
+	return ContentView(searchViewStore: store)
 }

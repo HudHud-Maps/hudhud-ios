@@ -183,28 +183,28 @@ extension POI: CustomStringConvertible {
 }
 
 public extension POI {
-	static let ketchup = POI(title: "Ketch up - Dubai",
-							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence - Bluewaters Island - Dubai",
-							 locationCoordinate: CLLocationCoordinate2D(latitude: 25.077744998955207, longitude: 55.124647403691284),
+	static let ketchup = POI(title: "Ketch up",
+							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
+							 locationCoordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
 							 type: "Restaurant")
 	static let starbucks = POI(title: "Starbucks",
-							   subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
-							   locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+							   subtitle: "The Beach",
+							   locationCoordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
 							   type: "Cafe")
 	static let publicPlace = POI(title: "publicPlace",
 								 subtitle: "Garden - Alyasmen - Riyadh",
-								 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
 								 type: "publicPlace")
 	static let artwork = POI(title: "Artwork",
 							 subtitle: "artwork - Al-Olya - Riyadh",
-							 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+							 locationCoordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
 							 type: "artwork")
 	static let pharmacy = POI(title: "Pharmacy",
 							  subtitle: "Al-Olya - Riyadh",
-							  locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+							  locationCoordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
 							  type: "pharmacy")
 	static let supermarket = POI(title: "Supermarket",
 								 subtitle: "Al-Narjs - Riyadh",
-								 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
 								 type: "supermarket")
 }
