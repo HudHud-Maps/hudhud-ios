@@ -45,6 +45,7 @@
 		CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */ = {isa = PBXBuildFile; fileRef = CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */; };
 		CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1BD91F2B91E59200A591BD /* NavigationView.swift */; };
 		CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */; };
+		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
@@ -137,6 +138,7 @@
 		CD1BD91F2B91E59200A591BD /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
 		CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewCoordinator.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
+		CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Limits.swift"; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
@@ -402,6 +404,7 @@
 				1A49E3EE7EB638EED6A6D564 /* View.swift */,
 				F3BB5BFA8CB42C0446317C57 /* Backport.swift */,
 				32589FE734D110C815A6168A /* LoggerSettings.swift */,
+				CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -632,6 +635,7 @@
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
 				CB39700B2B81F52C00CF9D59 /* MapLayersData.swift in Sources */,
+				CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */,
 				CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */,
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
 				90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */,
