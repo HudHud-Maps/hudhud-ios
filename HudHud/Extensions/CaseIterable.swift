@@ -16,4 +16,9 @@ extension CaseIterable where Self: Equatable {
 		let next = all.index(after: idx)
 		return all[next == all.endIndex ? all.startIndex : next]
 	}
+
+	mutating
+	func selectNext() {
+		self = self.next()
+	}
 }
