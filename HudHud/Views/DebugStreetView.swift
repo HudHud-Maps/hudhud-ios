@@ -17,7 +17,7 @@ class MotionViewModel: ObservableObject {
 		case fullscreen
 	}
 
-	@Published var position: Position = .zero
+	@Published var position: Position = .initial
 	@Published var positionOffet: Position?
 	@Published var size: Size = .compact
 
@@ -27,7 +27,7 @@ class MotionViewModel: ObservableObject {
 		var heading: Double
 		var pitch: Double
 
-		static var zero: MotionViewModel.Position = .init(heading: 0, pitch: 0)
+		static var initial: MotionViewModel.Position = .init(heading: 0, pitch: 90)
 
 		// MARK: - Lifecycle
 
@@ -81,7 +81,7 @@ struct DebugStreetView: View {
 						let scaleFactor = 0.25
 
 						self.viewModel.position = dragStartOffset + (MotionViewModel.Position(heading: value.translation.width,
-																							  pitch: -value.translation.height) * scaleFactor)
+																							  pitch: value.translation.height) * scaleFactor)
 					} else {
 						self.viewModel.positionOffet = self.viewModel.position
 					}
