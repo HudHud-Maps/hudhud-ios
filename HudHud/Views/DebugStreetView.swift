@@ -44,6 +44,11 @@ class MotionViewModel: ObservableObject {
 			return Position(heading: left.heading + right.heading,
 							pitch: pitch)
 		}
+
+		static func * (left: Position, right: Double) -> Position {
+			return Position(heading: left.heading * right,
+							pitch: left.pitch * right)
+		}
 	}
 }
 
@@ -71,8 +76,12 @@ struct DebugStreetView: View {
 			.gesture(DragGesture(minimumDistance: 10, coordinateSpace: .global)
 				.onChanged { value in
 					if let dragStartOffset = viewModel.positionOffet {
-						self.viewModel.position = dragStartOffset + MotionViewModel.Position(heading: value.translation.width,
-																							 pitch: -value.translation.height)
+						// try to mimic scrolling so your finger stays below the initial tap point
+						// needs fine tuning once we have the StreetView WebView
+						let scaleFactor = 0.25
+
+						self.viewModel.position = dragStartOffset + (MotionViewModel.Position(heading: value.translation.width,
+																							  pitch: -value.translation.height) * scaleFactor)
 					} else {
 						self.viewModel.positionOffet = self.viewModel.position
 					}
