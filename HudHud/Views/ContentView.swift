@@ -29,12 +29,12 @@ struct ContentView: View {
 	private let locationManager = Location()
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
-	@State private var showUserLocation: Bool = false
 	@StateObject var notificationQueue: NotificationQueue = .init()
+	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
-	@State var sheetSize: CGSize = .zero
-	@State var didTryToZoomOnUsersLocation = false
-	@State var streetViewVisible: Bool = false
+	@State private var sheetSize: CGSize = .zero
+	@State private var didTryToZoomOnUsersLocation = false
+	@State private var streetViewVisible: Bool = false
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {

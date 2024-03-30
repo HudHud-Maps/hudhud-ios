@@ -12,8 +12,14 @@ import SwiftUI
 // MARK: - MotionViewModel
 
 class MotionViewModel: ObservableObject {
+	enum Size: CaseIterable {
+		case compact
+		case fullscreen
+	}
+
 	@Published var position: Position = .zero
 	@Published var positionOffet: Position?
+	@Published var size: Size = .compact
 
 	// MARK: - Internal
 
@@ -48,45 +54,47 @@ struct DebugStreetView: View {
 	@StateObject var viewModel = MotionViewModel()
 
 	var body: some View {
-		// This here works as expected
-//		RoundedRectangle(cornerRadius: 10)
-//			.fill(Color.yellow)
-//			.frame(height: 300)
-//			.overlay(alignment: .top) {
-//				ZStack {
-//					Color.red
-//					Text("Debug StreetView")
-//						.foregroundColor(.white)
-//				}
-//				.clipShape(RoundedRectangle(cornerRadius: 10))
-//			}
-//			.padding(.horizontal, 20)
-
-		// This is ignoring the safeAreaInsets
-		VStack(alignment: .trailing) {
-			Text("Debug Street View")
-			Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))")
-				.monospaced()
-			Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))")
-				.monospaced()
-		}
-		.background(.red)
-		.gesture(DragGesture(minimumDistance: 10, coordinateSpace: .global)
-			.onChanged { value in
-				if let dragStartOffset = viewModel.positionOffet {
-					self.viewModel.position = dragStartOffset + MotionViewModel.Position(heading: value.translation.width,
-																						 pitch: -value.translation.height)
-				} else {
-					self.viewModel.positionOffet = self.viewModel.position
+		ViewThatFits {
+			VStack(alignment: .trailing) {
+				Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))")
+					.monospaced()
+					.animation(.none)
+				Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))")
+					.monospaced()
+					.animation(.none)
+			}
+			.frame(height: 300)
+			.frame(maxWidth: .infinity, maxHeight: self.viewModel.size == .compact ? 300 : .infinity)
+			.background(.gray, ignoresSafeAreaEdges: [])
+			.foregroundStyle(.white)
+			.clipShape(RoundedRectangle(cornerRadius: 12))
+			.gesture(DragGesture(minimumDistance: 10, coordinateSpace: .global)
+				.onChanged { value in
+					if let dragStartOffset = viewModel.positionOffet {
+						self.viewModel.position = dragStartOffset + MotionViewModel.Position(heading: value.translation.width,
+																							 pitch: -value.translation.height)
+					} else {
+						self.viewModel.positionOffet = self.viewModel.position
+					}
 				}
+				.onEnded { _ in
+					self.viewModel.positionOffet = nil
+				}
+			)
+			.onTapGesture {
+				self.viewModel.size.selectNext()
 			}
-			.onEnded { _ in
-				self.viewModel.positionOffet = nil
-			}
-		)
+		}
+		.padding(.horizontal)
+		.animation(.easeInOut, value: self.viewModel.size)
 	}
 }
 
 #Preview {
-	DebugStreetView()
+	Rectangle()
+		.fill(Color.yellow)
+		.ignoresSafeArea()
+		.safeAreaInset(edge: .top, alignment: .center) {
+			DebugStreetView()
+		}
 }
