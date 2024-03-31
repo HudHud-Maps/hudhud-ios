@@ -14,7 +14,7 @@ import SwiftLocation
 import SwiftUI
 
 struct CurrentLocationButton: View {
-
+	@State private var locationRequestInProgress = false
 	@Binding var camera: MapViewCamera
 	let location = Location()
 
@@ -22,6 +22,7 @@ struct CurrentLocationButton: View {
 		Button {
 			Task {
 				do {
+					self.locationRequestInProgress = true
 					self.location.accuracy = .threeKilometers
 					try await self.location.requestPermission(.whenInUse)
 					let userLocation = try await location.requestLocation()
@@ -30,18 +31,28 @@ struct CurrentLocationButton: View {
 						withAnimation {
 							self.camera = MapViewCamera.center(coordinates, zoom: 10)
 						}
+						self.locationRequestInProgress = false
 					} else {
 						Logger.searchView.error("location error: got no coordinates")
+						self.locationRequestInProgress = false
 					}
 				} catch {
 					Logger.searchView.error("location error: \(error)")
+					self.locationRequestInProgress = false
 				}
 			}
 		} label: {
-			Image(systemSymbol: .location)
-				.font(.title2)
-				.padding(10)
-				.foregroundColor(.gray)
+			if self.locationRequestInProgress {
+				ProgressView()
+					.font(.title2)
+					.padding(13)
+					.foregroundColor(.gray)
+			} else {
+				Image(systemSymbol: .location)
+					.font(.title2)
+					.padding(10)
+					.foregroundColor(.gray)
+			}
 		}
 		.background(Color.white)
 		.cornerRadius(15)
