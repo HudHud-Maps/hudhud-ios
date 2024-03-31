@@ -63,7 +63,7 @@ class SearchViewStore: ObservableObject {
 						self.isSearching = true
 						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.apple.predict(term: newValue))
 						self.mapStore.mapItemStatus = newStatus
-						self.isSearching = false
+						defer { self.isSearching = false }
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
@@ -71,7 +71,7 @@ class SearchViewStore: ObservableObject {
 						self.isSearching = true
 						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.toursprung.predict(term: newValue))
 						self.mapStore.mapItemStatus = newStatus
-						self.isSearching = false
+						defer { self.isSearching = false }
 					}
 				case .preview:
 					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
