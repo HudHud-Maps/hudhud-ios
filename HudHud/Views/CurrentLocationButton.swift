@@ -58,6 +58,7 @@ struct CurrentLocationButton: View {
 		.cornerRadius(15)
 		.shadow(color: .black.opacity(0.1), radius: 10, y: 4)
 		.fixedSize()
+		.disabled(self.locationRequestInProgress)
 //		.padding(12)
 //		.frame(minWidth: 44, minHeight: 44)
 //		.background {
