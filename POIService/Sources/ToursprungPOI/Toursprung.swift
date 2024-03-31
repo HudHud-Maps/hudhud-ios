@@ -181,6 +181,16 @@ public class Toursprung {
 		for route in response.routes {
 			route.routeIdentifier = json["uuid"] as? String
 		}
+
+		let httpResponse = answer.response as? HTTPURLResponse
+		if let httpStatusCode = httpResponse?.statusCode {
+			switch httpStatusCode {
+			case 500 ... 599:
+				throw ToursprungError.invalidResponse(message: "Server error HTTP status code: \(httpStatusCode)")
+			default:
+				throw ToursprungError.invalidResponse(message: "Server error occurred")
+			}
+		}
 		return .init(waypoints: response.waypoint, routes: response.routes)
 	}
 }
