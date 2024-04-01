@@ -28,6 +28,7 @@ struct FavoriteCategoriesView: View {
 	var body: some View {
 		ScrollView(.horizontal) {
 			HStack {
+				Spacer()
 				ForEach(self.favoriteCategoriesData.prefix(4), id: \.self) { favorite in
 					Button {
 						print("\(favorite.title) was pressed")
@@ -41,8 +42,9 @@ struct FavoriteCategoriesView: View {
 				} label: {
 					Text(self.plusButton.title)
 				}.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
+				Spacer()
+					.padding(.horizontal)
 			}
-			Spacer()
 		}
 	}
 }
