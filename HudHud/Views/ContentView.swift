@@ -48,37 +48,30 @@ struct ContentView: View {
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
 		}
-		/*
-		 .onTapMapGesture(onTapChanged: { context, mapView in
-		 	guard context.state == .ended else {
-		 		return
-		 	}
+		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
+			// Pick the first feature (which may be a port or a cluster), ideally selecting
+			// the one nearest nearest one to the touch point.
+			guard let feature = features.first,
+				  let placeID = feature.attribute(forKey: "poi_id") as? String else
+			{
+				// user tapped nothing - deselect
+				print("Tapped nothing - setting to nil...")
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
+				return
+			}
 
-		 	let point = context.point
-		 	let width = 16.0 * 2.0 // CircleStyleLayer Radius
-		 	let rect = CGRect(x: point.x - width / 2.0, y: point.y - width / 2.0, width: width, height: width)
-		 	let features = mapView.visibleFeatures(in: rect, styleLayerIdentifiers: ["simple-circles"])
+			let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
+			let poi = mapItems.first { row in
+				row.poi?.id == placeID
+			}?.poi
 
-		 	// Pick the first feature (which may be a port or a cluster), ideally selecting
-		 	// the one nearest nearest one to the touch point.
-		 	guard let feature = features.first,
-		 		  let placeID = feature.attribute(forKey: "poi_id") as? String else
-		 	{
-		 		// user tapped nothing - deselect
-		 		self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
-		 		return
-		 	}
-
-		 	let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
-		 	let poi = mapItems.first { row in
-		 		row.poi?.id == placeID
-		 	}?.poi
-
-		 	if let poi {
-		 		self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
-		 	}
-		 })
-		  */
+			if let poi {
+				print("setting poi")
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
+			} else {
+				print("had no poi")
+			}
+		})
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}

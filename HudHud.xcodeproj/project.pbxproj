@@ -137,7 +137,7 @@
 		CBCDB5252B94735A00311C1B /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
-		CD9C5B582BB47B55002999C8 /* maplibre-swiftui-dsl-playground */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-swiftui-dsl-playground"; path = "../maplibre-swiftui-dsl-playground"; sourceTree = "<group>"; };
+		CD5CA7482BB88690007EE7D1 /* maplibre-swiftui-dsl-playground */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-swiftui-dsl-playground"; path = "../maplibre-swiftui-dsl-playground"; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CDAE05492B681261003E5196 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -285,7 +285,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
-				CD9C5B582BB47B55002999C8 /* maplibre-swiftui-dsl-playground */,
+				CD5CA7482BB88690007EE7D1 /* maplibre-swiftui-dsl-playground */,
 				CDF4A6CE2B7E3D98001B3CD7 /* POIService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
