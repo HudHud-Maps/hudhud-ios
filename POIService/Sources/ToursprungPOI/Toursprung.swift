@@ -187,6 +187,8 @@ public class Toursprung {
 			switch httpStatusCode {
 			case 500 ... 599:
 				throw ToursprungError.invalidResponse(message: "Server error HTTP status code: \(httpStatusCode)")
+			case 200 ... 299:
+				return .init(waypoints: response.waypoint, routes: response.routes)
 			default:
 				throw ToursprungError.invalidResponse(message: "Server error occurred")
 			}
