@@ -7,7 +7,6 @@
 //
 
 import CoreMotion
-import MapLibreSwiftUI
 import SwiftUI
 
 // MARK: - MotionViewModel
@@ -82,7 +81,6 @@ final class MotionViewModel: ObservableObject {
 struct DebugStreetView: View {
 
 	@StateObject var viewModel: MotionViewModel
-	@Binding var camera: MapViewCamera
 
 	var body: some View {
 		ViewThatFits {
@@ -121,6 +119,6 @@ struct DebugStreetView: View {
 		.fill(Color.yellow)
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			DebugStreetView(viewModel: .init(), camera: .constant(.default()))
+			DebugStreetView(viewModel: .init())
 		}
 }

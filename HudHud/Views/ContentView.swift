@@ -97,13 +97,13 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
 			if self.mapStore.streetViewPoint != nil {
-				DebugStreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
+				DebugStreetView(viewModel: self.motionViewModel)
 					.onAppear {
-						switch self.mapStore.camera.state {
-						case let .centered(coordinate, _, _, direction):
-							self.mapStore.streetViewPoint = .init(location: coordinate, heading: direction)
-						default:
-							print(#function)
+						Task {
+							let userLocation = try await locationManager.requestLocation()
+							guard let location = userLocation.location else { return }
+
+							self.mapStore.streetViewPoint = .init(location: location.coordinate, heading: location.course)
 						}
 					}
 					.onDisappear {
