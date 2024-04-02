@@ -14,7 +14,7 @@ import MapLibre
 
 struct StreetViewPoint {
 	let location: CLLocationCoordinate2D
-	let heading: CGFloat
+	var heading: CGFloat
 }
 
 extension StreetViewPoint {

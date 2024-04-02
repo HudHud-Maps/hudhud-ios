@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import Combine
 import CoreLocation
 import Foundation
 import MapLibre
@@ -14,10 +15,11 @@ import SwiftUI
 
 // MARK: - MapStore
 
-class MapStore: ObservableObject {
+final class MapStore: ObservableObject {
 
-	@MainActor
-	@Published var mapItemStatus: MapItemsStatus = .empty {
+	private var cancelable: [AnyCancellable] = []
+
+	@NestedObservableObject var mapItemStatus: MapItemsStatus {
 		didSet {
 			if let coordinate = self.mapItemStatus.selectedItem?.locationCoordinate {
 				self.camera = .center(coordinate, zoom: 16)
@@ -33,28 +35,25 @@ class MapStore: ObservableObject {
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
-}
 
-extension CameraState {
+	// MARK: - Lifecycle
 
-	static func boundingBox(from locations: [CLLocationCoordinate2D]) -> MapViewCamera? {
-		guard !locations.isEmpty else { return nil }
+	init(mapItemStatus: MapItemsStatus, camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true) {
+		self.mapItemStatus = mapItemStatus
+		self.camera = camera
+		self.searchShown = searchShown
 
-		var minLat = locations[0].latitude
-		var maxLat = locations[0].latitude
-		var minLon = locations[0].longitude
-		var maxLon = locations[0].longitude
+		self.mapItemStatus.$selectedItem.sink { item in
+			guard let coordinate = item?.locationCoordinate else { return }
 
-		for coordinate in locations {
-			minLat = min(minLat, coordinate.latitude)
-			maxLat = max(maxLat, coordinate.latitude)
-			minLon = min(minLon, coordinate.longitude)
-			maxLon = max(maxLon, coordinate.longitude)
-		}
+			self.camera = .center(coordinate, zoom: 16)
+		}.store(in: &self.cancelable)
 
-		let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
-		let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
-		let coordinateBounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
-		return .boundingBox(coordinateBounds)
+		self.mapItemStatus.$mapItems.sink { mapItems in
+			let coordinates = mapItems.compactMap(\.coordinate)
+			guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+
+			self.camera = camera
+		}.store(in: &self.cancelable)
 	}
 }

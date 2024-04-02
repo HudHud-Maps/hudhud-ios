@@ -27,15 +27,14 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager: Location
-	@StateObject private var searchViewStore: SearchViewStore
-	@StateObject private var mapStore = MapStore()
+	@ObservedObject private var searchViewStore: SearchViewStore
+	@ObservedObject private var mapStore: MapStore
 	@StateObject var notificationQueue: NotificationQueue = .init()
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
-	@State private var streetViewVisible: Bool = false
-	@StateObject var viewModel = MotionViewModel()
+	@ObservedObject var motionViewModel: MotionViewModel
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -88,15 +87,25 @@ struct ContentView: View {
 				}
 
 				self.mapStore.camera = MapViewCamera.center(coordinates, zoom: 16)
-
 			} catch {
 				print("location error: \(error)")
 			}
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			if self.streetViewVisible {
-				DebugStreetView(viewModel: self.viewModel)
+			if self.mapStore.mapItemStatus.streetViewPoint != nil {
+				DebugStreetView(viewModel: self.motionViewModel)
+					.onAppear {
+						switch self.mapStore.camera.state {
+						case let .centered(coordinate, _, _, direction):
+							self.mapStore.mapItemStatus.streetViewPoint = .init(location: coordinate, heading: direction)
+						default:
+							print(#function)
+						}
+					}
+					.onDisappear {
+						self.mapStore.mapItemStatus.streetViewPoint = nil
+					}
 			} else {
 				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 					.presentationBackground(.thinMaterial)
@@ -119,7 +128,18 @@ struct ContentView: View {
 						}
 					},
 					MapButtonData(sfSymbol: .icon(.cube)) {
-						self.streetViewVisible.toggle()
+						if self.mapStore.mapItemStatus.streetViewPoint.isNil {
+							Task {
+								let location = try await self.locationManager.requestLocation()
+								guard let location = location.location else { return }
+
+								print("set new streetViewPoint")
+								self.mapStore.mapItemStatus.streetViewPoint = .init(location: location.coordinate,
+																					heading: location.course)
+							}
+						} else {
+							self.mapStore.mapItemStatus.streetViewPoint = nil
+						}
 					}
 				])
 				Spacer()
@@ -188,11 +208,11 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(locationManager: Location, searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+	init(locationManager: Location, searchViewStore: SearchViewStore, mapStore: MapStore, motionViewModel: MotionViewModel) {
 		self.locationManager = locationManager
-		self._searchViewStore = .init(wrappedValue: searchViewStore)
-		self._mapStore = .init(wrappedValue: mapStore)
-		searchViewStore.mapStore = mapStore
+		self.motionViewModel = motionViewModel
+		self.searchViewStore = searchViewStore
+		self.mapStore = mapStore
 	}
 
 	// MARK: - Internal
@@ -224,5 +244,6 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	return ContentView(locationManager: .init(), searchViewStore: .preview)
+	let searchViewStore: SearchViewStore = .preview
+	return ContentView(locationManager: .init(), searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, motionViewModel: .init())
 }

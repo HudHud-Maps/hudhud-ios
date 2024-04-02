@@ -79,18 +79,19 @@ struct SearchSheet: View {
 								if let firstResult = items.first, items.count == 1 {
 									self.show(row: firstResult)
 								} else {
-									self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
+									self.mapStore.mapItemStatus.selectedItem = nil
+									self.mapStore.mapItemStatus.mapItems = items
 								}
 							}
 						case .appleMapItem:
 							self.show(row: item.wrappedValue)
 						}
 					}, label: {
-					SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
-						.frame(maxWidth: .infinity)
-				})
-				.listRowSeparator(.hidden)
-				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+						SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
+							.frame(maxWidth: .infinity)
+					})
+					.listRowSeparator(.hidden)
+					.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 				}
 				.listStyle(.plain)
 			} else {
@@ -148,9 +149,8 @@ struct SearchSheet: View {
 }
 
 #Preview {
-	let sheet = SearchSheet(mapStore: .init(),
-							searchStore: .init(mode: .preview))
-	return sheet
+	let searchViewStore: SearchViewStore = .preview
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
 
 extension Route: Identifiable {}

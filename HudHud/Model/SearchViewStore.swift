@@ -16,9 +16,9 @@ import ToursprungPOI
 // MARK: - SearchViewStore
 
 @MainActor
-class SearchViewStore: ObservableObject {
+final class SearchViewStore: ObservableObject {
 
-	var mapStore: MapStore = .init()
+	@NestedObservableObject var mapStore: MapStore
 
 	enum Mode {
 		enum Provider: CaseIterable {
@@ -41,7 +41,8 @@ class SearchViewStore: ObservableObject {
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.mapStore.mapItemStatus = .empty
+			self.mapStore.mapItemStatus.mapItems = []
+			self.mapStore.mapItemStatus.selectedItem = nil
 		}
 	}
 
@@ -49,7 +50,8 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(mode: Mode) {
+	init(mapStore: MapStore, mode: Mode) {
+		self.mapStore = mapStore
 		self.mode = mode
 
 		self.cancellable = self.$searchText
@@ -59,25 +61,22 @@ class SearchViewStore: ObservableObject {
 				case .live(provider: .apple):
 					self.task?.cancel()
 					self.task = Task {
-						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.apple.predict(term: newValue))
-						self.mapStore.mapItemStatus = newStatus
+						self.mapStore.mapItemStatus.mapItems = try await self.apple.predict(term: newValue)
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
-						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.toursprung.predict(term: newValue))
-						self.mapStore.mapItemStatus = newStatus
+						self.mapStore.mapItemStatus.mapItems = try await self.toursprung.predict(term: newValue)
 					}
 				case .preview:
-					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
+					self.mapStore.mapItemStatus.mapItems = [
 						.init(toursprung: .starbucks),
 						.init(toursprung: .ketchup),
 						.init(toursprung: .publicPlace),
 						.init(toursprung: .artwork),
 						.init(toursprung: .pharmacy),
 						.init(toursprung: .supermarket)
-					])
-					self.mapStore.mapItemStatus = newStatus
+					]
 				}
 			}
 	}
@@ -99,7 +98,9 @@ class SearchViewStore: ObservableObject {
 }
 
 extension SearchViewStore {
+
 	static var preview: SearchViewStore {
-		.init(mode: .preview)
+		let mapItemStatus = MapItemsStatus(mapItems: [], motionViewModel: .init())
+		return SearchViewStore(mapStore: .init(mapItemStatus: mapItemStatus), mode: .preview)
 	}
 }

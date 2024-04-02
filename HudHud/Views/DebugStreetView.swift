@@ -11,7 +11,7 @@ import SwiftUI
 
 // MARK: - MotionViewModel
 
-class MotionViewModel: ObservableObject {
+final class MotionViewModel: ObservableObject {
 	enum Size: CaseIterable {
 		case compact
 		case fullscreen
@@ -20,6 +20,14 @@ class MotionViewModel: ObservableObject {
 	@Published var position: Position = .initial
 	@Published var positionOffet: Position?
 	@Published var size: Size = .compact
+
+	// MARK: - Lifecycle
+
+	init(position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
+		self.position = position
+		self.positionOffet = positionOffet
+		self.size = size
+	}
 
 	// MARK: - Internal
 
@@ -32,7 +40,7 @@ class MotionViewModel: ObservableObject {
 		// MARK: - Lifecycle
 
 		init(heading: Double, pitch: Double) {
-			self.heading = heading.wrap(min: 0, max: 360)
+			self.heading = heading
 			self.pitch = Double.minimum(pitch, 180)
 		}
 
@@ -48,6 +56,22 @@ class MotionViewModel: ObservableObject {
 		static func * (left: Position, right: Double) -> Position {
 			return Position(heading: left.heading * right,
 							pitch: left.pitch * right)
+		}
+	}
+
+	func adding(translation: CGSize) {
+		if let dragStartOffset = self.positionOffet {
+			// try to mimic scrolling so your finger stays below the initial tap point
+			// needs fine tuning once we have the StreetView WebView
+			let scaleFactor = 0.25
+
+			let newHeading = (dragStartOffset.heading + (translation.width * scaleFactor)).wrap(min: 0, max: 360)
+			let newPitch = (dragStartOffset.pitch + (translation.height * scaleFactor)).limit(upper: 180)
+
+			self.position.heading = newHeading
+			self.position.pitch = newPitch
+		} else {
+			self.positionOffet = self.position
 		}
 	}
 }
@@ -75,16 +99,7 @@ struct DebugStreetView: View {
 			.clipShape(RoundedRectangle(cornerRadius: 12))
 			.gesture(DragGesture(minimumDistance: 10, coordinateSpace: .global)
 				.onChanged { value in
-					if let dragStartOffset = viewModel.positionOffet {
-						// try to mimic scrolling so your finger stays below the initial tap point
-						// needs fine tuning once we have the StreetView WebView
-						let scaleFactor = 0.25
-
-						self.viewModel.position = dragStartOffset + (MotionViewModel.Position(heading: value.translation.width,
-																							  pitch: value.translation.height) * scaleFactor)
-					} else {
-						self.viewModel.positionOffet = self.viewModel.position
-					}
+					self.viewModel.adding(translation: value.translation)
 				}
 				.onEnded { _ in
 					self.viewModel.positionOffet = nil

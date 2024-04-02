@@ -15,11 +15,12 @@ import SwiftUI
 
 // MARK: - MapItemsStore
 
-struct MapItemsStatus {
+final class MapItemsStatus: ObservableObject {
 
-	var selectedItem: POI?
-	var mapItems: [Row]
-	var streetViewPoint: StreetViewPoint? = .init(location: .riyadh, heading: 45)
+	@Published var selectedItem: POI?
+	@Published var mapItems: [Row]
+	@Published var streetViewPoint: StreetViewPoint?
+	@NestedObservableObject var motionViewModel: MotionViewModel
 
 	var points: ShapeSource {
 		if let selectedItem, let locationCoordinate = selectedItem.locationCoordinate {
@@ -39,19 +40,19 @@ struct MapItemsStatus {
 	var streetViewSource: ShapeSource {
 		ShapeSource(identifier: "street-view-symbols") {
 			if let streetViewPoint {
+				let streetViewPoint = StreetViewPoint(location: streetViewPoint.location,
+													  heading: self.motionViewModel.position.heading)
 				streetViewPoint.feature
 			}
 		}
 	}
 
-	static var empty: MapItemsStatus {
-		.init(selectedItem: nil, mapItems: [])
-	}
-
 	// MARK: - Lifecycle
 
-	init(selectedItem: POI?, mapItems: [Row]) {
+	init(selectedItem: POI? = nil, mapItems: [Row], streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
 		self.selectedItem = selectedItem
 		self.mapItems = mapItems
+		self.streetViewPoint = streetViewPoint
+		self.motionViewModel = motionViewModel
 	}
 }
