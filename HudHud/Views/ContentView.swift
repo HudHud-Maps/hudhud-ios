@@ -29,11 +29,12 @@ struct ContentView: View {
 	private let locationManager = Location()
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
-	@State private var showUserLocation: Bool = false
 	@StateObject var notificationQueue: NotificationQueue = .init()
+	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
-	@State var sheetSize: CGSize = .zero
-	@State var didTryToZoomOnUsersLocation = false
+	@State private var sheetSize: CGSize = .zero
+	@State private var didTryToZoomOnUsersLocation = false
+	@State private var streetViewVisible: Bool = false
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -88,23 +89,36 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
-				.presentationBackground(.thinMaterial)
+			if self.streetViewVisible {
+				DebugStreetView()
+			} else {
+				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+					.presentationBackground(.thinMaterial)
+			}
 		}
 		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
 				MapButtonsView(mapButtonsData: [
-					MapButtonData(sfSymbol: .map) {
+					MapButtonData(sfSymbol: .icon(.map)) {
 						self.showMapLayer.toggle()
 					},
-					MapButtonData(sfSymbol: .cube) {
-						print("Location button tapped")
+					MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+						switch self.searchViewStore.mode {
+						case let .live(provider):
+							self.searchViewStore.mode = .live(provider: provider.next())
+							Logger.searchView.info("Map Mode live")
+						case .preview:
+							self.searchViewStore.mode = .live(provider: .toursprung)
+							Logger.searchView.info("Map Mode toursprung")
+						}
+					},
+					MapButtonData(sfSymbol: .icon(.cube)) {
+						self.streetViewVisible.toggle()
 					}
 				])
 				Spacer()
 				VStack(alignment: .trailing) {
 					CurrentLocationButton(camera: self.$mapStore.camera)
-					ProviderButton(searchViewStore: self.searchViewStore)
 				}
 			}
 			.opacity(self.sheetSize.height > 500 ? 0 : 1)
@@ -129,7 +143,7 @@ struct ContentView: View {
 					}
 				}
 				.onPreferenceChange(SizePreferenceKey.self) { value in
-					withAnimation {
+					withAnimation(.easeOut) {
 						self.sheetSize = value
 					}
 				}
