@@ -21,6 +21,7 @@ struct CurrentLocationButton: View {
 	var body: some View {
 		Button {
 			Task {
+				defer { self.locationRequestInProgress = false }
 				do {
 					self.locationRequestInProgress = true
 					self.location.accuracy = .threeKilometers
@@ -31,14 +32,11 @@ struct CurrentLocationButton: View {
 						withAnimation {
 							self.camera = MapViewCamera.center(coordinates, zoom: 10)
 						}
-						self.locationRequestInProgress = false
 					} else {
 						Logger.searchView.error("location error: got no coordinates")
-						self.locationRequestInProgress = false
 					}
 				} catch {
 					Logger.searchView.error("location error: \(error)")
-					self.locationRequestInProgress = false
 				}
 			}
 		} label: {
