@@ -16,15 +16,15 @@ import SwiftUI
 struct CurrentLocationButton: View {
 
 	@Binding var camera: MapViewCamera
-	let location = Location()
+	var locationManager: Location
 
 	var body: some View {
 		Button {
 			Task {
 				do {
-					self.location.accuracy = .threeKilometers
-					try await self.location.requestPermission(.whenInUse)
-					let userLocation = try await location.requestLocation()
+					self.locationManager.accuracy = .threeKilometers
+					try await self.locationManager.requestPermission(.whenInUse)
+					let userLocation = try await locationManager.requestLocation()
 
 					if let coordinates = userLocation.location?.coordinate {
 						withAnimation {
@@ -47,18 +47,12 @@ struct CurrentLocationButton: View {
 		.cornerRadius(15)
 		.shadow(color: .black.opacity(0.1), radius: 10, y: 4)
 		.fixedSize()
-//		.padding(12)
-//		.frame(minWidth: 44, minHeight: 44)
-//		.background {
-//			RoundedRectangle(cornerRadius: 10)
-//				.fill(Material.thickMaterial)
-//		}
 	}
 }
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	@State var camera: MapViewCamera = .default()
-	return CurrentLocationButton(camera: $camera)
+	return CurrentLocationButton(camera: $camera, locationManager: .init())
 		.padding()
 }

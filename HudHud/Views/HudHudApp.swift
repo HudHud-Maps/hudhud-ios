@@ -6,14 +6,18 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import SwiftLocation
 import SwiftUI
 
 @main
 struct HudHudApp: App {
 
+	private let locationManager = Location()
+
 	var body: some Scene {
 		WindowGroup {
-			ContentView(searchViewStore: .init(mode: .live(provider: .toursprung)))
+			ContentView(locationManager: self.locationManager,
+						searchViewStore: .init(mode: .live(provider: .toursprung)))
 		}
 	}
 }

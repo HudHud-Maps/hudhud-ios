@@ -26,7 +26,7 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-	private let locationManager = Location()
+	private let locationManager: Location
 	@StateObject private var searchViewStore: SearchViewStore
 	@StateObject private var mapStore = MapStore()
 	@StateObject var notificationQueue: NotificationQueue = .init()
@@ -124,7 +124,7 @@ struct ContentView: View {
 				])
 				Spacer()
 				VStack(alignment: .trailing) {
-					CurrentLocationButton(camera: self.$mapStore.camera)
+					CurrentLocationButton(camera: self.$mapStore.camera, locationManager: self.locationManager)
 				}
 			}
 			.opacity(self.sheetSize.height > 500 ? 0 : 1)
@@ -188,7 +188,8 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+	init(locationManager: Location, searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+		self.locationManager = locationManager
 		self._searchViewStore = .init(wrappedValue: searchViewStore)
 		self._mapStore = .init(wrappedValue: mapStore)
 		searchViewStore.mapStore = mapStore
@@ -223,5 +224,5 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	return ContentView(searchViewStore: .preview)
+	return ContentView(locationManager: .init(), searchViewStore: .preview)
 }
