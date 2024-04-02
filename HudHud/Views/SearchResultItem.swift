@@ -56,5 +56,5 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	return SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .init(mapStore: .init(mapItemStatus: .init(mapItems: [], motionViewModel: .init())), mode: .preview))
+	return SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .preview)
 }

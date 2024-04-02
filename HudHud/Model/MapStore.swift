@@ -10,6 +10,7 @@ import Combine
 import CoreLocation
 import Foundation
 import MapLibre
+import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import SwiftUI
 
@@ -19,6 +20,7 @@ final class MapStore: ObservableObject {
 
 	private var cancelable: [AnyCancellable] = []
 
+	@NestedObservableObject var motionViewModel: MotionViewModel
 	@NestedObservableObject var mapItemStatus: MapItemsStatus {
 		didSet {
 			if let coordinate = self.mapItemStatus.selectedItem?.locationCoordinate {
@@ -35,13 +37,26 @@ final class MapStore: ObservableObject {
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
+	@Published var streetViewPoint: StreetViewPoint?
+
+	var streetViewSource: ShapeSource {
+		ShapeSource(identifier: "street-view-symbols") {
+			if let streetViewPoint {
+				let streetViewPoint = StreetViewPoint(location: streetViewPoint.location,
+													  heading: self.motionViewModel.position.heading)
+				streetViewPoint.feature
+			}
+		}
+	}
 
 	// MARK: - Lifecycle
 
-	init(mapItemStatus: MapItemsStatus, camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true) {
+	init(mapItemStatus: MapItemsStatus, camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
 		self.mapItemStatus = mapItemStatus
 		self.camera = camera
 		self.searchShown = searchShown
+		self.streetViewPoint = streetViewPoint
+		self.motionViewModel = motionViewModel
 
 		self.mapItemStatus.$selectedItem.sink { item in
 			guard let coordinate = item?.locationCoordinate else { return }
@@ -56,4 +71,9 @@ final class MapStore: ObservableObject {
 			self.camera = camera
 		}.store(in: &self.cancelable)
 	}
+}
+
+extension MapStore {
+
+	static let preview: MapStore = .init(mapItemStatus: .preview, motionViewModel: .init())
 }

@@ -50,12 +50,12 @@ struct ContentView: View {
 				.iconColor(.white)
 				.iconRotation(45)
 
-			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.mapItemStatus.streetViewSource)
+			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
 				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
 		.unsafeMapViewModifier { mapView in
-			mapView.showsUserLocation = self.showUserLocation && self.mapStore.mapItemStatus.streetViewPoint.isNil
+			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetViewPoint.isNil
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
@@ -93,18 +93,18 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			if self.mapStore.mapItemStatus.streetViewPoint != nil {
+			if self.mapStore.streetViewPoint != nil {
 				DebugStreetView(viewModel: self.motionViewModel)
 					.onAppear {
 						switch self.mapStore.camera.state {
 						case let .centered(coordinate, _, _, direction):
-							self.mapStore.mapItemStatus.streetViewPoint = .init(location: coordinate, heading: direction)
+							self.mapStore.streetViewPoint = .init(location: coordinate, heading: direction)
 						default:
 							print(#function)
 						}
 					}
 					.onDisappear {
-						self.mapStore.mapItemStatus.streetViewPoint = nil
+						self.mapStore.streetViewPoint = nil
 					}
 			} else {
 				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
@@ -128,17 +128,17 @@ struct ContentView: View {
 						}
 					},
 					MapButtonData(sfSymbol: .icon(.cube)) {
-						if self.mapStore.mapItemStatus.streetViewPoint.isNil {
+						if self.mapStore.streetViewPoint.isNil {
 							Task {
 								let location = try await self.locationManager.requestLocation()
 								guard let location = location.location else { return }
 
 								print("set new streetViewPoint")
-								self.mapStore.mapItemStatus.streetViewPoint = .init(location: location.coordinate,
-																					heading: location.course)
+								self.mapStore.streetViewPoint = .init(location: location.coordinate,
+																	  heading: location.course)
 							}
 						} else {
-							self.mapStore.mapItemStatus.streetViewPoint = nil
+							self.mapStore.streetViewPoint = nil
 						}
 					}
 				])

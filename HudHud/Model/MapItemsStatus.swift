@@ -19,8 +19,6 @@ final class MapItemsStatus: ObservableObject {
 
 	@Published var selectedItem: POI?
 	@Published var mapItems: [Row]
-	@Published var streetViewPoint: StreetViewPoint?
-	@NestedObservableObject var motionViewModel: MotionViewModel
 
 	var points: ShapeSource {
 		if let selectedItem, let locationCoordinate = selectedItem.locationCoordinate {
@@ -37,29 +35,15 @@ final class MapItemsStatus: ObservableObject {
 		}
 	}
 
-	var streetViewSource: ShapeSource {
-		ShapeSource(identifier: "street-view-symbols") {
-			if let streetViewPoint {
-				let streetViewPoint = StreetViewPoint(location: streetViewPoint.location,
-													  heading: self.motionViewModel.position.heading)
-				streetViewPoint.feature
-			}
-		}
-	}
-
 	// MARK: - Lifecycle
 
-	init(selectedItem: POI? = nil, mapItems: [Row] = [], streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
+	init(selectedItem: POI? = nil, mapItems: [Row] = []) {
 		self.selectedItem = selectedItem
 		self.mapItems = mapItems
-		self.streetViewPoint = streetViewPoint
-		self.motionViewModel = motionViewModel
 	}
 }
 
 extension MapItemsStatus {
 
-	static var preview: MapItemsStatus {
-		.init(motionViewModel: .init())
-	}
+	static let preview: MapItemsStatus = .init()
 }
