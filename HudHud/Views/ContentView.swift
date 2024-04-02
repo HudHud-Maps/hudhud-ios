@@ -48,9 +48,14 @@ struct ContentView: View {
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
+				.iconRotation(45)
+
+			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.mapItemStatus.streetViewSource)
+				.iconImage(UIImage(systemName: "location.north.circle.fill")!)
+				.iconRotation(featurePropertyNamed: "heading")
 		}
 		.unsafeMapViewModifier { mapView in
-			mapView.showsUserLocation = self.showUserLocation
+			mapView.showsUserLocation = self.showUserLocation && self.mapStore.mapItemStatus.streetViewPoint.isNil
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
@@ -197,7 +202,7 @@ extension PresentationDetent {
 }
 
 extension CLLocationCoordinate2D {
-	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
+	static let riyadh = CLLocationCoordinate2D(latitude: 24.65333, longitude: 46.71526)
 }
 
 extension SimpleToastOptions {

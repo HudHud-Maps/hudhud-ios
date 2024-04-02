@@ -19,6 +19,7 @@ struct MapItemsStatus {
 
 	var selectedItem: POI?
 	var mapItems: [Row]
+	var streetViewPoint: StreetViewPoint? = .init(location: .riyadh, heading: 45)
 
 	var points: ShapeSource {
 		if let selectedItem, let locationCoordinate = selectedItem.locationCoordinate {
@@ -31,6 +32,14 @@ struct MapItemsStatus {
 				guard let coordinate = item.coordinate else { return nil }
 
 				return MLNPointFeature(coordinate: coordinate)
+			}
+		}
+	}
+
+	var streetViewSource: ShapeSource {
+		ShapeSource(identifier: "street-view-symbols") {
+			if let streetViewPoint {
+				streetViewPoint.feature
 			}
 		}
 	}
