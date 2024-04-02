@@ -86,11 +86,11 @@ struct SearchSheet: View {
 							self.show(row: item.wrappedValue)
 						}
 					}, label: {
-					SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
-						.frame(maxWidth: .infinity)
-				})
-				.listRowSeparator(.hidden)
-				.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+						SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
+							.frame(maxWidth: .infinity)
+					})
+					.listRowSeparator(.hidden)
+					.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 				}
 				.listStyle(.plain)
 			} else {
@@ -98,6 +98,9 @@ struct SearchSheet: View {
 					SearchSectionView(title: "Favorites") {
 						FavoriteCategoriesView()
 					}
+					SearchSectionView(title: "Recents", subview: {
+						RecentSearchResults()
+					})
 
 					.listRowSeparator(.hidden)
 				}
@@ -123,6 +126,29 @@ struct SearchSheet: View {
 			.fullScreenCover(item: self.$route) { route in
 				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 				NavigationView(route: route, styleURL: styleURL)
+			}
+			.onAppear {
+				// Store POI
+				do {
+					let encoder = JSONEncoder()
+
+					let data = try encoder.encode(item)
+
+					let defaults = UserDefaults.standard
+
+					var array = defaults.array(forKey: "selectedItems") as? [Data] ?? [Data]()
+
+					array.append(data)
+
+					if array.count > 10 {
+						array.removeFirst()
+					}
+
+					defaults.set(array, forKey: "selectedItems")
+
+				} catch {
+					print("Unable to Encode Array of Notes (\(error))")
+				}
 			}
 		}
 	}
