@@ -26,25 +26,22 @@ struct FavoriteCategoriesView: View {
 											tintColor: .green)
 
 	var body: some View {
-		ScrollView(.horizontal) {
-			HStack {
-				Spacer()
-				ForEach(self.favoriteCategoriesData.prefix(4), id: \.self) { favorite in
-					Button {
-						print("\(favorite.title) was pressed")
-					} label: {
-						Text(favorite.title)
-					}
-					.buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
-				}
+		HStack {
+			Spacer()
+			ForEach(self.favoriteCategoriesData.prefix(4), id: \.self) { favorite in
 				Button {
-					print("\(self.plusButton.title) was pressed")
+					print("\(favorite.title) was pressed")
 				} label: {
-					Text(self.plusButton.title)
-				}.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
-				Spacer()
-					.padding(.horizontal)
+					Text(favorite.title)
+				}
+				.buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
 			}
+			Button {
+				print("\(self.plusButton.title) was pressed")
+			} label: {
+				Text(self.plusButton.title)
+			}.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
+			Spacer()
 		}
 	}
 }

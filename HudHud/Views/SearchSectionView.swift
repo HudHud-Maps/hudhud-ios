@@ -13,16 +13,35 @@ struct SearchSectionView<Content: View>: View {
 	let subview: Content
 
 	var body: some View {
-		VStack {
-			HStack {
-				Text("\(self.title)")
-					.font(.title3)
-					.bold()
-				Spacer()
+		if #available(iOS 17.0, *) {
+			VStack {
+				HStack {
+					Text("\(self.title)")
+						.font(.title3)
+						.bold()
+					Spacer()
+				}
+				ScrollView(.horizontal) {
+					self.subview
+				}
+				.scrollClipDisabled()
 			}
-			ScrollView(.horizontal) {
-				self.subview
+		} else {
+			VStack {
+				HStack {
+					Text("\(self.title)")
+						.font(.title3)
+						.bold()
+						.padding(.horizontal)
+					Spacer()
+				}
+				ScrollView(.horizontal) {
+					self.subview
+						.padding(.horizontal)
+						.padding(.top, 4)
+				}
 			}
+			.frame(width: UIScreen.main.bounds.width, alignment: .leading)
 		}
 	}
 
