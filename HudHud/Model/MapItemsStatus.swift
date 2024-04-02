@@ -13,7 +13,7 @@ import MapLibreSwiftUI
 import POIService
 import SwiftUI
 
-// MARK: - MapItemsStore
+// MARK: - MapItemsStatus
 
 final class MapItemsStatus: ObservableObject {
 
@@ -49,10 +49,17 @@ final class MapItemsStatus: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(selectedItem: POI? = nil, mapItems: [Row], streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
+	init(selectedItem: POI? = nil, mapItems: [Row] = [], streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
 		self.selectedItem = selectedItem
 		self.mapItems = mapItems
 		self.streetViewPoint = streetViewPoint
 		self.motionViewModel = motionViewModel
+	}
+}
+
+extension MapItemsStatus {
+
+	static var preview: MapItemsStatus {
+		.init(motionViewModel: .init())
 	}
 }

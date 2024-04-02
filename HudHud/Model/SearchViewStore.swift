@@ -100,7 +100,7 @@ final class SearchViewStore: ObservableObject {
 extension SearchViewStore {
 
 	static var preview: SearchViewStore {
-		let mapItemStatus = MapItemsStatus(mapItems: [], motionViewModel: .init())
+		let mapItemStatus: MapItemsStatus = .preview
 		return SearchViewStore(mapStore: .init(mapItemStatus: mapItemStatus), mode: .preview)
 	}
 }
