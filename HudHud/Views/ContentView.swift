@@ -27,14 +27,17 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager: Location
+
 	@ObservedObject private var searchViewStore: SearchViewStore
 	@ObservedObject private var mapStore: MapStore
-	@StateObject var notificationQueue: NotificationQueue = .init()
+	@ObservedObject private var motionViewModel: MotionViewModel
+
+	@StateObject private var notificationQueue: NotificationQueue = .init()
+
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
-	@ObservedObject var motionViewModel: MotionViewModel
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -94,7 +97,7 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
 			if self.mapStore.streetViewPoint != nil {
-				DebugStreetView(viewModel: self.motionViewModel)
+				DebugStreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 					.onAppear {
 						switch self.mapStore.camera.state {
 						case let .centered(coordinate, _, _, direction):
@@ -214,18 +217,9 @@ struct ContentView: View {
 		self.searchViewStore = searchViewStore
 		self.mapStore = mapStore
 	}
-
-	// MARK: - Internal
 }
 
-extension PresentationDetent {
-	static let small: PresentationDetent = .height(80)
-	static let third: PresentationDetent = .fraction(0.33)
-}
-
-extension CLLocationCoordinate2D {
-	static let riyadh = CLLocationCoordinate2D(latitude: 24.65333, longitude: 46.71526)
-}
+// MARK: - SimpleToastOptions
 
 extension SimpleToastOptions {
 	static let notification = SimpleToastOptions(alignment: .top, hideAfter: 5, modifierType: .slide)
