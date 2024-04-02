@@ -51,7 +51,7 @@ struct ContentView: View {
 				.iconRotation(45)
 
 			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.mapItemStatus.streetViewSource)
-				.iconImage(UIImage(systemName: "location.north.circle.fill")!)
+				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
 		.unsafeMapViewModifier { mapView in
