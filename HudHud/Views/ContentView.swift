@@ -35,6 +35,7 @@ struct ContentView: View {
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
 	@State private var streetViewVisible: Bool = false
+	@StateObject var viewModel = MotionViewModel()
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -95,7 +96,7 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
 			if self.streetViewVisible {
-				DebugStreetView()
+				DebugStreetView(viewModel: self.viewModel)
 			} else {
 				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 					.presentationBackground(.thinMaterial)

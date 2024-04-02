@@ -56,7 +56,7 @@ class MotionViewModel: ObservableObject {
 
 struct DebugStreetView: View {
 
-	@StateObject var viewModel = MotionViewModel()
+	@StateObject var viewModel: MotionViewModel
 
 	var body: some View {
 		ViewThatFits {
@@ -104,6 +104,6 @@ struct DebugStreetView: View {
 		.fill(Color.yellow)
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			DebugStreetView()
+			DebugStreetView(viewModel: .init())
 		}
 }
