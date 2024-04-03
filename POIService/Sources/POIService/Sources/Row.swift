@@ -47,6 +47,17 @@ public struct Row: Hashable {
 		}
 	}
 
+	public var id: String {
+		switch self.provider {
+		case let .appleCompletion(completion):
+			return "\(completion.title)|\(completion.subtitle)"
+		case let .appleMapItem(mapItem):
+			return "\(self.title)|\(self.subtitle)|\(mapItem.placemark.coordinate.latitude)|\(mapItem.placemark.coordinate.longitude)"
+		case let .toursprung(poi):
+			return poi.id
+		}
+	}
+
 	public var icon: Image {
 		switch self.provider {
 		case let .toursprung(poi):
@@ -163,12 +174,12 @@ public struct Row: Hashable {
 			guard let coordinate = self.coordinate else {
 				return nil
 			}
-			return POI(title: self.title,
+			return POI(id: self.id, title: self.title,
 					   subtitle: self.subtitle,
 					   locationCoordinate: coordinate,
 					   type: "\(type)")
 		case let .appleMapItem(mapItem):
-			return POI(title: self.title,
+			return POI(id: self.id, title: self.title,
 					   subtitle: self.subtitle,
 					   locationCoordinate: mapItem.placemark.coordinate,
 					   type: "")
