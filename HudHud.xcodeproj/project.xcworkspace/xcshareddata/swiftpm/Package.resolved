@@ -37,12 +37,21 @@
       }
     },
     {
+      "identity" : "maplibre-swiftui-dsl-playground",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "state" : {
+        "branch" : "enhancement/pat-gestures",
+        "revision" : "ca182dc2e62003b83d97fc7615b19ec71a3ac327"
+      }
+    },
+    {
       "identity" : "mockable",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "7c35a588f6c6a79ce6e0a719dc31e49a6fec069b",
-        "version" : "0.0.4"
+        "revision" : "dcb23a48ce96e27fc0132b70bf6cb2daccf58cb4",
+        "version" : "0.0.5"
       }
     },
     {
@@ -79,15 +88,6 @@
       "state" : {
         "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
         "version" : "3.0.1"
-      }
-    },
-    {
-      "identity" : "swift-snapshot-testing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
-      "state" : {
-        "revision" : "5b0c434778f2c1a4c9b5ebdb8682b28e84dd69bd",
-        "version" : "1.15.4"
       }
     },
     {

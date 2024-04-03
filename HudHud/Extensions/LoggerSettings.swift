@@ -15,4 +15,5 @@ extension Logger {
 	static let searchView = Logger(subsystem: subsystem, category: "SearchView")
 	static let POIData = Logger(subsystem: subsystem, category: "POIData")
 	static let toursprung = Logger(subsystem: subsystem, category: "Toursprung")
+	static let mapInteraction = Logger(subsystem: subsystem, category: "MapInteraction")
 }

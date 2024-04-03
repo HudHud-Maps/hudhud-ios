@@ -56,7 +56,7 @@ struct ContentView: View {
 				  let placeID = feature.attribute(forKey: "poi_id") as? String else
 			{
 				// user tapped nothing - deselect
-				print("Tapped nothing - setting to nil...")
+				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
 				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
 				return
 			}
@@ -67,10 +67,10 @@ struct ContentView: View {
 			}?.poi
 
 			if let poi {
-				print("setting poi")
+				Logger.mapInteraction.debug("setting poi")
 				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
 			} else {
-				print("had no poi")
+				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
 			}
 		})
 		.unsafeMapViewModifier { mapView in
