@@ -18,7 +18,7 @@ struct CatagoryBannerData: Identifiable {
 
 	// MARK: - Test Data
 
-	static let cateoryBannerFakeDate = [
+	static let cateoryBannerFakeData = [
 		CatagoryBannerData(
 			buttonColor: Color(UIColor.systemBackground),
 			textColor: .green,

@@ -52,11 +52,11 @@ struct MapButtonsView: View {
 		MapButtonData(sfSymbol: .icon(.map)) {
 			print("Map button tapped")
 		},
-		MapButtonData(sfSymbol: .icon(.location)) {
-			print("Location button tapped")
+		MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: .live(provider: .toursprung))) {
+			print("Provider button tapped")
 		},
 		MapButtonData(sfSymbol: .icon(.cube)) {
-			print("Location button tapped")
+			print("StreetView button tapped")
 		}
 	])
 }

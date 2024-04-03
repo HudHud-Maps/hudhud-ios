@@ -66,33 +66,52 @@ struct SearchSheet: View {
 			.cornerRadius(12)
 			.padding()
 			if !self.searchStore.searchText.isEmpty {
-				List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
-					Button(action: {
-						switch item.wrappedValue.provider {
-						case .toursprung:
-							self.show(row: item.wrappedValue)
-						case .appleCompletion:
-							self.searchStore.selectedDetent = .medium
-							self.searchIsFocused = false
-							Task {
-								let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
-								if let firstResult = items.first, items.count == 1 {
-									self.show(row: firstResult)
-								} else {
-									self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
-								}
-							}
-						case .appleMapItem:
-							self.show(row: item.wrappedValue)
+				if self.searchStore.isSearching {
+					List {
+						ForEach(SearchSheet.fakeData.indices, id: \.self) { item in
+							Button(action: {},
+								   label: {
+								   	SearchSheet.fakeData[item]
+								   		.frame(maxWidth: .infinity)
+								   })
+								   .redacted(reason: .placeholder)
+								   .disabled(true)
 						}
-					}, label: {
-						SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
-							.frame(maxWidth: .infinity)
-					})
-					.listRowSeparator(.hidden)
-					.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+						.listRowSeparator(.hidden)
+						.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+					}
+					.listStyle(.plain)
+				} else {
+					List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
+						Button(action: {
+							switch item.wrappedValue.provider {
+							case .toursprung:
+								self.show(row: item.wrappedValue)
+							case .appleCompletion:
+								self.searchStore.selectedDetent = .medium
+								self.searchIsFocused = false
+								Task {
+									let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
+									if let firstResult = items.first, items.count == 1 {
+										self.show(row: firstResult)
+									} else {
+										self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
+									}
+								}
+							case .appleMapItem:
+								self.show(row: item.wrappedValue)
+							}
+						}, label: {
+							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
+								.frame(maxWidth: .infinity)
+								.redacted(reason: self.searchStore.isSearching ? .placeholder : [])
+						})
+						.disabled(self.searchStore.isSearching)
+						.listRowSeparator(.hidden)
+						.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+					}
+					.listStyle(.plain)
 				}
-				.listStyle(.plain)
 			} else {
 				List {
 					SearchSectionView(title: "Favorites") {
@@ -154,3 +173,14 @@ struct SearchSheet: View {
 }
 
 extension Route: Identifiable {}
+
+extension SearchSheet {
+	static var fakeData = [
+		SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .init(mode: .preview)),
+		SearchResultItem(prediction: .init(toursprung: .supermarket), searchViewStore: .init(mode: .preview)),
+		SearchResultItem(prediction: .init(toursprung: .pharmacy), searchViewStore: .init(mode: .preview)),
+		SearchResultItem(prediction: .init(toursprung: .artwork), searchViewStore: .init(mode: .preview)),
+		SearchResultItem(prediction: .init(toursprung: .ketchup), searchViewStore: .init(mode: .preview)),
+		SearchResultItem(prediction: .init(toursprung: .publicPlace), searchViewStore: .init(mode: .preview))
+	]
+}

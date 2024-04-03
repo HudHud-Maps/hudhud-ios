@@ -27,13 +27,14 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
-	@StateObject private var searchViewStore: SearchViewStore
-	@StateObject private var mapStore: MapStore
+	@ObservedObject var searchViewStore: SearchViewStore
+	@ObservedObject var mapStore: MapStore
 	@State private var showUserLocation: Bool = false
 	@StateObject var notificationQueue: NotificationQueue = .init()
 	@State private var showMapLayer: Bool = false
-	@State var sheetSize: CGSize = .zero
-	@State var didTryToZoomOnUsersLocation = false
+	@State private var sheetSize: CGSize = .zero
+	@State private var didTryToZoomOnUsersLocation = false
+	@State private var streetViewVisible: Bool = false
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -112,8 +113,12 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeDate, searchStore: self.searchViewStore)
-				.presentationBackground(.thinMaterial)
+			if self.streetViewVisible {
+				DebugStreetView()
+			} else {
+				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+					.presentationBackground(.thinMaterial)
+			}
 		}
 		.safeAreaInset(edge: .bottom) {
 			HStack(alignment: .bottom) {
@@ -132,7 +137,7 @@ struct ContentView: View {
 						}
 					},
 					MapButtonData(sfSymbol: .icon(.cube)) {
-						print("Location button tapped")
+						self.streetViewVisible.toggle()
 					}
 				])
 				Spacer()

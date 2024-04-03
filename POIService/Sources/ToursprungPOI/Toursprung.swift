@@ -10,6 +10,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 import MapboxNavigation
 import MapLibre
+import OSLog
 
 public typealias JSONDictionary = [String: Any]
 
@@ -18,24 +19,54 @@ public typealias JSONDictionary = [String: Any]
 public class Toursprung {
 
 	public enum ToursprungError: LocalizedError {
-		case invalidUrl
-		case invalidResponse
+		case invalidUrl(message: String?)
+		case invalidResponse(message: String?)
+		case noRoute(message: String?)
+		case noSegment(message: String?)
+		case forbidden(message: String?)
+		case invalidInput(message: String?)
+		case profileNotFound(message: String?)
+		case notAuthorized(message: String?)
 
 		public var errorDescription: String? {
 			switch self {
-			case .invalidUrl:
-				return "Calculating route failed"
-			case .invalidResponse:
-				return "Calculating route failed"
+			case let .invalidUrl(message):
+				return errorDescription(message: message, defaultMessage: "Calculating route failed")
+			case let .invalidResponse(message):
+				return errorDescription(message: message, defaultMessage: "Calculating route failed")
+			case let .noRoute(message):
+				return errorDescription(message: message, defaultMessage: "No route found.")
+			case let .noSegment(message):
+				return errorDescription(message: message, defaultMessage: "No segment found.")
+			case let .forbidden(message):
+				return errorDescription(message: message, defaultMessage: "Forbidden access.")
+			case let .invalidInput(message):
+				return errorDescription(message: message, defaultMessage: "Invalid input.")
+			case let .profileNotFound(message: message):
+				return errorDescription(message: message, defaultMessage: "ProfileNotFound")
+			case let .notAuthorized(message: message):
+				return errorDescription(message: message, defaultMessage: "NotAuthorized")
 			}
 		}
 
 		public var failureReason: String? {
 			switch self {
-			case .invalidUrl:
-				return "Calculating route failed because url can't be created"
-			case .invalidResponse:
-				return "Hudhud responded with invalid route"
+			case let .invalidUrl(message):
+				return self.errorDescription(message: message, defaultMessage: "Calculating route failed because url can't be created")
+			case let .invalidResponse(message):
+				return self.errorDescription(message: message, defaultMessage: "Hudhud responded with invalid route")
+			case let .noRoute(message):
+				return self.errorDescription(message: message, defaultMessage: "No route found.")
+			case let .noSegment(message):
+				return self.errorDescription(message: message, defaultMessage: "No segment found.")
+			case let .forbidden(message):
+				return self.errorDescription(message: message, defaultMessage: "Forbidden access.")
+			case let .invalidInput(message):
+				return self.errorDescription(message: message, defaultMessage: "Invalid input.")
+			case let .profileNotFound(message: message):
+				return self.errorDescription(message: message, defaultMessage: "Profile Not Found")
+			case let .notAuthorized(message: message):
+				return self.errorDescription(message: message, defaultMessage: "Not Authorized")
 			}
 		}
 
@@ -45,6 +76,18 @@ public class Toursprung {
 				return "Retry with another destination"
 			case .invalidResponse:
 				return "Update the app or retry with another destination"
+			case .noRoute:
+				return "Retry with another destination"
+			case .noSegment:
+				return "Retry with another destination"
+			case .forbidden:
+				return "Forbidden access."
+			case .invalidInput:
+				return "Invalid input."
+			case .profileNotFound:
+				return "Profile Not Found"
+			case .notAuthorized:
+				return "Not Authorized"
 			}
 		}
 
@@ -54,7 +97,29 @@ public class Toursprung {
 				return "Search for another location and start navigation to there"
 			case .invalidResponse:
 				return "Go to the AppStore and download the newest version of the App. Alternatively search for another location and start navigation to there."
+			case .noRoute:
+				return "Search for another location and start navigation to there"
+			case .noSegment:
+				return "Search for another location and start navigation to there"
+			case .forbidden:
+				return "Forbidden access"
+			case .invalidInput:
+				return "Invalid input"
+			case .profileNotFound:
+				return "Profile Not Found"
+			case .notAuthorized:
+				return "Not Authorized"
 			}
+		}
+
+		// MARK: - Private
+
+		private func errorDescription(message: String?, defaultMessage: String) -> String {
+			var description = defaultMessage
+			if let message {
+				description += " \(message)"
+			}
+			return description
 		}
 	}
 
@@ -76,32 +141,58 @@ public class Toursprung {
 	@discardableResult
 	public func calculate(_ options: RouteOptions) async throws -> RouteCalculationResult {
 		let url = try options.url
-
 		let answer: (data: Data, response: URLResponse) = try await URLSession.shared.data(from: url)
 		let json: JSONDictionary
 
 		guard answer.response.mimeType == "application/json" else {
-			throw ToursprungError.invalidResponse
+			throw ToursprungError.invalidResponse(message: "MIME Type not matching application/json")
 		}
 
 		do {
 			json = try JSONSerialization.jsonObject(with: answer.data, options: []) as? [String: Any] ?? [:]
-		} catch {
-			throw ToursprungError.invalidResponse
+		} catch let error as ToursprungError {
+			throw ToursprungError.invalidResponse(message: "Route error occurred: \(error.localizedDescription)")
 		}
 
 		let apiStatusCode = json["code"] as? String
 		let apiMessage = json["message"] as? String
 		guard (apiStatusCode == nil && apiMessage == nil) || apiStatusCode == "Ok" else {
-			throw ToursprungError.invalidResponse
+			switch apiStatusCode {
+			case "InvalidInput":
+				throw ToursprungError.invalidInput(message: apiMessage)
+			case "Not Authorized - No Token":
+				throw ToursprungError.notAuthorized(message: apiMessage)
+			case "Not Authorized - Invalid Token":
+				throw ToursprungError.notAuthorized(message: apiMessage)
+			case "Forbidden":
+				throw ToursprungError.forbidden(message: apiMessage)
+			case "ProfileNotFound":
+				throw ToursprungError.profileNotFound(message: apiMessage)
+			case "NoSegment":
+				throw ToursprungError.noSegment(message: apiMessage)
+			case "NoRoute":
+				throw ToursprungError.noRoute(message: apiMessage)
+			default:
+				throw ToursprungError.invalidResponse(message: nil)
+			}
 		}
 
 		let response = try options.response(from: json)
 		for route in response.routes {
 			route.routeIdentifier = json["uuid"] as? String
 		}
-
-		return .init(waypoints: response.waypoint, routes: response.routes)
+		guard let httpResponse = answer.response as? HTTPURLResponse else {
+			throw ToursprungError.invalidResponse(message: "Unexpected response type")
+		}
+		let httpStatusCode = httpResponse.statusCode
+		switch httpStatusCode {
+		case 500 ... 599:
+			throw ToursprungError.invalidResponse(message: "Server error HTTP status code: \(httpStatusCode)")
+		case 200 ... 299:
+			return .init(waypoints: response.waypoint, routes: response.routes)
+		default:
+			throw ToursprungError.invalidResponse(message: "Server error occurred")
+		}
 	}
 }
 
@@ -132,7 +223,7 @@ private extension RouteOptions {
 				URLQueryItem(name: "voice_units", value: "metric")
 			]
 			guard let url = components.url else {
-				throw Toursprung.ToursprungError.invalidUrl
+				throw Toursprung.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
 			}
 
 			return url
