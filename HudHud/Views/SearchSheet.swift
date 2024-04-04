@@ -106,7 +106,6 @@ struct SearchSheet: View {
 								self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: item.wrappedValue.poi, mapItems: self.mapStore.mapItemStatus.mapItems)
 							}
 
-
 						}, label: {
 							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
 								.frame(maxWidth: .infinity)
@@ -216,14 +215,12 @@ struct SearchSheet: View {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
 		self.mapStore.mapItemStatus.selectedItem = row.poi
-		self.detailSheetShown = true
 	}
 
 	func showSheet(poi: POI) {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
 		self.mapStore.mapItemStatus.selectedItem = poi
-		self.detailSheetShown = true
 	}
 
 }

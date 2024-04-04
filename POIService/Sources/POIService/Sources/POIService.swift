@@ -57,7 +57,7 @@ public class POI: Codable, Hashable, Identifiable {
 
 	public required init(from decoder: Decoder) throws {
 		let container = try decoder.container(keyedBy: CodingKeys.self)
-		self.id = try container.decode(Int.self, forKey: .id)
+		self.id = try container.decode(String.self, forKey: .id)
 		self.title = try container.decode(String.self, forKey: .title)
 		self.subtitle = try container.decode(String.self, forKey: .subtitle)
 		self.locationCoordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .locationCoordinate)
