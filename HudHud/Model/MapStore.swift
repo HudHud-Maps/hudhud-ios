@@ -75,5 +75,5 @@ final class MapStore: ObservableObject {
 
 extension MapStore {
 
-	static let preview: MapStore = .init(mapItemStatus: .preview, motionViewModel: .init())
+	static let preview = MapStore(mapItemStatus: .preview, motionViewModel: MotionViewModel())
 }

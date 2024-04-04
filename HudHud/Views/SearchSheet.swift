@@ -168,11 +168,11 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .preview),
-		SearchResultItem(prediction: .init(toursprung: .supermarket), searchViewStore: .preview),
-		SearchResultItem(prediction: .init(toursprung: .pharmacy), searchViewStore: .preview),
-		SearchResultItem(prediction: .init(toursprung: .artwork), searchViewStore: .preview),
-		SearchResultItem(prediction: .init(toursprung: .ketchup), searchViewStore: .preview),
-		SearchResultItem(prediction: .init(toursprung: .publicPlace), searchViewStore: .preview)
+		SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .preview),
+		SearchResultItem(prediction: Row(toursprung: .supermarket), searchViewStore: .preview),
+		SearchResultItem(prediction: Row(toursprung: .pharmacy), searchViewStore: .preview),
+		SearchResultItem(prediction: Row(toursprung: .artwork), searchViewStore: .preview),
+		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .preview),
+		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .preview)
 	]
 }

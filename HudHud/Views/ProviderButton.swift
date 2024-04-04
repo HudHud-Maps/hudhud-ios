@@ -44,7 +44,7 @@ struct ProviderButton: View {
 @available(iOS 17, *)
 #Preview("Apple", traits: .sizeThatFitsLayout) {
 	let mapItemStatus = MapItemsStatus()
-	let searchViewStore = SearchViewStore(mapStore: .init(mapItemStatus: mapItemStatus, motionViewModel: .init()), mode: .live(provider: .apple))
+	let searchViewStore = SearchViewStore(mapStore: .preview, mode: .live(provider: .apple))
 
 	return ProviderButton(searchViewStore: searchViewStore)
 		.padding()
@@ -53,7 +53,7 @@ struct ProviderButton: View {
 @available(iOS 17, *)
 #Preview("Toursprung", traits: .sizeThatFitsLayout) {
 	let mapItemStatus: MapItemsStatus = .preview
-	let searchViewStore = SearchViewStore(mapStore: .init(mapItemStatus: mapItemStatus, motionViewModel: .init()), mode: .live(provider: .apple))
+	let searchViewStore = SearchViewStore(mapStore: .preview, mode: .live(provider: .apple))
 
 	return ProviderButton(searchViewStore: searchViewStore)
 		.padding()

@@ -35,7 +35,7 @@ final class MotionViewModel: ObservableObject {
 		var heading: Double
 		var pitch: Double
 
-		static var initial: MotionViewModel.Position = .init(heading: 0, pitch: 90)
+		static var initial = MotionViewModel.Position(heading: 0, pitch: 90)
 
 		// MARK: - Lifecycle
 
@@ -119,6 +119,6 @@ struct DebugStreetView: View {
 		.fill(Color.yellow)
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			DebugStreetView(viewModel: .init())
+			DebugStreetView(viewModel: MotionViewModel())
 		}
 }

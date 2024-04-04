@@ -30,7 +30,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	public init() {
 		self.completer = MKLocalSearchCompleter()
-		self.delegate = .init()
+		self.delegate = DelegateWrapper()
 		self.delegate.poi = self
 		Task {
 			await self.completer.delegate = self.delegate

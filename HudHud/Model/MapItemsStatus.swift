@@ -44,5 +44,5 @@ final class MapItemsStatus: ObservableObject {
 
 extension MapItemsStatus {
 
-	static let preview: MapItemsStatus = .init()
+	static let preview = MapItemsStatus()
 }

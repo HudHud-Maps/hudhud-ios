@@ -31,8 +31,8 @@ final class SearchViewStore: ObservableObject {
 	}
 
 	private var task: Task<Void, Error>?
-	private var apple: ApplePOI = .init()
-	private var toursprung: ToursprungPOI = .init()
+	private var apple = ApplePOI()
+	private var toursprung = ToursprungPOI()
 	private var cancellable: AnyCancellable?
 
 	// MARK: - Properties
@@ -77,12 +77,12 @@ final class SearchViewStore: ObservableObject {
 					}
 				case .preview:
 					self.mapStore.mapItemStatus.mapItems = [
-						.init(toursprung: .starbucks),
-						.init(toursprung: .ketchup),
-						.init(toursprung: .publicPlace),
-						.init(toursprung: .artwork),
-						.init(toursprung: .pharmacy),
-						.init(toursprung: .supermarket)
+						Row(toursprung: .starbucks),
+						Row(toursprung: .ketchup),
+						Row(toursprung: .publicPlace),
+						Row(toursprung: .artwork),
+						Row(toursprung: .pharmacy),
+						Row(toursprung: .supermarket)
 					]
 				}
 			}
@@ -106,5 +106,5 @@ final class SearchViewStore: ObservableObject {
 
 extension SearchViewStore {
 
-	static let preview: SearchViewStore = .init(mapStore: .preview, mode: .preview)
+	static let preview = SearchViewStore(mapStore: .preview, mode: .preview)
 }

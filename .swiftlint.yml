@@ -56,4 +56,10 @@ custom_rules:
     message: "SFSymbol(rawValue:) usage is discouraged as it removes type safety. Please try to pass SFSymbol around instead of a String."
     regex: "(SFSymbol\\(rawValue:)|(\\(systemSymbol: .init\\(rawValue:)"
     severity: warning
+  init_usage:
+    name: "init() usage"
+    message: "Avoid using .init() as reviewer looses context especially in github without syntax Highlighting"
+#   regex: "\\.init\\("
+    regex: "(?<!self|super)\\.init\\("
+    severity: warning
     

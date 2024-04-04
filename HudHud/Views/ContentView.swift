@@ -32,7 +32,7 @@ struct ContentView: View {
 	@ObservedObject private var mapStore: MapStore
 	@ObservedObject private var motionViewModel: MotionViewModel
 
-	@StateObject private var notificationQueue: NotificationQueue = .init()
+	@StateObject private var notificationQueue = NotificationQueue()
 
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
@@ -61,8 +61,7 @@ struct ContentView: View {
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
 			// the one nearest nearest one to the touch point.
 			guard let feature = features.first,
-				  let placeID = feature.attribute(forKey: "poi_id") as? String else
-			{
+				  let placeID = feature.attribute(forKey: "poi_id") as? String else {
 				// user tapped nothing - deselect
 				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
 				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
@@ -127,7 +126,7 @@ struct ContentView: View {
 							let userLocation = try await locationManager.requestLocation()
 							guard let location = userLocation.location else { return }
 
-							self.mapStore.streetViewPoint = .init(location: location.coordinate, heading: location.course)
+							self.mapStore.streetViewPoint = StreetViewPoint(location: location.coordinate, heading: location.course)
 						}
 					}
 					.onDisappear {
@@ -161,8 +160,7 @@ struct ContentView: View {
 								guard let location = location.location else { return }
 
 								print("set new streetViewPoint")
-								self.mapStore.streetViewPoint = .init(location: location.coordinate,
-																	  heading: location.course)
+								self.mapStore.streetViewPoint = StreetViewPoint(location: location.coordinate, heading: location.course)
 							}
 						} else {
 							self.mapStore.streetViewPoint = nil
@@ -263,12 +261,12 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .preview
-	return ContentView(locationManager: .init(), searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, motionViewModel: .init())
+	return ContentView(locationManager: Location(), searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, motionViewModel: searchViewStore.mapStore.motionViewModel)
 }
 
 #Preview("Touch Testing") {
 	let store: SearchViewStore = .preview
 	store.searchText = "shops"
 	store.selectedDetent = .medium
-	return ContentView(locationManager: .init(), searchViewStore: store, mapStore: store.mapStore, motionViewModel: store.mapStore.motionViewModel)
+	return ContentView(locationManager: Location(), searchViewStore: store, mapStore: store.mapStore, motionViewModel: store.mapStore.motionViewModel)
 }

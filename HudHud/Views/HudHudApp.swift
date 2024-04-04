@@ -28,11 +28,11 @@ struct HudHudApp: App {
 	// MARK: - Lifecycle
 
 	init() {
-		self.locationManager = .init()
-		self.motionViewModel = .init()
+		self.locationManager = Location()
+		self.motionViewModel = MotionViewModel()
 
 		let mapItemStatus = MapItemsStatus()
 		let mapStore = MapStore(mapItemStatus: mapItemStatus, motionViewModel: self.motionViewModel)
-		self.searchViewStore = .init(mapStore: mapStore, mode: .live(provider: .toursprung))
+		self.searchViewStore = SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung))
 	}
 }
