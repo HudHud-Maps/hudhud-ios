@@ -32,7 +32,7 @@ public enum PredictionResult: Hashable {
 
 public class POI: Codable, Hashable, Identifiable {
 
-	public var id: Int
+	public var id: String
 	public var title: String
 	public var subtitle: String
 	public var locationCoordinate: CLLocationCoordinate2D?
@@ -47,7 +47,7 @@ public class POI: Codable, Hashable, Identifiable {
 
 	// MARK: - Lifecycle
 
-	public init(id: Int = .random(in: 0 ... 1_000_000), title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
+	public init(id: String, title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -207,29 +207,29 @@ extension POI: CustomStringConvertible {
 }
 
 public extension POI {
-	static let ketchup = POI(title: "Ketch up - Dubai",
-							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence - Bluewaters Island - Dubai",
-							 locationCoordinate: CLLocationCoordinate2D(latitude: 25.077744998955207, longitude: 55.124647403691284),
+	static let ketchup = POI(id: UUID().uuidString, title: "Ketch up",
+							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
+							 locationCoordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
 							 type: "Restaurant")
-	static let starbucks = POI(title: "Starbucks",
-							   subtitle: "The Beach - Jumeirah Beach Residence - Dubai",
-							   locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+	static let starbucks = POI(id: UUID().uuidString, title: "Starbucks",
+							   subtitle: "The Beach",
+							   locationCoordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
 							   type: "Cafe")
-	static let publicPlace = POI(title: "publicPlace",
+	static let publicPlace = POI(id: UUID().uuidString, title: "publicPlace",
 								 subtitle: "Garden - Alyasmen - Riyadh",
-								 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
 								 type: "publicPlace")
-	static let artwork = POI(title: "Artwork",
+	static let artwork = POI(id: UUID().uuidString, title: "Artwork",
 							 subtitle: "artwork - Al-Olya - Riyadh",
-							 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+							 locationCoordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
 							 type: "artwork")
-	static let pharmacy = POI(title: "Pharmacy",
+	static let pharmacy = POI(id: UUID().uuidString, title: "Pharmacy",
 							  subtitle: "Al-Olya - Riyadh",
-							  locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+							  locationCoordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
 							  type: "pharmacy")
-	static let supermarket = POI(title: "Supermarket",
+	static let supermarket = POI(id: UUID().uuidString, title: "Supermarket",
 								 subtitle: "Al-Narjs - Riyadh",
-								 locationCoordinate: CLLocationCoordinate2D(latitude: 25.075671955460354, longitude: 55.13046336047564),
+								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
 								 type: "supermarket")
 }
 

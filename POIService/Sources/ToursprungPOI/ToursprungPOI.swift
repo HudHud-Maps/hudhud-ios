@@ -106,7 +106,7 @@ public extension POI {
 
 		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-		self.init(id: element.placeID,
+		self.init(id: "\(element.placeID)",
 				  title: element.displayName,
 				  subtitle: element.address.description,
 				  locationCoordinate: coordinate,

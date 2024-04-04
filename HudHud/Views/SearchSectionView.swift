@@ -23,6 +23,7 @@ struct SearchSectionView<Content: View>: View {
 			ScrollView(.horizontal) {
 				self.subview
 			}
+			.backport.scrollClipDisabled()
 		}
 	}
 
