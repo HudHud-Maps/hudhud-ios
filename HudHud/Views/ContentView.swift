@@ -27,10 +27,10 @@ struct ContentView: View {
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager = Location()
-	@StateObject private var searchViewStore: SearchViewStore
-	@StateObject private var mapStore = MapStore()
-	@StateObject var notificationQueue: NotificationQueue = .init()
+	@ObservedObject var searchViewStore: SearchViewStore
+	@ObservedObject var mapStore: MapStore
 	@State private var showUserLocation: Bool = false
+	@StateObject var notificationQueue: NotificationQueue = .init()
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
@@ -49,6 +49,30 @@ struct ContentView: View {
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
 		}
+		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
+			// Pick the first feature (which may be a port or a cluster), ideally selecting
+			// the one nearest nearest one to the touch point.
+			guard let feature = features.first,
+				  let placeID = feature.attribute(forKey: "poi_id") as? String else
+			{
+				// user tapped nothing - deselect
+				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
+				return
+			}
+
+			let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
+			let poi = mapItems.first { row in
+				row.poi?.id == placeID
+			}?.poi
+
+			if let poi {
+				Logger.mapInteraction.debug("setting poi")
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
+			} else {
+				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+			}
+		})
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
 		}
@@ -182,10 +206,9 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+	init(searchViewStore: SearchViewStore) {
 		self._searchViewStore = .init(wrappedValue: searchViewStore)
-		self._mapStore = .init(wrappedValue: mapStore)
-		searchViewStore.mapStore = mapStore
+		self._mapStore = .init(wrappedValue: searchViewStore.mapStore)
 	}
 
 	// MARK: - Internal
@@ -217,5 +240,12 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	return ContentView(searchViewStore: .preview)
+	ContentView(searchViewStore: .preview)
+}
+
+#Preview("Touch Testing") {
+	let store: SearchViewStore = .preview
+	store.searchText = "shops"
+	store.selectedDetent = .medium
+	return ContentView(searchViewStore: store)
 }
