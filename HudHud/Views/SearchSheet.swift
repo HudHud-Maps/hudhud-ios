@@ -34,6 +34,9 @@ struct SearchSheet: View {
 
 	@State private var route: Route?
 
+	@State private var selectedItem: POI?
+	@State private var poiArray = [POI]()
+
 	var body: some View {
 		return VStack {
 			HStack {
@@ -98,9 +101,13 @@ struct SearchSheet: View {
 					SearchSectionView(title: "Favorites") {
 						FavoriteCategoriesView()
 					}
-					SearchSectionView(title: "Recents", subview: {
-						RecentSearchResults()
-					})
+
+					SearchSectionView(title: "Recents") {
+						RecentSearchResultsView(poiArray: self.poiArray) { poi in
+							self.selectedItem = poi
+							self.showSheet(poi: poi)
+						}
+					}
 
 					.listRowSeparator(.hidden)
 				}
@@ -129,25 +136,44 @@ struct SearchSheet: View {
 			}
 			.onAppear {
 				// Store POI
-				do {
-					let encoder = JSONEncoder()
+				Task {
+					do {
+						let encoder = JSONEncoder()
 
-					let data = try encoder.encode(item)
+						let data = try encoder.encode(item)
 
-					let defaults = UserDefaults.standard
+						let defaults = UserDefaults.standard
 
-					var array = defaults.array(forKey: "selectedItems") as? [Data] ?? [Data]()
+						var array = defaults.array(forKey: "selectedItems") as? [Data] ?? [Data]()
 
-					array.append(data)
+						array.append(data)
 
-					if array.count > 10 {
-						array.removeFirst()
+						if array.count > 10 {
+							array.removeFirst()
+						}
+
+						defaults.set(array, forKey: "selectedItems")
+
+					} catch {
+						print("Unable to Encode Array of Notes (\(error))")
 					}
+					// added this here
+					if let dataArray = UserDefaults.standard.array(forKey: "selectedItems") as? [Data] {
+						do {
+							let decoder = JSONDecoder()
 
-					defaults.set(array, forKey: "selectedItems")
+							for data in dataArray {
+								let poi = try decoder.decode(POI.self, from: data)
 
-				} catch {
-					print("Unable to Encode Array of Notes (\(error))")
+								self.poiArray.append(poi)
+							}
+
+						} catch {
+							print("Error decoding data: \(error)")
+						}
+					} else {
+						print("No data found in UserDefaults")
+					}
 				}
 			}
 		}
@@ -171,6 +197,14 @@ struct SearchSheet: View {
 		self.mapStore.mapItemStatus.selectedItem = row.poi
 		self.detailSheetShown = true
 	}
+
+	func showSheet(poi: POI) {
+		self.searchIsFocused = false
+		self.searchStore.selectedDetent = .small
+		self.mapStore.mapItemStatus.selectedItem = poi
+		self.detailSheetShown = true
+	}
+
 }
 
 #Preview {
