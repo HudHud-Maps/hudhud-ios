@@ -57,6 +57,30 @@ struct ContentView: View {
 				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
+		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
+			// Pick the first feature (which may be a port or a cluster), ideally selecting
+			// the one nearest nearest one to the touch point.
+			guard let feature = features.first,
+				  let placeID = feature.attribute(forKey: "poi_id") as? String else
+			{
+				// user tapped nothing - deselect
+				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
+				return
+			}
+
+			let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
+			let poi = mapItems.first { row in
+				row.poi?.id == placeID
+			}?.poi
+
+			if let poi {
+				Logger.mapInteraction.debug("setting poi")
+				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
+			} else {
+				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+			}
+		})
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetViewPoint.isNil
 		}
@@ -240,4 +264,11 @@ struct SizePreferenceKey: PreferenceKey {
 #Preview {
 	let searchViewStore: SearchViewStore = .preview
 	return ContentView(locationManager: .init(), searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, motionViewModel: .init())
+}
+
+#Preview("Touch Testing") {
+	let store: SearchViewStore = .preview
+	store.searchText = "shops"
+	store.selectedDetent = .medium
+	return ContentView(locationManager: .init(), searchViewStore: store, mapStore: store.mapStore, motionViewModel: store.mapStore.motionViewModel)
 }
