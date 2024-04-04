@@ -29,4 +29,12 @@ extension Backport where Content: View {
 			self.content.padding(edges, 100)
 		}
 	}
+
+	@ViewBuilder func scrollClipDisabled() -> some View {
+		if #available(iOS 17, *) {
+			content.scrollClipDisabled()
+		} else {
+			self.content
+		}
+	}
 }
