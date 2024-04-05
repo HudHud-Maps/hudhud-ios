@@ -7,7 +7,6 @@
 //
 
 import ApplePOI
-import Combine
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
@@ -24,8 +23,6 @@ import ToursprungPOI
 // MARK: - SearchSheet
 
 struct SearchSheet: View {
-
-	private var cancelables: Set<AnyCancellable> = []
 
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
@@ -151,7 +148,6 @@ struct SearchSheet: View {
 	// MARK: - Lifecycle
 
 	init(mapStore: MapStore, searchStore: SearchViewStore) {
-		self.cancelables = []
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
