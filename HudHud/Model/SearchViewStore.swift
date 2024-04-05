@@ -104,7 +104,9 @@ final class SearchViewStore: ObservableObject {
 	}
 }
 
-extension SearchViewStore {
+// MARK: - Preview
+
+extension SearchViewStore: Preview {
 
 	static let preview = SearchViewStore(mapStore: .preview, mode: .preview)
 }

@@ -59,7 +59,11 @@ custom_rules:
   init_usage:
     name: "init() usage"
     message: "Avoid using .init() as reviewer looses context especially in github without syntax Highlighting"
-#   regex: "\\.init\\("
     regex: "(?<!self|super)\\.init\\("
+    severity: warning
+  location_usage:
+    name: "Location() usage"
+    message: "Use Location via @EnvironemntObject, using one Location() object through the whole app allows us to use things like .lastLocation"
+    regex: "\\bLocation\\(\\)"
     severity: warning
     

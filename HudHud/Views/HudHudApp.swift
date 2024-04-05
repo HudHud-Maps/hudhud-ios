@@ -9,21 +9,29 @@
 import SwiftLocation
 import SwiftUI
 
+// MARK: - HudHudApp
+
 @main
 struct HudHudApp: App {
 
-	// TODO: Lets use one Location Instance in the whole app, add as environment object to WindowGroup
-	private let locationManager: Location
+	private let locationManager = Location() // swiftlint:disable:this location_usage
 
 	var body: some Scene {
 		WindowGroup {
-			ContentView(locationManager: self.locationManager)
+			let mapStore = MapStore(motionViewModel: MotionViewModel())
+			let searchStore = SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung))
+
+			ContentView(locationManager: self.locationManager, searchStore: searchStore)
+				.environmentObject(self.locationManager)
 		}
 	}
+}
 
-	// MARK: - Lifecycle
+extension Location: ObservableObject {}
 
-	init() {
-		self.locationManager = Location()
-	}
+// MARK: - Location + Preview
+
+extension Location: Preview {
+
+	static let preview = Location() // swiftlint:disable:this location_usage
 }

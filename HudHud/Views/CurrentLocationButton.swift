@@ -30,7 +30,7 @@ struct CurrentLocationButton: View {
 
 					if let coordinates = userLocation.location?.coordinate {
 						withAnimation {
-							self.camera = MapViewCamera.center(coordinates, zoom: 10)
+							self.camera = MapViewCamera.center(coordinates, zoom: 16)
 						}
 					} else {
 						Logger.searchView.error("location error: got no coordinates")
@@ -63,6 +63,6 @@ struct CurrentLocationButton: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	@State var camera: MapViewCamera = .default()
-	return CurrentLocationButton(camera: $camera, locationManager: Location())
+	return CurrentLocationButton(camera: $camera, locationManager: .preview)
 		.padding()
 }

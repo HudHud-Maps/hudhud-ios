@@ -24,12 +24,11 @@ struct POIDetailSheet: View {
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
 	let onMore: () -> Void
 
-	let location = Location()
-
 	@State var routes: Toursprung.RouteCalculationResult?
 
 	@Environment(\.dismiss) var dismiss
 	@EnvironmentObject var notificationQueue: NotificationQueue
+	@EnvironmentObject var location: Location
 
 	var body: some View {
 		NavigationStack {

@@ -29,8 +29,9 @@ struct ContentView: View {
 
 	@StateObject private var notificationQueue = NotificationQueue()
 	@StateObject private var motionViewModel: MotionViewModel
-	@StateObject private var searchViewStore: SearchViewStore
-	@StateObject private var mapStore: MapStore
+
+	@ObservedObject private var searchViewStore: SearchViewStore
+	@ObservedObject private var mapStore: MapStore
 
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
@@ -231,15 +232,11 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(locationManager: Location) {
+	init(locationManager: Location, searchStore: SearchViewStore) {
 		self.locationManager = locationManager
-
-		let motionViewModel = MotionViewModel()
-		let mapStore = MapStore(motionViewModel: motionViewModel)
-
-		self._searchViewStore = StateObject(wrappedValue: SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung)))
-		self._mapStore = StateObject(wrappedValue: mapStore)
-		self._motionViewModel = StateObject(wrappedValue: motionViewModel)
+		self.searchViewStore = searchStore
+		self.mapStore = searchStore.mapStore
+		self._motionViewModel = StateObject(wrappedValue: searchStore.mapStore.motionViewModel)
 	}
 }
 
@@ -263,12 +260,12 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .preview
-	return ContentView(locationManager: Location())
+	return ContentView(locationManager: .preview, searchStore: searchViewStore)
 }
 
 #Preview("Touch Testing") {
 	let store: SearchViewStore = .preview
 	store.searchText = "shops"
 	store.selectedDetent = .medium
-	return ContentView(locationManager: Location())
+	return ContentView(locationManager: .preview, searchStore: store)
 }
