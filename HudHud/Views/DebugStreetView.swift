@@ -35,7 +35,7 @@ struct DebugStreetView: View {
 					self.viewModel.adding(translation: value.translation)
 				}
 				.onEnded { _ in
-					self.viewModel.positionOffet = nil
+					self.viewModel.endTranslation()
 				}
 			)
 			.onTapGesture {

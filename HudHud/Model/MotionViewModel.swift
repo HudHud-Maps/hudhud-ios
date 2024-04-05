@@ -14,8 +14,11 @@ final class MotionViewModel: ObservableObject {
 		case fullscreen
 	}
 
+	private var positionOffet: Position?
+
+	// MARK: - Properties
+
 	@Published var position: Position = .initial
-	@Published var positionOffet: Position?
 	@Published var size: Size = .compact
 
 	// MARK: - Lifecycle
@@ -70,5 +73,9 @@ final class MotionViewModel: ObservableObject {
 		} else {
 			self.positionOffet = self.position
 		}
+	}
+
+	func endTranslation() {
+		self.positionOffet = nil
 	}
 }

@@ -18,7 +18,7 @@ import SwiftUI
 
 final class MapStore: ObservableObject {
 
-	@ObservedObject var motionViewModel: MotionViewModel
+	var motionViewModel: MotionViewModel
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
