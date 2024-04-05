@@ -16,7 +16,6 @@
 		341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */; };
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
-		467FC54605A6EF6E503C6257 /* MapItemsStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 641A222AD9BC659F7DC46F52 /* MapItemsStatus.swift */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
 		793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E69A6191475F5E54A62147D /* DirectionModeButton.swift */; };
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
@@ -119,7 +118,6 @@
 		4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
 		557A9FF81C4443860134AE6F /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
-		641A222AD9BC659F7DC46F52 /* MapItemsStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapItemsStatus.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
 		6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderButton.swift; sourceTree = "<group>"; };
 		738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
@@ -257,7 +255,6 @@
 			isa = PBXGroup;
 			children = (
 				4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */,
-				641A222AD9BC659F7DC46F52 /* MapItemsStatus.swift */,
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
 				CD2219572BBFDBEE00042564 /* MotionViewModel.swift */,
@@ -694,7 +691,6 @@
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
-				467FC54605A6EF6E503C6257 /* MapItemsStatus.swift in Sources */,
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
 				341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */,
 				FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */,

@@ -41,7 +41,7 @@ struct ContentView: View {
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
-			let pointSource = self.mapStore.mapItemStatus.points
+			let pointSource = self.mapStore.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
 				.radius(16)
@@ -64,18 +64,18 @@ struct ContentView: View {
 				  let placeID = feature.attribute(forKey: "poi_id") as? String else {
 				// user tapped nothing - deselect
 				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-				self.searchViewStore.mapStore.mapItemStatus.selectedItem = nil
+				self.searchViewStore.mapStore.selectedItem = nil
 				return
 			}
 
-			let mapItems = self.searchViewStore.mapStore.mapItemStatus.mapItems
+			let mapItems = self.searchViewStore.mapStore.mapItems
 			let poi = mapItems.first { row in
 				row.poi?.id == placeID
 			}?.poi
 
 			if let poi {
 				Logger.mapInteraction.debug("setting poi")
-				self.searchViewStore.mapStore.mapItemStatus.selectedItem = poi
+				self.searchViewStore.mapStore.selectedItem = poi
 			} else {
 				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
 			}

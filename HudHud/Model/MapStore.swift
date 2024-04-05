@@ -12,6 +12,7 @@ import Foundation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import POIService
 import SwiftUI
 
 // MARK: - MapStore
@@ -21,23 +22,53 @@ final class MapStore: ObservableObject {
 	private var cancelable: [AnyCancellable] = []
 
 	@NestedObservableObject var motionViewModel: MotionViewModel
-	@NestedObservableObject var mapItemStatus: MapItemsStatus {
-		didSet {
-			if let coordinate = self.mapItemStatus.selectedItem?.locationCoordinate {
-				self.camera = .center(coordinate, zoom: 16)
-				return
-			}
-
-			let coordinates = self.mapItemStatus.mapItems.compactMap(\.coordinate)
-			if let camera = CameraState.boundingBox(from: coordinates) {
-				self.camera = camera
-			}
-		}
-	}
+//	@NestedObservableObject var mapItemStatus: MapItemsStatus {
+//		didSet {
+//			if let coordinate = self.mapItemStatus.selectedItem?.locationCoordinate {
+//				self.camera = .center(coordinate, zoom: 16)
+//				return
+//			}
+//
+//			let coordinates = self.mapItemStatus.mapItems.compactMap(\.coordinate)
+//			if let camera = CameraState.boundingBox(from: coordinates) {
+//				self.camera = camera
+//			}
+//		}
+//	}
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
 	@Published var streetViewPoint: StreetViewPoint?
+
+	@Published var selectedItem: POI? {
+		didSet {
+			if let coordinate = self.selectedItem?.locationCoordinate {
+				self.camera = .center(coordinate, zoom: 16)
+			} else if self.mapItems.isEmpty == false {
+				self.updateCameraForMapItems()
+			}
+		}
+	}
+
+	@Published var mapItems: [Row] = [] {
+		didSet {
+			self.updateCameraForMapItems()
+		}
+	}
+
+	var points: ShapeSource {
+		return ShapeSource(identifier: "points") {
+			self.mapItems.compactMap { item in
+				guard let coordinate = item.coordinate else { return nil }
+
+				return MLNPointFeature(coordinate: coordinate) { feature in
+					if let poi = item.poi {
+						feature.attributes["poi_id"] = poi.id
+					}
+				}
+			}
+		}
+	}
 
 	var streetViewSource: ShapeSource {
 		ShapeSource(identifier: "street-view-symbols") {
@@ -51,29 +82,29 @@ final class MapStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(mapItemStatus: MapItemsStatus, camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
-		self.mapItemStatus = mapItemStatus
+	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
 		self.camera = camera
 		self.searchShown = searchShown
 		self.streetViewPoint = streetViewPoint
 		self.motionViewModel = motionViewModel
-
-		self.mapItemStatus.$selectedItem.sink { item in
-			guard let coordinate = item?.locationCoordinate else { return }
-
-			self.camera = .center(coordinate, zoom: 16)
-		}.store(in: &self.cancelable)
-
-		self.mapItemStatus.$mapItems.sink { mapItems in
-			let coordinates = mapItems.compactMap(\.coordinate)
-			guard let camera = CameraState.boundingBox(from: coordinates) else { return }
-
-			self.camera = camera
-		}.store(in: &self.cancelable)
 	}
 }
 
+// MARK: - Preview
+
 extension MapStore {
 
-	static let preview = MapStore(mapItemStatus: .preview, motionViewModel: MotionViewModel())
+	static let preview = MapStore(motionViewModel: MotionViewModel())
+}
+
+// MARK: - Private
+
+private extension MapStore {
+
+	func updateCameraForMapItems() {
+		let coordinates = self.mapItems.compactMap(\.coordinate)
+		guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+
+		self.camera = camera
+	}
 }

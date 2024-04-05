@@ -31,8 +31,7 @@ struct HudHudApp: App {
 		self.locationManager = Location()
 		self.motionViewModel = MotionViewModel()
 
-		let mapItemStatus = MapItemsStatus()
-		let mapStore = MapStore(mapItemStatus: mapItemStatus, motionViewModel: self.motionViewModel)
+		let mapStore = MapStore(motionViewModel: self.motionViewModel)
 		self.searchViewStore = SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung))
 	}
 }

@@ -81,26 +81,28 @@ struct SearchSheet: View {
 					}
 					.listStyle(.plain)
 				} else {
-					List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
+					List(self.$mapStore.mapItems, id: \.self) { item in
 						Button(action: {
 							self.searchIsFocused = false
 							self.searchStore.selectedDetent = .small
 							switch item.wrappedValue.provider {
 							case .toursprung:
-								self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: item.wrappedValue.poi, mapItems: self.mapStore.mapItemStatus.mapItems)
+								self.mapStore.selectedItem = item.wrappedValue.poi
 							case .appleCompletion:
 								self.searchStore.selectedDetent = .medium
 								self.searchIsFocused = false
 								Task {
 									let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
 									if let firstResult = items.first, items.count == 1 {
-										self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: firstResult.poi, mapItems: items)
+										self.mapStore.selectedItem = firstResult.poi
+										self.mapStore.mapItems = items
 									} else {
-										self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
+										self.mapStore.selectedItem = nil
+										self.mapStore.mapItems = items
 									}
 								}
 							case .appleMapItem:
-								self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: item.wrappedValue.poi, mapItems: self.mapStore.mapItemStatus.mapItems)
+								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
 						}, label: {
 							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
@@ -124,10 +126,9 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
+		.sheet(item: self.$mapStore.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
 				self.route = routes.routes.first
