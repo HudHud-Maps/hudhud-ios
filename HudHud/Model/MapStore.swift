@@ -18,11 +18,17 @@ import SwiftUI
 
 final class MapStore: ObservableObject {
 
+	enum StreetViewOption: Equatable {
+		case disabled
+		case requestedCurrentLocation
+		case point(StreetViewPoint)
+	}
+
 	var motionViewModel: MotionViewModel
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
-	@Published var streetViewPoint: StreetViewPoint?
+	@Published var streetView: StreetViewOption = .disabled
 
 	@Published var selectedItem: POI? {
 		didSet {
@@ -56,8 +62,8 @@ final class MapStore: ObservableObject {
 
 	var streetViewSource: ShapeSource {
 		ShapeSource(identifier: "street-view-symbols") {
-			if let streetViewPoint {
-				let streetViewPoint = StreetViewPoint(location: streetViewPoint.location,
+			if case let .point(point) = streetView {
+				let streetViewPoint = StreetViewPoint(location: point.location,
 													  heading: self.motionViewModel.position.heading)
 				streetViewPoint.feature
 			}
@@ -69,8 +75,13 @@ final class MapStore: ObservableObject {
 	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
 		self.camera = camera
 		self.searchShown = searchShown
-		self.streetViewPoint = streetViewPoint
 		self.motionViewModel = motionViewModel
+
+		if let streetViewPoint {
+			self.streetView = .point(streetViewPoint)
+		} else {
+			self.streetView = .disabled
+		}
 	}
 }
 

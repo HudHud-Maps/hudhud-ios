@@ -80,7 +80,7 @@ struct ContentView: View {
 			}
 		})
 		.unsafeMapViewModifier { mapView in
-			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetViewPoint.isNil
+			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
@@ -118,18 +118,18 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			if self.mapStore.streetViewPoint != nil {
+			if case .point = self.mapStore.streetView {
 				DebugStreetView(viewModel: self.motionViewModel)
 					.onAppear {
 						Task {
 							let userLocation = try await locationManager.requestLocation()
 							guard let location = userLocation.location else { return }
 
-							self.mapStore.streetViewPoint = StreetViewPoint(location: location.coordinate, heading: location.course)
+							self.mapStore.streetView = .point(StreetViewPoint(location: location.coordinate, heading: location.course))
 						}
 					}
 					.onDisappear {
-						self.mapStore.streetViewPoint = nil
+						self.mapStore.streetView = .disabled
 					}
 			} else {
 				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
@@ -152,17 +152,19 @@ struct ContentView: View {
 							Logger.searchView.info("Map Mode toursprung")
 						}
 					},
-					MapButtonData(sfSymbol: .icon(.cube)) {
-						if self.mapStore.streetViewPoint.isNil {
+					MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .cube : .cubeFill)) {
+						if self.mapStore.streetView == .disabled {
 							Task {
+								self.mapStore.streetView = .requestedCurrentLocation
 								let location = try await self.locationManager.requestLocation()
 								guard let location = location.location else { return }
 
 								print("set new streetViewPoint")
-								self.mapStore.streetViewPoint = StreetViewPoint(location: location.coordinate, heading: location.course)
+								let point = StreetViewPoint(location: location.coordinate, heading: location.course)
+								self.mapStore.streetView = .point(point)
 							}
 						} else {
-							self.mapStore.streetViewPoint = nil
+							self.mapStore.streetView = .disabled
 						}
 					}
 				])

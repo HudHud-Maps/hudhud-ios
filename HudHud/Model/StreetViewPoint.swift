@@ -12,7 +12,7 @@ import MapLibre
 
 // MARK: - StreetViewPoint
 
-struct StreetViewPoint {
+struct StreetViewPoint: Equatable {
 	let location: CLLocationCoordinate2D
 	var heading: CGFloat
 }
