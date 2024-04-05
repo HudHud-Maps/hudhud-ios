@@ -28,11 +28,10 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	private let locationManager: Location
 
-	@ObservedObject private var searchViewStore: SearchViewStore
-	@ObservedObject private var mapStore: MapStore
-	@ObservedObject private var motionViewModel: MotionViewModel
-
 	@StateObject private var notificationQueue = NotificationQueue()
+	@StateObject private var motionViewModel: MotionViewModel
+	@StateObject private var searchViewStore: SearchViewStore
+	@StateObject private var mapStore: MapStore
 
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
@@ -233,11 +232,15 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(locationManager: Location, searchViewStore: SearchViewStore, mapStore: MapStore, motionViewModel: MotionViewModel) {
+	init(locationManager: Location) {
 		self.locationManager = locationManager
-		self.motionViewModel = motionViewModel
-		self.searchViewStore = searchViewStore
-		self.mapStore = mapStore
+
+		let motionViewModel = MotionViewModel()
+		let mapStore = MapStore(motionViewModel: motionViewModel)
+
+		self._searchViewStore = StateObject(wrappedValue: SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung)))
+		self._mapStore = StateObject(wrappedValue: mapStore)
+		self._motionViewModel = StateObject(wrappedValue: motionViewModel)
 	}
 }
 
@@ -261,12 +264,12 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .preview
-	return ContentView(locationManager: Location(), searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, motionViewModel: searchViewStore.mapStore.motionViewModel)
+	return ContentView(locationManager: Location())
 }
 
 #Preview("Touch Testing") {
 	let store: SearchViewStore = .preview
 	store.searchText = "shops"
 	store.selectedDetent = .medium
-	return ContentView(locationManager: Location(), searchViewStore: store, mapStore: store.mapStore, motionViewModel: store.mapStore.motionViewModel)
+	return ContentView(locationManager: Location())
 }

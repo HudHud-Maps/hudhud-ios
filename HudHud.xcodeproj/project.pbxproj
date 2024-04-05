@@ -51,7 +51,6 @@
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
 		CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */; };
 		CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3632BBBD3FB009C3A1C /* Optional.swift */; };
-		CD71C3672BBBFCCE009C3A1C /* NestedObservableObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3662BBBFCCE009C3A1C /* NestedObservableObject.swift */; };
 		CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3682BBBFF27009C3A1C /* CameraState.swift */; };
 		CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */; };
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
@@ -149,7 +148,6 @@
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
 		CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewPoint.swift; sourceTree = "<group>"; };
 		CD71C3632BBBD3FB009C3A1C /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
-		CD71C3662BBBFCCE009C3A1C /* NestedObservableObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedObservableObject.swift; sourceTree = "<group>"; };
 		CD71C3682BBBFF27009C3A1C /* CameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
 		CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
@@ -270,14 +268,6 @@
 			path = UIStyle;
 			sourceTree = "<group>";
 		};
-		CD71C3652BBBFCBC009C3A1C /* Property Wrapper */ = {
-			isa = PBXGroup;
-			children = (
-				CD71C3662BBBFCCE009C3A1C /* NestedObservableObject.swift */,
-			);
-			path = "Property Wrapper";
-			sourceTree = "<group>";
-		};
 		CD85CB2C2BB4650C00C99774 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -313,7 +303,6 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
-				CD71C3652BBBFCBC009C3A1C /* Property Wrapper */,
 				CD85CB2C2BB4650C00C99774 /* Protocols */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
@@ -704,7 +693,6 @@
 				9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */,
 				CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */,
 				A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */,
-				CD71C3672BBBFCCE009C3A1C /* NestedObservableObject.swift in Sources */,
 				3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */,
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
 				4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */,

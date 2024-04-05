@@ -19,22 +19,7 @@ import SwiftUI
 
 final class MapStore: ObservableObject {
 
-	private var cancelable: [AnyCancellable] = []
-
-	@NestedObservableObject var motionViewModel: MotionViewModel
-//	@NestedObservableObject var mapItemStatus: MapItemsStatus {
-//		didSet {
-//			if let coordinate = self.mapItemStatus.selectedItem?.locationCoordinate {
-//				self.camera = .center(coordinate, zoom: 16)
-//				return
-//			}
-//
-//			let coordinates = self.mapItemStatus.mapItems.compactMap(\.coordinate)
-//			if let camera = CameraState.boundingBox(from: coordinates) {
-//				self.camera = camera
-//			}
-//		}
-//	}
+	@ObservedObject var motionViewModel: MotionViewModel
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true

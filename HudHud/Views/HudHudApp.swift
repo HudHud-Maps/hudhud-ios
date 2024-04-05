@@ -12,16 +12,12 @@ import SwiftUI
 @main
 struct HudHudApp: App {
 
+	// TODO: Lets use one Location Instance in the whole app, add as environment object to WindowGroup
 	private let locationManager: Location
-	private let searchViewStore: SearchViewStore
-	private let motionViewModel: MotionViewModel
 
 	var body: some Scene {
 		WindowGroup {
-			ContentView(locationManager: self.locationManager,
-						searchViewStore: self.searchViewStore,
-						mapStore: self.searchViewStore.mapStore,
-						motionViewModel: self.motionViewModel)
+			ContentView(locationManager: self.locationManager)
 		}
 	}
 
@@ -29,9 +25,5 @@ struct HudHudApp: App {
 
 	init() {
 		self.locationManager = Location()
-		self.motionViewModel = MotionViewModel()
-
-		let mapStore = MapStore(motionViewModel: self.motionViewModel)
-		self.searchViewStore = SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung))
 	}
 }

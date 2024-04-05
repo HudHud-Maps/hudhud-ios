@@ -18,7 +18,7 @@ import ToursprungPOI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
-	@NestedObservableObject var mapStore: MapStore
+	@ObservedObject var mapStore: MapStore
 
 	enum Mode {
 		enum Provider: CaseIterable {
