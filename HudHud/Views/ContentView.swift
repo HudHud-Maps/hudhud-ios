@@ -25,7 +25,7 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-	private let locationManager: Location
+	@EnvironmentObject var locationManager: Location
 
 	@StateObject private var notificationQueue = NotificationQueue()
 	@StateObject private var motionViewModel: MotionViewModel
@@ -232,8 +232,7 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(locationManager: Location, searchStore: SearchViewStore) {
-		self.locationManager = locationManager
+	init(searchStore: SearchViewStore) {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self._motionViewModel = StateObject(wrappedValue: searchStore.mapStore.motionViewModel)
@@ -260,12 +259,14 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .preview
-	return ContentView(locationManager: .preview, searchStore: searchViewStore)
+	return ContentView(searchStore: searchViewStore)
+		.environmentObject(Location.preview)
 }
 
 #Preview("Touch Testing") {
 	let store: SearchViewStore = .preview
 	store.searchText = "shops"
 	store.selectedDetent = .medium
-	return ContentView(locationManager: .preview, searchStore: store)
+	return ContentView(searchStore: store)
+		.environmentObject(Location.preview)
 }

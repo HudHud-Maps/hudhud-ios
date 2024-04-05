@@ -21,7 +21,7 @@ struct HudHudApp: App {
 			let mapStore = MapStore(motionViewModel: MotionViewModel())
 			let searchStore = SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung))
 
-			ContentView(locationManager: self.locationManager, searchStore: searchStore)
+			ContentView(searchStore: searchStore)
 				.environmentObject(self.locationManager)
 		}
 	}
