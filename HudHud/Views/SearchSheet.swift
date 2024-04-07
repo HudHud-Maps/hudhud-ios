@@ -35,6 +35,7 @@ struct SearchSheet: View {
 
 	@State private var selectedItem: POI?
 	@State private var poiArray = [POI]()
+	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
 	var body: some View {
 		return VStack {
@@ -124,9 +125,13 @@ struct SearchSheet: View {
 					}
 
 					SearchSectionView(title: "Recents") {
-						RecentSearchResultsView(poiArray: self.poiArray) { poi in
-							self.selectedItem = poi
-							self.showSheet(poi: poi)
+						ForEach(self.recentViewedPOIs, id: \.self) { poiID in
+//								Text(id)
+							if let item = mapStore.mapItemStatus.selectedItem {
+								if poiID == item.id {
+									RecentSearchResultsView(poi: item, recentSearchResult: self.$recentViewedPOIs)
+								}
+							}
 						}
 					}
 
@@ -158,42 +163,11 @@ struct SearchSheet: View {
 			.onAppear {
 				// Store POI
 				Task {
-					do {
-						let encoder = JSONEncoder()
-
-						let data = try encoder.encode(item)
-
-						let defaults = UserDefaults.standard
-
-						var array = defaults.array(forKey: "selectedItems") as? [Data] ?? [Data]()
-
-						array.append(data)
-
-						if array.count > 10 {
-							array.removeFirst()
+					withAnimation {
+						if self.recentViewedPOIs.count > 10 {
+							self.recentViewedPOIs.removeFirst()
 						}
-
-						defaults.set(array, forKey: "selectedItems")
-
-					} catch {
-						print("Unable to Encode Array of Notes (\(error))")
-					}
-					// added this here
-					if let dataArray = UserDefaults.standard.array(forKey: "selectedItems") as? [Data] {
-						do {
-							let decoder = JSONDecoder()
-
-							for data in dataArray {
-								let poi = try decoder.decode(POI.self, from: data)
-
-								self.poiArray.append(poi)
-							}
-
-						} catch {
-							print("Error decoding data: \(error)")
-						}
-					} else {
-						print("No data found in UserDefaults")
+						self.recentViewedPOIs.append(item.id)
 					}
 				}
 			}
@@ -215,12 +189,6 @@ struct SearchSheet: View {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
 		self.mapStore.mapItemStatus.selectedItem = row.poi
-	}
-
-	func showSheet(poi: POI) {
-		self.searchIsFocused = false
-		self.searchStore.selectedDetent = .small
-		self.mapStore.mapItemStatus.selectedItem = poi
 	}
 
 }
