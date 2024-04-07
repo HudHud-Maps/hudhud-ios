@@ -159,7 +159,7 @@ struct SearchSheet: View {
 				// Store POI
 				Task {
 					withAnimation {
-						if self.recentViewedPOIs.count > 10 {
+						if self.recentViewedPOIs.count > 8 {
 							self.recentViewedPOIs.removeFirst()
 						}
 						self.recentViewedPOIs.append(item.id)
