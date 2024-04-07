@@ -43,12 +43,12 @@ struct ProviderButton: View {
 
 @available(iOS 17, *)
 #Preview("Apple", traits: .sizeThatFitsLayout) {
-	return ProviderButton(searchViewStore: .preview)
+	ProviderButton(searchViewStore: .preview)
 		.padding()
 }
 
 @available(iOS 17, *)
 #Preview("Toursprung", traits: .sizeThatFitsLayout) {
-	return ProviderButton(searchViewStore: .preview)
+	ProviderButton(searchViewStore: .preview)
 		.padding()
 }
