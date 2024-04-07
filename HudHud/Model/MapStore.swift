@@ -24,7 +24,7 @@ final class MapStore: ObservableObject {
 		case point(StreetViewPoint)
 	}
 
-	var motionViewModel: MotionViewModel
+	let motionViewModel: MotionViewModel
 
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true

@@ -16,7 +16,7 @@ import SwiftUI
 struct CurrentLocationButton: View {
 	@State private var locationRequestInProgress = false
 	@Binding var camera: MapViewCamera
-	var locationManager: Location
+	let locationManager: Location
 
 	var body: some View {
 		Button {
