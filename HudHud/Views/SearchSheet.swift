@@ -33,8 +33,6 @@ struct SearchSheet: View {
 
 	@State private var route: Route?
 
-	@State private var selectedItem: POI?
-	@State private var poiArray = [POI]()
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
 	var body: some View {
@@ -125,12 +123,9 @@ struct SearchSheet: View {
 					}
 
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedPOIs, id: \.self) { poiID in
-//								Text(id)
-							if let item = mapStore.mapItemStatus.selectedItem {
-								if poiID == item.id {
-									RecentSearchResultsView(poi: item, recentSearchResult: self.$recentViewedPOIs)
-								}
+						ForEach(self.recentViewedPOIs.indices, id: \.self) { _ in
+							if let poiItem = self.mapStore.mapItemStatus.selectedItem {
+								RecentSearchResultsView(poi: self.mapStore.mapItemStatus.selectedItem ?? .ketchup, mapStore: self.mapStore)
 							}
 						}
 					}
