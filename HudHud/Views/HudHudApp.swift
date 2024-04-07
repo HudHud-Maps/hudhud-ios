@@ -15,15 +15,23 @@ import SwiftUI
 struct HudHudApp: App {
 
 	private let locationManager = Location() // swiftlint:disable:this location_usage
+	private let motionViewModel: MotionViewModel
+	private let mapStore: MapStore
+	private let searchStore: SearchViewStore
 
 	var body: some Scene {
 		WindowGroup {
-			let mapStore = MapStore(motionViewModel: MotionViewModel())
-			let searchStore = SearchViewStore(mapStore: mapStore, mode: .live(provider: .toursprung))
-
-			ContentView(searchStore: searchStore)
+			ContentView(searchStore: self.searchStore)
 				.environmentObject(self.locationManager)
 		}
+	}
+
+	// MARK: - Lifecycle
+
+	init() {
+		self.motionViewModel = MotionViewModel()
+		self.mapStore = MapStore(motionViewModel: self.motionViewModel)
+		self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .toursprung))
 	}
 }
 
