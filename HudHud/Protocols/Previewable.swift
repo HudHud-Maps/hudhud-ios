@@ -1,5 +1,5 @@
 //
-//  Preview.swift
+//  Previewable.swift
 //  HudHud
 //
 //  Created by Patrick Kladek on 05.04.24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol Preview {
+protocol Previewable {
 
 	static var preview: Self { get }
 }

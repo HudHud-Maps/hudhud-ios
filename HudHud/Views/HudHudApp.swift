@@ -37,9 +37,9 @@ struct HudHudApp: App {
 
 extension Location: ObservableObject {}
 
-// MARK: - Location + Preview
+// MARK: - Location + Previewable
 
-extension Location: Preview {
+extension Location: Previewable {
 
 	static let preview = Location() // swiftlint:disable:this location_usage
 }
