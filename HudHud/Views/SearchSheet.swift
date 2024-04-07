@@ -125,7 +125,7 @@ struct SearchSheet: View {
 					SearchSectionView(title: "Recents") {
 						ForEach(self.recentViewedPOIs.indices, id: \.self) { _ in
 							if let poiItem = self.mapStore.mapItemStatus.selectedItem {
-								RecentSearchResultsView(poi: self.mapStore.mapItemStatus.selectedItem ?? .ketchup, mapStore: self.mapStore)
+								RecentSearchResultsView(poi: poiItem, mapStore: self.mapStore)
 							}
 						}
 					}
