@@ -27,9 +27,8 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	@EnvironmentObject var locationManager: Location
 
-	@StateObject private var notificationQueue = NotificationQueue()
-	@StateObject private var motionViewModel: MotionViewModel
-
+	@ObservedObject private var notificationQueue = NotificationQueue()
+	@ObservedObject private var motionViewModel: MotionViewModel
 	@ObservedObject private var searchViewStore: SearchViewStore
 	@ObservedObject private var mapStore: MapStore
 
@@ -240,7 +239,7 @@ struct ContentView: View {
 	init(searchStore: SearchViewStore) {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
-		self._motionViewModel = StateObject(wrappedValue: searchStore.mapStore.motionViewModel)
+		self.motionViewModel = searchStore.mapStore.motionViewModel
 	}
 }
 
