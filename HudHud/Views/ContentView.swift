@@ -152,7 +152,7 @@ struct ContentView: View {
 							Logger.searchView.info("Map Mode toursprung")
 						}
 					},
-					MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .cube : .cubeFill)) {
+					MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
 						if self.mapStore.streetView == .disabled {
 							Task {
 								self.mapStore.streetView = .requestedCurrentLocation
@@ -166,6 +166,9 @@ struct ContentView: View {
 						} else {
 							self.mapStore.streetView = .disabled
 						}
+					},
+					MapButtonData(sfSymbol: .icon(.cube)) {
+						print("3D Map toggle tapped")
 					}
 				])
 				Spacer()
