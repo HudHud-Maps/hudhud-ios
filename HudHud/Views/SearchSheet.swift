@@ -123,10 +123,8 @@ struct SearchSheet: View {
 					}
 
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedPOIs.indices, id: \.self) { _ in
-							if let poiItem = self.mapStore.mapItemStatus.selectedItem {
-								RecentSearchResultsView(poi: poiItem, mapStore: self.mapStore)
-							}
+						ForEach(self.recentViewedPOIs, id: \.self) { pois in
+							RecentSearchResultsView(poi: pois, mapStore: self.mapStore)
 						}
 					}
 
@@ -159,10 +157,12 @@ struct SearchSheet: View {
 				// Store POI
 				Task {
 					withAnimation {
-						if self.recentViewedPOIs.count > 8 {
+						if self.recentViewedPOIs.count > 9 {
 							self.recentViewedPOIs.removeFirst()
 						}
-						self.recentViewedPOIs.append(item.id)
+						if !self.recentViewedPOIs.contains(item) {
+							self.recentViewedPOIs.append(item)
+						}
 					}
 				}
 			}

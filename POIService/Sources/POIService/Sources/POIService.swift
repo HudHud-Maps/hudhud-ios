@@ -86,31 +86,6 @@ public class POI: Codable, Hashable, Identifiable {
 
 }
 
-public typealias RecentViewedPOIs = [String]
-
-// MARK: - RawRepresentable
-
-extension RecentViewedPOIs: RawRepresentable {
-	public init?(rawValue: String) {
-		guard let data = rawValue.data(using: .utf8),
-			  let result = try? JSONDecoder()
-			  	.decode(RecentViewedPOIs.self, from: data) else
-		{
-			return nil
-		}
-		self = result
-	}
-
-	public var rawValue: String {
-		guard let data = try? JSONEncoder().encode(self),
-			  let result = String(data: data, encoding: .utf8) else
-		{
-			return "[]"
-		}
-		return result
-	}
-}
-
 public extension POI {
 
 	var icon: Image {
@@ -223,7 +198,7 @@ public extension POI {
 	}
 }
 
-// MARK: - POI + CustomStringConvertible
+// MARK: - CustomStringConvertible
 
 extension POI: CustomStringConvertible {
 	public var description: String {

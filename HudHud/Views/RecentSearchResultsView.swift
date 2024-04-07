@@ -16,13 +16,13 @@ struct RecentSearchResultsView: View {
 	var body: some View {
 		VStack {
 			Button {
-				print("Selected item: \(String(describing: self.mapStore.mapItemStatus.selectedItem))")
-				if let selectedItem = mapStore.mapItemStatus.selectedItem {
-					let mapItems = [Row(toursprung: selectedItem)]
-					let newMapItem = MapItemsStatus(selectedItem: selectedItem, mapItems: mapItems)
-					self.mapStore.mapItemStatus = newMapItem
-					print("Updated mapItemStatus: \(self.mapStore.mapItemStatus)")
-				}
+				print("Selected item: \(self.poi))")
+				let selectedItem = self.poi
+				let mapItems = [Row(toursprung: selectedItem)]
+				let newMapItem = MapItemsStatus(selectedItem: selectedItem, mapItems: mapItems)
+				self.mapStore.mapItemStatus = newMapItem
+				print("Updated mapItemStatus: \(self.mapStore.mapItemStatus)")
+
 				print("error")
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
