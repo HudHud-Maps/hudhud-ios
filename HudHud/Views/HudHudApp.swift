@@ -30,7 +30,7 @@ struct HudHudApp: App {
 
 	init() {
 		self.motionViewModel = .shared
-		self.mapStore = MapStore(motionViewModel: self.motionViewModel)
+		self.mapStore = MapStore(motionViewModel: self.motionViewModel, sheetSize: .constant(.zero))
 		self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .toursprung))
 	}
 }

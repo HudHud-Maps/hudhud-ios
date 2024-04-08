@@ -12,7 +12,7 @@ import MapLibreSwiftUI
 
 extension CameraState {
 
-	static func boundingBox(from locations: [CLLocationCoordinate2D]) -> MapViewCamera? {
+	static func boundingBox(from locations: [CLLocationCoordinate2D], edgePadding: UIEdgeInsets) -> MapViewCamera? {
 		guard !locations.isEmpty else { return nil }
 
 		var minLat = locations[0].latitude
@@ -30,6 +30,6 @@ extension CameraState {
 		let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
 		let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
 		let coordinateBounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
-		return .boundingBox(coordinateBounds)
+		return .boundingBox(coordinateBounds, edgePadding: edgePadding)
 	}
 }

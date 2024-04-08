@@ -231,6 +231,9 @@ struct ContentView: View {
 					.padding(.horizontal, 8)
 			}
 		})
+		.onAppear(perform: {
+			self.mapStore.bind(sheetSize: self.$sheetSize)
+		})
 	}
 
 	// MARK: - Lifecycle
