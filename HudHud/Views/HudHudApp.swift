@@ -29,7 +29,7 @@ struct HudHudApp: App {
 	// MARK: - Lifecycle
 
 	init() {
-		self.motionViewModel = MotionViewModel()
+		self.motionViewModel = .shared
 		self.mapStore = MapStore(motionViewModel: self.motionViewModel)
 		self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .toursprung))
 	}

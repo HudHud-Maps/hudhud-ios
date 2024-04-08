@@ -8,6 +8,8 @@
 
 import Foundation
 
+// MARK: - MotionViewModel
+
 final class MotionViewModel: ObservableObject {
 	enum Size: CaseIterable {
 		case compact
@@ -21,9 +23,11 @@ final class MotionViewModel: ObservableObject {
 	@Published var position: Position = .initial
 	@Published var size: Size = .compact
 
+	static let shared = MotionViewModel()
+
 	// MARK: - Lifecycle
 
-	init(position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
+	private init(position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
 		self.position = position
 		self.positionOffet = positionOffet
 		self.size = size
@@ -78,4 +82,11 @@ final class MotionViewModel: ObservableObject {
 	func endTranslation() {
 		self.positionOffet = nil
 	}
+}
+
+// MARK: - Previewable
+
+extension MotionViewModel: Previewable {
+
+	static var preview: MotionViewModel = .shared
 }
