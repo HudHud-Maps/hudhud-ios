@@ -22,7 +22,7 @@ struct HudHudApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView(searchStore: self.searchStore)
-				.environmentObject(self.locationManager)
+//				.environmentObject(self.locationManager)
 		}
 	}
 
@@ -35,7 +35,16 @@ struct HudHudApp: App {
 	}
 }
 
-extension Location: ObservableObject {}
+extension Location {
+
+	static let forSingleRequestUsage = {
+		assert(Thread.isMainThread)
+		return Location()
+	}()
+
+	// Currently not needed, reserved for future use
+//	static let forContinuesUsage = Location()
+}
 
 // MARK: - Location + Previewable
 

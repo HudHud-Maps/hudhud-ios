@@ -27,7 +27,8 @@ struct ContentView: View {
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 	@EnvironmentObject var locationManager: Location
 
-	@ObservedObject private var notificationQueue = NotificationQueue()
+	@StateObject private var notificationQueue = NotificationQueue()
+
 	@ObservedObject private var motionViewModel: MotionViewModel
 	@ObservedObject private var searchViewStore: SearchViewStore
 	@ObservedObject private var mapStore: MapStore
