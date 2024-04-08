@@ -157,7 +157,7 @@ struct SearchSheet: View {
 }
 
 #Preview {
-	let searchViewStore: SearchViewStore = .preview
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
 
@@ -165,11 +165,11 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .preview),
-		SearchResultItem(prediction: Row(toursprung: .supermarket), searchViewStore: .preview),
-		SearchResultItem(prediction: Row(toursprung: .pharmacy), searchViewStore: .preview),
-		SearchResultItem(prediction: Row(toursprung: .artwork), searchViewStore: .preview),
-		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .preview),
-		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .preview)
+		SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .supermarket), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .artwork), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
 	]
 }

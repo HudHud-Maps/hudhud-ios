@@ -52,6 +52,6 @@ struct DebugStreetView: View {
 		.fill(Color.yellow)
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			DebugStreetView(viewModel: .preview)
+			DebugStreetView(viewModel: .storeSetUpForPreviewing)
 		}
 }

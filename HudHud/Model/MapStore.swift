@@ -89,7 +89,7 @@ final class MapStore: ObservableObject {
 
 extension MapStore: Previewable {
 
-	static let preview = MapStore(motionViewModel: .preview)
+	static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing)
 }
 
 // MARK: - Private

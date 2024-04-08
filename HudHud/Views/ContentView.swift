@@ -261,12 +261,12 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	let searchViewStore: SearchViewStore = .preview
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return ContentView(searchStore: searchViewStore)
 }
 
 #Preview("Touch Testing") {
-	let store: SearchViewStore = .preview
+	let store: SearchViewStore = .storeSetUpForPreviewing
 	store.searchText = "shops"
 	store.selectedDetent = .medium
 	return ContentView(searchStore: store)

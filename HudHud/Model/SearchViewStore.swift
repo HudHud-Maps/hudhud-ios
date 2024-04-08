@@ -108,5 +108,5 @@ final class SearchViewStore: ObservableObject {
 
 extension SearchViewStore: Previewable {
 
-	static let preview = SearchViewStore(mapStore: .preview, mode: .preview)
+	static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mode: .preview)
 }

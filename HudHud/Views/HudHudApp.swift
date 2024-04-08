@@ -55,5 +55,5 @@ extension Location {
 
 extension Location: Previewable {
 
-	static let preview = Location() // swiftlint:disable:this location_usage
+	static let storeSetUpForPreviewing = Location() // swiftlint:disable:this location_usage
 }

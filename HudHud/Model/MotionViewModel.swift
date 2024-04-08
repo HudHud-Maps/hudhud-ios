@@ -88,5 +88,5 @@ final class MotionViewModel: ObservableObject {
 
 extension MotionViewModel: Previewable {
 
-	static var preview: MotionViewModel = .shared
+	static var storeSetUpForPreviewing: MotionViewModel = .shared
 }
