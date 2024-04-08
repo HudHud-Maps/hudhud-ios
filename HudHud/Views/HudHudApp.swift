@@ -13,7 +13,7 @@ struct HudHudApp: App {
 
 	var body: some Scene {
 		WindowGroup {
-			ContentView(searchViewStore: .init(mode: .live(provider: .toursprung)))
+			ContentView(searchViewStore: .init(mode: .live(provider: .toursprung)), route: nil)
 		}
 	}
 }

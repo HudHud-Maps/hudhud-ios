@@ -10,14 +10,15 @@ import SwiftUI
 
 struct DirectionsSummaryView: View {
 	var directionPreviewData: DirectionPreviewData
+	var go: () -> Void
 
 	var body: some View {
 		HStack {
 			VStack(alignment: .leading) {
 				// 20 min AKA duration
 				Text(self.formatDuration(duration: self.directionPreviewData.duration))
-					.font(.system(.title2))
-					.bold()
+					.font(.system(.largeTitle))
+					.fontWeight(.semibold)
 					.lineLimit(1)
 					.minimumScaleFactor(0.5)
 				// distance • type of route
@@ -29,23 +30,21 @@ struct DirectionsSummaryView: View {
 			Spacer()
 			// Go button
 			Button {
-				print("Starting Direction")
+				self.go()
 			} label: {
 				Text("Go")
-					.font(.system(.body))
+					.font(.system(.title2))
 					.bold()
 					.lineLimit(1)
 					.minimumScaleFactor(0.5)
 					.foregroundStyle(Color.white)
 					.padding()
 					.padding(.horizontal)
-					.background(.green)
+					.background(.blue)
 					.cornerRadius(8)
 			}
 		}
-		.padding()
 		.frame(maxWidth: .infinity)
-		.background(.tertiary)
 		.cornerRadius(8)
 	}
 
@@ -54,7 +53,7 @@ struct DirectionsSummaryView: View {
 	func formatDuration(duration: TimeInterval) -> String {
 		let formatter = DateComponentsFormatter()
 		formatter.allowedUnits = [.hour, .minute, .second]
-		formatter.unitsStyle = .brief
+		formatter.unitsStyle = .short
 		if let formattedString = formatter.string(from: duration) {
 			return formattedString
 		} else {
@@ -79,7 +78,7 @@ struct DirectionsSummaryView: View {
 				unit: UnitLength.kilometers
 			),
 			typeOfRoute: "Fastest"
-		)
+		), go: {}
 	)
 	.padding()
 }

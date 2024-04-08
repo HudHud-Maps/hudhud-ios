@@ -26,6 +26,7 @@ import ToursprungPOI
 struct SearchSheet: View {
 
 	private var cancelables: Set<AnyCancellable> = []
+	var routeSelected: ((Route?, POI?) -> Void)?
 
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
@@ -130,6 +131,9 @@ struct SearchSheet: View {
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
 				self.route = routes.routes.first
+				if let route = self.route {
+					self.routeSelected?(route, item)
+				}
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			}
@@ -139,21 +143,18 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
-			.fullScreenCover(item: self.$route) { route in
-				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-				NavigationView(route: route, styleURL: styleURL)
-			}
 		}
 	}
 
 	// MARK: - Lifecycle
 
-	init(mapStore: MapStore, searchStore: SearchViewStore) {
+	init(mapStore: MapStore, searchStore: SearchViewStore, routeSelected: ((Route?, POI?) -> Void)? = nil) {
 		self.cancelables = []
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
 		self.detailSheetShown = false
+		self.routeSelected = routeSelected
 	}
 
 	// MARK: - Internal
@@ -168,7 +169,7 @@ struct SearchSheet: View {
 
 #Preview {
 	let sheet = SearchSheet(mapStore: .init(),
-							searchStore: .init(mode: .preview))
+							searchStore: .init(mode: .preview), routeSelected: nil)
 	return sheet
 }
 

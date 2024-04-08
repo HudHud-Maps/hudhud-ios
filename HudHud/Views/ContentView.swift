@@ -8,6 +8,7 @@
 
 import Combine
 import CoreLocation
+import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -35,6 +36,8 @@ struct ContentView: View {
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
 	@State private var streetViewVisible: Bool = false
+	@State private var showNavigationRoute = false
+	@State private var route: Route?
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -48,9 +51,43 @@ struct ContentView: View {
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
+
+			// Display preview data as a polyline on the map
+			if let route = self.route {
+				let polylineSource = ShapeSource(identifier: "pedestrian-polyline") {
+					MLNPolylineFeature(coordinates: route.coordinates ?? [])
+				}
+
+				// Add a polyline casing for a stroke effect
+				LineStyleLayer(identifier: "route-line-casing", source: polylineSource)
+					.lineCap(.round)
+					.lineJoin(.round)
+					.lineColor(.white)
+					.lineWidth(interpolatedBy: .zoomLevel,
+							   curveType: .exponential,
+							   parameters: NSExpression(forConstantValue: 1.5),
+							   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+				// Add an inner (blue) polyline
+				LineStyleLayer(identifier: "route-line-inner", source: polylineSource)
+					.lineCap(.round)
+					.lineJoin(.round)
+					.lineColor(.systemBlue)
+					.lineWidth(interpolatedBy: .zoomLevel,
+							   curveType: .exponential,
+							   parameters: NSExpression(forConstantValue: 1.5),
+							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+			}
 		}
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation
+		}
+		.onChange(of: self.route) { newRoute in
+			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty, let coordinatesFirst = coordinates.first, let coordinatesLast = coordinates.last {
+				if let coordinate = CameraState.centerOfCoordinates(from: [coordinatesFirst, coordinatesLast]) {
+					self.mapStore.camera = MapViewCamera.center(coordinate, zoom: 16)
+				}
+			}
 		}
 		.task {
 			for await event in await self.locationManager.startMonitoringAuthorization() {
@@ -92,82 +129,106 @@ struct ContentView: View {
 			if self.streetViewVisible {
 				DebugStreetView()
 			} else {
-				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
-					.presentationBackground(.thinMaterial)
+				if !self.showNavigationRoute {
+					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+						.presentationBackground(.thinMaterial)
+				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			HStack(alignment: .bottom) {
-				MapButtonsView(mapButtonsData: [
-					MapButtonData(sfSymbol: .icon(.map)) {
-						self.showMapLayer.toggle()
-					},
-					MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-						switch self.searchViewStore.mode {
-						case let .live(provider):
-							self.searchViewStore.mode = .live(provider: provider.next())
-							Logger.searchView.info("Map Mode live")
-						case .preview:
-							self.searchViewStore.mode = .live(provider: .toursprung)
-							Logger.searchView.info("Map Mode toursprung")
+			if !self.showNavigationRoute {
+				HStack(alignment: .bottom) {
+					MapButtonsView(mapButtonsData: [
+						MapButtonData(sfSymbol: .icon(.map)) {
+							self.showMapLayer.toggle()
+						},
+						MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+							switch self.searchViewStore.mode {
+							case let .live(provider):
+								self.searchViewStore.mode = .live(provider: provider.next())
+								Logger.searchView.info("Map Mode live")
+							case .preview:
+								self.searchViewStore.mode = .live(provider: .toursprung)
+								Logger.searchView.info("Map Mode toursprung")
+							}
+						},
+						MapButtonData(sfSymbol: .icon(.cube)) {
+							self.streetViewVisible.toggle()
 						}
-					},
-					MapButtonData(sfSymbol: .icon(.cube)) {
-						self.streetViewVisible.toggle()
+					])
+					Spacer()
+					VStack(alignment: .trailing) {
+						CurrentLocationButton(camera: self.$mapStore.camera)
 					}
-				])
-				Spacer()
-				VStack(alignment: .trailing) {
-					CurrentLocationButton(camera: self.$mapStore.camera)
 				}
+				.opacity(self.sheetSize.height > 500 ? 0 : 1)
+				.padding(.horizontal)
 			}
-			.opacity(self.sheetSize.height > 500 ? 0 : 1)
-			.padding(.horizontal)
 		}
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
-						searchStore: self.searchViewStore)
-				.frame(minWidth: 320)
-				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-				.presentationBackgroundInteraction(
-					.enabled(upThrough: .large)
-				)
-				.interactiveDismissDisabled()
-				.ignoresSafeArea()
-				.presentationCompactAdaptation(.sheet)
-				.overlay {
-					GeometryReader { geometry in
-						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
-					}
-				}
-				.onPreferenceChange(SizePreferenceKey.self) { value in
-					withAnimation(.easeOut) {
-						self.sheetSize = value
-					}
-				}
-				.sheet(isPresented: self.$showMapLayer) {
-					VStack(alignment: .center, spacing: 30) {
-						HStack(alignment: .center) {
-							Spacer()
-							Text("Layers")
-								.foregroundStyle(.primary)
-							Spacer()
-							Button {
-								self.showMapLayer.toggle()
-							} label: {
-								Image(systemSymbol: .xmark)
-									.foregroundColor(.secondary)
+						searchStore: self.searchViewStore, routeSelected: { route, selectedItem in
+							self.showNavigationRoute.toggle()
+							self.route = route
+							self.mapStore.mapItemStatus.selectedItem = selectedItem
+						})
+						.frame(minWidth: 320)
+						.presentationCornerRadius(21)
+						.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+						.presentationBackgroundInteraction(
+							.enabled(upThrough: .large)
+						)
+						.interactiveDismissDisabled()
+						.ignoresSafeArea()
+						.presentationCompactAdaptation(.sheet)
+						.overlay {
+							GeometryReader { geometry in
+								Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
 							}
 						}
-						.padding(.horizontal, 30)
-						MainLayersView(mapLayerData: MapLayersData.getLayers())
+						.onPreferenceChange(SizePreferenceKey.self) { value in
+							withAnimation(.easeOut) {
+								self.sheetSize = value
+							}
+						}
+						.sheet(isPresented: self.$showNavigationRoute) {
+							NavigationSheetView(route: self.route) {
+								self.route = nil
+								self.showNavigationRoute.toggle()
+							}
 							.presentationCornerRadius(21)
-							.presentationDetents([.medium])
-					}
-				}
+							.presentationDetents([.height(150)])
+							.presentationBackgroundInteraction(
+								.enabled(upThrough: .height(150))
+							)
+							.ignoresSafeArea()
+							.interactiveDismissDisabled()
+							.presentationCompactAdaptation(.sheet)
+						}
+						.sheet(isPresented: self.$showMapLayer) {
+							VStack(alignment: .center, spacing: 25) {
+								Spacer()
+								HStack(alignment: .center) {
+									Spacer()
+									Text("Layers")
+										.foregroundStyle(.primary)
+									Spacer()
+									Button {
+										self.showMapLayer.toggle()
+									} label: {
+										Image(systemSymbol: .xmark)
+											.foregroundColor(.secondary)
+									}
+								}
+								.padding(.horizontal, 30)
+								MainLayersView(mapLayerData: MapLayersData.getLayers())
+									.presentationCornerRadius(21)
+									.presentationDetents([.medium])
+							}
+						}
 		}
+
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
 			self.notificationQueue.removeFirst()
@@ -182,10 +243,11 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore()) {
+	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore(), route: Route?) {
 		self._searchViewStore = .init(wrappedValue: searchViewStore)
 		self._mapStore = .init(wrappedValue: mapStore)
 		searchViewStore.mapStore = mapStore
+		self.route = route
 	}
 
 	// MARK: - Internal
@@ -217,5 +279,5 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	return ContentView(searchViewStore: .preview)
+	return ContentView(searchViewStore: .preview, route: nil)
 }

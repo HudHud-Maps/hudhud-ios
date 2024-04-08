@@ -71,6 +71,8 @@ struct POIDetailSheet: View {
 						guard let routes else { return }
 
 						self.onStart(routes)
+						self.dismiss()
+
 					}, label: {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
