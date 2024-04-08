@@ -9,52 +9,97 @@
 import CoreLocation
 import Foundation
 import MapLibre
+import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import POIService
 import SwiftUI
 
 // MARK: - MapStore
 
-class MapStore: ObservableObject {
+final class MapStore: ObservableObject {
 
-	@MainActor
-	@Published var mapItemStatus: MapItemsStatus = .empty {
+	enum StreetViewOption: Equatable {
+		case disabled
+		case requestedCurrentLocation
+		case point(StreetViewPoint)
+	}
+
+	let motionViewModel: MotionViewModel
+
+	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
+	@Published var searchShown: Bool = true
+	@Published var streetView: StreetViewOption = .disabled
+
+	@Published var selectedItem: POI? {
 		didSet {
-			if let coordinate = self.mapItemStatus.selectedItem?.locationCoordinate {
+			if let coordinate = self.selectedItem?.locationCoordinate {
 				self.camera = .center(coordinate, zoom: 16)
-				return
-			}
-
-			let coordinates = self.mapItemStatus.mapItems.compactMap(\.coordinate)
-			if let camera = CameraState.boundingBox(from: coordinates) {
-				self.camera = camera
+			} else if self.mapItems.isEmpty == false {
+				self.updateCameraForMapItems()
 			}
 		}
 	}
 
-	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
-	@Published var searchShown: Bool = true
+	@Published var mapItems: [Row] = [] {
+		didSet {
+			self.updateCameraForMapItems()
+		}
+	}
+
+	var points: ShapeSource {
+		return ShapeSource(identifier: "points") {
+			self.mapItems.compactMap { item in
+				guard let coordinate = item.coordinate else { return nil }
+
+				return MLNPointFeature(coordinate: coordinate) { feature in
+					if let poi = item.poi {
+						feature.attributes["poi_id"] = poi.id
+					}
+				}
+			}
+		}
+	}
+
+	var streetViewSource: ShapeSource {
+		ShapeSource(identifier: "street-view-symbols") {
+			if case let .point(point) = streetView {
+				let streetViewPoint = StreetViewPoint(location: point.location,
+													  heading: self.motionViewModel.position.heading)
+				streetViewPoint.feature
+			}
+		}
+	}
+
+	// MARK: - Lifecycle
+
+	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
+		self.camera = camera
+		self.searchShown = searchShown
+		self.motionViewModel = motionViewModel
+
+		if let streetViewPoint {
+			self.streetView = .point(streetViewPoint)
+		} else {
+			self.streetView = .disabled
+		}
+	}
 }
 
-extension CameraState {
+// MARK: - Previewable
 
-	static func boundingBox(from locations: [CLLocationCoordinate2D]) -> MapViewCamera? {
-		guard !locations.isEmpty else { return nil }
+extension MapStore: Previewable {
 
-		var minLat = locations[0].latitude
-		var maxLat = locations[0].latitude
-		var minLon = locations[0].longitude
-		var maxLon = locations[0].longitude
+	static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing)
+}
 
-		for coordinate in locations {
-			minLat = min(minLat, coordinate.latitude)
-			maxLat = max(maxLat, coordinate.latitude)
-			minLon = min(minLon, coordinate.longitude)
-			maxLon = max(maxLon, coordinate.longitude)
-		}
+// MARK: - Private
 
-		let northeast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
-		let southwest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
-		let coordinateBounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
-		return .boundingBox(coordinateBounds)
+private extension MapStore {
+
+	func updateCameraForMapItems() {
+		let coordinates = self.mapItems.compactMap(\.coordinate)
+		guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+
+		self.camera = camera
 	}
 }

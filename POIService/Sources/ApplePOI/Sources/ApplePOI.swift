@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Combine
 import CoreLocation
 import Foundation
 import MapKit
@@ -30,7 +29,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	public init() {
 		self.completer = MKLocalSearchCompleter()
-		self.delegate = .init()
+		self.delegate = DelegateWrapper()
 		self.delegate.poi = self
 		Task {
 			await self.completer.delegate = self.delegate

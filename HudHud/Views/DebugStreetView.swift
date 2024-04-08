@@ -9,54 +9,11 @@
 import CoreMotion
 import SwiftUI
 
-// MARK: - MotionViewModel
-
-class MotionViewModel: ObservableObject {
-	enum Size: CaseIterable {
-		case compact
-		case fullscreen
-	}
-
-	@Published var position: Position = .initial
-	@Published var positionOffet: Position?
-	@Published var size: Size = .compact
-
-	// MARK: - Internal
-
-	struct Position: Equatable {
-		var heading: Double
-		var pitch: Double
-
-		static var initial: MotionViewModel.Position = .init(heading: 0, pitch: 90)
-
-		// MARK: - Lifecycle
-
-		init(heading: Double, pitch: Double) {
-			self.heading = heading.wrap(min: 0, max: 360)
-			self.pitch = Double.minimum(pitch, 180)
-		}
-
-		// MARK: - Internal
-
-		static func + (left: Position, right: Position) -> Position {
-			let pitch = (left.pitch + right.pitch).limit(upper: 180)
-
-			return Position(heading: left.heading + right.heading,
-							pitch: pitch)
-		}
-
-		static func * (left: Position, right: Double) -> Position {
-			return Position(heading: left.heading * right,
-							pitch: left.pitch * right)
-		}
-	}
-}
-
 // MARK: - DebugStreetView
 
 struct DebugStreetView: View {
 
-	@StateObject var viewModel = MotionViewModel()
+	@ObservedObject var viewModel: MotionViewModel
 
 	var body: some View {
 		ViewThatFits {
@@ -75,19 +32,10 @@ struct DebugStreetView: View {
 			.clipShape(RoundedRectangle(cornerRadius: 12))
 			.gesture(DragGesture(minimumDistance: 10, coordinateSpace: .global)
 				.onChanged { value in
-					if let dragStartOffset = viewModel.positionOffet {
-						// try to mimic scrolling so your finger stays below the initial tap point
-						// needs fine tuning once we have the StreetView WebView
-						let scaleFactor = 0.25
-
-						self.viewModel.position = dragStartOffset + (MotionViewModel.Position(heading: value.translation.width,
-																							  pitch: value.translation.height) * scaleFactor)
-					} else {
-						self.viewModel.positionOffet = self.viewModel.position
-					}
+					self.viewModel.adding(translation: value.translation)
 				}
 				.onEnded { _ in
-					self.viewModel.positionOffet = nil
+					self.viewModel.endTranslation()
 				}
 			)
 			.onTapGesture {
@@ -104,6 +52,6 @@ struct DebugStreetView: View {
 		.fill(Color.yellow)
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			DebugStreetView()
+			DebugStreetView(viewModel: .storeSetUpForPreviewing)
 		}
 }

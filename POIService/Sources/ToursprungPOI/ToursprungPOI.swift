@@ -40,7 +40,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 
 	public init() {
 		self.session = .shared
-		self.debouncer = .init()
+		self.debouncer = AsyncDebouncer()
 	}
 
 	// MARK: - Public
