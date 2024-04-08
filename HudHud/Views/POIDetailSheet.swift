@@ -69,7 +69,6 @@ struct POIDetailSheet: View {
 				HStack {
 					Button(action: {
 						guard let routes else { return }
-
 						self.onStart(routes)
 						self.dismiss()
 
