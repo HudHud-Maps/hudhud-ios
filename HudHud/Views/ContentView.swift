@@ -83,9 +83,9 @@ struct ContentView: View {
 			mapView.showsUserLocation = self.showUserLocation
 		}
 		.onChange(of: self.route) { newRoute in
-			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty, let coordinatesFirst = coordinates.first, let coordinatesLast = coordinates.last {
-				if let coordinate = CameraState.centerOfCoordinates(from: [coordinatesFirst, coordinatesLast]) {
-					self.mapStore.camera = MapViewCamera.center(coordinate, zoom: 16)
+			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty {
+				if let camera = CameraState.boundingBox(from: coordinates) {
+					self.mapStore.camera = camera
 				}
 			}
 		}

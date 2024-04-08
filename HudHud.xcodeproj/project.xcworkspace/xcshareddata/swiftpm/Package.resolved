@@ -39,10 +39,10 @@
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "497ab5f9474af1c417cd8d3618ddc69b68f21fb3"
+        "branch" : "enhancement/pat-gestures",
+        "revision" : "ca182dc2e62003b83d97fc7615b19ec71a3ac327"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
-        "version" : "0.0.3"
+        "revision" : "dcb23a48ce96e27fc0132b70bf6cb2daccf58cb4",
+        "version" : "0.0.5"
       }
     },
     {

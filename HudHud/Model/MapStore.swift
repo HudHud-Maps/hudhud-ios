@@ -57,22 +57,4 @@ extension CameraState {
 		let coordinateBounds = MLNCoordinateBounds(sw: southwest, ne: northeast)
 		return .boundingBox(coordinateBounds)
 	}
-
-	static func centerOfCoordinates(from coordinates: [CLLocationCoordinate2D]) -> CLLocationCoordinate2D? {
-		guard !coordinates.isEmpty else { return nil }
-
-		var totalLatitude: CLLocationDegrees = 0
-		var totalLongitude: CLLocationDegrees = 0
-
-		for coordinate in coordinates {
-			totalLatitude += coordinate.latitude
-			totalLongitude += coordinate.longitude
-		}
-
-		let averageLatitude = totalLatitude / Double(coordinates.count)
-		let averageLongitude = totalLongitude / Double(coordinates.count)
-
-		return CLLocationCoordinate2D(latitude: averageLatitude, longitude: averageLongitude)
-	}
-
 }
