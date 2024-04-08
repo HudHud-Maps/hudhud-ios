@@ -106,7 +106,7 @@ private extension MapStore {
 
 	func updateCameraForMapItems() {
 		let coordinates = self.mapItems.compactMap(\.coordinate)
-		let edgePadding = UIEdgeInsets(top: 0, left: 0, bottom: 400, right: 0)
+		let edgePadding = UIEdgeInsets(top: 20, left: 20, bottom: self.sheetSize.height + 20, right: 20)
 
 		guard let camera = CameraState.boundingBox(from: coordinates, edgePadding: edgePadding) else { return }
 
