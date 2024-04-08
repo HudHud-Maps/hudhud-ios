@@ -63,7 +63,7 @@ custom_rules:
     severity: warning
   location_usage:
     name: "Location() usage"
-    message: "Use Location via @EnvironemntObject, using one Location() object through the whole app allows us to use things like .lastLocation"
+    message: "Use Location.forSingleRequestUsage or similar, using one Location() object through the whole app allows us to use things like .lastLocation"
     regex: "\\bLocation\\(\\)"
     severity: warning
     

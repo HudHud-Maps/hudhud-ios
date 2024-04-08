@@ -22,7 +22,6 @@ struct HudHudApp: App {
 	var body: some Scene {
 		WindowGroup {
 			ContentView(searchStore: self.searchStore)
-//				.environmentObject(self.locationManager)
 		}
 	}
 
@@ -39,11 +38,17 @@ extension Location {
 
 	static let forSingleRequestUsage = {
 		assert(Thread.isMainThread)
-		return Location()
+		let location = Location() // swiftlint:disable:this location_usage
+		location.accuracy = .threeKilometers // Location is extremely slow, unless set to this - returns better accuracy none the less.
+		return location
 	}()
 
 	// Currently not needed, reserved for future use
-//	static let forContinuesUsage = Location()
+	static let forContinuesUsage = {
+		let location = Location() // swiftlint:disable:this location_usage
+		location.accuracy = .threeKilometers
+		return location
+	}()
 }
 
 // MARK: - Location + Previewable

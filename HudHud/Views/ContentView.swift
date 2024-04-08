@@ -25,7 +25,6 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-	@EnvironmentObject var locationManager: Location
 
 	@StateObject private var notificationQueue = NotificationQueue()
 
@@ -83,13 +82,13 @@ struct ContentView: View {
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
 		.task {
-			for await event in await self.locationManager.startMonitoringAuthorization() {
+			for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
 				self.showUserLocation = event.authorizationStatus.allowed
 			}
 		}
 		.task {
-			self.showUserLocation = self.locationManager.authorizationStatus.allowed
+			self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
 			Logger.searchView.debug("Authorization status authorizedAllowed")
 		}
 		.task {
@@ -98,13 +97,12 @@ struct ContentView: View {
 					return
 				}
 				self.didTryToZoomOnUsersLocation = true
-				self.locationManager.accuracy = .threeKilometers
-				let userLocation = try await locationManager.requestLocation()
+				let userLocation = try await Location.forSingleRequestUsage.requestLocation()
 				var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
 				if coordinates == nil {
 					// fall back to any location that was found, even if bad
 					// accuracy
-					coordinates = self.locationManager.lastLocation?.coordinate
+					coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
 				}
 				guard let coordinates else {
 					print("Could not determine user location, will not zoom...")
@@ -122,7 +120,7 @@ struct ContentView: View {
 				DebugStreetView(viewModel: self.motionViewModel)
 					.onAppear {
 						Task {
-							let userLocation = try await locationManager.requestLocation()
+							let userLocation = try await Location.forSingleRequestUsage.requestLocation()
 							guard let location = userLocation.location else { return }
 
 							self.mapStore.streetView = .point(StreetViewPoint(location: location.coordinate, heading: location.course))
@@ -156,7 +154,7 @@ struct ContentView: View {
 						if self.mapStore.streetView == .disabled {
 							Task {
 								self.mapStore.streetView = .requestedCurrentLocation
-								let location = try await self.locationManager.requestLocation()
+								let location = try await Location.forSingleRequestUsage.requestLocation()
 								guard let location = location.location else { return }
 
 								print("set new streetViewPoint")
@@ -173,7 +171,7 @@ struct ContentView: View {
 				])
 				Spacer()
 				VStack(alignment: .trailing) {
-					CurrentLocationButton(camera: self.$mapStore.camera, locationManager: self.locationManager)
+					CurrentLocationButton(camera: self.$mapStore.camera)
 				}
 			}
 			.opacity(self.sheetSize.height > 500 ? 0 : 1)
@@ -265,7 +263,6 @@ struct SizePreferenceKey: PreferenceKey {
 #Preview {
 	let searchViewStore: SearchViewStore = .preview
 	return ContentView(searchStore: searchViewStore)
-		.environmentObject(Location.preview)
 }
 
 #Preview("Touch Testing") {
@@ -273,5 +270,4 @@ struct SizePreferenceKey: PreferenceKey {
 	store.searchText = "shops"
 	store.selectedDetent = .medium
 	return ContentView(searchStore: store)
-		.environmentObject(Location.preview)
 }

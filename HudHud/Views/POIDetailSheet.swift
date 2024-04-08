@@ -28,7 +28,6 @@ struct POIDetailSheet: View {
 
 	@Environment(\.dismiss) var dismiss
 	@EnvironmentObject var notificationQueue: NotificationQueue
-	@EnvironmentObject var location: Location
 
 	var body: some View {
 		NavigationStack {
@@ -118,10 +117,8 @@ struct POIDetailSheet: View {
 		}
 		.task {
 			do {
-				// Location may only be inited on main thread, do not init within task.
-				self.location.accuracy = .threeKilometers // Location is extremely slow, unless set to this - returns better accuracy none the less.
-				_ = try await self.location.requestPermission(.whenInUse)
-				guard let userLocation = try await location.requestLocation().location else {
+				_ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
+				guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
 					return
 				}
 				guard let locationCoordinate = self.poi.locationCoordinate else {
