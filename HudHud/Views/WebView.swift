@@ -17,10 +17,13 @@ import WebKit
 struct StreetViewWebView: UIViewRepresentable {
 
 	enum StreetViewError: LocalizedError {
+		case missingCoordinate
 		case invalidURL
 
 		var errorDescription: String? {
 			switch self {
+			case .missingCoordinate:
+				return "Coordinate missing"
 			case .invalidURL:
 				return "StreetView unavailable"
 			}
@@ -28,6 +31,8 @@ struct StreetViewWebView: UIViewRepresentable {
 
 		var failureReason: String? {
 			switch self {
+			case .missingCoordinate:
+				return "No Coordinate provided"
 			case .invalidURL:
 				return "Could not create URL for StreetView"
 			}
@@ -35,61 +40,61 @@ struct StreetViewWebView: UIViewRepresentable {
 
 		var recoverySuggestion: String? {
 			switch self {
-			case .invalidURL:
+			case .missingCoordinate,
+				 .invalidURL:
 				return "Contact Developer with a screenshot"
 			}
 		}
 	}
 
 	@StateObject private var scriptHandler = ScriptHandler()
+	@State private var pageLoaded: Bool = false
+	private var currentCoodinate: CLLocationCoordinate2D?
 
 	// MARK: - Properties
 
 	@ObservedObject var viewModel: MotionViewModel
 
-	let url: URL
-
 	// MARK: - Lifecycle
 
 	init(viewModel: MotionViewModel) throws {
 		self.viewModel = viewModel
-
-		var components = URLComponents()
-		components.scheme = "https"
-		components.host = "iabderrahmane.github.io"
-		components.path = "/"
-		components.queryItems = [
-			URLQueryItem(name: "long", value: String(viewModel.coordinate.longitude)),
-			URLQueryItem(name: "lat", value: String(viewModel.coordinate.latitude))
-		]
-		guard let url = components.url else {
-			throw StreetViewError.invalidURL
-		}
-
-		self.url = url
 	}
 
 	// MARK: - Internal
 
-	class Coordinator: ScriptHandlerDelegate {
+	class Coordinator: NSObject, ScriptHandlerDelegate, WKNavigationDelegate {
 
 		@Published var viewModel: MotionViewModel
+		@Binding var pageLoaded: Bool
 
 		// MARK: - Lifecycle
 
-		init(viewModel: MotionViewModel) {
+		init(viewModel: MotionViewModel, pageLoaded: Binding<Bool>) {
 			self.viewModel = viewModel
+			self._pageLoaded = pageLoaded
+		}
+
+		// MARK: - Internal
+
+		func webView(_: WKWebView, didFinish _: WKNavigation!) {
+			print(#function)
+			self.pageLoaded = true
 		}
 
 		// MARK: - Fileprivate
 
 		fileprivate func scriptHandler(_: ScriptHandler, didUpdate panorama: PanoramaInfo) {
-			self.viewModel.position.heading = panorama.heading
+			print(#function)
+
+			if self.viewModel.position.heading != panorama.heading {
+				self.viewModel.position.heading = panorama.heading
+			}
 		}
 	}
 
 	func makeCoordinator() -> Coordinator {
-		Coordinator(viewModel: self.viewModel)
+		Coordinator(viewModel: self.viewModel, pageLoaded: self.$pageLoaded)
 	}
 
 	func makeUIView(context: Context) -> WKWebView {
@@ -97,16 +102,55 @@ struct StreetViewWebView: UIViewRepresentable {
 
 		let config = WKWebViewConfiguration()
 		config.userContentController.add(self.scriptHandler, name: "viewUpdated")
-		return WKWebView(frame: .zero, configuration: config)
+		let webView = WKWebView(frame: .zero, configuration: config)
+		webView.navigationDelegate = context.coordinator
+		webView.backgroundColor = .clear
+
+//		if let htmlURL = Bundle.main.url(forResource: "streetview", withExtension: "html") {
+//			let baseURL = htmlURL.deletingLastPathComponent()
+//			webView.loadFileURL(htmlURL, allowingReadAccessTo: baseURL)
+//		}
+
+		var components = URLComponents()
+		components.scheme = "https"
+		components.host = "iabderrahmane.github.io"
+		components.path = "/"
+		if let coordinate = self.viewModel.coordinate {
+			components.queryItems = [
+				URLQueryItem(name: "long", value: String(coordinate.longitude)),
+				URLQueryItem(name: "lat", value: String(coordinate.latitude))
+			]
+		}
+		if let url = components.url {
+			let request = URLRequest(url: url)
+			webView.load(request)
+		}
+
+		return webView
 	}
 
 	func updateUIView(_ webView: WKWebView, context _: Context) {
-		guard webView.url != self.url else {
+		guard self.pageLoaded else {
 			return
 		}
 
-		let request = URLRequest(url: self.url)
-		webView.load(request)
+		defer {
+			self.currentCoodinate = self.viewModel.coordinate
+		}
+		guard let coordinate = self.viewModel.coordinate,
+			  self.currentCoodinate != self.viewModel.coordinate else {
+			return
+		}
+
+		print("updateUIView to \(coordinate)")
+
+		let javascript = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
+		print("javascript call: \(javascript)")
+		webView.evaluateJavaScript(javascript) { _, error in
+			if let error {
+				print("Error evaluating JavaScript code:", error)
+			}
+		}
 	}
 }
 
@@ -176,4 +220,11 @@ private struct PanoramaInfo: Codable {
 		try container.encode(self.pitch, forKey: .pitch)
 		try container.encode(self.heading, forKey: .heading)
 	}
+}
+
+// MARK: - ChangeLocation
+
+private struct ChangeLocation: Codable {
+	let lat: CLLocationDegrees
+	let long: CLLocationDegrees
 }

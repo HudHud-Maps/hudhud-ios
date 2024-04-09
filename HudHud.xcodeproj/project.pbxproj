@@ -59,6 +59,9 @@
 		CD74ECA72BC53B0C00CA10FF /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA62BC53B0C00CA10FF /* StreetView.swift */; };
 		CD74ECA92BC55C5500CA10FF /* ViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */; };
 		CD74ECAB2BC55D5000CA10FF /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */; };
+		CD74ECAF2BC5999300CA10FF /* pannellum.css in Resources */ = {isa = PBXBuildFile; fileRef = CD74ECAC2BC5999300CA10FF /* pannellum.css */; };
+		CD74ECB02BC5999300CA10FF /* streetview.html in Resources */ = {isa = PBXBuildFile; fileRef = CD74ECAD2BC5999300CA10FF /* streetview.html */; };
+		CD74ECB12BC5999300CA10FF /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = CD74ECAE2BC5999300CA10FF /* pannellum.js */; };
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2B2BB44B9700C99774 /* SmoothingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2A2BB44B9700C99774 /* SmoothingTests.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
@@ -161,6 +164,9 @@
 		CD74ECA62BC53B0C00CA10FF /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
 		CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuilder.swift; sourceTree = "<group>"; };
 		CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		CD74ECAC2BC5999300CA10FF /* pannellum.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = pannellum.css; sourceTree = "<group>"; };
+		CD74ECAD2BC5999300CA10FF /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
+		CD74ECAE2BC5999300CA10FF /* pannellum.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pannellum.js; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2A2BB44B9700C99774 /* SmoothingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmoothingTests.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
@@ -276,6 +282,16 @@
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
 			);
 			path = UIStyle;
+			sourceTree = "<group>";
+		};
+		CD74ECB22BC5999800CA10FF /* StreetView */ = {
+			isa = PBXGroup;
+			children = (
+				CD74ECAC2BC5999300CA10FF /* pannellum.css */,
+				CD74ECAE2BC5999300CA10FF /* pannellum.js */,
+				CD74ECAD2BC5999300CA10FF /* streetview.html */,
+			);
+			path = StreetView;
 			sourceTree = "<group>";
 		};
 		CD85CB2C2BB4650C00C99774 /* Protocols */ = {
@@ -452,6 +468,7 @@
 		FB53CF8783EC95AF1ECE21DD /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CD74ECB22BC5999800CA10FF /* StreetView */,
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
@@ -605,7 +622,10 @@
 			files = (
 				CD1298832B99031E00EC3295 /* Preview Assets.xcassets in Resources */,
 				CD1298822B99031E00EC3295 /* Riyadh.gpx in Resources */,
+				CD74ECAF2BC5999300CA10FF /* pannellum.css in Resources */,
 				CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */,
+				CD74ECB12BC5999300CA10FF /* pannellum.js in Resources */,
+				CD74ECB02BC5999300CA10FF /* streetview.html in Resources */,
 				CDAE05A82B69358E003E5196 /* Terrain.json in Resources */,
 				CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */,
 				F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */,

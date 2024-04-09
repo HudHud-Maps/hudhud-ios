@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="pannellum.css"/>
+    <script type="text/javascript" src="pannellum.js"></script>
+    <style>
+    #panorama {
+        width: 100vw;
+        height: 100vh;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+    </style>
+</head>
+<body>
+
+<div id="panorama"></div>
+<script>
+var long = 45;
+var lat = 25;
+var panoramaUrl = "https://pannellum.org/images/alma.jpg"
+var viewer;
+var changePanorama = function(url) {
+    panoramaUrl = url
+    viewer = pannellum.viewer('panorama', {
+        "autoLoad": true,
+        "type": "equirectangular",
+        "panorama": panoramaUrl,
+        "showZoomCtrl": false,
+        "showFullscreenCtrl": false,
+    });
+    viewer.on("load", function(e){
+        notifyIos();
+    });
+    viewer.on("animatefinished", function(e){
+        notifyIos();
+    });
+}
+changePanorama("https://pannellum.org/images/alma.jpg");
+var changeLocation = function(coords) {
+    // 24.6801222,46.6880241
+    if (coords.long >= 45 && coords.lat >= 25) {
+        long = 45
+        lat = 25
+        changePanorama("https://pannellum.org/images/tocopilla.jpg")
+        return;
+    } if (coords.long >= 35 && coords.lat >= 15) {
+        long = 35
+        lat = 15
+        changePanorama("https://pannellum.org/images/jfk.jpg")
+        return
+    } else {
+        // TODO: handle case when image does not exist
+        changePanorama("")
+    }
+}
+var getPanoramaInfo = function() {
+    return {
+        long: long,
+        lat: lat,
+        pitch: viewer.getPitch(),
+        heading: viewer.getYaw(),       
+    };
+}
+var notifyIos = function() {
+    try {
+        webkit.messageHandlers.viewUpdated.postMessage(getPanoramaInfo());
+    } catch(err) {
+        console.log(err);
+    }
+}
+</script>
+
+</body>
+</html>

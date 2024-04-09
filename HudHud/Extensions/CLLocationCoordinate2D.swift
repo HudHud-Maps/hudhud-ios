@@ -12,4 +12,5 @@ import Foundation
 extension CLLocationCoordinate2D {
 	static let zero = CLLocationCoordinate2D(latitude: 0, longitude: 0)
 	static let riyadh = CLLocationCoordinate2D(latitude: 24.65333, longitude: 46.71526)
+	static let jeddah = CLLocationCoordinate2D(latitude: 21.54238, longitude: 39.19797)
 }
