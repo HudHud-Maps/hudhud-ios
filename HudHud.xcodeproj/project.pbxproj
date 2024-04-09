@@ -57,6 +57,8 @@
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
 		CD74ECA52BC52C1200CA10FF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA42BC52C1200CA10FF /* WebView.swift */; };
 		CD74ECA72BC53B0C00CA10FF /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA62BC53B0C00CA10FF /* StreetView.swift */; };
+		CD74ECA92BC55C5500CA10FF /* ViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */; };
+		CD74ECAB2BC55D5000CA10FF /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */; };
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2B2BB44B9700C99774 /* SmoothingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2A2BB44B9700C99774 /* SmoothingTests.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
@@ -157,6 +159,8 @@
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		CD74ECA42BC52C1200CA10FF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		CD74ECA62BC53B0C00CA10FF /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
+		CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuilder.swift; sourceTree = "<group>"; };
+		CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2A2BB44B9700C99774 /* SmoothingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmoothingTests.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
@@ -365,6 +369,7 @@
 				CDAE05492B681261003E5196 /* ContentView.swift */,
 				CD85CB282BB343BA00C99774 /* DebugStreetView.swift */,
 				CD74ECA62BC53B0C00CA10FF /* StreetView.swift */,
+				CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */,
 				CD74ECA42BC52C1200CA10FF /* WebView.swift */,
 				CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */,
 				CD1BD91F2B91E59200A591BD /* NavigationView.swift */,
@@ -429,6 +434,7 @@
 				CD71C3682BBBFF27009C3A1C /* CameraState.swift */,
 				CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */,
 				CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */,
+				CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -657,6 +663,7 @@
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
+				CD74ECAB2BC55D5000CA10FF /* ErrorView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
 				CB39700B2B81F52C00CF9D59 /* MapLayersData.swift in Sources */,
 				CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */,
@@ -675,6 +682,7 @@
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
 				CD74ECA52BC52C1200CA10FF /* WebView.swift in Sources */,
 				CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */,
+				CD74ECA92BC55C5500CA10FF /* ViewBuilder.swift in Sources */,
 				CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */,
 				CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,

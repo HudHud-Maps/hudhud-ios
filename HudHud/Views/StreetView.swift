@@ -9,21 +9,27 @@
 import CoreMotion
 import SwiftUI
 
-// MARK: - DebugStreetView
+// MARK: - StreetView
 
 struct StreetView: View {
 
 	@ObservedObject var viewModel: MotionViewModel
 
 	var body: some View {
-		StreetViewWebView(viewModel: self.viewModel)
-			.frame(maxWidth: .infinity, idealHeight: 300, maxHeight: self.viewModel.size == .compact ? 300 : .infinity)
-			.clipShape(RoundedRectangle(cornerRadius: 12))
-			.onTapGesture {
-				self.viewModel.size.selectNext()
-			}
-			.padding(.horizontal)
-			.animation(.easeInOut, value: self.viewModel.size)
+		`do` {
+			try StreetViewWebView(viewModel: self.viewModel)
+				.frame(maxWidth: .infinity, idealHeight: 300, maxHeight: self.viewModel.size == .compact ? 300 : .infinity)
+				.clipShape(RoundedRectangle(cornerRadius: 12))
+				.onTapGesture {
+					self.viewModel.size.selectNext()
+				}
+				.padding(.horizontal)
+				.animation(.easeInOut, value: self.viewModel.size)
+		} catch: { error in
+			ErrorView(error: error)
+				.frame(height: 300)
+				.padding()
+		}
 	}
 }
 

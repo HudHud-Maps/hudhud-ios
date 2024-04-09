@@ -123,6 +123,7 @@ struct ContentView: View {
 							let userLocation = try await Location.forSingleRequestUsage.requestLocation()
 							guard let location = userLocation.location else { return }
 
+							self.motionViewModel.coordinate = location.coordinate
 							self.mapStore.streetView = .point(StreetViewPoint(location: location.coordinate, heading: location.course))
 						}
 					}
