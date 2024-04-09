@@ -117,7 +117,7 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
 			if case .point = self.mapStore.streetView {
-				DebugStreetView(viewModel: self.motionViewModel)
+				StreetView(viewModel: self.motionViewModel)
 					.onAppear {
 						Task {
 							let userLocation = try await Location.forSingleRequestUsage.requestLocation()

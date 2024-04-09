@@ -17,15 +17,13 @@ struct DebugStreetView: View {
 
 	var body: some View {
 		ViewThatFits {
-//			VStack(alignment: .trailing) {
-//				Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))")
-//					.monospaced()
-//					.animation(.none)
-//				Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))")
-//					.monospaced()
-//					.animation(.none)
 			VStack(alignment: .trailing) {
-				WebView(url: URL(string: "https://iabderrahmane.github.io/")!)
+				Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))")
+					.monospaced()
+					.animation(.none)
+				Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))")
+					.monospaced()
+					.animation(.none)
 			}
 			.frame(height: 300)
 			.frame(maxWidth: .infinity, maxHeight: self.viewModel.size == .compact ? 300 : .infinity)

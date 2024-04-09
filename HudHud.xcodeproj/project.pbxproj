@@ -56,6 +56,7 @@
 		CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */; };
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
 		CD74ECA52BC52C1200CA10FF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA42BC52C1200CA10FF /* WebView.swift */; };
+		CD74ECA72BC53B0C00CA10FF /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA62BC53B0C00CA10FF /* StreetView.swift */; };
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2B2BB44B9700C99774 /* SmoothingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2A2BB44B9700C99774 /* SmoothingTests.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
@@ -155,6 +156,7 @@
 		CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		CD74ECA42BC52C1200CA10FF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
+		CD74ECA62BC53B0C00CA10FF /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2A2BB44B9700C99774 /* SmoothingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmoothingTests.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
 				CD85CB282BB343BA00C99774 /* DebugStreetView.swift */,
+				CD74ECA62BC53B0C00CA10FF /* StreetView.swift */,
 				CD74ECA42BC52C1200CA10FF /* WebView.swift */,
 				CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */,
 				CD1BD91F2B91E59200A591BD /* NavigationView.swift */,
@@ -694,6 +697,7 @@
 				CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */,
 				0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */,
 				061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */,
+				CD74ECA72BC53B0C00CA10FF /* StreetView.swift in Sources */,
 				793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */,
 				A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */,
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
