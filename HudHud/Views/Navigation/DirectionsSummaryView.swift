@@ -6,6 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
+import MapboxCoreNavigation
+import MapboxDirections
 import SwiftUI
 
 struct DirectionsSummaryView: View {
@@ -61,11 +64,26 @@ struct DirectionsSummaryView: View {
 		}
 	}
 
-	func formatDistance(distance: Measurement<UnitLength>) -> String {
+	func formatDistance(distance: CLLocationDistance) -> String {
 		let formatter = MeasurementFormatter()
+		let locale = Locale.autoupdatingCurrent
+		formatter.locale = locale
 		formatter.unitOptions = .providedUnit
 		formatter.unitStyle = .short
-		return formatter.string(from: distance)
+
+		let distanceMeasurement = Measurement(value: distance, unit: UnitLength.meters)
+
+		// Check if distance is less than 1000 meters
+		if distance < 1000 {
+			// Round up to the next 50 meters increment
+			let roundedDistance = (distance / 50.0).rounded(.up) * 50.0
+			return "\(Int(roundedDistance))m"
+		} else {
+			// Format distance in kilometers with one decimal place
+			let distanceInKilometers = distanceMeasurement.converted(to: .kilometers)
+			formatter.numberFormatter.maximumFractionDigits = 1
+			return formatter.string(from: distanceInKilometers)
+		}
 	}
 }
 
@@ -73,10 +91,7 @@ struct DirectionsSummaryView: View {
 	DirectionsSummaryView(
 		directionPreviewData: DirectionPreviewData(
 			duration: 1200,
-			distance: Measurement(
-				value: 4.4,
-				unit: UnitLength.kilometers
-			),
+			distance: 4.4,
 			typeOfRoute: "Fastest"
 		), go: {}
 	)

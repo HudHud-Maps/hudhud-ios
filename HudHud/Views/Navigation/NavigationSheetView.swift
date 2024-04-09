@@ -50,10 +50,7 @@ struct NavigationSheetView: View {
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
-						distance: Measurement(
-							value: Double(route.distance) / 1000.0,
-							unit: UnitLength.kilometers
-						),
+						distance: route.distance,
 						typeOfRoute: "Fastest"
 					), go: {
 						self.goPressed.toggle()

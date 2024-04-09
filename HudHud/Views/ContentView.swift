@@ -64,7 +64,7 @@ struct ContentView: View {
 					.lineJoin(.round)
 					.lineColor(.white)
 					.lineWidth(interpolatedBy: .zoomLevel,
-							   curveType: .exponential,
+							   curveType: .linear,
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
 
@@ -74,7 +74,7 @@ struct ContentView: View {
 					.lineJoin(.round)
 					.lineColor(.systemBlue)
 					.lineWidth(interpolatedBy: .zoomLevel,
-							   curveType: .exponential,
+							   curveType: .linear,
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
 			}
@@ -161,7 +161,7 @@ struct ContentView: View {
 						CurrentLocationButton(camera: self.$mapStore.camera)
 					}
 				}
-				.opacity(self.sheetSize.height > 500 ? 0 : 1)
+				.opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
 				.padding(.horizontal)
 			}
 		}
@@ -169,9 +169,11 @@ struct ContentView: View {
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore, routeSelected: { route, selectedItem in
-							self.showNavigationRoute.toggle()
-							self.route = route
-							self.mapStore.mapItemStatus.selectedItem = selectedItem
+							if let selectedItem {
+								self.showNavigationRoute.toggle()
+								self.route = route
+								self.mapStore.mapItemStatus.mapItems = [Row(toursprung: selectedItem)]
+							}
 						})
 						.frame(minWidth: 320)
 						.presentationCornerRadius(21)
