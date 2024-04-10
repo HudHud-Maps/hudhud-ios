@@ -78,16 +78,15 @@ struct StreetViewWebView: UIViewRepresentable {
 		// MARK: - Internal
 
 		func webView(_: WKWebView, didFinish _: WKNavigation!) {
-			print(#function)
+			Logger.streetView.notice("WebView finished loading")
 			self.pageLoaded = true
 		}
 
 		// MARK: - Fileprivate
 
 		fileprivate func scriptHandler(_: ScriptHandler, didUpdate panorama: PanoramaInfo) {
-			print(#function)
-
 			if self.viewModel.position.heading != panorama.heading {
+				Logger.streetView.notice("scriptHandler update panoramaInfo")
 				self.viewModel.position.heading = panorama.heading
 			}
 		}
@@ -136,13 +135,11 @@ struct StreetViewWebView: UIViewRepresentable {
 			return
 		}
 
-		print("updateUIView to \(coordinate)")
-
 		let javascript = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
-		print("javascript call: \(javascript)")
+		Logger.streetView.notice("javascript call: \(javascript)")
 		webView.evaluateJavaScript(javascript) { _, error in
 			if let error {
-				print("Error evaluating JavaScript code:", error)
+				Logger.streetView.error("Error evaluating JavaScript code: \(error)")
 			}
 		}
 	}
