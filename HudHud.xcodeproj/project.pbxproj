@@ -50,7 +50,6 @@
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
-		CD6538C82BC66E4E002D5440 /* NonReactiveState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD6538C72BC66E4E002D5440 /* NonReactiveState.swift */; };
 		CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */; };
 		CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3632BBBD3FB009C3A1C /* Optional.swift */; };
 		CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3682BBBFF27009C3A1C /* CameraState.swift */; };
@@ -58,7 +57,6 @@
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
 		CD74ECA52BC52C1200CA10FF /* WebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA42BC52C1200CA10FF /* WebView.swift */; };
 		CD74ECA72BC53B0C00CA10FF /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA62BC53B0C00CA10FF /* StreetView.swift */; };
-		CD74ECA92BC55C5500CA10FF /* ViewBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */; };
 		CD74ECAB2BC55D5000CA10FF /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */; };
 		CD74ECAF2BC5999300CA10FF /* pannellum.css in Resources */ = {isa = PBXBuildFile; fileRef = CD74ECAC2BC5999300CA10FF /* pannellum.css */; };
 		CD74ECB02BC5999300CA10FF /* streetview.html in Resources */ = {isa = PBXBuildFile; fileRef = CD74ECAD2BC5999300CA10FF /* streetview.html */; };
@@ -156,7 +154,6 @@
 		CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Limits.swift"; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
-		CD6538C72BC66E4E002D5440 /* NonReactiveState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonReactiveState.swift; sourceTree = "<group>"; };
 		CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewPoint.swift; sourceTree = "<group>"; };
 		CD71C3632BBBD3FB009C3A1C /* Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Optional.swift; sourceTree = "<group>"; };
 		CD71C3682BBBFF27009C3A1C /* CameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
@@ -164,7 +161,6 @@
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		CD74ECA42BC52C1200CA10FF /* WebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebView.swift; sourceTree = "<group>"; };
 		CD74ECA62BC53B0C00CA10FF /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
-		CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewBuilder.swift; sourceTree = "<group>"; };
 		CD74ECAA2BC55D5000CA10FF /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		CD74ECAC2BC5999300CA10FF /* pannellum.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = pannellum.css; sourceTree = "<group>"; };
 		CD74ECAD2BC5999300CA10FF /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
@@ -274,7 +270,6 @@
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
 				CD2219572BBFDBEE00042564 /* MotionViewModel.swift */,
-				CD6538C72BC66E4E002D5440 /* NonReactiveState.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -453,7 +448,6 @@
 				CD71C3682BBBFF27009C3A1C /* CameraState.swift */,
 				CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */,
 				CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */,
-				CD74ECA82BC55C5500CA10FF /* ViewBuilder.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -705,7 +699,6 @@
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
 				CD74ECA52BC52C1200CA10FF /* WebView.swift in Sources */,
 				CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */,
-				CD74ECA92BC55C5500CA10FF /* ViewBuilder.swift in Sources */,
 				CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */,
 				CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
@@ -717,7 +710,6 @@
 				01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */,
 				1BB69DF95208C542E1B687DF /* ProviderButton.swift in Sources */,
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
-				CD6538C82BC66E4E002D5440 /* NonReactiveState.swift in Sources */,
 				CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */,
 				854A602E692EA22AC381F9CA /* FavoriteCategoriesData.swift in Sources */,
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,

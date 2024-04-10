@@ -47,60 +47,71 @@ struct StreetViewWebView: UIViewRepresentable {
 		}
 	}
 
-	@StateObject private var scriptHandler = ScriptHandler()
-	@State private var pageLoaded: Bool = false
-	@State private var currentCoodinate: NonReactiveState<CLLocationCoordinate2D?> = NonReactiveState(wrappedValue: nil)
-
 	// MARK: - Properties
 
 	@ObservedObject var viewModel: MotionViewModel
 
 	// MARK: - Lifecycle
 
-	init(viewModel: MotionViewModel) throws {
+	init(viewModel: MotionViewModel) {
 		self.viewModel = viewModel
 	}
 
 	// MARK: - Internal
 
-	class Coordinator: NSObject, ScriptHandlerDelegate, WKNavigationDelegate {
-
-		@Published var viewModel: MotionViewModel
-		@Binding var pageLoaded: Bool
+	class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
+		let viewModel: MotionViewModel
 
 		// MARK: - Lifecycle
 
-		init(viewModel: MotionViewModel, pageLoaded: Binding<Bool>) {
+		init(viewModel: MotionViewModel) {
 			self.viewModel = viewModel
-			self._pageLoaded = pageLoaded
 		}
 
 		// MARK: - Internal
 
-		func webView(_: WKWebView, didFinish _: WKNavigation!) {
-			Logger.streetView.notice("WebView finished loading")
-			self.pageLoaded = true
-		}
+		func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
+			do {
+				let jsonData = try JSONSerialization.data(withJSONObject: message.body, options: [])
 
-		// MARK: - Fileprivate
+				let decoder = JSONDecoder()
+				let panoramaInfo = try decoder.decode(PanoramaInfo.self, from: jsonData)
 
-		fileprivate func scriptHandler(_: ScriptHandler, didUpdate panorama: PanoramaInfo) {
-			if self.viewModel.position.heading != panorama.heading {
-				Logger.streetView.notice("scriptHandler update panoramaInfo")
-				self.viewModel.position.heading = panorama.heading
+				if self.viewModel.position.heading != panoramaInfo.heading {
+					Logger.streetView.notice("scriptHandler update panoramaInfo")
+					self.viewModel.position.heading = panoramaInfo.heading
+					self.viewModel.coordinate = panoramaInfo.coordinate
+				}
+			} catch {
+				Logger.streetView.error("Error decoding JSON: \(error)")
 			}
 		}
+
+		func webView(_: WKWebView, didFinish _: WKNavigation!) {
+			Logger.streetView.notice("WebView finished loading")
+			self.viewModel.pageLoaded = true
+		}
+
+		func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation!) {
+			Logger.streetView.notice("WebView started loading")
+			self.viewModel.pageLoaded = false
+		}
+
+		func webView(_: WKWebView, didFail _: WKNavigation!, withError _: any Error) {
+			// what should we do here?
+		}
+
 	}
 
 	func makeCoordinator() -> Coordinator {
-		Coordinator(viewModel: self.viewModel, pageLoaded: self.$pageLoaded)
+		Coordinator(viewModel: self.viewModel)
 	}
 
 	func makeUIView(context: Context) -> WKWebView {
-		self.scriptHandler.delegate = context.coordinator
+		print("making new webview")
 
 		let config = WKWebViewConfiguration()
-		config.userContentController.add(self.scriptHandler, name: "viewUpdated")
+		config.userContentController.add(context.coordinator, name: "viewUpdated")
 		let webView = WKWebView(frame: .zero, configuration: config)
 		webView.navigationDelegate = context.coordinator
 		webView.backgroundColor = .clear
@@ -124,62 +135,54 @@ struct StreetViewWebView: UIViewRepresentable {
 	}
 
 	func updateUIView(_ webView: WKWebView, context _: Context) {
-		guard self.pageLoaded else {
-			return
-		}
-		defer {
-			self.currentCoodinate.wrappedValue = self.viewModel.coordinate
-		}
-		guard let coordinate = self.viewModel.coordinate,
-			  self.currentCoodinate.wrappedValue != self.viewModel.coordinate else {
+		guard self.viewModel.pageLoaded else {
+			// this could lead to a situation where a user moves the pin while the screen is still loading
 			return
 		}
 
-		let javascript = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
-		Logger.streetView.notice("javascript call: \(javascript)")
-		webView.evaluateJavaScript(javascript) { _, error in
+		guard let coordinate = self.viewModel.coordinate else {
+			return
+		}
+
+		let jsFunction = "getPanoramaInfo();"
+		webView.evaluateJavaScript(jsFunction) { result, error in
 			if let error {
-				Logger.streetView.error("Error evaluating JavaScript code: \(error)")
+				print("JavaScript execution error: \(error.localizedDescription)")
+				return
+			}
+
+			guard let resultDict = result as? [String: Any] else {
+				print("Unexpected result format")
+				return
+			}
+
+			if let longitude = resultDict["long"] as? Double,
+			   let latitude = resultDict["lat"] as? Double {
+				let location1 = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+				let location2 = CLLocation(latitude: latitude, longitude: longitude)
+
+				if location1.distance(from: location2) > 1 {
+					// we should ask for a changeLocation that also accepts pitch and heading so we can keep this
+					// in sync from app too
+					let javascript = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
+					Logger.streetView.notice("javascript call: \(javascript)")
+
+					webView.evaluateJavaScript(javascript) { _, error in
+						if let error {
+							Logger.streetView.error("Error evaluating JavaScript code: \(error)")
+						}
+					}
+				}
+			} else {
+				print("Missing or invalid data types in result")
 			}
 		}
 	}
 }
 
-// MARK: - ScriptHandlerDelegate
-
-private protocol ScriptHandlerDelegate: AnyObject {
-	func scriptHandler(_ scriptHandler: ScriptHandler, didUpdate panorama: PanoramaInfo)
-}
-
-// MARK: - ScriptHandler
-
-private class ScriptHandler: NSObject, ObservableObject, WKScriptMessageHandler {
-
-	weak var delegate: ScriptHandlerDelegate?
-
-	// MARK: - Internal
-
-	func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
-		do {
-			let jsonData = try JSONSerialization.data(withJSONObject: message.body, options: [])
-
-			let decoder = JSONDecoder()
-			let panoramaInfo = try decoder.decode(PanoramaInfo.self, from: jsonData)
-
-			self.delegate?.scriptHandler(self, didUpdate: panoramaInfo)
-		} catch {
-			Logger.streetView.error("Error decoding JSON: \(error)")
-		}
-	}
-
-	// MARK: - Private
-
-	private func handleViewUpdated(_: WKScriptMessage) {}
-}
-
 // MARK: - PanoramaInfo
 
-private struct PanoramaInfo: Codable {
+struct PanoramaInfo: Codable {
 	let coordinate: CLLocationCoordinate2D
 	let pitch: Double
 	let heading: CLLocationDirection

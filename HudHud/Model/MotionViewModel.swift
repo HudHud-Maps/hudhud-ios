@@ -24,6 +24,7 @@ final class MotionViewModel: ObservableObject {
 	@Published var coordinate: CLLocationCoordinate2D?
 	@Published var position: Position = .initial
 	@Published var size: Size = .compact
+	@Published var pageLoaded = false
 
 	static let shared = MotionViewModel()
 

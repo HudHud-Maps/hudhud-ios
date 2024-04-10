@@ -162,9 +162,12 @@ struct ContentView: View {
 								let point = StreetViewPoint(location: location.coordinate, heading: location.course)
 								self.mapStore.streetView = .point(point)
 
-								DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-									self.motionViewModel.coordinate = .image2
-								}
+								/*
+								  // use Task.sleep for such things in a Task context
+								 DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
+								 	self.motionViewModel.coordinate = .image2
+								 }
+								  */
 							}
 						} else {
 							self.mapStore.streetView = .disabled
