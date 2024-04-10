@@ -26,7 +26,7 @@ final class MapStore: ObservableObject {
 
 	let motionViewModel: MotionViewModel
 
-	@Binding var sheetSize: CGSize
+	@Published var sheetSize: CGSize = .zero
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
 	@Published var streetView: StreetViewOption = .disabled
@@ -73,7 +73,7 @@ final class MapStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel, sheetSize: Binding<CGSize>) {
+	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
 		self.camera = camera
 		self.searchShown = searchShown
 		self.motionViewModel = motionViewModel
@@ -83,21 +83,15 @@ final class MapStore: ObservableObject {
 		} else {
 			self.streetView = .disabled
 		}
-		self._sheetSize = sheetSize
 	}
 
-	// MARK: - Internal
-
-	func bind(sheetSize: Binding<CGSize>) {
-		self._sheetSize = sheetSize
-	}
 }
 
 // MARK: - Previewable
 
 extension MapStore: Previewable {
 
-	static let preview = MapStore(motionViewModel: .preview, sheetSize: .constant(.zero))
+	static let preview = MapStore(motionViewModel: .preview)
 }
 
 // MARK: - Private

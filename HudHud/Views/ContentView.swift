@@ -34,7 +34,6 @@ struct ContentView: View {
 
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
-	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
 
 	var body: some View {
@@ -175,10 +174,10 @@ struct ContentView: View {
 					CurrentLocationButton(camera: self.$mapStore.camera, locationManager: self.locationManager)
 				}
 			}
-			.opacity(self.sheetSize.height > 500 ? 0 : 1)
+			.opacity(self.mapStore.sheetSize.height > 500 ? 0 : 1)
 			.padding(.horizontal)
 		}
-		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
+		.backport.safeAreaPadding(.bottom, self.mapStore.sheetSize.height + 8)
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -198,7 +197,7 @@ struct ContentView: View {
 				}
 				.onPreferenceChange(SizePreferenceKey.self) { value in
 					withAnimation(.easeOut) {
-						self.sheetSize = value
+						self.mapStore.sheetSize = value
 					}
 				}
 				.sheet(isPresented: self.$showMapLayer) {
@@ -230,9 +229,6 @@ struct ContentView: View {
 				NotificationBanner(notification: notification)
 					.padding(.horizontal, 8)
 			}
-		})
-		.onAppear(perform: {
-			self.mapStore.bind(sheetSize: self.$sheetSize)
 		})
 	}
 
