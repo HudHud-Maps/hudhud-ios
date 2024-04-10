@@ -163,7 +163,7 @@ struct ContentView: View {
 								self.mapStore.streetView = .point(point)
 
 								DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
-									self.motionViewModel.coordinate = .jeddah
+									self.motionViewModel.coordinate = .image2
 								}
 							}
 						} else {

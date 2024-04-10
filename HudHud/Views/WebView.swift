@@ -49,7 +49,7 @@ struct StreetViewWebView: UIViewRepresentable {
 
 	@StateObject private var scriptHandler = ScriptHandler()
 	@State private var pageLoaded: Bool = false
-	private var currentCoodinate: CLLocationCoordinate2D?
+	@State private var currentCoodinate: NonReactiveState<CLLocationCoordinate2D?> = NonReactiveState(wrappedValue: nil)
 
 	// MARK: - Properties
 
@@ -106,11 +106,6 @@ struct StreetViewWebView: UIViewRepresentable {
 		webView.navigationDelegate = context.coordinator
 		webView.backgroundColor = .clear
 
-//		if let htmlURL = Bundle.main.url(forResource: "streetview", withExtension: "html") {
-//			let baseURL = htmlURL.deletingLastPathComponent()
-//			webView.loadFileURL(htmlURL, allowingReadAccessTo: baseURL)
-//		}
-
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "iabderrahmane.github.io"
@@ -133,12 +128,11 @@ struct StreetViewWebView: UIViewRepresentable {
 		guard self.pageLoaded else {
 			return
 		}
-
 		defer {
-			self.currentCoodinate = self.viewModel.coordinate
+			self.currentCoodinate.wrappedValue = self.viewModel.coordinate
 		}
 		guard let coordinate = self.viewModel.coordinate,
-			  self.currentCoodinate != self.viewModel.coordinate else {
+			  self.currentCoodinate.wrappedValue != self.viewModel.coordinate else {
 			return
 		}
 
@@ -220,11 +214,4 @@ private struct PanoramaInfo: Codable {
 		try container.encode(self.pitch, forKey: .pitch)
 		try container.encode(self.heading, forKey: .heading)
 	}
-}
-
-// MARK: - ChangeLocation
-
-private struct ChangeLocation: Codable {
-	let lat: CLLocationDegrees
-	let long: CLLocationDegrees
 }
