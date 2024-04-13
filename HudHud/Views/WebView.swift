@@ -72,10 +72,7 @@ struct StreetViewWebView: UIViewRepresentable {
 
 		func userContentController(_: WKUserContentController, didReceive message: WKScriptMessage) {
 			do {
-				let jsonData = try JSONSerialization.data(withJSONObject: message.body, options: [])
-
-				let decoder = JSONDecoder()
-				let panoramaInfo = try decoder.decode(PanoramaInfo.self, from: jsonData)
+				let panoramaInfo = try DictionaryDecoder().decode(PanoramaInfo.self, from: message.body)
 
 				if self.viewModel.position.heading != panoramaInfo.heading {
 					Logger.streetView.notice("scriptHandler update panoramaInfo")
@@ -87,12 +84,12 @@ struct StreetViewWebView: UIViewRepresentable {
 			}
 		}
 
-		func webView(_: WKWebView, didFinish _: WKNavigation!) {
+		func webView(_: WKWebView, didFinish _: WKNavigation) {
 			Logger.streetView.notice("WebView finished loading")
 			self.viewModel.pageLoaded = true
 		}
 
-		func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation!) {
+		func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
 			Logger.streetView.notice("WebView started loading")
 			self.viewModel.pageLoaded = false
 		}
@@ -111,25 +108,19 @@ struct StreetViewWebView: UIViewRepresentable {
 		print("making new webview")
 
 		let config = WKWebViewConfiguration()
+		config.websiteDataStore = .nonPersistent()
 		config.userContentController.add(context.coordinator, name: "viewUpdated")
 		let webView = WKWebView(frame: .zero, configuration: config)
 		webView.navigationDelegate = context.coordinator
 		webView.backgroundColor = .clear
 
-		var components = URLComponents()
-		components.scheme = "https"
-		components.host = "iabderrahmane.github.io"
-		components.path = "/"
-		if let coordinate = self.viewModel.coordinate {
-			components.queryItems = [
-				URLQueryItem(name: "long", value: String(coordinate.longitude)),
-				URLQueryItem(name: "lat", value: String(coordinate.latitude))
-			]
-		}
-		if let url = components.url {
-			let request = URLRequest(url: url)
-			webView.load(request)
-		}
+		let coordinate = self.viewModel.coordinate!
+		let url = Bundle.main.url(forResource: "streetview", withExtension: "html")!.appending(queryItems: [
+			URLQueryItem(name: "long", value: String(coordinate.longitude)),
+			URLQueryItem(name: "lat", value: String(coordinate.latitude))
+		])
+		webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+		Logger.streetView.notice("loading: \(url)")
 
 		return webView
 	}
@@ -143,38 +134,21 @@ struct StreetViewWebView: UIViewRepresentable {
 		guard let coordinate = self.viewModel.coordinate else {
 			return
 		}
+		let targetLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
 
-		let jsFunction = "getPanoramaInfo();"
-		webView.evaluateJavaScript(jsFunction) { result, error in
-			if let error {
-				print("JavaScript execution error: \(error.localizedDescription)")
-				return
-			}
+		Task {
+			do {
+				let jsReadFunction = "getPanoramaInfo();"
+				let result = try await webView.evaluateJavaScript(jsReadFunction)
+				let info = try DictionaryDecoder().decode(PanoramaInfo.self, from: result)
+				print("info: \(info)")
+				guard info.location.distance(from: targetLocation) < 1 else { return }
 
-			guard let resultDict = result as? [String: Any] else {
-				print("Unexpected result format")
-				return
-			}
-
-			if let longitude = resultDict["long"] as? Double,
-			   let latitude = resultDict["lat"] as? Double {
-				let location1 = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-				let location2 = CLLocation(latitude: latitude, longitude: longitude)
-
-				if location1.distance(from: location2) > 1 {
-					// we should ask for a changeLocation that also accepts pitch and heading so we can keep this
-					// in sync from app too
-					let javascript = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
-					Logger.streetView.notice("javascript call: \(javascript)")
-
-					webView.evaluateJavaScript(javascript) { _, error in
-						if let error {
-							Logger.streetView.error("Error evaluating JavaScript code: \(error)")
-						}
-					}
-				}
-			} else {
-				print("Missing or invalid data types in result")
+				let jsWriteFunction = "changeLocation({long: \(targetLocation.coordinate.longitude), lat: \(targetLocation.coordinate.latitude)});"
+				Logger.streetView.notice("javascript call: \(jsWriteFunction)")
+				try await webView.evaluateJavaScript(jsWriteFunction)
+			} catch {
+				Logger.streetView.error("Error while evaluating js function: \(error)")
 			}
 		}
 	}
@@ -186,6 +160,10 @@ struct PanoramaInfo: Codable {
 	let coordinate: CLLocationCoordinate2D
 	let pitch: Double
 	let heading: CLLocationDirection
+
+	var location: CLLocation {
+		return CLLocation(latitude: self.coordinate.latitude, longitude: self.coordinate.longitude)
+	}
 
 	enum CodingKeys: String, CodingKey {
 		case lat
@@ -213,5 +191,33 @@ struct PanoramaInfo: Codable {
 		try container.encode(self.coordinate.longitude, forKey: .long)
 		try container.encode(self.pitch, forKey: .pitch)
 		try container.encode(self.heading, forKey: .heading)
+	}
+}
+
+// MARK: - DictionaryEncoder
+
+class DictionaryEncoder {
+	private let jsonEncoder = JSONEncoder()
+
+	// MARK: - Internal
+
+	/// Encodes given Encodable value into an array or dictionary
+	func encode(_ value: some Encodable) throws -> Any {
+		let jsonData = try self.jsonEncoder.encode(value)
+		return try JSONSerialization.jsonObject(with: jsonData, options: .allowFragments)
+	}
+}
+
+// MARK: - DictionaryDecoder
+
+class DictionaryDecoder {
+	private let jsonDecoder = JSONDecoder()
+
+	// MARK: - Internal
+
+	/// Decodes given Decodable type from given array or dictionary
+	func decode<T>(_ type: T.Type, from json: Any) throws -> T where T: Decodable {
+		let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+		return try self.jsonDecoder.decode(type, from: jsonData)
 	}
 }

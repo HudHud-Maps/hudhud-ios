@@ -21,10 +21,10 @@
     {
       "identity" : "maplibre-navigation-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git",
+      "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "feature/swift-package-manager",
-        "revision" : "929d70bbfff3f0d0941084a0b037585d1cb133bc"
+        "branch" : "main",
+        "revision" : "a768d89ba1e54b16f8499bd6259215dd93d819f8"
       }
     },
     {
@@ -34,15 +34,6 @@
       "state" : {
         "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463",
         "version" : "0.0.2"
-      }
-    },
-    {
-      "identity" : "maplibre-swiftui-dsl-playground",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
-      "state" : {
-        "branch" : "enhancement/pat-gestures",
-        "revision" : "ca182dc2e62003b83d97fc7615b19ec71a3ac327"
       }
     },
     {
@@ -88,6 +79,15 @@
       "state" : {
         "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
         "version" : "3.0.1"
+      }
+    },
+    {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "625ccca8570773dd84a34ee51a81aa2bc5a4f97a",
+        "version" : "1.16.0"
       }
     },
     {
