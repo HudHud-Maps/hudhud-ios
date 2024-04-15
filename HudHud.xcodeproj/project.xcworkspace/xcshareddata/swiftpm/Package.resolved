@@ -41,8 +41,13 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
       "state" : {
+<<<<<<< HEAD
         "branch" : "enhancement/pat-gestures",
         "revision" : "ca182dc2e62003b83d97fc7615b19ec71a3ac327"
+=======
+        "branch" : "main",
+        "revision" : "6e0cf328a7e8667e53dd8d6b1a87134c6942d01a"
+>>>>>>> develop
       }
     },
     {
@@ -50,8 +55,13 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
+<<<<<<< HEAD
         "revision" : "01632d5cfa6b048be4177884771fac1bf04f8c2e",
         "version" : "0.0.7"
+=======
+        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
+        "version" : "0.0.3"
+>>>>>>> develop
       }
     },
     {
