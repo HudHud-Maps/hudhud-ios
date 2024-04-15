@@ -24,7 +24,6 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-
 	var routeSelected: ((Route?, POI?) -> Void)?
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
@@ -148,12 +147,11 @@ struct SearchSheet: View {
 
 	// MARK: - Lifecycle
 
-
-	init(mapStore: MapStore, searchStore: SearchViewStore) {
+	init(mapStore: MapStore, searchStore: SearchViewStore, routeSelected: ((Route?, POI?) -> Void)? = nil) {
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
-    self.routeSelected = routeSelected
+		self.routeSelected = routeSelected
 	}
 
 	// MARK: - Internal

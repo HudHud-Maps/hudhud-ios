@@ -53,7 +53,7 @@ struct ContentView: View {
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
-      	.iconRotation(45)
+				.iconRotation(45)
 
 			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
 				.iconImage(UIImage.lookAroundPin)
@@ -85,7 +85,6 @@ struct ContentView: View {
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
 			}
-
 		}
 		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
@@ -192,24 +191,24 @@ struct ContentView: View {
 								Logger.searchView.info("Map Mode toursprung")
 							}
 						},
-           	MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
-						if self.mapStore.streetView == .disabled {
-							Task {
-								self.mapStore.streetView = .requestedCurrentLocation
-								let location = try await Location.forSingleRequestUsage.requestLocation()
-								guard let location = location.location else { return }
+						MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
+							if self.mapStore.streetView == .disabled {
+								Task {
+									self.mapStore.streetView = .requestedCurrentLocation
+									let location = try await Location.forSingleRequestUsage.requestLocation()
+									guard let location = location.location else { return }
 
-								print("set new streetViewPoint")
-								let point = StreetViewPoint(location: location.coordinate, heading: location.course)
-								self.mapStore.streetView = .point(point)
+									print("set new streetViewPoint")
+									let point = StreetViewPoint(location: location.coordinate, heading: location.course)
+									self.mapStore.streetView = .point(point)
+								}
+							} else {
+								self.mapStore.streetView = .disabled
 							}
-						} else {
-							self.mapStore.streetView = .disabled
+						},
+						MapButtonData(sfSymbol: .icon(.cube)) {
+							print("3D Map toggle tapped")
 						}
-					},
-					MapButtonData(sfSymbol: .icon(.cube)) {
-						print("3D Map toggle tapped")
-          }
 					])
 					Spacer()
 					VStack(alignment: .trailing) {
@@ -227,7 +226,7 @@ struct ContentView: View {
 							if let selectedItem {
 								self.showNavigationRoute.toggle()
 								self.route = route
-								self.mapStore.mapItemStatus.mapItems = [Row(toursprung: selectedItem)]
+								self.mapStore.mapItems = [Row(toursprung: selectedItem)]
 							}
 						})
 						.frame(minWidth: 320)
@@ -300,7 +299,7 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore(), route: Route?) {
+	init(searchStore: SearchViewStore, route: Route?) {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
