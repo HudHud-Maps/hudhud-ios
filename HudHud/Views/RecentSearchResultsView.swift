@@ -20,9 +20,9 @@ struct RecentSearchResultsView: View {
 			Button {
 				let selectedItem = self.poi
 				let mapItems = [Row]()
-				let newMapItem = MapItemsStatus(selectedItem: selectedItem, mapItems: mapItems)
 				self.searchStore.selectedDetent = .medium
-				self.mapStore.mapItemStatus = newMapItem
+				self.mapStore.selectedItem = selectedItem
+				self.mapStore.mapItems = mapItems
 
 			} label: {
 				HStack(alignment: .center, spacing: 12) {

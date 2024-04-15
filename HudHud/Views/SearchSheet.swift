@@ -171,7 +171,7 @@ struct SearchSheet: View {
 	func show(row: Row) {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
-		self.mapStore.mapItemStatus.selectedItem = row.poi
+		self.mapStore.selectedItem = row.poi
 	}
 
 	func storeRecentPOI(poi: POI) {
@@ -203,4 +203,27 @@ extension SearchSheet {
 		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .storeSetUpForPreviewing),
 		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
 	]
+}
+
+public typealias RecentViewedPOIs = [POI]
+
+// MARK: - RawRepresentable
+
+extension RecentViewedPOIs: RawRepresentable {
+	public init?(rawValue: String) {
+		guard let data = rawValue.data(using: .utf8),
+			  let result = try? JSONDecoder()
+			  	.decode(RecentViewedPOIs.self, from: data) else {
+			return nil
+		}
+		self = result
+	}
+
+	public var rawValue: String {
+		guard let data = try? JSONEncoder().encode(self),
+			  let result = String(data: data, encoding: .utf8) else {
+			return "[]"
+		}
+		return result
+	}
 }
