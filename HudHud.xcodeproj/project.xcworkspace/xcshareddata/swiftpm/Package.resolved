@@ -42,7 +42,7 @@
       "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground.git",
       "state" : {
         "branch" : "main",
-        "revision" : "d33066578eb665ae65b37d9d3bcc62dfbbfbc6a8"
+        "revision" : "6e0cf328a7e8667e53dd8d6b1a87134c6942d01a"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "7c35a588f6c6a79ce6e0a719dc31e49a6fec069b",
-        "version" : "0.0.4"
+        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
+        "version" : "0.0.3"
       }
     },
     {
