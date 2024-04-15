@@ -44,6 +44,7 @@ struct FavoriteCategoriesView: View {
 			}
 			Spacer()
 		}
+		.backport.scrollClipDisabled()
 	}
 }
 

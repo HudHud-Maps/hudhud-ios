@@ -7,7 +7,6 @@
 //
 
 import ApplePOI
-import Combine
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
@@ -25,13 +24,11 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-	private var cancelables: Set<AnyCancellable> = []
-	var routeSelected: ((Route?, POI?) -> Void)?
 
+	var routeSelected: ((Route?, POI?) -> Void)?
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
-	@State private var detailSheetShown: Bool = false
 
 	@State private var route: Route?
 
@@ -83,24 +80,28 @@ struct SearchSheet: View {
 					}
 					.listStyle(.plain)
 				} else {
-					List(self.$mapStore.mapItemStatus.mapItems, id: \.self) { item in
+					List(self.$mapStore.mapItems, id: \.self) { item in
 						Button(action: {
+							self.searchIsFocused = false
+							self.searchStore.selectedDetent = .small
 							switch item.wrappedValue.provider {
 							case .toursprung:
-								self.show(row: item.wrappedValue)
+								self.mapStore.selectedItem = item.wrappedValue.poi
 							case .appleCompletion:
 								self.searchStore.selectedDetent = .medium
 								self.searchIsFocused = false
 								Task {
 									let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
 									if let firstResult = items.first, items.count == 1 {
-										self.show(row: firstResult)
+										self.mapStore.selectedItem = firstResult.poi
+										self.mapStore.mapItems = items
 									} else {
-										self.mapStore.mapItemStatus = MapItemsStatus(selectedItem: nil, mapItems: items)
+										self.mapStore.selectedItem = nil
+										self.mapStore.mapItems = items
 									}
 								}
 							case .appleMapItem:
-								self.show(row: item.wrappedValue)
+								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
 						}, label: {
 							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
@@ -124,10 +125,9 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(item: self.$mapStore.mapItemStatus.selectedItem) {
+		.sheet(item: self.$mapStore.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
 				self.route = routes.routes.first
@@ -148,40 +148,31 @@ struct SearchSheet: View {
 
 	// MARK: - Lifecycle
 
-	init(mapStore: MapStore, searchStore: SearchViewStore, routeSelected: ((Route?, POI?) -> Void)? = nil) {
-		self.cancelables = []
+
+	init(mapStore: MapStore, searchStore: SearchViewStore) {
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
-		self.detailSheetShown = false
-		self.routeSelected = routeSelected
+    self.routeSelected = routeSelected
 	}
 
 	// MARK: - Internal
-
-	func show(row: Row) {
-		self.searchIsFocused = false
-		self.searchStore.selectedDetent = .small
-		self.mapStore.mapItemStatus.selectedItem = row.poi
-		self.detailSheetShown = true
-	}
 }
 
 #Preview {
-	let sheet = SearchSheet(mapStore: .init(),
-							searchStore: .init(mode: .preview), routeSelected: nil)
-	return sheet
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore, routeSelected: nil)
 }
 
 extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .init(mode: .preview)),
-		SearchResultItem(prediction: .init(toursprung: .supermarket), searchViewStore: .init(mode: .preview)),
-		SearchResultItem(prediction: .init(toursprung: .pharmacy), searchViewStore: .init(mode: .preview)),
-		SearchResultItem(prediction: .init(toursprung: .artwork), searchViewStore: .init(mode: .preview)),
-		SearchResultItem(prediction: .init(toursprung: .ketchup), searchViewStore: .init(mode: .preview)),
-		SearchResultItem(prediction: .init(toursprung: .publicPlace), searchViewStore: .init(mode: .preview))
+		SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .supermarket), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .artwork), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
 	]
 }

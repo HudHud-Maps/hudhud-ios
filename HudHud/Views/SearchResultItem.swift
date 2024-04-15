@@ -56,5 +56,5 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	return SearchResultItem(prediction: .init(toursprung: .starbucks), searchViewStore: .init(mode: .preview))
+	SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .storeSetUpForPreviewing)
 }

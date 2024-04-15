@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import Combine
 import CoreLocation
 import MapboxDirections
 import MapLibre
@@ -27,10 +26,13 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-	private let locationManager = Location()
-	@StateObject private var searchViewStore: SearchViewStore
-	@StateObject private var mapStore = MapStore()
-	@StateObject var notificationQueue: NotificationQueue = .init()
+
+	@StateObject private var notificationQueue = NotificationQueue()
+
+	@ObservedObject private var motionViewModel: MotionViewModel
+	@ObservedObject private var searchViewStore: SearchViewStore
+	@ObservedObject private var mapStore: MapStore
+
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
@@ -41,7 +43,7 @@ struct ContentView: View {
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
-			let pointSource = self.mapStore.mapItemStatus.points
+			let pointSource = self.mapStore.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
 				.radius(16)
@@ -51,6 +53,11 @@ struct ContentView: View {
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
+      	.iconRotation(45)
+
+			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
+				.iconImage(UIImage.lookAroundPin)
+				.iconRotation(featurePropertyNamed: "heading")
 
 			// Display preview data as a polyline on the map
 			if let route = self.route {
@@ -78,9 +85,33 @@ struct ContentView: View {
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
 			}
+
 		}
+		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
+			// Pick the first feature (which may be a port or a cluster), ideally selecting
+			// the one nearest nearest one to the touch point.
+			guard let feature = features.first,
+				  let placeID = feature.attribute(forKey: "poi_id") as? String else {
+				// user tapped nothing - deselect
+				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
+				self.searchViewStore.mapStore.selectedItem = nil
+				return
+			}
+
+			let mapItems = self.searchViewStore.mapStore.mapItems
+			let poi = mapItems.first { row in
+				row.poi?.id == placeID
+			}?.poi
+
+			if let poi {
+				Logger.mapInteraction.debug("setting poi")
+				self.searchViewStore.mapStore.selectedItem = poi
+			} else {
+				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+			}
+		})
 		.unsafeMapViewModifier { mapView in
-			mapView.showsUserLocation = self.showUserLocation
+			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
 		.onChange(of: self.route) { newRoute in
 			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -90,13 +121,13 @@ struct ContentView: View {
 			}
 		}
 		.task {
-			for await event in await self.locationManager.startMonitoringAuthorization() {
+			for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
 				self.showUserLocation = event.authorizationStatus.allowed
 			}
 		}
 		.task {
-			self.showUserLocation = self.locationManager.authorizationStatus.allowed
+			self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
 			Logger.searchView.debug("Authorization status authorizedAllowed")
 		}
 		.task {
@@ -105,13 +136,12 @@ struct ContentView: View {
 					return
 				}
 				self.didTryToZoomOnUsersLocation = true
-				self.locationManager.accuracy = .threeKilometers
-				let userLocation = try await locationManager.requestLocation()
+				let userLocation = try await Location.forSingleRequestUsage.requestLocation()
 				var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
 				if coordinates == nil {
 					// fall back to any location that was found, even if bad
 					// accuracy
-					coordinates = self.locationManager.lastLocation?.coordinate
+					coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
 				}
 				guard let coordinates else {
 					print("Could not determine user location, will not zoom...")
@@ -119,15 +149,25 @@ struct ContentView: View {
 				}
 
 				self.mapStore.camera = MapViewCamera.center(coordinates, zoom: 16)
-
 			} catch {
 				print("location error: \(error)")
 			}
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			if self.streetViewVisible {
-				DebugStreetView()
+			if case .point = self.mapStore.streetView {
+				DebugStreetView(viewModel: self.motionViewModel)
+					.onAppear {
+						Task {
+							let userLocation = try await Location.forSingleRequestUsage.requestLocation()
+							guard let location = userLocation.location else { return }
+
+							self.mapStore.streetView = .point(StreetViewPoint(location: location.coordinate, heading: location.course))
+						}
+					}
+					.onDisappear {
+						self.mapStore.streetView = .disabled
+					}
 			} else {
 				if !self.showNavigationRoute {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
@@ -152,9 +192,24 @@ struct ContentView: View {
 								Logger.searchView.info("Map Mode toursprung")
 							}
 						},
-						MapButtonData(sfSymbol: .icon(.cube)) {
-							self.streetViewVisible.toggle()
+           	MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
+						if self.mapStore.streetView == .disabled {
+							Task {
+								self.mapStore.streetView = .requestedCurrentLocation
+								let location = try await Location.forSingleRequestUsage.requestLocation()
+								guard let location = location.location else { return }
+
+								print("set new streetViewPoint")
+								let point = StreetViewPoint(location: location.coordinate, heading: location.course)
+								self.mapStore.streetView = .point(point)
+							}
+						} else {
+							self.mapStore.streetView = .disabled
 						}
+					},
+					MapButtonData(sfSymbol: .icon(.cube)) {
+						print("3D Map toggle tapped")
+          }
 					])
 					Spacer()
 					VStack(alignment: .trailing) {
@@ -246,23 +301,14 @@ struct ContentView: View {
 
 	@MainActor
 	init(searchViewStore: SearchViewStore, mapStore: MapStore = MapStore(), route: Route?) {
-		self._searchViewStore = .init(wrappedValue: searchViewStore)
-		self._mapStore = .init(wrappedValue: mapStore)
-		searchViewStore.mapStore = mapStore
+		self.searchViewStore = searchStore
+		self.mapStore = searchStore.mapStore
+		self.motionViewModel = searchStore.mapStore.motionViewModel
 		self.route = route
 	}
-
-	// MARK: - Internal
 }
 
-extension PresentationDetent {
-	static let small: PresentationDetent = .height(80)
-	static let third: PresentationDetent = .fraction(0.33)
-}
-
-extension CLLocationCoordinate2D {
-	static let riyadh = CLLocationCoordinate2D(latitude: 24.71, longitude: 46.67)
-}
+// MARK: - SimpleToastOptions
 
 extension SimpleToastOptions {
 	static let notification = SimpleToastOptions(alignment: .top, hideAfter: 5, modifierType: .slide)
@@ -281,5 +327,13 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview {
-	return ContentView(searchViewStore: .preview, route: nil)
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return ContentView(searchStore: searchViewStore, route: nil)
+}
+
+#Preview("Touch Testing") {
+	let store: SearchViewStore = .storeSetUpForPreviewing
+	store.searchText = "shops"
+	store.selectedDetent = .medium
+	return ContentView(searchStore: store, route: nil)
 }

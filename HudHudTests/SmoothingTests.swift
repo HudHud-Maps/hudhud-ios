@@ -40,10 +40,10 @@ final class SmoothingTests: XCTestCase {
 
 	func testSimpleContainerAverage() throws {
 		let measurments: [SingleContainer<Double>] = [
-			.init(value: 2),
-			.init(value: 4),
-			.init(value: 6),
-			.init(value: 8)
+			SingleContainer(value: 2),
+			SingleContainer(value: 4),
+			SingleContainer(value: 6),
+			SingleContainer(value: 8)
 		]
 
 		let average = measurments.reduce(SingleContainer(value: 0)) { partialResult, container in
@@ -54,10 +54,10 @@ final class SmoothingTests: XCTestCase {
 
 	func testMultiContainerAverage() throws {
 		let measurments: [MultiContainer] = [
-			.init(first: 2, second: 4),
-			.init(first: 4, second: 6),
-			.init(first: 6, second: 8),
-			.init(first: 8, second: 10)
+			MultiContainer(first: 2, second: 4),
+			MultiContainer(first: 4, second: 6),
+			MultiContainer(first: 6, second: 8),
+			MultiContainer(first: 8, second: 10)
 		]
 
 		let average = measurments.reduce(MultiContainer.zero) { partialResult, container in
@@ -70,10 +70,10 @@ final class SmoothingTests: XCTestCase {
 
 	func testDynamicAverage() throws {
 		let measurments: [MultiContainer] = [
-			.init(first: 2, second: 4),
-			.init(first: 4, second: 6),
-			.init(first: 6, second: 8),
-			.init(first: 8, second: 10)
+			MultiContainer(first: 2, second: 4),
+			MultiContainer(first: 4, second: 6),
+			MultiContainer(first: 6, second: 8),
+			MultiContainer(first: 8, second: 10)
 		]
 
 		let average = measurments.average()
@@ -87,7 +87,7 @@ final class SmoothingTests: XCTestCase {
 		let range = 360.0
 
 		let measurments: [MultiContainer] = (0 ..< count).map { _ in
-			.init(first: .random(in: 0 ..< range), second: .random(in: 0 ..< range))
+			MultiContainer(first: .random(in: 0 ..< range), second: .random(in: 0 ..< range))
 		}
 
 		// On Mac Mini M1 takes 1ms
