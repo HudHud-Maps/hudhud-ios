@@ -56,12 +56,17 @@
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
 <<<<<<< HEAD
+<<<<<<< HEAD
         "revision" : "01632d5cfa6b048be4177884771fac1bf04f8c2e",
         "version" : "0.0.7"
 =======
         "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
         "version" : "0.0.3"
 >>>>>>> develop
+=======
+        "revision" : "dcb23a48ce96e27fc0132b70bf6cb2daccf58cb4",
+        "version" : "0.0.5"
+>>>>>>> parent of 61508f7 (resolving merge conflicts)
       }
     },
     {
