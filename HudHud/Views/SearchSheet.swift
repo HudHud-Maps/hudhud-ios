@@ -124,7 +124,7 @@ struct SearchSheet: View {
 
 					SearchSectionView(title: "Recents") {
 						ForEach(self.recentViewedPOIs, id: \.self) { pois in
-							RecentSearchResultsView(poi: pois, mapStore: self.mapStore)
+							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
 
@@ -155,16 +155,7 @@ struct SearchSheet: View {
 			}
 			.onAppear {
 				// Store POI
-				Task {
-					withAnimation {
-						if self.recentViewedPOIs.count > 9 {
-							self.recentViewedPOIs.removeFirst()
-						}
-						if !self.recentViewedPOIs.contains(item) {
-							self.recentViewedPOIs.append(item)
-						}
-					}
-				}
+				self.storeRecentPOI(poi: item)
 			}
 		}
 	}
@@ -184,6 +175,17 @@ struct SearchSheet: View {
 		self.searchIsFocused = false
 		self.searchStore.selectedDetent = .small
 		self.mapStore.mapItemStatus.selectedItem = row.poi
+	}
+
+	func storeRecentPOI(poi: POI) {
+		withAnimation {
+			if self.recentViewedPOIs.count > 9 {
+				self.recentViewedPOIs.removeFirst()
+			}
+			if !self.recentViewedPOIs.contains(poi) {
+				self.recentViewedPOIs.append(poi)
+			}
+		}
 	}
 
 }

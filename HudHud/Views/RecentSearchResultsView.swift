@@ -6,24 +6,24 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import MapKit
 import POIService
 import SwiftUI
 
 struct RecentSearchResultsView: View {
 	let poi: POI
 	let mapStore: MapStore
+	let searchStore: SearchViewStore
 
 	var body: some View {
 		VStack {
 			Button {
-				print("Selected item: \(self.poi))")
 				let selectedItem = self.poi
-				let mapItems = [Row(toursprung: selectedItem)]
+				let mapItems = [Row]()
 				let newMapItem = MapItemsStatus(selectedItem: selectedItem, mapItems: mapItems)
+				self.searchStore.selectedDetent = .medium
 				self.mapStore.mapItemStatus = newMapItem
-				print("Updated mapItemStatus: \(self.mapStore.mapItemStatus)")
 
-				print("error")
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					self.poi.icon
