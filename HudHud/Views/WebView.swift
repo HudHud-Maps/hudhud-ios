@@ -115,11 +115,20 @@ struct StreetViewWebView: UIViewRepresentable {
 		webView.backgroundColor = .clear
 
 		let coordinate = self.viewModel.coordinate!
-		let url = Bundle.main.url(forResource: "streetview", withExtension: "html")!.appending(queryItems: [
-			URLQueryItem(name: "long", value: String(coordinate.longitude)),
-			URLQueryItem(name: "lat", value: String(coordinate.latitude))
-		])
-		webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+//		let url = Bundle.main.url(forResource: "streetview", withExtension: "html")!.appending(queryItems: [
+//			URLQueryItem(name: "long", value: String(coordinate.longitude)),
+//			URLQueryItem(name: "lat", value: String(coordinate.latitude))
+//		])
+		var components = URLComponents()
+		components.scheme = "https"
+		components.host = "iabderrahmane.github.io"
+		let url = components.url!
+
+//		webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
+//		Logger.streetView.notice("loading: \(url)")
+
+		let request = URLRequest(url: url)
+		webView.load(request)
 		Logger.streetView.notice("loading: \(url)")
 
 		return webView

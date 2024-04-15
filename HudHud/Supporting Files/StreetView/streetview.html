@@ -21,19 +21,13 @@
 
 <div id="panorama"></div>
 <script>
-var long = 0;
-var lat = 0;
+
+
+document.addEventListener("DOMContentLoaded", registerTouchmoveHandler);
+var long = 45;
+var lat = 25;
 var panoramaUrl = "https://pannellum.org/images/alma.jpg"
 var viewer;
-
-// Function to parse URL parameters and set latitude and longitude
-function setInitialCoordinates() {
-	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	long = parseFloat(urlParams.get('long')) || 0; // Default to 0 if parameter is not found
-	lat = parseFloat(urlParams.get('lat')) || 0; // Default to 0 if parameter is not found
-}
-
 var changePanorama = function(url) {
     panoramaUrl = url
     viewer = pannellum.viewer('panorama', {
@@ -44,13 +38,15 @@ var changePanorama = function(url) {
         "showFullscreenCtrl": false,
     });
     viewer.on("load", function(e){
-        notifyIos();
+        notifyApp();
     });
     viewer.on("animatefinished", function(e){
-        notifyIos();
+        notifyApp();
     });
+    viewer.on("touchstart", function(params) {
+        notifyApp();
+    })
 }
-setInitialCoordinates();
 changePanorama("https://pannellum.org/images/alma.jpg");
 var changeLocation = function(coords) {
     // 24.6801222,46.6880241
@@ -77,12 +73,27 @@ var getPanoramaInfo = function() {
         heading: viewer.getYaw(),       
     };
 }
-var notifyIos = function() {
-    try {
-        webkit.messageHandlers.viewUpdated.postMessage(getPanoramaInfo());
-    } catch(err) {
-        console.log(err);
+var notifyApp = function() {
+    if (typeof webkit !== "undefined") {
+        try {
+            webkit.messageHandlers.viewUpdated.postMessage(getPanoramaInfo());
+        } catch(err) {
+            console.log(err);
+        }
     }
+    if (typeof Android !== "undefined") {
+        try {
+            Adnroid.viewUpdated(JSON.stringify(getPanoramaInfo()));
+        } catch (err) {
+            console.log(err);
+        }
+    }
+}
+function registerTouchmoveHandler() {
+  const el = document.getElementById("panorama");
+  el.addEventListener("touchmove", function(params) {
+    notifyApp();
+  });
 }
 </script>
 
