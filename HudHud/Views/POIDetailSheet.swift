@@ -24,8 +24,6 @@ struct POIDetailSheet: View {
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
 	let onMore: () -> Void
 
-	let location = Location()
-
 	@State var routes: Toursprung.RouteCalculationResult?
 
 	@Environment(\.dismiss) var dismiss
@@ -119,10 +117,8 @@ struct POIDetailSheet: View {
 		}
 		.task {
 			do {
-				// Location may only be inited on main thread, do not init within task.
-				self.location.accuracy = .threeKilometers // Location is extremely slow, unless set to this - returns better accuracy none the less.
-				_ = try await self.location.requestPermission(.whenInUse)
-				guard let userLocation = try await location.requestLocation().location else {
+				_ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
+				guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
 					return
 				}
 				guard let locationCoordinate = self.poi.locationCoordinate else {

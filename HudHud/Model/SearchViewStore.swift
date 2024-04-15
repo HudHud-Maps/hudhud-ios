@@ -16,9 +16,9 @@ import ToursprungPOI
 // MARK: - SearchViewStore
 
 @MainActor
-class SearchViewStore: ObservableObject {
+final class SearchViewStore: ObservableObject {
 
-	var mapStore: MapStore = .init()
+	let mapStore: MapStore
 
 	enum Mode {
 		enum Provider: CaseIterable {
@@ -31,8 +31,8 @@ class SearchViewStore: ObservableObject {
 	}
 
 	private var task: Task<Void, Error>?
-	private var apple: ApplePOI = .init()
-	private var toursprung: ToursprungPOI = .init()
+	private var apple = ApplePOI()
+	private var toursprung = ToursprungPOI()
 	private var cancellable: AnyCancellable?
 
 	// MARK: - Properties
@@ -41,7 +41,8 @@ class SearchViewStore: ObservableObject {
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.mapStore.mapItemStatus = .empty
+			self.mapStore.mapItems = []
+			self.mapStore.selectedItem = nil
 		}
 	}
 
@@ -50,7 +51,8 @@ class SearchViewStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(mode: Mode) {
+	init(mapStore: MapStore, mode: Mode) {
+		self.mapStore = mapStore
 		self.mode = mode
 
 		self.cancellable = self.$searchText
@@ -62,27 +64,26 @@ class SearchViewStore: ObservableObject {
 					self.task = Task {
 						defer { self.isSearching = false }
 						self.isSearching = true
-						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.apple.predict(term: newValue))
-						self.mapStore.mapItemStatus = newStatus
+
+						self.mapStore.mapItems = try await self.apple.predict(term: newValue)
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
 					self.task = Task {
 						defer { self.isSearching = false }
 						self.isSearching = true
-						let newStatus = try await MapItemsStatus(selectedItem: nil, mapItems: self.toursprung.predict(term: newValue))
-						self.mapStore.mapItemStatus = newStatus
+
+						self.mapStore.mapItems = try await self.toursprung.predict(term: newValue)
 					}
 				case .preview:
-					let newStatus = MapItemsStatus(selectedItem: nil, mapItems: [
-						.init(toursprung: .starbucks),
-						.init(toursprung: .ketchup),
-						.init(toursprung: .publicPlace),
-						.init(toursprung: .artwork),
-						.init(toursprung: .pharmacy),
-						.init(toursprung: .supermarket)
-					])
-					self.mapStore.mapItemStatus = newStatus
+					self.mapStore.mapItems = [
+						Row(toursprung: .starbucks),
+						Row(toursprung: .ketchup),
+						Row(toursprung: .publicPlace),
+						Row(toursprung: .artwork),
+						Row(toursprung: .pharmacy),
+						Row(toursprung: .supermarket)
+					]
 				}
 			}
 	}
@@ -103,8 +104,9 @@ class SearchViewStore: ObservableObject {
 	}
 }
 
-extension SearchViewStore {
-	static var preview: SearchViewStore {
-		.init(mode: .preview)
-	}
+// MARK: - Previewable
+
+extension SearchViewStore: Previewable {
+
+	static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mode: .preview)
 }
