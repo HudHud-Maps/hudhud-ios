@@ -27,9 +27,7 @@ struct RecentSearchResultsView: View {
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					self.poi.icon
-						.resizable()
-						.aspectRatio(contentMode: .fit)
-						.frame(width: 24, height: 24)
+						.font(.title2)
 						.foregroundStyle(.white)
 						.padding()
 						.clipShape(Circle())
@@ -54,13 +52,11 @@ struct RecentSearchResultsView: View {
 					}
 				}
 				Spacer()
-				Button(action: {
-					//
-				}, label: {
-					Image(systemSymbol: .chevronRight)
-				})
-				.padding(.trailing)
-				.foregroundStyle(.tertiary)
+
+				Image(systemSymbol: .chevronRight)
+
+						.padding(.trailing)
+						.foregroundStyle(.tertiary)
 			}
 			.padding(8)
 		}
