@@ -6,10 +6,11 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
 
 struct DirectionPreviewData {
 	var duration: TimeInterval
-	var distance: Measurement<UnitLength>
+	var distance: CLLocationDistance
 	var typeOfRoute: String
 }
