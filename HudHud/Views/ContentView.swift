@@ -37,9 +37,6 @@ struct ContentView: View {
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
-	@State private var streetViewVisible: Bool = false
-	@State private var showNavigationRoute = false
-	@State private var route: Route?
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -60,7 +57,7 @@ struct ContentView: View {
 				.iconRotation(featurePropertyNamed: "heading")
 
 			// Display preview data as a polyline on the map
-			if let route = self.route {
+			if let route = self.mapStore.route {
 				let polylineSource = ShapeSource(identifier: "pedestrian-polyline") {
 					MLNPolylineFeature(coordinates: route.coordinates ?? [])
 				}
@@ -112,7 +109,7 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
-		.onChange(of: self.route) { newRoute in
+		.onChange(of: self.mapStore.route) { newRoute in
 			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty {
 				if let camera = CameraState.boundingBox(from: coordinates) {
 					self.mapStore.camera = camera
@@ -168,14 +165,14 @@ struct ContentView: View {
 						self.mapStore.streetView = .disabled
 					}
 			} else {
-				if !self.showNavigationRoute {
+				if self.mapStore.route != nil {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 						.presentationBackground(.thinMaterial)
 				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			if !self.showNavigationRoute {
+			if self.mapStore.route != nil {
 				HStack(alignment: .bottom) {
 					MapButtonsView(mapButtonsData: [
 						MapButtonData(sfSymbol: .icon(.map)) {
@@ -222,67 +219,61 @@ struct ContentView: View {
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
 		.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
-						searchStore: self.searchViewStore, routeSelected: { route, selectedItem in
-							if let selectedItem {
-								self.showNavigationRoute.toggle()
-								self.route = route
-								self.mapStore.mapItems = [Row(toursprung: selectedItem)]
-							}
-						})
-						.frame(minWidth: 320)
+						searchStore: self.searchViewStore)
+				.frame(minWidth: 320)
+				.presentationCornerRadius(21)
+				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .large)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
+				.presentationCompactAdaptation(.sheet)
+				.overlay {
+					GeometryReader { geometry in
+						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+					}
+				}
+				.onPreferenceChange(SizePreferenceKey.self) { value in
+					withAnimation(.easeOut) {
+						self.sheetSize = value
+					}
+				}
+				.sheet(isPresented: Binding<Bool>(
+					get: { self.mapStore.route != nil },
+					set: { _ in }
+				)) {
+					NavigationSheetView(mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+						.presentationDetents([.height(150)])
 						.presentationBackgroundInteraction(
-							.enabled(upThrough: .large)
+							.enabled(upThrough: .height(150))
 						)
-						.interactiveDismissDisabled()
 						.ignoresSafeArea()
+						.interactiveDismissDisabled()
 						.presentationCompactAdaptation(.sheet)
-						.overlay {
-							GeometryReader { geometry in
-								Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+				}
+				.sheet(isPresented: self.$showMapLayer) {
+					VStack(alignment: .center, spacing: 25) {
+						Spacer()
+						HStack(alignment: .center) {
+							Spacer()
+							Text("Layers")
+								.foregroundStyle(.primary)
+							Spacer()
+							Button {
+								self.showMapLayer.toggle()
+							} label: {
+								Image(systemSymbol: .xmark)
+									.foregroundColor(.secondary)
 							}
 						}
-						.onPreferenceChange(SizePreferenceKey.self) { value in
-							withAnimation(.easeOut) {
-								self.sheetSize = value
-							}
-						}
-						.sheet(isPresented: self.$showNavigationRoute) {
-							NavigationSheetView(route: self.route) {
-								self.route = nil
-								self.showNavigationRoute.toggle()
-							}
+						.padding(.horizontal, 30)
+						MainLayersView(mapLayerData: MapLayersData.getLayers())
 							.presentationCornerRadius(21)
-							.presentationDetents([.height(150)])
-							.presentationBackgroundInteraction(
-								.enabled(upThrough: .height(150))
-							)
-							.ignoresSafeArea()
-							.interactiveDismissDisabled()
-							.presentationCompactAdaptation(.sheet)
-						}
-						.sheet(isPresented: self.$showMapLayer) {
-							VStack(alignment: .center, spacing: 25) {
-								Spacer()
-								HStack(alignment: .center) {
-									Spacer()
-									Text("Layers")
-										.foregroundStyle(.primary)
-									Spacer()
-									Button {
-										self.showMapLayer.toggle()
-									} label: {
-										Image(systemSymbol: .xmark)
-											.foregroundColor(.secondary)
-									}
-								}
-								.padding(.horizontal, 30)
-								MainLayersView(mapLayerData: MapLayersData.getLayers())
-									.presentationCornerRadius(21)
-									.presentationDetents([.medium])
-							}
-						}
+							.presentationDetents([.medium])
+					}
+				}
 		}
 
 		.environmentObject(self.notificationQueue)
@@ -299,11 +290,11 @@ struct ContentView: View {
 	// MARK: - Lifecycle
 
 	@MainActor
-	init(searchStore: SearchViewStore, route: Route?) {
+	init(searchStore: SearchViewStore) {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
-		self.route = route
+		self.mapStore.route = searchStore.mapStore.route
 	}
 }
 
@@ -327,12 +318,12 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return ContentView(searchStore: searchViewStore, route: nil)
+	return ContentView(searchStore: searchViewStore)
 }
 
 #Preview("Touch Testing") {
 	let store: SearchViewStore = .storeSetUpForPreviewing
 	store.searchText = "shops"
 	store.selectedDetent = .medium
-	return ContentView(searchStore: store, route: nil)
+	return ContentView(searchStore: store)
 }

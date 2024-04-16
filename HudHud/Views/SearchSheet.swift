@@ -24,12 +24,9 @@ import ToursprungPOI
 
 struct SearchSheet: View {
 
-	var routeSelected: ((Route?, POI?) -> Void)?
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
-
-	@State private var route: Route?
 
 	var body: some View {
 		return VStack {
@@ -129,10 +126,8 @@ struct SearchSheet: View {
 		} content: { item in
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
-				self.route = routes.routes.first
-				if let route = self.route {
-					self.routeSelected?(route, item)
-				}
+				self.mapStore.route = routes.routes.first
+				self.mapStore.mapItems = [Row(toursprung: item)]
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			}
@@ -147,11 +142,10 @@ struct SearchSheet: View {
 
 	// MARK: - Lifecycle
 
-	init(mapStore: MapStore, searchStore: SearchViewStore, routeSelected: ((Route?, POI?) -> Void)? = nil) {
+	init(mapStore: MapStore, searchStore: SearchViewStore) {
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
-		self.routeSelected = routeSelected
 	}
 
 	// MARK: - Internal
@@ -159,7 +153,7 @@ struct SearchSheet: View {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore, routeSelected: nil)
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
 
 extension Route: Identifiable {}

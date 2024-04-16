@@ -21,7 +21,7 @@ struct HudHudApp: App {
 
 	var body: some Scene {
 		WindowGroup {
-			ContentView(searchStore: self.searchStore, route: nil)
+			ContentView(searchStore: self.searchStore)
 		}
 	}
 

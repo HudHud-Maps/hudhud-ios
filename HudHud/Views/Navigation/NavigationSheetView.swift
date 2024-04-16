@@ -15,9 +15,8 @@ import SwiftUI
 import ToursprungPOI
 
 struct NavigationSheetView: View {
-	var route: Route?
-	let location = Location()
-	var dismissAction: () -> Void
+
+	@ObservedObject var mapStore: MapStore
 	@State var goPressed = false
 
 	var body: some View {
@@ -29,7 +28,8 @@ struct NavigationSheetView: View {
 					.cornerRadius(10)
 				Spacer()
 				Button(action: {
-					self.dismissAction()
+					self.mapStore.route = nil
+					//	self.dismissAction()
 				}, label: {
 					ZStack {
 						Circle()
@@ -46,7 +46,7 @@ struct NavigationSheetView: View {
 				.buttonStyle(PlainButtonStyle())
 				.accessibilityLabel(Text("Close"))
 			}
-			if let route = self.route {
+			if let route = self.mapStore.route {
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -61,7 +61,7 @@ struct NavigationSheetView: View {
 		.padding()
 		.fullScreenCover(isPresented: self.$goPressed) {
 			let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-			if let route = self.route {
+			if let route = self.mapStore.route {
 				NavigationView(route: route, styleURL: styleURL)
 			}
 		}
@@ -69,5 +69,6 @@ struct NavigationSheetView: View {
 }
 
 #Preview {
-	NavigationSheetView(dismissAction: {})
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return NavigationSheetView(mapStore: searchViewStore.mapStore)
 }
