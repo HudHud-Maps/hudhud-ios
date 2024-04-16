@@ -28,6 +28,7 @@ struct RecentSearchResultsView: View {
 				HStack(alignment: .center, spacing: 12) {
 					self.poi.icon
 						.font(.title2)
+						.aspectRatio(contentMode: .fit)
 						.foregroundStyle(.white)
 						.padding()
 						.clipShape(Circle())
@@ -50,13 +51,8 @@ struct RecentSearchResultsView: View {
 							.lineLimit(1)
 							.foregroundColor(.primary)
 					}
+					Spacer()
 				}
-				Spacer()
-
-				Image(systemSymbol: .chevronRight)
-
-						.padding(.trailing)
-						.foregroundStyle(.tertiary)
 			}
 			.padding(8)
 		}
@@ -64,6 +60,6 @@ struct RecentSearchResultsView: View {
 
 }
 
-// #Preview {
-//	RecentSearchResultsView()
-// }
+#Preview {
+	RecentSearchResultsView(poi: .artwork, mapStore: .storeSetUpForPreviewing, searchStore: .init(mapStore: .storeSetUpForPreviewing, mode: .preview))
+}

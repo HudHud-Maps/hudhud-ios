@@ -120,14 +120,14 @@ struct SearchSheet: View {
 					SearchSectionView(title: "Favorites") {
 						FavoriteCategoriesView()
 					}
-
+					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
 						ForEach(self.recentViewedPOIs, id: \.self) { pois in
 							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
-
 					.listRowSeparator(.hidden)
+					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 				}
 				.listStyle(.plain)
 			}
@@ -167,12 +167,6 @@ struct SearchSheet: View {
 	}
 
 	// MARK: - Internal
-
-	func show(row: Row) {
-		self.searchIsFocused = false
-		self.searchStore.selectedDetent = .small
-		self.mapStore.selectedItem = row.poi
-	}
 
 	func storeRecentPOI(poi: POI) {
 		withAnimation {
