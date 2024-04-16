@@ -55,7 +55,7 @@ struct DirectionsSummaryView: View {
 
 	func formatDuration(duration: TimeInterval) -> String {
 		let formatter = DateComponentsFormatter()
-		formatter.allowedUnits = [.hour, .minute, .second]
+		formatter.allowedUnits = [.hour, .minute]
 		formatter.unitsStyle = .short
 		if let formattedString = formatter.string(from: duration) {
 			return formattedString

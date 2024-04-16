@@ -29,7 +29,6 @@ struct NavigationSheetView: View {
 				Spacer()
 				Button(action: {
 					self.mapStore.route = nil
-					//	self.dismissAction()
 				}, label: {
 					ZStack {
 						Circle()

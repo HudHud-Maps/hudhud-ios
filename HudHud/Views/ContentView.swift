@@ -40,22 +40,6 @@ struct ContentView: View {
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
-			let pointSource = self.mapStore.points
-
-			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
-				.radius(16)
-				.color(.systemRed)
-				.strokeWidth(2)
-				.strokeColor(.white)
-			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
-				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-				.iconColor(.white)
-				.iconRotation(45)
-
-			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
-				.iconImage(UIImage.lookAroundPin)
-				.iconRotation(featurePropertyNamed: "heading")
-
 			// Display preview data as a polyline on the map
 			if let route = self.mapStore.route {
 				let polylineSource = ShapeSource(identifier: "pedestrian-polyline") {
@@ -82,6 +66,21 @@ struct ContentView: View {
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
 			}
+			let pointSource = self.mapStore.points
+
+			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+				.radius(16)
+				.color(.systemRed)
+				.strokeWidth(2)
+				.strokeColor(.white)
+			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+				.iconColor(.white)
+				.iconRotation(45)
+
+			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
+				.iconImage(UIImage.lookAroundPin)
+				.iconRotation(featurePropertyNamed: "heading")
 		}
 		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
