@@ -153,11 +153,11 @@ struct ContentView: View {
 								}
 								self.mapStore.streetView = .enabled
 
-								try await Task.sleep(nanoseconds: 10_000_000_000)
-								self.motionViewModel.coordinate = .image2
-								withAnimation {
-									self.mapStore.camera = .center(.image2, zoom: 14)
-								}
+//								try await Task.sleep(nanoseconds: 10_000_000_000)
+//								self.motionViewModel.coordinate = .image2
+//								withAnimation {
+//									self.mapStore.camera = .center(.image2, zoom: 14)
+//								}
 							}
 						} else {
 							self.mapStore.streetView = .disabled

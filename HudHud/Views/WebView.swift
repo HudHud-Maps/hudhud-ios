@@ -94,10 +94,10 @@ struct StreetViewWebView: UIViewRepresentable {
 			self.viewModel.pageLoaded = false
 		}
 
-		func webView(_: WKWebView, didFail _: WKNavigation!, withError _: any Error) {
+		func webView(_: WKWebView, didFail _: WKNavigation!, withError error: any Error) {
 			// what should we do here?
+			Logger.streetView.notice("WebView failed: \(error)")
 		}
-
 	}
 
 	func makeCoordinator() -> Coordinator {
@@ -105,7 +105,7 @@ struct StreetViewWebView: UIViewRepresentable {
 	}
 
 	func makeUIView(context: Context) -> WKWebView {
-		print("making new webview")
+		Logger.streetView.notice("making new webview")
 
 		let config = WKWebViewConfiguration()
 		config.websiteDataStore = .nonPersistent()
@@ -134,7 +134,7 @@ struct StreetViewWebView: UIViewRepresentable {
 		return webView
 	}
 
-	func updateUIView(_ webView: WKWebView, context _: Context) {
+	func updateUIView(_: WKWebView, context _: Context) {
 		guard self.viewModel.pageLoaded else {
 			// this could lead to a situation where a user moves the pin while the screen is still loading
 			return
@@ -143,23 +143,80 @@ struct StreetViewWebView: UIViewRepresentable {
 		guard let coordinate = self.viewModel.coordinate else {
 			return
 		}
-		let targetLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
 
-		Task {
-			do {
-				let jsReadFunction = "getPanoramaInfo();"
-				let result = try await webView.evaluateJavaScript(jsReadFunction)
-				let info = try DictionaryDecoder().decode(PanoramaInfo.self, from: result)
-				print("info: \(info)")
-				guard info.location.distance(from: targetLocation) < 1 else { return }
+//		Task {
+//			do {
+//				let info: PanoramaInfo = try await webView.runJavaScriptFunction("getPanoramaInfo();")
+//				Logger.streetView.notice("info: \(String(describing: info))")
+//				guard info.coordinate.distance(from: coordinate) < 1 else { return }
+//
+//				let jsWriteFunction = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
+		////				Logger.streetView.notice("javascript call: \(jsWriteFunction)")
+//				let result = try await webView.runJavaScript(jsWriteFunction)
+		////				Logger.streetView.notice("successfully called javascript: \(jsWriteFunction) returning: \(String(describing: result))")
+//			} catch {
+//				Logger.streetView.error("Error while evaluating js function: \(error)")
+//			}
+//		}
+	}
+}
 
-				let jsWriteFunction = "changeLocation({long: \(targetLocation.coordinate.longitude), lat: \(targetLocation.coordinate.latitude)});"
-				Logger.streetView.notice("javascript call: \(jsWriteFunction)")
-				try await webView.evaluateJavaScript(jsWriteFunction)
-			} catch {
-				Logger.streetView.error("Error while evaluating js function: \(error)")
+extension WKWebView {
+
+	func runJavaScriptFunction<T>(_ javaScriptString: String) async throws -> T where T: Decodable {
+		return try await withCheckedThrowingContinuation { continuation in
+			DispatchQueue.main.async {
+				self.evaluateJavaScript(javaScriptString) { object, error in
+					if let error {
+						continuation.resume(throwing: error)
+						return
+					}
+
+					if let object {
+						do {
+							let info = try DictionaryDecoder().decode(T.self, from: object)
+							continuation.resume(returning: info)
+						} catch {
+							continuation.resume(throwing: error)
+						}
+						return
+					}
+
+					assertionFailure("illegal javascript callback, object & error nil")
+				}
 			}
 		}
+	}
+
+	@discardableResult
+	func runJavaScript(_ javaScriptString: String) async throws -> Any? {
+		return try await withCheckedThrowingContinuation { continuation in
+			DispatchQueue.main.async {
+				self.evaluateJavaScript(javaScriptString) { object, error in
+					if let error {
+						continuation.resume(throwing: error)
+						return
+					}
+
+					if let object {
+						continuation.resume(returning: object)
+						return
+					}
+
+					continuation.resume(returning: nil)
+				}
+			}
+		}
+	}
+}
+
+extension CLLocationCoordinate2D {
+
+	func distance(from coordinate: CLLocationCoordinate2D) -> CLLocationDistance {
+		let currentLocation = CLLocation(latitude: self.latitude, longitude: self.longitude)
+		let targetLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+
+		return currentLocation.distance(from: targetLocation)
 	}
 }
 
