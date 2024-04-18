@@ -76,7 +76,9 @@ struct StreetViewWebView: UIViewRepresentable {
 					Logger.streetView.notice("scriptHandler update panoramaInfo")
 					self.viewModel.position.heading = panoramaInfo.heading
 					self.viewModel.coordinate = panoramaInfo.coordinate
-					self.camera = .center(panoramaInfo.coordinate, zoom: 14)
+					withAnimation {
+						self.camera = .center(panoramaInfo.coordinate, zoom: 14)
+					}
 				}
 			} catch {
 				Logger.streetView.error("Error decoding JSON: \(error)")
@@ -107,7 +109,11 @@ struct StreetViewWebView: UIViewRepresentable {
 		Logger.streetView.notice("making new webview")
 
 		let config = WKWebViewConfiguration()
+
+		// Using .nonPersistent() works as exptected but is slow.
+		// .default() caches but there seems to be a race condition and its undefined which image is shown :(
 		config.websiteDataStore = .nonPersistent()
+//		config.websiteDataStore = .default()
 		config.userContentController.add(context.coordinator, name: "viewUpdated")
 		let webView = WKWebView(frame: .zero, configuration: config)
 		webView.navigationDelegate = context.coordinator
