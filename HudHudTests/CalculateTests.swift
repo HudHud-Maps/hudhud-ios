@@ -13,7 +13,7 @@ import XCTest
 
 final class CalculateTests: XCTestCase {
 
-	func testCalculate_ValidCoordinates_ReturnsRouteWithSteps() async throws {
+	func testCalculateValidCoordinatesReturnsRouteWithSteps() async throws {
 		// Given
 		let toursprung = Toursprung()
 
@@ -34,7 +34,7 @@ final class CalculateTests: XCTestCase {
 		XCTAssertGreaterThan(result.routes[0].legs[0].steps.count, 0)
 	}
 
-	func testCalculate_WithInvalidStartCoordinate_ThrowsInvalidInputError() async throws {
+	func testCalculateWithInvalidStartCoordinateThrowsInvalidInputError() async throws {
 		// Given
 		let toursprung = Toursprung()
 
@@ -58,7 +58,7 @@ final class CalculateTests: XCTestCase {
 		}
 	}
 
-	func testCalculate_ImpossibleRoute_ThrowsNoRouteError() async throws {
+	func testCalculateImpossibleRouteThrowsNoRouteError() async throws {
 		// Given
 		let toursprung = Toursprung()
 
