@@ -8,6 +8,7 @@
 
 import CoreLocation
 import Foundation
+import MapLibreSwiftUI
 import OSLog
 import SwiftUI
 import WebKit
@@ -50,22 +51,19 @@ struct StreetViewWebView: UIViewRepresentable {
 	// MARK: - Properties
 
 	@ObservedObject var viewModel: MotionViewModel
-
-	// MARK: - Lifecycle
-
-	init(viewModel: MotionViewModel) {
-		self.viewModel = viewModel
-	}
+	@Binding var camera: MapViewCamera
 
 	// MARK: - Internal
 
 	class Coordinator: NSObject, WKNavigationDelegate, WKScriptMessageHandler {
 		let viewModel: MotionViewModel
+		@Binding var camera: MapViewCamera
 
 		// MARK: - Lifecycle
 
-		init(viewModel: MotionViewModel) {
+		init(viewModel: MotionViewModel, camera: Binding<MapViewCamera>) {
 			self.viewModel = viewModel
+			self._camera = camera
 		}
 
 		// MARK: - Internal
@@ -78,6 +76,7 @@ struct StreetViewWebView: UIViewRepresentable {
 					Logger.streetView.notice("scriptHandler update panoramaInfo")
 					self.viewModel.position.heading = panoramaInfo.heading
 					self.viewModel.coordinate = panoramaInfo.coordinate
+					self.camera = .center(panoramaInfo.coordinate, zoom: 14)
 				}
 			} catch {
 				Logger.streetView.error("Error decoding JSON: \(error)")
@@ -101,7 +100,7 @@ struct StreetViewWebView: UIViewRepresentable {
 	}
 
 	func makeCoordinator() -> Coordinator {
-		Coordinator(viewModel: self.viewModel)
+		Coordinator(viewModel: self.viewModel, camera: self.$camera)
 	}
 
 	func makeUIView(context: Context) -> WKWebView {
@@ -115,18 +114,21 @@ struct StreetViewWebView: UIViewRepresentable {
 		webView.backgroundColor = .clear
 
 		let coordinate = self.viewModel.coordinate!
-//		let url = Bundle.main.url(forResource: "streetview", withExtension: "html")!.appending(queryItems: [
-//			URLQueryItem(name: "long", value: String(coordinate.longitude)),
-//			URLQueryItem(name: "lat", value: String(coordinate.latitude))
-//		])
+		let queryItems = [
+			URLQueryItem(name: "long", value: String(coordinate.longitude)),
+			URLQueryItem(name: "lat", value: String(coordinate.latitude))
+		]
+
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "iabderrahmane.github.io"
-		let url = components.url!
+		components.queryItems = queryItems
 
+//		let url = Bundle.main.url(forResource: "streetview", withExtension: "html")!.appending(queryItems: queryItems)
 //		webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
 //		Logger.streetView.notice("loading: \(url)")
 
+		let url = components.url!
 		let request = URLRequest(url: url)
 		webView.load(request)
 		Logger.streetView.notice("loading: \(url)")
@@ -134,7 +136,7 @@ struct StreetViewWebView: UIViewRepresentable {
 		return webView
 	}
 
-	func updateUIView(_: WKWebView, context _: Context) {
+	func updateUIView(_ webView: WKWebView, context _: Context) {
 		guard self.viewModel.pageLoaded else {
 			// this could lead to a situation where a user moves the pin while the screen is still loading
 			return
@@ -144,20 +146,24 @@ struct StreetViewWebView: UIViewRepresentable {
 			return
 		}
 
-//		Task {
-//			do {
-//				let info: PanoramaInfo = try await webView.runJavaScriptFunction("getPanoramaInfo();")
-//				Logger.streetView.notice("info: \(String(describing: info))")
-//				guard info.coordinate.distance(from: coordinate) < 1 else { return }
-//
-//				let jsWriteFunction = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
-		////				Logger.streetView.notice("javascript call: \(jsWriteFunction)")
-//				let result = try await webView.runJavaScript(jsWriteFunction)
-		////				Logger.streetView.notice("successfully called javascript: \(jsWriteFunction) returning: \(String(describing: result))")
-//			} catch {
-//				Logger.streetView.error("Error while evaluating js function: \(error)")
-//			}
-//		}
+		Task {
+			do {
+				let info: PanoramaInfo = try await webView.runJavaScriptFunction("getPanoramaInfo();")
+				Logger.streetView.notice("info: \(String(describing: info))")
+
+				// If distance between target and actual location is too big, reload
+				// This will reset heading to zero.
+				// Might need to extend the WebView to take a heading parameter on launch
+				guard info.coordinate.distance(from: coordinate) > 1 else { return }
+
+				let jsWriteFunction = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
+				Logger.streetView.notice("javascript call: \(jsWriteFunction)")
+				let result = try await webView.runJavaScript(jsWriteFunction)
+				Logger.streetView.notice("successfully called javascript: \(jsWriteFunction) returning: \(String(describing: result))")
+			} catch {
+				Logger.streetView.error("Error while evaluating js function: \(error)")
+			}
+		}
 	}
 }
 

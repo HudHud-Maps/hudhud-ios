@@ -117,7 +117,7 @@ struct ContentView: View {
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
 			if case .enabled = self.mapStore.streetView {
-				StreetView(viewModel: self.motionViewModel)
+				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
 				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 					.presentationBackground(.thinMaterial)
