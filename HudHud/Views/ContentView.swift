@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -39,6 +40,32 @@ struct ContentView: View {
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+			// Display preview data as a polyline on the map
+			if let route = self.mapStore.route {
+				let polylineSource = ShapeSource(identifier: "pedestrian-polyline") {
+					MLNPolylineFeature(coordinates: route.coordinates ?? [])
+				}
+
+				// Add a polyline casing for a stroke effect
+				LineStyleLayer(identifier: "route-line-casing", source: polylineSource)
+					.lineCap(.round)
+					.lineJoin(.round)
+					.lineColor(.white)
+					.lineWidth(interpolatedBy: .zoomLevel,
+							   curveType: .linear,
+							   parameters: NSExpression(forConstantValue: 1.5),
+							   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+				// Add an inner (blue) polyline
+				LineStyleLayer(identifier: "route-line-inner", source: polylineSource)
+					.lineCap(.round)
+					.lineJoin(.round)
+					.lineColor(.systemBlue)
+					.lineWidth(interpolatedBy: .zoomLevel,
+							   curveType: .linear,
+							   parameters: NSExpression(forConstantValue: 1.5),
+							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+			}
 			let pointSource = self.mapStore.points
 
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
@@ -81,6 +108,13 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
+		.onChange(of: self.mapStore.route) { newRoute in
+			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty {
+				if let camera = CameraState.boundingBox(from: coordinates) {
+					self.mapStore.camera = camera
+				}
+			}
+		}
 		.task {
 			for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
@@ -119,55 +153,59 @@ struct ContentView: View {
 			if case .enabled = self.mapStore.streetView {
 				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
-				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
-					.presentationBackground(.thinMaterial)
+				if self.mapStore.route != nil {
+					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+						.presentationBackground(.thinMaterial)
+				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			HStack(alignment: .bottom) {
-				MapButtonsView(mapButtonsData: [
-					MapButtonData(sfSymbol: .icon(.map)) {
-						self.showMapLayer.toggle()
-					},
-					MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-						switch self.searchViewStore.mode {
-						case let .live(provider):
-							self.searchViewStore.mode = .live(provider: provider.next())
-							Logger.searchView.info("Map Mode live")
-						case .preview:
-							self.searchViewStore.mode = .live(provider: .toursprung)
-							Logger.searchView.info("Map Mode toursprung")
-						}
-					},
-					MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
-						if self.mapStore.streetView == .disabled {
-							Task {
-								self.mapStore.streetView = .requestedCurrentLocation
-								let location = try await Location.forSingleRequestUsage.requestLocation()
-								guard let location = location.location else { return }
-
-								print("set new streetViewPoint")
-								self.motionViewModel.coordinate = location.coordinate
-								if location.course > 0 {
-									self.motionViewModel.position.heading = location.course
-								}
-								self.mapStore.streetView = .enabled
+			if self.mapStore.route == nil {
+				HStack(alignment: .bottom) {
+					MapButtonsView(mapButtonsData: [
+						MapButtonData(sfSymbol: .icon(.map)) {
+							self.showMapLayer.toggle()
+						},
+						MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+							switch self.searchViewStore.mode {
+							case let .live(provider):
+								self.searchViewStore.mode = .live(provider: provider.next())
+								Logger.searchView.info("Map Mode live")
+							case .preview:
+								self.searchViewStore.mode = .live(provider: .toursprung)
+								Logger.searchView.info("Map Mode toursprung")
 							}
-						} else {
-							self.mapStore.streetView = .disabled
+						},
+						MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
+							if self.mapStore.streetView == .disabled {
+								Task {
+									self.mapStore.streetView = .requestedCurrentLocation
+									let location = try await Location.forSingleRequestUsage.requestLocation()
+									guard let location = location.location else { return }
+
+									print("set new streetViewPoint")
+									self.motionViewModel.coordinate = location.coordinate
+									if location.course > 0 {
+										self.motionViewModel.position.heading = location.course
+									}
+									self.mapStore.streetView = .enabled
+								}
+							} else {
+								self.mapStore.streetView = .disabled
+							}
+						},
+						MapButtonData(sfSymbol: .icon(.cube)) {
+							print("3D Map toggle tapped")
 						}
-					},
-					MapButtonData(sfSymbol: .icon(.cube)) {
-						print("3D Map toggle tapped")
+					])
+					Spacer()
+					VStack(alignment: .trailing) {
+						CurrentLocationButton(camera: self.$mapStore.camera)
 					}
-				])
-				Spacer()
-				VStack(alignment: .trailing) {
-					CurrentLocationButton(camera: self.$mapStore.camera)
 				}
+				.opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
+				.padding(.horizontal)
 			}
-			.opacity(self.sheetSize.height > 500 ? 0 : 1)
-			.padding(.horizontal)
 		}
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
 		.sheet(isPresented: self.$mapStore.searchShown) {
@@ -192,8 +230,23 @@ struct ContentView: View {
 						self.sheetSize = value
 					}
 				}
+				.sheet(isPresented: Binding<Bool>(
+					get: { self.mapStore.route != nil },
+					set: { _ in }
+				)) {
+					NavigationSheetView(mapStore: self.mapStore)
+						.presentationCornerRadius(21)
+						.presentationDetents([.height(150)])
+						.presentationBackgroundInteraction(
+							.enabled(upThrough: .height(150))
+						)
+						.ignoresSafeArea()
+						.interactiveDismissDisabled()
+						.presentationCompactAdaptation(.sheet)
+				}
 				.sheet(isPresented: self.$showMapLayer) {
-					VStack(alignment: .center, spacing: 30) {
+					VStack(alignment: .center, spacing: 25) {
+						Spacer()
 						HStack(alignment: .center) {
 							Spacer()
 							Text("Layers")
@@ -213,6 +266,7 @@ struct ContentView: View {
 					}
 				}
 		}
+
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
 			self.notificationQueue.removeFirst()
@@ -231,6 +285,7 @@ struct ContentView: View {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
+		self.mapStore.route = searchStore.mapStore.route
 	}
 }
 

@@ -8,6 +8,7 @@
 
 import CoreLocation
 import Foundation
+import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -29,6 +30,7 @@ final class MapStore: ObservableObject {
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
 	@Published var streetView: StreetViewOption = .disabled
+	@Published var route: Route?
 
 	@Published var selectedItem: POI? {
 		didSet {
