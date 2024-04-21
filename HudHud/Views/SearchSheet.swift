@@ -28,7 +28,6 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
-	@State private var route: Route?
 
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
@@ -137,7 +136,8 @@ struct SearchSheet: View {
 		} content: { item in
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
-				self.route = routes.routes.first
+				self.mapStore.route = routes.routes.first
+				self.mapStore.mapItems = [Row(toursprung: item)]
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			}
@@ -147,10 +147,7 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
-			.fullScreenCover(item: self.$route) { route in
-				let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-				NavigationView(route: route, styleURL: styleURL)
-			}
+
 			.onAppear {
 				// Store POI
 				self.storeRecentPOI(poi: item)
