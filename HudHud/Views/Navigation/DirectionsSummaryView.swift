@@ -23,12 +23,10 @@ struct DirectionsSummaryView: View {
 					.font(.system(.largeTitle))
 					.fontWeight(.semibold)
 					.lineLimit(1)
-					.minimumScaleFactor(0.5)
 				// distance • type of route
 				Text("\(self.formatDistance(distance: self.directionPreviewData.distance)) • \(self.directionPreviewData.typeOfRoute)")
 					.font(.system(.body))
 					.lineLimit(1)
-					.minimumScaleFactor(0.5)
 			}
 			Spacer()
 			// Go button
@@ -39,7 +37,6 @@ struct DirectionsSummaryView: View {
 					.font(.system(.title2))
 					.bold()
 					.lineLimit(1)
-					.minimumScaleFactor(0.5)
 					.foregroundStyle(Color.white)
 					.padding()
 					.padding(.horizontal)

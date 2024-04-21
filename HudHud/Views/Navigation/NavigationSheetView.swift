@@ -45,7 +45,8 @@ struct NavigationSheetView: View {
 				.buttonStyle(PlainButtonStyle())
 				.accessibilityLabel(Text("Close"))
 			}
-			if let route = self.mapStore.route {
+
+			if let route = self.mapStore.route, let items = self.mapStore.destination, let source = self.mapStore.route?.legs.first?.source {
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -55,6 +56,7 @@ struct NavigationSheetView: View {
 						self.goPressed.toggle()
 					}
 				)
+				ABCRouteConfigurationView(routeConfigurations: [.myLocation(source), .poi(items)], mapStore: self.mapStore)
 			}
 		}
 		.padding()

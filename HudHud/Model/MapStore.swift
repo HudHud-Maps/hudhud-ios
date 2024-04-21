@@ -31,6 +31,7 @@ final class MapStore: ObservableObject {
 	@Published var searchShown: Bool = true
 	@Published var streetView: StreetViewOption = .disabled
 	@Published var route: Route?
+	@Published var destination: POI?
 
 	@Published var selectedItem: POI? {
 		didSet {

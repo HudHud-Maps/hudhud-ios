@@ -128,6 +128,7 @@ struct SearchSheet: View {
 				Logger.searchView.info("Start item \(item)")
 				self.mapStore.route = routes.routes.first
 				self.mapStore.mapItems = [Row(toursprung: item)]
+				self.mapStore.destination = item
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			}

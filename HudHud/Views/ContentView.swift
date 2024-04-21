@@ -164,14 +164,14 @@ struct ContentView: View {
 						self.mapStore.streetView = .disabled
 					}
 			} else {
-				if self.mapStore.route != nil {
+				if self.mapStore.route == nil {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 						.presentationBackground(.thinMaterial)
 				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			if self.mapStore.route != nil {
+			if self.mapStore.route == nil {
 				HStack(alignment: .bottom) {
 					MapButtonsView(mapButtonsData: [
 						MapButtonData(sfSymbol: .icon(.map)) {
@@ -244,9 +244,9 @@ struct ContentView: View {
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.height(150)])
+						.presentationDetents([.height(150), .medium, .large])
 						.presentationBackgroundInteraction(
-							.enabled(upThrough: .height(150))
+							.enabled(upThrough: .medium)
 						)
 						.ignoresSafeArea()
 						.interactiveDismissDisabled()
