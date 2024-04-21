@@ -37,12 +37,21 @@
       }
     },
     {
+      "identity" : "maplibre-swiftui-dsl-playground",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground",
+      "state" : {
+        "branch" : "main",
+        "revision" : "317024999056357506cf5c1ac91575cb7e1209fd"
+      }
+    },
+    {
       "identity" : "mockable",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "01632d5cfa6b048be4177884771fac1bf04f8c2e",
-        "version" : "0.0.7"
+        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
+        "version" : "0.0.3"
       }
     },
     {
@@ -79,15 +88,6 @@
       "state" : {
         "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
         "version" : "3.0.1"
-      }
-    },
-    {
-      "identity" : "swift-snapshot-testing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
-      "state" : {
-        "revision" : "625ccca8570773dd84a34ee51a81aa2bc5a4f97a",
-        "version" : "1.16.0"
       }
     },
     {

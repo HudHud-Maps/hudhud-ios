@@ -72,22 +72,27 @@ struct StreetViewWebView: UIViewRepresentable {
 			do {
 				let panoramaInfo = try DictionaryDecoder().decode(PanoramaInfo.self, from: message.body)
 
-				if self.viewModel.position.heading != panoramaInfo.heading {
-					Logger.streetView.notice("scriptHandler update panoramaInfo")
-					self.viewModel.position.heading = panoramaInfo.heading
-					self.viewModel.coordinate = panoramaInfo.coordinate
-					withAnimation {
-						self.camera = .center(panoramaInfo.coordinate, zoom: 14)
-					}
-				}
+				self.update(for: panoramaInfo)
 			} catch {
 				Logger.streetView.error("Error decoding JSON: \(error)")
 			}
 		}
 
-		func webView(_: WKWebView, didFinish _: WKNavigation) {
+		func webView(_ webView: WKWebView, didFinish _: WKNavigation) {
 			Logger.streetView.notice("WebView finished loading")
 			self.viewModel.pageLoaded = true
+			Task {
+				do {
+					let info: PanoramaInfo = try await webView.getPanoramaInfo()
+					Logger.streetView.notice("didFinish panorama info: \(String(describing: info))")
+
+					await MainActor.run {
+						self.update(for: info)
+					}
+				} catch {
+					Logger.streetView.error("didFinish Error while evaluating js function: \(error)")
+				}
+			}
 		}
 
 		func webView(_: WKWebView, didStartProvisionalNavigation _: WKNavigation) {
@@ -98,6 +103,19 @@ struct StreetViewWebView: UIViewRepresentable {
 		func webView(_: WKWebView, didFail _: WKNavigation!, withError error: any Error) {
 			// what should we do here?
 			Logger.streetView.notice("WebView failed: \(error)")
+		}
+
+		// MARK: - Fileprivate
+
+		fileprivate func update(for panoramaInfo: PanoramaInfo) {
+			if self.viewModel.position.heading != panoramaInfo.heading || (self.viewModel.coordinate != nil && panoramaInfo.coordinate.distance(from: self.viewModel.coordinate!) > 1) { // swiftlint:disable:this force_unwrapping
+				Logger.streetView.notice("Received JS Coordinate: \(panoramaInfo.coordinate.latitude), \(panoramaInfo.coordinate.longitude)")
+				self.viewModel.position.heading = panoramaInfo.heading
+				self.viewModel.coordinate = panoramaInfo.coordinate
+				withAnimation {
+					self.camera = .center(panoramaInfo.coordinate, zoom: 14)
+				}
+			}
 		}
 	}
 
@@ -155,7 +173,7 @@ struct StreetViewWebView: UIViewRepresentable {
 		Task {
 			do {
 				let info: PanoramaInfo = try await webView.runJavaScriptFunction("getPanoramaInfo();")
-				Logger.streetView.notice("info: \(String(describing: info))")
+				Logger.streetView.notice("UpdateUI location of webview: \(String(describing: info))")
 
 				// If distance between target and actual location is too big, reload
 				// This will reset heading to zero.
@@ -163,11 +181,10 @@ struct StreetViewWebView: UIViewRepresentable {
 				guard info.coordinate.distance(from: coordinate) > 1 else { return }
 
 				let jsWriteFunction = "changeLocation({long: \(coordinate.longitude), lat: \(coordinate.latitude)});"
-				Logger.streetView.notice("javascript call: \(jsWriteFunction)")
 				let result = try await webView.runJavaScript(jsWriteFunction)
-				Logger.streetView.notice("successfully called javascript: \(jsWriteFunction) returning: \(String(describing: result))")
+				Logger.streetView.notice("UpdateUI JS Success: \(jsWriteFunction) returning: \(String(describing: result))")
 			} catch {
-				Logger.streetView.error("Error while evaluating js function: \(error)")
+				Logger.streetView.error("UpdateUI Error while evaluating js function: \(error)")
 			}
 		}
 	}
@@ -187,6 +204,31 @@ extension WKWebView {
 					if let object {
 						do {
 							let info = try DictionaryDecoder().decode(T.self, from: object)
+							continuation.resume(returning: info)
+						} catch {
+							continuation.resume(throwing: error)
+						}
+						return
+					}
+
+					assertionFailure("illegal javascript callback, object & error nil")
+				}
+			}
+		}
+	}
+
+	func getPanoramaInfo() async throws -> PanoramaInfo {
+		return try await withCheckedThrowingContinuation { continuation in
+			DispatchQueue.main.async {
+				self.evaluateJavaScript("getPanoramaInfo();") { object, error in
+					if let error {
+						continuation.resume(throwing: error)
+						return
+					}
+
+					if let object {
+						do {
+							let info = try DictionaryDecoder().decode(PanoramaInfo.self, from: object)
 							continuation.resume(returning: info)
 						} catch {
 							continuation.resume(throwing: error)
