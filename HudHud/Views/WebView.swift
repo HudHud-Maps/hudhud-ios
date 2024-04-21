@@ -137,25 +137,31 @@ struct StreetViewWebView: UIViewRepresentable {
 		webView.navigationDelegate = context.coordinator
 		webView.backgroundColor = .clear
 
-		let coordinate = self.viewModel.coordinate!
-		let queryItems = [
-			URLQueryItem(name: "long", value: String(coordinate.longitude)),
-			URLQueryItem(name: "lat", value: String(coordinate.latitude))
-		]
-
 		var components = URLComponents()
 		components.scheme = "https"
 		components.host = "iabderrahmane.github.io"
-		components.queryItems = queryItems
+
+		if let coordinate = self.viewModel.coordinate {
+			let queryItems = [
+				URLQueryItem(name: "long", value: String(coordinate.longitude)),
+				URLQueryItem(name: "lat", value: String(coordinate.latitude))
+			]
+			components.queryItems = queryItems
+		} else {
+			assertionFailure("Trying to initialize a street webview without having coordinates")
+		}
 
 //		let url = Bundle.main.url(forResource: "streetview", withExtension: "html")!.appending(queryItems: queryItems)
 //		webView.loadFileURL(url, allowingReadAccessTo: url.deletingLastPathComponent())
 //		Logger.streetView.notice("loading: \(url)")
 
-		let url = components.url!
-		let request = URLRequest(url: url)
-		webView.load(request)
-		Logger.streetView.notice("loading: \(url)")
+		if let url = components.url {
+			let request = URLRequest(url: url)
+			webView.load(request)
+			Logger.streetView.notice("loading: \(url)")
+		} else {
+			assertionFailure("Unable to generate URL for StreetView")
+		}
 
 		return webView
 	}
