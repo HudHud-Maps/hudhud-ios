@@ -30,7 +30,7 @@ public enum PredictionResult: Hashable {
 
 // MARK: - POI
 
-public class POI: Hashable, Identifiable {
+public class POI: Codable, Hashable, Identifiable {
 
 	public var id: String
 	public var title: String
@@ -38,6 +38,12 @@ public class POI: Hashable, Identifiable {
 	public var locationCoordinate: CLLocationCoordinate2D?
 	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
+
+	// MARK: - Codable Protocol
+
+	enum CodingKeys: String, CodingKey {
+		case id, title, subtitle, locationCoordinate, type
+	}
 
 	// MARK: - Lifecycle
 
@@ -49,10 +55,28 @@ public class POI: Hashable, Identifiable {
 		self.type = type
 	}
 
+	public required init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.id = try container.decode(String.self, forKey: .id)
+		self.title = try container.decode(String.self, forKey: .title)
+		self.subtitle = try container.decode(String.self, forKey: .subtitle)
+		self.locationCoordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .locationCoordinate)
+		self.type = try container.decode(String.self, forKey: .type)
+	}
+
 	// MARK: - Public
 
 	public static func == (lhs: POI, rhs: POI) -> Bool {
 		return lhs.title == rhs.title && lhs.subtitle == rhs.subtitle
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(self.id, forKey: .id)
+		try container.encode(self.title, forKey: .title)
+		try container.encode(self.subtitle, forKey: .subtitle)
+		try container.encode(self.locationCoordinate, forKey: .locationCoordinate)
+		try container.encode(self.type, forKey: .type)
 	}
 
 	public func hash(into hasher: inout Hasher) {
@@ -207,4 +231,26 @@ public extension POI {
 								 subtitle: "Al-Narjs - Riyadh",
 								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
 								 type: "supermarket")
+}
+
+// MARK: - CLLocationCoordinate2D + Codable
+
+extension CLLocationCoordinate2D: Codable {
+	public enum CodingKeys: String, CodingKey {
+		case latitude
+		case longitude
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(latitude, forKey: .latitude)
+		try container.encode(longitude, forKey: .longitude)
+	}
+
+	public init(from decoder: Decoder) throws {
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		self.init()
+		latitude = try values.decode(Double.self, forKey: .latitude)
+		longitude = try values.decode(Double.self, forKey: .longitude)
+	}
 }
