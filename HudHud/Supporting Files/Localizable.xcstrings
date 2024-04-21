@@ -1,0 +1,238 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "%@" : {
+      "comment" : "duration"
+    },
+    "%@ • %@" : {
+      "comment" : "distance • type of route",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ • %2$@"
+          }
+        }
+      }
+    },
+    "%@ • %@ • %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ • %2$@ • %3$@"
+          }
+        }
+      }
+    },
+    "%lld" : {
+
+    },
+    "Add Location" : {
+      "comment" : "To Add a new stop",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة موقع"
+          }
+        }
+      }
+    },
+    "Bad Traffic Data" : {
+      "comment" : "for traffic chart"
+    },
+    "bicycle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دراجة"
+          }
+        }
+      }
+    },
+    "bus" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باص"
+          }
+        }
+      }
+    },
+    "Call" : {
+      "comment" : "on poi deatil sheet to call the poi",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مكالمة"
+          }
+        }
+      }
+    },
+    "car" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيارة"
+          }
+        }
+      }
+    },
+    "Close" : {
+      "comment" : "accesibility label instead of x",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إغلاق"
+          }
+        }
+      }
+    },
+    "Direction" : {
+      "comment" : "navigation sheet header",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إتجاهات"
+          }
+        }
+      }
+    },
+    "Fastest" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسرع"
+          }
+        }
+      }
+    },
+    "Go" : {
+      "comment" : "start navigation",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدء"
+          }
+        }
+      }
+    },
+    "Heading: %@" : {
+      "comment" : "street view"
+    },
+    "Hours Range" : {
+
+    },
+    "Layers" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "طبقات"
+          }
+        }
+      }
+    },
+    "Map Details" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تفاصيل الخريطة"
+          }
+        }
+      }
+    },
+    "Map Type" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نوع الخريطة"
+          }
+        }
+      }
+    },
+    "metro" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قطار"
+          }
+        }
+      }
+    },
+    "More" : {
+      "comment" : "on poi detail sheet to see more info",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أكثر"
+          }
+        }
+      }
+    },
+    "MTK" : {
+
+    },
+    "Occupancy Range" : {
+
+    },
+    "Pitch: %@" : {
+      "comment" : "street view"
+    },
+    "Search" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بحث"
+          }
+        }
+      }
+    },
+    "Start" : {
+      "comment" : "get the navigation route",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إتجاهات"
+          }
+        }
+      }
+    },
+    "walk" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشي"
+          }
+        }
+      }
+    },
+    "Web" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}

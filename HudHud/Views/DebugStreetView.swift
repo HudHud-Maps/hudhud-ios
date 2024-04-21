@@ -18,10 +18,10 @@ struct DebugStreetView: View {
 	var body: some View {
 		ViewThatFits {
 			VStack(alignment: .trailing) {
-				Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))")
+				Text("Heading: \(String(format: "%5.1f°", self.viewModel.position.heading))", comment: "street view")
 					.monospaced()
 					.animation(.none)
-				Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))")
+				Text("Pitch: \(String(format: "%5.1f ", self.viewModel.position.pitch))", comment: "street view")
 					.monospaced()
 					.animation(.none)
 			}

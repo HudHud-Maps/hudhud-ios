@@ -40,7 +40,11 @@ struct TrafficChartView: View {
 			}
 			.chartYScale(domain: 0 ... 1)
 		} else {
-			Label("Bad Traffic Data", systemSymbol: .exclamationmarkTriangle)
+			Label {
+				Text("Bad Traffic Data", comment: "for traffic chart")
+			} icon: {
+				Image(systemSymbol: .exclamationmarkTriangle)
+			}
 		}
 	}
 }
