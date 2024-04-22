@@ -208,7 +208,7 @@ struct ContentView: View {
 			}
 		}
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
-		.sheet(isPresented: self.$mapStore.searchShown) {
+		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
 				.frame(minWidth: 320)
