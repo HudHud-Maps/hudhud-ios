@@ -29,6 +29,7 @@ struct NavigationSheetView: View {
 				Spacer()
 				Button(action: {
 					self.mapStore.route = nil
+					self.mapStore.waypoints = nil
 				}, label: {
 					ZStack {
 						Circle()
@@ -46,7 +47,7 @@ struct NavigationSheetView: View {
 				.accessibilityLabel(Text("Close"))
 			}
 
-			if let route = self.mapStore.route, let items = self.mapStore.destination, let source = self.mapStore.route?.legs.first?.source {
+			if let route = self.mapStore.route, let waypoints = self.mapStore.waypoints {
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -56,7 +57,7 @@ struct NavigationSheetView: View {
 						self.goPressed.toggle()
 					}
 				)
-				ABCRouteConfigurationView(routeConfigurations: [.myLocation(source), .poi(items)], mapStore: self.mapStore)
+				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore)
 			}
 		}
 		.padding()

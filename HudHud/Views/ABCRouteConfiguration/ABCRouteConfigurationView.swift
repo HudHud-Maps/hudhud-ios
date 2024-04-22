@@ -114,7 +114,7 @@ struct ABCRouteConfigurationView: View {
 				self.routes = results
 				self.mapStore.route = self.routes?.routes.first
 			} catch {
-				Logger.routeChange.error("Updating routes: \(error)")
+				Logger.routing.error("Updating routes: \(error)")
 			}
 		}
 	}

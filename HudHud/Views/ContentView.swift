@@ -239,7 +239,7 @@ struct ContentView: View {
 					}
 				}
 				.sheet(isPresented: Binding<Bool>(
-					get: { self.mapStore.route != nil },
+					get: { self.mapStore.route != nil && self.mapStore.waypoints != nil },
 					set: { _ in }
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
