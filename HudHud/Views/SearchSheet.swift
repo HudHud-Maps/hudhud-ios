@@ -28,7 +28,6 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
-
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
 	var body: some View {
@@ -147,7 +146,6 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
-
 			.onAppear {
 				// Store POI
 				self.storeRecentPOI(poi: item)

@@ -13,7 +13,8 @@ extension Logger {
 	private static var subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping
 
 	static let searchView = Logger(subsystem: subsystem, category: "SearchView")
-	static let POIData = Logger(subsystem: subsystem, category: "POIData")
+	static let poiData = Logger(subsystem: subsystem, category: "POIData")
 	static let toursprung = Logger(subsystem: subsystem, category: "Toursprung")
 	static let mapInteraction = Logger(subsystem: subsystem, category: "MapInteraction")
+	static let streetView = Logger(subsystem: subsystem, category: "StreetView")
 }
