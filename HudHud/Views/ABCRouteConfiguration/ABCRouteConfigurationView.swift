@@ -94,6 +94,7 @@ struct ABCRouteConfigurationView: View {
 						}
 					}
 				}
+				self.mapStore.waypoints = newRoute
 				self.updateRoutes(wayPoints: waypoints)
 			}
 		}

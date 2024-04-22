@@ -65,6 +65,18 @@ struct ContentView: View {
 							   curveType: .linear,
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+
+				let routePoints = self.mapStore.routePoints
+
+				CircleStyleLayer(identifier: "simple-circles-route", source: routePoints)
+					.radius(16)
+					.color(.systemRed)
+					.strokeWidth(2)
+					.strokeColor(.white)
+				SymbolStyleLayer(identifier: "simple-symbols-route", source: routePoints)
+					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(.white)
+					.iconRotation(45)
 			}
 			let pointSource = self.mapStore.points
 
