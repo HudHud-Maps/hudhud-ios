@@ -28,6 +28,16 @@
     "%lld" : {
 
     },
+    "Add" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة"
+          }
+        }
+      }
+    },
     "Add Location" : {
       "comment" : "To Add a new stop",
       "localizations" : {
@@ -115,6 +125,16 @@
         }
       }
     },
+    "Favorites" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المفضلة"
+          }
+        }
+      }
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -128,6 +148,16 @@
     },
     "Heading: %@" : {
       "comment" : "street view"
+    },
+    "Home" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المنزل"
+          }
+        }
+      }
     },
     "Hours Range" : {
 
@@ -192,6 +222,26 @@
     "Pitch: %@" : {
       "comment" : "street view"
     },
+    "Recents" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "شوهد مؤخرًا"
+          }
+        }
+      }
+    },
+    "School" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المدرسة"
+          }
+        }
+      }
+    },
     "Search" : {
       "localizations" : {
         "ar" : {
@@ -229,6 +279,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "الموقع"
+          }
+        }
+      }
+    },
+    "Work" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العمل"
           }
         }
       }
