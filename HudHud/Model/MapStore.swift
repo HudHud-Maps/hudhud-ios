@@ -64,21 +64,23 @@ final class MapStore: ObservableObject {
 	}
 
 	var routePoints: ShapeSource {
-		return ShapeSource(identifier: "routePoints") {
-			if let waypoints = self.waypoints {
-				for item in waypoints {
-					switch item {
-					case .myLocation:
-						print("myLocation")
-					case let .poi(poi):
-						if let poiCoordinate = poi.locationCoordinate {
-							MLNPointFeature(coordinate: poiCoordinate) { feature in
-								feature.attributes["poi_id"] = poi.id
-							}
-						}
+		var features: [MLNPointFeature] = []
+		if let waypoints = self.waypoints {
+			for item in waypoints {
+				switch item {
+				case .myLocation:
+					continue
+				case let .poi(poi):
+					if let poiCoordinate = poi.locationCoordinate {
+						let feature = MLNPointFeature(coordinate: poiCoordinate)
+						feature.attributes["poi_id"] = poi.id
+						features.append(feature)
 					}
 				}
 			}
+		}
+		return ShapeSource(identifier: "routePoints") {
+			features
 		}
 	}
 
