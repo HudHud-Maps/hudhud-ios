@@ -28,7 +28,7 @@ struct ProviderButton: View {
 			case .live(.apple):
 				Image(systemSymbol: .appleLogo)
 			case .live(.toursprung):
-				Text("MTK")
+				Text(String("MTK"))
 			case .preview:
 				Image(systemSymbol: .pCircle)
 			}

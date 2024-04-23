@@ -73,7 +73,7 @@
       }
     },
     "Call" : {
-      "comment" : "on poi deatil sheet to call the poi",
+      "comment" : "on poi detail sheet to call the poi",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -160,7 +160,7 @@
       }
     },
     "Hours Range" : {
-
+      "comment" : "traffic chart view, Hours range x axes"
     },
     "Layers" : {
       "localizations" : {
@@ -213,11 +213,8 @@
         }
       }
     },
-    "MTK" : {
-
-    },
     "Occupancy Range" : {
-
+      "comment" : "traffic chart view, Occupancy Range y axes"
     },
     "Pitch: %@" : {
       "comment" : "street view"

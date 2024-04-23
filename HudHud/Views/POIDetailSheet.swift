@@ -84,7 +84,7 @@ struct POIDetailSheet: View {
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .phoneFill)
-							Text("Call", comment: "on poi deatil sheet to call the poi")
+							Text("Call", comment: "on poi detail sheet to call the poi")
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
