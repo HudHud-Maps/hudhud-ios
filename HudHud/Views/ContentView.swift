@@ -210,7 +210,7 @@ struct ContentView: View {
 		}
 
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
-		.backport.customSheet(isPresented: self.$mapStore.searchShown, sheetSize: self.sheetSize, offsetY: self.offsetY) {
+		.backport.customSheet(isPresented: self.$mapStore.searchShown) {
 			//		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -233,6 +233,16 @@ struct ContentView: View {
 						self.sheetSize = value
 					}
 				}
+				.overlay {
+					GeometryReader { geometry in
+						Color.clear.preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+					}
+				}
+				.onPreferenceChange(HeightPreferenceKey.self) { value in
+					withAnimation(.easeOut) {
+						self.sheetSize.height = value
+					}
+				}
 		}
 		.offset(y: self.sheetSize.height + self.offsetY)
 		.gesture(
@@ -252,11 +262,6 @@ struct ContentView: View {
 						self.sheetSize = .zero
 					}
 				})
-		.overlay {
-			GeometryReader { geometry in
-				Color.clear.preference(key: HeightPreferenceKey.self, value: geometry.size.height)
-			}
-		}
 
 		.sheet(isPresented: Binding<Bool>(
 			get: { self.mapStore.route != nil },

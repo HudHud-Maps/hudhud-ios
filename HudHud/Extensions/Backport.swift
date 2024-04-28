@@ -52,11 +52,8 @@ extension Backport where Content: View {
 	}
 
 	@ViewBuilder
-	func customSheet(isPresented: Binding<Bool>, sheetSize: CGSize, offsetY: CGFloat, onDismiss: (() -> Void)? = nil, @ViewBuilder content subContent: @escaping () -> some View) -> some View where Content: View {
+	func customSheet(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content subContent: @escaping () -> some View) -> some View where Content: View {
 		if UIDevice.current.userInterfaceIdiom == .pad {
-			@State var sheetSize: CGSize = .zero
-
-			@State var offsetY: CGFloat = 0
 			self.content.overlay(alignment: .bottomLeading) {
 				VStack(spacing: 0) {
 					subContent()
