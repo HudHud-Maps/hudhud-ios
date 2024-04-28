@@ -37,6 +37,7 @@ struct ContentView: View {
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
+	@State var offsetY: CGFloat = 0
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -207,8 +208,10 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
+
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
-		.backport.sheet(isPresented: self.$mapStore.searchShown) {
+		.backport.customSheet(isPresented: self.$mapStore.searchShown, sheetSize: self.sheetSize, offsetY: self.offsetY) {
+			//		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
 				.frame(minWidth: 320)
@@ -230,41 +233,66 @@ struct ContentView: View {
 						self.sheetSize = value
 					}
 				}
-				.sheet(isPresented: Binding<Bool>(
-					get: { self.mapStore.route != nil },
-					set: { _ in }
-				)) {
-					NavigationSheetView(mapStore: self.mapStore)
-						.presentationCornerRadius(21)
-						.presentationDetents([.height(150)])
-						.presentationBackgroundInteraction(
-							.enabled(upThrough: .height(150))
-						)
-						.ignoresSafeArea()
-						.interactiveDismissDisabled()
-						.presentationCompactAdaptation(.sheet)
+		}
+		.offset(y: self.sheetSize.height + self.offsetY)
+		.gesture(
+			DragGesture()
+				.onChanged { value in
+					self.sheetSize = value.translation
 				}
-				.sheet(isPresented: self.$showMapLayer) {
-					VStack(alignment: .center, spacing: 25) {
-						Spacer()
-						HStack(alignment: .center) {
-							Spacer()
-							Text("Layers")
-								.foregroundStyle(.primary)
-							Spacer()
-							Button {
-								self.showMapLayer.toggle()
-							} label: {
-								Image(systemSymbol: .xmark)
-									.foregroundColor(.secondary)
-							}
+				.onEnded { _ in
+					withAnimation(.spring()) {
+						let snap = self.sheetSize.height + self.offsetY
+						let quarter = HeightPreferenceKey.defaultValue / 4
+						if snap > quarter {
+							self.offsetY = quarter * 3 + 100
+						} else {
+							self.offsetY = 0
 						}
-						.padding(.horizontal, 30)
-						MainLayersView(mapLayerData: MapLayersData.getLayers())
-							.presentationCornerRadius(21)
-							.presentationDetents([.medium])
+						self.sheetSize = .zero
+					}
+				})
+		.overlay {
+			GeometryReader { geometry in
+				Color.clear.preference(key: HeightPreferenceKey.self, value: geometry.size.height)
+			}
+		}
+
+		.sheet(isPresented: Binding<Bool>(
+			get: { self.mapStore.route != nil },
+			set: { _ in }
+		)) {
+			NavigationSheetView(mapStore: self.mapStore)
+				.presentationCornerRadius(21)
+				.presentationDetents([.height(150)])
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .height(150))
+				)
+				.ignoresSafeArea()
+				.interactiveDismissDisabled()
+				.presentationCompactAdaptation(.sheet)
+		}
+
+		.sheet(isPresented: self.$showMapLayer) {
+			VStack(alignment: .center, spacing: 25) {
+				Spacer()
+				HStack(alignment: .center) {
+					Spacer()
+					Text("Layers")
+						.foregroundStyle(.primary)
+					Spacer()
+					Button {
+						self.showMapLayer.toggle()
+					} label: {
+						Image(systemSymbol: .xmark)
+							.foregroundColor(.secondary)
 					}
 				}
+				.padding(.horizontal, 30)
+				MainLayersView(mapLayerData: MapLayersData.getLayers())
+					.presentationCornerRadius(21)
+					.presentationDetents([.medium])
+			}
 		}
 
 		.environmentObject(self.notificationQueue)
@@ -303,6 +331,18 @@ struct SizePreferenceKey: PreferenceKey {
 	// MARK: - Internal
 
 	static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+		value = nextValue()
+	}
+}
+
+// MARK: - HeightPreferenceKey
+
+struct HeightPreferenceKey: PreferenceKey {
+	static var defaultValue: CGFloat = 0
+
+	// MARK: - Internal
+
+	static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
 		value = nextValue()
 	}
 }
