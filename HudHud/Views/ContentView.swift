@@ -244,7 +244,7 @@ struct ContentView: View {
 					}
 				}
 		}
-		.offset(y: self.sheetSize.height + self.offsetY)
+		.offset(y: self.sheetSize.height + self.offsetY) // it's dragging the whole screen
 		.gesture(
 			DragGesture()
 				.onChanged { value in
@@ -253,7 +253,7 @@ struct ContentView: View {
 				.onEnded { _ in
 					withAnimation(.spring()) {
 						let snap = self.sheetSize.height + self.offsetY
-						let quarter = HeightPreferenceKey.defaultValue / 4
+						let quarter = HeightPreferenceKey.defaultValue / 4 // here i need to use the value that comes from geometryReader
 						if snap > quarter {
 							self.offsetY = quarter * 3 + 100
 						} else {
