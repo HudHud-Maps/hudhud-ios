@@ -14,13 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-<<<<<<< HEAD
         "revision" : "6d0071977ed1f2380c739715f82ac650f99b0824",
         "version" : "6.4.0"
-=======
-        "revision" : "b05c4dd3b8b6ed8780ed49706cc93193fdb8245c",
-        "version" : "6.3.3"
->>>>>>> develop
       }
     },
     {
@@ -29,7 +24,7 @@
       "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
       "state" : {
         "branch" : "main",
-        "revision" : "a768d89ba1e54b16f8499bd6259215dd93d819f8"
+        "revision" : "02640091735e8852967baa743c4e19b3cc44cd06"
       }
     },
     {
