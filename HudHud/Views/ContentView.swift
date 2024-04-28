@@ -323,7 +323,7 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview("Main Map") {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return Text("woof")
+	return ContentView(searchStore: searchViewStore)
 }
 
 #Preview("Touch Testing") {
