@@ -3,10 +3,10 @@
     {
       "identity" : "mapbox-directions-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
+      "location" : "https://github.com/FatooAJ/mapbox-directions-swift",
       "state" : {
-        "revision" : "6c19ecc4e1324887ae3250802b8d13d8d8b3ff2d",
-        "version" : "0.23.3"
+        "branch" : "optional-token",
+        "revision" : "ef00fa7fb6eec09e51ae1f1172007a7e72b3ceb9"
       }
     },
     {
