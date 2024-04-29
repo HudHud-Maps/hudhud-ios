@@ -48,7 +48,7 @@ struct ABCRouteConfigurationView: View {
 					HStack {
 						Image(systemSymbol: .plus)
 							.foregroundColor(.secondary)
-						Text("Add Location")
+						Text("Add Location", comment: "To Add a new stop")
 							.foregroundColor(.primary)
 							.lineLimit(1)
 							.minimumScaleFactor(0.5)

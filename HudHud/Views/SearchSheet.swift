@@ -126,6 +126,7 @@ struct SearchSheet: View {
 					}
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+					.padding(.top)
 				}
 				.listStyle(.plain)
 			}
