@@ -13,12 +13,12 @@ import SwiftUI
 
 struct MapLayersData: Identifiable {
 	let id = UUID()
-	let layerTitle: String
+	let layerTitle: LocalizedStringResource
 	var layers: [Layer]
 
 	// MARK: - Lifecycle
 
-	init(layerTitle: String, layers: [Layer]) {
+	init(layerTitle: LocalizedStringResource, layers: [Layer]) {
 		self.layerTitle = layerTitle
 		self.layers = layers
 	}

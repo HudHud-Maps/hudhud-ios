@@ -30,7 +30,7 @@ struct MapButtonData: Identifiable, Equatable {
 		case .live(.apple):
 			.icon(.appleLogo)
 		case .live(.toursprung):
-			.text("MTK")
+			.text(String("MTK"))
 		case .preview:
 			.icon(.pCircle)
 		}

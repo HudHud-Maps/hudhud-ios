@@ -22,7 +22,7 @@ final class MapStore: ObservableObject {
 	enum StreetViewOption: Equatable {
 		case disabled
 		case requestedCurrentLocation
-		case point(StreetViewPoint)
+		case enabled
 	}
 
 	let motionViewModel: MotionViewModel
@@ -64,8 +64,8 @@ final class MapStore: ObservableObject {
 
 	var streetViewSource: ShapeSource {
 		ShapeSource(identifier: "street-view-symbols") {
-			if case let .point(point) = streetView {
-				let streetViewPoint = StreetViewPoint(location: point.location,
+			if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
+				let streetViewPoint = StreetViewPoint(location: coordinate,
 													  heading: self.motionViewModel.position.heading)
 				streetViewPoint.feature
 			}
@@ -74,16 +74,10 @@ final class MapStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
+	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
 		self.camera = camera
 		self.searchShown = searchShown
 		self.motionViewModel = motionViewModel
-
-		if let streetViewPoint {
-			self.streetView = .point(streetViewPoint)
-		} else {
-			self.streetView = .disabled
-		}
 	}
 }
 

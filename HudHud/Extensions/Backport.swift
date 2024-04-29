@@ -37,4 +37,17 @@ extension Backport where Content: View {
 			self.content
 		}
 	}
+
+	@ViewBuilder func sheet(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content subContent: @escaping () -> some View) -> some View where Content: View {
+		if UIDevice.current.userInterfaceIdiom == .pad {
+			self.content.overlay(alignment: .bottomLeading) {
+				subContent()
+					.frame(width: 400, height: 400)
+					.background(.white)
+					.padding(.leading)
+			}
+		} else {
+			self.content.sheet(isPresented: isPresented, onDismiss: onDismiss, content: subContent)
+		}
+	}
 }

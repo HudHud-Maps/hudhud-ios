@@ -60,7 +60,7 @@ struct POIDetailSheet: View {
 						.contentShape(Circle())
 					})
 					.buttonStyle(PlainButtonStyle())
-					.accessibilityLabel(Text("Close"))
+					.accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
 				}
 				.padding([.top, .leading, .trailing])
 
@@ -73,7 +73,7 @@ struct POIDetailSheet: View {
 					}, label: {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
-							Text("Start")
+							Text("Start", comment: "get the navigation route")
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -84,7 +84,7 @@ struct POIDetailSheet: View {
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .phoneFill)
-							Text("Call")
+							Text("Call", comment: "on poi detail sheet to call the poi")
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -104,7 +104,7 @@ struct POIDetailSheet: View {
 					Button(action: self.onMore) {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .phoneFill)
-							Text("More")
+							Text("More", comment: "on poi detail sheet to see more info")
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
