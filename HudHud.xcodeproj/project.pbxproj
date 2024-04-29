@@ -511,7 +511,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				00A6E7919BA7E91B7A61583A /* PBXTargetDependency */,
+				CD5F3AE92BDFCE3D00517AE7 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -772,8 +772,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		00A6E7919BA7E91B7A61583A /* PBXTargetDependency */ = {
+		CD5F3AE92BDFCE3D00517AE7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			productRef = CD5F3AE82BDFCE3D00517AE7 /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1190,6 +1191,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
 			productName = SFSafeSymbols;
+		};
+		CD5F3AE82BDFCE3D00517AE7 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CD8C5A1F2BA342A5002EBE8A /* SimpleToast */ = {
 			isa = XCSwiftPackageProductDependency;
