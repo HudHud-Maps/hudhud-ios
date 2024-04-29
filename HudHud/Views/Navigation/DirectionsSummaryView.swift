@@ -19,12 +19,12 @@ struct DirectionsSummaryView: View {
 		HStack {
 			VStack(alignment: .leading) {
 				// 20 min AKA duration
-				Text(self.formatDuration(duration: self.directionPreviewData.duration))
+				Text("\(self.formatDuration(duration: self.directionPreviewData.duration))", comment: "duration")
 					.font(.system(.largeTitle))
 					.fontWeight(.semibold)
 					.lineLimit(1)
 				// distance • type of route
-				Text("\(self.formatDistance(distance: self.directionPreviewData.distance)) • \(self.directionPreviewData.typeOfRoute)")
+				Text("\(self.formatDistance(distance: self.directionPreviewData.distance)) • \(self.directionPreviewData.typeOfRoute)", comment: "distance • type of route")
 					.font(.system(.body))
 					.lineLimit(1)
 			}
@@ -33,7 +33,7 @@ struct DirectionsSummaryView: View {
 			Button {
 				self.go()
 			} label: {
-				Text("Go")
+				Text("Go", comment: "start navigation")
 					.font(.system(.title2))
 					.bold()
 					.lineLimit(1)

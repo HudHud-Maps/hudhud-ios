@@ -28,6 +28,8 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
+	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
+
 	var body: some View {
 		return VStack {
 			HStack {
@@ -99,6 +101,7 @@ struct SearchSheet: View {
 							case .appleMapItem:
 								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
+
 						}, label: {
 							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
 								.frame(maxWidth: .infinity)
@@ -115,8 +118,15 @@ struct SearchSheet: View {
 					SearchSectionView(title: "Favorites") {
 						FavoriteCategoriesView()
 					}
-
+					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+					SearchSectionView(title: "Recents") {
+						ForEach(self.recentViewedPOIs, id: \.self) { pois in
+							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
+						}
+					}
 					.listRowSeparator(.hidden)
+					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+					.padding(.top)
 				}
 				.listStyle(.plain)
 			}
@@ -140,6 +150,10 @@ struct SearchSheet: View {
 			)
 			.interactiveDismissDisabled()
 			.ignoresSafeArea()
+			.onAppear {
+				// Store POI
+				self.storeRecentPOI(poi: item)
+			}
 		}
 	}
 
@@ -152,6 +166,18 @@ struct SearchSheet: View {
 	}
 
 	// MARK: - Internal
+
+	func storeRecentPOI(poi: POI) {
+		withAnimation {
+			if self.recentViewedPOIs.count > 9 {
+				self.recentViewedPOIs.removeFirst()
+			}
+			if !self.recentViewedPOIs.contains(poi) {
+				self.recentViewedPOIs.append(poi)
+			}
+		}
+	}
+
 }
 
 #Preview {
@@ -170,4 +196,27 @@ extension SearchSheet {
 		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .storeSetUpForPreviewing),
 		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
 	]
+}
+
+public typealias RecentViewedPOIs = [POI]
+
+// MARK: - RawRepresentable
+
+extension RecentViewedPOIs: RawRepresentable {
+	public init?(rawValue: String) {
+		guard let data = rawValue.data(using: .utf8),
+			  let result = try? JSONDecoder()
+			  	.decode(RecentViewedPOIs.self, from: data) else {
+			return nil
+		}
+		self = result
+	}
+
+	public var rawValue: String {
+		guard let data = try? JSONEncoder().encode(self),
+			  let result = String(data: data, encoding: .utf8) else {
+			return "[]"
+		}
+		return result
+	}
 }

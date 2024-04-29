@@ -11,24 +11,24 @@ import SwiftUI
 
 struct FavoriteCategoriesView: View {
 	let favoriteCategoriesData: [FavoriteCategoriesData] = [
-		FavoriteCategoriesData(title: "Home",
+		FavoriteCategoriesData(id: 1, title: "Home",
 							   sfSymbol: .houseFill,
 							   tintColor: .gray),
-		FavoriteCategoriesData(title: "Work",
+		FavoriteCategoriesData(id: 2, title: "Work",
 							   sfSymbol: .bagFill,
 							   tintColor: .gray),
-		FavoriteCategoriesData(title: "School",
+		FavoriteCategoriesData(id: 3, title: "School",
 							   sfSymbol: .buildingColumnsFill,
 							   tintColor: .gray)
 	]
-	let plusButton = FavoriteCategoriesData(title: "Add",
+	let plusButton = FavoriteCategoriesData(id: 4, title: "Add",
 											sfSymbol: .plusCircleFill,
 											tintColor: .green)
 
 	var body: some View {
 		ScrollView(.horizontal) {
 			HStack {
-				ForEach(self.favoriteCategoriesData.prefix(4), id: \.self) { favorite in
+				ForEach(self.favoriteCategoriesData.prefix(4)) { favorite in
 					Button {
 						print("\(favorite.title) was pressed")
 					} label: {

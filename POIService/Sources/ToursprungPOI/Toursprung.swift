@@ -18,7 +18,7 @@ public typealias JSONDictionary = [String: Any]
 
 public class Toursprung {
 
-	public enum ToursprungError: LocalizedError {
+	public enum ToursprungError: LocalizedError, Equatable {
 		case invalidUrl(message: String?)
 		case invalidResponse(message: String?)
 		case noRoute(message: String?)

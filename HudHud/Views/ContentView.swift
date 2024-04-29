@@ -162,19 +162,8 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			if case .point = self.mapStore.streetView {
-				DebugStreetView(viewModel: self.motionViewModel)
-					.onAppear {
-						Task {
-							let userLocation = try await Location.forSingleRequestUsage.requestLocation()
-							guard let location = userLocation.location else { return }
-
-							self.mapStore.streetView = .point(StreetViewPoint(location: location.coordinate, heading: location.course))
-						}
-					}
-					.onDisappear {
-						self.mapStore.streetView = .disabled
-					}
+			if case .enabled = self.mapStore.streetView {
+				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
 				if self.mapStore.route == nil {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
@@ -207,8 +196,11 @@ struct ContentView: View {
 									guard let location = location.location else { return }
 
 									print("set new streetViewPoint")
-									let point = StreetViewPoint(location: location.coordinate, heading: location.course)
-									self.mapStore.streetView = .point(point)
+									self.motionViewModel.coordinate = location.coordinate
+									if location.course > 0 {
+										self.motionViewModel.position.heading = location.course
+									}
+									self.mapStore.streetView = .enabled
 								}
 							} else {
 								self.mapStore.streetView = .disabled
@@ -228,7 +220,7 @@ struct ContentView: View {
 			}
 		}
 		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
-		.sheet(isPresented: self.$mapStore.searchShown) {
+		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
 				.frame(minWidth: 320)

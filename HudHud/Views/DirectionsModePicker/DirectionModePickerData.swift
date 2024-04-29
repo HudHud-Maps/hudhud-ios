@@ -38,7 +38,7 @@ enum DirectionMode: Identifiable {
 		}
 	}
 
-	var title: String {
+	var title: LocalizedStringResource {
 		switch self {
 		case .car: return "car"
 		case .walk: return "walk"
