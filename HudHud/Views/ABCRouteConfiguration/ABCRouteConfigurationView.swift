@@ -7,12 +7,18 @@
 //
 
 import CoreLocation
+import MapboxCoreNavigation
+import MapboxDirections
+import OSLog
 import POIService
 import SFSafeSymbols
+import SwiftLocation
 import SwiftUI
+import ToursprungPOI
 
 struct ABCRouteConfigurationView: View {
 	@State var routeConfigurations: [ABCRouteConfigurationItem]
+	@ObservedObject var mapStore: MapStore
 
 	var body: some View {
 		VStack {
@@ -47,31 +53,70 @@ struct ABCRouteConfigurationView: View {
 				} label: { // (24.7189756, 46.6468911)
 					HStack {
 						Image(systemSymbol: .plus)
-							.foregroundColor(.secondary)
-						Text("Add Location", comment: "To Add a new stop")
-							.foregroundColor(.primary)
+							.foregroundColor(.blue)
+						Text("Add Location")
+							.foregroundColor(.blue)
 							.lineLimit(1)
 							.minimumScaleFactor(0.5)
 					}
 				}
-				.listRowBackground(Color(.quaternarySystemFill))
+				.listRowBackground(Color(.systemBackground))
+				.listRowSeparator(.hidden)
 			}
+			.listStyle(.grouped)
+			.scrollContentBackground(.hidden)
+			.scrollIndicators(.hidden)
 			.overlayPreferenceValue(ItemBoundsKey.self) { bounds in
 				GeometryReader { proxy in
 					let pairs = Array(zip(routeConfigurations, routeConfigurations.dropFirst()))
-					ForEach(pairs, id: \.0.id) { item, next in
+
+					ForEach(pairs.dropLast(2), id: \.0.id) { item, next in
 						if let from = bounds[item.id], let to = bounds[next.id] {
 							Line(from: proxy[from][.bottom], to: proxy[to][.top])
 								.stroke(style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [0.5, 5], dashPhase: 4))
 								.foregroundColor(.secondary)
+								.opacity(next == self.routeConfigurations.last ? 0 : 1) // Hide line for last row
 						}
 					}
 				}
+			}
+			.onChange(of: self.routeConfigurations) { newRoute in
+				var waypoints: [Waypoint] = []
+				for item in newRoute {
+					switch item {
+					case let .myLocation(waypoint):
+						waypoints.append(waypoint)
+					case let .poi(poi):
+						if let poi = poi.locationCoordinate {
+							let waypoint = Waypoint(coordinate: poi)
+							waypoints.append(waypoint)
+						}
+					}
+				}
+				self.mapStore.waypoints = newRoute
+				self.updateRoutes(wayPoints: waypoints)
 			}
 		}
 	}
 
 	// MARK: - Internal
+
+	// Update routes by making a network request
+	func updateRoutes(wayPoints: [Waypoint]) {
+		Task {
+			do {
+				let options = NavigationRouteOptions(waypoints: wayPoints, profileIdentifier: .automobileAvoidingTraffic)
+				options.shapeFormat = .polyline6
+				options.distanceMeasurementSystem = .metric
+				options.attributeOptions = []
+
+				let results = try await Toursprung.shared.calculate(options)
+				self.mapStore.routes = results
+			} catch {
+				Logger.routing.error("Updating routes: \(error)")
+			}
+		}
+	}
 
 	func moveAction(from source: IndexSet, to destination: Int) {
 		self.routeConfigurations.move(fromOffsets: source, toOffset: destination)
@@ -79,9 +124,10 @@ struct ABCRouteConfigurationView: View {
 }
 
 #Preview {
-	ABCRouteConfigurationView(routeConfigurations: [
-		.myLocation,
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return ABCRouteConfigurationView(routeConfigurations: [
+		.myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
 		.poi(POI(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), type: "Coffee")),
 		.poi(POI(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), type: "Office"))
-	])
+	], mapStore: searchViewStore.mapStore)
 }

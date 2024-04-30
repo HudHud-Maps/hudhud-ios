@@ -41,7 +41,7 @@ struct ContentView: View {
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
-			if let route = self.mapStore.route {
+			if let route = self.mapStore.routes?.routes.first {
 				let polylineSource = ShapeSource(identifier: "pedestrian-polyline") {
 					MLNPolylineFeature(coordinates: route.coordinates ?? [])
 				}
@@ -65,6 +65,17 @@ struct ContentView: View {
 							   curveType: .linear,
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+
+				let routePoints = self.mapStore.routePoints
+
+				CircleStyleLayer(identifier: "simple-circles-route", source: routePoints)
+					.radius(16)
+					.color(.systemRed)
+					.strokeWidth(2)
+					.strokeColor(.white)
+				SymbolStyleLayer(identifier: "simple-symbols-route", source: routePoints)
+					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(.white)
 			}
 			let pointSource = self.mapStore.points
 
@@ -122,8 +133,8 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
-		.onChange(of: self.mapStore.route) { newRoute in
-			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty {
+		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
+			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
 				if let camera = CameraState.boundingBox(from: coordinates) {
 					self.mapStore.camera = camera
 				}
@@ -167,14 +178,14 @@ struct ContentView: View {
 			if case .enabled = self.mapStore.streetView {
 				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
-				if self.mapStore.route != nil {
+				if self.mapStore.routes == nil {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 						.presentationBackground(.thinMaterial)
 				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			if self.mapStore.route == nil {
+			if self.mapStore.routes == nil {
 				HStack(alignment: .bottom) {
 					MapButtonsView(mapButtonsData: [
 						MapButtonData(sfSymbol: .icon(.map)) {
@@ -245,14 +256,14 @@ struct ContentView: View {
 					}
 				}
 				.sheet(isPresented: Binding<Bool>(
-					get: { self.mapStore.route != nil },
+					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
 					set: { _ in }
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.height(150)])
+						.presentationDetents([.height(150), .medium, .large])
 						.presentationBackgroundInteraction(
-							.enabled(upThrough: .height(150))
+							.enabled(upThrough: .medium)
 						)
 						.ignoresSafeArea()
 						.interactiveDismissDisabled()
@@ -299,7 +310,7 @@ struct ContentView: View {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
-		self.mapStore.route = searchStore.mapStore.route
+		self.mapStore.routes = searchStore.mapStore.routes
 	}
 }
 
