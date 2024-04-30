@@ -18,7 +18,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	private var localSearch: MKLocalSearch?
 	private var completer: MKLocalSearchCompleter
-	private var continuation: CheckedContinuation<[Row], Error>?
+	private var continuation: CheckedContinuation<[POI], Error>?
 	private let delegate: DelegateWrapper
 
 	// MARK: - POIServiceProtocol
@@ -38,7 +38,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	// MARK: - Public
 
-	public func lookup(prediction: PredictionResult) async throws -> [Row] {
+	public func lookup(prediction: PredictionResult) async throws -> [POI] {
 		guard case let .apple(completion) = prediction else {
 			return []
 		}
@@ -59,15 +59,15 @@ public actor ApplePOI: POIServiceProtocol {
 					return
 				}
 
-				let rows = mapItems.map {
-					Row(mapItem: $0)
+				let rows = mapItems.compactMap {
+					Row(mapItem: $0).poi
 				}
 				continuation.resume(returning: rows)
 			}
 		}
 	}
 
-	public func predict(term: String) async throws -> [Row] {
+	public func predict(term: String) async throws -> [POI] {
 		return try await withCheckedThrowingContinuation { continuation in
 			if let continuation = self.continuation {
 				self.completer.cancel()
@@ -89,7 +89,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	// MARK: - Internal
 
-	func update(results: [Row]) async {
+	func update(results: [POI]) async {
 		self.continuation?.resume(returning: results)
 		self.continuation = nil
 	}
@@ -111,8 +111,8 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 	// MARK: - MKLocalSearchCompleterDelegate
 
 	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-		let results = completer.results.map {
-			Row(appleCompletion: $0)
+		let results = completer.results.compactMap {
+			Row(appleCompletion: $0).poi
 		}
 		Task {
 			await self.poi?.update(results: results)

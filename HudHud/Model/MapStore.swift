@@ -42,7 +42,7 @@ final class MapStore: ObservableObject {
 		}
 	}
 
-	@Published var mapItems: [Row] = [] {
+	@Published var mapItems: [POI] = [] {
 		didSet {
 			self.updateCameraForMapItems()
 		}
@@ -51,12 +51,10 @@ final class MapStore: ObservableObject {
 	var points: ShapeSource {
 		return ShapeSource(identifier: "points") {
 			self.mapItems.compactMap { item in
-				guard let coordinate = item.coordinate else { return nil }
+				guard let coordinate = item.locationCoordinate else { return nil }
 
 				return MLNPointFeature(coordinate: coordinate) { feature in
-					if let poi = item.poi {
-						feature.attributes["poi_id"] = poi.id
-					}
+					feature.attributes["poi_id"] = item.id
 				}
 			}
 		}
@@ -93,7 +91,7 @@ extension MapStore: Previewable {
 private extension MapStore {
 
 	func updateCameraForMapItems() {
-		let coordinates = self.mapItems.compactMap(\.coordinate)
+		let coordinates = self.mapItems.compactMap(\.locationCoordinate)
 		guard let camera = CameraState.boundingBox(from: coordinates) else { return }
 
 		self.camera = camera

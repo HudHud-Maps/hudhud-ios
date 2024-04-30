@@ -79,27 +79,28 @@ struct SearchSheet: View {
 					.listStyle(.plain)
 				} else {
 					List(self.$mapStore.mapItems, id: \.self) { item in
+						let row = Row(toursprung: item.wrappedValue)
 						Button(action: {
 							self.searchIsFocused = false
 							self.searchStore.selectedDetent = .small
-							switch item.wrappedValue.provider {
+							switch row.provider {
 							case .toursprung:
-								self.mapStore.selectedItem = item.wrappedValue.poi
+								self.mapStore.selectedItem = row.poi
 							case .appleCompletion:
 								self.searchStore.selectedDetent = .medium
 								self.searchIsFocused = false
 								Task {
-									let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
+									let items = try await self.searchStore.resolve(prediction: row)
 									if let firstResult = items.first, items.count == 1 {
 										self.mapStore.selectedItem = firstResult.poi
-										self.mapStore.mapItems = items
+										self.mapStore.mapItems = items.compactMap(\.poi)
 									} else {
 										self.mapStore.selectedItem = nil
-										self.mapStore.mapItems = items
+										self.mapStore.mapItems = items.compactMap(\.poi)
 									}
 								}
 							case .appleMapItem:
-								self.mapStore.selectedItem = item.wrappedValue.poi
+								self.mapStore.selectedItem = row.poi
 							}
 
 						}, label: {
@@ -137,7 +138,7 @@ struct SearchSheet: View {
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
 				self.mapStore.route = routes.routes.first
-				self.mapStore.mapItems = [Row(toursprung: item)]
+				self.mapStore.mapItems = [item]
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			}
@@ -186,12 +187,12 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: Row(toursprung: .supermarket), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: Row(toursprung: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: Row(toursprung: .artwork), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: Row(toursprung: .ketchup), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: Row(toursprung: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
+		SearchResultItem(prediction: .starbucks, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: .supermarket, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: .pharmacy, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: .artwork, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: .ketchup, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: .publicPlace, searchViewStore: .storeSetUpForPreviewing)
 	]
 }
 

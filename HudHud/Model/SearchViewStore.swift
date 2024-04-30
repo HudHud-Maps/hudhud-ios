@@ -65,7 +65,9 @@ final class SearchViewStore: ObservableObject {
 						defer { self.isSearching = false }
 						self.isSearching = true
 
-						self.mapStore.mapItems = try await self.apple.predict(term: newValue)
+						let prediction = try await self.apple.predict(term: newValue)
+						let items = prediction
+						self.mapStore.mapItems = items
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
@@ -73,16 +75,18 @@ final class SearchViewStore: ObservableObject {
 						defer { self.isSearching = false }
 						self.isSearching = true
 
-						self.mapStore.mapItems = try await self.toursprung.predict(term: newValue)
+						let prediction = try await self.toursprung.predict(term: newValue)
+						let items = prediction
+						self.mapStore.mapItems = items
 					}
 				case .preview:
 					self.mapStore.mapItems = [
-						Row(toursprung: .starbucks),
-						Row(toursprung: .ketchup),
-						Row(toursprung: .publicPlace),
-						Row(toursprung: .artwork),
-						Row(toursprung: .pharmacy),
-						Row(toursprung: .supermarket)
+						.starbucks,
+						.ketchup,
+						.publicPlace,
+						.artwork,
+						.pharmacy,
+						.supermarket
 					]
 				}
 			}
@@ -95,7 +99,7 @@ final class SearchViewStore: ObservableObject {
 	func resolve(prediction: Row) async throws -> [Row] {
 		switch prediction.provider {
 		case let .appleCompletion(completion):
-			return try await self.apple.lookup(prediction: .apple(completion: completion))
+			return try await self.apple.lookup(prediction: .apple(completion: completion)).map { Row(toursprung: $0) }
 		case let .appleMapItem(mapItem):
 			return [Row(mapItem: mapItem)]
 		case let .toursprung(poi):

@@ -17,8 +17,8 @@ import SwiftUI
 public protocol POIServiceProtocol {
 
 	static var serviceName: String { get }
-	func lookup(prediction: PredictionResult) async throws -> [Row]
-	func predict(term: String) async throws -> [Row]
+	func lookup(prediction: PredictionResult) async throws -> [POI]
+	func predict(term: String) async throws -> [POI]
 }
 
 // MARK: - PredictionResult
@@ -47,7 +47,7 @@ public class POI: Codable, Hashable, Identifiable {
 
 	// MARK: - Lifecycle
 
-	public init(id: String, title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
+	public init(id: String, title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D?, type: String) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle

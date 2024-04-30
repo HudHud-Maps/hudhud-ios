@@ -30,7 +30,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 	}
 
 	private let session: URLSession
-	private let debouncer: AsyncDebouncer<String, [Row]>
+	private let debouncer: AsyncDebouncer<String, [POI]>
 
 	// MARK: - POIServiceProtocol
 
@@ -45,13 +45,13 @@ public actor ToursprungPOI: POIServiceProtocol {
 
 	// MARK: - Public
 
-	public func predict(term: String) async throws -> [Row] {
+	public func predict(term: String) async throws -> [POI] {
 		return try await self.debouncer.debounce(input: term) { input in
 			return try await self.search(term: input)
 		}
 	}
 
-	public func lookup(prediction _: PredictionResult) async throws -> [Row] {
+	public func lookup(prediction _: PredictionResult) async throws -> [POI] {
 		return []
 	}
 }
@@ -60,7 +60,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 
 private extension ToursprungPOI {
 
-	func search(term: String) async throws -> [Row] {
+	func search(term: String) async throws -> [POI] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()
@@ -92,9 +92,7 @@ private extension ToursprungPOI {
 		let pois = poiElementss.compactMap {
 			return POIService.POI(element: $0)
 		}
-		return pois.map {
-			return Row(toursprung: $0)
-		}
+		return pois
 	}
 }
 

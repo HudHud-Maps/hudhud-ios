@@ -13,7 +13,7 @@ import SwiftUI
 
 // MARK: - Row
 
-public struct Row: Hashable {
+public class Row: NSObject {
 
 	public enum Provider: Hashable {
 		case appleCompletion(completion: MKLocalSearchCompletion)

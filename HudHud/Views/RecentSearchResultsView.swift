@@ -19,7 +19,7 @@ struct RecentSearchResultsView: View {
 		VStack {
 			Button {
 				let selectedItem = self.poi
-				let mapItems = [Row]()
+				let mapItems = [POI]()
 				self.searchStore.selectedDetent = .medium
 				self.mapStore.selectedItem = selectedItem
 				self.mapStore.mapItems = mapItems
