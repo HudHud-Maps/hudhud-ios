@@ -76,7 +76,6 @@ struct ContentView: View {
 				SymbolStyleLayer(identifier: "simple-symbols-route", source: routePoints)
 					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(.white)
-					.iconRotation(45)
 			}
 			let pointSource = self.mapStore.points
 
