@@ -68,15 +68,29 @@ struct ContentView: View {
 			}
 			let pointSource = self.mapStore.points
 
+			// shows the clustered pins
+			CircleStyleLayer(identifier: "simple-circles-clustered", source: pointSource)
+				.radius(16)
+				.color(.systemRed)
+				.strokeWidth(2)
+				.strokeColor(.white)
+				.predicate(NSPredicate(format: "cluster == YES"))
+			SymbolStyleLayer(identifier: "simple-symbols-clustered", source: pointSource)
+				.textColor(.white)
+				.text(expression: NSExpression(format: "CAST(point_count, 'NSString')"))
+				.predicate(NSPredicate(format: "cluster == YES"))
+
+			// shows the unclustered pins
 			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
 				.radius(16)
 				.color(.systemRed)
 				.strokeWidth(2)
 				.strokeColor(.white)
+				.predicate(NSPredicate(format: "cluster != YES"))
 			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
-				.iconRotation(45)
+				.predicate(NSPredicate(format: "cluster != YES"))
 
 			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
 				.iconImage(UIImage.lookAroundPin)
@@ -307,7 +321,7 @@ struct SizePreferenceKey: PreferenceKey {
 	}
 }
 
-#Preview {
+#Preview("Main Map") {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return ContentView(searchStore: searchViewStore)
 }

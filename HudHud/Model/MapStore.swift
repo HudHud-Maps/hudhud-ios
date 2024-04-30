@@ -49,7 +49,7 @@ final class MapStore: ObservableObject {
 	}
 
 	var points: ShapeSource {
-		return ShapeSource(identifier: "points") {
+		return ShapeSource(identifier: "points", options: [.clustered: true, .clusterRadius: 44]) {
 			self.mapItems.compactMap { item in
 				guard let coordinate = item.coordinate else { return nil }
 
