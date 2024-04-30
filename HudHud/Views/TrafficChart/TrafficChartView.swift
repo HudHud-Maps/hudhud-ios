@@ -17,8 +17,8 @@ struct TrafficChartView: View {
 		if let trafficRange = chartData.getSpecificTrafficRange {
 			Chart(trafficRange) { shape in
 				BarMark(
-					x: .value("Hours Range", shape.hour.lowerBound, unit: .hour),
-					y: .value("Occupancy Range", shape.traffic), width: .automatic
+					x: .value(String(localized: "Hours Range", comment: "traffic chart view, Hours range x axes"), shape.hour.lowerBound, unit: .hour),
+					y: .value(String(localized: "Occupancy Range", comment: "traffic chart view, Occupancy Range y axes"), shape.traffic), width: .automatic
 				)
 				.foregroundStyle(
 					shape.hour.contains(Date()) == true ? .blue
@@ -40,7 +40,11 @@ struct TrafficChartView: View {
 			}
 			.chartYScale(domain: 0 ... 1)
 		} else {
-			Label("Bad Traffic Data", systemSymbol: .exclamationmarkTriangle)
+			Label {
+				Text("Bad Traffic Data", comment: "for traffic chart")
+			} icon: {
+				Image(systemSymbol: .exclamationmarkTriangle)
+			}
 		}
 	}
 }

@@ -22,7 +22,7 @@ struct NavigationSheetView: View {
 	var body: some View {
 		VStack {
 			HStack {
-				Text("Direction")
+				Text("Direction", comment: "navigation sheet header")
 					.font(.system(.title))
 					.fontWeight(.semibold)
 					.cornerRadius(10)
@@ -43,7 +43,7 @@ struct NavigationSheetView: View {
 					.contentShape(Circle())
 				})
 				.buttonStyle(PlainButtonStyle())
-				.accessibilityLabel(Text("Close"))
+				.accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
 			}
 			if let route = self.mapStore.route {
 				DirectionsSummaryView(
