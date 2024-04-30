@@ -14,6 +14,7 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SwiftUI
+import ToursprungPOI
 
 // MARK: - MapStore
 
@@ -30,7 +31,7 @@ final class MapStore: ObservableObject {
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
 	@Published var streetView: StreetViewOption = .disabled
-	@Published var route: Route?
+	@Published var routes: Toursprung.RouteCalculationResult?
 	@Published var waypoints: [ABCRouteConfigurationItem]?
 
 	@Published var selectedItem: POI? {

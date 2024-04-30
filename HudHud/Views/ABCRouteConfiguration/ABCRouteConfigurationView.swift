@@ -18,7 +18,6 @@ import ToursprungPOI
 
 struct ABCRouteConfigurationView: View {
 	@State var routeConfigurations: [ABCRouteConfigurationItem]
-	@State var routes: Toursprung.RouteCalculationResult?
 	@ObservedObject var mapStore: MapStore
 
 	var body: some View {
@@ -112,8 +111,7 @@ struct ABCRouteConfigurationView: View {
 				options.attributeOptions = []
 
 				let results = try await Toursprung.shared.calculate(options)
-				self.routes = results
-				self.mapStore.route = self.routes?.routes.first
+				self.mapStore.routes = results
 			} catch {
 				Logger.routing.error("Updating routes: \(error)")
 			}
