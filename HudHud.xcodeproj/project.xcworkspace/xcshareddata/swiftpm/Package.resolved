@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "dcb23a48ce96e27fc0132b70bf6cb2daccf58cb4",
-        "version" : "0.0.5"
+        "revision" : "f931faaae32a0ef21a0dcc731e5fc8bdc7d704f9",
+        "version" : "0.0.8"
       }
     },
     {

@@ -216,7 +216,7 @@ private extension RouteOptions {
 				URLQueryItem(name: "steps", value: "true"),
 				URLQueryItem(name: "continue_straight", value: "true"),
 				URLQueryItem(name: "annotations", value: "congestion,distance"),
-				URLQueryItem(name: "language", value: Locale.current.language.languageCode?.identifier ?? "ar"),
+				URLQueryItem(name: "language", value: Locale.preferredLanguages.first ?? "en-US"),
 				URLQueryItem(name: "roundabout_exits", value: "true"),
 				URLQueryItem(name: "voice_instructions", value: "true"),
 				URLQueryItem(name: "banner_instructions", value: "true"),
