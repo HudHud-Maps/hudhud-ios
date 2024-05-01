@@ -13,7 +13,7 @@ struct PadSheetView<Content: View>: View {
 	let subview: Content
 
 	var body: some View {
-		VStack(spacing: 0) {
+		VStack {
 			self.subview
 				.frame(width: 300, height: self.screenHeight)
 				.background(Color.white)

@@ -234,7 +234,7 @@ struct ContentView: View {
 			}
 		}
 
-		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
+		.backport.buttonSafeArea(length: self.sheetSize)
 		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -336,11 +336,7 @@ struct SizePreferenceKey: PreferenceKey {
 	}
 }
 
-
-
-
 #Preview("Main Map") {
-
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return ContentView(searchStore: searchViewStore)
 }

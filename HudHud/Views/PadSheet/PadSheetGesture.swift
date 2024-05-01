@@ -28,8 +28,7 @@ struct PadSheetGesture<Content: View>: View {
 							let snap = self.sheetSize.height + self.offsetY
 
 							if snap > self.screenHeight / 2 {
-								self.offsetY = self.screenHeight - self.screenHeight / 7
-
+								self.offsetY = self.screenHeight - self.screenHeight / 9.5
 							} else {
 								self.offsetY = 0
 							}

@@ -30,6 +30,14 @@ extension Backport where Content: View {
 		}
 	}
 
+	@ViewBuilder func buttonSafeArea(length: CGSize) -> some View {
+		if UIDevice.current.userInterfaceIdiom == .pad {
+			self.safeAreaPadding(.leading, length.width)
+		} else {
+			self.safeAreaPadding(.bottom, length.height)
+		}
+	}
+
 	@ViewBuilder func scrollClipDisabled() -> some View {
 		if #available(iOS 17, *) {
 			content.scrollClipDisabled()
@@ -45,11 +53,12 @@ extension Backport where Content: View {
 		@ViewBuilder content: @escaping () -> some View
 	) -> some View {
 		if UIDevice.current.userInterfaceIdiom == .pad, isPresented.wrappedValue {
-			self.content.overlay(alignment: .bottomLeading) {
+			self.content.overlay(alignment: .topLeading) {
 				PadSheetGesture {
 					PadSheetView {
 						content()
 					}
+					.padding(.top)
 				}
 				.shadow(radius: 0.5)
 				.padding(.horizontal)
