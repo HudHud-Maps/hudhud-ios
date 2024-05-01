@@ -130,7 +130,7 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(item: self.$mapStore.selectedItem) {
+		.backport.sheet(item: self.$mapStore.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
 			POIDetailSheet(poi: item) { routes in
@@ -139,6 +139,8 @@ struct SearchSheet: View {
 				self.mapStore.mapItems = [Row(toursprung: item)]
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
+			} onDismiss: {
+				self.mapStore.selectedItem = nil
 			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(
@@ -172,6 +174,10 @@ struct SearchSheet: View {
 				self.recentViewedPOIs.append(poi)
 			}
 		}
+	}
+
+	func dismissSheet() {
+		self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
 	}
 
 }

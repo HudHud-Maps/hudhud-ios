@@ -27,6 +27,7 @@ struct POIDetailSheet: View {
 	@State var routes: Toursprung.RouteCalculationResult?
 
 	@Environment(\.dismiss) var dismiss
+	let onDismiss: () -> Void
 	@EnvironmentObject var notificationQueue: NotificationQueue
 
 	var body: some View {
@@ -46,6 +47,7 @@ struct POIDetailSheet: View {
 
 					Button(action: {
 						self.dismiss()
+						self.onDismiss()
 					}, label: {
 						ZStack {
 							Circle()
@@ -69,11 +71,12 @@ struct POIDetailSheet: View {
 						guard let routes else { return }
 						self.onStart(routes)
 						self.dismiss()
-
 					}, label: {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
 							Text("Start")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -85,6 +88,8 @@ struct POIDetailSheet: View {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .phoneFill)
 							Text("Call")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -95,6 +100,8 @@ struct POIDetailSheet: View {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .safariFill)
 							Text("Web")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -105,6 +112,8 @@ struct POIDetailSheet: View {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .phoneFill)
 							Text("More")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -155,5 +164,5 @@ struct POIDetailSheet: View {
 		Logger.searchView.info("Start \(poi)")
 	} onMore: {
 		Logger.searchView.info("More \(poi)")
-	}
+	} onDismiss: {}
 }

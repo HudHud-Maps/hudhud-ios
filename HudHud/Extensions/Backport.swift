@@ -38,40 +38,45 @@ extension Backport where Content: View {
 		}
 	}
 
-	@ViewBuilder func sheet(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content subContent: @escaping () -> some View) -> some View where Content: View {
-		if UIDevice.current.userInterfaceIdiom == .pad {
+	@ViewBuilder
+	func sheet(
+		isPresented: Binding<Bool>,
+		onDismiss: (() -> Void)? = nil,
+		@ViewBuilder content: @escaping () -> some View
+	) -> some View {
+		if UIDevice.current.userInterfaceIdiom == .pad, isPresented.wrappedValue {
 			self.content.overlay(alignment: .bottomLeading) {
-				subContent()
-					.frame(width: 400, height: 400)
-					.background(.white)
-					.padding(.leading)
+				PadSheetGesture {
+					PadSheetView {
+						content()
+					}
+				}
+				.shadow(radius: 0.5)
+				.padding(.horizontal)
 			}
 		} else {
-			self.content.sheet(isPresented: isPresented, onDismiss: onDismiss, content: subContent)
+			self.content.sheet(isPresented: isPresented, onDismiss: onDismiss, content: content)
 		}
 	}
 
 	@ViewBuilder
-	func customSheet(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content subContent: @escaping () -> some View) -> some View where Content: View {
-		if UIDevice.current.userInterfaceIdiom == .pad {
+	func sheet<Item>(
+		item: Binding<Item?>,
+		onDismiss: (() -> Void)? = nil,
+		@ViewBuilder content: @escaping (Item) -> some View
+	) -> some View where Item: Identifiable {
+		if UIDevice.current.userInterfaceIdiom == .pad, item.wrappedValue != nil {
 			self.content.overlay(alignment: .bottomLeading) {
-				VStack(spacing: 0) {
-					subContent()
-						.frame(width: 400, height: 1000)
-						.background(Color.white)
-						.cornerRadius(16)
-						.overlay(alignment: .top) {
-							Rectangle()
-								.frame(width: 40, height: 6)
-								.foregroundColor(Color.secondary)
-								.cornerRadius(3)
-								.padding(5)
-						}
+				PadSheetGesture {
+					PadSheetView {
+						content(item.wrappedValue!)
+					}
 				}
+				.shadow(radius: 0.5)
+				.padding(.horizontal, 9.5)
 			}
-
 		} else {
-			self.content.sheet(isPresented: isPresented, onDismiss: onDismiss, content: subContent)
+			self.content.sheet(item: item, onDismiss: onDismiss, content: content)
 		}
 	}
 }
