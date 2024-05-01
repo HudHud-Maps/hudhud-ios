@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SearchSectionView<Content: View>: View {
-	let title: String
+	let title: LocalizedStringResource
 	let subview: Content
 
 	var body: some View {
@@ -29,7 +29,7 @@ struct SearchSectionView<Content: View>: View {
 
 	// MARK: - Lifecycle
 
-	init(title: String, @ViewBuilder subview: () -> Content) {
+	init(title: LocalizedStringResource, @ViewBuilder subview: () -> Content) {
 		self.title = title
 		self.subview = subview()
 	}

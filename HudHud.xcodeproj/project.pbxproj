@@ -11,6 +11,7 @@
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		1BB69DF95208C542E1B687DF /* ProviderButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E825A251C71AF6F93DF0C29 /* ProviderButton.swift */; };
+		3128DEAD94F57B2B0DF2FF75 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 42D4637226943F53246C2A7F /* InfoPlist.xcstrings */; };
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
 		341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */; };
@@ -33,6 +34,7 @@
 		A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49E3EE7EB638EED6A6D564 /* View.swift */; };
 		A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */; };
 		A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */; };
+		B653962DFA19FBD6454B2EB1 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = BDD0744DB9A2E4620B56EF7C /* Localizable.xcstrings */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
 		CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */; };
 		CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */; };
@@ -51,11 +53,11 @@
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
 		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
-		CD57BF4B2BD283F300C275B9 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD57BF4A2BD283F300C275B9 /* MapLibreSwiftDSL */; };
-		CD57BF4D2BD283F300C275B9 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD57BF4C2BD283F300C275B9 /* MapLibreSwiftUI */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
+		CD609BA82BDEF33C00BDFECE /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD609BA72BDEF33C00BDFECE /* MapLibreSwiftDSL */; };
+		CD609BAA2BDEF33C00BDFECE /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD609BA92BDEF33C00BDFECE /* MapLibreSwiftUI */; };
 		CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */; };
 		CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3632BBBD3FB009C3A1C /* Optional.swift */; };
 		CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3682BBBFF27009C3A1C /* CameraState.swift */; };
@@ -70,6 +72,7 @@
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
+		CD93F8432BE1891B00D5126F /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = A439777C4AC32686290533F1 /* MapboxNavigation */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -123,6 +126,7 @@
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
+		42D4637226943F53246C2A7F /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
 		4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
@@ -142,6 +146,7 @@
 		912B1ACD8511E9B4FB445AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		AC401BC1BC530C9F34CE12C6 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCRouteConfigurationView.swift; sourceTree = "<group>"; };
+		BDD0744DB9A2E4620B56EF7C /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerView.swift; sourceTree = "<group>"; };
 		C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
 		C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCRouteConfigurationData.swift; sourceTree = "<group>"; };
@@ -199,12 +204,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD57BF4B2BD283F300C275B9 /* MapLibreSwiftDSL in Frameworks */,
+				CD93F8432BE1891B00D5126F /* MapboxNavigation in Frameworks */,
+				CD609BA82BDEF33C00BDFECE /* MapLibreSwiftDSL in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
-				CD57BF4D2BD283F300C275B9 /* MapLibreSwiftUI in Frameworks */,
+				CD609BAA2BDEF33C00BDFECE /* MapLibreSwiftUI in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */,
@@ -488,6 +494,8 @@
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
 				1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */,
+				42D4637226943F53246C2A7F /* InfoPlist.xcstrings */,
+				BDD0744DB9A2E4620B56EF7C /* Localizable.xcstrings */,
 			);
 			path = "Supporting Files";
 			sourceTree = "<group>";
@@ -532,8 +540,9 @@
 				C7AFBB29CC507D42D1538B2C /* MapboxNavigation */,
 				DE3A66FF070A2B17657129E4 /* MapLibre */,
 				6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */,
-				CD57BF4A2BD283F300C275B9 /* MapLibreSwiftDSL */,
-				CD57BF4C2BD283F300C275B9 /* MapLibreSwiftUI */,
+				CD609BA72BDEF33C00BDFECE /* MapLibreSwiftDSL */,
+				CD609BA92BDEF33C00BDFECE /* MapLibreSwiftUI */,
+				A439777C4AC32686290533F1 /* MapboxNavigation */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -607,6 +616,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ar,
 			);
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
@@ -615,7 +625,7 @@
 				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
-				CD57BF492BD283F300C275B9 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				CD609BA62BDEF33C00BDFECE /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -642,6 +652,8 @@
 				CDAE05A82B69358E003E5196 /* Terrain.json in Resources */,
 				CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */,
 				F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */,
+				B653962DFA19FBD6454B2EB1 /* Localizable.xcstrings in Resources */,
+				3128DEAD94F57B2B0DF2FF75 /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1100,17 +1112,17 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
+		0D2304994EF3BDFEB3695EE3 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
+			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
 			requirement = {
-				branch = main;
+				branch = "feature/swift-package-manager";
 				kind = branch;
 			};
 		};
-		CD57BF492BD283F300C275B9 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground";
+			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
 			requirement = {
 				branch = main;
 				kind = branch;
@@ -1122,6 +1134,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.1.1;
+			};
+		};
+		CD609BA62BDEF33C00BDFECE /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hactar/maplibre-swiftui-dsl-playground.git";
+			requirement = {
+				branch = clustering;
+				kind = branch;
 			};
 		};
 		CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
@@ -1155,6 +1175,11 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
 		};
+		A439777C4AC32686290533F1 /* MapboxNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 0D2304994EF3BDFEB3695EE3 /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
+			productName = MapboxNavigation;
+		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
@@ -1168,20 +1193,20 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MapLibre;
 		};
-		CD57BF4A2BD283F300C275B9 /* MapLibreSwiftDSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CD57BF492BD283F300C275B9 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
-			productName = MapLibreSwiftDSL;
-		};
-		CD57BF4C2BD283F300C275B9 /* MapLibreSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CD57BF492BD283F300C275B9 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
-			productName = MapLibreSwiftUI;
-		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
 			productName = SFSafeSymbols;
+		};
+		CD609BA72BDEF33C00BDFECE /* MapLibreSwiftDSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD609BA62BDEF33C00BDFECE /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftDSL;
+		};
+		CD609BA92BDEF33C00BDFECE /* MapLibreSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD609BA62BDEF33C00BDFECE /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftUI;
 		};
 		CD8C5A1F2BA342A5002EBE8A /* SimpleToast */ = {
 			isa = XCSwiftPackageProductDependency;

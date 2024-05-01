@@ -126,6 +126,7 @@ struct SearchSheet: View {
 					}
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+					.padding(.top)
 				}
 				.listStyle(.plain)
 			}
@@ -135,8 +136,11 @@ struct SearchSheet: View {
 		} content: { item in
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
-				self.mapStore.route = routes.routes.first
+				self.mapStore.routes = routes
 				self.mapStore.mapItems = [Row(toursprung: item)]
+				if let location = routes.waypoints.first {
+					self.mapStore.waypoints = [.myLocation(location), .poi(item)]
+				}
 			} onMore: {
 				Logger.searchView.info("more item \(item))")
 			} onDismiss: {
