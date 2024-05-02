@@ -38,25 +38,21 @@ public class POI: Codable, Hashable, Identifiable {
 	public var locationCoordinate: CLLocationCoordinate2D?
 	public var type: String
 	public var userInfo: [String: AnyHashable] = [:]
-	public var phone: String?
-	public var website: String?
 
 	// MARK: - Codable Protocol
 
 	enum CodingKeys: String, CodingKey {
-		case id, title, subtitle, locationCoordinate, type, phone, website
+		case id, title, subtitle, locationCoordinate, type
 	}
 
 	// MARK: - Lifecycle
 
-	public init(id: String, title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String, phone: String? = nil, website: String? = nil) {
+	public init(id: String, title: String, subtitle: String, locationCoordinate: CLLocationCoordinate2D, type: String) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
 		self.locationCoordinate = locationCoordinate
 		self.type = type
-		self.phone = phone
-		self.website = website
 	}
 
 	public required init(from decoder: Decoder) throws {
@@ -66,8 +62,6 @@ public class POI: Codable, Hashable, Identifiable {
 		self.subtitle = try container.decode(String.self, forKey: .subtitle)
 		self.locationCoordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .locationCoordinate)
 		self.type = try container.decode(String.self, forKey: .type)
-		self.phone = try container.decode(String.self, forKey: .phone)
-		self.website = try container.decode(String.self, forKey: .website)
 	}
 
 	// MARK: - Public
@@ -83,8 +77,6 @@ public class POI: Codable, Hashable, Identifiable {
 		try container.encode(self.subtitle, forKey: .subtitle)
 		try container.encode(self.locationCoordinate, forKey: .locationCoordinate)
 		try container.encode(self.type, forKey: .type)
-		try container.encode(self.phone, forKey: .phone)
-		try container.encode(self.website, forKey: .website)
 	}
 
 	public func hash(into hasher: inout Hasher) {
@@ -218,39 +210,27 @@ public extension POI {
 	static let ketchup = POI(id: UUID().uuidString, title: "Ketch up",
 							 subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
 							 locationCoordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
-							 type: "Restaurant",
-							 phone: "0503539560",
-							 website: "https:www.hudhudmap.sa")
+							 type: "Restaurant")
 	static let starbucks = POI(id: UUID().uuidString, title: "Starbucks",
 							   subtitle: "The Beach",
 							   locationCoordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
-							   type: "Cafe",
-							   phone: "0503539560",
-							   website: "https:www.hudhudmap.sa")
+							   type: "Cafe")
 	static let publicPlace = POI(id: UUID().uuidString, title: "publicPlace",
 								 subtitle: "Garden - Alyasmen - Riyadh",
 								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
-								 type: "publicPlace",
-								 phone: "0503539560",
-								 website: "https:www.hudhudmap.sa")
+								 type: "publicPlace")
 	static let artwork = POI(id: UUID().uuidString, title: "Artwork",
 							 subtitle: "artwork - Al-Olya - Riyadh",
 							 locationCoordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-							 type: "artwork",
-							 phone: "0503539560",
-							 website: "https:www.hudhudmap.sa")
+							 type: "artwork")
 	static let pharmacy = POI(id: UUID().uuidString, title: "Pharmacy",
 							  subtitle: "Al-Olya - Riyadh",
 							  locationCoordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-							  type: "pharmacy",
-							  phone: "0503539560",
-							  website: "https:www.hudhudmap.sa")
+							  type: "pharmacy")
 	static let supermarket = POI(id: UUID().uuidString, title: "Supermarket",
 								 subtitle: "Al-Narjs - Riyadh",
 								 locationCoordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
-								 type: "supermarket",
-								 phone: "0503539560",
-								 website: "https:www.hudhudmap.sa")
+								 type: "supermarket")
 }
 
 // MARK: - CLLocationCoordinate2D + Codable
