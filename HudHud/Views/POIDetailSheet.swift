@@ -113,6 +113,7 @@ struct POIDetailSheet: View {
 				}
 				.padding(.horizontal)
 
+				AdditionalPOIDetailsView(routes: self.routes)
 				DictionaryView(dictionary: self.poi.userInfo)
 			}
 		}
