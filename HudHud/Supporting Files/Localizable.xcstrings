@@ -106,6 +106,7 @@
     },
     "Direction" : {
       "comment" : "navigation sheet header",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -114,6 +115,9 @@
           }
         }
       }
+    },
+    "Directions" : {
+      "comment" : "navigation sheet header"
     },
     "Fastest" : {
       "localizations" : {

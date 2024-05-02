@@ -261,7 +261,7 @@ struct ContentView: View {
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.height(150), .medium, .large])
+						.presentationDetents([.height(130), .medium, .large])
 						.presentationBackgroundInteraction(
 							.enabled(upThrough: .medium)
 						)
