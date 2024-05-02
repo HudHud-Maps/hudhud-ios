@@ -51,7 +51,7 @@ final class MapStore: ObservableObject {
 	}
 
 	var points: ShapeSource {
-		return ShapeSource(identifier: "points", options: [.clustered: true, .clusterRadius: 44]) {
+		return ShapeSource(identifier: MapSourceIdentifier.points.identifier, options: [.clustered: true, .clusterRadius: 44]) {
 			self.mapItems.compactMap { item in
 				guard let coordinate = item.coordinate else { return nil }
 
@@ -80,13 +80,13 @@ final class MapStore: ObservableObject {
 				}
 			}
 		}
-		return ShapeSource(identifier: "routePoints") {
+		return ShapeSource(identifier: MapSourceIdentifier.routePoints.identifier) {
 			features
 		}
 	}
 
 	var streetViewSource: ShapeSource {
-		ShapeSource(identifier: "street-view-symbols") {
+		ShapeSource(identifier: MapSourceIdentifier.streetViewSymbols.identifier) {
 			if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
 				let streetViewPoint = StreetViewPoint(location: coordinate,
 													  heading: self.motionViewModel.position.heading)
