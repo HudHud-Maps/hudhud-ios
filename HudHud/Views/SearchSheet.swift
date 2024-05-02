@@ -27,7 +27,8 @@ struct SearchSheet: View {
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
-
+	@Environment(\.openURL) private var openURL
+	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
 	var body: some View {
@@ -141,8 +142,27 @@ struct SearchSheet: View {
 				if let location = routes.waypoints.first {
 					self.mapStore.waypoints = [.myLocation(location), .poi(item)]
 				}
-			} onMore: {
-				Logger.searchView.info("more item \(item))")
+			} onMore: { action in
+				switch action {
+				case .phone:
+					// Perform phone action
+					if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+						self.openURL(url)
+					}
+					Logger.searchView.info("Item phone \(item.phone ?? "nil")")
+				case .website:
+					// Perform website action
+					self.isPresentWebView = true
+					Logger.searchView.info("Item website \(item.website ?? "nil")")
+				case .moreInfo:
+					// Perform more info action
+					Logger.searchView.info("more item \(item))")
+				}
+			}
+			.fullScreenCover(isPresented: self.$isPresentWebView) {
+				if let website = item.website, let url = URL(string: website) {
+					SafariWebView(url: url).ignoresSafeArea()
+				}
 			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(
