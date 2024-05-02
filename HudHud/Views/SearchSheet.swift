@@ -125,6 +125,7 @@ struct SearchSheet: View {
 							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
+
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					.padding(.top)
@@ -170,11 +171,11 @@ struct SearchSheet: View {
 				.enabled(upThrough: .third)
 			)
 			.interactiveDismissDisabled()
+			.ignoresSafeArea()
 			.onAppear {
 				// Store POI
 				self.storeRecentPOI(poi: item)
 			}
-			.ignoresSafeArea()
 		}
 	}
 
