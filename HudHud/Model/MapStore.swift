@@ -32,28 +32,24 @@ final class MapStore: ObservableObject {
 	@Published var streetView: StreetViewOption = .disabled
 	@Published var route: Route?
 
-	@Published var selectedItem: POI? {
+	@Published var displayableItems: [any DisplayableAsRow] = []
+
+	@Published var selectedItem: ResolvedItem? {
 		didSet {
-			if let coordinate = self.selectedItem?.locationCoordinate {
-				self.camera = .center(coordinate, zoom: 16)
-			} else if self.mapItems.isEmpty == false {
-				self.updateCameraForMapItems()
+			if let selectedItem {
+				self.addToRecents(selectedItem)
 			}
 		}
 	}
 
-	@Published var mapItems: [POI] = [] {
-		didSet {
-			self.updateCameraForMapItems()
-		}
+	var mapItems: [any DisplayableAsMapPin] {
+		self.displayableItems.compactMap { $0 as? (any DisplayableAsMapPin) }
 	}
 
 	var points: ShapeSource {
 		return ShapeSource(identifier: "points") {
 			self.mapItems.compactMap { item in
-				guard let coordinate = item.locationCoordinate else { return nil }
-
-				return MLNPointFeature(coordinate: coordinate) { feature in
+				return MLNPointFeature(coordinate: item.coordinate) { feature in
 					feature.attributes["poi_id"] = item.id
 				}
 			}
@@ -91,9 +87,20 @@ extension MapStore: Previewable {
 private extension MapStore {
 
 	func updateCameraForMapItems() {
-		let coordinates = self.mapItems.compactMap(\.locationCoordinate)
+		let coordinates = self.mapItems.map(\.coordinate)
 		guard let camera = CameraState.boundingBox(from: coordinates) else { return }
 
 		self.camera = camera
+	}
+
+	func addToRecents(_: any DisplayableAsMapPin) {
+//		withAnimation {
+//			if self.recentViewedPOIs.count > 9 {
+//				self.recentViewedPOIs.removeFirst()
+//			}
+//			if !self.recentViewedPOIs.contains(poi) {
+//				self.recentViewedPOIs.append(poi)
+//			}
+//		}
 	}
 }

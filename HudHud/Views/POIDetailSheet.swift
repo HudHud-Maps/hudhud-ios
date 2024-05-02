@@ -20,7 +20,7 @@ import ToursprungPOI
 
 struct POIDetailSheet: View {
 
-	let poi: POI
+	let item: any DisplayableAsRow
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
 	let onMore: () -> Void
 
@@ -34,11 +34,11 @@ struct POIDetailSheet: View {
 			VStack(alignment: .leading) {
 				HStack(alignment: .top) {
 					VStack {
-						Text(self.poi.title)
+						Text(self.item.title)
 							.font(.title.bold())
 							.frame(maxWidth: .infinity, alignment: .leading)
 
-						Text(self.poi.type)
+						Text(self.item.subtitle)
 							.font(.footnote)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.padding(.bottom, 8)
@@ -113,7 +113,8 @@ struct POIDetailSheet: View {
 				}
 				.padding(.horizontal)
 
-				DictionaryView(dictionary: self.poi.userInfo)
+				Spacer()
+//				DictionaryView(dictionary: self.poi.userInfo)
 			}
 		}
 		.task {
@@ -122,9 +123,9 @@ struct POIDetailSheet: View {
 				guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
 					return
 				}
-				guard let locationCoordinate = self.poi.locationCoordinate else {
-					return
-				}
+				guard let mapItem = self.item as? any DisplayableAsMapPin else { return }
+
+				let locationCoordinate = mapItem.coordinate
 				let waypoint1 = Waypoint(location: userLocation)
 				let waypoint2 = Waypoint(coordinate: locationCoordinate)
 
@@ -151,7 +152,7 @@ struct POIDetailSheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
-	return POIDetailSheet(poi: poi) { _ in
+	return POIDetailSheet(item: ResolvedItem(id: UUID().uuidString, title: poi.title, subtitle: poi.subtitle, coordinate: poi.locationCoordinate!)) { _ in
 		Logger.searchView.info("Start \(poi)")
 	} onMore: {
 		Logger.searchView.info("More \(poi)")

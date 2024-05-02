@@ -30,7 +30,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 	}
 
 	private let session: URLSession
-	private let debouncer: AsyncDebouncer<String, [POI]>
+	private let debouncer: AsyncDebouncer<String, [PredicatedItem]>
 
 	// MARK: - POIServiceProtocol
 
@@ -45,13 +45,13 @@ public actor ToursprungPOI: POIServiceProtocol {
 
 	// MARK: - Public
 
-	public func predict(term: String) async throws -> [POI] {
+	public func predict(term: String) async throws -> [any DisplayableAsRow] {
 		return try await self.debouncer.debounce(input: term) { input in
 			return try await self.search(term: input)
 		}
 	}
 
-	public func lookup(prediction _: PredictionResult) async throws -> [POI] {
+	public func lookup(prediction _: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow] {
 		return []
 	}
 }
@@ -60,7 +60,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 
 private extension ToursprungPOI {
 
-	func search(term: String) async throws -> [POI] {
+	func search(term: String) async throws -> [PredicatedItem] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()
@@ -89,10 +89,16 @@ private extension ToursprungPOI {
 
 		let decoder = JSONDecoder()
 		let poiElementss = try decoder.decode([POIElement].self, from: data)
-		let pois = poiElementss.compactMap {
-			return POIService.POI(element: $0)
+		let items = poiElementss.compactMap {
+			return PredicatedItem(id: "\($0.placeID)",
+								  title: $0.displayName,
+								  subtitle: $0.address.description,
+								  icon: .init(systemSymbol: .pinFill),
+								  type: .toursprung) { _ in
+				print(#function)
+			}
 		}
-		return pois
+		return items
 	}
 }
 

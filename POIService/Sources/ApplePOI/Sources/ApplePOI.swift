@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import Contacts
 import CoreLocation
 import Foundation
 import MapKit
@@ -18,7 +19,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	private var localSearch: MKLocalSearch?
 	private var completer: MKLocalSearchCompleter
-	private var continuation: CheckedContinuation<[POI], Error>?
+	private var continuation: CheckedContinuation<[any DisplayableAsRow], Error>?
 	private let delegate: DelegateWrapper
 
 	// MARK: - POIServiceProtocol
@@ -30,7 +31,7 @@ public actor ApplePOI: POIServiceProtocol {
 	public init() {
 		self.completer = MKLocalSearchCompleter()
 		self.delegate = DelegateWrapper()
-		self.delegate.poi = self
+		self.delegate.apple = self
 		Task {
 			await self.completer.delegate = self.delegate
 		}
@@ -38,8 +39,8 @@ public actor ApplePOI: POIServiceProtocol {
 
 	// MARK: - Public
 
-	public func lookup(prediction: PredictionResult) async throws -> [POI] {
-		guard case let .apple(completion) = prediction else {
+	public func lookup(prediction: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow] {
+		guard case let .apple(completion) = prediction.type else {
 			return []
 		}
 
@@ -59,15 +60,22 @@ public actor ApplePOI: POIServiceProtocol {
 					return
 				}
 
-				let rows = mapItems.compactMap {
-					Row(mapItem: $0).poi
+				let items = mapItems.compactMap {
+					return ResolvedItem(id: UUID().uuidString,
+										title: $0.name ?? "",
+//								 subtitle: $0.pointOfInterestCategory?.rawValue.localizedUppercase ?? "",
+										subtitle: $0.placemark.formattedAddress ?? "",
+										coordinate: $0.placemark.coordinate,
+										onTap: { _ in
+											print(#function)
+										})
 				}
-				continuation.resume(returning: rows)
+				continuation.resume(returning: items)
 			}
 		}
 	}
 
-	public func predict(term: String) async throws -> [POI] {
+	public func predict(term: String) async throws -> [any DisplayableAsRow] {
 		return try await withCheckedThrowingContinuation { continuation in
 			if let continuation = self.continuation {
 				self.completer.cancel()
@@ -89,7 +97,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	// MARK: - Internal
 
-	func update(results: [POI]) async {
+	func update(results: [any DisplayableAsRow]) async {
 		self.continuation?.resume(returning: results)
 		self.continuation = nil
 	}
@@ -104,7 +112,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
-	weak var poi: ApplePOI?
+	weak var apple: ApplePOI?
 
 	// MARK: - Internal
 
@@ -112,16 +120,27 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
 	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
 		let results = completer.results.compactMap {
-			Row(appleCompletion: $0).poi
+			PredicatedItem(id: UUID().uuidString,
+						   title: $0.title,
+						   subtitle: $0.subtitle,
+						   icon: .init(systemSymbol: .pin),
+						   type: .apple(completion: $0))
 		}
 		Task {
-			await self.poi?.update(results: results)
+			await self.apple?.update(results: results)
 		}
 	}
 
 	func completer(_: MKLocalSearchCompleter, didFailWithError error: Error) {
 		Task {
-			await self.poi?.update(error: error)
+			await self.apple?.update(error: error)
 		}
+	}
+}
+
+extension MKPlacemark {
+	var formattedAddress: String? {
+		guard let postalAddress else { return nil }
+		return CNPostalAddressFormatter.string(from: postalAddress, style: .mailingAddress).replacingOccurrences(of: "\n", with: " ")
 	}
 }

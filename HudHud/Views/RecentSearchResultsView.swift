@@ -11,22 +11,22 @@ import POIService
 import SwiftUI
 
 struct RecentSearchResultsView: View {
-	let poi: POI
+	let item: ResolvedItem
 	let mapStore: MapStore
 	let searchStore: SearchViewStore
 
 	var body: some View {
 		VStack {
 			Button {
-				let selectedItem = self.poi
-				let mapItems = [POI]()
+				let selectedItem = self.item
+				let mapItems = [ResolvedItem]()
 				self.searchStore.selectedDetent = .medium
 				self.mapStore.selectedItem = selectedItem
-				self.mapStore.mapItems = mapItems
+				self.mapStore.displayableItems = mapItems
 
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
-					self.poi.icon
+					self.item.icon
 						.font(.title2)
 						.aspectRatio(contentMode: .fit)
 						.foregroundStyle(.white)
@@ -35,17 +35,17 @@ struct RecentSearchResultsView: View {
 						.overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
 						.layoutPriority(1)
 						.frame(minWidth: .leastNonzeroMagnitude)
-						.background(
-							self.poi.iconColor.mask(Circle())
-						)
+//						.background(
+//							self.item.iconColor.mask(Circle())
+//						)
 
 					VStack(alignment: .leading) {
-						Text(self.poi.title)
+						Text(self.item.title)
 							.foregroundStyle(.primary)
 							.font(.headline)
 							.lineLimit(1)
 							.foregroundColor(.primary)
-						Text(self.poi.subtitle)
+						Text(self.item.subtitle)
 							.foregroundStyle(.secondary)
 							.font(.body)
 							.lineLimit(1)
@@ -61,5 +61,7 @@ struct RecentSearchResultsView: View {
 }
 
 #Preview {
-	RecentSearchResultsView(poi: .artwork, mapStore: .storeSetUpForPreviewing, searchStore: .init(mapStore: .storeSetUpForPreviewing, mode: .preview))
+	RecentSearchResultsView(item: .init(id: UUID().uuidString, title: "Riyadh", subtitle: "City Center", coordinate: .riyadh),
+							mapStore: .storeSetUpForPreviewing,
+							searchStore: .init(mapStore: .storeSetUpForPreviewing, mode: .preview))
 }

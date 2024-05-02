@@ -12,7 +12,7 @@ import SwiftUI
 
 struct SearchResultItem: View {
 
-	let prediction: POI
+	let prediction: any DisplayableAsRow
 	@ObservedObject var searchViewStore: SearchViewStore
 
 	var body: some View {
@@ -27,9 +27,9 @@ struct SearchResultItem: View {
 				.overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
 				.layoutPriority(1)
 				.frame(minWidth: .leastNonzeroMagnitude)
-				.background(
-					self.prediction.iconColor.mask(Circle())
-				)
+//				.background(
+//					self.prediction.iconColor.mask(Circle())
+//				)
 
 			VStack(alignment: .leading) {
 				Text(self.prediction.title)
@@ -56,5 +56,10 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	SearchResultItem(prediction: .starbucks, searchViewStore: .storeSetUpForPreviewing)
+	SearchResultItem(prediction: PredicatedItem(id: UUID().uuidString,
+												title: "Starbucks",
+												subtitle: "Coffee",
+												icon: .init(systemSymbol: .cupAndSaucer),
+												type: .appleResolved),
+					 searchViewStore: .storeSetUpForPreviewing)
 }

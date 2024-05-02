@@ -28,7 +28,7 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
-	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
+	@AppStorage("RecentViewedItem") var recentViewedItem = RecentViewedItems()
 
 	var body: some View {
 		return VStack {
@@ -61,6 +61,7 @@ struct SearchSheet: View {
 			.background(.quinary)
 			.cornerRadius(12)
 			.padding()
+
 			if !self.searchStore.searchText.isEmpty {
 				if self.searchStore.isSearching {
 					List {
@@ -78,33 +79,57 @@ struct SearchSheet: View {
 					}
 					.listStyle(.plain)
 				} else {
-					List(self.$mapStore.mapItems, id: \.self) { item in
-						let row = Row(toursprung: item.wrappedValue)
+					List(self.mapStore.displayableItems, id: \.id) { item in
 						Button(action: {
 							self.searchIsFocused = false
-							self.searchStore.selectedDetent = .small
-							switch row.provider {
+
+							switch item.type {
 							case .toursprung:
-								self.mapStore.selectedItem = row.poi
-							case .appleCompletion:
-								self.searchStore.selectedDetent = .medium
-								self.searchIsFocused = false
-								Task {
-									let items = try await self.searchStore.resolve(prediction: row)
-									if let firstResult = items.first, items.count == 1 {
-										self.mapStore.selectedItem = firstResult.poi
-										self.mapStore.mapItems = items.compactMap(\.poi)
-									} else {
-										self.mapStore.selectedItem = nil
-										self.mapStore.mapItems = items.compactMap(\.poi)
+//								self.mapStore.selectedItem = item
+								break
+							case .apple:
+								if item is PredicatedItem {
+									Task {
+										let resolvedItems = try await self.searchStore.resolve(prediction: item)
+										self.mapStore.displayableItems = resolvedItems
+										if let firstResult = resolvedItems.first, resolvedItems.count == 1 {
+											self.mapStore.selectedItem = firstResult as? ResolvedItem
+										} else {
+											self.mapStore.selectedItem = nil
+										}
 									}
 								}
-							case .appleMapItem:
-								self.mapStore.selectedItem = row.poi
+								if item is ResolvedItem {
+									item.select()
+								}
+							case .appleResolved:
+								item.select()
+							case .none:
+								break
 							}
 
+//							switch row.provider {
+//							case .toursprung:
+//								self.mapStore.selectedItem = item
+//							case .appleCompletion:
+//								self.searchStore.selectedDetent = .medium
+//								self.searchIsFocused = false
+//								Task {
+//									let items = try await self.searchStore.resolve(prediction: row)
+//									if let firstResult = items.first, items.count == 1 {
+//										self.mapStore.selectedItem = firstResult.poi
+//										self.mapStore.mapItems = items.compactMap(\.poi)
+//									} else {
+//										self.mapStore.selectedItem = nil
+//										self.mapStore.mapItems = items.compactMap(\.poi)
+//									}
+//								}
+//							case .appleMapItem:
+//								self.mapStore.selectedItem = row.poi
+//							}
+
 						}, label: {
-							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
+							SearchResultItem(prediction: item, searchViewStore: self.searchStore)
 								.frame(maxWidth: .infinity)
 								.redacted(reason: self.searchStore.isSearching ? .placeholder : [])
 						})
@@ -121,8 +146,8 @@ struct SearchSheet: View {
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedPOIs, id: \.self) { pois in
-							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
+						ForEach(self.recentViewedItem, id: \.self) { item in
+							RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
 					.listRowSeparator(.hidden)
@@ -133,26 +158,53 @@ struct SearchSheet: View {
 			}
 		}
 		.sheet(item: self.$mapStore.selectedItem) {
+			// Dismiss callback
 			self.searchStore.selectedDetent = .medium
-		} content: { item in
-			POIDetailSheet(poi: item) { routes in
-				Logger.searchView.info("Start item \(item)")
-				self.mapStore.route = routes.routes.first
-				self.mapStore.mapItems = [item]
-			} onMore: {
-				Logger.searchView.info("more item \(item))")
-			}
-			.presentationDetents([.third, .large])
-			.presentationBackgroundInteraction(
-				.enabled(upThrough: .third)
-			)
-			.interactiveDismissDisabled()
-			.ignoresSafeArea()
-			.onAppear {
-				// Store POI
-				self.storeRecentPOI(poi: item)
-			}
+		} content: { _ in
+			/*
+			 			POIDetailSheet(item: item, onStart: { calculation in
+			 				Logger.searchView.info("Start item \(item.title)")
+			 				self.mapStore.route = calculation.routes.first
+			 				self.mapStore.displayableItems = [item]
+			 			}, onMore: {
+			 				Logger.searchView.info("more item \(item.title))")
+			 			})
+			 			.presentationDetents([.third, .large])
+			 			.presentationBackgroundInteraction(
+			 				.enabled(upThrough: .third)
+			 			)
+			 			.interactiveDismissDisabled()
+			 			.ignoresSafeArea()
+			 			.onAppear {
+			 				// Store POI
+			 //				self.storeRecentPOI(poi: item)
+			 			}
+			 			 */
 		}
+
+		/*
+		 .sheet(item: self.$mapStore.selectedItem, onDismiss: {
+		 	self.searchStore.selectedDetent = .medium
+		 }, content: { item in
+		 	POIDetailSheet(item: item) { calculation in
+		 		Logger.searchView.info("Start item \(item)")
+		 		self.mapStore.route = calculation.routes.first
+		 		self.mapStore.displayableItems = [item]
+		 	} onMore: {
+		 		Logger.searchView.info("more item \(item))")
+		 	}
+		 	.presentationDetents([.third, .large])
+		 	.presentationBackgroundInteraction(
+		 		.enabled(upThrough: .third)
+		 	)
+		 	.interactiveDismissDisabled()
+		 	.ignoresSafeArea()
+		 	.onAppear {
+		 		// Store POI
+		 		self.storeRecentPOI(poi: item)
+		 	}
+		 })
+		 */
 	}
 
 	// MARK: - Lifecycle
@@ -165,16 +217,16 @@ struct SearchSheet: View {
 
 	// MARK: - Internal
 
-	func storeRecentPOI(poi: POI) {
-		withAnimation {
-			if self.recentViewedPOIs.count > 9 {
-				self.recentViewedPOIs.removeFirst()
-			}
-			if !self.recentViewedPOIs.contains(poi) {
-				self.recentViewedPOIs.append(poi)
-			}
-		}
-	}
+//	func storeRecentPOI(poi: POI) {
+//		withAnimation {
+//			if self.recentViewedPOIs.count > 9 {
+//				self.recentViewedPOIs.removeFirst()
+//			}
+//			if !self.recentViewedPOIs.contains(poi) {
+//				self.recentViewedPOIs.append(poi)
+//			}
+//		}
+//	}
 
 }
 
@@ -187,24 +239,35 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: .starbucks, searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: .supermarket, searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: .pharmacy, searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: .artwork, searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: .ketchup, searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: .publicPlace, searchViewStore: .storeSetUpForPreviewing)
+		SearchResultItem(prediction: PredicatedItem(poi: .starbucks), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredicatedItem(poi: .supermarket), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredicatedItem(poi: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredicatedItem(poi: .artwork), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredicatedItem(poi: .ketchup), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredicatedItem(poi: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
 	]
 }
 
-public typealias RecentViewedPOIs = [POI]
+extension PredicatedItem {
+
+	init(poi: POI) {
+		self.init(id: poi.id,
+				  title: poi.title,
+				  subtitle: poi.subtitle,
+				  icon: poi.icon,
+				  type: .appleResolved)
+	}
+}
+
+public typealias RecentViewedItems = [ResolvedItem]
 
 // MARK: - RawRepresentable
 
-extension RecentViewedPOIs: RawRepresentable {
+extension RecentViewedItems: RawRepresentable {
 	public init?(rawValue: String) {
 		guard let data = rawValue.data(using: .utf8),
 			  let result = try? JSONDecoder()
-			  	.decode(RecentViewedPOIs.self, from: data) else {
+			  	.decode(RecentViewedItems.self, from: data) else {
 			return nil
 		}
 		self = result

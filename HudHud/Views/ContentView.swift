@@ -98,11 +98,11 @@ struct ContentView: View {
 				poi.id == placeID
 			}
 
-			if let poi {
+			if let poi = poi as? ResolvedItem {
 				Logger.mapInteraction.debug("setting poi")
 				self.searchViewStore.mapStore.selectedItem = poi
 			} else {
-				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
 			}
 		})
 		.unsafeMapViewModifier { mapView in

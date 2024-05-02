@@ -41,7 +41,7 @@ final class SearchViewStore: ObservableObject {
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.mapStore.mapItems = []
+			self.mapStore.displayableItems = []
 			self.mapStore.selectedItem = nil
 		}
 	}
@@ -67,7 +67,7 @@ final class SearchViewStore: ObservableObject {
 
 						let prediction = try await self.apple.predict(term: newValue)
 						let items = prediction
-						self.mapStore.mapItems = items
+						self.mapStore.displayableItems = items
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
@@ -77,16 +77,17 @@ final class SearchViewStore: ObservableObject {
 
 						let prediction = try await self.toursprung.predict(term: newValue)
 						let items = prediction
-						self.mapStore.mapItems = items
+						self.mapStore.displayableItems = items
 					}
 				case .preview:
-					self.mapStore.mapItems = [
-						.starbucks,
-						.ketchup,
-						.publicPlace,
-						.artwork,
-						.pharmacy,
-						.supermarket
+					self.mapStore.displayableItems = [
+						ResolvedItem(id: UUID().uuidString, title: "Starbucks", subtitle: "Coffee", coordinate: .riyadh)
+//						.starbucks,
+//						.ketchup,
+//						.publicPlace,
+//						.artwork,
+//						.pharmacy,
+//						.supermarket
 					]
 				}
 			}
@@ -96,14 +97,30 @@ final class SearchViewStore: ObservableObject {
 
 	// MARK: - SearchViewStore
 
-	func resolve(prediction: Row) async throws -> [Row] {
-		switch prediction.provider {
-		case let .appleCompletion(completion):
-			return try await self.apple.lookup(prediction: .apple(completion: completion)).map { Row(toursprung: $0) }
-		case let .appleMapItem(mapItem):
-			return [Row(mapItem: mapItem)]
-		case let .toursprung(poi):
-			return [Row(toursprung: poi)]
+//	func resolve(prediction: Row) async throws -> [Row] {
+//		switch prediction.provider {
+//		case let .appleCompletion(completion):
+//			return try await self.apple.lookup(prediction: .apple(completion: completion)).map { Row(toursprung: $0) }
+//		case let .appleMapItem(mapItem):
+//			return [Row(mapItem: mapItem)]
+//		case let .toursprung(poi):
+//			return [Row(toursprung: poi)]
+//		}
+//	}
+
+	func resolve(prediction: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow] {
+//		print(#function)
+//		return []
+
+		switch prediction.type {
+		case .apple:
+			return try await self.apple.lookup(prediction: prediction)
+		case .appleResolved:
+			return []
+		case .toursprung:
+			return []
+//		case .none:
+//			return []
 		}
 	}
 }

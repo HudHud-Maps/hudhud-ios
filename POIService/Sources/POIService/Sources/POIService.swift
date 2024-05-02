@@ -17,15 +17,141 @@ import SwiftUI
 public protocol POIServiceProtocol {
 
 	static var serviceName: String { get }
-	func lookup(prediction: PredictionResult) async throws -> [POI]
-	func predict(term: String) async throws -> [POI]
+	func lookup(prediction: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow]
+	func predict(term: String) async throws -> [any DisplayableAsRow]
 }
 
 // MARK: - PredictionResult
 
 public enum PredictionResult: Hashable {
 	case apple(completion: MKLocalSearchCompletion)
-	case toursprung(result: Row)
+	case appleResolved
+	case toursprung
+}
+
+// MARK: - DisplayableAsRow
+
+public protocol DisplayableAsRow: Identifiable, Hashable {
+	var id: String { get set }
+	var title: String { get }
+	var subtitle: String { get }
+	var icon: Image { get }
+	var type: PredictionResult { get }
+
+	var onTap: ((Self) -> Void)? { get }
+
+	func select()
+}
+
+// MARK: - DisplayableAsMapPin
+
+public protocol DisplayableAsMapPin: Identifiable, Hashable, Codable {
+	var id: String { get set }
+	var coordinate: CLLocationCoordinate2D { get }
+	var icon: Image { get }
+}
+
+// MARK: - PredicatedItem
+
+public struct PredicatedItem: DisplayableAsRow {
+	public var id: String
+	public var title: String
+	public var subtitle: String
+	public var icon: Image
+	public var type: PredictionResult
+	public var onTap: ((Self) -> Void)?
+
+	// MARK: - Lifecycle
+
+	public init(id: String, title: String, subtitle: String, icon: Image, type: PredictionResult, onTap: ((Self) -> Void)? = nil) {
+		self.id = id
+		self.title = title
+		self.subtitle = subtitle
+		self.icon = icon
+		self.type = type
+		self.onTap = onTap
+	}
+
+	// MARK: - Public
+
+	public static func == (lhs: PredicatedItem, rhs: PredicatedItem) -> Bool {
+		return lhs.id == rhs.id
+	}
+
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(self.id)
+		hasher.combine(self.title)
+		hasher.combine(self.subtitle)
+	}
+
+	public func select() {
+		self.onTap?(self)
+	}
+}
+
+// MARK: - ResolvedItem
+
+public struct ResolvedItem: DisplayableAsRow, DisplayableAsMapPin, Codable, CustomStringConvertible {
+	public var id: String
+	public var title: String
+	public var subtitle: String
+	public var icon: Image {
+		return Image(systemSymbol: .pinFill)
+	}
+
+	public let type: PredictionResult = .appleResolved
+	public var coordinate: CLLocationCoordinate2D
+	public var onTap: ((Self) -> Void)?
+
+	enum CodingKeys: String, CodingKey {
+		case id, title, subtitle, coordinate
+	}
+
+	public var description: String {
+		return "\(self.title), \(self.subtitle), coordinate: \(self.coordinate)"
+	}
+
+	// MARK: - Lifecycle
+
+	public init(id: String, title: String, subtitle: String, coordinate: CLLocationCoordinate2D, onTap: ((Self) -> Void)? = nil) {
+		self.id = id
+		self.title = title
+		self.subtitle = subtitle
+		self.onTap = onTap
+		self.coordinate = coordinate
+	}
+
+	public init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		self.id = try container.decode(String.self, forKey: .id)
+		self.title = try container.decode(String.self, forKey: .title)
+		self.subtitle = try container.decode(String.self, forKey: .subtitle)
+		self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
+	}
+
+	// MARK: - Public
+
+	public static func == (lhs: ResolvedItem, rhs: ResolvedItem) -> Bool {
+		return lhs.id == rhs.id
+	}
+
+	public func encode(to encoder: Encoder) throws {
+		var container = encoder.container(keyedBy: CodingKeys.self)
+		try container.encode(self.id, forKey: .id)
+		try container.encode(self.title, forKey: .title)
+		try container.encode(self.subtitle, forKey: .subtitle)
+		try container.encode(self.coordinate, forKey: .coordinate)
+	}
+
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(self.id)
+		hasher.combine(self.title)
+		hasher.combine(self.subtitle)
+	}
+
+	public func select() {
+		self.onTap?(self)
+	}
 }
 
 // MARK: - POI
