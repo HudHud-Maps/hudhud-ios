@@ -179,14 +179,14 @@ public struct Row: Hashable {
 					   locationCoordinate: coordinate,
 					   type: "\(type)",
 					   phone: self.poi?.phone ?? "",
-					   website: self.poi?.website ?? "")
+					   website: self.poi?.website ?? URL(string: ""))
 		case let .appleMapItem(mapItem):
 			return POI(id: self.id, title: self.title,
 					   subtitle: self.subtitle,
 					   locationCoordinate: mapItem.placemark.coordinate,
 					   type: "",
 					   phone: mapItem.phoneNumber,
-					   website: mapItem.url?.absoluteString)
+					   website: mapItem.url ?? URL(string: ""))
 		case let .toursprung(poi):
 			return poi
 		}

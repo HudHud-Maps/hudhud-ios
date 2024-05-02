@@ -153,15 +153,16 @@ struct SearchSheet: View {
 				case .website:
 					// Perform website action
 					self.isPresentWebView = true
-					Logger.searchView.info("Item website \(item.website ?? "nil")")
+					Logger.searchView.info("Item website \(item.website?.absoluteString ?? "")")
 				case .moreInfo:
 					// Perform more info action
 					Logger.searchView.info("more item \(item))")
 				}
 			}
 			.fullScreenCover(isPresented: self.$isPresentWebView) {
-				if let website = item.website, let url = URL(string: website) {
-					SafariWebView(url: url).ignoresSafeArea()
+				if let website = item.website {
+					SafariWebView(url: website)
+						.ignoresSafeArea()
 				}
 			}
 			.presentationDetents([.third, .large])
@@ -169,11 +170,11 @@ struct SearchSheet: View {
 				.enabled(upThrough: .third)
 			)
 			.interactiveDismissDisabled()
-			.ignoresSafeArea()
 			.onAppear {
 				// Store POI
 				self.storeRecentPOI(poi: item)
 			}
+			.ignoresSafeArea()
 		}
 	}
 
