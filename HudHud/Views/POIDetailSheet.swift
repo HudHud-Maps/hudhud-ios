@@ -91,7 +91,7 @@ struct POIDetailSheet: View {
 					.buttonStyle(.borderedProminent)
 					.disabled(self.routes == nil)
 
-					if let phone = self.poi.phone {
+					if let phone = self.poi.phone, !phone.isEmpty {
 						Button(action: {
 							self.onMore(.phone)
 						}, label: {
@@ -104,7 +104,7 @@ struct POIDetailSheet: View {
 						})
 						.buttonStyle(.bordered)
 					}
-					if let website = self.poi.website {
+					if let website = self.poi.website, !website.isEmpty {
 						Button(action: {
 							self.onMore(.website)
 						}, label: {
