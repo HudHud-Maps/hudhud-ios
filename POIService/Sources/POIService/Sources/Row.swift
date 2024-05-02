@@ -177,16 +177,12 @@ public struct Row: Hashable {
 			return POI(id: self.id, title: self.title,
 					   subtitle: self.subtitle,
 					   locationCoordinate: coordinate,
-					   type: "\(type)",
-					   phone: self.poi?.phone ?? "",
-					   website: self.poi?.website ?? "")
+					   type: "\(type)")
 		case let .appleMapItem(mapItem):
 			return POI(id: self.id, title: self.title,
 					   subtitle: self.subtitle,
 					   locationCoordinate: mapItem.placemark.coordinate,
-					   type: "",
-					   phone: mapItem.phoneNumber,
-					   website: mapItem.url?.absoluteString)
+					   type: "")
 		case let .toursprung(poi):
 			return poi
 		}
