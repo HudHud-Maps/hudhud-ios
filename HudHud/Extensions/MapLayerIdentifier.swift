@@ -9,36 +9,14 @@
 import Foundation
 
 enum MapLayerIdentifier {
-	case routeLineCasing
-	case routeLineInner
-	case simpleCirclesRoute
-	case simpleSymbolsRoute
-	case simpleCirclesClustered
-	case simpleSymbolsClustered
-	case simpleCircles
-	case simpleSymbols
-	case streetViewSymbols
+	static var routeLineCasing = "routeLineCasing"
+	static var routeLineInner = "routeLineInner"
+	static var simpleCirclesRoute = "simpleCirclesRoute"
+	static var simpleSymbolsRoute = "simpleSymbolsRoute"
+	static var simpleCirclesClustered = "simpleCirclesClustered"
+	static var simpleSymbolsClustered = "simpleSymbolsClustered"
+	static var simpleCircles = "simpleCircles"
+	static var simpleSymbols = "simpleSymbols"
+	static var streetViewSymbols = "streetViewSymbols"
 
-	var identifier: String {
-		switch self {
-		case .routeLineCasing:
-			return "route-line-casing"
-		case .routeLineInner:
-			return "route-line-inner"
-		case .simpleCirclesRoute:
-			return "simple-circles-route"
-		case .simpleSymbolsRoute:
-			return "simple-symbols-route"
-		case .simpleCirclesClustered:
-			return "simple-circles-clustered"
-		case .simpleSymbolsClustered:
-			return "simple-symbols-clustered"
-		case .simpleCircles:
-			return "simple-circles"
-		case .simpleSymbols:
-			return "simple-symbols"
-		case .streetViewSymbols:
-			return "street-view-symbols"
-		}
-	}
 }

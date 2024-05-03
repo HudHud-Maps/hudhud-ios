@@ -9,21 +9,8 @@
 import Foundation
 
 enum MapSourceIdentifier {
-	case pedestrianPolyline
-	case points
-	case routePoints
-	case streetViewSymbols
-
-	var identifier: String {
-		switch self {
-		case .pedestrianPolyline:
-			return "pedestrian-polyline"
-		case .points:
-			return "points"
-		case .routePoints:
-			return "routePoints"
-		case .streetViewSymbols:
-			return "street-view-symbols"
-		}
-	}
+	static var pedestrianPolyline = "pedestrianPolyline"
+	static var points = "points"
+	static var routePoints = "routePoints"
+	static var streetViewSymbols = "streetViewSymbols"
 }

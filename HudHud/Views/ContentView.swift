@@ -42,12 +42,12 @@ struct ContentView: View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
 			if let route = self.mapStore.routes?.routes.first {
-				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline.identifier) {
+				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
 					MLNPolylineFeature(coordinates: route.coordinates ?? [])
 				}
 
 				// Add a polyline casing for a stroke effect
-				LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing.identifier, source: polylineSource)
+				LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
 					.lineCap(.round)
 					.lineJoin(.round)
 					.lineColor(.white)
@@ -57,7 +57,7 @@ struct ContentView: View {
 							   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
 
 				// Add an inner (blue) polyline
-				LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner.identifier, source: polylineSource)
+				LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
 					.lineCap(.round)
 					.lineJoin(.round)
 					.lineColor(.systemBlue)
@@ -68,46 +68,46 @@ struct ContentView: View {
 
 				let routePoints = self.mapStore.routePoints
 
-				CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute.identifier, source: routePoints)
+				CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
 					.radius(16)
 					.color(.systemRed)
 					.strokeWidth(2)
 					.strokeColor(.white)
-				SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute.identifier, source: routePoints)
+				SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
 					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 					.iconColor(.white)
 			}
 			let pointSource = self.mapStore.points
 
 			// shows the clustered pins
-			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered.identifier, source: pointSource)
+			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered, source: pointSource)
 				.radius(16)
 				.color(.systemRed)
 				.strokeWidth(2)
 				.strokeColor(.white)
 				.predicate(NSPredicate(format: "cluster == YES"))
-			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsClustered.identifier, source: pointSource)
+			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsClustered, source: pointSource)
 				.textColor(.white)
 				.text(expression: NSExpression(format: "CAST(point_count, 'NSString')"))
 				.predicate(NSPredicate(format: "cluster == YES"))
 
 			// shows the unclustered pins
-			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles.identifier, source: pointSource)
+			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
 				.radius(16)
 				.color(.systemRed)
 				.strokeWidth(2)
 				.strokeColor(.white)
 				.predicate(NSPredicate(format: "cluster != YES"))
-			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols.identifier, source: pointSource)
+			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
 				.predicate(NSPredicate(format: "cluster != YES"))
 
-			SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols.identifier, source: self.mapStore.streetViewSource)
+			SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
 				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
-		.onTapMapGesture(on: [MapLayerIdentifier.simpleCircles.identifier], onTapChanged: { _, features in
+		.onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
 			// the one nearest nearest one to the touch point.
 			guard let feature = features.first,
