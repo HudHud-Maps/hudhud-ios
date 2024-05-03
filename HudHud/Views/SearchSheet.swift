@@ -28,8 +28,6 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
-	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
-
 	var body: some View {
 		return VStack {
 			HStack {
@@ -120,7 +118,7 @@ struct SearchSheet: View {
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedPOIs, id: \.self) { pois in
+						ForEach(self.searchStore.recentViewedPOIs, id: \.self) { pois in
 							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
@@ -171,11 +169,11 @@ struct SearchSheet: View {
 
 	func storeRecentPOI(poi: POI) {
 		withAnimation {
-			if self.recentViewedPOIs.count > 9 {
-				self.recentViewedPOIs.removeFirst()
+			if self.searchStore.recentViewedPOIs.count > 9 {
+				self.searchStore.recentViewedPOIs.removeFirst()
 			}
-			if !self.recentViewedPOIs.contains(poi) {
-				self.recentViewedPOIs.append(poi)
+			if !self.searchStore.recentViewedPOIs.contains(poi) {
+				self.searchStore.recentViewedPOIs.append(poi)
 			}
 		}
 	}
@@ -184,11 +182,6 @@ struct SearchSheet: View {
 		self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
 	}
 
-}
-
-#Preview {
-	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
 
 extension Route: Identifiable {}
@@ -225,4 +218,9 @@ extension RecentViewedPOIs: RawRepresentable {
 		}
 		return result
 	}
+}
+
+#Preview {
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
