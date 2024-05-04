@@ -56,7 +56,7 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	SearchResultItem(prediction: PredicatedItem(id: UUID().uuidString,
+	SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
 												title: "Starbucks",
 												subtitle: "Coffee",
 												icon: .init(systemSymbol: .cupAndSaucer),

@@ -120,7 +120,7 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
 	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
 		let results = completer.results.compactMap {
-			AnyDisplayableAsRow(PredicatedItem(id: UUID().uuidString,
+			AnyDisplayableAsRow(PredictionItem(id: UUID().uuidString,
 											   title: $0.title,
 											   subtitle: $0.subtitle,
 											   icon: .init(systemSymbol: .pin),

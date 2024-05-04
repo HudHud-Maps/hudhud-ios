@@ -184,16 +184,16 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: PredicatedItem(poi: .starbucks), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredicatedItem(poi: .supermarket), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredicatedItem(poi: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredicatedItem(poi: .artwork), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredicatedItem(poi: .ketchup), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredicatedItem(poi: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
+		SearchResultItem(prediction: PredictionItem(poi: .starbucks), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem(poi: .supermarket), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem(poi: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem(poi: .artwork), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem(poi: .ketchup), searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem(poi: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
 	]
 }
 
-extension PredicatedItem {
+extension PredictionItem {
 
 	init(poi: POI) {
 		self.init(id: poi.id,

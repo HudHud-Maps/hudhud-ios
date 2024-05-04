@@ -85,9 +85,9 @@ public protocol DisplayableAsMapPin: Identifiable, Hashable, Codable {
 	var icon: Image { get }
 }
 
-// MARK: - PredicatedItem
+// MARK: - PredictionItem
 
-public struct PredicatedItem: DisplayableAsRow {
+public struct PredictionItem: DisplayableAsRow {
 
 	public var id: String
 	public var title: String
@@ -109,7 +109,7 @@ public struct PredicatedItem: DisplayableAsRow {
 
 	// MARK: - Public
 
-	public static func == (lhs: PredicatedItem, rhs: PredicatedItem) -> Bool {
+	public static func == (lhs: PredictionItem, rhs: PredictionItem) -> Bool {
 		return lhs.id == rhs.id
 	}
 
