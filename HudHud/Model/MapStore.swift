@@ -42,8 +42,8 @@ final class MapStore: ObservableObject {
 		}
 	}
 
-	var mapItems: [any DisplayableAsMapPin] {
-		self.displayableItems.compactMap { $0 as? (any DisplayableAsMapPin) }
+	var mapItems: [ResolvedItem] {
+		self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
 	}
 
 	var points: ShapeSource {
@@ -93,7 +93,7 @@ private extension MapStore {
 		self.camera = camera
 	}
 
-	func addToRecents(_: any DisplayableAsMapPin) {
+	func addToRecents(_: ResolvedItem) {
 //		withAnimation {
 //			if self.recentViewedPOIs.count > 9 {
 //				self.recentViewedPOIs.removeFirst()

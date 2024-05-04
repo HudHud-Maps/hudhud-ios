@@ -28,7 +28,7 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
-	@AppStorage("RecentViewedItem") var recentViewedItem = RecentViewedItems()
+	@AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
 
 	var body: some View {
 		return VStack {
@@ -79,8 +79,20 @@ struct SearchSheet: View {
 					}
 					.listStyle(.plain)
 				} else {
-					List(self.mapStore.displayableItems) { _ in
-						Text("Woof")
+					List(self.mapStore.displayableItems) { item in
+						Button(action: {
+							// just a rough idea:
+							// let resolvedItem = try await item.ontap() // or a closure
+							// self.mapstore.displayableItems = currentDisplayableItemsButWithThisOneItemUpdatedTotheNewResolvedItem
+							// self.mapstore.selectedItem = resolvedItem
+						}, label: {
+							SearchResultItem(prediction: item, searchViewStore: self.searchStore)
+								.frame(maxWidth: .infinity)
+								.redacted(reason: self.searchStore.isSearching ? .placeholder : [])
+						})
+						.disabled(self.searchStore.isSearching)
+						.listRowSeparator(.hidden)
+						.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
 					}
 					.listStyle(.plain)
 				}
@@ -91,7 +103,7 @@ struct SearchSheet: View {
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedItem, id: \.self) { item in
+						ForEach(self.recentViewedItem) { item in
 							RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
@@ -204,15 +216,13 @@ extension PredictionItem {
 	}
 }
 
-public typealias RecentViewedItems = [ResolvedItem]
+// MARK: - RawRepresentable + RawRepresentable
 
-// MARK: - RawRepresentable
-
-extension RecentViewedItems: RawRepresentable {
+extension [ResolvedItem]: RawRepresentable {
 	public init?(rawValue: String) {
 		guard let data = rawValue.data(using: .utf8),
 			  let result = try? JSONDecoder()
-			  	.decode(RecentViewedItems.self, from: data) else {
+			  	.decode([ResolvedItem].self, from: data) else {
 			return nil
 		}
 		self = result

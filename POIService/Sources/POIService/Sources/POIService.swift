@@ -60,7 +60,7 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 		self.innerModel.onTap
 	}
 
-	var innerModel: any DisplayableAsRow
+	public var innerModel: any DisplayableAsRow
 
 	public var id: String { self.innerModel.id }
 
@@ -75,14 +75,6 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 	public static func == (lhs: AnyDisplayableAsRow, rhs: AnyDisplayableAsRow) -> Bool {
 		return lhs.id == rhs.id
 	}
-}
-
-// MARK: - DisplayableAsMapPin
-
-public protocol DisplayableAsMapPin: Identifiable, Hashable, Codable {
-	var id: String { get set }
-	var coordinate: CLLocationCoordinate2D { get }
-	var icon: Image { get }
 }
 
 // MARK: - PredictionItem
@@ -123,7 +115,7 @@ public struct PredictionItem: DisplayableAsRow {
 
 // MARK: - ResolvedItem
 
-public struct ResolvedItem: DisplayableAsRow, DisplayableAsMapPin, Codable, CustomStringConvertible {
+public struct ResolvedItem: DisplayableAsRow, Codable, CustomStringConvertible {
 	public var id: String
 	public var title: String
 	public var subtitle: String

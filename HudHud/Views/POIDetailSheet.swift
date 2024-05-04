@@ -20,7 +20,7 @@ import ToursprungPOI
 
 struct POIDetailSheet: View {
 
-	let item: any DisplayableAsRow
+	let item: ResolvedItem
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
 	let onMore: () -> Void
 
@@ -123,8 +123,7 @@ struct POIDetailSheet: View {
 				guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
 					return
 				}
-				guard let mapItem = self.item as? any DisplayableAsMapPin else { return }
-
+				let mapItem = self.item
 				let locationCoordinate = mapItem.coordinate
 				let waypoint1 = Waypoint(location: userLocation)
 				let waypoint2 = Waypoint(coordinate: locationCoordinate)
