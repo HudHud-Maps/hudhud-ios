@@ -37,6 +37,7 @@ struct ContentView: View {
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
+	@State var selectedDetent: PresentationDetent = .medium
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -261,7 +262,7 @@ struct ContentView: View {
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.height(130), .medium, .large])
+						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
 						.presentationBackgroundInteraction(
 							.enabled(upThrough: .medium)
 						)

@@ -136,6 +136,7 @@ struct SearchSheet: View {
 		} content: { item in
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
+				self.searchStore.selectedDetent = .small
 				self.mapStore.routes = routes
 				self.mapStore.mapItems = [Row(toursprung: item)]
 				if let location = routes.waypoints.first {
