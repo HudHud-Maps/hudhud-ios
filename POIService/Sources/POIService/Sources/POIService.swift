@@ -17,8 +17,8 @@ import SwiftUI
 public protocol POIServiceProtocol {
 
 	static var serviceName: String { get }
-	func lookup(prediction: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow]
-	func predict(term: String) async throws -> [any DisplayableAsRow]
+	func lookup(prediction: Any) async throws -> [ResolvedItem]
+	func predict(term: String) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - PredictionResult
@@ -31,16 +31,50 @@ public enum PredictionResult: Hashable {
 
 // MARK: - DisplayableAsRow
 
-public protocol DisplayableAsRow: Identifiable, Hashable {
-	var id: String { get set }
+public protocol DisplayableAsRow: Identifiable {
+	var id: String { get }
 	var title: String { get }
 	var subtitle: String { get }
 	var icon: Image { get }
-	var type: PredictionResult { get }
 
-	var onTap: ((Self) -> Void)? { get }
+	var onTap: (() -> Void)? { get }
+}
 
-	func select()
+// MARK: - AnyDisplayableAsRow
+
+public struct AnyDisplayableAsRow: DisplayableAsRow {
+
+	public var title: String {
+		self.innerModel.title
+	}
+
+	public var subtitle: String {
+		self.innerModel.subtitle
+	}
+
+	public var icon: Image {
+		self.innerModel.icon
+	}
+
+	public var onTap: (() -> Void)? {
+		self.innerModel.onTap
+	}
+
+	var innerModel: any DisplayableAsRow
+
+	public var id: String { self.innerModel.id }
+
+	// MARK: - Lifecycle
+
+	public init(_ model: some DisplayableAsRow) {
+		self.innerModel = model // Automatically casts to “any” type
+	}
+
+	// MARK: - Public
+
+	public static func == (lhs: AnyDisplayableAsRow, rhs: AnyDisplayableAsRow) -> Bool {
+		return lhs.id == rhs.id
+	}
 }
 
 // MARK: - DisplayableAsMapPin
@@ -54,16 +88,17 @@ public protocol DisplayableAsMapPin: Identifiable, Hashable, Codable {
 // MARK: - PredicatedItem
 
 public struct PredicatedItem: DisplayableAsRow {
+
 	public var id: String
 	public var title: String
 	public var subtitle: String
 	public var icon: Image
 	public var type: PredictionResult
-	public var onTap: ((Self) -> Void)?
+	public var onTap: (() -> Void)?
 
 	// MARK: - Lifecycle
 
-	public init(id: String, title: String, subtitle: String, icon: Image, type: PredictionResult, onTap: ((Self) -> Void)? = nil) {
+	public init(id: String, title: String, subtitle: String, icon: Image, type: PredictionResult, onTap: (() -> Void)? = nil) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -84,9 +119,6 @@ public struct PredicatedItem: DisplayableAsRow {
 		hasher.combine(self.subtitle)
 	}
 
-	public func select() {
-		self.onTap?(self)
-	}
 }
 
 // MARK: - ResolvedItem
@@ -101,7 +133,7 @@ public struct ResolvedItem: DisplayableAsRow, DisplayableAsMapPin, Codable, Cust
 
 	public let type: PredictionResult = .appleResolved
 	public var coordinate: CLLocationCoordinate2D
-	public var onTap: ((Self) -> Void)?
+	public var onTap: (() -> Void)?
 
 	enum CodingKeys: String, CodingKey {
 		case id, title, subtitle, coordinate
@@ -113,7 +145,7 @@ public struct ResolvedItem: DisplayableAsRow, DisplayableAsMapPin, Codable, Cust
 
 	// MARK: - Lifecycle
 
-	public init(id: String, title: String, subtitle: String, coordinate: CLLocationCoordinate2D, onTap: ((Self) -> Void)? = nil) {
+	public init(id: String, title: String, subtitle: String, coordinate: CLLocationCoordinate2D, onTap: (() -> Void)? = nil) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
@@ -147,10 +179,6 @@ public struct ResolvedItem: DisplayableAsRow, DisplayableAsMapPin, Codable, Cust
 		hasher.combine(self.id)
 		hasher.combine(self.title)
 		hasher.combine(self.subtitle)
-	}
-
-	public func select() {
-		self.onTap?(self)
 	}
 }
 

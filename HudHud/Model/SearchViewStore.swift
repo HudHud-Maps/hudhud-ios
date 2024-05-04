@@ -81,7 +81,7 @@ final class SearchViewStore: ObservableObject {
 					}
 				case .preview:
 					self.mapStore.displayableItems = [
-						ResolvedItem(id: UUID().uuidString, title: "Starbucks", subtitle: "Coffee", coordinate: .riyadh)
+						AnyDisplayableAsRow(ResolvedItem(id: UUID().uuidString, title: "Starbucks", subtitle: "Coffee", coordinate: .riyadh))
 //						.starbucks,
 //						.ketchup,
 //						.publicPlace,
@@ -108,20 +108,9 @@ final class SearchViewStore: ObservableObject {
 //		}
 //	}
 
-	func resolve(prediction: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow] {
-//		print(#function)
-//		return []
-
-		switch prediction.type {
-		case .apple:
-			return try await self.apple.lookup(prediction: prediction)
-		case .appleResolved:
-			return []
-		case .toursprung:
-			return []
-//		case .none:
-//			return []
-		}
+	func resolve(prediction _: any DisplayableAsRow) async throws -> [ResolvedItem] {
+		// run prediction.onTap() here -> make it return ResolvedItem or [ResolvedItem]
+		return []
 	}
 }
 

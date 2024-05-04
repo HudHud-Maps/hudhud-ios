@@ -74,8 +74,6 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
-		CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */; };
-		CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */; };
 		CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05FF2B6BDC5A003E5196 /* ApplePOI */; };
 		CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06012B6BDC5A003E5196 /* POIService */; };
 		CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE06032B6BDC5A003E5196 /* ToursprungPOI */; };
@@ -86,6 +84,8 @@
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
 		CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
+		CDFDD8F72BE66345001C5B46 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CDFDD8F62BE66345001C5B46 /* MapLibreSwiftDSL */; };
+		CDFDD8F92BE66345001C5B46 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDFDD8F82BE66345001C5B46 /* MapLibreSwiftUI */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
 		D811C7BCC8E737CD5281D017 /* pannellum.css in Resources */ = {isa = PBXBuildFile; fileRef = C2F990BDBBAB0AC344EDE41E /* pannellum.css */; };
 		D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */; };
@@ -206,11 +206,11 @@
 				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538C82BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
+				CDFDD8F92BE66345001C5B46 /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CDAE05F32B6AC131003E5196 /* MapLibreSwiftDSL in Frameworks */,
+				CDFDD8F72BE66345001C5B46 /* MapLibreSwiftDSL in Frameworks */,
 				CDAE06022B6BDC5A003E5196 /* POIService in Frameworks */,
 				CDAE06002B6BDC5A003E5196 /* ApplePOI in Frameworks */,
-				CDAE05F52B6AC131003E5196 /* MapLibreSwiftUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
 				CDAE06042B6BDC5A003E5196 /* ToursprungPOI in Frameworks */,
@@ -516,8 +516,6 @@
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
-				CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */,
-				CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */,
 				CDAE05FF2B6BDC5A003E5196 /* ApplePOI */,
 				CDAE06012B6BDC5A003E5196 /* POIService */,
 				CDAE06032B6BDC5A003E5196 /* ToursprungPOI */,
@@ -529,6 +527,8 @@
 				C7AFBB29CC507D42D1538B2C /* MapboxNavigation */,
 				DE3A66FF070A2B17657129E4 /* MapLibre */,
 				6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */,
+				CDFDD8F62BE66345001C5B46 /* MapLibreSwiftDSL */,
+				CDFDD8F82BE66345001C5B46 /* MapLibreSwiftUI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -607,12 +607,11 @@
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
 				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
-				CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CDAE05FE2B6BDC5A003E5196 /* XCLocalSwiftPackageReference "POIService" */,
 				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
 				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
-				CBD0641815164382AACAF45A /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				CDFDD8F52BE66345001C5B46 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1105,14 +1104,6 @@
 				kind = branch;
 			};
 		};
-		CBD0641815164382AACAF45A /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
@@ -1137,7 +1128,7 @@
 				kind = branch;
 			};
 		};
-		CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+		CDFDD8F52BE66345001C5B46 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground";
 			requirement = {
@@ -1201,16 +1192,6 @@
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
 			productName = SwiftLocation;
 		};
-		CDAE05F22B6AC131003E5196 /* MapLibreSwiftDSL */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
-			productName = MapLibreSwiftDSL;
-		};
-		CDAE05F42B6AC131003E5196 /* MapLibreSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CDAE05F12B6AC131003E5196 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
-			productName = MapLibreSwiftUI;
-		};
 		CDAE05FF2B6BDC5A003E5196 /* ApplePOI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ApplePOI;
@@ -1222,6 +1203,16 @@
 		CDAE06032B6BDC5A003E5196 /* ToursprungPOI */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = ToursprungPOI;
+		};
+		CDFDD8F62BE66345001C5B46 /* MapLibreSwiftDSL */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDFDD8F52BE66345001C5B46 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftDSL;
+		};
+		CDFDD8F82BE66345001C5B46 /* MapLibreSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CDFDD8F52BE66345001C5B46 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
+			productName = MapLibreSwiftUI;
 		};
 		DE3A66FF070A2B17657129E4 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;

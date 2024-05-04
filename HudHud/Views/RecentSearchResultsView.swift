@@ -19,7 +19,7 @@ struct RecentSearchResultsView: View {
 		VStack {
 			Button {
 				let selectedItem = self.item
-				let mapItems = [ResolvedItem]()
+				let mapItems = [AnyDisplayableAsRow(self.item)]
 				self.searchStore.selectedDetent = .medium
 				self.mapStore.selectedItem = selectedItem
 				self.mapStore.displayableItems = mapItems

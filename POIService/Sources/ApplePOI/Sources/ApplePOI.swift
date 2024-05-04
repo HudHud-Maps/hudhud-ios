@@ -19,7 +19,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	private var localSearch: MKLocalSearch?
 	private var completer: MKLocalSearchCompleter
-	private var continuation: CheckedContinuation<[any DisplayableAsRow], Error>?
+	private var continuation: CheckedContinuation<[AnyDisplayableAsRow], Error>?
 	private let delegate: DelegateWrapper
 
 	// MARK: - POIServiceProtocol
@@ -39,8 +39,8 @@ public actor ApplePOI: POIServiceProtocol {
 
 	// MARK: - Public
 
-	public func lookup(prediction: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow] {
-		guard case let .apple(completion) = prediction.type else {
+	public func lookup(prediction: Any) async throws -> [ResolvedItem] {
+		guard let completion = prediction as? MKLocalSearchCompletion else {
 			return []
 		}
 
@@ -66,7 +66,7 @@ public actor ApplePOI: POIServiceProtocol {
 //								 subtitle: $0.pointOfInterestCategory?.rawValue.localizedUppercase ?? "",
 										subtitle: $0.placemark.formattedAddress ?? "",
 										coordinate: $0.placemark.coordinate,
-										onTap: { _ in
+										onTap: {
 											print(#function)
 										})
 				}
@@ -75,7 +75,7 @@ public actor ApplePOI: POIServiceProtocol {
 		}
 	}
 
-	public func predict(term: String) async throws -> [any DisplayableAsRow] {
+	public func predict(term: String) async throws -> [AnyDisplayableAsRow] {
 		return try await withCheckedThrowingContinuation { continuation in
 			if let continuation = self.continuation {
 				self.completer.cancel()
@@ -97,7 +97,7 @@ public actor ApplePOI: POIServiceProtocol {
 
 	// MARK: - Internal
 
-	func update(results: [any DisplayableAsRow]) async {
+	func update(results: [AnyDisplayableAsRow]) async {
 		self.continuation?.resume(returning: results)
 		self.continuation = nil
 	}
@@ -120,11 +120,11 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
 	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
 		let results = completer.results.compactMap {
-			PredicatedItem(id: UUID().uuidString,
-						   title: $0.title,
-						   subtitle: $0.subtitle,
-						   icon: .init(systemSymbol: .pin),
-						   type: .apple(completion: $0))
+			AnyDisplayableAsRow(PredicatedItem(id: UUID().uuidString,
+											   title: $0.title,
+											   subtitle: $0.subtitle,
+											   icon: .init(systemSymbol: .pin),
+											   type: .apple(completion: $0)))
 		}
 		Task {
 			await self.apple?.update(results: results)

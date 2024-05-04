@@ -32,7 +32,7 @@ final class MapStore: ObservableObject {
 	@Published var streetView: StreetViewOption = .disabled
 	@Published var route: Route?
 
-	@Published var displayableItems: [any DisplayableAsRow] = []
+	@Published var displayableItems: [AnyDisplayableAsRow] = []
 
 	@Published var selectedItem: ResolvedItem? {
 		didSet {

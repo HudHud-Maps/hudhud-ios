@@ -79,63 +79,8 @@ struct SearchSheet: View {
 					}
 					.listStyle(.plain)
 				} else {
-					List(self.mapStore.displayableItems, id: \.id) { item in
-						Button(action: {
-							self.searchIsFocused = false
-
-							switch item.type {
-							case .toursprung:
-//								self.mapStore.selectedItem = item
-								break
-							case .apple:
-								if item is PredicatedItem {
-									Task {
-										let resolvedItems = try await self.searchStore.resolve(prediction: item)
-										self.mapStore.displayableItems = resolvedItems
-										if let firstResult = resolvedItems.first, resolvedItems.count == 1 {
-											self.mapStore.selectedItem = firstResult as? ResolvedItem
-										} else {
-											self.mapStore.selectedItem = nil
-										}
-									}
-								}
-								if item is ResolvedItem {
-									item.select()
-								}
-							case .appleResolved:
-								item.select()
-							case .none:
-								break
-							}
-
-//							switch row.provider {
-//							case .toursprung:
-//								self.mapStore.selectedItem = item
-//							case .appleCompletion:
-//								self.searchStore.selectedDetent = .medium
-//								self.searchIsFocused = false
-//								Task {
-//									let items = try await self.searchStore.resolve(prediction: row)
-//									if let firstResult = items.first, items.count == 1 {
-//										self.mapStore.selectedItem = firstResult.poi
-//										self.mapStore.mapItems = items.compactMap(\.poi)
-//									} else {
-//										self.mapStore.selectedItem = nil
-//										self.mapStore.mapItems = items.compactMap(\.poi)
-//									}
-//								}
-//							case .appleMapItem:
-//								self.mapStore.selectedItem = row.poi
-//							}
-
-						}, label: {
-							SearchResultItem(prediction: item, searchViewStore: self.searchStore)
-								.frame(maxWidth: .infinity)
-								.redacted(reason: self.searchStore.isSearching ? .placeholder : [])
-						})
-						.disabled(self.searchStore.isSearching)
-						.listRowSeparator(.hidden)
-						.listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+					List(self.mapStore.displayableItems) { _ in
+						Text("Woof")
 					}
 					.listStyle(.plain)
 				}

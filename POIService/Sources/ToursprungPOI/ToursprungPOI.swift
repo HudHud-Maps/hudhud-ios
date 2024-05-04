@@ -30,7 +30,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 	}
 
 	private let session: URLSession
-	private let debouncer: AsyncDebouncer<String, [PredicatedItem]>
+	private let debouncer: AsyncDebouncer<String, [ResolvedItem]>
 
 	// MARK: - POIServiceProtocol
 
@@ -45,22 +45,26 @@ public actor ToursprungPOI: POIServiceProtocol {
 
 	// MARK: - Public
 
-	public func predict(term: String) async throws -> [any DisplayableAsRow] {
-		return try await self.debouncer.debounce(input: term) { input in
+	public func predict(term: String) async throws -> [AnyDisplayableAsRow] {
+		let results = try await self.debouncer.debounce(input: term) { input in
 			return try await self.search(term: input)
+		}
+		return results.map { item in
+			return AnyDisplayableAsRow(item)
 		}
 	}
 
-	public func lookup(prediction _: any DisplayableAsRow) async throws -> [any DisplayableAsMapPin & DisplayableAsRow] {
+	public func lookup(prediction _: Any) async throws -> [ResolvedItem] {
 		return []
 	}
+
 }
 
 // MARK: - Private
 
 private extension ToursprungPOI {
 
-	func search(term: String) async throws -> [PredicatedItem] {
+	func search(term: String) async throws -> [ResolvedItem] {
 		// "https://geocoder.maptoolkit.net/search?<params>"
 
 		var components = URLComponents()
@@ -88,14 +92,15 @@ private extension ToursprungPOI {
 		}
 
 		let decoder = JSONDecoder()
-		let poiElementss = try decoder.decode([POIElement].self, from: data)
-		let items = poiElementss.compactMap {
-			return PredicatedItem(id: "\($0.placeID)",
-								  title: $0.displayName,
-								  subtitle: $0.address.description,
-								  icon: .init(systemSymbol: .pinFill),
-								  type: .toursprung) { _ in
-				print(#function)
+		let poiElements = try decoder.decode([POIElement].self, from: data)
+		let items: [ResolvedItem] = poiElements.compactMap {
+			guard let lat = Double($0.lat),
+				  let lon = Double($0.lon) else { return nil }
+
+			let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
+
+			return ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, coordinate: coordinate) {
+				print("tapped")
 			}
 		}
 		return items
