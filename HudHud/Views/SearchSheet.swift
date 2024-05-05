@@ -82,9 +82,9 @@ struct SearchSheet: View {
 							Task {
 								let resolvedItems = try await item.execute(in: self.searchStore.apple)
 
-								if resolvedItems.count == 1, let firstItem = resolvedItems.first {
-									let resolvedItem = firstItem.innerModel as? ResolvedItem
+								if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
 									self.mapStore.selectedItem = resolvedItem
+									self.mapStore.displayableItems = [AnyDisplayableAsRow(resolvedItem)]
 								} else {
 									self.mapStore.displayableItems = resolvedItems
 								}
