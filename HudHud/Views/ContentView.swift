@@ -37,7 +37,10 @@ struct ContentView: View {
 	@State private var showMapLayer: Bool = false
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
+
+	@State var offsetY: CGFloat = 0
 	@State var selectedDetent: PresentationDetent = .medium
+
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -233,7 +236,8 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
+
+		.backport.buttonSafeArea(length: self.sheetSize)
 		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -256,8 +260,10 @@ struct ContentView: View {
 						self.sheetSize = value
 					}
 				}
-				.sheet(isPresented: Binding<Bool>(
+
+				.backport.sheet(isPresented: Binding<Bool>(
 					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+
 					set: { _ in }
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
@@ -270,6 +276,7 @@ struct ContentView: View {
 						.interactiveDismissDisabled()
 						.presentationCompactAdaptation(.sheet)
 				}
+
 				.sheet(isPresented: self.$showMapLayer) {
 					VStack(alignment: .center, spacing: 25) {
 						Spacer()
@@ -292,7 +299,6 @@ struct ContentView: View {
 					}
 				}
 		}
-
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
 			self.notificationQueue.removeFirst()
