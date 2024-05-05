@@ -17,7 +17,6 @@ import OSLog
 import POIService
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - SearchSheet
 
@@ -177,24 +176,13 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
 	static var fakeData = [
-		SearchResultItem(prediction: PredictionItem(poi: .starbucks), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredictionItem(poi: .supermarket), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredictionItem(poi: .pharmacy), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredictionItem(poi: .artwork), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredictionItem(poi: .ketchup), searchViewStore: .storeSetUpForPreviewing),
-		SearchResultItem(prediction: PredictionItem(poi: .publicPlace), searchViewStore: .storeSetUpForPreviewing)
+		SearchResultItem(prediction: PredictionItem.starbucks, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem.supermarket, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem.pharmacy, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem.artwork, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem.ketchup, searchViewStore: .storeSetUpForPreviewing),
+		SearchResultItem(prediction: PredictionItem.publicPlace, searchViewStore: .storeSetUpForPreviewing)
 	]
-}
-
-extension PredictionItem {
-
-	init(poi: POI) {
-		self.init(id: poi.id,
-				  title: poi.title,
-				  subtitle: poi.subtitle,
-				  icon: poi.icon,
-				  type: .appleResolved)
-	}
 }
 
 // MARK: - RawRepresentable + RawRepresentable

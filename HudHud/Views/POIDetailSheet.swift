@@ -16,7 +16,6 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 struct POIDetailSheet: View {
 
@@ -150,10 +149,10 @@ struct POIDetailSheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
-	return POIDetailSheet(item: ResolvedItem(id: UUID().uuidString, title: poi.title, subtitle: poi.subtitle, coordinate: poi.locationCoordinate!)) { _ in
-		Logger.searchView.info("Start \(poi)")
+	let item = ResolvedItem(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
+	return POIDetailSheet(item: item) { _ in
+		Logger.searchView.info("Start \(item)")
 	} onMore: {
-		Logger.searchView.info("More \(poi)")
+		Logger.searchView.info("More \(item)")
 	}
 }

@@ -14,10 +14,6 @@ let package = Package(
 		.library(
 			name: "POIService",
 			targets: ["POIService"]
-		),
-		.library(
-			name: "ToursprungPOI",
-			targets: ["ToursprungPOI"]
 		)
 	],
 	dependencies: [
@@ -33,10 +29,6 @@ let package = Package(
 				.product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
 				.product(name: "MapboxNavigation", package: "maplibre-navigation-ios")
 			]
-		),
-		.target(
-			name: "ToursprungPOI",
-			dependencies: ["POIService"]
 		)
 	]
 )

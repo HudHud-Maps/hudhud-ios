@@ -13,8 +13,8 @@ import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import POIService
 import SwiftUI
-import ToursprungPOI
 
 typealias JSONDictionary = [String: Any]
 

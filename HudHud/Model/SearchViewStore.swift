@@ -10,7 +10,6 @@ import Combine
 import Foundation
 import POIService
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - SearchViewStore
 

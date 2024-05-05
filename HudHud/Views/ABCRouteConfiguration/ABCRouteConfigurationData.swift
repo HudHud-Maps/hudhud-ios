@@ -16,7 +16,7 @@ import SwiftUI
 enum ABCRouteConfigurationItem: Hashable, Identifiable {
 
 	case myLocation
-	case poi(POI)
+	case poi(ResolvedItem)
 
 	var id: Self {
 		return self

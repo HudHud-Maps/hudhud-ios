@@ -17,7 +17,6 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - ContentView
 
