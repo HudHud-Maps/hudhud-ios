@@ -26,6 +26,8 @@
 		82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32589FE734D110C815A6168A /* LoggerSettings.swift */; };
 		854A602E692EA22AC381F9CA /* FavoriteCategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */; };
 		90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */; };
+		90C808972BE3CD0D002FA90C /* MapLayerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C808962BE3CD0D002FA90C /* MapLayerIdentifier.swift */; };
+		90C808992BE3CD2E002FA90C /* MapSourceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C808982BE3CD2D002FA90C /* MapSourceIdentifier.swift */; };
 		90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */; };
 		90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */; };
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
@@ -138,6 +140,8 @@
 		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
 		7E21300E9BF61F5A403DE2CE /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
 		90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSectionView.swift; sourceTree = "<group>"; };
+		90C808962BE3CD0D002FA90C /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
+		90C808982BE3CD2D002FA90C /* MapSourceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceIdentifier.swift; sourceTree = "<group>"; };
 		90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionsSummaryView.swift; sourceTree = "<group>"; };
 		90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DirectionPreviewData.swift; sourceTree = "<group>"; };
 		912B1ACD8511E9B4FB445AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -461,6 +465,8 @@
 				CD71C3682BBBFF27009C3A1C /* CameraState.swift */,
 				CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */,
 				CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */,
+				90C808962BE3CD0D002FA90C /* MapLayerIdentifier.swift */,
+				90C808982BE3CD2D002FA90C /* MapSourceIdentifier.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -697,6 +703,7 @@
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
+				90C808972BE3CD0D002FA90C /* MapLayerIdentifier.swift in Sources */,
 				CD74ECAB2BC55D5000CA10FF /* ErrorView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
 				CB39700B2B81F52C00CF9D59 /* MapLayersData.swift in Sources */,
@@ -741,6 +748,7 @@
 				061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */,
 				CD74ECA72BC53B0C00CA10FF /* StreetView.swift in Sources */,
 				793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */,
+				90C808992BE3CD2E002FA90C /* MapSourceIdentifier.swift in Sources */,
 				A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */,
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
