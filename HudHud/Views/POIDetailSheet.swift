@@ -18,11 +18,21 @@ import SwiftLocation
 import SwiftUI
 import ToursprungPOI
 
+// MARK: - POIDetailAction
+
+enum POIDetailAction {
+	case phone
+	case website
+	case moreInfo
+}
+
+// MARK: - POIDetailSheet
+
 struct POIDetailSheet: View {
 
 	let poi: POI
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
-	let onMore: () -> Void
+	let onMore: (POIDetailAction) -> Void
 
 	@State var routes: Toursprung.RouteCalculationResult?
 
@@ -84,40 +94,50 @@ struct POIDetailSheet: View {
 					.buttonStyle(.borderedProminent)
 					.disabled(self.routes == nil)
 
-					Button(action: self.onMore) {
-						VStack(spacing: 2) {
-							Image(systemSymbol: .phoneFill)
-							Text("Call", comment: "on poi detail sheet to call the poi")
-              .lineLimit(1)
-								.minimumScaleFactor(0.5)
-						}
-						.frame(maxWidth: .infinity)
-						.padding(.vertical, 2)
-					}
-					.buttonStyle(.bordered)
 
-					Button(action: self.onMore) {
-						VStack(spacing: 2) {
-							Image(systemSymbol: .safariFill)
-							Text("Web")
-								.lineLimit(1)
+					if let phone = self.poi.phone, !phone.isEmpty {
+						Button(action: {
+							self.onMore(.phone)
+						}, label: {
+							VStack(spacing: 2) {
+								Image(systemSymbol: .phoneFill)
+								Text("Call", comment: "on poi detail sheet to call the poi")
+                 .lineLimit(1)
 								.minimumScaleFactor(0.5)
-						}
-						.frame(maxWidth: .infinity)
-						.padding(.vertical, 2)
+							}
+							.frame(maxWidth: .infinity)
+							.padding(.vertical, 2)
+						})
+						.buttonStyle(.bordered)
 					}
-					.buttonStyle(.bordered)
+					if let website = self.poi.website {
+						Button(action: {
+							self.onMore(.website)
+						}, label: {
+							VStack(spacing: 2) {
+								Image(systemSymbol: .safariFill)
+								Text("Web")
+                 .lineLimit(1)
+								.minimumScaleFactor(0.5)
+							}
+							.frame(maxWidth: .infinity)
+							.padding(.vertical, 2)
+						})
+						.buttonStyle(.bordered)
 
-					Button(action: self.onMore) {
+					}
+					Button(action: {
+						self.onMore(.moreInfo)
+					}, label: {
 						VStack(spacing: 2) {
-							Image(systemSymbol: .phoneFill)
+							Image(systemSymbol: .ellipsisCircleFill)
 							Text("More", comment: "on poi detail sheet to see more info")
               .lineLimit(1)
 								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
-					}
+					})
 					.buttonStyle(.bordered)
 				}
 				.padding(.horizontal)
@@ -162,7 +182,7 @@ struct POIDetailSheet: View {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
 	return POIDetailSheet(poi: poi) { _ in
 		Logger.searchView.info("Start \(poi)")
-	} onMore: {
+	} onMore: { _ in
 		Logger.searchView.info("More \(poi)")
 	} onDismiss: {}
 }

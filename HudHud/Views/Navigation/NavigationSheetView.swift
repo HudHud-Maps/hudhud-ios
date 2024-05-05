@@ -20,9 +20,9 @@ struct NavigationSheetView: View {
 	@State var goPressed = false
 
 	var body: some View {
-		VStack {
+		VStack(spacing: 5) {
 			HStack {
-				Text("Direction", comment: "navigation sheet header")
+				Text("Directions", comment: "navigation sheet header")
 					.font(.system(.title))
 					.fontWeight(.semibold)
 					.cornerRadius(10)
@@ -46,8 +46,10 @@ struct NavigationSheetView: View {
 				.buttonStyle(PlainButtonStyle())
 				.accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
 			}
+			.padding(.top)
 
 			if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
+				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore)
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -57,7 +59,7 @@ struct NavigationSheetView: View {
 						self.goPressed.toggle()
 					}
 				)
-				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore)
+				.padding(.bottom)
 			}
 		}
 		.padding()
