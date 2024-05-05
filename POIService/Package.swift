@@ -18,10 +18,6 @@ let package = Package(
 		.library(
 			name: "ToursprungPOI",
 			targets: ["ToursprungPOI"]
-		),
-		.library(
-			name: "ApplePOI",
-			targets: ["ApplePOI"]
 		)
 	],
 	dependencies: [
@@ -40,10 +36,6 @@ let package = Package(
 		),
 		.target(
 			name: "ToursprungPOI",
-			dependencies: ["POIService"]
-		),
-		.target(
-			name: "ApplePOI",
 			dependencies: ["POIService"]
 		)
 	]

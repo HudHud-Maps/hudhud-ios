@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import ApplePOI
 import Combine
 import Foundation
 import POIService
@@ -31,7 +30,7 @@ final class SearchViewStore: ObservableObject {
 	}
 
 	private var task: Task<Void, Error>?
-	private var apple = ApplePOI()
+	var apple = ApplePOI()
 	private var toursprung = ToursprungPOI()
 	private var cancellable: AnyCancellable?
 

@@ -38,6 +38,7 @@ public protocol DisplayableAsRow: Identifiable {
 	var icon: Image { get }
 
 	var onTap: (() -> Void)? { get }
+	func execute(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - AnyDisplayableAsRow
@@ -75,6 +76,11 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 	public static func == (lhs: AnyDisplayableAsRow, rhs: AnyDisplayableAsRow) -> Bool {
 		return lhs.id == rhs.id
 	}
+
+	public func execute(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+		return try await self.innerModel.execute(in: provider)
+	}
+
 }
 
 // MARK: - PredictionItem
@@ -103,6 +109,16 @@ public struct PredictionItem: DisplayableAsRow {
 
 	public static func == (lhs: PredictionItem, rhs: PredictionItem) -> Bool {
 		return lhs.id == rhs.id
+	}
+
+	public func execute(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+		guard case let .apple(completion) = self.type else { return [] }
+
+		let resolved = try await provider.lookup(prediction: completion)
+		let mapped = resolved.map {
+			AnyDisplayableAsRow($0)
+		}
+		return mapped
 	}
 
 	public func hash(into hasher: inout Hasher) {
@@ -157,6 +173,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, CustomStringConvertible {
 
 	public static func == (lhs: ResolvedItem, rhs: ResolvedItem) -> Bool {
 		return lhs.id == rhs.id
+	}
+
+	public func execute(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+		return [AnyDisplayableAsRow(self)]
 	}
 
 	public func encode(to encoder: Encoder) throws {
@@ -396,7 +416,7 @@ extension CLLocationCoordinate2D: Codable {
 	public init(from decoder: Decoder) throws {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		self.init()
-		latitude = try values.decode(Double.self, forKey: .latitude)
-		longitude = try values.decode(Double.self, forKey: .longitude)
+		self.latitude = try values.decode(Double.self, forKey: .latitude)
+		self.longitude = try values.decode(Double.self, forKey: .longitude)
 	}
 }

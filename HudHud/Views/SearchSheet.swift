@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import ApplePOI
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
@@ -81,10 +80,18 @@ struct SearchSheet: View {
 				} else {
 					List(self.mapStore.displayableItems) { item in
 						Button(action: {
-							// just a rough idea:
-							// let resolvedItem = try await item.ontap() // or a closure
-							// self.mapstore.displayableItems = currentDisplayableItemsButWithThisOneItemUpdatedTotheNewResolvedItem
-							// self.mapstore.selectedItem = resolvedItem
+							Task {
+								let resolvedItems = try await item.execute(in: self.searchStore.apple)
+
+								if resolvedItems.count == 1, let firstItem = resolvedItems.first {
+									let resolvedItem = firstItem.innerModel as? ResolvedItem
+									self.mapStore.selectedItem = resolvedItem
+								} else {
+									self.mapStore.displayableItems = resolvedItems
+								}
+							}
+							self.searchStore.selectedDetent = .medium
+							self.searchIsFocused = false
 						}, label: {
 							SearchResultItem(prediction: item, searchViewStore: self.searchStore)
 								.frame(maxWidth: .infinity)
@@ -117,51 +124,25 @@ struct SearchSheet: View {
 		.sheet(item: self.$mapStore.selectedItem) {
 			// Dismiss callback
 			self.searchStore.selectedDetent = .medium
-		} content: { _ in
-			/*
-			 			POIDetailSheet(item: item, onStart: { calculation in
-			 				Logger.searchView.info("Start item \(item.title)")
-			 				self.mapStore.route = calculation.routes.first
-			 				self.mapStore.displayableItems = [item]
-			 			}, onMore: {
-			 				Logger.searchView.info("more item \(item.title))")
-			 			})
-			 			.presentationDetents([.third, .large])
-			 			.presentationBackgroundInteraction(
-			 				.enabled(upThrough: .third)
-			 			)
-			 			.interactiveDismissDisabled()
-			 			.ignoresSafeArea()
-			 			.onAppear {
-			 				// Store POI
-			 //				self.storeRecentPOI(poi: item)
-			 			}
-			 			 */
+		} content: { item in
+			POIDetailSheet(item: item, onStart: { calculation in
+				Logger.searchView.info("Start item \(item.title)")
+				self.mapStore.route = calculation.routes.first
+				self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
+			}, onMore: {
+				Logger.searchView.info("more item \(item.title))")
+			})
+			.presentationDetents([.third, .large])
+			.presentationBackgroundInteraction(
+				.enabled(upThrough: .third)
+			)
+			.interactiveDismissDisabled()
+			.ignoresSafeArea()
+			.onAppear {
+				// Store POI
+				// self.storeRecentPOI(poi: item)
+			}
 		}
-
-		/*
-		 .sheet(item: self.$mapStore.selectedItem, onDismiss: {
-		 	self.searchStore.selectedDetent = .medium
-		 }, content: { item in
-		 	POIDetailSheet(item: item) { calculation in
-		 		Logger.searchView.info("Start item \(item)")
-		 		self.mapStore.route = calculation.routes.first
-		 		self.mapStore.displayableItems = [item]
-		 	} onMore: {
-		 		Logger.searchView.info("more item \(item))")
-		 	}
-		 	.presentationDetents([.third, .large])
-		 	.presentationBackgroundInteraction(
-		 		.enabled(upThrough: .third)
-		 	)
-		 	.interactiveDismissDisabled()
-		 	.ignoresSafeArea()
-		 	.onAppear {
-		 		// Store POI
-		 		self.storeRecentPOI(poi: item)
-		 	}
-		 })
-		 */
 	}
 
 	// MARK: - Lifecycle

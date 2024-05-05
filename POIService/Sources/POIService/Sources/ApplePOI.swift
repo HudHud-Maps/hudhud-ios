@@ -10,7 +10,6 @@ import Contacts
 import CoreLocation
 import Foundation
 import MapKit
-import POIService
 import SwiftUI
 
 // MARK: - ApplePOI
@@ -120,11 +119,12 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
 	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
 		let results = completer.results.compactMap {
-			AnyDisplayableAsRow(PredictionItem(id: UUID().uuidString,
-											   title: $0.title,
-											   subtitle: $0.subtitle,
-											   icon: .init(systemSymbol: .pin),
-											   type: .apple(completion: $0)))
+			let item = PredictionItem(id: UUID().uuidString,
+									  title: $0.title,
+									  subtitle: $0.subtitle,
+									  icon: .init(systemSymbol: .pin),
+									  type: .apple(completion: $0))
+			return AnyDisplayableAsRow(item)
 		}
 		Task {
 			await self.apple?.update(results: results)

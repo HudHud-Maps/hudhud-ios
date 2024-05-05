@@ -98,7 +98,7 @@ struct ContentView: View {
 				poi.id == placeID
 			}
 
-			if let poi = poi as? ResolvedItem {
+			if let poi {
 				Logger.mapInteraction.debug("setting poi")
 				self.searchViewStore.mapStore.selectedItem = poi
 			} else {
