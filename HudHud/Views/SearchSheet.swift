@@ -126,17 +126,6 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-//		.sheet(item: self.$mapStore.selectedItem) {
-//			// Dismiss callback
-//			self.searchStore.selectedDetent = .medium
-//		} content: { item in
-//			POIDetailSheet(item: item, onStart: { calculation in
-//				Logger.searchView.info("Start item \(item.title)")
-//				self.mapStore.route = calculation.routes.first
-//				self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
-//			}, onMore: {
-//				Logger.searchView.info("more item \(item.title))")
-//			})
 		.backport.sheet(item: self.$mapStore.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
@@ -181,7 +170,7 @@ struct SearchSheet: View {
 			.ignoresSafeArea()
 			.onAppear {
 				// Store POI
-				// self.storeRecentPOI(poi: item)
+				self.storeRecent(item: item)
 			}
 		}
 	}
@@ -196,16 +185,18 @@ struct SearchSheet: View {
 
 	// MARK: - Internal
 
-//	func storeRecentPOI(poi: POI) {
-//		withAnimation {
-//			if self.recentViewedPOIs.count > 9 {
-//				self.recentViewedPOIs.removeFirst()
-//			}
-//			if !self.recentViewedPOIs.contains(poi) {
-//				self.recentViewedPOIs.append(poi)
-//			}
-//		}
-//	}
+	func storeRecent(item: ResolvedItem) {
+		withAnimation {
+			if self.searchStore.recentViewedItem.count > 9 {
+				self.searchStore.recentViewedItem.removeLast()
+			}
+			if self.searchStore.recentViewedItem.contains(item) {
+//				self.searchStore.recentViewedItem.dele
+			} else {
+				self.searchStore.recentViewedItem.append(item)
+			}
+		}
+	}
 
 	func dismissSheet() {
 		self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
