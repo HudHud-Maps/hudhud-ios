@@ -81,13 +81,12 @@ final class SearchViewStore: ObservableObject {
 					}
 				case .preview:
 					self.mapStore.displayableItems = [
-						AnyDisplayableAsRow(ResolvedItem(id: UUID().uuidString, title: "Starbucks", subtitle: "Coffee", type: .toursprung, coordinate: .riyadh))
-//						.starbucks,
-//						.ketchup,
-//						.publicPlace,
-//						.artwork,
-//						.pharmacy,
-//						.supermarket
+						.starbucks,
+						.ketchup,
+						.publicPlace,
+						.artwork,
+						.pharmacy,
+						.supermarket
 					]
 				}
 			}
@@ -96,26 +95,6 @@ final class SearchViewStore: ObservableObject {
 			let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
 			self.recentViewedItem = [itemOne, itemTwo]
 		}
-	}
-
-	// MARK: - Internal
-
-	// MARK: - SearchViewStore
-
-//	func resolve(prediction: Row) async throws -> [Row] {
-//		switch prediction.provider {
-//		case let .appleCompletion(completion):
-//			return try await self.apple.lookup(prediction: .apple(completion: completion)).map { Row(toursprung: $0) }
-//		case let .appleMapItem(mapItem):
-//			return [Row(mapItem: mapItem)]
-//		case let .toursprung(poi):
-//			return [Row(toursprung: poi)]
-//		}
-//	}
-
-	func resolve(prediction _: any DisplayableAsRow) async throws -> [ResolvedItem] {
-		// run prediction.onTap() here -> make it return ResolvedItem or [ResolvedItem]
-		return []
 	}
 }
 

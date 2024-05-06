@@ -210,7 +210,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 public extension PredictionItem {
 
 	static let ketchup = PredictionItem(id: UUID().uuidString,
-										title: "Bluewaters Island - off Jumeirah Beach Residence",
+										title: "Ketch up",
 										subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
 										icon: .init(systemSymbol: .pin),
 										type: .appleResolved)
@@ -239,6 +239,65 @@ public extension PredictionItem {
 											subtitle: "Al-Narjs - Riyadh",
 											icon: .init(systemSymbol: .pin),
 											type: .appleResolved)
+}
+
+public extension ResolvedItem {
+
+	static let ketchup = ResolvedItem(id: UUID().uuidString,
+									  title: "Ketch up",
+									  subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
+									  type: .toursprung,
+									  coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
+									  phone: "0503539560",
+									  website: URL(string: "https://hudhud.sa"))
+
+	static let starbucks = ResolvedItem(id: UUID().uuidString,
+										title: "Starbucks",
+										subtitle: "The Beach",
+										type: .toursprung,
+										coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
+										phone: "0503539560",
+										website: URL(string: "https://hudhud.sa"))
+
+	static let publicPlace = ResolvedItem(id: UUID().uuidString,
+										  title: "publicPlace",
+										  subtitle: "Garden - Alyasmen - Riyadh",
+										  type: .toursprung,
+										  coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346))
+
+	static let artwork = ResolvedItem(id: UUID().uuidString,
+									  title: "Artwork",
+									  subtitle: "artwork - Al-Olya - Riyadh",
+									  type: .toursprung,
+									  coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
+									  phone: "0503539560",
+									  website: URL(string: "https://hudhud.sa"))
+
+	static let pharmacy = ResolvedItem(id: UUID().uuidString,
+									   title: "Pharmacy",
+									   subtitle: "Al-Olya - Riyadh",
+									   type: .toursprung,
+									   coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+									   phone: "0503539560",
+									   website: URL(string: "https://hudhud.sa"))
+
+	static let supermarket = ResolvedItem(id: UUID().uuidString,
+										  title: "Supermarket",
+										  subtitle: "Al-Narjs - Riyadh",
+										  type: .toursprung,
+										  coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
+										  phone: "0503539560",
+										  website: URL(string: "https://hudhud.sa"))
+}
+
+public extension AnyDisplayableAsRow {
+
+	static let ketchup = AnyDisplayableAsRow(ResolvedItem.ketchup)
+	static let starbucks = AnyDisplayableAsRow(ResolvedItem.starbucks)
+	static let publicPlace = AnyDisplayableAsRow(ResolvedItem.publicPlace)
+	static let artwork = AnyDisplayableAsRow(ResolvedItem.artwork)
+	static let pharmacy = AnyDisplayableAsRow(ResolvedItem.pharmacy)
+	static let supermarket = AnyDisplayableAsRow(ResolvedItem.supermarket)
 }
 
 public extension ResolvedItem {
