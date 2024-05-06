@@ -98,9 +98,18 @@ private extension ToursprungPOI {
 
 			let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-			return ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, type: .toursprung, coordinate: coordinate) {
+			var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, type: .toursprung, coordinate: coordinate) {
 				print("tapped")
 			}
+
+			let mirror = Mirror(reflecting: $0)
+			mirror.children.forEach { child in
+				guard let label = child.label else { return }
+
+				item.userInfo[label] = child.value as? AnyHashable
+			}
+
+			return item
 		}
 		return items
 	}

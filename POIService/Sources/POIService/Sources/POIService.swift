@@ -300,29 +300,6 @@ public extension AnyDisplayableAsRow {
 	static let supermarket = AnyDisplayableAsRow(ResolvedItem.supermarket)
 }
 
-public extension ResolvedItem {
-
-	init?(element: POIElement) {
-		guard let lat = Double(element.lat),
-			  let lon = Double(element.lon) else { return nil }
-
-		let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
-
-		self.init(id: "\(element.placeID)",
-				  title: element.displayName,
-				  subtitle: element.address.description,
-				  type: .toursprung,
-				  coordinate: coordinate)
-
-		let mirror = Mirror(reflecting: element)
-		mirror.children.forEach { child in
-			guard let label = child.label else { return }
-
-			self.userInfo[label] = child.value as? AnyHashable
-		}
-	}
-}
-
 /*
  public extension POI {
 

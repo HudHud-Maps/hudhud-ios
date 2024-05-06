@@ -140,7 +140,7 @@ struct POIDetailSheet: View {
 				.padding(.horizontal)
 
 				Spacer()
-//				DictionaryView(dictionary: self.poi.userInfo)
+				DictionaryView(dictionary: self.item.userInfo)
 			}
 		}
 		.task {
@@ -176,7 +176,7 @@ struct POIDetailSheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let item = ResolvedItem(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
+	let item = ResolvedItem.starbucks
 	return POIDetailSheet(item: item) { _ in
 		Logger.searchView.info("Start \(item)")
 	} onMore: { _ in
