@@ -30,38 +30,50 @@ struct SearchSheet: View {
 	@Environment(\.openURL) private var openURL
 	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
+	@Environment(\.dismiss) var dismiss
 
 	var body: some View {
 		return VStack {
-			HStack {
-				Image(systemSymbol: .magnifyingglass)
-					.foregroundStyle(.tertiary)
-					.padding(.leading, 8)
-				TextField("Search", text: self.$searchStore.searchText)
-					.focused(self.$searchIsFocused)
-					.padding(.vertical, 10)
-					.padding(.horizontal, 0)
-					.autocorrectionDisabled()
-					.overlay(
-						HStack {
-							Spacer()
-							if !self.searchStore.searchText.isEmpty {
-								Button(action: {
-									self.searchStore.searchText = ""
-								}, label: {
-									Image(systemSymbol: .multiplyCircleFill)
-										.foregroundColor(.gray)
-										.padding(.vertical)
-								})
+			HStack(spacing: 0) {
+				HStack {
+					Image(systemSymbol: .magnifyingglass)
+						.foregroundStyle(.tertiary)
+						.padding(.leading, 8)
+					TextField("Search", text: self.$searchStore.searchText)
+						.focused(self.$searchIsFocused)
+						.padding(.vertical, 10)
+						.padding(.horizontal, 0)
+						.autocorrectionDisabled()
+						.overlay(
+							HStack {
+								Spacer()
+								if !self.searchStore.searchText.isEmpty {
+									Button(action: {
+										self.searchStore.searchText = ""
+									}, label: {
+										Image(systemSymbol: .multiplyCircleFill)
+											.foregroundColor(.gray)
+											.padding(.vertical)
+									})
+								}
 							}
-						}
-						.padding(.horizontal, 8)
-					)
-					.padding(.horizontal, 10)
+							.padding(.horizontal, 8)
+						)
+
+						.padding(.horizontal, 10)
+				}
+				.background(.quinary)
+				.cornerRadius(12)
+				.padding()
+				if self.searchStore.searchType == .addPOILocation {
+					Button("Cancel", action: {
+						self.dismiss()
+					})
+					.foregroundColor(.gray)
+					.padding(.trailing)
+				}
 			}
-			.background(.quinary)
-			.cornerRadius(12)
-			.padding()
+
 			if !self.searchStore.searchText.isEmpty {
 				if self.searchStore.isSearching {
 					List {
@@ -102,6 +114,10 @@ struct SearchSheet: View {
 							case .appleMapItem:
 								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
+							if self.searchStore.searchType == .addPOILocation {
+								self.searchStore.mapStore.waypoints?.append(.poi(self.mapStore.selectedItem!))
+								self.dismiss()
+							}
 
 						}, label: {
 							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
@@ -133,49 +149,74 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(item: self.$mapStore.selectedItem) {
-			self.searchStore.selectedDetent = .medium
-		} content: { item in
-			POIDetailSheet(poi: item) { routes in
-				Logger.searchView.info("Start item \(item)")
-				self.searchStore.selectedDetent = .small
-				self.mapStore.routes = routes
-				self.mapStore.mapItems = [Row(toursprung: item)]
-				if let location = routes.waypoints.first {
-					self.mapStore.waypoints = [.myLocation(location), .poi(item)]
+		.sheet(
+			isPresented: Binding<Bool>(
+				get: {
+					self.searchStore.searchType == .selectPOI
+						&& self.mapStore.selectedItem != nil
+				},
+				set: { _ in
+					self.searchStore.selectedDetent = .medium
+					self.mapStore.selectedItem = nil
 				}
-			} onMore: { action in
-				switch action {
-				case .phone:
-					// Perform phone action
-					if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-						self.openURL(url)
-					}
-					Logger.searchView.info("Item phone \(item.phone ?? "nil")")
-				case .website:
-					// Perform website action
-					self.isPresentWebView = true
-					Logger.searchView.info("Item website \(item.website?.absoluteString ?? "")")
-				case .moreInfo:
-					// Perform more info action
-					Logger.searchView.info("more item \(item))")
-				}
-			}
-			.fullScreenCover(isPresented: self.$isPresentWebView) {
-				if let website = item.website {
-					SafariWebView(url: website)
-						.ignoresSafeArea()
-				}
-			}
-			.presentationDetents([.third, .large])
-			.presentationBackgroundInteraction(
-				.enabled(upThrough: .third)
 			)
-			.interactiveDismissDisabled()
-			.ignoresSafeArea()
-			.onAppear {
-				// Store POI
-				self.storeRecentPOI(poi: item)
+		) {
+			if let item = self.mapStore.selectedItem {
+				POIDetailSheet(poi: item) { routes in
+					Logger.searchView.info("Start item \(item)")
+					self.searchStore.selectedDetent = .small
+					self.mapStore.routes = routes
+					self.mapStore.mapItems = [Row(toursprung: item)]
+					if let location = routes.waypoints.first {
+						self.mapStore.waypoints = [.myLocation(location), .poi(item)]
+					}
+				} onMore: { action in
+					switch action {
+					case .phone:
+						// Perform phone action
+						if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+							self.openURL(url)
+						}
+						Logger.searchView.info("Item phone \(item.phone ?? "nil")")
+					case .website:
+						// Perform website action
+						self.isPresentWebView = true
+						Logger.searchView.info("Item website \(item.website?.absoluteString ?? "")")
+					case .moreInfo:
+						// Perform more info action
+						Logger.searchView.info("more item \(item))")
+					}
+				}
+				.fullScreenCover(isPresented: self.$isPresentWebView) {
+					if let website = item.website {
+						SafariWebView(url: website)
+							.ignoresSafeArea()
+					}
+				}
+				.presentationDetents([.third, .large])
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .third)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
+				.onAppear {
+					// Store POI
+					self.storeRecentPOI(poi: item)
+				}
+				.sheet(isPresented: Binding<Bool>(
+					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+					set: { _ in self.searchStore.searchType = .selectPOI }
+				)) {
+					NavigationSheetView(searchViewStore: self.searchStore, mapStore: self.mapStore)
+						.presentationCornerRadius(21)
+						.presentationDetents([.height(130), .medium, .large], selection: self.$searchStore.selectedDetent)
+						.presentationBackgroundInteraction(
+							.enabled(upThrough: .medium)
+						)
+						.ignoresSafeArea()
+						.interactiveDismissDisabled()
+						.presentationCompactAdaptation(.sheet)
+				}
 			}
 		}
 	}

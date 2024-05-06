@@ -16,8 +16,10 @@ import ToursprungPOI
 
 struct NavigationSheetView: View {
 
+	@ObservedObject var searchViewStore: SearchViewStore
 	@ObservedObject var mapStore: MapStore
 	@State var goPressed = false
+	@State var searchShown = false
 
 	var body: some View {
 		VStack(spacing: 5) {
@@ -49,7 +51,9 @@ struct NavigationSheetView: View {
 			.padding(.top)
 
 			if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
-				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore)
+				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore, searchShown: {
+					self.searchShown = true
+				})
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -69,10 +73,23 @@ struct NavigationSheetView: View {
 				NavigationView(route: route, styleURL: styleURL)
 			}
 		}
+		.sheet(isPresented: self.$searchShown) {
+			SearchSheet(mapStore: self.mapStore,
+						searchStore: self.searchViewStore)
+				.frame(minWidth: 320)
+				.presentationCornerRadius(21)
+				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .large)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
+				.presentationCompactAdaptation(.sheet)
+		}
 	}
 }
 
 #Preview {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return NavigationSheetView(mapStore: searchViewStore.mapStore)
+	return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore)
 }

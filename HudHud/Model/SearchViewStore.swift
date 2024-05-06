@@ -18,7 +18,10 @@ import ToursprungPOI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
-	let mapStore: MapStore
+	enum SearchType {
+		case selectPOI
+		case addPOILocation
+	}
 
 	enum Mode {
 		enum Provider: CaseIterable {
@@ -29,6 +32,8 @@ final class SearchViewStore: ObservableObject {
 		case live(provider: Provider)
 		case preview
 	}
+
+	let mapStore: MapStore
 
 	private var task: Task<Void, Error>?
 	private var apple = ApplePOI()
@@ -48,6 +53,7 @@ final class SearchViewStore: ObservableObject {
 
 	@Published var selectedDetent: PresentationDetent = .small
 	@Published var isSearching = false
+	@Published var searchType: SearchType = .selectPOI
 
 	// MARK: - Lifecycle
 
