@@ -55,6 +55,8 @@ final class SearchViewStore: ObservableObject {
 	@Published var isSearching = false
 	@Published var searchType: SearchType = .selectPOI
 
+	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
+
 	// MARK: - Lifecycle
 
 	init(mapStore: MapStore, mode: Mode) {
@@ -92,6 +94,11 @@ final class SearchViewStore: ObservableObject {
 					]
 				}
 			}
+		if case .preview = mode {
+			let poiOne = POI(id: "1", title: "Starbucks", subtitle: "Main Street 1", locationCoordinate: .riyadh, type: "Coffee")
+			let poiTwo = POI(id: "2", title: "Motel One", subtitle: "Main Street 2", locationCoordinate: .riyadh, type: "Hotel")
+			self.recentViewedPOIs = [poiOne, poiTwo]
+		}
 	}
 
 	// MARK: - Internal

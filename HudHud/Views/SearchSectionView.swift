@@ -20,10 +20,9 @@ struct SearchSectionView<Content: View>: View {
 					.bold()
 				Spacer()
 			}
-			ScrollView(.horizontal) {
-				self.subview
-			}
-			.backport.scrollClipDisabled()
+
+			self.subview
+				.backport.scrollClipDisabled()
 		}
 	}
 

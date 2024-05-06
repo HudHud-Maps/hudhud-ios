@@ -27,6 +27,7 @@ struct SearchSheet: View {
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
+
 	@Environment(\.openURL) private var openURL
 	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
@@ -137,7 +138,7 @@ struct SearchSheet: View {
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedPOIs, id: \.self) { pois in
+						ForEach(self.searchStore.recentViewedPOIs, id: \.self) { pois in
 							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
@@ -149,7 +150,7 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(
+		.backport.sheet(
 			isPresented: Binding<Bool>(
 				get: {
 					self.searchStore.searchType == .selectPOI
@@ -186,6 +187,8 @@ struct SearchSheet: View {
 						// Perform more info action
 						Logger.searchView.info("more item \(item))")
 					}
+				} onDismiss: {
+					self.mapStore.selectedItem = nil
 				}
 				.fullScreenCover(isPresented: self.$isPresentWebView) {
 					if let website = item.website {
@@ -233,20 +236,19 @@ struct SearchSheet: View {
 
 	func storeRecentPOI(poi: POI) {
 		withAnimation {
-			if self.recentViewedPOIs.count > 9 {
-				self.recentViewedPOIs.removeFirst()
+			if self.searchStore.recentViewedPOIs.count > 9 {
+				self.searchStore.recentViewedPOIs.removeFirst()
 			}
-			if !self.recentViewedPOIs.contains(poi) {
-				self.recentViewedPOIs.append(poi)
+			if !self.searchStore.recentViewedPOIs.contains(poi) {
+				self.searchStore.recentViewedPOIs.append(poi)
 			}
 		}
 	}
 
-}
+	func dismissSheet() {
+		self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
+	}
 
-#Preview {
-	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
 
 extension Route: Identifiable {}
@@ -283,4 +285,9 @@ extension RecentViewedPOIs: RawRepresentable {
 		}
 		return result
 	}
+}
+
+#Preview {
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }

@@ -37,6 +37,7 @@ struct POIDetailSheet: View {
 	@State var routes: Toursprung.RouteCalculationResult?
 
 	@Environment(\.dismiss) var dismiss
+	let onDismiss: () -> Void
 	@EnvironmentObject var notificationQueue: NotificationQueue
 
 	var body: some View {
@@ -56,6 +57,7 @@ struct POIDetailSheet: View {
 
 					Button(action: {
 						self.dismiss()
+						self.onDismiss()
 					}, label: {
 						ZStack {
 							Circle()
@@ -79,11 +81,12 @@ struct POIDetailSheet: View {
 						guard let routes else { return }
 						self.onStart(routes)
 						self.dismiss()
-
 					}, label: {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
 							Text("Start", comment: "get the navigation route")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -98,6 +101,8 @@ struct POIDetailSheet: View {
 							VStack(spacing: 2) {
 								Image(systemSymbol: .phoneFill)
 								Text("Call", comment: "on poi detail sheet to call the poi")
+									.lineLimit(1)
+									.minimumScaleFactor(0.5)
 							}
 							.frame(maxWidth: .infinity)
 							.padding(.vertical, 2)
@@ -111,6 +116,8 @@ struct POIDetailSheet: View {
 							VStack(spacing: 2) {
 								Image(systemSymbol: .safariFill)
 								Text("Web")
+									.lineLimit(1)
+									.minimumScaleFactor(0.5)
 							}
 							.frame(maxWidth: .infinity)
 							.padding(.vertical, 2)
@@ -123,6 +130,8 @@ struct POIDetailSheet: View {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .ellipsisCircleFill)
 							Text("More", comment: "on poi detail sheet to see more info")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -173,5 +182,5 @@ struct POIDetailSheet: View {
 		Logger.searchView.info("Start \(poi)")
 	} onMore: { _ in
 		Logger.searchView.info("More \(poi)")
-	}
+	} onDismiss: {}
 }
