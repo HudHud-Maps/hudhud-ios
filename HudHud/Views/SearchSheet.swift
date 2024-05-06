@@ -80,13 +80,18 @@ struct SearchSheet: View {
 					List(self.mapStore.displayableItems) { item in
 						Button(action: {
 							Task {
-								let resolvedItems = try await item.execute(in: self.searchStore.apple)
-
-								if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
+								if let resolvedItem = item.innerModel as? ResolvedItem {
 									self.mapStore.selectedItem = resolvedItem
-									self.mapStore.displayableItems = [AnyDisplayableAsRow(resolvedItem)]
 								} else {
-									self.mapStore.displayableItems = resolvedItems
+									// Currently only ApplePOI supports resolving, so this should only be called on apple pois
+									let resolvedItems = try await item.resolve(in: self.searchStore.apple)
+
+									if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
+										self.mapStore.selectedItem = resolvedItem
+										self.mapStore.displayableItems = [AnyDisplayableAsRow(resolvedItem)]
+									} else {
+										self.mapStore.displayableItems = resolvedItems
+									}
 								}
 							}
 							self.searchStore.selectedDetent = .medium

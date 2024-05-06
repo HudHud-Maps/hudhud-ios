@@ -9,7 +9,6 @@
 import CoreLocation
 import Foundation
 import MapKit
-import POIService
 
 // MARK: - ToursprungPOI
 
@@ -99,7 +98,7 @@ private extension ToursprungPOI {
 
 			let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-			return ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, coordinate: coordinate) {
+			return ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, type: .toursprung, coordinate: coordinate) {
 				print("tapped")
 			}
 		}

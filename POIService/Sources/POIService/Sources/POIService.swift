@@ -23,10 +23,15 @@ public protocol POIServiceProtocol {
 
 // MARK: - PredictionResult
 
-public enum PredictionResult: Hashable {
+public enum PredictionResult: Hashable, Codable {
 	case apple(completion: MKLocalSearchCompletion)
 	case appleResolved
 	case toursprung
+
+	enum CodingKeys: CodingKey {
+		case appleResolved
+		case toursprung
+	}
 }
 
 // MARK: - DisplayableAsRow
@@ -38,7 +43,7 @@ public protocol DisplayableAsRow: Identifiable {
 	var icon: Image { get }
 
 	var onTap: (() -> Void)? { get }
-	func execute(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
+	func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - AnyDisplayableAsRow
@@ -77,8 +82,8 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 		return lhs.id == rhs.id
 	}
 
-	public func execute(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
-		return try await self.innerModel.execute(in: provider)
+	public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+		return try await self.innerModel.resolve(in: provider)
 	}
 
 }
@@ -111,7 +116,7 @@ public struct PredictionItem: DisplayableAsRow {
 		return lhs.id == rhs.id
 	}
 
-	public func execute(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+	public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
 		guard case let .apple(completion) = self.type else { return [] }
 
 		let resolved = try await provider.lookup(prediction: completion)
@@ -139,14 +144,14 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		return Image(systemSymbol: .pinFill)
 	}
 
-	public let type: PredictionResult = .appleResolved
+	public let type: PredictionResult
 	public var coordinate: CLLocationCoordinate2D
 	public var onTap: (() -> Void)?
 
 	public var userInfo: [String: AnyHashable] = [:]
 
 	enum CodingKeys: String, CodingKey {
-		case id, title, subtitle, coordinate
+		case id, title, subtitle, type, coordinate
 	}
 
 	public var description: String {
@@ -155,12 +160,13 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
 	// MARK: - Lifecycle
 
-	public init(id: String, title: String, subtitle: String, coordinate: CLLocationCoordinate2D, onTap: (() -> Void)? = nil) {
+	public init(id: String, title: String, subtitle: String, type: PredictionResult, coordinate: CLLocationCoordinate2D, onTap: (() -> Void)? = nil) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
-		self.onTap = onTap
+		self.type = type
 		self.coordinate = coordinate
+		self.onTap = onTap
 	}
 
 	public init(from decoder: Decoder) throws {
@@ -168,6 +174,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		self.id = try container.decode(String.self, forKey: .id)
 		self.title = try container.decode(String.self, forKey: .title)
 		self.subtitle = try container.decode(String.self, forKey: .subtitle)
+		self.type = try container.decode(PredictionResult.self, forKey: .type)
 		self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
 	}
 
@@ -177,7 +184,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		return lhs.id == rhs.id
 	}
 
-	public func execute(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+	public func resolve(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
 		return [AnyDisplayableAsRow(self)]
 	}
 
@@ -187,6 +194,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		try container.encode(self.title, forKey: .title)
 		try container.encode(self.subtitle, forKey: .subtitle)
 		try container.encode(self.coordinate, forKey: .coordinate)
+		try container.encode(self.type, forKey: .type)
 	}
 
 	public func hash(into hasher: inout Hasher) {
@@ -241,6 +249,7 @@ public extension ResolvedItem {
 		self.init(id: "\(element.placeID)",
 				  title: element.displayName,
 				  subtitle: element.address.description,
+				  type: .toursprung,
 				  coordinate: coordinate)
 
 		let mirror = Mirror(reflecting: element)

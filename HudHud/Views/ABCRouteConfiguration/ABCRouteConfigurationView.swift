@@ -43,7 +43,7 @@ struct ABCRouteConfigurationView: View {
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-					self.routeConfigurations.append(.poi(ResolvedItem(id: UUID().uuidString, title: "New Location", subtitle: "h", coordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911))))
+					self.routeConfigurations.append(.poi(ResolvedItem(id: UUID().uuidString, title: "New Location", subtitle: "h", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911))))
 				} label: { // (24.7189756, 46.6468911)
 					HStack {
 						Image(systemSymbol: .plus)
@@ -81,7 +81,7 @@ struct ABCRouteConfigurationView: View {
 #Preview {
 	ABCRouteConfigurationView(routeConfigurations: [
 		.myLocation,
-		.poi(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
-		.poi(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
+		.poi(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
+		.poi(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
 	])
 }

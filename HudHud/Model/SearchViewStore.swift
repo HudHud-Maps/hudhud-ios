@@ -79,7 +79,7 @@ final class SearchViewStore: ObservableObject {
 					}
 				case .preview:
 					self.mapStore.displayableItems = [
-						AnyDisplayableAsRow(ResolvedItem(id: UUID().uuidString, title: "Starbucks", subtitle: "Coffee", coordinate: .riyadh))
+						AnyDisplayableAsRow(ResolvedItem(id: UUID().uuidString, title: "Starbucks", subtitle: "Coffee", type: .toursprung, coordinate: .riyadh))
 //						.starbucks,
 //						.ketchup,
 //						.publicPlace,

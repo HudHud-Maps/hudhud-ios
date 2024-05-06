@@ -64,6 +64,7 @@ public actor ApplePOI: POIServiceProtocol {
 										title: $0.name ?? "",
 //								 subtitle: $0.pointOfInterestCategory?.rawValue.localizedUppercase ?? "",
 										subtitle: $0.placemark.formattedAddress ?? "",
+										type: .appleResolved,
 										coordinate: $0.placemark.coordinate,
 										onTap: {
 											print(#function)
