@@ -30,7 +30,8 @@ final class MapStore: ObservableObject {
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
 	@Published var streetView: StreetViewOption = .disabled
-	@Published var route: Route?
+	@Published var routes: Toursprung.RouteCalculationResult?
+	@Published var waypoints: [ABCRouteConfigurationItem]?
 
 	@Published var displayableItems: [AnyDisplayableAsRow] = []
 
@@ -47,7 +48,7 @@ final class MapStore: ObservableObject {
 	}
 
 	var points: ShapeSource {
-		return ShapeSource(identifier: "points") {
+		return ShapeSource(identifier: MapSourceIdentifier.points, options: [.clustered: true, .clusterRadius: 44]) {
 			self.mapItems.compactMap { item in
 				return MLNPointFeature(coordinate: item.coordinate) { feature in
 					feature.attributes["poi_id"] = item.id
@@ -56,8 +57,27 @@ final class MapStore: ObservableObject {
 		}
 	}
 
+	var routePoints: ShapeSource {
+		var features: [MLNPointFeature] = []
+		if let waypoints = self.waypoints {
+			for item in waypoints {
+				switch item {
+				case .myLocation:
+					continue
+				case let .waypoint(poi):
+					let feature = MLNPointFeature(coordinate: poi.coordinate)
+					feature.attributes["poi_id"] = poi.id
+					features.append(feature)
+				}
+			}
+		}
+		return ShapeSource(identifier: MapSourceIdentifier.routePoints) {
+			features
+		}
+	}
+
 	var streetViewSource: ShapeSource {
-		ShapeSource(identifier: "street-view-symbols") {
+		ShapeSource(identifier: MapSourceIdentifier.streetViewSymbols) {
 			if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
 				let streetViewPoint = StreetViewPoint(location: coordinate,
 													  heading: self.motionViewModel.position.heading)

@@ -37,16 +37,19 @@ struct ContentView: View {
 	@State private var sheetSize: CGSize = .zero
 	@State private var didTryToZoomOnUsersLocation = false
 
+	@State var offsetY: CGFloat = 0
+	@State var selectedDetent: PresentationDetent = .medium
+
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
-			if let route = self.mapStore.route {
-				let polylineSource = ShapeSource(identifier: "pedestrian-polyline") {
+			if let route = self.mapStore.routes?.routes.first {
+				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
 					MLNPolylineFeature(coordinates: route.coordinates ?? [])
 				}
 
 				// Add a polyline casing for a stroke effect
-				LineStyleLayer(identifier: "route-line-casing", source: polylineSource)
+				LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
 					.lineCap(.round)
 					.lineJoin(.round)
 					.lineColor(.white)
@@ -56,7 +59,7 @@ struct ContentView: View {
 							   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
 
 				// Add an inner (blue) polyline
-				LineStyleLayer(identifier: "route-line-inner", source: polylineSource)
+				LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
 					.lineCap(.round)
 					.lineJoin(.round)
 					.lineColor(.systemBlue)
@@ -64,24 +67,49 @@ struct ContentView: View {
 							   curveType: .linear,
 							   parameters: NSExpression(forConstantValue: 1.5),
 							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+
+				let routePoints = self.mapStore.routePoints
+
+				CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
+					.radius(16)
+					.color(.systemRed)
+					.strokeWidth(2)
+					.strokeColor(.white)
+				SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
+					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(.white)
 			}
 			let pointSource = self.mapStore.points
 
-			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+			// shows the clustered pins
+			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered, source: pointSource)
 				.radius(16)
 				.color(.systemRed)
 				.strokeWidth(2)
 				.strokeColor(.white)
-			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+				.predicate(NSPredicate(format: "cluster == YES"))
+			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsClustered, source: pointSource)
+				.textColor(.white)
+				.text(expression: NSExpression(format: "CAST(point_count, 'NSString')"))
+				.predicate(NSPredicate(format: "cluster == YES"))
+
+			// shows the unclustered pins
+			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
+				.radius(16)
+				.color(.systemRed)
+				.strokeWidth(2)
+				.strokeColor(.white)
+				.predicate(NSPredicate(format: "cluster != YES"))
+			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
-				.iconRotation(45)
+				.predicate(NSPredicate(format: "cluster != YES"))
 
-			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
+			SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
 				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
-		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
+		.onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
 			// the one nearest nearest one to the touch point.
 			guard let feature = features.first,
@@ -107,8 +135,8 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
-		.onChange(of: self.mapStore.route) { newRoute in
-			if let route = newRoute, let coordinates = route.coordinates, !coordinates.isEmpty {
+		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
+			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
 				if let camera = CameraState.boundingBox(from: coordinates) {
 					self.mapStore.camera = camera
 				}
@@ -152,14 +180,14 @@ struct ContentView: View {
 			if case .enabled = self.mapStore.streetView {
 				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
-				if self.mapStore.route != nil {
+				if self.mapStore.routes == nil {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 						.presentationBackground(.thinMaterial)
 				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			if self.mapStore.route == nil {
+			if self.mapStore.routes == nil {
 				HStack(alignment: .bottom) {
 					MapButtonsView(mapButtonsData: [
 						MapButtonData(sfSymbol: .icon(.map)) {
@@ -206,7 +234,8 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-		.backport.safeAreaPadding(.bottom, self.sheetSize.height + 8)
+
+		.backport.buttonSafeArea(length: self.sheetSize)
 		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
@@ -229,20 +258,23 @@ struct ContentView: View {
 						self.sheetSize = value
 					}
 				}
-				.sheet(isPresented: Binding<Bool>(
-					get: { self.mapStore.route != nil },
+
+				.backport.sheet(isPresented: Binding<Bool>(
+					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+
 					set: { _ in }
 				)) {
 					NavigationSheetView(mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.height(150)])
+						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
 						.presentationBackgroundInteraction(
-							.enabled(upThrough: .height(150))
+							.enabled(upThrough: .medium)
 						)
 						.ignoresSafeArea()
 						.interactiveDismissDisabled()
 						.presentationCompactAdaptation(.sheet)
 				}
+
 				.sheet(isPresented: self.$showMapLayer) {
 					VStack(alignment: .center, spacing: 25) {
 						Spacer()
@@ -265,7 +297,6 @@ struct ContentView: View {
 					}
 				}
 		}
-
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
 			self.notificationQueue.removeFirst()
@@ -284,7 +315,7 @@ struct ContentView: View {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
-		self.mapStore.route = searchStore.mapStore.route
+		self.mapStore.routes = searchStore.mapStore.routes
 	}
 }
 
@@ -306,7 +337,7 @@ struct SizePreferenceKey: PreferenceKey {
 	}
 }
 
-#Preview {
+#Preview("Main Map") {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return ContentView(searchStore: searchViewStore)
 }

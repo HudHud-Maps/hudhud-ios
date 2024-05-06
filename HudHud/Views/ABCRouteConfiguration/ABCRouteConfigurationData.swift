@@ -6,7 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
+import MapboxDirections
+import MapKit
 import POIService
 import SFSafeSymbols
 import SwiftUI
@@ -15,8 +18,8 @@ import SwiftUI
 
 enum ABCRouteConfigurationItem: Hashable, Identifiable {
 
-	case myLocation
-	case poi(ResolvedItem)
+	case myLocation(Waypoint)
+	case waypoint(ResolvedItem)
 
 	var id: Self {
 		return self
@@ -26,7 +29,7 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
 		switch self {
 		case .myLocation:
 			return "My Location"
-		case let .poi(poi):
+		case let .waypoint(poi):
 			return poi.title
 		}
 	}
@@ -35,7 +38,7 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
 		switch self {
 		case .myLocation:
 			return Image(systemSymbol: .location)
-		case .poi:
+		case .waypoint:
 			return Image(systemSymbol: .mappin)
 		}
 	}

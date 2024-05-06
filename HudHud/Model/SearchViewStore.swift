@@ -47,6 +47,8 @@ final class SearchViewStore: ObservableObject {
 	@Published var selectedDetent: PresentationDetent = .small
 	@Published var isSearching = false
 
+	@AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
+
 	// MARK: - Lifecycle
 
 	init(mapStore: MapStore, mode: Mode) {
@@ -89,6 +91,11 @@ final class SearchViewStore: ObservableObject {
 					]
 				}
 			}
+		if case .preview = mode {
+			let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh)
+			let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
+			self.recentViewedItem = [itemOne, itemTwo]
+		}
 	}
 
 	// MARK: - Internal

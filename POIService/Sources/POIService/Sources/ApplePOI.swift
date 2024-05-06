@@ -62,10 +62,11 @@ public actor ApplePOI: POIServiceProtocol {
 				let items = mapItems.compactMap {
 					return ResolvedItem(id: UUID().uuidString,
 										title: $0.name ?? "",
-//								 subtitle: $0.pointOfInterestCategory?.rawValue.localizedUppercase ?? "",
 										subtitle: $0.placemark.formattedAddress ?? "",
 										type: .appleResolved,
 										coordinate: $0.placemark.coordinate,
+										phone: $0.phoneNumber,
+										website: $0.url,
 										onTap: {
 											print(#function)
 										})

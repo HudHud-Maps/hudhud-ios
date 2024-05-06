@@ -25,8 +25,8 @@ struct SearchSheet: View {
 	@ObservedObject var mapStore: MapStore
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
-
-	@AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
+	@Environment(\.openURL) private var openURL
+	@State private var isPresentWebView = false
 
 	var body: some View {
 		return VStack {
@@ -114,10 +114,11 @@ struct SearchSheet: View {
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedItem) { item in
+						ForEach(self.searchStore.recentViewedItem) { item in
 							RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
+
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					.padding(.top)
@@ -125,17 +126,53 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(item: self.$mapStore.selectedItem) {
-			// Dismiss callback
+//		.sheet(item: self.$mapStore.selectedItem) {
+//			// Dismiss callback
+//			self.searchStore.selectedDetent = .medium
+//		} content: { item in
+//			POIDetailSheet(item: item, onStart: { calculation in
+//				Logger.searchView.info("Start item \(item.title)")
+//				self.mapStore.route = calculation.routes.first
+//				self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
+//			}, onMore: {
+//				Logger.searchView.info("more item \(item.title))")
+//			})
+		.backport.sheet(item: self.$mapStore.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
-			POIDetailSheet(item: item, onStart: { calculation in
-				Logger.searchView.info("Start item \(item.title)")
-				self.mapStore.route = calculation.routes.first
+			POIDetailSheet(item: item) { calculation in
+				Logger.searchView.info("Start item \(item)")
+				self.searchStore.selectedDetent = .small
+				self.mapStore.routes = calculation
 				self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
-			}, onMore: {
-				Logger.searchView.info("more item \(item.title))")
-			})
+				if let location = calculation.waypoints.first {
+					self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
+				}
+			} onMore: { action in
+				switch action {
+				case .phone:
+					// Perform phone action
+					if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+						self.openURL(url)
+					}
+					Logger.searchView.info("Item phone \(item.phone ?? "nil")")
+				case .website:
+					// Perform website action
+					self.isPresentWebView = true
+					Logger.searchView.info("Item website \(item.website?.absoluteString ?? "")")
+				case .moreInfo:
+					// Perform more info action
+					Logger.searchView.info("more item \(item))")
+				}
+			} onDismiss: {
+				self.mapStore.selectedItem = nil
+			}
+			.fullScreenCover(isPresented: self.$isPresentWebView) {
+				if let website = item.website {
+					SafariWebView(url: website)
+						.ignoresSafeArea()
+				}
+			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(
 				.enabled(upThrough: .third)
@@ -170,11 +207,9 @@ struct SearchSheet: View {
 //		}
 //	}
 
-}
-
-#Preview {
-	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
+	func dismissSheet() {
+		self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
+	}
 }
 
 extension Route: Identifiable {}
@@ -209,4 +244,9 @@ extension [ResolvedItem]: RawRepresentable {
 		}
 		return result
 	}
+}
+
+#Preview {
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
