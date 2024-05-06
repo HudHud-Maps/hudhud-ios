@@ -42,7 +42,6 @@ public protocol DisplayableAsRow: Identifiable {
 	var subtitle: String { get }
 	var icon: Image { get }
 
-	var onTap: (() -> Void)? { get }
 	func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
 }
 
@@ -60,10 +59,6 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 
 	public var icon: Image {
 		self.innerModel.icon
-	}
-
-	public var onTap: (() -> Void)? {
-		self.innerModel.onTap
 	}
 
 	public var innerModel: any DisplayableAsRow
@@ -97,17 +92,15 @@ public struct PredictionItem: DisplayableAsRow {
 	public var subtitle: String
 	public var icon: Image
 	public var type: PredictionResult
-	public var onTap: (() -> Void)?
 
 	// MARK: - Lifecycle
 
-	public init(id: String, title: String, subtitle: String, icon: Image, type: PredictionResult, onTap: (() -> Void)? = nil) {
+	public init(id: String, title: String, subtitle: String, icon: Image, type: PredictionResult) {
 		self.id = id
 		self.title = title
 		self.subtitle = subtitle
 		self.icon = icon
 		self.type = type
-		self.onTap = onTap
 	}
 
 	// MARK: - Public
