@@ -32,6 +32,7 @@ struct SearchSheet: View {
 	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 	@Environment(\.dismiss) var dismiss
+	var onSearchCompletion: ((ABCRouteConfigurationItem) -> Void)?
 
 	var body: some View {
 		return VStack {
@@ -66,12 +67,15 @@ struct SearchSheet: View {
 				.background(.quinary)
 				.cornerRadius(12)
 				.padding()
-				if self.searchStore.searchType == .addPOILocation {
+				switch self.searchStore.searchType {
+				case .addPOILocation:
 					Button("Cancel", action: {
 						self.dismiss()
 					})
 					.foregroundColor(.gray)
 					.padding(.trailing)
+				case .selectPOI:
+					EmptyView()
 				}
 			}
 
@@ -115,9 +119,12 @@ struct SearchSheet: View {
 							case .appleMapItem:
 								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
-							if self.searchStore.searchType == .addPOILocation {
-								self.searchStore.mapStore.waypoints?.append(.poi(self.mapStore.selectedItem!))
+							switch self.searchStore.searchType {
+							case .addPOILocation:
+								self.onSearchCompletion?(.poi(self.mapStore.selectedItem!))
 								self.dismiss()
+							default:
+								break
 							}
 
 						}, label: {
@@ -226,10 +233,11 @@ struct SearchSheet: View {
 
 	// MARK: - Lifecycle
 
-	init(mapStore: MapStore, searchStore: SearchViewStore) {
+	init(mapStore: MapStore, searchStore: SearchViewStore, onSearchCompletion: ((ABCRouteConfigurationItem) -> Void)? = nil) {
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
+		self.onSearchCompletion = onSearchCompletion
 	}
 
 	// MARK: - Internal

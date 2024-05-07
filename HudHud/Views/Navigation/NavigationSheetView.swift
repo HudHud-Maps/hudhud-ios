@@ -19,7 +19,7 @@ struct NavigationSheetView: View {
 	@ObservedObject var searchViewStore: SearchViewStore
 	@ObservedObject var mapStore: MapStore
 	@State var goPressed = false
-	@State var searchShown = false
+	@State var searchShown: Bool = false
 
 	var body: some View {
 		VStack(spacing: 5) {
@@ -51,9 +51,7 @@ struct NavigationSheetView: View {
 			.padding(.top)
 
 			if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
-				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore, searchShown: {
-					self.searchShown = true
-				})
+				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore, searchShown: self.$searchShown)
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -74,17 +72,23 @@ struct NavigationSheetView: View {
 			}
 		}
 		.sheet(isPresented: self.$searchShown) {
-			SearchSheet(mapStore: self.mapStore,
-						searchStore: self.searchViewStore)
-				.frame(minWidth: 320)
-				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-				.presentationBackgroundInteraction(
-					.enabled(upThrough: .large)
-				)
-				.interactiveDismissDisabled()
-				.ignoresSafeArea()
-				.presentationCompactAdaptation(.sheet)
+			// Initialize fresh instances of MapStore and SearchViewStore
+			let freshMapStore = MapStore(motionViewModel: .shared)
+			let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: .live(provider: .toursprung))
+			freshSearchViewStore.searchType = .addPOILocation
+			return SearchSheet(mapStore: freshSearchViewStore.mapStore,
+							   searchStore: freshSearchViewStore, onSearchCompletion: { item in
+							   	self.searchViewStore.mapStore.waypoints?.append(item)
+							   })
+							   .frame(minWidth: 320)
+							   .presentationCornerRadius(21)
+							   .presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+							   .presentationBackgroundInteraction(
+							   	.enabled(upThrough: .large)
+							   )
+							   .interactiveDismissDisabled()
+							   .ignoresSafeArea()
+							   .presentationCompactAdaptation(.sheet)
 		}
 	}
 }
