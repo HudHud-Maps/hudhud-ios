@@ -17,7 +17,7 @@ struct SearchResultItem: View {
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
-			self.prediction.icon
+			Image(systemSymbol: self.prediction.symbol)
 				.resizable()
 				.aspectRatio(contentMode: .fit)
 				.frame(width: 24, height: 24)
@@ -27,9 +27,9 @@ struct SearchResultItem: View {
 				.overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
 				.layoutPriority(1)
 				.frame(minWidth: .leastNonzeroMagnitude)
-//				.background(
-//					self.prediction.iconColor.mask(Circle())
-//				)
+				.background(
+					self.prediction.tintColor.mask(Circle())
+				)
 
 			VStack(alignment: .leading) {
 				Text(self.prediction.title)
@@ -59,7 +59,7 @@ struct SearchResultItem: View {
 	SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
 												title: "Starbucks",
 												subtitle: "Coffee",
-												icon: .init(systemSymbol: .cupAndSaucer),
+												symbol: .cupAndSaucer,
 												type: .appleResolved),
 					 searchViewStore: .storeSetUpForPreviewing)
 }

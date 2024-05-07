@@ -26,7 +26,7 @@ struct RecentSearchResultsView: View {
 
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
-					self.item.icon
+					Image(systemSymbol: self.item.symbol)
 						.font(.title2)
 						.aspectRatio(contentMode: .fit)
 						.foregroundStyle(.white)
@@ -35,9 +35,9 @@ struct RecentSearchResultsView: View {
 						.overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
 						.layoutPriority(1)
 						.frame(minWidth: .leastNonzeroMagnitude)
-//						.background(
-//							self.item.iconColor.mask(Circle())
-//						)
+						.background(
+							self.item.tintColor.mask(Circle())
+						)
 
 					VStack(alignment: .leading) {
 						Text(self.item.title)

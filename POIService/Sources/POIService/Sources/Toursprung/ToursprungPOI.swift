@@ -9,6 +9,8 @@
 import CoreLocation
 import Foundation
 import MapKit
+import SFSafeSymbols
+import SwiftUI
 
 // MARK: - ToursprungPOI
 
@@ -56,7 +58,6 @@ public actor ToursprungPOI: POIServiceProtocol {
 	public func lookup(prediction _: Any) async throws -> [ResolvedItem] {
 		return []
 	}
-
 }
 
 // MARK: - Private
@@ -98,9 +99,8 @@ private extension ToursprungPOI {
 
 			let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
-			var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, type: .toursprung, coordinate: coordinate) {
-				print("tapped")
-			}
+			let symbol = self.symbol(from: $0.type)
+			var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, category: $0.type.lowercased(), symbol: symbol, type: .toursprung, coordinate: coordinate)
 
 			let mirror = Mirror(reflecting: $0)
 			mirror.children.forEach { child in
@@ -148,4 +148,103 @@ public extension POIElement {
 																  suburb: "Setiawangsa",
 																  iso31662Lvl3: nil),
 												 category: "poi")
+}
+
+private extension ToursprungPOI {
+
+	func symbol(from: String) -> SFSymbol {
+		switch from.lowercased() {
+		case "cafe":
+			return .cupAndSaucerFill
+		case "accomodation", "appartment", "camp_site", "caravan_site", "chalet", "guest_house", "hostel", "hotel", "motel", "wilderness_hut":
+			return .houseFill
+		case "alpine_hut":
+			return .tramFill
+
+		// Animals
+		case "animal_boarding", "animal_shelter", "veterinary":
+			return .pawprintFill
+
+		// Arts and Culture
+		case "arts_centre", "gallery", "museum":
+			return .paintpaletteFill
+		case "library":
+			return .booksVerticalFill
+		case "place_of_worship":
+			return .buildingColumnsFill
+		case "studio":
+			return .cameraFill
+
+		// Education
+		case "college", "kindergarten", "language_school", "music_school", "school", "university":
+			return .graduationcapFill
+		case "driving_school":
+			return .carFill
+
+		// Facilities
+		case "bench", "shelter", "table", "toilets":
+			return .rectangleFillOnRectangleAngledFill
+		case "clock", "post_box", "telephone":
+			return .clockFill
+		case "drinking_water", "water_point":
+			return .dropFill
+		case "fountain":
+			return .dropCircleFill
+		case "recycling", "recycling_station", "waste_basket", "waste_disposal":
+			return .trashFill
+		case "shower":
+			return .showerFill
+
+		// Financial
+		case "atm":
+			return .creditcardFill
+		case "bank", "bureau_de_change":
+			return .buildingFill
+
+		// Healthcare
+		case "baby_hatch", "clinic", "dentist", "doctors", "hospital", "nursing_home", "retirement_home", "social_facility":
+			return .crossFill
+
+		// Leisure and Entertainment
+		case "amusement_arcade", "adult_gaming_centre", "cinema", "nightclub", "theme_park", "zoo":
+			return .filmFill
+		case "beach_resort", "park", "picnic_site", "playground":
+			return .leafFill
+		case "dog_park":
+			return .pawprintFill
+		case "swimming_pool", "water_park":
+			return .waveformPathEcgRectangleFill
+
+		// Tourism
+		case "aquarium", "artwork", "attraction", "viewpoint":
+			return .eyeglasses
+		case "information":
+			return .infoCircleFill
+
+		// Shop
+		case "bakery", "beverages", "butcher", "cheese", "chocolate", "coffee", "confectionery", "dairy", "deli", "farm", "fish", "greengrocer", "tea":
+			return .cartFill
+		case "bicycle", "bicycle_parking", "bicycle_rental", "bicycle_repair_station":
+			return .bicycle
+		case "book", "books":
+			return .bookFill
+		case "clothes", "fashion":
+			return .tshirtFill
+		case "convenience", "supermarket":
+			return .bagFill
+		case "pharmacy":
+			return .pillFill
+
+		// Food & Drink
+		case "bar", "biergarten", "fast_food", "food_court", "ice_cream", "pub", "restaurant":
+			return .forkKnife
+
+		// Transport
+		case "boat_sharing", "bus_station", "bus_stop", "car_rental", "car_repair", "car_sharing", "car_wash", "charging_station", "ev_charging", "ferry_terminal", "fuel", "motorcycle_parking", "parking", "parking_entrance", "parking_space", "taxi":
+			return .carFill
+
+		default:
+			return .mappin
+		}
+	}
 }

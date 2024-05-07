@@ -63,13 +63,12 @@ public actor ApplePOI: POIServiceProtocol {
 					return ResolvedItem(id: UUID().uuidString,
 										title: $0.name ?? "",
 										subtitle: $0.placemark.formattedAddress ?? "",
+										category: $0.pointOfInterestCategory?.rawValue.replacingOccurrences(of: "MKPOICategory", with: ""),
+										symbol: $0.pointOfInterestCategory?.symbol ?? .pin,
 										type: .appleResolved,
 										coordinate: $0.placemark.coordinate,
 										phone: $0.phoneNumber,
-										website: $0.url,
-										onTap: {
-											print(#function)
-										})
+										website: $0.url)
 				}
 				continuation.resume(returning: items)
 			}
@@ -124,7 +123,7 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 			let item = PredictionItem(id: UUID().uuidString,
 									  title: $0.title,
 									  subtitle: $0.subtitle,
-									  icon: .init(systemSymbol: .pin),
+									  symbol: .pin,
 									  type: .apple(completion: $0))
 			return AnyDisplayableAsRow(item)
 		}
