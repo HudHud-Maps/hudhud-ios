@@ -19,7 +19,7 @@ struct AdditionalPOIDetailsView: View {
 			VStack {
 				Text("Hours")
 					.foregroundStyle(.secondary)
-				Text("Unkown")
+				Text("Unknown")
 					.bold()
 					.font(.title3)
 					.lineLimit(1)

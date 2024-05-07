@@ -9,6 +9,8 @@ import CoreLocation
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
+import MapKit
+import SwiftUI
 
 class Formatters {
 	func formatDuration(duration: TimeInterval) -> String {
@@ -23,24 +25,13 @@ class Formatters {
 	}
 
 	func formatDistance(distance: CLLocationDistance) -> String {
-		let formatter = MeasurementFormatter()
 		let locale = Locale.autoupdatingCurrent
-		formatter.locale = locale
-		formatter.unitOptions = .providedUnit
-		formatter.unitStyle = .short
 
 		let distanceMeasurement = Measurement(value: distance, unit: UnitLength.meters)
 
-		// Check if distance is less than 1000 meters
-		if distance < 1000 {
-			// Round up to the next 50 meters increment
-			let roundedDistance = (distance / 50.0).rounded(.up) * 50.0
-			return "\(Int(roundedDistance))m"
-		} else {
-			// Format distance in kilometers with one decimal place
-			let distanceInKilometers = distanceMeasurement.converted(to: .kilometers)
-			formatter.numberFormatter.maximumFractionDigits = 1
-			return formatter.string(from: distanceInKilometers)
-		}
+		let stringDistance = distanceMeasurement.formatted(.measurement(width: .abbreviated, usage: .road).locale(locale))
+
+		return stringDistance
 	}
+
 }
