@@ -41,7 +41,6 @@ struct ContentView: View {
 	@State var offsetY: CGFloat = 0
 	@State var selectedDetent: PresentationDetent = .medium
 
-
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
@@ -224,7 +223,8 @@ struct ContentView: View {
 							}
 						},
 						MapButtonData(sfSymbol: .icon(.cube)) {
-							print("3D Map toggle tapped")
+							self.mapStore.switchTo3D.toggle()
+							Logger.mapInteraction.debug("3D Map toggle tapped")
 						}
 					])
 					Spacer()

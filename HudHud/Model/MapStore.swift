@@ -50,6 +50,17 @@ final class MapStore: ObservableObject {
 		}
 	}
 
+	var switchTo3D: Bool = false {
+		didSet {
+			if self.switchTo3D {
+				self.camera.setZoom(16)
+				self.camera.setPitch(.fixed(60))
+			} else {
+				self.camera.setPitch(.fixed(0))
+			}
+		}
+	}
+
 	var points: ShapeSource {
 		return ShapeSource(identifier: MapSourceIdentifier.points, options: [.clustered: true, .clusterRadius: 44]) {
 			self.mapItems.compactMap { item in
