@@ -11,6 +11,7 @@ import SwiftUI
 struct DirectionModePickerView: View {
 	@State var directionModePickerData: [DirectionModePickerData]
 	@State var selectedRoute = DirectionModePickerData(mode: .car, duration: 1200)
+	var formatter = Formatters()
 
 	var body: some View {
 		HStack {
@@ -18,7 +19,7 @@ struct DirectionModePickerView: View {
 				Button {
 					self.switchMode(mode: mode)
 				} label: {
-					Text(self.formatDuration(duration: mode.duration))
+					Text(self.formatter.formatDuration(duration: mode.duration))
 				}
 				.buttonStyle(DirectionModeButton(sfSymol: mode.mode.iconName))
 				.foregroundStyle(self.selectedRoute == mode ? Color.blue : Color.gray)
@@ -28,19 +29,6 @@ struct DirectionModePickerView: View {
 				.cornerRadius(10)
 				.shadow(color: self.selectedRoute == mode ? .black.opacity(0.1) : .black.opacity(0), radius: 10, y: 10)
 			}
-		}
-	}
-
-	// MARK: - Internal
-
-	func formatDuration(duration: TimeInterval) -> String {
-		let formatter = DateComponentsFormatter()
-		formatter.allowedUnits = [.hour, .minute]
-		formatter.unitsStyle = .brief
-		if let formattedString = formatter.string(from: duration) {
-			return formattedString
-		} else {
-			return "-"
 		}
 	}
 
