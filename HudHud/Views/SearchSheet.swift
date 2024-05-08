@@ -32,7 +32,6 @@ struct SearchSheet: View {
 	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 	@Environment(\.dismiss) var dismiss
-	var onSearchCompletion: ((ABCRouteConfigurationItem) -> Void)?
 
 	var body: some View {
 		return VStack {
@@ -68,7 +67,7 @@ struct SearchSheet: View {
 				.cornerRadius(12)
 				.padding()
 				switch self.searchStore.searchType {
-				case .addPOILocation:
+				case .returnPOILocation:
 					Button("Cancel", action: {
 						self.dismiss()
 					})
@@ -120,9 +119,11 @@ struct SearchSheet: View {
 								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
 							switch self.searchStore.searchType {
-							case .addPOILocation:
-								self.onSearchCompletion?(.poi(self.mapStore.selectedItem!))
-								self.dismiss()
+							case let .returnPOILocation(completion):
+								if let selectedItem = self.mapStore.selectedItem {
+									completion?(.poi(selectedItem))
+									self.dismiss()
+								}
 							default:
 								break
 							}
@@ -233,11 +234,10 @@ struct SearchSheet: View {
 
 	// MARK: - Lifecycle
 
-	init(mapStore: MapStore, searchStore: SearchViewStore, onSearchCompletion: ((ABCRouteConfigurationItem) -> Void)? = nil) {
+	init(mapStore: MapStore, searchStore: SearchViewStore) {
 		self.mapStore = mapStore
 		self.searchStore = searchStore
 		self.searchIsFocused = false
-		self.onSearchCompletion = onSearchCompletion
 	}
 
 	// MARK: - Internal

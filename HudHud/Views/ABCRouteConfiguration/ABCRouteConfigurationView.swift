@@ -51,7 +51,7 @@ struct ABCRouteConfigurationView: View {
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-					self.searchViewStore.searchType = .addPOILocation
+					self.searchViewStore.searchType = .returnPOILocation(completion: nil)
 					self.searchShown = true
 				} label: {
 					HStack {

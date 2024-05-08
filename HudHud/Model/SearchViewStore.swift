@@ -18,9 +18,24 @@ import ToursprungPOI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
-	enum SearchType {
+	enum SearchType: Equatable {
+
 		case selectPOI
-		case addPOILocation
+		case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
+
+		// MARK: - Internal
+
+		static func == (lhs: SearchType, rhs: SearchType) -> Bool {
+			switch (lhs, rhs) {
+			case (.selectPOI, .selectPOI):
+				return true
+			case let (.returnPOILocation(lhsCompletion), .returnPOILocation(rhsCompletion)):
+				// Compare the optional closures using their identity
+				return lhsCompletion as AnyObject === rhsCompletion as AnyObject
+			default:
+				return false
+			}
+		}
 	}
 
 	enum Mode {

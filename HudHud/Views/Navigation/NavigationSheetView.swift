@@ -73,22 +73,22 @@ struct NavigationSheetView: View {
 		}
 		.sheet(isPresented: self.$searchShown) {
 			// Initialize fresh instances of MapStore and SearchViewStore
-			let freshMapStore = MapStore(motionViewModel: .shared)
-			let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: .live(provider: .toursprung))
-			freshSearchViewStore.searchType = .addPOILocation
+			let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+			let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
+			freshSearchViewStore.searchType = .returnPOILocation(completion: { item in
+				self.searchViewStore.mapStore.waypoints?.append(item)
+			})
 			return SearchSheet(mapStore: freshSearchViewStore.mapStore,
-							   searchStore: freshSearchViewStore, onSearchCompletion: { item in
-							   	self.searchViewStore.mapStore.waypoints?.append(item)
-							   })
-							   .frame(minWidth: 320)
-							   .presentationCornerRadius(21)
-							   .presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-							   .presentationBackgroundInteraction(
-							   	.enabled(upThrough: .large)
-							   )
-							   .interactiveDismissDisabled()
-							   .ignoresSafeArea()
-							   .presentationCompactAdaptation(.sheet)
+							   searchStore: freshSearchViewStore)
+				.frame(minWidth: 320)
+				.presentationCornerRadius(21)
+				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .large)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
+				.presentationCompactAdaptation(.sheet)
 		}
 	}
 }
