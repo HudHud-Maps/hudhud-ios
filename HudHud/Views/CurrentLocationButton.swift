@@ -16,7 +16,6 @@ import SwiftUI
 struct CurrentLocationButton: View {
 	@State private var locationRequestInProgress = false
 	@Binding var camera: MapViewCamera
-	let locationManager: Location
 
 	var body: some View {
 		Button {
@@ -24,9 +23,8 @@ struct CurrentLocationButton: View {
 				defer { self.locationRequestInProgress = false }
 				do {
 					self.locationRequestInProgress = true
-					self.locationManager.accuracy = .threeKilometers
-					try await self.locationManager.requestPermission(.whenInUse)
-					let userLocation = try await locationManager.requestLocation()
+					try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
+					let userLocation = try await Location.forSingleRequestUsage.requestLocation()
 
 					if let coordinates = userLocation.location?.coordinate {
 						withAnimation {
@@ -63,6 +61,6 @@ struct CurrentLocationButton: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
 	@State var camera: MapViewCamera = .default()
-	return CurrentLocationButton(camera: $camera, locationManager: .preview)
+	return CurrentLocationButton(camera: $camera)
 		.padding()
 }

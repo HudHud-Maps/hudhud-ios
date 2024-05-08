@@ -18,17 +18,27 @@ import SwiftLocation
 import SwiftUI
 import ToursprungPOI
 
+// MARK: - POIDetailAction
+
+enum POIDetailAction {
+	case phone
+	case website
+	case moreInfo
+}
+
+// MARK: - POIDetailSheet
+
 struct POIDetailSheet: View {
 
 	let poi: POI
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
-	let onMore: () -> Void
+	let onMore: (POIDetailAction) -> Void
 
 	@State var routes: Toursprung.RouteCalculationResult?
 
 	@Environment(\.dismiss) var dismiss
+	let onDismiss: () -> Void
 	@EnvironmentObject var notificationQueue: NotificationQueue
-	@EnvironmentObject var location: Location
 
 	var body: some View {
 		NavigationStack {
@@ -47,6 +57,7 @@ struct POIDetailSheet: View {
 
 					Button(action: {
 						self.dismiss()
+						self.onDismiss()
 					}, label: {
 						ZStack {
 							Circle()
@@ -61,19 +72,21 @@ struct POIDetailSheet: View {
 						.contentShape(Circle())
 					})
 					.buttonStyle(PlainButtonStyle())
-					.accessibilityLabel(Text("Close"))
+					.accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
 				}
 				.padding([.top, .leading, .trailing])
 
 				HStack {
 					Button(action: {
 						guard let routes else { return }
-
 						self.onStart(routes)
+						self.dismiss()
 					}, label: {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
-							Text("Start")
+							Text("Start", comment: "get the navigation route")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
@@ -81,34 +94,48 @@ struct POIDetailSheet: View {
 					.buttonStyle(.borderedProminent)
 					.disabled(self.routes == nil)
 
-					Button(action: self.onMore) {
+					if let phone = self.poi.phone, !phone.isEmpty {
+						Button(action: {
+							self.onMore(.phone)
+						}, label: {
+							VStack(spacing: 2) {
+								Image(systemSymbol: .phoneFill)
+								Text("Call", comment: "on poi detail sheet to call the poi")
+									.lineLimit(1)
+									.minimumScaleFactor(0.5)
+							}
+							.frame(maxWidth: .infinity)
+							.padding(.vertical, 2)
+						})
+						.buttonStyle(.bordered)
+					}
+					if let website = self.poi.website {
+						Button(action: {
+							self.onMore(.website)
+						}, label: {
+							VStack(spacing: 2) {
+								Image(systemSymbol: .safariFill)
+								Text("Web")
+									.lineLimit(1)
+									.minimumScaleFactor(0.5)
+							}
+							.frame(maxWidth: .infinity)
+							.padding(.vertical, 2)
+						})
+						.buttonStyle(.bordered)
+					}
+					Button(action: {
+						self.onMore(.moreInfo)
+					}, label: {
 						VStack(spacing: 2) {
-							Image(systemSymbol: .phoneFill)
-							Text("Call")
+							Image(systemSymbol: .ellipsisCircleFill)
+							Text("More", comment: "on poi detail sheet to see more info")
+								.lineLimit(1)
+								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
 						.padding(.vertical, 2)
-					}
-					.buttonStyle(.bordered)
-
-					Button(action: self.onMore) {
-						VStack(spacing: 2) {
-							Image(systemSymbol: .safariFill)
-							Text("Web")
-						}
-						.frame(maxWidth: .infinity)
-						.padding(.vertical, 2)
-					}
-					.buttonStyle(.bordered)
-
-					Button(action: self.onMore) {
-						VStack(spacing: 2) {
-							Image(systemSymbol: .phoneFill)
-							Text("More")
-						}
-						.frame(maxWidth: .infinity)
-						.padding(.vertical, 2)
-					}
+					})
 					.buttonStyle(.bordered)
 				}
 				.padding(.horizontal)
@@ -118,10 +145,8 @@ struct POIDetailSheet: View {
 		}
 		.task {
 			do {
-				// Location may only be inited on main thread, do not init within task.
-				self.location.accuracy = .threeKilometers // Location is extremely slow, unless set to this - returns better accuracy none the less.
-				_ = try await self.location.requestPermission(.whenInUse)
-				guard let userLocation = try await location.requestLocation().location else {
+				_ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
+				guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
 					return
 				}
 				guard let locationCoordinate = self.poi.locationCoordinate else {
@@ -155,7 +180,7 @@ struct POIDetailSheet: View {
 	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
 	return POIDetailSheet(poi: poi) { _ in
 		Logger.searchView.info("Start \(poi)")
-	} onMore: {
+	} onMore: { _ in
 		Logger.searchView.info("More \(poi)")
-	}
+	} onDismiss: {}
 }

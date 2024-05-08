@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
 
 // MARK: - MotionViewModel
@@ -20,14 +21,17 @@ final class MotionViewModel: ObservableObject {
 
 	// MARK: - Properties
 
+	@Published var coordinate: CLLocationCoordinate2D?
 	@Published var position: Position = .initial
 	@Published var size: Size = .compact
+	@Published var pageLoaded = false
 
 	static let shared = MotionViewModel()
 
 	// MARK: - Lifecycle
 
-	private init(position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
+	private init(coordinate: CLLocationCoordinate2D? = nil, position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
+		self.coordinate = coordinate
 		self.position = position
 		self.positionOffet = positionOffet
 		self.size = size
@@ -88,5 +92,5 @@ final class MotionViewModel: ObservableObject {
 
 extension MotionViewModel: Previewable {
 
-	static var preview: MotionViewModel = .shared
+	static var storeSetUpForPreviewing: MotionViewModel = .shared
 }

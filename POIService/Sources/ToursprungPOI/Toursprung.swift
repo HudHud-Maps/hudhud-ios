@@ -18,7 +18,7 @@ public typealias JSONDictionary = [String: Any]
 
 public class Toursprung {
 
-	public enum ToursprungError: LocalizedError {
+	public enum ToursprungError: LocalizedError, Equatable {
 		case invalidUrl(message: String?)
 		case invalidResponse(message: String?)
 		case noRoute(message: String?)
@@ -216,7 +216,7 @@ private extension RouteOptions {
 				URLQueryItem(name: "steps", value: "true"),
 				URLQueryItem(name: "continue_straight", value: "true"),
 				URLQueryItem(name: "annotations", value: "congestion,distance"),
-				URLQueryItem(name: "language", value: "ar"),
+				URLQueryItem(name: "language", value: Locale.preferredLanguages.first ?? "en-US"),
 				URLQueryItem(name: "roundabout_exits", value: "true"),
 				URLQueryItem(name: "voice_instructions", value: "true"),
 				URLQueryItem(name: "banner_instructions", value: "true"),

@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -25,9 +26,9 @@ struct ContentView: View {
 
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-	@EnvironmentObject var locationManager: Location
 
-	@ObservedObject private var notificationQueue = NotificationQueue()
+	@StateObject private var notificationQueue = NotificationQueue()
+
 	@ObservedObject private var motionViewModel: MotionViewModel
 	@ObservedObject private var searchViewStore: SearchViewStore
 	@ObservedObject private var mapStore: MapStore
@@ -35,26 +36,81 @@ struct ContentView: View {
 	@State private var showUserLocation: Bool = false
 	@State private var showMapLayer: Bool = false
 	@State private var didTryToZoomOnUsersLocation = false
+	@State private var sheetSize: CGSize = .zero
+
+	@State var offsetY: CGFloat = 0
+	@State var selectedDetent: PresentationDetent = .medium
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+			// Display preview data as a polyline on the map
+			if let route = self.mapStore.routes?.routes.first {
+				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
+					MLNPolylineFeature(coordinates: route.coordinates ?? [])
+				}
+
+				// Add a polyline casing for a stroke effect
+				LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
+					.lineCap(.round)
+					.lineJoin(.round)
+					.lineColor(.white)
+					.lineWidth(interpolatedBy: .zoomLevel,
+							   curveType: .linear,
+							   parameters: NSExpression(forConstantValue: 1.5),
+							   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+				// Add an inner (blue) polyline
+				LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
+					.lineCap(.round)
+					.lineJoin(.round)
+					.lineColor(.systemBlue)
+					.lineWidth(interpolatedBy: .zoomLevel,
+							   curveType: .linear,
+							   parameters: NSExpression(forConstantValue: 1.5),
+							   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+
+				let routePoints = self.mapStore.routePoints
+
+				CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
+					.radius(16)
+					.color(.systemRed)
+					.strokeWidth(2)
+					.strokeColor(.white)
+				SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
+					.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+					.iconColor(.white)
+			}
 			let pointSource = self.mapStore.points
 
-			CircleStyleLayer(identifier: "simple-circles", source: pointSource)
+			// shows the clustered pins
+			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered, source: pointSource)
 				.radius(16)
 				.color(.systemRed)
 				.strokeWidth(2)
 				.strokeColor(.white)
-			SymbolStyleLayer(identifier: "simple-symbols", source: pointSource)
+				.predicate(NSPredicate(format: "cluster == YES"))
+			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsClustered, source: pointSource)
+				.textColor(.white)
+				.text(expression: NSExpression(format: "CAST(point_count, 'NSString')"))
+				.predicate(NSPredicate(format: "cluster == YES"))
+
+			// shows the unclustered pins
+			CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
+				.radius(16)
+				.color(.systemRed)
+				.strokeWidth(2)
+				.strokeColor(.white)
+				.predicate(NSPredicate(format: "cluster != YES"))
+			SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
 				.iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
 				.iconColor(.white)
-				.iconRotation(45)
+				.predicate(NSPredicate(format: "cluster != YES"))
 
-			SymbolStyleLayer(identifier: "street-view-symbols", source: self.mapStore.streetViewSource)
+			SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
 				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
-		.onTapMapGesture(on: ["simple-circles"], onTapChanged: { _, features in
+		.onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
 			// Pick the first feature (which may be a port or a cluster), ideally selecting
 			// the one nearest nearest one to the touch point.
 			guard let feature = features.first,
@@ -80,14 +136,21 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
+		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
+			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
+				if let camera = CameraState.boundingBox(from: coordinates) {
+					self.mapStore.camera = camera
+				}
+			}
+		}
 		.task {
-			for await event in await self.locationManager.startMonitoringAuthorization() {
+			for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
 				self.showUserLocation = event.authorizationStatus.allowed
 			}
 		}
 		.task {
-			self.showUserLocation = self.locationManager.authorizationStatus.allowed
+			self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
 			Logger.searchView.debug("Authorization status authorizedAllowed")
 		}
 		.task {
@@ -96,13 +159,12 @@ struct ContentView: View {
 					return
 				}
 				self.didTryToZoomOnUsersLocation = true
-				self.locationManager.accuracy = .threeKilometers
-				let userLocation = try await locationManager.requestLocation()
+				let userLocation = try await Location.forSingleRequestUsage.requestLocation()
 				var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
 				if coordinates == nil {
 					// fall back to any location that was found, even if bad
 					// accuracy
-					coordinates = self.locationManager.lastLocation?.coordinate
+					coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
 				}
 				guard let coordinates else {
 					print("Could not determine user location, will not zoom...")
@@ -116,69 +178,65 @@ struct ContentView: View {
 		}
 		.ignoresSafeArea()
 		.safeAreaInset(edge: .top, alignment: .center) {
-			if case .point = self.mapStore.streetView {
-				DebugStreetView(viewModel: self.motionViewModel)
-					.onAppear {
-						Task {
-							let userLocation = try await locationManager.requestLocation()
-							guard let location = userLocation.location else { return }
-
-							self.mapStore.streetView = .point(StreetViewPoint(location: location.coordinate, heading: location.course))
-						}
-					}
-					.onDisappear {
-						self.mapStore.streetView = .disabled
-					}
+			if case .enabled = self.mapStore.streetView {
+				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
-				CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
-					.presentationBackground(.thinMaterial)
+				if self.mapStore.routes == nil {
+					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+						.presentationBackground(.thinMaterial)
+				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			HStack(alignment: .bottom) {
-				MapButtonsView(mapButtonsData: [
-					MapButtonData(sfSymbol: .icon(.map)) {
-						self.showMapLayer.toggle()
-					},
-					MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-						switch self.searchViewStore.mode {
-						case let .live(provider):
-							self.searchViewStore.mode = .live(provider: provider.next())
-							Logger.searchView.info("Map Mode live")
-						case .preview:
-							self.searchViewStore.mode = .live(provider: .toursprung)
-							Logger.searchView.info("Map Mode toursprung")
-						}
-					},
-					MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
-						if self.mapStore.streetView == .disabled {
-							Task {
-								self.mapStore.streetView = .requestedCurrentLocation
-								let location = try await self.locationManager.requestLocation()
-								guard let location = location.location else { return }
-
-								print("set new streetViewPoint")
-								let point = StreetViewPoint(location: location.coordinate, heading: location.course)
-								self.mapStore.streetView = .point(point)
+			if self.mapStore.routes == nil {
+				HStack(alignment: .bottom) {
+					MapButtonsView(mapButtonsData: [
+						MapButtonData(sfSymbol: .icon(.map)) {
+							self.showMapLayer.toggle()
+						},
+						MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+							switch self.searchViewStore.mode {
+							case let .live(provider):
+								self.searchViewStore.mode = .live(provider: provider.next())
+								Logger.searchView.info("Map Mode live")
+							case .preview:
+								self.searchViewStore.mode = .live(provider: .toursprung)
+								Logger.searchView.info("Map Mode toursprung")
 							}
-						} else {
-							self.mapStore.streetView = .disabled
+						},
+						MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
+							if self.mapStore.streetView == .disabled {
+								Task {
+									self.mapStore.streetView = .requestedCurrentLocation
+									let location = try await Location.forSingleRequestUsage.requestLocation()
+									guard let location = location.location else { return }
+
+									print("set new streetViewPoint")
+									self.motionViewModel.coordinate = location.coordinate
+									if location.course > 0 {
+										self.motionViewModel.position.heading = location.course
+									}
+									self.mapStore.streetView = .enabled
+								}
+							} else {
+								self.mapStore.streetView = .disabled
+							}
+						},
+						MapButtonData(sfSymbol: .icon(.cube)) {
+							print("3D Map toggle tapped")
 						}
-					},
-					MapButtonData(sfSymbol: .icon(.cube)) {
-						print("3D Map toggle tapped")
+					])
+					Spacer()
+					VStack(alignment: .trailing) {
+						CurrentLocationButton(camera: self.$mapStore.camera)
 					}
-				])
-				Spacer()
-				VStack(alignment: .trailing) {
-					CurrentLocationButton(camera: self.$mapStore.camera, locationManager: self.locationManager)
 				}
+				.opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
+				.padding(.horizontal)
 			}
-			.opacity(self.mapStore.sheetSize.height > 500 ? 0 : 1)
-			.padding(.horizontal)
 		}
-		.backport.safeAreaPadding(.bottom, self.mapStore.sheetSize.height + 8)
-		.sheet(isPresented: self.$mapStore.searchShown) {
+		.backport.buttonSafeArea(length: self.sheetSize)
+		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
 						searchStore: self.searchViewStore)
 				.frame(minWidth: 320)
@@ -200,8 +258,26 @@ struct ContentView: View {
 						self.mapStore.sheetSize = value
 					}
 				}
+
+				.backport.sheet(isPresented: Binding<Bool>(
+					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+
+					set: { _ in }
+				)) {
+					NavigationSheetView(mapStore: self.mapStore)
+						.presentationCornerRadius(21)
+						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
+						.presentationBackgroundInteraction(
+							.enabled(upThrough: .medium)
+						)
+						.ignoresSafeArea()
+						.interactiveDismissDisabled()
+						.presentationCompactAdaptation(.sheet)
+				}
+
 				.sheet(isPresented: self.$showMapLayer) {
-					VStack(alignment: .center, spacing: 30) {
+					VStack(alignment: .center, spacing: 25) {
+						Spacer()
 						HStack(alignment: .center) {
 							Spacer()
 							Text("Layers")
@@ -239,6 +315,7 @@ struct ContentView: View {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
+		self.mapStore.routes = searchStore.mapStore.routes
 	}
 }
 
@@ -260,16 +337,14 @@ struct SizePreferenceKey: PreferenceKey {
 	}
 }
 
-#Preview {
-	let searchViewStore: SearchViewStore = .preview
+#Preview("Main Map") {
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return ContentView(searchStore: searchViewStore)
-		.environmentObject(Location.preview)
 }
 
 #Preview("Touch Testing") {
-	let store: SearchViewStore = .preview
+	let store: SearchViewStore = .storeSetUpForPreviewing
 	store.searchText = "shops"
 	store.selectedDetent = .medium
 	return ContentView(searchStore: store)
-		.environmentObject(Location.preview)
 }

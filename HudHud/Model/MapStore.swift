@@ -8,11 +8,13 @@
 
 import CoreLocation
 import Foundation
+import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SwiftUI
+import ToursprungPOI
 
 // MARK: - MapStore
 
@@ -21,7 +23,7 @@ final class MapStore: ObservableObject {
 	enum StreetViewOption: Equatable {
 		case disabled
 		case requestedCurrentLocation
-		case point(StreetViewPoint)
+		case enabled
 	}
 
 	let motionViewModel: MotionViewModel
@@ -30,6 +32,8 @@ final class MapStore: ObservableObject {
 	@Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
 	@Published var searchShown: Bool = true
 	@Published var streetView: StreetViewOption = .disabled
+	@Published var routes: Toursprung.RouteCalculationResult?
+	@Published var waypoints: [ABCRouteConfigurationItem]?
 
 	@Published var selectedItem: POI? {
 		didSet {
@@ -48,7 +52,7 @@ final class MapStore: ObservableObject {
 	}
 
 	var points: ShapeSource {
-		return ShapeSource(identifier: "points") {
+		return ShapeSource(identifier: MapSourceIdentifier.points, options: [.clustered: true, .clusterRadius: 44]) {
 			self.mapItems.compactMap { item in
 				guard let coordinate = item.coordinate else { return nil }
 
@@ -61,10 +65,31 @@ final class MapStore: ObservableObject {
 		}
 	}
 
+	var routePoints: ShapeSource {
+		var features: [MLNPointFeature] = []
+		if let waypoints = self.waypoints {
+			for item in waypoints {
+				switch item {
+				case .myLocation:
+					continue
+				case let .poi(poi):
+					if let poiCoordinate = poi.locationCoordinate {
+						let feature = MLNPointFeature(coordinate: poiCoordinate)
+						feature.attributes["poi_id"] = poi.id
+						features.append(feature)
+					}
+				}
+			}
+		}
+		return ShapeSource(identifier: MapSourceIdentifier.routePoints) {
+			features
+		}
+	}
+
 	var streetViewSource: ShapeSource {
-		ShapeSource(identifier: "street-view-symbols") {
-			if case let .point(point) = streetView {
-				let streetViewPoint = StreetViewPoint(location: point.location,
+		ShapeSource(identifier: MapSourceIdentifier.streetViewSymbols) {
+			if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
+				let streetViewPoint = StreetViewPoint(location: coordinate,
 													  heading: self.motionViewModel.position.heading)
 				streetViewPoint.feature
 			}
@@ -73,25 +98,18 @@ final class MapStore: ObservableObject {
 
 	// MARK: - Lifecycle
 
-	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, streetViewPoint: StreetViewPoint? = nil, motionViewModel: MotionViewModel) {
+	init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
 		self.camera = camera
 		self.searchShown = searchShown
 		self.motionViewModel = motionViewModel
-
-		if let streetViewPoint {
-			self.streetView = .point(streetViewPoint)
-		} else {
-			self.streetView = .disabled
-		}
 	}
-
 }
 
 // MARK: - Previewable
 
 extension MapStore: Previewable {
 
-	static let preview = MapStore(motionViewModel: .preview)
+	static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing)
 }
 
 // MARK: - Private

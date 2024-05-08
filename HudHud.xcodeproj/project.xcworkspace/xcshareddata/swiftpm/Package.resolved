@@ -14,17 +14,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "92505cfbad5c5ed6a93e0f3cd70872aaa98a12ac",
-        "version" : "6.2.0"
+        "revision" : "6d0071977ed1f2380c739715f82ac650f99b0824",
+        "version" : "6.4.0"
       }
     },
     {
       "identity" : "maplibre-navigation-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git",
+      "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "feature/swift-package-manager",
-        "revision" : "929d70bbfff3f0d0941084a0b037585d1cb133bc"
+        "branch" : "main",
+        "revision" : "02640091735e8852967baa743c4e19b3cc44cd06"
       }
     },
     {
@@ -32,17 +32,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
       "state" : {
-        "revision" : "9f15cbb11d2b5248ead47aecae5be8a1d4d5f463",
-        "version" : "0.0.2"
+        "revision" : "d52adbcbfaf96bd0723a156bd838826916ff7a69",
+        "version" : "0.0.3"
       }
     },
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground",
       "state" : {
-        "branch" : "enhancement/pat-gestures",
-        "revision" : "ca182dc2e62003b83d97fc7615b19ec71a3ac327"
+        "branch" : "main",
+        "revision" : "aa159ad30abe1f27c37640147d984f610c992676"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "01632d5cfa6b048be4177884771fac1bf04f8c2e",
-        "version" : "0.0.7"
+        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
+        "version" : "0.0.3"
       }
     },
     {

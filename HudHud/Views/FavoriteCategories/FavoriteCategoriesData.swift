@@ -10,8 +10,9 @@ import Foundation
 import SFSafeSymbols
 import SwiftUI
 
-struct FavoriteCategoriesData: Hashable {
-	let title: String
+struct FavoriteCategoriesData: Identifiable {
+	let id: Int
+	let title: LocalizedStringResource
 	let sfSymbol: SFSymbol
 	let tintColor: Color?
 }
