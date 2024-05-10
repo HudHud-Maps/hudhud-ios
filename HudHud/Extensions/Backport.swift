@@ -74,11 +74,11 @@ extension Backport where Content: View {
 		onDismiss: (() -> Void)? = nil,
 		@ViewBuilder content: @escaping (Item) -> some View
 	) -> some View where Item: Identifiable {
-		if UIDevice.current.userInterfaceIdiom == .pad, item.wrappedValue != nil {
+		if UIDevice.current.userInterfaceIdiom == .pad, let wrappedValue = item.wrappedValue {
 			self.content.overlay(alignment: .bottomLeading) {
 				PadSheetGesture {
 					PadSheetView {
-						content(item.wrappedValue!)
+						content(wrappedValue)
 					}
 				}
 				.shadow(radius: 0.5)

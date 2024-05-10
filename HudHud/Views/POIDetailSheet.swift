@@ -108,7 +108,7 @@ struct POIDetailSheet: View {
 						})
 						.buttonStyle(.bordered)
 					}
-					if let website = self.item.website {
+					if self.item.website != nil {
 						Button(action: {
 							self.onMore(.website)
 						}, label: {

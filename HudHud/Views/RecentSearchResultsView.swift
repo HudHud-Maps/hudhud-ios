@@ -61,7 +61,7 @@ struct RecentSearchResultsView: View {
 }
 
 #Preview {
-	RecentSearchResultsView(item: .init(id: UUID().uuidString, title: "Riyadh", subtitle: "City Center", type: .toursprung, coordinate: .riyadh),
+	RecentSearchResultsView(item: .artwork,
 							mapStore: .storeSetUpForPreviewing,
-							searchStore: .init(mapStore: .storeSetUpForPreviewing, mode: .preview))
+							searchStore: .storeSetUpForPreviewing)
 }

@@ -234,7 +234,6 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-
 		.backport.buttonSafeArea(length: self.sheetSize)
 		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
