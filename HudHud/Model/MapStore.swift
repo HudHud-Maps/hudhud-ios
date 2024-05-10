@@ -32,16 +32,8 @@ final class MapStore: ObservableObject {
 	@Published var streetView: StreetViewOption = .disabled
 	@Published var routes: Toursprung.RouteCalculationResult?
 	@Published var waypoints: [ABCRouteConfigurationItem]?
-
 	@Published var displayableItems: [AnyDisplayableAsRow] = []
-
-	@Published var selectedItem: ResolvedItem? {
-		didSet {
-			if let selectedItem {
-				self.addToRecents(selectedItem)
-			}
-		}
-	}
+	@Published var selectedItem: ResolvedItem?
 
 	var mapItems: [ResolvedItem] {
 		self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
@@ -111,16 +103,5 @@ private extension MapStore {
 		guard let camera = CameraState.boundingBox(from: coordinates) else { return }
 
 		self.camera = camera
-	}
-
-	func addToRecents(_: ResolvedItem) {
-//		withAnimation {
-//			if self.recentViewedPOIs.count > 9 {
-//				self.recentViewedPOIs.removeFirst()
-//			}
-//			if !self.recentViewedPOIs.contains(poi) {
-//				self.recentViewedPOIs.append(poi)
-//			}
-//		}
 	}
 }

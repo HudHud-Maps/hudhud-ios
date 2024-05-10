@@ -191,10 +191,9 @@ struct SearchSheet: View {
 				self.searchStore.recentViewedItem.removeLast()
 			}
 			if self.searchStore.recentViewedItem.contains(item) {
-//				self.searchStore.recentViewedItem.dele
-			} else {
-				self.searchStore.recentViewedItem.append(item)
+				self.searchStore.recentViewedItem.removeAll(where: { $0 == item })
 			}
+			self.searchStore.recentViewedItem.append(item)
 		}
 	}
 
