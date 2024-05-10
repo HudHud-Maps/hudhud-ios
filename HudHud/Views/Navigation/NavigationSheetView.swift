@@ -20,15 +20,16 @@ struct NavigationSheetView: View {
 	@State var goPressed = false
 
 	var body: some View {
-		VStack {
+		VStack(spacing: 5) {
 			HStack {
-				Text("Direction", comment: "navigation sheet header")
+				Text("Directions", comment: "navigation sheet header")
 					.font(.system(.title))
 					.fontWeight(.semibold)
 					.cornerRadius(10)
 				Spacer()
 				Button(action: {
-					self.mapStore.route = nil
+					self.mapStore.routes = nil
+					self.mapStore.waypoints = nil
 				}, label: {
 					ZStack {
 						Circle()
@@ -45,7 +46,10 @@ struct NavigationSheetView: View {
 				.buttonStyle(PlainButtonStyle())
 				.accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
 			}
-			if let route = self.mapStore.route {
+			.padding(.top)
+
+			if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
+				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore)
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
 						duration: route.expectedTravelTime,
@@ -55,12 +59,13 @@ struct NavigationSheetView: View {
 						self.goPressed.toggle()
 					}
 				)
+				.padding(.bottom)
 			}
 		}
 		.padding()
 		.fullScreenCover(isPresented: self.$goPressed) {
 			let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-			if let route = self.mapStore.route {
+			if let route = self.mapStore.routes?.routes.first {
 				NavigationView(route: route, styleURL: styleURL)
 			}
 		}

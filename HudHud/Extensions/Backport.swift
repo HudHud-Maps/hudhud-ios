@@ -30,6 +30,14 @@ extension Backport where Content: View {
 		}
 	}
 
+	@ViewBuilder func buttonSafeArea(length: CGSize) -> some View {
+		if UIDevice.current.userInterfaceIdiom == .pad {
+			self.safeAreaPadding(.leading, length.width)
+		} else {
+			self.safeAreaPadding(.bottom, length.height)
+		}
+	}
+
 	@ViewBuilder func scrollClipDisabled() -> some View {
 		if #available(iOS 17, *) {
 			content.scrollClipDisabled()
@@ -38,16 +46,46 @@ extension Backport where Content: View {
 		}
 	}
 
-	@ViewBuilder func sheet(isPresented: Binding<Bool>, onDismiss: (() -> Void)? = nil, @ViewBuilder content subContent: @escaping () -> some View) -> some View where Content: View {
-		if UIDevice.current.userInterfaceIdiom == .pad {
-			self.content.overlay(alignment: .bottomLeading) {
-				subContent()
-					.frame(width: 400, height: 400)
-					.background(.white)
-					.padding(.leading)
+	@ViewBuilder
+	func sheet(
+		isPresented: Binding<Bool>,
+		onDismiss: (() -> Void)? = nil,
+		@ViewBuilder content: @escaping () -> some View
+	) -> some View {
+		if UIDevice.current.userInterfaceIdiom == .pad, isPresented.wrappedValue {
+			self.content.overlay(alignment: .topLeading) {
+				PadSheetGesture {
+					PadSheetView {
+						content()
+					}
+					.padding(.top)
+				}
+				.shadow(radius: 0.5)
+				.padding(.horizontal)
 			}
 		} else {
-			self.content.sheet(isPresented: isPresented, onDismiss: onDismiss, content: subContent)
+			self.content.sheet(isPresented: isPresented, onDismiss: onDismiss, content: content)
+		}
+	}
+
+	@ViewBuilder
+	func sheet<Item>(
+		item: Binding<Item?>,
+		onDismiss: (() -> Void)? = nil,
+		@ViewBuilder content: @escaping (Item) -> some View
+	) -> some View where Item: Identifiable {
+		if UIDevice.current.userInterfaceIdiom == .pad, let wrappedValue = item.wrappedValue {
+			self.content.overlay(alignment: .bottomLeading) {
+				PadSheetGesture {
+					PadSheetView {
+						content(wrappedValue)
+					}
+				}
+				.shadow(radius: 0.5)
+				.padding(.horizontal, 9.5)
+			}
+		} else {
+			self.content.sheet(item: item, onDismiss: onDismiss, content: content)
 		}
 	}
 }

@@ -28,6 +28,8 @@ struct SearchSheet: View {
 	@ObservedObject var searchStore: SearchViewStore
 	@FocusState private var searchIsFocused: Bool
 
+	@Environment(\.openURL) private var openURL
+	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
 	var body: some View {
@@ -120,10 +122,11 @@ struct SearchSheet: View {
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {
-						ForEach(self.recentViewedPOIs, id: \.self) { pois in
+						ForEach(self.searchStore.recentViewedPOIs, id: \.self) { pois in
 							RecentSearchResultsView(poi: pois, mapStore: self.mapStore, searchStore: self.searchStore)
 						}
 					}
+
 					.listRowSeparator(.hidden)
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					.padding(.top)
@@ -131,15 +134,41 @@ struct SearchSheet: View {
 				.listStyle(.plain)
 			}
 		}
-		.sheet(item: self.$mapStore.selectedItem) {
+		.backport.sheet(item: self.$mapStore.selectedItem) {
 			self.searchStore.selectedDetent = .medium
 		} content: { item in
 			POIDetailSheet(poi: item) { routes in
 				Logger.searchView.info("Start item \(item)")
-				self.mapStore.route = routes.routes.first
+				self.searchStore.selectedDetent = .small
+				self.mapStore.routes = routes
 				self.mapStore.mapItems = [Row(toursprung: item)]
-			} onMore: {
-				Logger.searchView.info("more item \(item))")
+				if let location = routes.waypoints.first {
+					self.mapStore.waypoints = [.myLocation(location), .poi(item)]
+				}
+			} onMore: { action in
+				switch action {
+				case .phone:
+					// Perform phone action
+					if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+						self.openURL(url)
+					}
+					Logger.searchView.info("Item phone \(item.phone ?? "nil")")
+				case .website:
+					// Perform website action
+					self.isPresentWebView = true
+					Logger.searchView.info("Item website \(item.website?.absoluteString ?? "")")
+				case .moreInfo:
+					// Perform more info action
+					Logger.searchView.info("more item \(item))")
+				}
+			} onDismiss: {
+				self.mapStore.selectedItem = nil
+			}
+			.fullScreenCover(isPresented: self.$isPresentWebView) {
+				if let website = item.website {
+					SafariWebView(url: website)
+						.ignoresSafeArea()
+				}
 			}
 			.presentationDetents([.third, .large])
 			.presentationBackgroundInteraction(
@@ -166,20 +195,19 @@ struct SearchSheet: View {
 
 	func storeRecentPOI(poi: POI) {
 		withAnimation {
-			if self.recentViewedPOIs.count > 9 {
-				self.recentViewedPOIs.removeFirst()
+			if self.searchStore.recentViewedPOIs.count > 9 {
+				self.searchStore.recentViewedPOIs.removeFirst()
 			}
-			if !self.recentViewedPOIs.contains(poi) {
-				self.recentViewedPOIs.append(poi)
+			if !self.searchStore.recentViewedPOIs.contains(poi) {
+				self.searchStore.recentViewedPOIs.append(poi)
 			}
 		}
 	}
 
-}
+	func dismissSheet() {
+		self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
+	}
 
-#Preview {
-	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
 
 extension Route: Identifiable {}
@@ -216,4 +244,9 @@ extension RecentViewedPOIs: RawRepresentable {
 		}
 		return result
 	}
+}
+
+#Preview {
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
 }
