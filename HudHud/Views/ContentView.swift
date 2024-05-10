@@ -41,7 +41,6 @@ struct ContentView: View {
 	@State var offsetY: CGFloat = 0
 	@State var selectedDetent: PresentationDetent = .medium
 
-
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
@@ -236,7 +235,6 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-
 		.backport.buttonSafeArea(length: self.sheetSize)
 		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,

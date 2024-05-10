@@ -32,7 +32,6 @@ struct SearchSheet: View {
 	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
-
 	var body: some View {
 		return VStack {
 			HStack {
@@ -146,8 +145,6 @@ struct SearchSheet: View {
 				if let location = routes.waypoints.first {
 					self.mapStore.waypoints = [.myLocation(location), .poi(item)]
 				}
-
-
 			} onMore: { action in
 				switch action {
 				case .phone:

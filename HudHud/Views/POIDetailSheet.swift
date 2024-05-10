@@ -85,7 +85,7 @@ struct POIDetailSheet: View {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .carFill)
 							Text("Start", comment: "get the navigation route")
-              .lineLimit(1)
+								.lineLimit(1)
 								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)
@@ -94,7 +94,6 @@ struct POIDetailSheet: View {
 					.buttonStyle(.borderedProminent)
 					.disabled(self.routes == nil)
 
-
 					if let phone = self.poi.phone, !phone.isEmpty {
 						Button(action: {
 							self.onMore(.phone)
@@ -102,29 +101,28 @@ struct POIDetailSheet: View {
 							VStack(spacing: 2) {
 								Image(systemSymbol: .phoneFill)
 								Text("Call", comment: "on poi detail sheet to call the poi")
-                 .lineLimit(1)
-								.minimumScaleFactor(0.5)
+									.lineLimit(1)
+									.minimumScaleFactor(0.5)
 							}
 							.frame(maxWidth: .infinity)
 							.padding(.vertical, 2)
 						})
 						.buttonStyle(.bordered)
 					}
-					if let website = self.poi.website {
+					if self.poi.website != nil {
 						Button(action: {
 							self.onMore(.website)
 						}, label: {
 							VStack(spacing: 2) {
 								Image(systemSymbol: .safariFill)
 								Text("Web")
-                 .lineLimit(1)
-								.minimumScaleFactor(0.5)
+									.lineLimit(1)
+									.minimumScaleFactor(0.5)
 							}
 							.frame(maxWidth: .infinity)
 							.padding(.vertical, 2)
 						})
 						.buttonStyle(.bordered)
-
 					}
 					Button(action: {
 						self.onMore(.moreInfo)
@@ -132,7 +130,7 @@ struct POIDetailSheet: View {
 						VStack(spacing: 2) {
 							Image(systemSymbol: .ellipsisCircleFill)
 							Text("More", comment: "on poi detail sheet to see more info")
-              .lineLimit(1)
+								.lineLimit(1)
 								.minimumScaleFactor(0.5)
 						}
 						.frame(maxWidth: .infinity)

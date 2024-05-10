@@ -61,5 +61,5 @@ struct RecentSearchResultsView: View {
 }
 
 #Preview {
-	RecentSearchResultsView(poi: .artwork, mapStore: .storeSetUpForPreviewing, searchStore: .init(mapStore: .storeSetUpForPreviewing, mode: .preview))
+	RecentSearchResultsView(poi: .artwork, mapStore: .storeSetUpForPreviewing, searchStore: SearchViewStore(mapStore: .storeSetUpForPreviewing, mode: .preview))
 }
