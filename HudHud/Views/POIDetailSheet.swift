@@ -16,7 +16,6 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - POIDetailAction
 
@@ -30,7 +29,7 @@ enum POIDetailAction {
 
 struct POIDetailSheet: View {
 
-	let poi: POI
+	let item: ResolvedItem
 	let onStart: (Toursprung.RouteCalculationResult) -> Void
 	let onMore: (POIDetailAction) -> Void
 
@@ -45,11 +44,11 @@ struct POIDetailSheet: View {
 			VStack(alignment: .leading) {
 				HStack(alignment: .top) {
 					VStack {
-						Text(self.poi.title)
+						Text(self.item.title)
 							.font(.title.bold())
 							.frame(maxWidth: .infinity, alignment: .leading)
 
-						Text(self.poi.type)
+						Text(self.item.subtitle)
 							.font(.footnote)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.padding(.bottom, 8)
@@ -94,7 +93,7 @@ struct POIDetailSheet: View {
 					.buttonStyle(.borderedProminent)
 					.disabled(self.routes == nil)
 
-					if let phone = self.poi.phone, !phone.isEmpty {
+					if let phone = self.item.phone, !phone.isEmpty {
 						Button(action: {
 							self.onMore(.phone)
 						}, label: {
@@ -109,7 +108,7 @@ struct POIDetailSheet: View {
 						})
 						.buttonStyle(.bordered)
 					}
-					if self.poi.website != nil {
+					if self.item.website != nil {
 						Button(action: {
 							self.onMore(.website)
 						}, label: {
@@ -141,7 +140,7 @@ struct POIDetailSheet: View {
 				.padding(.horizontal)
 
 				AdditionalPOIDetailsView(routes: self.routes)
-				DictionaryView(dictionary: self.poi.userInfo)
+				DictionaryView(dictionary: self.item.userInfo)
 			}
 		}
 		.task {
@@ -150,9 +149,8 @@ struct POIDetailSheet: View {
 				guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
 					return
 				}
-				guard let locationCoordinate = self.poi.locationCoordinate else {
-					return
-				}
+				let mapItem = self.item
+				let locationCoordinate = mapItem.coordinate
 				let waypoint1 = Waypoint(location: userLocation)
 				let waypoint2 = Waypoint(coordinate: locationCoordinate)
 
@@ -178,10 +176,10 @@ struct POIDetailSheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	let poi = POI(element: .starbucksKualaLumpur)! // swiftlint:disable:this force_unwrapping
-	return POIDetailSheet(poi: poi) { _ in
-		Logger.searchView.info("Start \(poi)")
+	let item = ResolvedItem.starbucks
+	return POIDetailSheet(item: item) { _ in
+		Logger.searchView.info("Start \(item)")
 	} onMore: { _ in
-		Logger.searchView.info("More \(poi)")
+		Logger.searchView.info("More \(item)")
 	} onDismiss: {}
 }

@@ -17,7 +17,6 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - ContentView
 
@@ -122,15 +121,15 @@ struct ContentView: View {
 			}
 
 			let mapItems = self.searchViewStore.mapStore.mapItems
-			let poi = mapItems.first { row in
-				row.poi?.id == placeID
-			}?.poi
+			let poi = mapItems.first { poi in
+				poi.id == placeID
+			}
 
 			if let poi {
 				Logger.mapInteraction.debug("setting poi")
 				self.searchViewStore.mapStore.selectedItem = poi
 			} else {
-				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
 			}
 		})
 		.unsafeMapViewModifier { mapView in

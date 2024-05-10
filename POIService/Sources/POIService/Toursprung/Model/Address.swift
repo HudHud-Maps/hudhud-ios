@@ -78,7 +78,7 @@ public struct Address: Codable, Equatable, Hashable, Sendable {
 	}
 }
 
-// MARK: CustomStringConvertible
+// MARK: - CustomStringConvertible
 
 extension Address: CustomStringConvertible {
 
