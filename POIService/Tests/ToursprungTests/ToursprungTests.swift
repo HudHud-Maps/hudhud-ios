@@ -6,7 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-@testable import Toursprung
+@testable import POIService
 import XCTest
 
 final class ToursprungTests: XCTestCase {

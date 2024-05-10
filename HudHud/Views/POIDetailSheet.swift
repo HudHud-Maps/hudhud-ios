@@ -139,7 +139,7 @@ struct POIDetailSheet: View {
 				}
 				.padding(.horizontal)
 
-				Spacer()
+				AdditionalPOIDetailsView(routes: self.routes)
 				DictionaryView(dictionary: self.item.userInfo)
 			}
 		}
