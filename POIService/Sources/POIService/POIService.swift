@@ -36,7 +36,7 @@ public enum PredictionResult: Hashable, Codable {
 
 // MARK: - DisplayableAsRow
 
-public protocol DisplayableAsRow: Identifiable {
+public protocol DisplayableAsRow: Identifiable, Hashable {
 	var id: String { get }
 	var title: String { get }
 	var subtitle: String { get }
@@ -86,6 +86,12 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 		return try await self.innerModel.resolve(in: provider)
 	}
 
+	public func hash(into hasher: inout Hasher) {
+		hasher.combine(self.title)
+		hasher.combine(self.subtitle)
+		hasher.combine(self.symbol)
+		hasher.combine(self.id)
+	}
 }
 
 // MARK: - PredictionItem

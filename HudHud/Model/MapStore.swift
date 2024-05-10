@@ -36,7 +36,14 @@ final class MapStore: ObservableObject {
 	@Published var selectedItem: ResolvedItem?
 
 	var mapItems: [ResolvedItem] {
-		self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
+		let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
+
+		if let selectedItem {
+			let items = allItems.union([AnyDisplayableAsRow(selectedItem)])
+			return items.compactMap { $0.innerModel as? ResolvedItem }
+		}
+
+		return self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
 	}
 
 	var points: ShapeSource {
