@@ -165,6 +165,7 @@
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CBFD427C2BE3A96B002DDA50 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
+		CD12DB702BED0A5A00223962 /* maplibre-swiftui-dsl-playground */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-swiftui-dsl-playground"; path = "../maplibre-swiftui-dsl-playground"; sourceTree = "<group>"; };
 		CD1BD91F2B91E59200A591BD /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
 		CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewCoordinator.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
@@ -333,6 +334,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
+				CD12DB702BED0A5A00223962 /* maplibre-swiftui-dsl-playground */,
 				CDF4A6CE2B7E3D98001B3CD7 /* POIService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,

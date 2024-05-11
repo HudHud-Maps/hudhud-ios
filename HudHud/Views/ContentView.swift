@@ -223,8 +223,8 @@ struct ContentView: View {
 							}
 						},
 						MapButtonData(sfSymbol: .icon(.cube)) {
-							self.mapStore.switchTo3D.toggle()
-							Logger.mapInteraction.debug("3D Map toggle tapped")
+							// self.mapStore.camera.setZoom(12)
+							self.mapStore.camera.setPitch(.fixed(60))
 						}
 					])
 					Spacer()
