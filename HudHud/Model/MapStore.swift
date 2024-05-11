@@ -14,7 +14,6 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import POIService
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - MapStore
 
@@ -34,32 +33,25 @@ final class MapStore: ObservableObject {
 	@Published var streetView: StreetViewOption = .disabled
 	@Published var routes: Toursprung.RouteCalculationResult?
 	@Published var waypoints: [ABCRouteConfigurationItem]?
+	@Published var displayableItems: [AnyDisplayableAsRow] = []
+	@Published var selectedItem: ResolvedItem?
 
-	@Published var selectedItem: POI? {
-		didSet {
-			if let coordinate = self.selectedItem?.locationCoordinate {
-				self.camera = .center(coordinate, zoom: 16)
-			} else if self.mapItems.isEmpty == false {
-				self.updateCameraForMapItems()
-			}
-		}
-	}
+	var mapItems: [ResolvedItem] {
+		let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
 
-	@Published var mapItems: [Row] = [] {
-		didSet {
-			self.updateCameraForMapItems()
+		if let selectedItem {
+			let items = allItems.union([AnyDisplayableAsRow(selectedItem)])
+			return items.compactMap { $0.innerModel as? ResolvedItem }
 		}
+
+		return self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
 	}
 
 	var points: ShapeSource {
 		return ShapeSource(identifier: MapSourceIdentifier.points, options: [.clustered: true, .clusterRadius: 44]) {
 			self.mapItems.compactMap { item in
-				guard let coordinate = item.coordinate else { return nil }
-
-				return MLNPointFeature(coordinate: coordinate) { feature in
-					if let poi = item.poi {
-						feature.attributes["poi_id"] = poi.id
-					}
+				return MLNPointFeature(coordinate: item.coordinate) { feature in
+					feature.attributes["poi_id"] = item.id
 				}
 			}
 		}
@@ -72,12 +64,10 @@ final class MapStore: ObservableObject {
 				switch item {
 				case .myLocation:
 					continue
-				case let .poi(poi):
-					if let poiCoordinate = poi.locationCoordinate {
-						let feature = MLNPointFeature(coordinate: poiCoordinate)
-						feature.attributes["poi_id"] = poi.id
-						features.append(feature)
-					}
+				case let .waypoint(poi):
+					let feature = MLNPointFeature(coordinate: poi.coordinate)
+					feature.attributes["poi_id"] = poi.id
+					features.append(feature)
 				}
 			}
 		}
@@ -117,7 +107,7 @@ extension MapStore: Previewable {
 private extension MapStore {
 
 	func updateCameraForMapItems() {
-		let coordinates = self.mapItems.compactMap(\.coordinate)
+		let coordinates = self.mapItems.map(\.coordinate)
 		let edgePadding = UIEdgeInsets(top: 20, left: 20, bottom: self.sheetSize.height + 20, right: 20)
 
 		guard let camera = CameraState.boundingBox(from: coordinates, edgePadding: edgePadding) else { return }
