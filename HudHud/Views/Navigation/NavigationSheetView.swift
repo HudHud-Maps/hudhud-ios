@@ -12,7 +12,6 @@ import MapboxDirections
 import POIService
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 struct NavigationSheetView: View {
 

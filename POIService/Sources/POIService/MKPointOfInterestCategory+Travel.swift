@@ -7,6 +7,7 @@
 //
 
 import MapKit
+import SFSafeSymbols
 
 extension MKPointOfInterestCategory {
 
@@ -37,6 +38,33 @@ extension MKPointOfInterestCategory {
 			return "bus"
 		default:
 			return MKPointOfInterestCategory.defaultPointOfInterestSymbolName
+		}
+	}
+
+	var symbol: SFSymbol {
+		switch self {
+		case .airport:
+			return .airplane
+		case .atm, .bank:
+			return .banknote
+		case .bakery, .brewery, .cafe, .foodMarket, .restaurant, .winery:
+			return .forkKnife
+		case .campground, .hotel:
+			return .bedDouble
+		case .carRental, .evCharger, .gasStation, .parking:
+			return .car
+		case .laundry, .store:
+			return .tshirt
+		case .library, .museum, .school, .theater, .university:
+			return .buildingColumns
+		case .nationalPark, .park:
+			return .leaf
+		case .postOffice:
+			return .envelope
+		case .publicTransport:
+			return .bus
+		default:
+			return .mappinAndEllipse
 		}
 	}
 }

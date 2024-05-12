@@ -8,7 +8,7 @@
 
 @testable import MapboxDirections
 @testable import MapLibre
-@testable import ToursprungPOI
+@testable import POIService
 import XCTest
 
 final class CalculateTests: XCTestCase {

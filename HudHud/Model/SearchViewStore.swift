@@ -6,12 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import ApplePOI
 import Combine
 import Foundation
 import POIService
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - SearchViewStore
 
@@ -51,7 +49,7 @@ final class SearchViewStore: ObservableObject {
 	let mapStore: MapStore
 
 	private var task: Task<Void, Error>?
-	private var apple = ApplePOI()
+	var apple = ApplePOI()
 	private var toursprung = ToursprungPOI()
 	private var cancellable: AnyCancellable?
 
@@ -61,7 +59,7 @@ final class SearchViewStore: ObservableObject {
 	@Published var mode: Mode {
 		didSet {
 			self.searchText = ""
-			self.mapStore.mapItems = []
+			self.mapStore.displayableItems = []
 			self.mapStore.selectedItem = nil
 		}
 	}
@@ -70,7 +68,7 @@ final class SearchViewStore: ObservableObject {
 	@Published var isSearching = false
 	@Published var searchType: SearchType = .selectPOI
 
-	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
+	@AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
 
 	// MARK: - Lifecycle
 
@@ -88,7 +86,9 @@ final class SearchViewStore: ObservableObject {
 						defer { self.isSearching = false }
 						self.isSearching = true
 
-						self.mapStore.mapItems = try await self.apple.predict(term: newValue)
+						let prediction = try await self.apple.predict(term: newValue)
+						let items = prediction
+						self.mapStore.displayableItems = items
 					}
 				case .live(provider: .toursprung):
 					self.task?.cancel()
@@ -96,38 +96,25 @@ final class SearchViewStore: ObservableObject {
 						defer { self.isSearching = false }
 						self.isSearching = true
 
-						self.mapStore.mapItems = try await self.toursprung.predict(term: newValue)
+						let prediction = try await self.toursprung.predict(term: newValue)
+						let items = prediction
+						self.mapStore.displayableItems = items
 					}
 				case .preview:
-					self.mapStore.mapItems = [
-						Row(toursprung: .starbucks),
-						Row(toursprung: .ketchup),
-						Row(toursprung: .publicPlace),
-						Row(toursprung: .artwork),
-						Row(toursprung: .pharmacy),
-						Row(toursprung: .supermarket)
+					self.mapStore.displayableItems = [
+						.starbucks,
+						.ketchup,
+						.publicPlace,
+						.artwork,
+						.pharmacy,
+						.supermarket
 					]
 				}
 			}
 		if case .preview = mode {
-			let poiOne = POI(id: "1", title: "Starbucks", subtitle: "Main Street 1", locationCoordinate: .riyadh, type: "Coffee")
-			let poiTwo = POI(id: "2", title: "Motel One", subtitle: "Main Street 2", locationCoordinate: .riyadh, type: "Hotel")
-			self.recentViewedPOIs = [poiOne, poiTwo]
-		}
-	}
-
-	// MARK: - Internal
-
-	// MARK: - SearchViewStore
-
-	func resolve(prediction: Row) async throws -> [Row] {
-		switch prediction.provider {
-		case let .appleCompletion(completion):
-			return try await self.apple.lookup(prediction: .apple(completion: completion))
-		case let .appleMapItem(mapItem):
-			return [Row(mapItem: mapItem)]
-		case let .toursprung(poi):
-			return [Row(toursprung: poi)]
+			let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh)
+			let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
+			self.recentViewedItem = [itemOne, itemTwo]
 		}
 	}
 }
