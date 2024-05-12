@@ -20,7 +20,6 @@ struct DebugMenuView: View {
 					TextField("Routing URL", text: self.$debugSettings.routingURL)
 						.autocapitalization(.none)
 						.disableAutocorrection(true)
-						.textFieldStyle(RoundedBorderTextFieldStyle())
 					if !self.debugSettings.isURLValid {
 						Text("Invalid or unreachable URL")
 							.foregroundColor(.red)
