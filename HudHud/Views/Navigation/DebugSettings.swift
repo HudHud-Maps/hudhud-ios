@@ -9,36 +9,23 @@
 import Foundation
 
 class DebugSettings: ObservableObject {
-	@Published var routingURL: String = "gh.maptoolkit.net"
+	@Published var routingURL: String = "gh.maptoolkit.net" {
+		didSet {
+			if !self.isValidHostname(self.routingURL) {
+				self.routingURL = oldValue // Revert to the old value if new value is invalid
+			}
+		}
+	}
+
 	@Published var isURLValid: Bool = true
 
 	@Published var simulateRide: Bool = false
 
 	// MARK: - Internal
 
-	func validateCurrentURL() {
-		self.testURLReachability(urlString: self.routingURL) { isValid in
-			self.isURLValid = isValid
-		}
-	}
-
-	// MARK: - Private
-
-	private func testURLReachability(urlString: String, completion: @escaping (Bool) -> Void) {
-		guard let url = URL(string: urlString) else {
-			completion(false)
-			return
-		}
-
-		var request = URLRequest(url: url)
-		request.httpMethod = "HEAD"
-
-		URLSession.shared.dataTask(with: request) { _, response, error in
-			let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
-			DispatchQueue.main.async {
-				completion(error == nil && statusCode == 200)
-			}
-		}.resume()
+	func isValidHostname(_ hostname: String) -> Bool {
+		let hostnameRegex = "^(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,6}$"
+		return NSPredicate(format: "SELF MATCHES %@", hostnameRegex).evaluate(with: hostname)
 	}
 
 }
