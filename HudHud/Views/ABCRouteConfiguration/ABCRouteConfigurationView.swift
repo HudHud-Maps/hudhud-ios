@@ -18,6 +18,8 @@ import SwiftUI
 struct ABCRouteConfigurationView: View {
 	@State var routeConfigurations: [ABCRouteConfigurationItem]
 	@ObservedObject var mapStore: MapStore
+	@ObservedObject var searchViewStore: SearchViewStore
+	@Binding var searchShown: Bool
 
 	var body: some View {
 		VStack {
@@ -48,8 +50,9 @@ struct ABCRouteConfigurationView: View {
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-					self.routeConfigurations.append(.waypoint(ResolvedItem(id: UUID().uuidString, title: "New Location", subtitle: "h", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911))))
-				} label: { // (24.7189756, 46.6468911)
+					self.searchViewStore.searchType = .returnPOILocation(completion: nil)
+					self.searchShown = true
+				} label: {
 					HStack {
 						Image(systemSymbol: .plus)
 							.foregroundColor(.blue)
@@ -94,6 +97,10 @@ struct ABCRouteConfigurationView: View {
 				self.updateRoutes(wayPoints: waypoints)
 			}
 		}
+		// This line will update the routeConfigurations with latest waypoints after added stop point
+		.onChange(of: self.mapStore.waypoints ?? []) { waypoints in
+			self.routeConfigurations = waypoints
+		}
 	}
 
 	// MARK: - Internal
@@ -121,9 +128,10 @@ struct ABCRouteConfigurationView: View {
 }
 
 #Preview {
-	ABCRouteConfigurationView(routeConfigurations: [
+	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+	return ABCRouteConfigurationView(routeConfigurations: [
 		.myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
 		.waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
 		.waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
-	], mapStore: .storeSetUpForPreviewing)
+	], mapStore: searchViewStore.mapStore, searchViewStore: searchViewStore, searchShown: .constant(false))
 }
