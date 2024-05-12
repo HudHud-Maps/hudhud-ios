@@ -40,6 +40,9 @@ struct ContentView: View {
 	@State var offsetY: CGFloat = 0
 	@State var selectedDetent: PresentationDetent = .medium
 
+	@State var simulaterSheet = false
+	@StateObject var debugSettings = DebugSettings()
+
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
@@ -223,6 +226,9 @@ struct ContentView: View {
 						},
 						MapButtonData(sfSymbol: .icon(.cube)) {
 							print("3D Map toggle tapped")
+						},
+						MapButtonData(sfSymbol: .icon(.terminal)) {
+							self.simulaterSheet = true
 						}
 					])
 					Spacer()
@@ -263,7 +269,7 @@ struct ContentView: View {
 
 					set: { _ in }
 				)) {
-					NavigationSheetView(mapStore: self.mapStore)
+					NavigationSheetView(mapStore: self.mapStore, debugSettings: self.debugSettings)
 						.presentationCornerRadius(21)
 						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
 						.presentationBackgroundInteraction(
@@ -273,7 +279,9 @@ struct ContentView: View {
 						.interactiveDismissDisabled()
 						.presentationCompactAdaptation(.sheet)
 				}
-
+				.backport.sheet(isPresented: self.$simulaterSheet) {
+					DebugMenuView(debugSettings: self.debugSettings)
+				}
 				.sheet(isPresented: self.$showMapLayer) {
 					VStack(alignment: .center, spacing: 25) {
 						Spacer()

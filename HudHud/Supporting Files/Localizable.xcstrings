@@ -104,6 +104,9 @@
         }
       }
     },
+    "Debug Menu" : {
+
+    },
     "Direction" : {
       "comment" : "navigation sheet header",
       "extractionState" : "stale",
@@ -116,14 +119,17 @@
         }
       }
     },
+    "Directions" : {
+      "comment" : "navigation sheet header"
+    },
     "Distance" : {
+
+    },
+    "Done" : {
 
     },
     "Duration" : {
 
-    },
-    "Directions" : {
-      "comment" : "navigation sheet header"
     },
     "Fastest" : {
       "localizations" : {
@@ -174,6 +180,12 @@
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
+    },
+    "Invalid or unreachable URL" : {
+
+    },
+    "Invalid URL" : {
+
     },
     "Layers" : {
       "localizations" : {
@@ -232,8 +244,14 @@
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
+    "OK" : {
+
+    },
     "Pitch: %@" : {
       "comment" : "street view"
+    },
+    "Please enter a valid URL." : {
+
     },
     "Ratings" : {
 
@@ -247,6 +265,12 @@
           }
         }
       }
+    },
+    "Routing Configuration" : {
+
+    },
+    "Routing URL" : {
+
     },
     "School" : {
       "localizations" : {
@@ -268,6 +292,12 @@
         }
       }
     },
+    "Simulate Ride during Navigation" : {
+
+    },
+    "Simulation" : {
+
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "localizations" : {
@@ -278,13 +308,15 @@
           }
         }
       }
-    },  
-	"Traffic" : {
-		
-	},
-	"View More >" : {
-	 },
+    },
+    "Traffic" : {
+
+    },
     "Unknown" : {
+
+    },
+    "View More >" : {
+
     },
     "walk" : {
       "localizations" : {
