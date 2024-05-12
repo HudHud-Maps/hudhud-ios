@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import POIService
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - NotificationQueue
 

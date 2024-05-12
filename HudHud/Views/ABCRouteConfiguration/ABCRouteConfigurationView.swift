@@ -14,7 +14,6 @@ import POIService
 import SFSafeSymbols
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 struct ABCRouteConfigurationView: View {
 	@State var routeConfigurations: [ABCRouteConfigurationItem]
@@ -49,7 +48,7 @@ struct ABCRouteConfigurationView: View {
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-					self.routeConfigurations.append(.poi(POI(id: UUID().uuidString, title: "New Location", subtitle: "h", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911), type: "h")))
+					self.routeConfigurations.append(.waypoint(ResolvedItem(id: UUID().uuidString, title: "New Location", subtitle: "h", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911))))
 				} label: { // (24.7189756, 46.6468911)
 					HStack {
 						Image(systemSymbol: .plus)
@@ -86,11 +85,9 @@ struct ABCRouteConfigurationView: View {
 					switch item {
 					case let .myLocation(waypoint):
 						waypoints.append(waypoint)
-					case let .poi(poi):
-						if let poi = poi.locationCoordinate {
-							let waypoint = Waypoint(coordinate: poi)
-							waypoints.append(waypoint)
-						}
+					case let .waypoint(point):
+						let waypoint = Waypoint(coordinate: point.coordinate)
+						waypoints.append(waypoint)
 					}
 				}
 				self.mapStore.waypoints = newRoute
@@ -124,10 +121,9 @@ struct ABCRouteConfigurationView: View {
 }
 
 #Preview {
-	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return ABCRouteConfigurationView(routeConfigurations: [
+	ABCRouteConfigurationView(routeConfigurations: [
 		.myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
-		.poi(POI(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), type: "Coffee")),
-		.poi(POI(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), type: "Office"))
-	], mapStore: searchViewStore.mapStore)
+		.waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
+		.waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
+	], mapStore: .storeSetUpForPreviewing)
 }

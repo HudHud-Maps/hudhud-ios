@@ -17,7 +17,6 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - ContentView
 
@@ -121,15 +120,15 @@ struct ContentView: View {
 			}
 
 			let mapItems = self.searchViewStore.mapStore.mapItems
-			let poi = mapItems.first { row in
-				row.poi?.id == placeID
-			}?.poi
+			let poi = mapItems.first { poi in
+				poi.id == placeID
+			}
 
 			if let poi {
 				Logger.mapInteraction.debug("setting poi")
 				self.searchViewStore.mapStore.selectedItem = poi
 			} else {
-				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
 			}
 		})
 		.unsafeMapViewModifier { mapView in
@@ -243,7 +242,6 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-
 		.backport.buttonSafeArea(length: self.sheetSize)
 		.backport.sheet(isPresented: self.$mapStore.searchShown) {
 			SearchSheet(mapStore: self.mapStore,
@@ -363,12 +361,14 @@ struct SizePreferenceKey: PreferenceKey {
 
 #Preview("NavigationPreview") {
 	let store: SearchViewStore = .storeSetUpForPreviewing
-	let poi = POI(id: UUID().uuidString, title: "Pharmacy",
-				  subtitle: "Al-Olya - Riyadh",
-				  locationCoordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-				  type: "pharmacy",
-				  phone: "0503539560",
-				  website: URL(string: "https://hudhud.sa"))
+
+	let poi = ResolvedItem(id: UUID().uuidString,
+						   title: "Pharmacy",
+						   subtitle: "Al-Olya - Riyadh",
+						   type: .toursprung,
+						   coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+						   phone: "0503539560",
+						   website: URL(string: "https://hudhud.sa"))
 	store.mapStore.selectedItem = poi
 	return ContentView(searchStore: store)
 }

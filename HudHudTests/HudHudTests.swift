@@ -8,7 +8,6 @@
 
 @testable import HudHud
 import POIService
-import ToursprungPOI
 import XCTest
 
 final class HudHudTests: XCTestCase {
