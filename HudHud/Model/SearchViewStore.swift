@@ -32,6 +32,7 @@ final class SearchViewStore: ObservableObject {
 	var apple = ApplePOI()
 	private var toursprung = ToursprungPOI()
 	private var cancellable: AnyCancellable?
+	private var cancellables: Set<AnyCancellable> = []
 
 	// MARK: - Properties
 
@@ -95,17 +96,34 @@ final class SearchViewStore: ObservableObject {
 			let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
 			self.recentViewedItem = [itemOne, itemTwo]
 		}
+		self.$searchText
+			.debounce(for: .milliseconds(300), scheduler: RunLoop.main)
+			.removeDuplicates()
+			.sink { [weak self] _ in
+				self?.updateSheetDetent()
+			}
+			.store(in: &self.cancellables)
+
+		self.mapStore.$selectedItem
+			.sink { [weak self] _ in
+				self?.updateSheetDetent()
+			}
+			.store(in: &self.cancellables)
 	}
 
 	// MARK: - Internal
 
+	// Updates the presentation detent based on the current state of the search
+
 	func updateSheetDetent() {
-		print(self.searchText.isEmpty)
+		// If routes exist or an item is selected, use the medium detent
 		if let routes = mapStore.routes, !routes.routes.isEmpty || mapStore.selectedItem != nil {
 			self.selectedDetent = .medium
 		} else if !self.searchText.isEmpty {
+			// If search text is not empty, also use the medium detent
 			self.selectedDetent = .medium
 		} else {
+			// Otherwise, use the small detent
 			self.selectedDetent = .small
 		}
 	}

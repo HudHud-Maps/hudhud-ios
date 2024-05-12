@@ -20,10 +20,8 @@ struct RecentSearchResultsView: View {
 			Button {
 				let selectedItem = self.item
 				let mapItems = [AnyDisplayableAsRow(self.item)]
-				self.searchStore.selectedDetent = .medium
 				self.mapStore.selectedItem = selectedItem
 				self.mapStore.displayableItems = mapItems
-				self.searchStore.updateSheetDetent()
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					Image(systemSymbol: self.item.symbol)
@@ -55,8 +53,6 @@ struct RecentSearchResultsView: View {
 				}
 			}
 			.padding(8)
-		}.onChange(of: self.mapStore.selectedItem) { _ in
-			self.searchStore.updateSheetDetent()
 		}
 	}
 

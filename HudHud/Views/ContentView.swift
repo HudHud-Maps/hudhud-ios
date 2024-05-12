@@ -5,7 +5,7 @@
 //  Created by Patrick Kladek on 29.01.24.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
-
+// swiftlint:disable file_length function_body_length closure_parameter_position
 import CoreLocation
 import MapboxDirections
 import MapLibre
@@ -141,13 +141,8 @@ struct ContentView: View {
 				}
 			}
 		}
+
 		.onChange(of: self.mapStore.routes?.routes) {
-			_ in self.searchViewStore.updateSheetDetent()
-		}
-		.onChange(of: self.mapStore.selectedItem) {
-			_ in self.searchViewStore.updateSheetDetent()
-		}
-		.onChange(of: self.searchViewStore.searchText) {
 			_ in self.searchViewStore.updateSheetDetent()
 		}
 		.task {

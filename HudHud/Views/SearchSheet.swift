@@ -94,7 +94,6 @@ struct SearchSheet: View {
 									}
 								}
 							}
-							self.searchStore.updateSheetDetent()
 							self.searchIsFocused = false
 						}, label: {
 							SearchResultItem(prediction: item, searchViewStore: self.searchStore)
@@ -172,12 +171,6 @@ struct SearchSheet: View {
 				// Store POI
 				self.storeRecent(item: item)
 				// update sheet
-				self.searchStore.updateSheetDetent()
-			}
-			.onChange(of: self.mapStore.selectedItem) { _ in
-				self.searchStore.updateSheetDetent()
-			}
-			.onChange(of: self.searchStore.searchText) { _ in
 				self.searchStore.updateSheetDetent()
 			}
 		}
