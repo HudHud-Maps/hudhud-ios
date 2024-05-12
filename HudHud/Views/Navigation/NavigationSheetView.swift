@@ -27,7 +27,7 @@ struct NavigationSheetView: View {
 					.cornerRadius(10)
 				Spacer()
 				Button(action: {
-					self.mapStore.routes = nil
+					self.mapStore.routeResults = nil
 					self.mapStore.waypoints = nil
 				}, label: {
 					ZStack {
@@ -47,7 +47,7 @@ struct NavigationSheetView: View {
 			}
 			.padding(.top)
 
-			if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
+			if let route = self.mapStore.routeResults?.routes.first, let waypoints = self.mapStore.waypoints {
 				ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore)
 				DirectionsSummaryView(
 					directionPreviewData: DirectionPreviewData(
@@ -64,7 +64,7 @@ struct NavigationSheetView: View {
 		.padding()
 		.fullScreenCover(isPresented: self.$goPressed) {
 			let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-			if let route = self.mapStore.routes?.routes.first {
+			if let route = self.mapStore.routeResults?.routes.first {
 				NavigationView(route: route, styleURL: styleURL)
 			}
 		}

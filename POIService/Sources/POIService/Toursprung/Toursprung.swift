@@ -133,7 +133,7 @@ public class Toursprung {
 
 	// MARK: - Public
 
-	public struct RouteCalculationResult {
+	public struct RouteCalculationResult: Equatable {
 		public let waypoints: [Waypoint]
 		public let routes: [Route]
 	}

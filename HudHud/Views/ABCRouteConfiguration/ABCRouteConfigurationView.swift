@@ -108,7 +108,7 @@ struct ABCRouteConfigurationView: View {
 				options.attributeOptions = []
 
 				let results = try await Toursprung.shared.calculate(options)
-				self.mapStore.routes = results
+				self.mapStore.routeResults = results
 			} catch {
 				Logger.routing.error("Updating routes: \(error)")
 			}

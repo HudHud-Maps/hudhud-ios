@@ -43,7 +43,7 @@ struct ContentView: View {
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
-			if let route = self.mapStore.routes?.routes.first {
+			if let route = self.mapStore.routeResults?.routes.first {
 				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
 					MLNPolylineFeature(coordinates: route.coordinates ?? [])
 				}
@@ -135,10 +135,12 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
-		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
-			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-				if let camera = CameraState.boundingBox(from: coordinates) {
-					self.mapStore.camera = camera
+		.onChange(of: self.mapStore.routeResults) { result in
+			if let result {
+				if let route = result.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
+					if let camera = CameraState.boundingBox(from: coordinates, edgePadding: .zero) {
+						self.mapStore.camera = camera
+					}
 				}
 			}
 		}
@@ -180,14 +182,14 @@ struct ContentView: View {
 			if case .enabled = self.mapStore.streetView {
 				StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
 			} else {
-				if self.mapStore.routes == nil {
+				if self.mapStore.routeResults == nil {
 					CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
 						.presentationBackground(.thinMaterial)
 				}
 			}
 		}
 		.safeAreaInset(edge: .bottom) {
-			if self.mapStore.routes == nil {
+			if self.mapStore.routeResults == nil {
 				HStack(alignment: .bottom) {
 					MapButtonsView(mapButtonsData: [
 						MapButtonData(sfSymbol: .icon(.map)) {
@@ -259,7 +261,7 @@ struct ContentView: View {
 				}
 
 				.backport.sheet(isPresented: Binding<Bool>(
-					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+					get: { self.mapStore.routeResults != nil && self.mapStore.waypoints != nil },
 
 					set: { _ in }
 				)) {
@@ -314,7 +316,7 @@ struct ContentView: View {
 		self.searchViewStore = searchStore
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
-		self.mapStore.routes = searchStore.mapStore.routes
+		self.mapStore.routeResults = searchStore.mapStore.routeResults
 	}
 }
 
