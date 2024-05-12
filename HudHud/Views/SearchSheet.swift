@@ -110,7 +110,7 @@ struct SearchSheet: View {
 			} else {
 				List {
 					SearchSectionView(title: "Favorites") {
-						FavoriteCategoriesView()
+						FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
 					}
 					.listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
 					SearchSectionView(title: "Recents") {

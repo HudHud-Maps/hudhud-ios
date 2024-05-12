@@ -6,31 +6,39 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import POIService
 import SFSafeSymbols
 import SwiftUI
 
 struct FavoriteCategoriesView: View {
+	let mapStore: MapStore
+	let searchStore: SearchViewStore
 	let favoriteCategoriesData: [FavoriteCategoriesData] = [
 		FavoriteCategoriesData(id: 1, title: "Home",
 							   sfSymbol: .houseFill,
-							   tintColor: .gray),
+							   tintColor: .gray, item: .artwork),
 		FavoriteCategoriesData(id: 2, title: "Work",
 							   sfSymbol: .bagFill,
-							   tintColor: .gray),
+							   tintColor: .gray, item: .ketchup),
 		FavoriteCategoriesData(id: 3, title: "School",
 							   sfSymbol: .buildingColumnsFill,
-							   tintColor: .gray)
+							   tintColor: .gray, item: .pharmacy)
 	]
 	let plusButton = FavoriteCategoriesData(id: 4, title: "Add",
 											sfSymbol: .plusCircleFill,
-											tintColor: .green)
+											tintColor: .green, item: nil)
 
 	var body: some View {
 		ScrollView(.horizontal) {
 			HStack {
 				ForEach(self.favoriteCategoriesData.prefix(4)) { favorite in
 					Button {
-						print("\(favorite.title) was pressed")
+						if let selectedItem = favorite.item {
+							let mapItems = [AnyDisplayableAsRow(favorite.item!)]
+							self.searchStore.selectedDetent = .medium
+							self.mapStore.selectedItem = selectedItem
+							self.mapStore.displayableItems = mapItems
+						}
 					} label: {
 						Text(favorite.title)
 					}
@@ -61,7 +69,7 @@ struct FavoriteCategoriesView: View {
 				.lineLimit(1)
 				.minimumScaleFactor(0.5)
 		}
-		FavoriteCategoriesView()
+		FavoriteCategoriesView(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
 	}
 	.padding()
 }
