@@ -124,7 +124,7 @@ struct SearchSheet: View {
 									completion?(.poi(selectedItem))
 									self.dismiss()
 								}
-							default:
+							case .selectPOI:
 								break
 							}
 
