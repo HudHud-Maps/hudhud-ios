@@ -109,6 +109,17 @@ final class SearchViewStore: ObservableObject {
 			return [Row(toursprung: poi)]
 		}
 	}
+
+	func updateSheetDetent() {
+		print(self.searchText.isEmpty)
+		if let routes = mapStore.routes, !routes.routes.isEmpty || mapStore.selectedItem != nil {
+			self.selectedDetent = .medium
+		} else if !self.searchText.isEmpty {
+			self.selectedDetent = .medium
+		} else {
+			self.selectedDetent = .small
+		}
+	}
 }
 
 // MARK: - Previewable

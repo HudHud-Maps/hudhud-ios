@@ -32,7 +32,6 @@ struct SearchSheet: View {
 	@State private var isPresentWebView = false
 	@AppStorage("RecentViewedPOIs") var recentViewedPOIs = RecentViewedPOIs()
 
-
 	var body: some View {
 		return VStack {
 			HStack {
@@ -84,12 +83,10 @@ struct SearchSheet: View {
 					List(self.$mapStore.mapItems, id: \.self) { item in
 						Button(action: {
 							self.searchIsFocused = false
-							self.searchStore.selectedDetent = .small
 							switch item.wrappedValue.provider {
 							case .toursprung:
 								self.mapStore.selectedItem = item.wrappedValue.poi
 							case .appleCompletion:
-								self.searchStore.selectedDetent = .medium
 								self.searchIsFocused = false
 								Task {
 									let items = try await self.searchStore.resolve(prediction: item.wrappedValue)
@@ -104,7 +101,7 @@ struct SearchSheet: View {
 							case .appleMapItem:
 								self.mapStore.selectedItem = item.wrappedValue.poi
 							}
-
+							self.searchStore.updateSheetDetent()
 						}, label: {
 							SearchResultItem(prediction: item.wrappedValue, searchViewStore: self.searchStore)
 								.frame(maxWidth: .infinity)
@@ -147,7 +144,6 @@ struct SearchSheet: View {
 					self.mapStore.waypoints = [.myLocation(location), .poi(item)]
 				}
 
-
 			} onMore: { action in
 				switch action {
 				case .phone:
@@ -182,6 +178,14 @@ struct SearchSheet: View {
 			.onAppear {
 				// Store POI
 				self.storeRecentPOI(poi: item)
+				// update sheet
+				self.searchStore.updateSheetDetent()
+			}
+			.onChange(of: self.mapStore.selectedItem) { _ in
+				self.searchStore.updateSheetDetent()
+			}
+			.onChange(of: self.searchStore.searchText) { _ in
+				self.searchStore.updateSheetDetent()
 			}
 		}
 	}
