@@ -19,23 +19,8 @@ struct CurrentLocationButton: View {
 
 	var body: some View {
 		Button {
-			Task {
-				defer { self.locationRequestInProgress = false }
-				do {
-					self.locationRequestInProgress = true
-					try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
-					let userLocation = try await Location.forSingleRequestUsage.requestLocation()
-
-					if let coordinates = userLocation.location?.coordinate {
-						withAnimation {
-							self.camera = MapViewCamera.center(coordinates, zoom: 16)
-						}
-					} else {
-						Logger.searchView.error("location error: got no coordinates")
-					}
-				} catch {
-					Logger.searchView.error("location error: \(error)")
-				}
+			withAnimation {
+				self.camera = MapViewCamera.trackUserLocation(zoom: self.camera.zoom ?? MapViewCamera.Defaults.zoom)
 			}
 		} label: {
 			if self.locationRequestInProgress {
