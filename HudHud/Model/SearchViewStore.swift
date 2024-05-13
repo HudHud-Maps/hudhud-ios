@@ -16,7 +16,25 @@ import SwiftUI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
-	let mapStore: MapStore
+	enum SearchType: Equatable {
+
+		case selectPOI
+		case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
+
+		// MARK: - Internal
+
+		static func == (lhs: SearchType, rhs: SearchType) -> Bool {
+			switch (lhs, rhs) {
+			case (.selectPOI, .selectPOI):
+				return true
+			case let (.returnPOILocation(lhsCompletion), .returnPOILocation(rhsCompletion)):
+				// Compare the optional closures using their identity
+				return lhsCompletion as AnyObject === rhsCompletion as AnyObject
+			default:
+				return false
+			}
+		}
+	}
 
 	enum Mode {
 		enum Provider: CaseIterable {
@@ -27,6 +45,8 @@ final class SearchViewStore: ObservableObject {
 		case live(provider: Provider)
 		case preview
 	}
+
+	let mapStore: MapStore
 
 	private var task: Task<Void, Error>?
 	var apple = ApplePOI()
@@ -47,6 +67,7 @@ final class SearchViewStore: ObservableObject {
 
 	@Published var selectedDetent: PresentationDetent = .small
 	@Published var isSearching = false
+	@Published var searchType: SearchType = .selectPOI
 
 	@AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
 
