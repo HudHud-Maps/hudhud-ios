@@ -83,6 +83,9 @@
         }
       }
     },
+    "Cancel" : {
+
+    },
     "car" : {
       "localizations" : {
         "ar" : {

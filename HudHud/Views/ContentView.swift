@@ -266,10 +266,9 @@ struct ContentView: View {
 
 				.backport.sheet(isPresented: Binding<Bool>(
 					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
-
-					set: { _ in }
+					set: { _ in self.searchViewStore.searchType = .selectPOI }
 				)) {
-					NavigationSheetView(mapStore: self.mapStore, debugSettings: self.debugSettings)
+					NavigationSheetView(searchViewStore: self.searchViewStore, debugSettings: self.debugSettings, mapStore: self.mapStore)
 						.presentationCornerRadius(21)
 						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
 						.presentationBackgroundInteraction(
