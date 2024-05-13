@@ -23,7 +23,6 @@ struct NavigationSheetView: View {
 
 	@State var searchShown: Bool = false
 
-
 	var body: some View {
 		VStack(spacing: 5) {
 			HStack {
@@ -101,6 +100,5 @@ struct NavigationSheetView: View {
 
 	@StateObject var debugSettings = DebugSettings()
 
-	return NavigationSheetView(searchViewStore: searchViewStore, debugSettings: debugSettings, mapStore: searchViewStore.mapStore)
-
+	return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugSettings: debugSettings)
 }
