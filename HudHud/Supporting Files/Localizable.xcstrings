@@ -181,12 +181,6 @@
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
     },
-    "Invalid or unreachable URL" : {
-
-    },
-    "Invalid URL" : {
-
-    },
     "Layers" : {
       "localizations" : {
         "ar" : {
@@ -244,14 +238,8 @@
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
-    "OK" : {
-
-    },
     "Pitch: %@" : {
       "comment" : "street view"
-    },
-    "Please enter a valid URL." : {
-
     },
     "Ratings" : {
 

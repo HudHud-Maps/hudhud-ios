@@ -40,7 +40,7 @@ struct ContentView: View {
 	@State var offsetY: CGFloat = 0
 	@State var selectedDetent: PresentationDetent = .medium
 
-	@State var simulaterSheet = false
+	@State var debugMenuShown = false
 	@StateObject var debugSettings = DebugSettings()
 
 	var body: some View {
@@ -228,7 +228,7 @@ struct ContentView: View {
 							print("3D Map toggle tapped")
 						},
 						MapButtonData(sfSymbol: .icon(.terminal)) {
-							self.simulaterSheet = true
+							self.debugMenuShown = true
 						}
 					])
 					Spacer()
@@ -279,7 +279,7 @@ struct ContentView: View {
 						.interactiveDismissDisabled()
 						.presentationCompactAdaptation(.sheet)
 				}
-				.backport.sheet(isPresented: self.$simulaterSheet) {
+				.fullScreenCover(isPresented: self.$debugMenuShown) {
 					DebugMenuView(debugSettings: self.debugSettings)
 				}
 				.sheet(isPresented: self.$showMapLayer) {

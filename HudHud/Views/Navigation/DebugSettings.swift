@@ -17,8 +17,6 @@ class DebugSettings: ObservableObject {
 		}
 	}
 
-	@Published var isURLValid: Bool = true
-
 	@Published var simulateRide: Bool = false
 
 	// MARK: - Internal

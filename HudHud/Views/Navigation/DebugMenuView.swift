@@ -11,7 +11,6 @@ import SwiftUI
 struct DebugMenuView: View {
 	@Environment(\.dismiss) private var dismiss
 	@ObservedObject var debugSettings: DebugSettings
-	@State private var showingError = false
 
 	var body: some View {
 		NavigationStack {
@@ -20,10 +19,6 @@ struct DebugMenuView: View {
 					TextField("Routing URL", text: self.$debugSettings.routingURL)
 						.autocapitalization(.none)
 						.disableAutocorrection(true)
-					if !self.debugSettings.isURLValid {
-						Text("Invalid or unreachable URL")
-							.foregroundColor(.red)
-					}
 				}
 
 				Section(header: Text("Simulation")) {
@@ -39,9 +34,6 @@ struct DebugMenuView: View {
 						self.dismiss()
 					}
 				}
-			}
-			.alert(isPresented: self.$showingError) {
-				Alert(title: Text("Invalid URL"), message: Text("Please enter a valid URL."), dismissButton: .default(Text("OK")))
 			}
 		}
 	}

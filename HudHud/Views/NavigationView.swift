@@ -42,9 +42,11 @@ public struct NavigationView: UIViewControllerRepresentable {
 		let simulatedLocationManager = SimulatedLocationManager(route: self.route)
 		simulatedLocationManager.speedMultiplier = 1
 
+		let locationManager = self.debugSettings.simulateRide ? simulatedLocationManager : nil
+
 		let routeVoice = RouteVoiceController()
 		let directions = Directions(accessToken: nil, host: debugSettings.routingURL)
-		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: self.debugSettings.simulateRide ? simulatedLocationManager : nil, voiceController: routeVoice)
+		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 		navigationController.mapView?.logoView.isHidden = true
 
