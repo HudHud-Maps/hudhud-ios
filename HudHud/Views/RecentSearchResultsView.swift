@@ -27,8 +27,10 @@ struct RecentSearchResultsView: View {
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					Image(systemSymbol: self.item.symbol)
+						.resizable()
 						.font(.title2)
 						.aspectRatio(contentMode: .fit)
+						.frame(width: 24, height: 24)
 						.foregroundStyle(.white)
 						.padding()
 						.clipShape(Circle())
