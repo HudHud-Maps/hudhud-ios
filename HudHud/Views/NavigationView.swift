@@ -24,12 +24,12 @@ public struct NavigationView: UIViewControllerRepresentable {
 
 	public typealias UIViewControllerType = NavigationViewController
 
-	let route: Route
+	let route: Route?
 	let styleURL: URL
 
 	// MARK: - Lifecycle
 
-	init(route: Route, styleURL: URL) {
+	init(route: Route?, styleURL: URL) {
 		self.route = route
 		self.styleURL = styleURL
 	}
@@ -37,14 +37,30 @@ public struct NavigationView: UIViewControllerRepresentable {
 	// MARK: - Public
 
 	public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
-		// let simulatedLocationManager = SimulatedLocationManager(route: self.route)
-		// simulatedLocationManager.speedMultiplier = 1
+		var simulatedLocationManager: SimulatedLocationManager?
+
+		if let route = self.route {
+			simulatedLocationManager = SimulatedLocationManager(route: route)
+			simulatedLocationManager?.speedMultiplier = 2
+		}
 
 		let routeVoice = RouteVoiceController()
 		let directions = Directions(accessToken: nil, host: "gh.maptoolkit.net")
-		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], voiceController: routeVoice)
+		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: simulatedLocationManager, voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 		navigationController.mapView?.logoView.isHidden = true
+		navigationController.mapView?.allowsTilting = false
+		navigationController.mapView?.userTrackingMode = .follow
+		navigationController.mapView?.showsUserLocation = true
+
+		let location = CLLocation(coordinate: .riyadh,
+								  altitude: 1000,
+								  horizontalAccuracy: 10,
+								  verticalAccuracy: 10,
+								  timestamp: .now)
+
+		navigationController.mapView?.updateCourseTracking(location: location)
+		navigationController.mapView?.camera.centerCoordinate = .riyadh
 
 		return navigationController
 	}

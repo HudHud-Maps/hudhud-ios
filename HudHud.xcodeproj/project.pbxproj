@@ -68,6 +68,7 @@
 		CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3682BBBFF27009C3A1C /* CameraState.swift */; };
 		CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */; };
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
+		CD7615652BF169C600DF2A25 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7615642BF169C600DF2A25 /* MapViewCamera.swift */; };
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
@@ -184,6 +185,8 @@
 		CD71C3682BBBFF27009C3A1C /* CameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
 		CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
+		CD7615632BF15DF600DF2A25 /* maplibre-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-navigation-ios"; path = "../maplibre-navigation-ios"; sourceTree = "<group>"; };
+		CD7615642BF169C600DF2A25 /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
@@ -333,6 +336,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
+				CD7615632BF15DF600DF2A25 /* maplibre-navigation-ios */,
 				CDF4A6CE2B7E3D98001B3CD7 /* POIService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
@@ -483,6 +487,7 @@
 				93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */,
 				45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */,
 				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
+				CD7615642BF169C600DF2A25 /* MapViewCamera.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -635,7 +640,6 @@
 				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
 				CDFDD8F52BE66345001C5B46 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
-				14BD6439C3272952846FE21F /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -729,6 +733,7 @@
 				CB3970112B83429200CF9D59 /* MainLayersView.swift in Sources */,
 				CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */,
 				90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */,
+				CD7615652BF169C600DF2A25 /* MapViewCamera.swift in Sources */,
 				CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */,
 				CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */,
 				CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */,
@@ -1127,14 +1132,6 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		14BD6439C3272952846FE21F /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground";
-			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
 		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
