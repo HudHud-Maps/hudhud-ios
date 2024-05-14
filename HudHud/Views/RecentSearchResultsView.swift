@@ -14,6 +14,7 @@ struct RecentSearchResultsView: View {
 	let item: ResolvedItem
 	let mapStore: MapStore
 	let searchStore: SearchViewStore
+	@ScaledMetric var imageSize = 24
 
 	var body: some View {
 		VStack {
@@ -27,8 +28,10 @@ struct RecentSearchResultsView: View {
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					Image(systemSymbol: self.item.symbol)
+						.resizable()
 						.font(.title2)
 						.aspectRatio(contentMode: .fit)
+						.frame(width: self.imageSize, height: self.imageSize)
 						.foregroundStyle(.white)
 						.padding()
 						.clipShape(Circle())

@@ -14,13 +14,14 @@ struct SearchResultItem: View {
 
 	let prediction: any DisplayableAsRow
 	@ObservedObject var searchViewStore: SearchViewStore
+	@ScaledMetric var imageSize = 24
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
 			Image(systemSymbol: self.prediction.symbol)
 				.resizable()
 				.aspectRatio(contentMode: .fit)
-				.frame(width: 24, height: 24)
+				.frame(width: self.imageSize, height: self.imageSize)
 				.foregroundStyle(.white)
 				.padding()
 				.clipShape(Circle())
