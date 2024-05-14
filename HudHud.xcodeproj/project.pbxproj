@@ -187,6 +187,7 @@
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		CD7615632BF15DF600DF2A25 /* maplibre-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-navigation-ios"; path = "../maplibre-navigation-ios"; sourceTree = "<group>"; };
 		CD7615642BF169C600DF2A25 /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
+		CD76156D2BF3993600DF2A25 /* maplibre-swiftui-dsl-playground */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-swiftui-dsl-playground"; path = "../maplibre-swiftui-dsl-playground"; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
@@ -336,6 +337,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
+				CD76156D2BF3993600DF2A25 /* maplibre-swiftui-dsl-playground */,
 				CD7615632BF15DF600DF2A25 /* maplibre-navigation-ios */,
 				CDF4A6CE2B7E3D98001B3CD7 /* POIService */,
 				CDAE05462B681261003E5196 /* HudHud */,
