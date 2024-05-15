@@ -39,10 +39,10 @@
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground",
+      "location" : "https://github.com/hactar/maplibre-swiftui-dsl-playground.git",
       "state" : {
         "branch" : "main",
-        "revision" : "aa159ad30abe1f27c37640147d984f610c992676"
+        "revision" : "8c67dc6141be44971dc7862e785bd8dd8c222c9d"
       }
     },
     {
