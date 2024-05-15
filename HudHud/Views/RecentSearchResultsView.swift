@@ -21,10 +21,8 @@ struct RecentSearchResultsView: View {
 			Button {
 				let selectedItem = self.item
 				let mapItems = [AnyDisplayableAsRow(self.item)]
-				self.searchStore.selectedDetent = .medium
 				self.mapStore.selectedItem = selectedItem
 				self.mapStore.displayableItems = mapItems
-
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					Image(systemSymbol: self.item.symbol)

@@ -38,7 +38,6 @@ struct ContentView: View {
 	@State private var didTryToZoomOnUsersLocation = false
 
 	@State var offsetY: CGFloat = 0
-	@State var selectedDetent: PresentationDetent = .medium
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -141,6 +140,10 @@ struct ContentView: View {
 					self.mapStore.camera = camera
 				}
 			}
+		}
+
+		.onChange(of: self.mapStore.routes?.routes) {
+			_ in self.searchViewStore.updateSheetDetent()
 		}
 		.task {
 			for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
@@ -264,7 +267,7 @@ struct ContentView: View {
 				)) {
 					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore)
 						.presentationCornerRadius(21)
-						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
+						.presentationDetents([.height(130), .medium, .large], selection: self.$searchViewStore.selectedDetent)
 						.presentationBackgroundInteraction(
 							.enabled(upThrough: .medium)
 						)
@@ -304,6 +307,9 @@ struct ContentView: View {
 					.padding(.horizontal, 8)
 			}
 		})
+		.onAppear {
+			self.searchViewStore.updateSheetDetent()
+		}
 	}
 
 	// MARK: - Lifecycle
@@ -314,6 +320,7 @@ struct ContentView: View {
 		self.mapStore = searchStore.mapStore
 		self.motionViewModel = searchStore.mapStore.motionViewModel
 		self.mapStore.routes = searchStore.mapStore.routes
+		self.searchViewStore.updateSheetDetent()
 	}
 }
 
@@ -343,6 +350,19 @@ struct SizePreferenceKey: PreferenceKey {
 #Preview("Touch Testing") {
 	let store: SearchViewStore = .storeSetUpForPreviewing
 	store.searchText = "shops"
-	store.selectedDetent = .medium
+	return ContentView(searchStore: store)
+}
+
+#Preview("NavigationPreview") {
+	let store: SearchViewStore = .storeSetUpForPreviewing
+
+	let poi = ResolvedItem(id: UUID().uuidString,
+						   title: "Pharmacy",
+						   subtitle: "Al-Olya - Riyadh",
+						   type: .toursprung,
+						   coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+						   phone: "0503539560",
+						   website: URL(string: "https://hudhud.sa"))
+	store.mapStore.selectedItem = poi
 	return ContentView(searchStore: store)
 }

@@ -111,6 +111,7 @@ struct SearchSheet: View {
 									}
 								}
 							}
+
 							switch self.searchStore.searchType {
 							case let .returnPOILocation(completion):
 								if let selectedItem = self.mapStore.selectedItem {
@@ -208,6 +209,8 @@ struct SearchSheet: View {
 				.onAppear {
 					// Store POI
 					self.storeRecent(item: item)
+					// update Sheet
+					self.searchStore.updateSheetDetent()
 				}
 			}
 		}
