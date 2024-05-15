@@ -39,11 +39,14 @@ public struct NavigationView: UIViewControllerRepresentable {
 	// MARK: - Public
 
 	public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
-		let simulatedLocationManager = SimulatedLocationManager(route: self.route)
-		simulatedLocationManager.speedMultiplier = 1
-
-		let locationManager = self.debugSettings.simulateRide ? simulatedLocationManager : nil
-
+		let locationManager: NavigationLocationManager?
+		if self.debugSettings.simulateRide {
+			let simulatedLocationManager = SimulatedLocationManager(route: self.route)
+			simulatedLocationManager.speedMultiplier = 1
+			locationManager = simulatedLocationManager
+		} else {
+			locationManager = nil
+		}
 		let routeVoice = RouteVoiceController()
 		let directions = Directions(accessToken: nil, host: debugSettings.routingURL)
 		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
