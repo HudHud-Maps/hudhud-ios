@@ -60,7 +60,7 @@ public struct POIElement: Codable, Equatable, Sendable {
 	}
 }
 
-// MARK: CustomStringConvertible
+// MARK: - CustomStringConvertible
 
 extension POIElement: CustomStringConvertible {
 

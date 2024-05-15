@@ -14,11 +14,12 @@ import POIService
 import SFSafeSymbols
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 struct ABCRouteConfigurationView: View {
 	@State var routeConfigurations: [ABCRouteConfigurationItem]
 	@ObservedObject var mapStore: MapStore
+	@ObservedObject var searchViewStore: SearchViewStore
+	@Binding var searchShown: Bool
 
 	var body: some View {
 		VStack {
@@ -49,8 +50,9 @@ struct ABCRouteConfigurationView: View {
 				.listRowBackground(Color(.quaternarySystemFill))
 				// Add location button
 				Button {
-					self.routeConfigurations.append(.poi(POI(id: UUID().uuidString, title: "New Location", subtitle: "h", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7189756, longitude: 46.6468911), type: "h")))
-				} label: { // (24.7189756, 46.6468911)
+					self.searchViewStore.searchType = .returnPOILocation(completion: nil)
+					self.searchShown = true
+				} label: {
 					HStack {
 						Image(systemSymbol: .plus)
 							.foregroundColor(.blue)
@@ -86,16 +88,18 @@ struct ABCRouteConfigurationView: View {
 					switch item {
 					case let .myLocation(waypoint):
 						waypoints.append(waypoint)
-					case let .poi(poi):
-						if let poi = poi.locationCoordinate {
-							let waypoint = Waypoint(coordinate: poi)
-							waypoints.append(waypoint)
-						}
+					case let .waypoint(point):
+						let waypoint = Waypoint(coordinate: point.coordinate)
+						waypoints.append(waypoint)
 					}
 				}
 				self.mapStore.waypoints = newRoute
 				self.updateRoutes(wayPoints: waypoints)
 			}
+		}
+		// This line will update the routeConfigurations with latest waypoints after added stop point
+		.onChange(of: self.mapStore.waypoints ?? []) { waypoints in
+			self.routeConfigurations = waypoints
 		}
 	}
 
@@ -127,7 +131,7 @@ struct ABCRouteConfigurationView: View {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 	return ABCRouteConfigurationView(routeConfigurations: [
 		.myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
-		.poi(POI(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), type: "Coffee")),
-		.poi(POI(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", locationCoordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), type: "Office"))
-	], mapStore: searchViewStore.mapStore)
+		.waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
+		.waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
+	], mapStore: searchViewStore.mapStore, searchViewStore: searchViewStore, searchShown: .constant(false))
 }

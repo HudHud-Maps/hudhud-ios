@@ -17,7 +17,6 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
-import ToursprungPOI
 
 // MARK: - ContentView
 
@@ -123,15 +122,15 @@ struct ContentView: View {
 			}
 
 			let mapItems = self.searchViewStore.mapStore.mapItems
-			let poi = mapItems.first { row in
-				row.poi?.id == placeID
-			}?.poi
+			let poi = mapItems.first { poi in
+				poi.id == placeID
+			}
 
 			if let poi {
 				Logger.mapInteraction.debug("setting poi")
 				self.searchViewStore.mapStore.selectedItem = poi
 			} else {
-				Logger.mapInteraction.warning("User tapped a feature but it had no POI")
+				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
 			}
 		})
 		.unsafeMapViewModifier { mapView in
@@ -185,6 +184,7 @@ struct ContentView: View {
 					}
 				}
 			}
+
 			.safeAreaInset(edge: .bottom) {
 				if self.mapStore.routes == nil {
 					HStack(alignment: .bottom) {
@@ -246,7 +246,6 @@ struct ContentView: View {
 					.padding(.horizontal)
 				}
 			}
-
 			.backport.buttonSafeArea(length: self.sheetSize)
 			.backport.sheet(isPresented: self.$mapStore.searchShown) {
 				SearchSheet(mapStore: self.mapStore,
@@ -273,10 +272,9 @@ struct ContentView: View {
 
 					.backport.sheet(isPresented: Binding<Bool>(
 						get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
-
-						set: { _ in }
+						set: { _ in self.searchViewStore.searchType = .selectPOI }
 					)) {
-						NavigationSheetView(mapStore: self.mapStore)
+						NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore)
 							.presentationCornerRadius(21)
 							.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
 							.presentationBackgroundInteraction(

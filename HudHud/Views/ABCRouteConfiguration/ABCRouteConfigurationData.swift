@@ -19,7 +19,7 @@ import SwiftUI
 enum ABCRouteConfigurationItem: Hashable, Identifiable {
 
 	case myLocation(Waypoint)
-	case poi(POI)
+	case waypoint(ResolvedItem)
 
 	var id: Self {
 		return self
@@ -29,7 +29,7 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
 		switch self {
 		case .myLocation:
 			return "My Location"
-		case let .poi(poi):
+		case let .waypoint(poi):
 			return poi.title
 		}
 	}
@@ -38,7 +38,7 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
 		switch self {
 		case .myLocation:
 			return Image(systemSymbol: .location)
-		case .poi:
+		case .waypoint:
 			return Image(systemSymbol: .mappin)
 		}
 	}

@@ -12,15 +12,16 @@ import SwiftUI
 
 struct SearchResultItem: View {
 
-	let prediction: Row
+	let prediction: any DisplayableAsRow
 	@ObservedObject var searchViewStore: SearchViewStore
+	@ScaledMetric var imageSize = 24
 
 	var body: some View {
 		HStack(alignment: .center, spacing: 12) {
-			self.prediction.icon
+			Image(systemSymbol: self.prediction.symbol)
 				.resizable()
 				.aspectRatio(contentMode: .fit)
-				.frame(width: 24, height: 24)
+				.frame(width: self.imageSize, height: self.imageSize)
 				.foregroundStyle(.white)
 				.padding()
 				.clipShape(Circle())
@@ -28,7 +29,7 @@ struct SearchResultItem: View {
 				.layoutPriority(1)
 				.frame(minWidth: .leastNonzeroMagnitude)
 				.background(
-					self.prediction.poi?.iconColor.mask(Circle())
+					self.prediction.tintColor.mask(Circle())
 				)
 
 			VStack(alignment: .leading) {
@@ -56,5 +57,10 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-	SearchResultItem(prediction: Row(toursprung: .starbucks), searchViewStore: .storeSetUpForPreviewing)
+	SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
+												title: "Starbucks",
+												subtitle: "Coffee",
+												symbol: .cupAndSaucer,
+												type: .appleResolved),
+					 searchViewStore: .storeSetUpForPreviewing)
 }

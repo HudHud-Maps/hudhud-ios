@@ -83,6 +83,9 @@
         }
       }
     },
+    "Cancel" : {
+
+    },
     "car" : {
       "localizations" : {
         "ar" : {
@@ -115,6 +118,12 @@
           }
         }
       }
+    },
+    "Distance" : {
+
+    },
+    "Duration" : {
+
     },
     "Directions" : {
       "comment" : "navigation sheet header"
@@ -162,6 +171,9 @@
           }
         }
       }
+    },
+    "Hours" : {
+
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
@@ -217,11 +229,17 @@
         }
       }
     },
+    "No Ratings" : {
+
+    },
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
     "Pitch: %@" : {
       "comment" : "street view"
+    },
+    "Ratings" : {
+
     },
     "Recents" : {
       "localizations" : {
@@ -263,12 +281,13 @@
           }
         }
       }
-    },
-    "Traffic" : {
-
-    },
-    "View More >" : {
-
+    },  
+	"Traffic" : {
+		
+	},
+	"View More >" : {
+	 },
+    "Unknown" : {
     },
     "walk" : {
       "localizations" : {
