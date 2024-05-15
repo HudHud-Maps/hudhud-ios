@@ -7,6 +7,7 @@ disabled_rules:
   - file_length
   - function_body_length
   - closure_parameter_position
+  - type_body_length
 # Optional Rules
 opt_in_rules:
   - empty_count
