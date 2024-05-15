@@ -54,14 +54,9 @@ struct SearchSheet: View {
 									})
 								}
 							}
-							.padding(.horizontal, 8)
 						)
-
 						.padding(.horizontal, 10)
 				}
-				.background(.quinary)
-				.cornerRadius(12)
-				.padding()
 				switch self.searchStore.searchType {
 				case .returnPOILocation:
 					Button("Cancel", action: {
