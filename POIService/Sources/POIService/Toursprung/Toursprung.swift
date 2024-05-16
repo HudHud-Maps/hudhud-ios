@@ -139,8 +139,8 @@ public class Toursprung {
 	}
 
 	@discardableResult
-	public func calculate(_ options: RouteOptions) async throws -> RouteCalculationResult {
-		let url = try options.url
+	public func calculate(host: String, options: RouteOptions) async throws -> RouteCalculationResult {
+		let url = try options.url(host: host)
 		let answer: (data: Data, response: URLResponse) = try await URLSession.shared.data(from: url)
 		let json: JSONDictionary
 
@@ -200,34 +200,32 @@ public class Toursprung {
 
 private extension RouteOptions {
 
-	var url: URL {
-		get throws {
-			let stops = self.waypoints.map { "\($0.coordinate.longitude),\($0.coordinate.latitude)" }.joined(separator: ";")
+	func url(host: String) throws -> URL {
+		let stops = self.waypoints.map { "\($0.coordinate.longitude),\($0.coordinate.latitude)" }.joined(separator: ";")
 
-			var components = URLComponents()
-			components.scheme = "https"
-			components.host = "gh.maptoolkit.net"
-			components.path = "/navigate/directions/v5/gh/car/\(stops)"
-			components.queryItems = [
-				URLQueryItem(name: "access_token", value: ""),
-				URLQueryItem(name: "alternatives", value: "false"),
-				URLQueryItem(name: "geometries", value: "polyline6"),
-				URLQueryItem(name: "overview", value: "full"),
-				URLQueryItem(name: "steps", value: "true"),
-				URLQueryItem(name: "continue_straight", value: "true"),
-				URLQueryItem(name: "annotations", value: "congestion,distance"),
-				URLQueryItem(name: "language", value: Locale.preferredLanguages.first ?? "en-US"),
-				URLQueryItem(name: "roundabout_exits", value: "true"),
-				URLQueryItem(name: "voice_instructions", value: "true"),
-				URLQueryItem(name: "banner_instructions", value: "true"),
-				URLQueryItem(name: "voice_units", value: "metric")
-			]
-			guard let url = components.url else {
-				throw Toursprung.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
-			}
-
-			return url
+		var components = URLComponents()
+		components.scheme = "https"
+		components.host = host
+		components.path = "/navigate/directions/v5/gh/car/\(stops)"
+		components.queryItems = [
+			URLQueryItem(name: "access_token", value: ""),
+			URLQueryItem(name: "alternatives", value: "false"),
+			URLQueryItem(name: "geometries", value: "polyline6"),
+			URLQueryItem(name: "overview", value: "full"),
+			URLQueryItem(name: "steps", value: "true"),
+			URLQueryItem(name: "continue_straight", value: "true"),
+			URLQueryItem(name: "annotations", value: "congestion,distance"),
+			URLQueryItem(name: "language", value: Locale.preferredLanguages.first ?? "en-US"),
+			URLQueryItem(name: "roundabout_exits", value: "true"),
+			URLQueryItem(name: "voice_instructions", value: "true"),
+			URLQueryItem(name: "banner_instructions", value: "true"),
+			URLQueryItem(name: "voice_units", value: "metric")
+		]
+		guard let url = components.url else {
+			throw Toursprung.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
 		}
+
+		return url
 	}
 
 	func response(from json: JSONDictionary) throws -> (waypoint: [Waypoint], routes: [Route]) {

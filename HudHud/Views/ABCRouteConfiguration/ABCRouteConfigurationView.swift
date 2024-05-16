@@ -114,7 +114,7 @@ struct ABCRouteConfigurationView: View {
 				options.distanceMeasurementSystem = .metric
 				options.attributeOptions = []
 
-				let results = try await Toursprung.shared.calculate(options)
+				let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
 				self.mapStore.routes = results
 			} catch {
 				Logger.routing.error("Updating routes: \(error)")

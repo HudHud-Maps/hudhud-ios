@@ -39,6 +39,9 @@ struct ContentView: View {
 
 	@State var offsetY: CGFloat = 0
 
+	@State var debugMenuShown = false
+	@StateObject var debugStore = DebugStore()
+
 	@ViewBuilder
 	var mapView: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -244,11 +247,15 @@ struct ContentView: View {
 										self.mapStore.camera.setPitch(60)
 									}
 								}
-							}
+							},
+						MapButtonData(sfSymbol: .icon(.terminal)) {
+							self.debugMenuShown = true
+            }
 						])
 						Spacer()
 						VStack(alignment: .trailing) {
 							CurrentLocationButton(camera: self.$mapStore.camera)
+
 						}
 					}
 					.opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
@@ -283,7 +290,7 @@ struct ContentView: View {
 						get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
 						set: { _ in self.searchViewStore.searchType = .selectPOI }
 					)) {
-						NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore)
+						NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore)
 							.presentationCornerRadius(21)
 							.presentationDetents([.height(130), .medium, .large], selection: self.$searchViewStore.selectedDetent)
 							.presentationBackgroundInteraction(
@@ -293,7 +300,9 @@ struct ContentView: View {
 							.interactiveDismissDisabled()
 							.presentationCompactAdaptation(.sheet)
 					}
-
+          .fullScreenCover(isPresented: self.$debugMenuShown) {
+            DebugMenuView(debugSettings: self.debugStore)
+          }
 					.sheet(isPresented: self.$showMapLayer) {
 						VStack(alignment: .center, spacing: 25) {
 							Spacer()

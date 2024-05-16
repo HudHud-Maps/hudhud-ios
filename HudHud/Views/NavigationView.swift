@@ -26,23 +26,30 @@ public struct NavigationView: UIViewControllerRepresentable {
 
 	let route: Route
 	let styleURL: URL
+	@ObservedObject var debugSettings: DebugStore
 
 	// MARK: - Lifecycle
 
-	init(route: Route, styleURL: URL) {
+	init(route: Route, styleURL: URL, debugSettings: DebugStore) {
 		self.route = route
 		self.styleURL = styleURL
+		self.debugSettings = debugSettings
 	}
 
 	// MARK: - Public
 
 	public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
-		// let simulatedLocationManager = SimulatedLocationManager(route: self.route)
-		// simulatedLocationManager.speedMultiplier = 1
-
+		let locationManager: NavigationLocationManager?
+		if self.debugSettings.simulateRide {
+			let simulatedLocationManager = SimulatedLocationManager(route: self.route)
+			simulatedLocationManager.speedMultiplier = 1
+			locationManager = simulatedLocationManager
+		} else {
+			locationManager = nil
+		}
 		let routeVoice = RouteVoiceController()
-		let directions = Directions(accessToken: nil, host: "gh.maptoolkit.net")
-		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], voiceController: routeVoice)
+		let directions = Directions(accessToken: nil, host: debugSettings.routingHost)
+		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 		navigationController.mapView?.logoView.isHidden = true
 
