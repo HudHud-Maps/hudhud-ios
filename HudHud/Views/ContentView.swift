@@ -44,6 +44,7 @@ struct ContentView: View {
 		NavigationView(styleURL: self.styleURL, camera: self.$mapStore.camera)
 			.unsafeMapViewModifier { mapView in
 				mapView.showsUserLocation = true
+				mapView.tracksUserCourse = true
 			}
 
 //		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {

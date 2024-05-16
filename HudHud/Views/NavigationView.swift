@@ -75,7 +75,7 @@ public struct NavigationView: UIViewRepresentable {
 
 	/// 'Escape hatch' to MLNMapView until we have more modifiers.
 	/// See ``unsafeMapViewModifier(_:)``
-	var unsafeMapViewModifier: ((MLNMapView) -> Void)?
+	var unsafeMapViewModifier: ((NavigationMapView) -> Void)?
 	var controls: [MapControl] = [
 		CompassView(),
 		LogoView(),
@@ -162,7 +162,7 @@ public struct NavigationView: UIViewRepresentable {
 
 	// MARK: - Internal
 
-	func unsafeMapViewModifier(_ modifier: @escaping (MLNMapView) -> Void) -> Self {
+	func unsafeMapViewModifier(_ modifier: @escaping (NavigationMapView) -> Void) -> Self {
 		var newMapView = self
 		newMapView.unsafeMapViewModifier = modifier
 		return newMapView
@@ -170,7 +170,7 @@ public struct NavigationView: UIViewRepresentable {
 
 	// MARK: - Private
 
-	@MainActor private func applyModifiers(_ mapView: MLNMapView, runUnsafe: Bool) {
+	@MainActor private func applyModifiers(_ mapView: NavigationMapView, runUnsafe: Bool) {
 		mapView.contentInset = self.mapViewContentInset
 
 		// Assume all controls are hidden by default (so that an empty list returns a map with no controls)
