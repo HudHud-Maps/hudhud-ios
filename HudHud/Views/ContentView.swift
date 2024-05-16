@@ -135,13 +135,16 @@ struct ContentView: View {
 				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
 			}
 		})
+		.expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
-		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
-			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-				if let camera = CameraState.boundingBox(from: coordinates) {
-					self.mapStore.camera = camera
+		.onChange(of: self.mapStore.routes) { newRoute in
+			if let routeUnwrapped = newRoute {
+				if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
+					if let camera = CameraState.boundingBox(from: coordinates) {
+						self.mapStore.camera = camera
+					}
 				}
 			}
 		}
@@ -248,14 +251,13 @@ struct ContentView: View {
 									}
 								}
 							},
-						MapButtonData(sfSymbol: .icon(.terminal)) {
-							self.debugMenuShown = true
-            }
+							MapButtonData(sfSymbol: .icon(.terminal)) {
+								self.debugMenuShown = true
+							}
 						])
 						Spacer()
 						VStack(alignment: .trailing) {
 							CurrentLocationButton(camera: self.$mapStore.camera)
-
 						}
 					}
 					.opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
@@ -300,9 +302,9 @@ struct ContentView: View {
 							.interactiveDismissDisabled()
 							.presentationCompactAdaptation(.sheet)
 					}
-          .fullScreenCover(isPresented: self.$debugMenuShown) {
-            DebugMenuView(debugSettings: self.debugStore)
-          }
+					.fullScreenCover(isPresented: self.$debugMenuShown) {
+						DebugMenuView(debugSettings: self.debugStore)
+					}
 					.sheet(isPresented: self.$showMapLayer) {
 						VStack(alignment: .center, spacing: 25) {
 							Spacer()

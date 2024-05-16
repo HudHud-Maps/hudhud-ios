@@ -32,8 +32,18 @@ final class MapStore: ObservableObject {
 	@Published var streetView: StreetViewOption = .disabled
 	@Published var routes: Toursprung.RouteCalculationResult?
 	@Published var waypoints: [ABCRouteConfigurationItem]?
-	@Published var displayableItems: [AnyDisplayableAsRow] = []
-	@Published var selectedItem: ResolvedItem?
+
+	@Published var displayableItems: [AnyDisplayableAsRow] = [] {
+		didSet {
+			updateCameraForMapItems()
+		}
+	}
+
+	@Published var selectedItem: ResolvedItem? {
+		didSet {
+			updateCameraForMapItems()
+		}
+	}
 
 	var mapItems: [ResolvedItem] {
 		let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
@@ -106,9 +116,28 @@ extension MapStore: Previewable {
 private extension MapStore {
 
 	func updateCameraForMapItems() {
-		let coordinates = self.mapItems.map(\.coordinate)
-		guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+		if let selectedItem {
+			// when an item is selected the camera behaves differently then when there isn't
+			self.camera = .center(selectedItem.coordinate, zoom: 16)
+		} else {
+			switch self.mapItems.count {
+			case 0:
+				break // no items, do nothing
 
-		self.camera = camera
+			case 1:
+				guard let item = self.mapItems.first else {
+					return
+				}
+				self.camera = .center(item.coordinate, zoom: 16)
+
+			case 2...:
+				let coordinates = self.mapItems.map(\.coordinate)
+				guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+
+				self.camera = camera
+			default:
+				break // should never occur
+			}
+		}
 	}
 }

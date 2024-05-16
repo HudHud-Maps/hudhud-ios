@@ -100,7 +100,17 @@ struct SearchSheet: View {
 
 									if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
 										self.mapStore.selectedItem = resolvedItem
-										self.mapStore.displayableItems = [AnyDisplayableAsRow(resolvedItem)]
+
+										let index = self.mapStore.displayableItems.firstIndex { itemInArray in
+											return itemInArray.id == resolvedItem.id
+										}
+
+										if let index {
+											self.mapStore.displayableItems[index] = AnyDisplayableAsRow(resolvedItem)
+										} else {
+											Logger.searchView.error("Resolved an item that is no longer in the displayable list")
+										}
+
 									} else {
 										self.mapStore.displayableItems = resolvedItems
 									}
