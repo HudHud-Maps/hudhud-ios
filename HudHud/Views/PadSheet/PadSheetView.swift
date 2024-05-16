@@ -9,32 +9,32 @@
 import SwiftUI
 
 struct PadSheetView<Content: View>: View {
-	let screenHeight = UIScreen.main.bounds.height
-	let subview: Content
+    let screenHeight = UIScreen.main.bounds.height
+    let subview: Content
 
-	var body: some View {
-		VStack {
-			self.subview
-				.frame(width: 300, height: self.screenHeight)
-				.background(Color.white)
-				.cornerRadius(16)
-				.overlay(alignment: .top) {
-					Rectangle()
-						.frame(width: 40, height: 6)
-						.foregroundColor(Color.secondary)
-						.cornerRadius(3)
-						.padding(5)
-				}
-		}
-	}
+    var body: some View {
+        VStack {
+            self.subview
+                .frame(width: 300, height: self.screenHeight)
+                .background(Color.white)
+                .cornerRadius(16)
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .frame(width: 40, height: 6)
+                        .foregroundColor(Color.secondary)
+                        .cornerRadius(3)
+                        .padding(5)
+                }
+        }
+    }
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	init(@ViewBuilder subview: () -> Content) {
-		self.subview = subview()
-	}
+    init(@ViewBuilder subview: () -> Content) {
+        self.subview = subview()
+    }
 }
 
 #Preview {
-	PadSheetView {}
+    PadSheetView {}
 }

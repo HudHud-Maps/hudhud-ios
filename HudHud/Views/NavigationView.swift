@@ -22,48 +22,48 @@ typealias JSONDictionary = [String: Any]
 
 public struct NavigationView: UIViewControllerRepresentable {
 
-	public typealias UIViewControllerType = NavigationViewController
+    public typealias UIViewControllerType = NavigationViewController
 
-	let route: Route
-	let styleURL: URL
-	@ObservedObject var debugSettings: DebugStore
+    let route: Route
+    let styleURL: URL
+    @ObservedObject var debugSettings: DebugStore
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	init(route: Route, styleURL: URL, debugSettings: DebugStore) {
-		self.route = route
-		self.styleURL = styleURL
-		self.debugSettings = debugSettings
-	}
+    init(route: Route, styleURL: URL, debugSettings: DebugStore) {
+        self.route = route
+        self.styleURL = styleURL
+        self.debugSettings = debugSettings
+    }
 
-	// MARK: - Public
+    // MARK: - Public
 
-	public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
-		let locationManager: NavigationLocationManager?
-		if self.debugSettings.simulateRide {
-			let simulatedLocationManager = SimulatedLocationManager(route: self.route)
-			simulatedLocationManager.speedMultiplier = 1
-			locationManager = simulatedLocationManager
-		} else {
-			locationManager = nil
-		}
-		let routeVoice = RouteVoiceController()
-		let directions = Directions(accessToken: nil, host: debugSettings.routingHost)
-		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
-		navigationController.mapView?.styleURL = self.styleURL
-		navigationController.mapView?.logoView.isHidden = true
+    public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
+        let locationManager: NavigationLocationManager?
+        if self.debugSettings.simulateRide {
+            let simulatedLocationManager = SimulatedLocationManager(route: self.route)
+            simulatedLocationManager.speedMultiplier = 1
+            locationManager = simulatedLocationManager
+        } else {
+            locationManager = nil
+        }
+        let routeVoice = RouteVoiceController()
+        let directions = Directions(accessToken: nil, host: debugSettings.routingHost)
+        let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
+        navigationController.mapView?.styleURL = self.styleURL
+        navigationController.mapView?.logoView.isHidden = true
 
-		return navigationController
-	}
+        return navigationController
+    }
 
-	public func updateUIViewController(_: MapboxNavigation.NavigationViewController, context _: Context) {
-		CancelButton.appearance().setTitle("Finish", for: .normal)
-		CancelButton.appearance().setImage(nil, for: .normal)
-		CancelButton.appearance().textColor = .red
-		print(#function)
-	}
+    public func updateUIViewController(_: MapboxNavigation.NavigationViewController, context _: Context) {
+        CancelButton.appearance().setTitle("Finish", for: .normal)
+        CancelButton.appearance().setImage(nil, for: .normal)
+        CancelButton.appearance().textColor = .red
+        print(#function)
+    }
 
-	public func makeCoordinator() -> NavigationViewCoordinator {
-		NavigationViewCoordinator(parent: self)
-	}
+    public func makeCoordinator() -> NavigationViewCoordinator {
+        NavigationViewCoordinator(parent: self)
+    }
 }

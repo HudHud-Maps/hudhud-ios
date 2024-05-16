@@ -11,55 +11,55 @@ import SFSafeSymbols
 import SwiftUI
 
 struct TrafficChartView: View {
-	let chartData: TrafficChartData
+    let chartData: TrafficChartData
 
-	var body: some View {
-		if let trafficRange = chartData.getSpecificTrafficRange {
-			Chart(trafficRange) { shape in
-				BarMark(
-					x: .value(String(localized: "Hours Range", comment: "traffic chart view, Hours range x axes"), shape.hour.lowerBound, unit: .hour),
-					y: .value(String(localized: "Occupancy Range", comment: "traffic chart view, Occupancy Range y axes"), shape.traffic), width: .automatic
-				)
-				.foregroundStyle(
-					shape.hour.contains(Date()) == true ? .blue
-						: Color(
-							UIColor.secondarySystemFill
-						)
-				)
-			}
-			.chartXAxis(content: {
-				AxisMarks(preset: .aligned, values: AxisMarkValues.stride(by: .hour, count: 3)) { _ in
-					AxisGridLine()
-					AxisValueLabel(format: .dateTime.hour())
-				}
-			})
-			.chartYAxis {
-				AxisMarks(preset: .automatic, position: .automatic, values: [0]) { _ in
-					AxisGridLine()
-				}
-			}
-			.chartYScale(domain: 0 ... 1)
-		} else {
-			Label {
-				Text("Bad Traffic Data", comment: "for traffic chart")
-			} icon: {
-				Image(systemSymbol: .exclamationmarkTriangle)
-			}
-		}
-	}
+    var body: some View {
+        if let trafficRange = chartData.getSpecificTrafficRange {
+            Chart(trafficRange) { shape in
+                BarMark(
+                    x: .value(String(localized: "Hours Range", comment: "traffic chart view, Hours range x axes"), shape.hour.lowerBound, unit: .hour),
+                    y: .value(String(localized: "Occupancy Range", comment: "traffic chart view, Occupancy Range y axes"), shape.traffic), width: .automatic
+                )
+                .foregroundStyle(
+                    shape.hour.contains(Date()) == true ? .blue
+                        : Color(
+                            UIColor.secondarySystemFill
+                        )
+                )
+            }
+            .chartXAxis(content: {
+                AxisMarks(preset: .aligned, values: AxisMarkValues.stride(by: .hour, count: 3)) { _ in
+                    AxisGridLine()
+                    AxisValueLabel(format: .dateTime.hour())
+                }
+            })
+            .chartYAxis {
+                AxisMarks(preset: .automatic, position: .automatic, values: [0]) { _ in
+                    AxisGridLine()
+                }
+            }
+            .chartYScale(domain: 0 ... 1)
+        } else {
+            Label {
+                Text("Bad Traffic Data", comment: "for traffic chart")
+            } icon: {
+                Image(systemSymbol: .exclamationmarkTriangle)
+            }
+        }
+    }
 }
 
 #Preview {
-	let trafic = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0, 0.1, 0.1, 0.2, 0.4, 0.9, 0.9, 0.8, 0.8, 0.6, 0.4, 0.0, 0.0, 0.0]
+    let trafic = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0.1, 0, 0.1, 0.1, 0.2, 0.4, 0.9, 0.9, 0.8, 0.8, 0.6, 0.4, 0.0, 0.0, 0.0]
 
-	return VStack(alignment: .leading) {
-		Text("Traffic")
-			.font(.title)
-			.frame(width: .infinity)
-		TrafficChartView(chartData: TrafficChartData(date: Date(), traffic: trafic))
-			.frame(maxHeight: 200)
+    return VStack(alignment: .leading) {
+        Text("Traffic")
+            .font(.title)
+            .frame(width: .infinity)
+        TrafficChartView(chartData: TrafficChartData(date: Date(), traffic: trafic))
+            .frame(maxHeight: 200)
 
-		Spacer()
-	}
-	.padding()
+        Spacer()
+    }
+    .padding()
 }

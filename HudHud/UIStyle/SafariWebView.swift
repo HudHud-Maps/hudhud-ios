@@ -11,15 +11,15 @@ import SafariServices
 import SwiftUI
 
 struct SafariWebView: UIViewControllerRepresentable {
-	let url: URL
+    let url: URL
 
-	// MARK: - Internal
+    // MARK: - Internal
 
-	func makeUIViewController(context _: Context) -> SFSafariViewController {
-		return SFSafariViewController(url: self.url)
-	}
+    func makeUIViewController(context _: Context) -> SFSafariViewController {
+        return SFSafariViewController(url: self.url)
+    }
 
-	func updateUIViewController(_: SFSafariViewController, context _: Context) {
-		return
-	}
+    func updateUIViewController(_: SFSafariViewController, context _: Context) {
+        return
+    }
 }

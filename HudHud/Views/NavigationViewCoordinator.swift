@@ -16,15 +16,15 @@ import MapLibreSwiftUI
 
 public class NavigationViewCoordinator: NSObject {
 
-	// This must be weak, the UIViewRepresentable owns the MLNMapView.
-	weak var mapView: NavigationMapView?
-	var parent: NavigationView
+    // This must be weak, the UIViewRepresentable owns the MLNMapView.
+    weak var mapView: NavigationMapView?
+    var parent: NavigationView
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	init(parent: NavigationView) {
-		self.parent = parent
-	}
+    init(parent: NavigationView) {
+        self.parent = parent
+    }
 }
 
 // MARK: - MLNMapViewDelegate

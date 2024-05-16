@@ -10,5 +10,5 @@ import Foundation
 
 protocol Previewable {
 
-	static var storeSetUpForPreviewing: Self { get }
+    static var storeSetUpForPreviewing: Self { get }
 }
