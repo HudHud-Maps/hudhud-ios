@@ -22,7 +22,6 @@ import SwiftUI
 
 @MainActor
 struct ContentView: View {
-
 	// NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
 	private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 
@@ -41,7 +40,7 @@ struct ContentView: View {
 	@State var selectedDetent: PresentationDetent = .medium
 
 	var body: some View {
-		NavigationView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+		Navigation(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
 			if let route = self.mapStore.routes?.routes.first {
 				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
@@ -109,39 +108,39 @@ struct ContentView: View {
 				.iconImage(UIImage.lookAroundPin)
 				.iconRotation(featurePropertyNamed: "heading")
 		}
-		.onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
-			// Pick the first feature (which may be a port or a cluster), ideally selecting
-			// the one nearest nearest one to the touch point.
-			guard let feature = features.first,
-				  let placeID = feature.attribute(forKey: "poi_id") as? String else {
-				// user tapped nothing - deselect
-				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-				self.searchViewStore.mapStore.selectedItem = nil
-				return
-			}
-
-			let mapItems = self.searchViewStore.mapStore.mapItems
-			let poi = mapItems.first { poi in
-				poi.id == placeID
-			}
-
-			if let poi {
-				Logger.mapInteraction.debug("setting poi")
-				self.searchViewStore.mapStore.selectedItem = poi
-			} else {
-				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
-			}
-		})
+//		.onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
+//			// Pick the first feature (which may be a port or a cluster), ideally selecting
+//			// the one nearest nearest one to the touch point.
+//			guard let feature = features.first,
+//			      let placeID = feature.attribute(forKey: "poi_id") as? String else {
+//				// user tapped nothing - deselect
+//				Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
+//				self.searchViewStore.mapStore.selectedItem = nil
+//				return
+//			}
+//
+//			let mapItems = self.searchViewStore.mapStore.mapItems
+//			let poi = mapItems.first { poi in
+//				poi.id == placeID
+//			}
+//
+//			if let poi {
+//				Logger.mapInteraction.debug("setting poi")
+//				self.searchViewStore.mapStore.selectedItem = poi
+//			} else {
+//				Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
+//			}
+//		})
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
-		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
-			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-				if let camera = CameraState.boundingBox(from: coordinates) {
-					self.mapStore.camera = camera
-				}
-			}
-		}
+//		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
+//			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
+//				if let camera = CameraState.boundingBox(from: coordinates) {
+//					self.mapStore.camera = camera
+//				}
+//			}
+//		}
 		.task {
 			for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
 				Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
@@ -234,65 +233,65 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-		.backport.buttonSafeArea(length: self.sheetSize)
-		.backport.sheet(isPresented: self.$mapStore.searchShown) {
-			SearchSheet(mapStore: self.mapStore,
-						searchStore: self.searchViewStore)
-				.frame(minWidth: 320)
-				.presentationCornerRadius(21)
-				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-				.presentationBackgroundInteraction(
-					.enabled(upThrough: .large)
-				)
-				.interactiveDismissDisabled()
-				.ignoresSafeArea()
-				.presentationCompactAdaptation(.sheet)
-				.overlay {
-					GeometryReader { geometry in
-						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
-					}
-				}
-				.onPreferenceChange(SizePreferenceKey.self) { value in
-					withAnimation(.easeOut) {
-						self.sheetSize = value
-					}
-				}
-				.backport.sheet(isPresented: Binding<Bool>(
-					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
-					set: { _ in self.searchViewStore.searchType = .selectPOI }
-				)) {
-					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore)
-						.presentationCornerRadius(21)
-						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
-						.presentationBackgroundInteraction(
-							.enabled(upThrough: .medium)
-						)
-						.ignoresSafeArea()
-						.interactiveDismissDisabled()
-						.presentationCompactAdaptation(.sheet)
-				}
-				.sheet(isPresented: self.$showMapLayer) {
-					VStack(alignment: .center, spacing: 25) {
-						Spacer()
-						HStack(alignment: .center) {
-							Spacer()
-							Text("Layers")
-								.foregroundStyle(.primary)
-							Spacer()
-							Button {
-								self.showMapLayer.toggle()
-							} label: {
-								Image(systemSymbol: .xmark)
-									.foregroundColor(.secondary)
-							}
-						}
-						.padding(.horizontal, 30)
-						MainLayersView(mapLayerData: MapLayersData.getLayers())
-							.presentationCornerRadius(21)
-							.presentationDetents([.medium])
-					}
-				}
-		}
+//		.backport.buttonSafeArea(length: self.sheetSize)
+//		.backport.sheet(isPresented: self.$mapStore.searchShown) {
+//			SearchSheet(mapStore: self.mapStore,
+//			            searchStore: self.searchViewStore)
+//				.frame(minWidth: 320)
+//				.presentationCornerRadius(21)
+//				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+//				.presentationBackgroundInteraction(
+//					.enabled(upThrough: .large)
+//				)
+//				.interactiveDismissDisabled()
+//				.ignoresSafeArea()
+//				.presentationCompactAdaptation(.sheet)
+//				.overlay {
+//					GeometryReader { geometry in
+//						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+//					}
+//				}
+//				.onPreferenceChange(SizePreferenceKey.self) { value in
+//					withAnimation(.easeOut) {
+//						self.sheetSize = value
+//					}
+//				}
+//				.backport.sheet(isPresented: Binding<Bool>(
+//					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+//					set: { _ in self.searchViewStore.searchType = .selectPOI }
+//				)) {
+//					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore)
+//						.presentationCornerRadius(21)
+//						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
+//						.presentationBackgroundInteraction(
+//							.enabled(upThrough: .medium)
+//						)
+//						.ignoresSafeArea()
+//						.interactiveDismissDisabled()
+//						.presentationCompactAdaptation(.sheet)
+//				}
+//				.sheet(isPresented: self.$showMapLayer) {
+//					VStack(alignment: .center, spacing: 25) {
+//						Spacer()
+//						HStack(alignment: .center) {
+//							Spacer()
+//							Text("Layers")
+//								.foregroundStyle(.primary)
+//							Spacer()
+//							Button {
+//								self.showMapLayer.toggle()
+//							} label: {
+//								Image(systemSymbol: .xmark)
+//									.foregroundColor(.secondary)
+//							}
+//						}
+//						.padding(.horizontal, 30)
+//						MainLayersView(mapLayerData: MapLayersData.getLayers())
+//							.presentationCornerRadius(21)
+//							.presentationDetents([.medium])
+//					}
+//				}
+//		}
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
 			self.notificationQueue.removeFirst()

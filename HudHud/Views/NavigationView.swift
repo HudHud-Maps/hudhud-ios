@@ -28,11 +28,10 @@ public struct NavigationView: UIViewRepresentable {
 	let userLayers: [StyleLayerDefinition]
 
 	public var gestures = [MapGesture]()
+	public var mapViewContentInset: UIEdgeInsets = .zero
 
 	var onStyleLoaded: ((MLNStyle) -> Void)?
 	var onViewPortChanged: ((MapViewPort) -> Void)?
-
-	public var mapViewContentInset: UIEdgeInsets = .zero
 
 	/// 'Escape hatch' to MLNMapView until we have more modifiers.
 	/// See ``unsafeMapViewModifier(_:)``

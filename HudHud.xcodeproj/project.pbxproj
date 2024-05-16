@@ -74,6 +74,7 @@
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
+		CD958B3D2BF60BC900501F93 /* Navigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD958B3C2BF60BC900501F93 /* Navigation.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -191,6 +192,7 @@
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
+		CD958B3C2BF60BC900501F93 /* Navigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigation.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CDAE05492B681261003E5196 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				CD85CB282BB343BA00C99774 /* DebugStreetView.swift */,
 				CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */,
 				CD1BD91F2B91E59200A591BD /* NavigationView.swift */,
+				CD958B3C2BF60BC900501F93 /* Navigation.swift */,
 				CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */,
 				47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */,
 				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
@@ -778,6 +781,7 @@
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
 				4C8F2777E10B77217C6B2E9D /* ErrorView.swift in Sources */,
 				9628E8F074C51BC707B44367 /* WebView.swift in Sources */,
+				CD958B3D2BF60BC900501F93 /* Navigation.swift in Sources */,
 				80FC33228F84547305447C36 /* StreetView.swift in Sources */,
 				655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */,
 				EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */,
