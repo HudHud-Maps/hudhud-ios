@@ -21,45 +21,6 @@ typealias JSONDictionary = [String: Any]
 // MARK: - NavigationView
 
 public struct NavigationView: UIViewRepresentable {
-	/*
-	 let route: Route?
-	 let styleURL: URL
-
-	 // MARK: - Lifecycle
-
-	 init(route: Route?, styleURL: URL) {
-	 	self.route = route
-	 	self.styleURL = styleURL
-	 }
-
-	 // MARK: - Public
-
-	 public func makeUIView(context _: Context) -> MapboxNavigation.NavigationMapView {
-	 	var simulatedLocationManager: SimulatedLocationManager?
-
-	 	if let route = self.route {
-	 		simulatedLocationManager = SimulatedLocationManager(route: route)
-	 		simulatedLocationManager?.speedMultiplier = 2
-	 	}
-
-	 	// TODO: use NavigationMapView instead of NavigationViewController
-	 	let navigationView = NavigationMapView(frame: .zero, styleURL: self.styleURL)
-	 	navigationView.showsUserLocation = true
-	 	navigationView.setCenter(.riyadh, zoomLevel: 14, animated: false)
-	 	return navigationView
-	 }
-
-	 public func updateUIView(_ uiView: MapboxNavigation.NavigationMapView, context: Context) {
-	 	CancelButton.appearance().setTitle("Finish", for: .normal)
-	 	CancelButton.appearance().setImage(nil, for: .normal)
-	 	CancelButton.appearance().textColor = .red
-	 	print(#function)
-	 }
-
-	 public func makeCoordinator() -> NavigationViewCoordinator {
-	 	NavigationViewCoordinator(parent: self)
-	 }
-	 */
 
 	@Binding var camera: MapViewCamera
 

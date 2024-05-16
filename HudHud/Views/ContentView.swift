@@ -41,11 +41,6 @@ struct ContentView: View {
 	@State var selectedDetent: PresentationDetent = .medium
 
 	var body: some View {
-//		NavigationView(styleURL: self.styleURL, camera: self.$mapStore.camera)
-//		.unsafeMapViewModifier { mapView in
-//			mapView.showsUserLocation = true
-//		}
-
 		NavigationView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
 			if let route = self.mapStore.routes?.routes.first {
