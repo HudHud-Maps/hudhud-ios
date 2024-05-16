@@ -41,7 +41,7 @@ struct ContentView: View {
 	@State var selectedDetent: PresentationDetent = .medium
 
 	@State var debugMenuShown = false
-	@StateObject var debugSettings = DebugSettings()
+	@StateObject var debugStore = DebugStore()
 
 	var body: some View {
 		MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -268,7 +268,7 @@ struct ContentView: View {
 					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
 					set: { _ in self.searchViewStore.searchType = .selectPOI }
 				)) {
-					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugSettings: self.debugSettings)
+					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore)
 						.presentationCornerRadius(21)
 						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
 						.presentationBackgroundInteraction(
@@ -279,7 +279,7 @@ struct ContentView: View {
 						.presentationCompactAdaptation(.sheet)
 				}
 				.fullScreenCover(isPresented: self.$debugMenuShown) {
-					DebugMenuView(debugSettings: self.debugSettings)
+					DebugMenuView(debugSettings: self.debugStore)
 				}
 				.sheet(isPresented: self.$showMapLayer) {
 					VStack(alignment: .center, spacing: 25) {

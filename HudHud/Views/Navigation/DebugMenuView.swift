@@ -10,13 +10,13 @@ import SwiftUI
 
 struct DebugMenuView: View {
 	@Environment(\.dismiss) private var dismiss
-	@ObservedObject var debugSettings: DebugSettings
+	@ObservedObject var debugSettings: DebugStore
 
 	var body: some View {
 		NavigationStack {
 			Form {
 				Section(header: Text("Routing Configuration")) {
-					TextField("Routing URL", text: self.$debugSettings.routingURL)
+					TextField("Routing URL", text: self.$debugSettings.routingHost)
 						.autocapitalization(.none)
 						.disableAutocorrection(true)
 				}
@@ -40,7 +40,7 @@ struct DebugMenuView: View {
 }
 
 #Preview {
-	@StateObject var debugSettings = DebugSettings()
+	@StateObject var debugSettings = DebugStore()
 
 	return DebugMenuView(debugSettings: debugSettings)
 }

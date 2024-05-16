@@ -26,11 +26,11 @@ public struct NavigationView: UIViewControllerRepresentable {
 
 	let route: Route
 	let styleURL: URL
-	@ObservedObject var debugSettings: DebugSettings
+	@ObservedObject var debugSettings: DebugStore
 
 	// MARK: - Lifecycle
 
-	init(route: Route, styleURL: URL, debugSettings: DebugSettings) {
+	init(route: Route, styleURL: URL, debugSettings: DebugStore) {
 		self.route = route
 		self.styleURL = styleURL
 		self.debugSettings = debugSettings
@@ -48,7 +48,7 @@ public struct NavigationView: UIViewControllerRepresentable {
 			locationManager = nil
 		}
 		let routeVoice = RouteVoiceController()
-		let directions = Directions(accessToken: nil, host: debugSettings.routingURL)
+		let directions = Directions(accessToken: nil, host: debugSettings.routingHost)
 		let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
 		navigationController.mapView?.styleURL = self.styleURL
 		navigationController.mapView?.logoView.isHidden = true

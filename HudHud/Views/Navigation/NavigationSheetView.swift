@@ -19,7 +19,7 @@ struct NavigationSheetView: View {
 	@ObservedObject var mapStore: MapStore
 	@State var goPressed = false
 
-	@ObservedObject var debugSettings: DebugSettings
+	@ObservedObject var debugStore: DebugStore
 
 	@State var searchShown: Bool = false
 
@@ -70,7 +70,7 @@ struct NavigationSheetView: View {
 		.fullScreenCover(isPresented: self.$goPressed) {
 			let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 			if let route = self.mapStore.routes?.routes.first {
-				NavigationView(route: route, styleURL: styleURL, debugSettings: self.debugSettings)
+				NavigationView(route: route, styleURL: styleURL, debugSettings: self.debugStore)
 			}
 		}
 		.sheet(isPresented: self.$searchShown) {
@@ -98,7 +98,7 @@ struct NavigationSheetView: View {
 #Preview {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 
-	@StateObject var debugSettings = DebugSettings()
+	@StateObject var debugStore = DebugStore()
 
-	return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugSettings: debugSettings)
+	return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugStore: debugStore)
 }
