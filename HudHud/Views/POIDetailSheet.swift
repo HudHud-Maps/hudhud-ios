@@ -50,6 +50,8 @@ struct POIDetailSheet: View {
 
 						Text(self.item.subtitle)
 							.font(.footnote)
+							.lineLimit(2)
+							.fixedSize(horizontal: false, vertical: true)
 							.frame(maxWidth: .infinity, alignment: .leading)
 							.padding(.bottom, 8)
 					}

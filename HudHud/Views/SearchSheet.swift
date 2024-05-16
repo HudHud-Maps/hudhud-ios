@@ -54,14 +54,9 @@ struct SearchSheet: View {
 									})
 								}
 							}
-							.padding(.horizontal, 8)
 						)
-
 						.padding(.horizontal, 10)
 				}
-				.background(.quinary)
-				.cornerRadius(12)
-				.padding()
 				switch self.searchStore.searchType {
 				case .returnPOILocation:
 					Button("Cancel", action: {
@@ -111,6 +106,7 @@ struct SearchSheet: View {
 									}
 								}
 							}
+
 							switch self.searchStore.searchType {
 							case let .returnPOILocation(completion):
 								if let selectedItem = self.mapStore.selectedItem {
@@ -208,6 +204,8 @@ struct SearchSheet: View {
 				.onAppear {
 					// Store POI
 					self.storeRecent(item: item)
+					// update Sheet
+					self.searchStore.updateSheetDetent()
 				}
 			}
 		}

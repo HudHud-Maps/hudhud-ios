@@ -14,21 +14,22 @@ struct RecentSearchResultsView: View {
 	let item: ResolvedItem
 	let mapStore: MapStore
 	let searchStore: SearchViewStore
+	@ScaledMetric var imageSize = 24
 
 	var body: some View {
 		VStack {
 			Button {
 				let selectedItem = self.item
 				let mapItems = [AnyDisplayableAsRow(self.item)]
-				self.searchStore.selectedDetent = .medium
 				self.mapStore.selectedItem = selectedItem
 				self.mapStore.displayableItems = mapItems
-
 			} label: {
 				HStack(alignment: .center, spacing: 12) {
 					Image(systemSymbol: self.item.symbol)
+						.resizable()
 						.font(.title2)
 						.aspectRatio(contentMode: .fit)
+						.frame(width: self.imageSize, height: self.imageSize)
 						.foregroundStyle(.white)
 						.padding()
 						.clipShape(Circle())
