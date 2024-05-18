@@ -47,7 +47,7 @@ public struct NavigationView: UIViewControllerRepresentable {
         } else {
             locationManager = nil
         }
-        let routeVoice = RouteVoiceController()
+        let routeVoice = HudHudRouteVoiceController()
         let directions = Directions(accessToken: nil, host: debugSettings.routingHost)
         let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
         navigationController.mapView?.styleURL = self.styleURL
