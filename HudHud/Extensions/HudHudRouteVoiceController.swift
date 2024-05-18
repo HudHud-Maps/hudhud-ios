@@ -15,8 +15,6 @@ import UIKit
 class HudHudRouteVoiceController: RouteVoiceController {
     lazy var speechSynth = AVSpeechSynthesizer()
 
-    let audioQueue = DispatchQueue(label: "hudhud.audio")
-
     var lastSpokenInstruction: SpokenInstruction?
     var routeProgress: RouteProgress?
 
@@ -81,29 +79,35 @@ class HudHudRouteVoiceController: RouteVoiceController {
      - parameter ignoreProgress: A `Bool` that indicates if the routeProgress is added to the instruction.
      */
     override func speak(_ instruction: SpokenInstruction, with _: Locale?, ignoreProgress _: Bool = false) {
-        if self.speechSynth.isSpeaking, let lastSpokenInstruction {
-            self.voiceControllerDelegate?.voiceController?(self, didInterrupt: lastSpokenInstruction, with: instruction)
-        }
+        let localLastSpokenInstruction = self.lastSpokenInstruction
 
-        do {
-            try self.duckAudio()
-        } catch {
-            self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
-        }
+        // Thread performance checker complains if you access the speechSynthesizer on the main thread,
+        // so we do speech on a background thread instead.
+        DispatchQueue.global(qos: .default).async {
+            if self.speechSynth.isSpeaking, let localLastSpokenInstruction {
+                self.voiceControllerDelegate?.voiceController?(self, didInterrupt: localLastSpokenInstruction, with: instruction)
+            }
 
-        let modifiedInstruction = self.voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: self.routeProgress) ?? instruction
+            do {
+                try self.duckAudio()
+            } catch {
+                self.voiceControllerDelegate?.voiceController?(self, spokenInstructionsDidFailWith: error)
+            }
 
-        let thingsToSay = self.splitBasedOnScript(string: modifiedInstruction.text)
+            let modifiedInstruction = self.voiceControllerDelegate?.voiceController?(self, willSpeak: instruction, routeProgress: self.routeProgress) ?? instruction
 
-        for thingToSay in thingsToSay {
-            let utterance = AVSpeechUtterance(string: thingToSay.string)
-            switch thingToSay.language {
-            case .arabic:
-                utterance.voice = self.arabicVoice
-                self.speechSynth.speak(utterance)
+            let thingsToSay = self.splitBasedOnScript(string: modifiedInstruction.text)
 
-            case .other:
-                utterance.voice = self.allOtherLanguagesVoice
+            for thingToSay in thingsToSay {
+                let utterance = AVSpeechUtterance(string: thingToSay.string)
+                switch thingToSay.language {
+                case .arabic:
+                    utterance.voice = self.arabicVoice
+
+                case .other:
+                    utterance.voice = self.allOtherLanguagesVoice
+                }
+
                 self.speechSynth.speak(utterance)
             }
         }
