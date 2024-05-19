@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import Combine
 import CoreLocation
 import Foundation
 import MapboxDirections
@@ -44,6 +45,9 @@ final class MapStore: ObservableObject {
             updateCameraForMapItems()
         }
     }
+
+    private var cancellable: AnyCancellable?
+    private var cancellables: Set<AnyCancellable> = []
 
     var mapItems: [ResolvedItem] {
         let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
@@ -101,7 +105,25 @@ final class MapStore: ObservableObject {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
+        self.setupCameraBindings()
     }
+
+    // MARK: - Internal
+
+    func setupCameraBindings() {
+        self.$displayableItems
+            .sink { [weak self] _ in
+                self?.updateCameraForMapItems()
+            }
+            .store(in: &self.cancellables)
+
+        self.$selectedItem
+            .sink { [weak self] _ in
+                self?.updateCameraForMapItems()
+            }
+            .store(in: &self.cancellables)
+    }
+
 }
 
 // MARK: - Previewable

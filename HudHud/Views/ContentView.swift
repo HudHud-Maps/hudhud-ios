@@ -152,6 +152,9 @@ struct ContentView: View {
         .onChange(of: self.mapStore.routes?.routes) {
             _ in self.searchViewStore.updateSheetDetent()
         }
+        .onChange(of: self.searchViewStore.mapStore.mapItems) { _ in
+            self.searchViewStore.mapStore.setupCameraBindings()
+        }
     }
 
     var body: some View {
@@ -338,6 +341,7 @@ struct ContentView: View {
             })
             .onAppear {
                 self.searchViewStore.updateSheetDetent()
+                self.searchViewStore.mapStore.setupCameraBindings()
             }
     }
 
@@ -350,6 +354,7 @@ struct ContentView: View {
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.mapStore.routes = searchStore.mapStore.routes
         self.searchViewStore.updateSheetDetent()
+        self.searchViewStore.mapStore.setupCameraBindings()
     }
 }
 
@@ -386,10 +391,10 @@ struct SizePreferenceKey: PreferenceKey {
     let store: SearchViewStore = .storeSetUpForPreviewing
 
     let poi = ResolvedItem(id: UUID().uuidString,
-                           title: "Pharmacy",
-                           subtitle: "Al-Olya - Riyadh",
-                           type: .toursprung,
-                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                           title: "Half Million",
+                           subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
+                           type: .appleResolved,
+                           coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi

@@ -216,6 +216,13 @@ struct SearchSheet: View {
                     self.storeRecent(item: item)
                     // update Sheet
                     self.searchStore.updateSheetDetent()
+                    self.searchStore.mapStore.setupCameraBindings()
+                }
+                .onChange(of: self.mapStore.selectedItem) { _ in
+                    self.searchStore.mapStore.setupCameraBindings()
+                }
+                .onChange(of: self.mapStore.displayableItems) { _ in
+                    self.searchStore.mapStore.setupCameraBindings()
                 }
             }
         }
