@@ -30,6 +30,7 @@ final class MapStore: ObservableObject {
     @Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
     @Published var searchShown: Bool = true
     @Published var streetView: StreetViewOption = .disabled
+    @Published var camera3D: Bool = false
     @Published var routes: Toursprung.RouteCalculationResult?
     @Published var waypoints: [ABCRouteConfigurationItem]?
 
