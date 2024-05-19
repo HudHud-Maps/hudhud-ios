@@ -33,6 +33,8 @@ struct NavigationSheetView: View {
                 Spacer()
                 Button(action: {
                     self.mapStore.routes = nil
+                    self.mapStore.displayableItems = []
+                    self.mapStore.selectedItem = nil
                     self.mapStore.waypoints = nil
                 }, label: {
                     ZStack {
