@@ -235,7 +235,7 @@ struct ContentView: View {
                                     self.mapStore.streetView = .disabled
                                 }
                             },
-                            MapButtonData(sfSymbol: self.mapStore.camera3D ? .icon(.triangleFill) : .icon(.cube)) {
+                            MapButtonData(sfSymbol: self.mapStore.camera3D ? .icon(.diamond) : .icon(.cube)) {
                                 if case let .centered(
                                     onCoordinate: _,
                                     zoom: _,
@@ -247,9 +247,9 @@ struct ContentView: View {
                                         self.mapStore.camera.setPitch(0)
                                         self.mapStore.camera3D.toggle()
                                     } else {
-                                        self.mapStore.camera3D.toggle()
                                         self.mapStore.camera.setZoom(17)
                                         self.mapStore.camera.setPitch(60)
+                                        self.mapStore.camera3D.toggle()
                                     }
                                 }
                             },
