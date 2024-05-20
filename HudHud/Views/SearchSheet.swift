@@ -216,7 +216,6 @@ struct SearchSheet: View {
                     self.storeRecent(item: item)
                     // update Sheet
                     self.searchStore.updateSheetDetent()
-                    self.searchStore.mapStore.setupCameraBindings()
                 }
             }
         }

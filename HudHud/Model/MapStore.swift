@@ -105,23 +105,6 @@ final class MapStore: ObservableObject {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
-        self.setupCameraBindings()
-    }
-
-    // MARK: - Internal
-
-    func setupCameraBindings() {
-        self.$displayableItems
-            .sink { [weak self] _ in
-                self?.updateCameraForMapItems()
-            }
-            .store(in: &self.cancellables)
-
-        self.$selectedItem
-            .sink { [weak self] _ in
-                self?.updateCameraForMapItems()
-            }
-            .store(in: &self.cancellables)
     }
 
 }

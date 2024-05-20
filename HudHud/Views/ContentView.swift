@@ -152,9 +152,6 @@ struct ContentView: View {
         .onChange(of: self.mapStore.routes?.routes) {
             _ in self.searchViewStore.updateSheetDetent()
         }
-        .onChange(of: self.searchViewStore.mapStore.mapItems) { _ in
-            self.searchViewStore.mapStore.setupCameraBindings()
-        }
     }
 
     var body: some View {
@@ -341,7 +338,6 @@ struct ContentView: View {
             })
             .onAppear {
                 self.searchViewStore.updateSheetDetent()
-                self.searchViewStore.mapStore.setupCameraBindings()
             }
     }
 
@@ -354,7 +350,6 @@ struct ContentView: View {
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.mapStore.routes = searchStore.mapStore.routes
         self.searchViewStore.updateSheetDetent()
-        self.searchViewStore.mapStore.setupCameraBindings()
     }
 }
 
