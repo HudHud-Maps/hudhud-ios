@@ -42,16 +42,27 @@ public struct NavigationView: UIViewControllerRepresentable {
         let locationManager: NavigationLocationManager?
         if self.debugSettings.simulateRide {
             let simulatedLocationManager = SimulatedLocationManager(route: self.route)
-            simulatedLocationManager.speedMultiplier = 1
+            simulatedLocationManager.speedMultiplier = 2
             locationManager = simulatedLocationManager
         } else {
             locationManager = nil
         }
-        let routeVoice = RouteVoiceController()
+        let routeVoice = HudHudRouteVoiceController()
         let directions = Directions(accessToken: nil, host: debugSettings.routingHost)
-        let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [CustomDayStyle(), CustomNightStyle()], locationManager: locationManager, voiceController: routeVoice)
+        let dayStyle = CustomDayStyle()
+        dayStyle.mapStyleURL = self.styleURL
+
+        let nightStyle = CustomNightStyle()
+        nightStyle.mapStyleURL = self.styleURL
+
+        let navigationController = NavigationViewController(for: self.route, directions: directions, styles: [dayStyle, nightStyle], locationManager: locationManager, voiceController: routeVoice)
+        if let coordinates = route.coordinates?.first {
+            navigationController.mapView?.setCenter(coordinates, zoomLevel: 16, animated: false)
+        }
         navigationController.mapView?.styleURL = self.styleURL
+        navigationController.mapView?.logoView.image = nil // isHidden does nothing, so we set the image to nil
         navigationController.mapView?.logoView.isHidden = true
+        navigationController.showsEndOfRouteFeedback = false // feedback view crashes the app on route completion
 
         return navigationController
     }

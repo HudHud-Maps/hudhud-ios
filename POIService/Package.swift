@@ -18,7 +18,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "4.1.1"),
-        .package(url: "https://github.com/maplibre/maplibre-navigation-ios.git", branch: "main")
+        .package(url: "https://github.com/HudHud-Maps/maplibre-navigation-ios.git", branch: "remove-mapbox-street-adding")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
