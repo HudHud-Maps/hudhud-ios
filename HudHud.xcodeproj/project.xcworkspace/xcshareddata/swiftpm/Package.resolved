@@ -21,10 +21,10 @@
     {
       "identity" : "maplibre-navigation-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
+      "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "02640091735e8852967baa743c4e19b3cc44cd06"
+        "branch" : "remove-mapbox-street-adding",
+        "revision" : "61c065e339c5beb1a77cbcc566f4e37242479cf3"
       }
     },
     {
