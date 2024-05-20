@@ -102,6 +102,22 @@ final class MapStore: ObservableObject {
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
     }
+
+    // MARK: - Internal
+
+    func getCameraPitch() -> Double {
+        if case let .centered(
+            onCoordinate: _,
+            zoom: _,
+            pitch: pitch,
+            pitchRange: _,
+            direction: _
+        ) = camera.state {
+            return pitch
+        }
+        return 0
+    }
+
 }
 
 // MARK: - Previewable
