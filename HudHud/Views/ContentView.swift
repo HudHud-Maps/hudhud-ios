@@ -235,22 +235,12 @@ struct ContentView: View {
                                     self.mapStore.streetView = .disabled
                                 }
                             },
-                            MapButtonData(sfSymbol: self.mapStore.camera3D ? .icon(.diamond) : .icon(.cube)) {
-                                if case let .centered(
-                                    onCoordinate: _,
-                                    zoom: _,
-                                    pitch: pitch,
-                                    pitchRange: _,
-                                    direction: _
-                                ) = self.mapStore.camera.state {
-                                    if pitch > 0 {
-                                        self.mapStore.camera.setPitch(0)
-                                        self.mapStore.camera3D.toggle()
-                                    } else {
-                                        self.mapStore.camera.setZoom(17)
-                                        self.mapStore.camera.setPitch(60)
-                                        self.mapStore.camera3D.toggle()
-                                    }
+                            MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
+                                if self.mapStore.getCameraPitch() > 0 {
+                                    self.mapStore.camera.setPitch(0)
+                                } else {
+                                    self.mapStore.camera.setZoom(17)
+                                    self.mapStore.camera.setPitch(60)
                                 }
                             },
                             MapButtonData(sfSymbol: .icon(.terminal)) {

@@ -29,7 +29,6 @@ final class MapStore: ObservableObject {
 
     @Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
     @Published var searchShown: Bool = true
-    @Published var camera3D: Bool = false
     @Published var streetView: StreetViewOption = .disabled
     @Published var routes: Toursprung.RouteCalculationResult?
     @Published var waypoints: [ABCRouteConfigurationItem]?
@@ -103,6 +102,22 @@ final class MapStore: ObservableObject {
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
     }
+
+    // MARK: - Internal
+
+    func getCameraPitch() -> Double {
+        if case let .centered(
+            onCoordinate: _,
+            zoom: _,
+            pitch: pitch,
+            pitchRange: _,
+            direction: _
+        ) = camera.state {
+            return pitch
+        }
+        return 0
+    }
+
 }
 
 // MARK: - Previewable
