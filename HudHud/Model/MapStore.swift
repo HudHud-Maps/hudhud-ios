@@ -231,7 +231,7 @@ private extension MapStore {
                     // do not show any move
                     self.camera.setZoom(self.getCameraZoomLevel())
                 } else {
-                    // if item chosing from Recents or choose dirctly from the search it will zoom and center around it
+                    // if poi choosing from Resents or directly from the search it will zoom and center around it
                     self.camera = .center(selectedItem.coordinate, zoom: 15)
                 }
             }
