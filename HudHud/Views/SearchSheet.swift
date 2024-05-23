@@ -197,7 +197,8 @@ struct SearchSheet: View {
                         Logger.searchView.info("more item \(item))")
                     }
                 } onDismiss: {
-                    self.mapStore.selectedItem = nil
+                    self.searchStore.mapStore.selectedItem = nil
+                    self.searchStore.mapStore.displayableItems = []
                 }
                 .fullScreenCover(isPresented: self.$isPresentWebView) {
                     if let website = item.website {

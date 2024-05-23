@@ -15,7 +15,7 @@ import SwiftUI
 
 struct CurrentLocationButton: View {
     @State private var locationRequestInProgress = false
-    @Binding var camera: MapViewCamera
+    @ObservedObject var mapStore: MapStore
 
     var body: some View {
         Button {
@@ -28,7 +28,7 @@ struct CurrentLocationButton: View {
 
                     if let coordinates = userLocation.location?.coordinate {
                         withAnimation {
-                            self.camera = MapViewCamera.center(coordinates, zoom: 16)
+                            self.mapStore.lastKnownLocationOfUser = coordinates
                         }
                     } else {
                         Logger.searchView.error("location error: got no coordinates")
@@ -60,7 +60,7 @@ struct CurrentLocationButton: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    @State var camera: MapViewCamera = .default()
-    return CurrentLocationButton(camera: $camera)
+    @State var mapStore: MapStore = .storeSetUpForPreviewing
+    return CurrentLocationButton(mapStore: mapStore)
         .padding()
 }

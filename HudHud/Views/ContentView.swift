@@ -139,16 +139,6 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
-        .onChange(of: self.mapStore.routes) { newRoute in
-            if let routeUnwrapped = newRoute {
-                if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-                    if let camera = CameraState.boundingBox(from: coordinates) {
-                        self.mapStore.camera = camera
-                    }
-                }
-            }
-        }
-
         .onChange(of: self.mapStore.routes?.routes) {
             _ in self.searchViewStore.updateSheetDetent()
         }
@@ -183,8 +173,9 @@ struct ContentView: View {
                         print("Could not determine user location, will not zoom...")
                         return
                     }
-
-                    self.mapStore.camera = MapViewCamera.center(coordinates, zoom: 16)
+                    if self.mapStore.lastKnownLocationOfUser != coordinates {
+                        self.mapStore.lastKnownLocationOfUser = coordinates
+                    }
                 } catch {
                     print("location error: \(error)")
                 }
@@ -249,7 +240,7 @@ struct ContentView: View {
                         ])
                         Spacer()
                         VStack(alignment: .trailing) {
-                            CurrentLocationButton(camera: self.$mapStore.camera)
+                            CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
                     .opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)

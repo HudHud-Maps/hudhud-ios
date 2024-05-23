@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "6d0071977ed1f2380c739715f82ac650f99b0824",
-        "version" : "6.4.0"
+        "revision" : "816a24eb56b7cd004e389f7da404047839d5dc2b",
+        "version" : "6.4.2"
       }
     },
     {
@@ -105,7 +105,7 @@
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin.git",
       "state" : {
         "branch" : "main",
-        "revision" : "e5dcdd16e3aaefd5945cfc2fd84a0bd802802d0e"
+        "revision" : "960dafd7d693f258a91cc40bf148266242050af6"
       }
     },
     {
