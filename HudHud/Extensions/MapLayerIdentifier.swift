@@ -9,14 +9,14 @@
 import Foundation
 
 enum MapLayerIdentifier {
-	static var routeLineCasing = "routeLineCasing"
-	static var routeLineInner = "routeLineInner"
-	static var simpleCirclesRoute = "simpleCirclesRoute"
-	static var simpleSymbolsRoute = "simpleSymbolsRoute"
-	static var simpleCirclesClustered = "simpleCirclesClustered"
-	static var simpleSymbolsClustered = "simpleSymbolsClustered"
-	static var simpleCircles = "simpleCircles"
-	static var simpleSymbols = "simpleSymbols"
-	static var streetViewSymbols = "streetViewSymbols"
+    static var routeLineCasing = "routeLineCasing"
+    static var routeLineInner = "routeLineInner"
+    static var simpleCirclesRoute = "simpleCirclesRoute"
+    static var simpleSymbolsRoute = "simpleSymbolsRoute"
+    static var simpleCirclesClustered = "simpleCirclesClustered"
+    static var simpleSymbolsClustered = "simpleSymbolsClustered"
+    static var simpleCircles = "simpleCircles"
+    static var simpleSymbols = "simpleSymbols"
+    static var streetViewSymbols = "streetViewSymbols"
 
 }

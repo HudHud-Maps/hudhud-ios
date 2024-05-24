@@ -10,7 +10,7 @@ import CoreLocation
 import Foundation
 
 struct DirectionPreviewData {
-	var duration: TimeInterval
-	var distance: CLLocationDistance
-	var typeOfRoute: LocalizedStringResource
+    var duration: TimeInterval
+    var distance: CLLocationDistance
+    var typeOfRoute: LocalizedStringResource
 }

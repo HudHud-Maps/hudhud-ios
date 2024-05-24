@@ -10,36 +10,36 @@ import Foundation
 
 public actor AsyncDebouncer<Input, Output> {
 
-	enum DebouncerError: Error {
-		case taskCanceled
-	}
+    enum DebouncerError: Error {
+        case taskCanceled
+    }
 
-	private var task: Task<Output, Error>?
-	private let delay: TimeInterval
+    private var task: Task<Output, Error>?
+    private let delay: TimeInterval
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	public init(delay: TimeInterval = 0.2) {
-		self.delay = delay
-	}
+    public init(delay: TimeInterval = 0.2) {
+        self.delay = delay
+    }
 
-	// MARK: - Public
+    // MARK: - Public
 
-	// MARK: - AsyncDebouncer
+    // MARK: - AsyncDebouncer
 
-	public func debounce(input: Input, action: @escaping (Input) async throws -> Output) async throws -> Output {
-		self.task?.cancel()
+    public func debounce(input: Input, action: @escaping (Input) async throws -> Output) async throws -> Output {
+        self.task?.cancel()
 
-		let localTask = Task {
-			try? await Task.sleep(nanoseconds: UInt64(self.delay * 1_000_000_000))
+        let localTask = Task {
+            try? await Task.sleep(nanoseconds: UInt64(self.delay * 1_000_000_000))
 
-			guard !Task.isCancelled else {
-				throw DebouncerError.taskCanceled
-			}
+            guard !Task.isCancelled else {
+                throw DebouncerError.taskCanceled
+            }
 
-			return try await action(input)
-		}
-		self.task = localTask
-		return try await localTask.value
-	}
+            return try await action(input)
+        }
+        self.task = localTask
+        return try await localTask.value
+    }
 }

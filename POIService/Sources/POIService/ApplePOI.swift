@@ -16,132 +16,132 @@ import SwiftUI
 
 public actor ApplePOI: POIServiceProtocol {
 
-	private var localSearch: MKLocalSearch?
-	private var completer: MKLocalSearchCompleter
-	private var continuation: CheckedContinuation<[AnyDisplayableAsRow], Error>?
-	private let delegate: DelegateWrapper
+    private var localSearch: MKLocalSearch?
+    private var completer: MKLocalSearchCompleter
+    private var continuation: CheckedContinuation<[AnyDisplayableAsRow], Error>?
+    private let delegate: DelegateWrapper
 
-	// MARK: - POIServiceProtocol
+    // MARK: - POIServiceProtocol
 
-	public static var serviceName: String = "Apple"
+    public static var serviceName: String = "Apple"
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	public init() {
-		self.completer = MKLocalSearchCompleter()
-		self.delegate = DelegateWrapper()
-		self.delegate.apple = self
-		Task {
-			await self.completer.delegate = self.delegate
-		}
-	}
+    public init() {
+        self.completer = MKLocalSearchCompleter()
+        self.delegate = DelegateWrapper()
+        self.delegate.apple = self
+        Task {
+            await self.completer.delegate = self.delegate
+        }
+    }
 
-	// MARK: - Public
+    // MARK: - Public
 
-	public func lookup(prediction: Any) async throws -> [ResolvedItem] {
-		guard let completion = prediction as? MKLocalSearchCompletion else {
-			return []
-		}
+    public func lookup(prediction: Any) async throws -> [ResolvedItem] {
+        guard let completion = prediction as? MKLocalSearchCompletion else {
+            return []
+        }
 
-		let searchRequest = MKLocalSearch.Request(completion: completion)
-		searchRequest.resultTypes = .pointOfInterest
+        let searchRequest = MKLocalSearch.Request(completion: completion)
+        searchRequest.resultTypes = .pointOfInterest
 
-		return try await withCheckedThrowingContinuation { continuation in
-			self.localSearch = MKLocalSearch(request: searchRequest)
-			self.localSearch?.start { response, error in
-				if let error {
-					continuation.resume(throwing: error)
-					return
-				}
+        return try await withCheckedThrowingContinuation { continuation in
+            self.localSearch = MKLocalSearch(request: searchRequest)
+            self.localSearch?.start { response, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
 
-				guard let mapItems = response?.mapItems else {
-					continuation.resume(returning: [])
-					return
-				}
+                guard let mapItems = response?.mapItems else {
+                    continuation.resume(returning: [])
+                    return
+                }
 
-				let items = mapItems.compactMap {
-					return ResolvedItem(id: UUID().uuidString,
-										title: $0.name ?? "",
-										subtitle: $0.placemark.formattedAddress ?? "",
-										category: $0.pointOfInterestCategory?.rawValue.replacingOccurrences(of: "MKPOICategory", with: ""),
-										symbol: $0.pointOfInterestCategory?.symbol ?? .pin,
-										type: .appleResolved,
-										coordinate: $0.placemark.coordinate,
-										phone: $0.phoneNumber,
-										website: $0.url)
-				}
-				continuation.resume(returning: items)
-			}
-		}
-	}
+                let items = mapItems.compactMap {
+                    return ResolvedItem(id: UUID().uuidString,
+                                        title: $0.name ?? "",
+                                        subtitle: $0.placemark.formattedAddress ?? "",
+                                        category: $0.pointOfInterestCategory?.rawValue.replacingOccurrences(of: "MKPOICategory", with: ""),
+                                        symbol: $0.pointOfInterestCategory?.symbol ?? .pin,
+                                        type: .appleResolved,
+                                        coordinate: $0.placemark.coordinate,
+                                        phone: $0.phoneNumber,
+                                        website: $0.url)
+                }
+                continuation.resume(returning: items)
+            }
+        }
+    }
 
-	public func predict(term: String) async throws -> [AnyDisplayableAsRow] {
-		return try await withCheckedThrowingContinuation { continuation in
-			if let continuation = self.continuation {
-				self.completer.cancel()
-				continuation.resume(returning: [])
-				self.continuation = nil
-			}
+    public func predict(term: String) async throws -> [AnyDisplayableAsRow] {
+        return try await withCheckedThrowingContinuation { continuation in
+            if let continuation = self.continuation {
+                self.completer.cancel()
+                continuation.resume(returning: [])
+                self.continuation = nil
+            }
 
-			if term.isEmpty {
-				continuation.resume(returning: [])
-				return
-			}
+            if term.isEmpty {
+                continuation.resume(returning: [])
+                return
+            }
 
-			self.continuation = continuation
-			DispatchQueue.main.sync {
-				self.completer.queryFragment = term
-			}
-		}
-	}
+            self.continuation = continuation
+            DispatchQueue.main.sync {
+                self.completer.queryFragment = term
+            }
+        }
+    }
 
-	// MARK: - Internal
+    // MARK: - Internal
 
-	func update(results: [AnyDisplayableAsRow]) async {
-		self.continuation?.resume(returning: results)
-		self.continuation = nil
-	}
+    func update(results: [AnyDisplayableAsRow]) async {
+        self.continuation?.resume(returning: results)
+        self.continuation = nil
+    }
 
-	func update(error: Error) async {
-		self.continuation?.resume(throwing: error)
-		self.continuation = nil
-	}
+    func update(error: Error) async {
+        self.continuation?.resume(throwing: error)
+        self.continuation = nil
+    }
 }
 
 // MARK: - DelegateWrapper
 
 private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
-	weak var apple: ApplePOI?
+    weak var apple: ApplePOI?
 
-	// MARK: - Internal
+    // MARK: - Internal
 
-	// MARK: - MKLocalSearchCompleterDelegate
+    // MARK: - MKLocalSearchCompleterDelegate
 
-	func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-		let results = completer.results.compactMap {
-			let item = PredictionItem(id: UUID().uuidString,
-									  title: $0.title,
-									  subtitle: $0.subtitle,
-									  symbol: .pin,
-									  type: .apple(completion: $0))
-			return AnyDisplayableAsRow(item)
-		}
-		Task {
-			await self.apple?.update(results: results)
-		}
-	}
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        let results = completer.results.compactMap {
+            let item = PredictionItem(id: UUID().uuidString,
+                                      title: $0.title,
+                                      subtitle: $0.subtitle,
+                                      symbol: .pin,
+                                      type: .apple(completion: $0))
+            return AnyDisplayableAsRow(item)
+        }
+        Task {
+            await self.apple?.update(results: results)
+        }
+    }
 
-	func completer(_: MKLocalSearchCompleter, didFailWithError error: Error) {
-		Task {
-			await self.apple?.update(error: error)
-		}
-	}
+    func completer(_: MKLocalSearchCompleter, didFailWithError error: Error) {
+        Task {
+            await self.apple?.update(error: error)
+        }
+    }
 }
 
 extension MKPlacemark {
-	var formattedAddress: String? {
-		guard let postalAddress else { return nil }
-		return CNPostalAddressFormatter.string(from: postalAddress, style: .mailingAddress).replacingOccurrences(of: "\n", with: " ")
-	}
+    var formattedAddress: String? {
+        guard let postalAddress else { return nil }
+        return CNPostalAddressFormatter.string(from: postalAddress, style: .mailingAddress).replacingOccurrences(of: "\n", with: " ")
+    }
 }

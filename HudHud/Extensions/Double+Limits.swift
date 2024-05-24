@@ -10,7 +10,7 @@ import Foundation
 
 extension Double {
 
-	func limit(lower _: Double = 0, upper: Double) -> Double {
-		Double.minimum(Double.maximum(self, 0), upper)
-	}
+    func limit(lower _: Double = 0, upper: Double) -> Double {
+        Double.minimum(Double.maximum(self, 0), upper)
+    }
 }

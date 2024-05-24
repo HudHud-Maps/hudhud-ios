@@ -9,8 +9,8 @@
 import Foundation
 
 enum MapSourceIdentifier {
-	static var pedestrianPolyline = "pedestrianPolyline"
-	static var points = "points"
-	static var routePoints = "routePoints"
-	static var streetViewSymbols = "streetViewSymbols"
+    static var pedestrianPolyline = "pedestrianPolyline"
+    static var points = "points"
+    static var routePoints = "routePoints"
+    static var streetViewSymbols = "streetViewSymbols"
 }

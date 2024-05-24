@@ -9,47 +9,47 @@
 import SwiftUI
 
 struct MapLayersView: View {
-	var mapLayerData: MapLayersData
-	@State var currentlySelected: String?
+    var mapLayerData: MapLayersData
+    @State var currentlySelected: String?
 
-	var body: some View {
-		VStack(alignment: .leading, spacing: 10) {
-			Text(self.mapLayerData.layerTitle).foregroundStyle(.secondary)
-			HStack {
-				ForEach(self.mapLayerData.layers) { layer in
-					VStack {
-						Button {
-							self.currentlySelected = layer.id.uuidString
-						} label: {
-							AsyncImage(url: URL(string: layer.imageUrl)) { image in
-								image
-									.resizable()
-									.scaledToFill()
-							} placeholder: {
-								ProgressView()
-							}
-							.frame(width: 110, height: 110)
-							.background(.secondary)
-							.cornerRadius(4.0)
-							.overlay(
-								RoundedRectangle(cornerRadius: 4)
-									.stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 2)
-							)
-						}
-						Text(layer.imageTitle)
-							.foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .secondary)
-					}
-				}
-			}
-		}
-	}
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(self.mapLayerData.layerTitle).foregroundStyle(.secondary)
+            HStack {
+                ForEach(self.mapLayerData.layers) { layer in
+                    VStack {
+                        Button {
+                            self.currentlySelected = layer.id.uuidString
+                        } label: {
+                            AsyncImage(url: URL(string: layer.imageUrl)) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                            } placeholder: {
+                                ProgressView()
+                            }
+                            .frame(width: 110, height: 110)
+                            .background(.secondary)
+                            .cornerRadius(4.0)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 4)
+                                    .stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 2)
+                            )
+                        }
+                        Text(layer.imageTitle)
+                            .foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .secondary)
+                    }
+                }
+            }
+        }
+    }
 }
 
 #Preview {
-	let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
-	let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-	let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-	let mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
-	return MapLayersView(mapLayerData: mapLayerData)
-		.padding(.horizontal, 20)
+    let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
+    let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
+    let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
+    let mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
+    return MapLayersView(mapLayerData: mapLayerData)
+        .padding(.horizontal, 20)
 }

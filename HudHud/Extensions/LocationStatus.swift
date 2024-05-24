@@ -11,7 +11,7 @@ import Foundation
 
 extension CLAuthorizationStatus {
 
-	var allowed: Bool {
-		return self == .authorizedAlways || self == .authorizedWhenInUse
-	}
+    var allowed: Bool {
+        return self == .authorizedAlways || self == .authorizedWhenInUse
+    }
 }

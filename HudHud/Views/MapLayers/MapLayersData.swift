@@ -12,44 +12,44 @@ import SwiftUI
 // MARK: - MapLayersData
 
 struct MapLayersData: Identifiable {
-	let id = UUID()
-	let layerTitle: LocalizedStringResource
-	var layers: [Layer]
+    let id = UUID()
+    let layerTitle: LocalizedStringResource
+    var layers: [Layer]
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	init(layerTitle: LocalizedStringResource, layers: [Layer]) {
-		self.layerTitle = layerTitle
-		self.layers = layers
-	}
+    init(layerTitle: LocalizedStringResource, layers: [Layer]) {
+        self.layerTitle = layerTitle
+        self.layers = layers
+    }
 
-	// MARK: - Internal
+    // MARK: - Internal
 
-	// MARK: - Test Data
+    // MARK: - Test Data
 
-	static func getLayers() -> [MapLayersData] {
-		let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
-		let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-		let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-		let layerOne = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
-		let layerTwo = MapLayersData(layerTitle: "Map Details", layers: [layer, layer1, layer2])
-		return [layerOne, layerTwo]
-	}
+    static func getLayers() -> [MapLayersData] {
+        let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
+        let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
+        let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
+        let layerOne = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
+        let layerTwo = MapLayersData(layerTitle: "Map Details", layers: [layer, layer1, layer2])
+        return [layerOne, layerTwo]
+    }
 }
 
 // MARK: - Layer
 
 struct Layer: Identifiable {
-	let id = UUID()
-	let imageTitle: String
-	let imageUrl: String
-	var isSelected: Bool
+    let id = UUID()
+    let imageTitle: String
+    let imageUrl: String
+    var isSelected: Bool
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	init(imageTitle: String, imageUrl: String, isSelected: Bool) {
-		self.imageTitle = imageTitle
-		self.imageUrl = imageUrl
-		self.isSelected = isSelected
-	}
+    init(imageTitle: String, imageUrl: String, isSelected: Bool) {
+        self.imageTitle = imageTitle
+        self.imageUrl = imageUrl
+        self.isSelected = isSelected
+    }
 }

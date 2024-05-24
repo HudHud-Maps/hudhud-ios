@@ -10,20 +10,20 @@ import SFSafeSymbols
 import SwiftUI
 
 struct DirectionModeButton: ButtonStyle {
-	@State var sfSymol: SFSymbol = .car
+    @State var sfSymol: SFSymbol = .car
 
-	// MARK: - Internal
+    // MARK: - Internal
 
-	func makeBody(configuration: Configuration) -> some View {
-		VStack {
-			Image(systemSymbol: self.sfSymol)
-				.font(.title)
-				.lineLimit(1)
-				.minimumScaleFactor(0.5)
-			configuration.label
-				.lineLimit(1)
-				.minimumScaleFactor(0.5)
-		}
-		.frame(maxWidth: .infinity)
-	}
+    func makeBody(configuration: Configuration) -> some View {
+        VStack {
+            Image(systemSymbol: self.sfSymol)
+                .font(.title)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+            configuration.label
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+        }
+        .frame(maxWidth: .infinity)
+    }
 }

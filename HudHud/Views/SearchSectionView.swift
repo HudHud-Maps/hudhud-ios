@@ -9,33 +9,33 @@
 import SwiftUI
 
 struct SearchSectionView<Content: View>: View {
-	let title: LocalizedStringResource
-	let subview: Content
+    let title: LocalizedStringResource
+    let subview: Content
 
-	var body: some View {
-		VStack {
-			HStack {
-				Text("\(self.title)")
-					.font(.title3)
-					.bold()
-				Spacer()
-			}
+    var body: some View {
+        VStack {
+            HStack {
+                Text("\(self.title)")
+                    .font(.title3)
+                    .bold()
+                Spacer()
+            }
 
-			self.subview
-				.backport.scrollClipDisabled()
-		}
-	}
+            self.subview
+                .backport.scrollClipDisabled()
+        }
+    }
 
-	// MARK: - Lifecycle
+    // MARK: - Lifecycle
 
-	init(title: LocalizedStringResource, @ViewBuilder subview: () -> Content) {
-		self.title = title
-		self.subview = subview()
-	}
+    init(title: LocalizedStringResource, @ViewBuilder subview: () -> Content) {
+        self.title = title
+        self.subview = subview()
+    }
 }
 
 #Preview {
-	SearchSectionView(title: "Favorites") {
-		FavoriteCategoriesView()
-	}
+    SearchSectionView(title: "Favorites") {
+        FavoriteCategoriesView(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+    }
 }

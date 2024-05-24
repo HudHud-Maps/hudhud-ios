@@ -10,15 +10,15 @@ import Foundation
 
 extension CaseIterable where Self: Equatable {
 
-	func next() -> Self {
-		let all = Self.allCases
-		let idx = all.firstIndex(of: self)! // swiftlint:disable:this force_unwrapping
-		let next = all.index(after: idx)
-		return all[next == all.endIndex ? all.startIndex : next]
-	}
+    func next() -> Self {
+        let all = Self.allCases
+        let idx = all.firstIndex(of: self)! // swiftlint:disable:this force_unwrapping
+        let next = all.index(after: idx)
+        return all[next == all.endIndex ? all.startIndex : next]
+    }
 
-	mutating
-	func selectNext() {
-		self = self.next()
-	}
+    mutating
+    func selectNext() {
+        self = self.next()
+    }
 }

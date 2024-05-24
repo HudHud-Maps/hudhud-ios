@@ -10,18 +10,18 @@ import MapLibreSwiftUI
 
 extension MapViewCamera {
 
-	var zoom: Double? {
-		switch self.state {
-		case let .centered(_, zoom, _, _):
-			return zoom
-		case let .trackingUserLocation(zoom, _, _):
-			return zoom
-		case let .trackingUserLocationWithCourse(zoom, _):
-			return zoom
-		case let .trackingUserLocationWithHeading(zoom, _):
-			return zoom
-		default:
-			return nil
-		}
-	}
+    var zoom: Double? {
+        switch self.state {
+        case let .centered(_, zoom, _, _, _):
+            return zoom
+        case let .trackingUserLocation(zoom, _, _, _):
+            return zoom
+        case let .trackingUserLocationWithCourse(zoom, _, _):
+            return zoom
+        case let .trackingUserLocationWithHeading(zoom, _, _):
+            return zoom
+        default:
+            return nil
+        }
+    }
 }

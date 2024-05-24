@@ -107,6 +107,9 @@
         }
       }
     },
+    "Debug Menu" : {
+
+    },
     "Direction" : {
       "comment" : "navigation sheet header",
       "extractionState" : "stale",
@@ -119,14 +122,17 @@
         }
       }
     },
+    "Directions" : {
+      "comment" : "navigation sheet header"
+    },
     "Distance" : {
+
+    },
+    "Done" : {
 
     },
     "Duration" : {
 
-    },
-    "Directions" : {
-      "comment" : "navigation sheet header"
     },
     "Fastest" : {
       "localizations" : {
@@ -251,6 +257,12 @@
         }
       }
     },
+    "Routing Configuration" : {
+
+    },
+    "Routing URL" : {
+
+    },
     "School" : {
       "localizations" : {
         "ar" : {
@@ -271,6 +283,12 @@
         }
       }
     },
+    "Simulate Ride during Navigation" : {
+
+    },
+    "Simulation" : {
+
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "localizations" : {
@@ -281,13 +299,15 @@
           }
         }
       }
-    },  
-	"Traffic" : {
-		
-	},
-	"View More >" : {
-	 },
+    },
+    "Traffic" : {
+
+    },
     "Unknown" : {
+
+    },
+    "View More >" : {
+
     },
     "walk" : {
       "localizations" : {

@@ -14,64 +14,64 @@ import SwiftUI
 
 struct TrafficChartData {
 
-	let date: Date
-	let traffic: [Double] // 24 items, 0:00 - 1:00 at index 0
+    let date: Date
+    let traffic: [Double] // 24 items, 0:00 - 1:00 at index 0
 
-	var getSpecificTrafficRange: [HourTrafficData]? {
-		guard self.traffic.count == 24 else {
-			Logger.poiData.warning("Got traffic with unexpected number of elements: \(self.traffic.count)...")
+    var getSpecificTrafficRange: [HourTrafficData]? {
+        guard self.traffic.count == 24 else {
+            Logger.poiData.warning("Got traffic with unexpected number of elements: \(self.traffic.count)...")
 
-			return nil
-		}
-		var tempData: [HourTrafficData] = []
-		for index in 9 ... 23 {
-			if let dateRange = dateRangeForHour(hour: index) {
-				let hour = HourTrafficData(hour: dateRange, traffic: traffic[index])
-				tempData.append(hour)
-			}
-		}
-		return tempData
-	}
+            return nil
+        }
+        var tempData: [HourTrafficData] = []
+        for index in 9 ... 23 {
+            if let dateRange = dateRangeForHour(hour: index) {
+                let hour = HourTrafficData(hour: dateRange, traffic: traffic[index])
+                tempData.append(hour)
+            }
+        }
+        return tempData
+    }
 
-	// MARK: - Internal
+    // MARK: - Internal
 
-	func dateRangeForHour(hour: Int) -> Range<Date>? {
-		let calendar = Calendar.current
-		let currentDate = Date()
+    func dateRangeForHour(hour: Int) -> Range<Date>? {
+        let calendar = Calendar.current
+        let currentDate = Date()
 
-		// Extract year, month, and day components
-		let year = calendar.component(.year, from: currentDate)
-		let month = calendar.component(.month, from: currentDate)
-		let day = calendar.component(.day, from: currentDate)
+        // Extract year, month, and day components
+        let year = calendar.component(.year, from: currentDate)
+        let month = calendar.component(.month, from: currentDate)
+        let day = calendar.component(.day, from: currentDate)
 
-		// Components for the start of the hour
-		var startComponents = DateComponents()
-		startComponents.year = year
-		startComponents.month = month
-		startComponents.day = day
-		startComponents.hour = hour
+        // Components for the start of the hour
+        var startComponents = DateComponents()
+        startComponents.year = year
+        startComponents.month = month
+        startComponents.day = day
+        startComponents.hour = hour
 
-		// Create the start date from components
-		guard let startDate = calendar.date(from: startComponents) else {
-			return nil
-		}
+        // Create the start date from components
+        guard let startDate = calendar.date(from: startComponents) else {
+            return nil
+        }
 
-		// Attempt to create the end date by adding nearly one hour to the start date
-		guard let endDate = calendar.date(byAdding: .hour, value: 1, to: startDate)?.addingTimeInterval(-1) else {
-			return nil
-		}
+        // Attempt to create the end date by adding nearly one hour to the start date
+        guard let endDate = calendar.date(byAdding: .hour, value: 1, to: startDate)?.addingTimeInterval(-1) else {
+            return nil
+        }
 
-		return startDate ..< endDate
-	}
+        return startDate ..< endDate
+    }
 }
 
 // MARK: - HourTrafficData
 
 struct HourTrafficData: Identifiable {
-	let hour: Range<Date>
-	let traffic: Double
+    let hour: Range<Date>
+    let traffic: Double
 
-	var id: Range<Date> {
-		return self.hour
-	}
+    var id: Range<Date> {
+        return self.hour
+    }
 }

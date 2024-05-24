@@ -9,6 +9,6 @@
 import SwiftUI
 
 extension PresentationDetent {
-	static let small: PresentationDetent = .height(80)
-	static let third: PresentationDetent = .fraction(0.33)
+    static let small: PresentationDetent = .height(80)
+    static let third: PresentationDetent = .fraction(0.33)
 }

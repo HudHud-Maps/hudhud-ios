@@ -7,12 +7,14 @@
 //
 
 import Foundation
+import POIService
 import SFSafeSymbols
 import SwiftUI
 
 struct FavoriteCategoriesData: Identifiable {
-	let id: Int
-	let title: LocalizedStringResource
-	let sfSymbol: SFSymbol
-	let tintColor: Color?
+    let id: Int
+    let title: LocalizedStringResource
+    let sfSymbol: SFSymbol
+    let tintColor: Color?
+    let item: ResolvedItem?
 }
