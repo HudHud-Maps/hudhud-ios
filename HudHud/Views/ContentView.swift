@@ -38,9 +38,10 @@ struct ContentView: View {
 
 	@State var offsetY: CGFloat = 0
 	@State var selectedDetent: PresentationDetent = .medium
+	@State var goPressed: Bool = false
 
 	var body: some View {
-		Navigation(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+		NavigationMapView(styleSource: .url(self.styleURL), camera: self.$mapStore.camera) {
 			// Display preview data as a polyline on the map
 			if let route = self.mapStore.routes?.routes.first {
 				let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
@@ -134,6 +135,7 @@ struct ContentView: View {
 		.unsafeMapViewModifier { mapView in
 			mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
 		}
+		.assign(route: self.mapStore.routes?.routes.first)
 //		.onChange(of: self.mapStore.routes?.routes ?? []) { newRoute in
 //			if let route = newRoute.first, let coordinates = route.coordinates, !coordinates.isEmpty {
 //				if let camera = CameraState.boundingBox(from: coordinates) {
@@ -233,65 +235,65 @@ struct ContentView: View {
 				.padding(.horizontal)
 			}
 		}
-//		.backport.buttonSafeArea(length: self.sheetSize)
-//		.backport.sheet(isPresented: self.$mapStore.searchShown) {
-//			SearchSheet(mapStore: self.mapStore,
-//			            searchStore: self.searchViewStore)
-//				.frame(minWidth: 320)
-//				.presentationCornerRadius(21)
-//				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-//				.presentationBackgroundInteraction(
-//					.enabled(upThrough: .large)
-//				)
-//				.interactiveDismissDisabled()
-//				.ignoresSafeArea()
-//				.presentationCompactAdaptation(.sheet)
-//				.overlay {
-//					GeometryReader { geometry in
-//						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
-//					}
-//				}
-//				.onPreferenceChange(SizePreferenceKey.self) { value in
-//					withAnimation(.easeOut) {
-//						self.sheetSize = value
-//					}
-//				}
-//				.backport.sheet(isPresented: Binding<Bool>(
-//					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
-//					set: { _ in self.searchViewStore.searchType = .selectPOI }
-//				)) {
-//					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore)
-//						.presentationCornerRadius(21)
-//						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
-//						.presentationBackgroundInteraction(
-//							.enabled(upThrough: .medium)
-//						)
-//						.ignoresSafeArea()
-//						.interactiveDismissDisabled()
-//						.presentationCompactAdaptation(.sheet)
-//				}
-//				.sheet(isPresented: self.$showMapLayer) {
-//					VStack(alignment: .center, spacing: 25) {
-//						Spacer()
-//						HStack(alignment: .center) {
-//							Spacer()
-//							Text("Layers")
-//								.foregroundStyle(.primary)
-//							Spacer()
-//							Button {
-//								self.showMapLayer.toggle()
-//							} label: {
-//								Image(systemSymbol: .xmark)
-//									.foregroundColor(.secondary)
-//							}
-//						}
-//						.padding(.horizontal, 30)
-//						MainLayersView(mapLayerData: MapLayersData.getLayers())
-//							.presentationCornerRadius(21)
-//							.presentationDetents([.medium])
-//					}
-//				}
-//		}
+		.backport.buttonSafeArea(length: self.sheetSize)
+		.backport.sheet(isPresented: self.$mapStore.searchShown) {
+			SearchSheet(mapStore: self.mapStore,
+						searchStore: self.searchViewStore)
+				.frame(minWidth: 320)
+				.presentationCornerRadius(21)
+				.presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
+				.presentationBackgroundInteraction(
+					.enabled(upThrough: .large)
+				)
+				.interactiveDismissDisabled()
+				.ignoresSafeArea()
+				.presentationCompactAdaptation(.sheet)
+				.overlay {
+					GeometryReader { geometry in
+						Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+					}
+				}
+				.onPreferenceChange(SizePreferenceKey.self) { value in
+					withAnimation(.easeOut) {
+						self.sheetSize = value
+					}
+				}
+				.backport.sheet(isPresented: Binding<Bool>(
+					get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
+					set: { _ in self.searchViewStore.searchType = .selectPOI }
+				)) {
+					NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, goPressed: self.$goPressed)
+						.presentationCornerRadius(21)
+						.presentationDetents([.height(130), .medium, .large], selection: self.$selectedDetent)
+						.presentationBackgroundInteraction(
+							.enabled(upThrough: .medium)
+						)
+						.ignoresSafeArea()
+						.interactiveDismissDisabled()
+						.presentationCompactAdaptation(.sheet)
+				}
+				.sheet(isPresented: self.$showMapLayer) {
+					VStack(alignment: .center, spacing: 25) {
+						Spacer()
+						HStack(alignment: .center) {
+							Spacer()
+							Text("Layers")
+								.foregroundStyle(.primary)
+							Spacer()
+							Button {
+								self.showMapLayer.toggle()
+							} label: {
+								Image(systemSymbol: .xmark)
+									.foregroundColor(.secondary)
+							}
+						}
+						.padding(.horizontal, 30)
+						MainLayersView(mapLayerData: MapLayersData.getLayers())
+							.presentationCornerRadius(21)
+							.presentationDetents([.medium])
+					}
+				}
+		}
 		.environmentObject(self.notificationQueue)
 		.simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
 			self.notificationQueue.removeFirst()

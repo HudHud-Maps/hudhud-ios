@@ -17,7 +17,7 @@ struct NavigationSheetView: View {
 
 	@ObservedObject var searchViewStore: SearchViewStore
 	@ObservedObject var mapStore: MapStore
-	@State var goPressed = false
+	@Binding var goPressed: Bool
 	@State var searchShown: Bool = false
 
 	var body: some View {
@@ -64,13 +64,6 @@ struct NavigationSheetView: View {
 			}
 		}
 		.padding()
-		.fullScreenCover(isPresented: self.$goPressed) {
-			let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-			if let route = self.mapStore.routes?.routes.first {
-//				NavigationView(route: route, styleURL: styleURL)
-				NavigationView(styleURL: styleURL)
-			}
-		}
 		.sheet(isPresented: self.$searchShown) {
 			// Initialize fresh instances of MapStore and SearchViewStore
 			let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
@@ -95,5 +88,5 @@ struct NavigationSheetView: View {
 
 #Preview {
 	let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-	return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore)
+	return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, goPressed: .constant(false))
 }
