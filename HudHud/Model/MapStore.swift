@@ -258,7 +258,7 @@ private extension MapStore {
             }
         case 2...:
             // if there is more than 2 items on the map ...and the zoom level is under 13 ...zoom out and move the camera to show items
-            if self.getCameraZoomLevel() < 13 {
+            if self.getCameraZoomLevel() <= 13 {
                 var coordinates = self.mapItems.map(\.coordinate)
                 if let userLocation = lastKnownLocationOfUser {
                     coordinates.append(userLocation)
@@ -268,7 +268,7 @@ private extension MapStore {
                 }
             } else {
                 // if the camera zooming in...zoom out a little bit and show the nearest 4 poi around me
-                if self.isAnyItemVisible() {
+                if self.isAnyItemVisible() || self.getCameraZoomLevel() >= 13 {
                     if let nearestCoordinates = getNearestMapItemCoordinates() {
                         var coordinatea = nearestCoordinates
                         if let userLocation = lastKnownLocationOfUser {
