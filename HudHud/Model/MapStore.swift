@@ -188,7 +188,7 @@ final class MapStore: ObservableObject {
         let sortedItems = self.mapItems.sorted(by: {
             $0.coordinate.distance(to: userLocation) < $1.coordinate.distance(to: userLocation)
         })
-        // Return the coordinates of the two nearest items, if available
+        // Return the coordinates of the 4 nearest items, if available
         return Array(sortedItems.prefix(4)).map(\.coordinate)
     }
 
