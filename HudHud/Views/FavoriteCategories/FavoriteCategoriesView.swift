@@ -13,39 +13,32 @@ import SwiftUI
 struct FavoriteCategoriesView: View {
     let mapStore: MapStore
     let searchStore: SearchViewStore
-    let favoriteCategoriesData: [FavoriteCategoriesData] = [
-        FavoriteCategoriesData(id: 1, title: "Home",
-                               sfSymbol: .houseFill,
-                               tintColor: .gray, item: .artwork),
-        FavoriteCategoriesData(id: 2, title: "Work",
-                               sfSymbol: .bagFill,
-                               tintColor: .gray, item: .ketchup),
-        FavoriteCategoriesData(id: 3, title: "School",
-                               sfSymbol: .buildingColumnsFill,
-                               tintColor: .gray, item: .pharmacy)
-    ]
     let plusButton = FavoriteCategoriesData(id: 4, title: "Add",
                                             sfSymbol: .plusCircleFill,
-                                            tintColor: .green, item: nil)
+                                            tintColor: .green, item: nil, type: "add")
+    @AppStorage("favorites") var favorites = FavoriteItems(items: FavoriteCategoriesData.favoritesInit)
+    @State var ViewMoreShown: Bool = false
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
-                ForEach(self.favoriteCategoriesData.prefix(4)) { favorite in
+                ForEach(self.favorites.favoriteCategoriesData.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
                             let mapItems = [AnyDisplayableAsRow(selectedItem)]
                             self.searchStore.selectedDetent = .medium
                             self.mapStore.selectedItem = selectedItem
                             self.mapStore.displayableItems = mapItems
+                        } else {
+                            self.ViewMoreShown = true
                         }
                     } label: {
-                        Text(favorite.title)
+                        Text(favorite.type)
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
                 }
                 Button {
-                    print("\(self.plusButton.title) was pressed")
+                    self.ViewMoreShown = true
                 } label: {
                     Text(self.plusButton.title)
                 }.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
@@ -53,6 +46,13 @@ struct FavoriteCategoriesView: View {
             Spacer()
         }
         .backport.scrollClipDisabled()
+        //		.onAppear {
+        ////			favorites.favoriteCategoriesData.append(contentsOf: favoriteCategoriesData)
+        //			print("faav", favorites.favoriteCategoriesData.count)
+        //		}
+        .fullScreenCover(isPresented: self.$ViewMoreShown, content: {
+            FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
+        })
     }
 }
 

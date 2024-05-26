@@ -20,6 +20,10 @@
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		4C8F2777E10B77217C6B2E9D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1796352BDB2448B1DC1EC645 /* ErrorView.swift */; };
+		5932E1202C03291D00254B22 /* FavoritesViewMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E11F2C03291D00254B22 /* FavoritesViewMoreView.swift */; };
+		5932E1222C03325A00254B22 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1212C03325A00254B22 /* FavoriteItemView.swift */; };
+		5932E1242C03345000254B22 /* DetailFavoriteForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1232C03345000254B22 /* DetailFavoriteForm.swift */; };
+		5932E1262C03502900254B22 /* EditFavoriteForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1252C03502900254B22 /* EditFavoriteForm.swift */; };
 		5936D87F2BF09A2600A258BE /* DebugStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D87E2BF09A2600A258BE /* DebugStore.swift */; };
 		5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D8802BF09A4D00A258BE /* DebugMenuView.swift */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
@@ -141,6 +145,10 @@
 		4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
 		557A9FF81C4443860134AE6F /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
+		5932E11F2C03291D00254B22 /* FavoritesViewMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewMoreView.swift; sourceTree = "<group>"; };
+		5932E1212C03325A00254B22 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
+		5932E1232C03345000254B22 /* DetailFavoriteForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailFavoriteForm.swift; sourceTree = "<group>"; };
+		5932E1252C03502900254B22 /* EditFavoriteForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoriteForm.swift; sourceTree = "<group>"; };
 		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
 		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
@@ -526,6 +534,10 @@
 				D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */,
 				64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */,
 				38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */,
+				5932E11F2C03291D00254B22 /* FavoritesViewMoreView.swift */,
+				5932E1212C03325A00254B22 /* FavoriteItemView.swift */,
+				5932E1232C03345000254B22 /* DetailFavoriteForm.swift */,
+				5932E1252C03502900254B22 /* EditFavoriteForm.swift */,
 			);
 			path = FavoriteCategories;
 			sourceTree = "<group>";
@@ -729,6 +741,7 @@
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
 				CB39700B2B81F52C00CF9D59 /* MapLayersData.swift in Sources */,
 				CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */,
+				5932E1202C03291D00254B22 /* FavoritesViewMoreView.swift in Sources */,
 				CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */,
 				CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */,
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
@@ -754,6 +767,7 @@
 				CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */,
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,
 				01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */,
+				5932E1242C03345000254B22 /* DetailFavoriteForm.swift in Sources */,
 				1BB69DF95208C542E1B687DF /* ProviderButton.swift in Sources */,
 				5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */,
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
@@ -765,6 +779,8 @@
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
 				341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */,
 				FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */,
+				5932E1262C03502900254B22 /* EditFavoriteForm.swift in Sources */,
+				5932E1222C03325A00254B22 /* FavoriteItemView.swift in Sources */,
 				5936D87F2BF09A2600A258BE /* DebugStore.swift in Sources */,
 				CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */,
 				0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */,
