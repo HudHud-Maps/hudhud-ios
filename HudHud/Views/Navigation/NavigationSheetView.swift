@@ -23,6 +23,8 @@ struct NavigationSheetView: View {
 
     @State var searchShown: Bool = false
 
+    @Environment(\.dismiss) private var dismiss
+
     var body: some View {
         VStack(spacing: 5) {
             HStack {
@@ -34,6 +36,7 @@ struct NavigationSheetView: View {
                 Button(action: {
                     self.mapStore.routes = nil
                     self.mapStore.waypoints = nil
+                    self.dismiss()
                 }, label: {
                     ZStack {
                         Circle()
@@ -84,10 +87,6 @@ struct NavigationSheetView: View {
                                searchStore: freshSearchViewStore)
                 .frame(minWidth: 320)
                 .presentationCornerRadius(21)
-                .presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-                .presentationBackgroundInteraction(
-                    .enabled(upThrough: .large)
-                )
                 .interactiveDismissDisabled()
                 .ignoresSafeArea()
                 .presentationCompactAdaptation(.sheet)

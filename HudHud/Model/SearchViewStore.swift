@@ -65,7 +65,6 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    @Published var selectedDetent: PresentationDetent = .small
     @Published var isSearching = false
     @Published var searchType: SearchType = .selectPOI
 
@@ -117,57 +116,9 @@ final class SearchViewStore: ObservableObject {
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
             self.recentViewedItem = [itemOne, itemTwo]
         }
-
-        self.$searchText
-            .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
-            .removeDuplicates()
-            .sink { [weak self] _ in
-                self?.updateSheetDetent()
-            }
-            .store(in: &self.cancellables)
-
-        // Observing changes in all relevant published properties
-        Publishers.CombineLatest3($mode, mapStore.$selectedItem, mapStore.$displayableItems)
-            .sink { [weak self] _ in
-                self?.updateSheetDetent()
-            }
-            .store(in: &self.cancellables)
-
-        /** 	Important Note: any additional criteria are added in the future (e.g., `mapItems`), should be added here also to call `updateSheetDetent`.
-          .....
-         **/
     }
 
     // MARK: - Internal
-
-    /**
-     This function determines the appropriate sheet detent based on the current state of the map store and search text.
-
-     Current Criteria:
-     - If there are routes available or a selected item, the sheet detent is set to `.medium`.
-     - If the search text is not empty, the sheet detent is set to `.medium`.
-     - Otherwise, the sheet detent is set to `.small`.
-
-     Important Note:
-     This function relies on changes to the `mapStore.routes`, `mapStore.selectedItem`, and `searchText`. If additional criteria are added in the future (e.g., `mapItems`), ensure to:
-     1. Update this function to include the new criteria.
-     2. Set up the appropriate observers for the new criteria to call `updateSheetDetent`.
-
-     Failure to do so can result in the function not updating the detent properly when the new criteria change.
-     **/
-
-    func updateSheetDetent() {
-        // If routes exist or an item is selected, use the medium detent
-        if let routes = mapStore.routes, !routes.routes.isEmpty || mapStore.selectedItem != nil {
-            self.selectedDetent = .medium
-        } else if !self.searchText.isEmpty {
-            // If search text is not empty, also use the medium detent
-            self.selectedDetent = .medium
-        } else {
-            // Otherwise, use the small detent
-            self.selectedDetent = .small
-        }
-    }
 
 }
 

@@ -15,6 +15,65 @@ import MapLibreSwiftUI
 import POIService
 import SwiftUI
 
+// MARK: - NavPath
+
+struct NavPath {
+    var elements: [Any] = []
+}
+
+// MARK: - Decodable
+
+extension NavPath: Decodable {
+    init(from decoder: Decoder) throws {
+        var container = try decoder.unkeyedContainer()
+        self.elements = []
+
+        while !container.isAtEnd {
+            let typeName = try container.decode(String.self)
+            var type = _typeByName(typeName) as? any Decodable.Type
+            if type == nil, typeName == "POIService.ResolvedItem" {
+                // _typeByName doesn't work for things in other packages yet
+                type = POIService.ResolvedItem.self
+            }
+            if type == nil, typeName == "POIService.Toursprung.RouteCalculationResult" {
+                // _typeByName doesn't work for things in other packages yet
+                type = POIService.Toursprung.RouteCalculationResult.self
+            }
+            if type == nil, typeName == "HudHud.SheetSubView" {
+                // _typeByName doesn't work for things in other packages yet
+                type = SheetSubView.self
+            }
+            guard let type else {
+                throw DecodingError.dataCorruptedError(
+                    in: container,
+                    debugDescription: "\(typeName) is not decodable."
+                )
+            }
+
+            let encodedValue = try container.decode(String.self)
+            let value = try JSONDecoder().decode(type, from: Data(encodedValue.utf8))
+            self.elements.insert(value, at: 0)
+        }
+    }
+}
+
+extension NavigationPath {
+
+    enum CustomNavigationPathError: Error {
+        case codableIsNil
+    }
+
+    func elements() throws -> [Any] {
+        // NavigationPath offers no way to see whats currently in it, so we workaround this with its JSON encoding system
+        guard let codable = self.codable else {
+            throw CustomNavigationPathError.codableIsNil
+        }
+        let encodedData = try JSONEncoder().encode(codable)
+        let decodedPath = try JSONDecoder().decode(NavPath.self, from: encodedData)
+        return decodedPath.elements
+    }
+}
+
 // MARK: - MapStore
 
 final class MapStore: ObservableObject {
@@ -30,8 +89,34 @@ final class MapStore: ObservableObject {
     @Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
     @Published var searchShown: Bool = true
     @Published var streetView: StreetViewOption = .disabled
-    @Published var routes: Toursprung.RouteCalculationResult?
+
+    @Published var selectedDetent: PresentationDetent = .small
+    @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+
+    @Published var routes: Toursprung.RouteCalculationResult? {
+        didSet {
+            if let routes {
+                self.path.append(routes)
+            }
+        }
+    }
+
     @Published var waypoints: [ABCRouteConfigurationItem]?
+
+    @Published var path = NavigationPath() {
+        didSet {
+            do {
+                let elements = try path.elements()
+                print("path now: \(elements)")
+                // DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) {
+                self.updateSelectedSheetDetent(to: elements.last)
+                // }
+
+            } catch {
+                print("update detent error: \(error)")
+            }
+        }
+    }
 
     @Published var displayableItems: [AnyDisplayableAsRow] = [] {
         didSet {
@@ -42,6 +127,9 @@ final class MapStore: ObservableObject {
     @Published var selectedItem: ResolvedItem? {
         didSet {
             updateCameraForMapItems()
+            if let selectedItem {
+                self.path.append(selectedItem)
+            }
         }
     }
 
@@ -105,6 +193,55 @@ final class MapStore: ObservableObject {
 
     // MARK: - Internal
 
+    /**
+     This function determines the appropriate sheet detent based on the current state of the map store and search text.
+
+     Current Criteria:
+     - If there are routes available or a selected item, the sheet detent is set to `.medium`.
+     - If the search text is not empty, the sheet detent is set to `.medium`.
+     - Otherwise, the sheet detent is set to `.small`.
+
+     Important Note:
+     This function relies on changes to the `mapStore.routes`, `mapStore.selectedItem`, and `searchText`. If additional criteria are added in the future (e.g., `mapItems`), ensure to:
+     1. Update this function to include the new criteria.
+     2. Set up the appropriate observers for the new criteria to call `updateSheetDetent`.
+
+     Failure to do so can result in the function not updating the detent properly when the new criteria change.
+     **/
+
+    func updateSelectedSheetDetent(to navigationPathItem: Any?) {
+        // If routes exist or an item is selected, use the medium detent
+
+        guard let navigationPathItem else {
+            self.allowedDetents = [.small, .third, .large]
+            if self.mapItems.isEmpty {
+                self.selectedDetent = .small
+            } else {
+                self.selectedDetent = .third
+            }
+            return
+        }
+
+        if let sheetSubview = navigationPathItem as? SheetSubView {
+            switch sheetSubview {
+            case .mapStyle:
+                self.allowedDetents = [.small, .medium]
+                self.selectedDetent = .medium
+            case .debugView:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
+            }
+        }
+        if let _ = navigationPathItem as? ResolvedItem {
+            self.allowedDetents = [.small, .third, .large]
+            self.selectedDetent = .third
+        }
+        if let _ = navigationPathItem as? Toursprung.RouteCalculationResult {
+            self.allowedDetents = [.height(150), .medium]
+            self.selectedDetent = .medium
+        }
+    }
+
     func getCameraPitch() -> Double {
         if case let .centered(
             onCoordinate: _,
@@ -131,28 +268,67 @@ extension MapStore: Previewable {
 
 private extension MapStore {
 
+    func generateMLNCoordinateBounds(from coordinates: [CLLocationCoordinate2D]) -> MLNCoordinateBounds? {
+        guard !coordinates.isEmpty else {
+            return nil
+        }
+
+        var minLat = coordinates[0].latitude
+        var maxLat = coordinates[0].latitude
+        var minLon = coordinates[0].longitude
+        var maxLon = coordinates[0].longitude
+
+        for coordinate in coordinates {
+            if coordinate.latitude < minLat {
+                minLat = coordinate.latitude
+            }
+            if coordinate.latitude > maxLat {
+                maxLat = coordinate.latitude
+            }
+            if coordinate.longitude < minLon {
+                minLon = coordinate.longitude
+            }
+            if coordinate.longitude > maxLon {
+                maxLon = coordinate.longitude
+            }
+        }
+
+        let southWest = CLLocationCoordinate2D(latitude: minLat, longitude: minLon)
+        let northEast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
+
+        return MLNCoordinateBounds(sw: southWest, ne: northEast)
+    }
+
     func updateCameraForMapItems() {
-        if let selectedItem {
-            // when an item is selected the camera behaves differently then when there isn't
-            self.camera = .center(selectedItem.coordinate, zoom: 16)
-        } else {
-            switch self.mapItems.count {
-            case 0:
-                break // no items, do nothing
-
-            case 1:
-                guard let item = self.mapItems.first else {
-                    return
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+            if let routes = self.routes {
+                if let route = routes.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
+                    self.camera = MapViewCamera.boundingBox(self.generateMLNCoordinateBounds(from: coordinates)!, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
                 }
-                self.camera = .center(item.coordinate, zoom: 16)
+                return
+            }
+            if let selectedItem = self.selectedItem {
+                // when an item is selected the camera behaves differently then when there isn't
+                self.camera = .center(selectedItem.coordinate, zoom: 16)
+            } else {
+                switch self.mapItems.count {
+                case 0:
+                    break // no items, do nothing
 
-            case 2...:
-                let coordinates = self.mapItems.map(\.coordinate)
-                guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+                case 1:
+                    guard let item = self.mapItems.first else {
+                        return
+                    }
+                    self.camera = .center(item.coordinate, zoom: 16)
 
-                self.camera = camera
-            default:
-                break // should never occur
+                case 2...:
+                    let coordinates = self.mapItems.map(\.coordinate)
+                    guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+
+                    self.camera = camera
+                default:
+                    break // should never occur
+                }
             }
         }
     }

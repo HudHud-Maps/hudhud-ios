@@ -17,7 +17,7 @@ import SwiftUI
 public protocol POIServiceProtocol {
 
     static var serviceName: String { get }
-    func lookup(prediction: Any) async throws -> [ResolvedItem]
+    func lookup(id: String, prediction: Any) async throws -> [ResolvedItem]
     func predict(term: String) async throws -> [AnyDisplayableAsRow]
 }
 
@@ -127,7 +127,7 @@ public struct PredictionItem: DisplayableAsRow {
     public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
-        let resolved = try await provider.lookup(prediction: completion)
+        let resolved = try await provider.lookup(id: self.id, prediction: completion)
         let mapped = resolved.map {
             AnyDisplayableAsRow($0)
         }

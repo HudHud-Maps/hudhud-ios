@@ -11,12 +11,19 @@ import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import NavigationTransitions
 import OSLog
 import POIService
 import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
+
+// MARK: - SheetSubView
+
+enum SheetSubView: Hashable, Codable {
+    case mapStyle, debugView
+}
 
 // MARK: - ContentView
 
@@ -33,13 +40,11 @@ struct ContentView: View {
     @ObservedObject private var mapStore: MapStore
 
     @State private var showUserLocation: Bool = false
-    @State private var showMapLayer: Bool = false
     @State private var sheetSize: CGSize = .zero
     @State private var didTryToZoomOnUsersLocation = false
 
     @State var offsetY: CGFloat = 0
 
-    @State var debugMenuShown = false
     @StateObject var debugStore = DebugStore()
 
     @ViewBuilder
@@ -139,6 +144,7 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
+        .backport.safeAreaPadding(.bottom, self.sheetSize.height)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -147,10 +153,6 @@ struct ContentView: View {
                     }
                 }
             }
-        }
-
-        .onChange(of: self.mapStore.routes?.routes) {
-            _ in self.searchViewStore.updateSheetDetent()
         }
     }
 
@@ -205,7 +207,7 @@ struct ContentView: View {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
-                                self.showMapLayer.toggle()
+                                self.mapStore.path.append(SheetSubView.mapStyle)
                             },
                             MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
                                 switch self.searchViewStore.mode {
@@ -244,7 +246,7 @@ struct ContentView: View {
                                 }
                             },
                             MapButtonData(sfSymbol: .icon(.terminal)) {
-                                self.debugMenuShown = true
+                                self.mapStore.path.append(SheetSubView.debugView)
                             }
                         ])
                         Spacer()
@@ -252,72 +254,83 @@ struct ContentView: View {
                             CurrentLocationButton(camera: self.$mapStore.camera)
                         }
                     }
-                    .opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
+                    .opacity(self.mapStore.selectedDetent == .small ? 1 : 0)
                     .padding(.horizontal)
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown) {
-                SearchSheet(mapStore: self.mapStore,
-                            searchStore: self.searchViewStore)
-                    .frame(minWidth: 320)
-                    .presentationCornerRadius(21)
-                    .presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .large)
-                    )
-                    .interactiveDismissDisabled()
-                    .ignoresSafeArea()
-                    .presentationCompactAdaptation(.sheet)
-                    .overlay {
-                        GeometryReader { geometry in
-                            Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
-                        }
-                    }
-                    .onPreferenceChange(SizePreferenceKey.self) { value in
-                        withAnimation(.easeOut) {
-                            self.sheetSize = value
-                        }
-                    }
-
-                    .backport.sheet(isPresented: Binding<Bool>(
-                        get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil },
-                        set: { _ in self.searchViewStore.searchType = .selectPOI }
-                    )) {
-                        NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore)
-                            .presentationCornerRadius(21)
-                            .presentationDetents([.height(130), .medium, .large], selection: self.$searchViewStore.selectedDetent)
-                            .presentationBackgroundInteraction(
-                                .enabled(upThrough: .medium)
-                            )
-                            .ignoresSafeArea()
-                            .interactiveDismissDisabled()
-                            .presentationCompactAdaptation(.sheet)
-                    }
-                    .fullScreenCover(isPresented: self.$debugMenuShown) {
-                        DebugMenuView(debugSettings: self.debugStore)
-                    }
-                    .sheet(isPresented: self.$showMapLayer) {
-                        VStack(alignment: .center, spacing: 25) {
-                            Spacer()
-                            HStack(alignment: .center) {
-                                Spacer()
-                                Text("Layers")
-                                    .foregroundStyle(.primary)
-                                Spacer()
-                                Button {
-                                    self.showMapLayer.toggle()
-                                } label: {
-                                    Image(systemSymbol: .xmark)
-                                        .foregroundColor(.secondary)
+                NavigationStack(path: self.$mapStore.path) {
+                    SearchSheet(mapStore: self.mapStore,
+                                searchStore: self.searchViewStore)
+                        .navigationDestination(for: SheetSubView.self) { value in
+                            switch value {
+                            case .mapStyle:
+                                VStack(alignment: .center, spacing: 25) {
+                                    Spacer()
+                                    HStack(alignment: .center) {
+                                        Spacer()
+                                        Text("Layers")
+                                            .foregroundStyle(.primary)
+                                        Spacer()
+                                        Button {
+                                            self.mapStore.path.removeLast()
+                                        } label: {
+                                            Image(systemSymbol: .xmark)
+                                                .foregroundColor(.secondary)
+                                        }
+                                    }
+                                    .padding(.horizontal, 30)
+                                    MainLayersView(mapLayerData: MapLayersData.getLayers())
+                                        .navigationBarBackButtonHidden()
+                                        .presentationCornerRadius(21)
                                 }
+                            case .debugView:
+                                DebugMenuView(debugSettings: self.debugStore)
+                                    .navigationBarBackButtonHidden()
                             }
-                            .padding(.horizontal, 30)
-                            MainLayersView(mapLayerData: MapLayersData.getLayers())
-                                .presentationCornerRadius(21)
-                                .presentationDetents([.medium])
                         }
+                        .navigationDestination(for: ResolvedItem.self) { item in
+                            POIDetailSheet(item: item) { calculation in
+                                Logger.searchView.info("Start item \(item)")
+                                self.mapStore.routes = calculation
+                                self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
+                                if let location = calculation.waypoints.first {
+                                    self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
+                                }
+                            } onDismiss: {
+                                self.mapStore.selectedItem = nil
+                            }
+                            .navigationBarBackButtonHidden()
+                        }
+                        .navigationDestination(for: Toursprung.RouteCalculationResult.self) { _ in
+                            NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore)
+                                .navigationBarBackButtonHidden()
+                                .onDisappear(perform: {
+                                    self.mapStore.waypoints = nil
+                                    self.mapStore.routes = nil
+                                })
+                                .presentationCornerRadius(21)
+                        }
+                }
+                .navigationTransition(.fade(.cross).animation(nil))
+                .frame(minWidth: 320)
+                .presentationCornerRadius(21)
+                .presentationDetents(self.mapStore.allowedDetents, selection: self.$mapStore.selectedDetent)
+                .presentationBackgroundInteraction(.enabled)
+                .interactiveDismissDisabled()
+                .ignoresSafeArea()
+                .presentationCompactAdaptation(.sheet)
+                .overlay {
+                    GeometryReader { geometry in
+                        Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
                     }
+                }
+                .onPreferenceChange(SizePreferenceKey.self) { value in
+                    // withAnimation(.easeOut) {
+                    self.sheetSize = value
+                    // }
+                }
             }
             .environmentObject(self.notificationQueue)
             .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
@@ -328,9 +341,6 @@ struct ContentView: View {
                         .padding(.horizontal, 8)
                 }
             })
-            .onAppear {
-                self.searchViewStore.updateSheetDetent()
-            }
     }
 
     // MARK: - Lifecycle
@@ -341,7 +351,6 @@ struct ContentView: View {
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.mapStore.routes = searchStore.mapStore.routes
-        self.searchViewStore.updateSheetDetent()
     }
 }
 

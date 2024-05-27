@@ -25,7 +25,6 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @FocusState private var searchIsFocused: Bool
-    @Environment(\.openURL) private var openURL
     @State private var isPresentWebView = false
     @Environment(\.dismiss) var dismiss
 
@@ -127,7 +126,6 @@ struct SearchSheet: View {
                                 break
                             }
 
-                            self.searchStore.selectedDetent = .medium
                             self.searchIsFocused = false
                         }, label: {
                             SearchResultItem(prediction: item, searchViewStore: self.searchStore)
@@ -157,66 +155,6 @@ struct SearchSheet: View {
                     .padding(.top)
                 }
                 .listStyle(.plain)
-            }
-        }
-        .backport.sheet(
-            isPresented: Binding<Bool>(
-                get: {
-                    self.searchStore.searchType == .selectPOI
-                        && self.mapStore.selectedItem != nil
-                },
-                set: { _ in
-                    self.searchStore.selectedDetent = .medium
-                    self.mapStore.selectedItem = nil
-                }
-            )
-        ) {
-            if let item = self.mapStore.selectedItem {
-                POIDetailSheet(item: item) { calculation in
-                    Logger.searchView.info("Start item \(item)")
-                    self.searchStore.selectedDetent = .small
-                    self.mapStore.routes = calculation
-                    self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
-                    if let location = calculation.waypoints.first {
-                        self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
-                    }
-                } onMore: { action in
-                    switch action {
-                    case .phone:
-                        // Perform phone action
-                        if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                            self.openURL(url)
-                        }
-                        Logger.searchView.info("Item phone \(item.phone ?? "nil")")
-                    case .website:
-                        // Perform website action
-                        self.isPresentWebView = true
-                        Logger.searchView.info("Item website \(item.website?.absoluteString ?? "")")
-                    case .moreInfo:
-                        // Perform more info action
-                        Logger.searchView.info("more item \(item))")
-                    }
-                } onDismiss: {
-                    self.mapStore.selectedItem = nil
-                }
-                .fullScreenCover(isPresented: self.$isPresentWebView) {
-                    if let website = item.website {
-                        SafariWebView(url: website)
-                            .ignoresSafeArea()
-                    }
-                }
-                .presentationDetents([.third, .large])
-                .presentationBackgroundInteraction(
-                    .enabled(upThrough: .third)
-                )
-                .interactiveDismissDisabled()
-                .ignoresSafeArea()
-                .onAppear {
-                    // Store POI
-                    self.storeRecent(item: item)
-                    // update Sheet
-                    self.searchStore.updateSheetDetent()
-                }
             }
         }
     }

@@ -17,120 +17,86 @@ import SimpleToast
 import SwiftLocation
 import SwiftUI
 
-// MARK: - POIDetailAction
-
-enum POIDetailAction {
-    case phone
-    case website
-    case moreInfo
-}
-
 // MARK: - POIDetailSheet
 
 struct POIDetailSheet: View {
 
     let item: ResolvedItem
     let onStart: (Toursprung.RouteCalculationResult) -> Void
-    let onMore: (POIDetailAction) -> Void
 
     @State var routes: Toursprung.RouteCalculationResult?
 
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) private var dismiss
     let onDismiss: () -> Void
+
     @EnvironmentObject var notificationQueue: NotificationQueue
+    @Environment(\.openURL) private var openURL
 
     var body: some View {
-        NavigationStack {
-            VStack(alignment: .leading) {
-                HStack(alignment: .top) {
-                    VStack {
-                        Text(self.item.title)
-                            .font(.title.bold())
-                            .frame(maxWidth: .infinity, alignment: .leading)
+        VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                VStack {
+                    Text(self.item.title)
+                        .font(.title.bold())
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
-                        Text(self.item.subtitle)
-                            .font(.footnote)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 8)
-                    }
-
-                    Button(action: {
-                        self.dismiss()
-                        self.onDismiss()
-                    }, label: {
-                        ZStack {
-                            Circle()
-                                .fill(.quaternary)
-                                .frame(width: 30, height: 30)
-
-                            Image(systemSymbol: .xmark)
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
-                        }
-                        .padding(8)
-                        .contentShape(Circle())
-                    })
-                    .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                    Text(self.item.subtitle)
+                        .font(.footnote)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, 8)
                 }
-                .padding([.top, .leading, .trailing])
 
-                HStack {
+                Button(action: {
+                    self.dismiss()
+                    self.onDismiss()
+                }, label: {
+                    ZStack {
+                        Circle()
+                            .fill(.quaternary)
+                            .frame(width: 30, height: 30)
+
+                        Image(systemSymbol: .xmark)
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundColor(.white)
+                    }
+                    .padding(8)
+                    .contentShape(Circle())
+                })
+                .buttonStyle(PlainButtonStyle())
+                .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+            }
+            .padding([.top, .leading, .trailing])
+
+            HStack {
+                Button(action: {
+                    guard let routes else { return }
+                    self.onStart(routes)
+                }, label: {
+                    VStack(spacing: 2) {
+                        Image(systemSymbol: .carFill)
+                        Text("Start", comment: "get the navigation route")
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 2)
+                })
+                .buttonStyle(.borderedProminent)
+                .disabled(self.routes == nil)
+
+                if let phone = self.item.phone, !phone.isEmpty {
                     Button(action: {
-                        guard let routes else { return }
-                        self.onStart(routes)
-                        self.dismiss()
-                    }, label: {
-                        VStack(spacing: 2) {
-                            Image(systemSymbol: .carFill)
-                            Text("Start", comment: "get the navigation route")
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.5)
+                        // Perform phone action
+                        if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+                            self.openURL(url)
                         }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 2)
-                    })
-                    .buttonStyle(.borderedProminent)
-                    .disabled(self.routes == nil)
-
-                    if let phone = self.item.phone, !phone.isEmpty {
-                        Button(action: {
-                            self.onMore(.phone)
-                        }, label: {
-                            VStack(spacing: 2) {
-                                Image(systemSymbol: .phoneFill)
-                                Text("Call", comment: "on poi detail sheet to call the poi")
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.5)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 2)
-                        })
-                        .buttonStyle(.bordered)
-                    }
-                    if self.item.website != nil {
-                        Button(action: {
-                            self.onMore(.website)
-                        }, label: {
-                            VStack(spacing: 2) {
-                                Image(systemSymbol: .safariFill)
-                                Text("Web")
-                                    .lineLimit(1)
-                                    .minimumScaleFactor(0.5)
-                            }
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 2)
-                        })
-                        .buttonStyle(.bordered)
-                    }
-                    Button(action: {
-                        self.onMore(.moreInfo)
+                        Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
                     }, label: {
                         VStack(spacing: 2) {
-                            Image(systemSymbol: .ellipsisCircleFill)
-                            Text("More", comment: "on poi detail sheet to see more info")
+                            Image(systemSymbol: .phoneFill)
+                            Text("Call", comment: "on poi detail sheet to call the poi")
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                         }
@@ -139,12 +105,41 @@ struct POIDetailSheet: View {
                     })
                     .buttonStyle(.bordered)
                 }
-                .padding(.horizontal)
-
-                AdditionalPOIDetailsView(routes: self.routes)
-                DictionaryView(dictionary: self.item.userInfo)
+                if self.item.website != nil {
+                    Button(action: {
+                        // PAT do the web action here directly
+                    }, label: {
+                        VStack(spacing: 2) {
+                            Image(systemSymbol: .safariFill)
+                            Text("Web")
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 2)
+                    })
+                    .buttonStyle(.bordered)
+                }
+                Button(action: {
+                    // PAT do the action here directly
+                }, label: {
+                    VStack(spacing: 2) {
+                        Image(systemSymbol: .ellipsisCircleFill)
+                        Text("More", comment: "on poi detail sheet to see more info")
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 2)
+                })
+                .buttonStyle(.bordered)
             }
+            .padding(.horizontal)
+
+            AdditionalPOIDetailsView(routes: self.routes)
+            DictionaryView(dictionary: self.item.userInfo)
         }
+
         .task {
             do {
                 _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
@@ -181,7 +176,5 @@ struct POIDetailSheet: View {
     let item = ResolvedItem.starbucks
     return POIDetailSheet(item: item) { _ in
         Logger.searchView.info("Start \(item)")
-    } onMore: { _ in
-        Logger.searchView.info("More \(item)")
     } onDismiss: {}
 }

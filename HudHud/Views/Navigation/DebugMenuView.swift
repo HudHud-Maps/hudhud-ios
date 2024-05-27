@@ -13,26 +13,24 @@ struct DebugMenuView: View {
     @ObservedObject var debugSettings: DebugStore
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section(header: Text("Routing Configuration")) {
-                    TextField("Routing URL", text: self.$debugSettings.routingHost)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                }
+        Form {
+            Section(header: Text("Routing Configuration")) {
+                TextField("Routing URL", text: self.$debugSettings.routingHost)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+            }
 
-                Section(header: Text("Simulation")) {
-                    Toggle(isOn: self.$debugSettings.simulateRide) {
-                        Text("Simulate Ride during Navigation")
-                    }
+            Section(header: Text("Simulation")) {
+                Toggle(isOn: self.$debugSettings.simulateRide) {
+                    Text("Simulate Ride during Navigation")
                 }
             }
-            .navigationTitle("Debug Menu")
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") {
-                        self.dismiss()
-                    }
+        }
+        .navigationTitle("Debug Menu")
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button("Done") {
+                    self.dismiss()
                 }
             }
         }
