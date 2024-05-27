@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "..." : {
 
     },
@@ -263,9 +266,6 @@
     "Name" : {
 
     },
-    "Name %@" : {
-
-    },
     "No Ratings" : {
 
     },
@@ -314,6 +314,9 @@
           }
         }
       }
+    },
+    "Select Type" : {
+
     },
     "Simulate Ride during Navigation" : {
 

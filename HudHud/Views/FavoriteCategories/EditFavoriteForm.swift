@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import SFSafeSymbols
 import SwiftUI
 
 struct EditFavoriteForm: View {
@@ -14,6 +15,7 @@ struct EditFavoriteForm: View {
     @Environment(\.dismiss) var dismiss
     @Binding var item: FavoriteCategoriesData
     @AppStorage("favorites") var favorites = FavoriteItems(items: FavoriteCategoriesData.favoritesInit)
+    @State private var typeSymbols: [String: SFSymbol] = ["Home": .houseFill, "Work": .bagFill, "School": .buildingFill]
 
     var body: some View {
         VStack {
@@ -22,7 +24,7 @@ struct EditFavoriteForm: View {
                     self.dismiss()
                 } label: {
                     Image(systemSymbol: .chevronLeft)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(UIColor.label))
                         .padding(.horizontal, 15)
                 }
                 Spacer()
@@ -33,42 +35,67 @@ struct EditFavoriteForm: View {
                     self.dismiss()
                 } label: {
                     Text("Edit")
-                        .padding(.horizontal, 15)
-                        .padding(.vertical, 8)
-                        .foregroundColor(.white)
-                        .background(.blue)
-                        .cornerRadius(8)
+                        .foregroundStyle(Color(UIColor.label))
                 }
-                .buttonBorderShape(.roundedRectangle)
             }
-            .padding(.horizontal)
+            .padding()
             Form {
                 Section {
-                    TextField("Name", text: self.$item.title)
+                    FloatingLabelTextField(text: self.$item.title, placeholder: "Name")
                     HStack {
                         if let address = item.item?.subtitle {
                             Text("\(address)")
                         }
+                        Spacer()
                         Button {} label: {
                             Image(systemSymbol: .pencil)
+                                .foregroundStyle(.gray)
                         }
                     }
                 }
-
-                TextField("description", text: self.$item.description.toUnwrapped(defaultValue: ""))
-
-                Picker("Type", selection: self.$item.type) {
-                    ForEach(self.types, id: \.self) { type in
-                        Text(type).tag(type)
+                VStack(alignment: .leading) {
+                    Section(header: Text("description").foregroundStyle(.gray)) {
+                        TextEditor(text: self.$item.description.toUnwrapped(defaultValue: ""))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            )
                     }
-                }.pickerStyle(.inline)
+                }
+                .padding(.vertical)
+                Section(header: Text("Select Type")) {
+                    ForEach(self.types, id: \.self) { type in
+                        HStack {
+                            Image(systemSymbol: self.typeSymbols[type] ?? .heartFill)
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding(10)
+                                .background {
+                                    Circle().fill(Color.blue)
+                                }
+                            Text(type)
+                            Spacer()
+                            if self.item.type == type {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            self.item.type = type
+                        }
+                        .padding(.vertical, 5)
+                    }
+                }
                 Section {
-                    TextField("Add Type", text: self.$newType)
-                    Button(action: {
-                        self.addNewOption()
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .foregroundColor(Color.blue)
+                    HStack {
+                        FloatingLabelTextField(text: self.$newType, placeholder: "Add Type")
+                        Button(action: {
+                            self.addNewOption()
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .foregroundStyle(Color(UIColor.label))
+                        }
                     }
                 }
             }

@@ -19,6 +19,7 @@ struct DetailFavoriteForm: View { // Add
     @Binding var newFavorite: FavoriteCategoriesData
     @Environment(\.dismiss) var dismiss
     @AppStorage("favorites") var favorites = FavoriteItems(items: FavoriteCategoriesData.favoritesInit)
+    @State private var typeSymbols: [String: SFSymbol] = ["Home": .houseFill, "Work": .bagFill, "School": .buildingFill]
 
     var body: some View {
         VStack {
@@ -27,7 +28,7 @@ struct DetailFavoriteForm: View { // Add
                     self.dismiss()
                 } label: {
                     Image(systemSymbol: .chevronLeft)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(UIColor.label))
                 }
                 Spacer()
                 Text("Details")
@@ -40,7 +41,7 @@ struct DetailFavoriteForm: View { // Add
 
                     let newFavoriteData = FavoriteCategoriesData(
                         id: .random(in: 1 ... 100),
-                        title: !self.newFavorite.type.isEmpty && self.newFavorite.title == self.item.title ? self.newFavorite.type : self.newFavorite.title, // handle this better
+                        title: !self.newFavorite.type.isEmpty && self.newFavorite.title == self.item.title ? self.newFavorite.type : self.newFavorite.title,
                         sfSymbol: self.getSymbol(for: self.newFavorite.type),
                         tintColor: .gray,
                         item: self.item,
@@ -51,40 +52,72 @@ struct DetailFavoriteForm: View { // Add
                     self.dismiss()
                 } label: {
                     Text("Add")
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(UIColor.label))
                 }
             }
             .padding(.horizontal)
-
+            Spacer()
             Form {
                 Section {
-                    TextField("Name \(!self.newFavorite.type.isEmpty ? self.newFavorite.type : self.item.title)", text: self.$newFavorite.title)
+                    FloatingLabelTextField(text: self.$newFavorite.title, placeholder: "Name: \(!self.newFavorite.type.isEmpty ? self.newFavorite.type : self.item.title)")
                     HStack {
                         Text("\(self.item.subtitle)")
-
+                        Spacer()
                         Button {} label: {
                             Image(systemSymbol: .pencil)
+                                .foregroundStyle(.gray)
                         }
                     }
                 }
-
-                TextField("description", text: self.$newFavorite.description.toUnwrapped(defaultValue: ""))
-
-                Picker("Type", selection: self.$newFavorite.type) {
-                    ForEach(self.types, id: \.self) { type in
-                        Text(type).tag(type)
+                VStack(alignment: .leading) {
+                    Section(header: Text("description").foregroundStyle(.gray)) {
+                        TextEditor(text: self.$newFavorite.description.toUnwrapped(defaultValue: ""))
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 8)
+                                    .stroke(Color.gray, lineWidth: 1)
+                            )
                     }
-                }.pickerStyle(.inline)
+                }
+                .padding(.vertical)
+                Section(header: Text("Select Type")) {
+                    ForEach(self.types, id: \.self) { type in
+                        HStack {
+                            Image(systemSymbol: self.typeSymbols[type] ?? .heartFill)
+                                .font(.title)
+                                .foregroundColor(.white)
+                                .padding(10)
+                                .background {
+                                    Circle().fill(Color.blue)
+                                }
+                            Text(type)
+                            Spacer()
+                            if self.newFavorite.type == type {
+                                Image(systemName: "checkmark")
+                                    .foregroundColor(.blue)
+                            }
+                        }
+                        .contentShape(Rectangle())
+                        .onTapGesture {
+                            self.newFavorite.type = type
+                        }
+                        .padding(.vertical, 5)
+                    }
+                }
                 Section {
-                    TextField("Add Type", text: self.$newType)
-                    Button(action: {
-                        //						addNewOption()
-                    }) {
-                        Image(systemName: "plus.circle")
-                            .foregroundColor(Color.blue)
+                    HStack {
+                        FloatingLabelTextField(text: self.$newType, placeholder: "Add Type")
+                        Button(action: {
+                            self.addNewOption()
+                        }) {
+                            Image(systemName: "plus.circle")
+                                .foregroundStyle(Color(UIColor.label))
+                        }
                     }
                 }
             }
+            .formStyle(.columns)
+            .padding(.horizontal)
+            Spacer()
         }
     }
 

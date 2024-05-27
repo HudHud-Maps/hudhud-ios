@@ -31,16 +31,17 @@ struct FavoritesViewMoreView: View {
                     self.dismiss()
                 } label: {
                     Image(systemSymbol: .chevronLeft)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(UIColor.label))
                 }
                 Spacer()
                 Text("Favorites")
                 Spacer()
                 Button {} label: {
                     Image(systemSymbol: .plus)
-                        .foregroundStyle(.black)
+                        .foregroundStyle(Color(UIColor.label))
                 }
             }
+            .padding(.vertical)
             VStack {
                 HStack {
                     Image(systemSymbol: .magnifyingglass)
@@ -83,7 +84,7 @@ struct FavoritesViewMoreView: View {
             }
             .background(.thickMaterial)
             .cornerRadius(12)
-
+            .padding(.vertical)
             Section {
                 ForEach(self.favorites.favoriteCategoriesData) { favorite in
                     if favorite.item != nil {
@@ -95,6 +96,7 @@ struct FavoritesViewMoreView: View {
                                 self.clickedFav = favorite
                             } label: {
                                 Text("...")
+                                    .foregroundStyle(Color(UIColor.label))
                             }
                             .confirmationDialog("action", isPresented: self.$actionSheetShown) {
                                 Button {
@@ -113,6 +115,7 @@ struct FavoritesViewMoreView: View {
             .fullScreenCover(isPresented: self.$editFormShown, content: {
                 EditFavoriteForm(item: self.$clickedFav)
             })
+
             Section("Suggestions") {
                 ForEach(self.searchStore.recentViewedItem) { item in
                     HStack {
@@ -125,12 +128,10 @@ struct FavoritesViewMoreView: View {
                                 self.clickedFav = FavoriteCategoriesData(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
                             } label: {
                                 Text("+")
+                                    .foregroundStyle(Color(UIColor.label))
                             }
                         }
                     }
-                }
-                .onAppear {
-                    print(self.favorites)
                 }
                 .fullScreenCover(isPresented: self.$detailFormShown, content: {
                     DetailFavoriteForm(item: self.$clickedItem, newFavorite: self.$clickedFav)

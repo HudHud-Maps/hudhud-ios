@@ -24,6 +24,7 @@
 		5932E1222C03325A00254B22 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1212C03325A00254B22 /* FavoriteItemView.swift */; };
 		5932E1242C03345000254B22 /* DetailFavoriteForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1232C03345000254B22 /* DetailFavoriteForm.swift */; };
 		5932E1262C03502900254B22 /* EditFavoriteForm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1252C03502900254B22 /* EditFavoriteForm.swift */; };
+		5932E1422C045A8100254B22 /* FloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5932E1412C045A8100254B22 /* FloatingLabelTextField.swift */; };
 		5936D87F2BF09A2600A258BE /* DebugStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D87E2BF09A2600A258BE /* DebugStore.swift */; };
 		5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D8802BF09A4D00A258BE /* DebugMenuView.swift */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
@@ -149,6 +150,7 @@
 		5932E1212C03325A00254B22 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
 		5932E1232C03345000254B22 /* DetailFavoriteForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailFavoriteForm.swift; sourceTree = "<group>"; };
 		5932E1252C03502900254B22 /* EditFavoriteForm.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoriteForm.swift; sourceTree = "<group>"; };
+		5932E1412C045A8100254B22 /* FloatingLabelTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingLabelTextField.swift; sourceTree = "<group>"; };
 		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
 		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
@@ -333,6 +335,7 @@
 			children = (
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
 				417081C775FE86E29A6F3437 /* SafariWebView.swift */,
+				5932E1412C045A8100254B22 /* FloatingLabelTextField.swift */,
 			);
 			path = UIStyle;
 			sourceTree = "<group>";
@@ -805,6 +808,7 @@
 				DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */,
 				D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */,
 				0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */,
+				5932E1422C045A8100254B22 /* FloatingLabelTextField.swift in Sources */,
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -46,10 +46,6 @@ struct FavoriteCategoriesView: View {
             Spacer()
         }
         .backport.scrollClipDisabled()
-        //		.onAppear {
-        ////			favorites.favoriteCategoriesData.append(contentsOf: favoriteCategoriesData)
-        //			print("faav", favorites.favoriteCategoriesData.count)
-        //		}
         .fullScreenCover(isPresented: self.$ViewMoreShown, content: {
             FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
         })
