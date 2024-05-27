@@ -61,9 +61,6 @@
         }
       }
     },
-    "Add Type" : {
-
-    },
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
     },
@@ -263,9 +260,6 @@
         }
       }
     },
-    "Name" : {
-
-    },
     "No Ratings" : {
 
     },
@@ -339,9 +333,6 @@
 
     },
     "Traffic" : {
-
-    },
-    "Type" : {
 
     },
     "Unknown" : {

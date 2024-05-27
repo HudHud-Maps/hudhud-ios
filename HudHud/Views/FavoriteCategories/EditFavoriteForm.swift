@@ -99,7 +99,7 @@ struct EditFavoriteForm: View {
                     }
                 }
             }
-            .formStyle(.grouped)
+            .formStyle(.columns)
         }
     }
 
