@@ -146,6 +146,12 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
+        .onLongPressMapGesture(onPressChanged: { MapGesture in
+            if self.searchViewStore.mapStore.selectedItem == nil {
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: MapGesture.coordinate)
+                self.searchViewStore.mapStore.selectedItem = selectedItem
+            }
+        })
         .backport.safeAreaPadding(.bottom, self.sheetSize.height)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {

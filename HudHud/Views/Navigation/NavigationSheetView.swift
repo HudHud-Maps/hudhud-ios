@@ -17,11 +17,9 @@ struct NavigationSheetView: View {
 
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
-    @State var goPressed = false
-
     @ObservedObject var debugStore: DebugStore
-
     @Environment(\.dismiss) private var dismiss
+    @State var goPressed = false
 
     var body: some View {
         VStack(spacing: 5) {
