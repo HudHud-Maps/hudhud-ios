@@ -39,6 +39,13 @@ final class MapStore: ObservableObject {
         didSet {
             if let routes, self.path.contains(Toursprung.RouteCalculationResult.self) == false {
                 self.path.append(routes)
+                self.cameraTask?.cancel()
+                self.cameraTask = Task {
+                    try await Task.sleep(nanoseconds: 400 * NSEC_PER_MSEC)
+                    await MainActor.run {
+                        updateCameraForMapItems()
+                    }
+                }
             }
         }
     }
@@ -124,6 +131,8 @@ final class MapStore: ObservableObject {
             }
         }
     }
+
+    var cameraTask: Task<Void, any Error>?
 
     // MARK: - Lifecycle
 
@@ -245,37 +254,33 @@ private extension MapStore {
     }
 
     func updateCameraForMapItems() {
-        // if the sheet and camera animations run simulataneously, things look chaotic, so lets
-        // stagger them a bit
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250)) {
-            if let routes = self.routes {
-                if let route = routes.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-                    self.camera = MapViewCamera.boundingBox(self.generateMLNCoordinateBounds(from: coordinates)!, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
-                }
-                return
+        if let routes = self.routes {
+            if let route = routes.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
+                self.camera = MapViewCamera.boundingBox(self.generateMLNCoordinateBounds(from: coordinates)!, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
             }
-            if let selectedItem = self.selectedItem {
-                // when an item is selected the camera behaves differently then when there isn't
-                self.camera = .center(selectedItem.coordinate, zoom: 16)
-            } else {
-                switch self.mapItems.count {
-                case 0:
-                    break // no items, do nothing
+            return
+        }
+        if let selectedItem = self.selectedItem {
+            // when an item is selected the camera behaves differently then when there isn't
+            self.camera = .center(selectedItem.coordinate, zoom: 16)
+        } else {
+            switch self.mapItems.count {
+            case 0:
+                break // no items, do nothing
 
-                case 1:
-                    guard let item = self.mapItems.first else {
-                        return
-                    }
-                    self.camera = .center(item.coordinate, zoom: 16)
-
-                case 2...:
-                    let coordinates = self.mapItems.map(\.coordinate)
-                    guard let camera = CameraState.boundingBox(from: coordinates) else { return }
-
-                    self.camera = camera
-                default:
-                    break // should never occur
+            case 1:
+                guard let item = self.mapItems.first else {
+                    return
                 }
+                self.camera = .center(item.coordinate, zoom: 16)
+
+            case 2...:
+                let coordinates = self.mapItems.map(\.coordinate)
+                guard let camera = CameraState.boundingBox(from: coordinates) else { return }
+
+                self.camera = camera
+            default:
+                break // should never occur
             }
         }
     }

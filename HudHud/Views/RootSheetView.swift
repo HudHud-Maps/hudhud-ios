@@ -63,7 +63,6 @@ struct RootSheetView: View {
                     POIDetailSheet(item: item) { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
-                        self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
