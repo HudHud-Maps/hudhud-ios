@@ -17,10 +17,8 @@ struct NavigationSheetView: View {
 
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
-    @Binding var goPressed: Bool
-
     @ObservedObject var debugStore: DebugStore
-
+    @Binding var goPressed: Bool
     @State var searchShown: Bool = false
 
     var body: some View {
@@ -34,6 +32,8 @@ struct NavigationSheetView: View {
                 Button(action: {
                     self.mapStore.routes = nil
                     self.mapStore.waypoints = nil
+                    self.mapStore.selectedItem = nil
+                    self.mapStore.displayableItems = []
                 }, label: {
                     ZStack {
                         Circle()
@@ -99,5 +99,5 @@ struct NavigationSheetView: View {
 
     @StateObject var debugStore = DebugStore()
 
-    return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, goPressed: .constant(false), debugStore: debugStore)
+    return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugStore: debugStore, goPressed: .constant(false))
 }

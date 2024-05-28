@@ -141,6 +141,13 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
+
+        .onLongPressMapGesture(onPressChanged: { MapGesture in
+            if self.searchViewStore.mapStore.selectedItem == nil {
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: MapGesture.coordinate)
+                self.searchViewStore.mapStore.selectedItem = selectedItem
+            }
+        })
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -289,7 +296,7 @@ struct ContentView: View {
                         get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil && self.navigationRunning == false },
                         set: { _ in self.searchViewStore.searchType = .selectPOI }
                     )) {
-                        NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, goPressed: self.$navigationRunning, debugStore: self.debugStore)
+                        NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore, goPressed: self.$navigationRunning)
                             .presentationCornerRadius(21)
                             .presentationDetents([.height(130), .medium, .large], selection: self.$searchViewStore.selectedDetent)
                             .presentationBackgroundInteraction(
