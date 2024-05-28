@@ -18,8 +18,7 @@ struct NavigationSheetView: View {
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
-    @Binding var goPressed: Bool
-    @State var searchShown: Bool = false
+    @Environment(\.dismiss) private var dismiss
 
     var body: some View {
         VStack(spacing: 5) {
@@ -30,10 +29,7 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
-                    self.mapStore.routes = nil
-                    self.mapStore.waypoints = nil
-                    self.mapStore.selectedItem = nil
-                    self.mapStore.displayableItems = []
+                    self.dismiss()
                 }, label: {
                     ZStack {
                         Circle()
@@ -53,7 +49,7 @@ struct NavigationSheetView: View {
             .padding(.top)
 
             if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
-                ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore, searchShown: self.$searchShown)
+                ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
                         duration: route.expectedTravelTime,
@@ -65,32 +61,12 @@ struct NavigationSheetView: View {
                         } else {
                             self.mapStore.navigatingRoute = nil
                         }
-                        self.goPressed.toggle()
                     }
                 )
                 .padding(.bottom)
             }
         }
         .padding()
-        .sheet(isPresented: self.$searchShown) {
-            // Initialize fresh instances of MapStore and SearchViewStore
-            let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
-            let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
-            freshSearchViewStore.searchType = .returnPOILocation(completion: { item in
-                self.searchViewStore.mapStore.waypoints?.append(item)
-            })
-            return SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                               searchStore: freshSearchViewStore)
-                .frame(minWidth: 320)
-                .presentationCornerRadius(21)
-                .presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-                .presentationBackgroundInteraction(
-                    .enabled(upThrough: .large)
-                )
-                .interactiveDismissDisabled()
-                .ignoresSafeArea()
-                .presentationCompactAdaptation(.sheet)
-        }
     }
 }
 
@@ -99,5 +75,5 @@ struct NavigationSheetView: View {
 
     @StateObject var debugStore = DebugStore()
 
-    return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugStore: debugStore, goPressed: .constant(false))
+    return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugStore: debugStore)
 }

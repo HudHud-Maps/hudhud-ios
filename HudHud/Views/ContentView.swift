@@ -6,18 +6,26 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BetterSafariView
 import CoreLocation
 import MapboxDirections
 import MapLibre
 import MapLibreNavigationSwiftUI
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import NavigationTransitions
 import OSLog
 import POIService
 import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
+
+// MARK: - SheetSubView
+
+enum SheetSubView: Hashable, Codable {
+    case mapStyle, debugView, navigationAddSearchView
+}
 
 // MARK: - ContentView
 
@@ -34,15 +42,14 @@ struct ContentView: View {
     @ObservedObject private var mapStore: MapStore
 
     @State private var showUserLocation: Bool = false
-    @State private var showMapLayer: Bool = false
     @State private var sheetSize: CGSize = .zero
     @State private var didTryToZoomOnUsersLocation = false
 
     @State var offsetY: CGFloat = 0
     @State var navigationRunning: Bool = false
 
-    @State var debugMenuShown = false
     @StateObject var debugStore = DebugStore()
+    @State var safariURL: URL?
 
     @ViewBuilder
     var mapView: some View {
@@ -141,13 +148,13 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
-
         .onLongPressMapGesture(onPressChanged: { MapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
                 let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: MapGesture.coordinate)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
+        .backport.safeAreaPadding(.bottom, self.sheetSize.height)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -156,9 +163,6 @@ struct ContentView: View {
                     }
                 }
             }
-        }
-        .onChange(of: self.mapStore.routes?.routes) {
-            _ in self.searchViewStore.updateSheetDetent()
         }
     }
 
@@ -214,7 +218,7 @@ struct ContentView: View {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
-                                self.showMapLayer.toggle()
+                                self.mapStore.path.append(SheetSubView.mapStyle)
                             },
                             MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
                                 switch self.searchViewStore.mode {
@@ -253,7 +257,7 @@ struct ContentView: View {
                                 }
                             },
                             MapButtonData(sfSymbol: .icon(.terminal)) {
-                                self.debugMenuShown = true
+                                self.mapStore.path.append(SheetSubView.debugView)
                             }
                         ])
                         Spacer()
@@ -261,76 +265,24 @@ struct ContentView: View {
                             CurrentLocationButton(camera: self.$mapStore.camera)
                         }
                     }
-                    .opacity(self.searchViewStore.selectedDetent == .small ? 1 : 0)
+                    .opacity(self.mapStore.selectedDetent == .small ? 1 : 0)
                     .padding(.horizontal)
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown && !self.$mapStore.navigationInProgress) {
-//            .backport.sheet(isPresented: Binding<Bool>(
-                //				get: { self.mapStore.searchShown && self.mapStore.navigatingRoute == nil },
-                //				set: { self.mapStore.searchShown = $0}
-                //			)) {
-                SearchSheet(mapStore: self.mapStore,
-                            searchStore: self.searchViewStore)
-                    .frame(minWidth: 320)
-                    .presentationCornerRadius(21)
-                    .presentationDetents([.small, .medium, .large], selection: self.$searchViewStore.selectedDetent)
-                    .presentationBackgroundInteraction(
-                        .enabled(upThrough: .large)
-                    )
-                    .interactiveDismissDisabled()
-                    .ignoresSafeArea()
-                    .presentationCompactAdaptation(.sheet)
-                    .overlay {
-                        GeometryReader { geometry in
-                            Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
-                        }
-                    }
-                    .onPreferenceChange(SizePreferenceKey.self) { value in
-                        withAnimation(.easeOut) {
-                            self.sheetSize = value
-                        }
-                    }
-                    .backport.sheet(isPresented: Binding<Bool>(
-                        get: { self.mapStore.routes != nil && self.mapStore.waypoints != nil && self.navigationRunning == false },
-                        set: { _ in self.searchViewStore.searchType = .selectPOI }
-                    )) {
-                        NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore, goPressed: self.$navigationRunning)
-                            .presentationCornerRadius(21)
-                            .presentationDetents([.height(130), .medium, .large], selection: self.$searchViewStore.selectedDetent)
-                            .presentationBackgroundInteraction(
-                                .enabled(upThrough: .medium)
-                            )
-                            .ignoresSafeArea()
-                            .interactiveDismissDisabled()
-                            .presentationCompactAdaptation(.sheet)
-                    }
-                    .fullScreenCover(isPresented: self.$debugMenuShown) {
-                        DebugMenuView(debugSettings: self.debugStore)
-                    }
-                    .sheet(isPresented: self.$showMapLayer) {
-                        VStack(alignment: .center, spacing: 25) {
-                            Spacer()
-                            HStack(alignment: .center) {
-                                Spacer()
-                                Text("Layers")
-                                    .foregroundStyle(.primary)
-                                Spacer()
-                                Button {
-                                    self.showMapLayer.toggle()
-                                } label: {
-                                    Image(systemSymbol: .xmark)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.horizontal, 30)
-                            MainLayersView(mapLayerData: MapLayersData.getLayers())
-                                .presentationCornerRadius(21)
-                                .presentationDetents([.medium])
-                        }
-                    }
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, sheetSize: self.$sheetSize)
             }
+            .safariView(item: self.$safariURL) { url in
+                SafariView(url: url)
+            }
+            .onOpenURL(handler: { url in
+                if let scheme = url.scheme, scheme == "https" || scheme == "http" {
+                    self.safariURL = url
+                    return .handled
+                }
+                return .systemAction
+            })
             .environmentObject(self.notificationQueue)
             .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
                 self.notificationQueue.removeFirst()
@@ -340,9 +292,6 @@ struct ContentView: View {
                         .padding(.horizontal, 8)
                 }
             })
-            .onAppear {
-                self.searchViewStore.updateSheetDetent()
-            }
     }
 
     // MARK: - Lifecycle
@@ -353,7 +302,6 @@ struct ContentView: View {
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.mapStore.routes = searchStore.mapStore.routes
-        self.searchViewStore.updateSheetDetent()
     }
 }
 

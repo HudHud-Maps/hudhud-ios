@@ -34,7 +34,7 @@ extension Backport where Content: View {
         if UIDevice.current.userInterfaceIdiom == .pad {
             self.safeAreaPadding(.leading, length.width)
         } else {
-            self.safeAreaPadding(.bottom, length.height)
+            self.safeAreaPadding(.bottom, length.height + 8)
         }
     }
 

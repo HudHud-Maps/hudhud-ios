@@ -38,7 +38,7 @@ public actor ApplePOI: POIServiceProtocol {
 
     // MARK: - Public
 
-    public func lookup(prediction: Any) async throws -> [ResolvedItem] {
+    public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
         guard let completion = prediction as? MKLocalSearchCompletion else {
             return []
         }
@@ -60,7 +60,7 @@ public actor ApplePOI: POIServiceProtocol {
                 }
 
                 let items = mapItems.compactMap {
-                    return ResolvedItem(id: UUID().uuidString,
+                    return ResolvedItem(id: mapItems.count == 1 ? id : UUID().uuidString,
                                         title: $0.name ?? "",
                                         subtitle: $0.placemark.formattedAddress ?? "",
                                         category: $0.pointOfInterestCategory?.rawValue.replacingOccurrences(of: "MKPOICategory", with: ""),

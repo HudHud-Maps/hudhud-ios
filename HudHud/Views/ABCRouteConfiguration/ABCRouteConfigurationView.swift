@@ -19,7 +19,6 @@ struct ABCRouteConfigurationView: View {
     @State var routeConfigurations: [ABCRouteConfigurationItem]
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
-    @Binding var searchShown: Bool
 
     var body: some View {
         VStack {
@@ -50,8 +49,7 @@ struct ABCRouteConfigurationView: View {
                 .listRowBackground(Color(.quaternarySystemFill))
                 // Add location button
                 Button {
-                    self.searchViewStore.searchType = .returnPOILocation(completion: nil)
-                    self.searchShown = true
+                    self.mapStore.path.append(SheetSubView.navigationAddSearchView)
                 } label: {
                     HStack {
                         Image(systemSymbol: .plus)
@@ -133,5 +131,5 @@ struct ABCRouteConfigurationView: View {
         .myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
         .waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
         .waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
-    ], mapStore: searchViewStore.mapStore, searchViewStore: searchViewStore, searchShown: .constant(false))
+    ], mapStore: searchViewStore.mapStore, searchViewStore: searchViewStore)
 }

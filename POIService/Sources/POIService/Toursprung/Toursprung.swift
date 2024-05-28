@@ -133,9 +133,34 @@ public class Toursprung {
 
     // MARK: - Public
 
-    public struct RouteCalculationResult: Equatable {
+    public struct RouteCalculationResult: Equatable, Hashable, Encodable, Decodable {
+
         public let waypoints: [Waypoint]
         public let routes: [Route]
+
+        // MARK: - Lifecycle
+
+        public init(from _: any Decoder) throws {
+            // this is an empty implementation to support the NavPath workaround, as we never actually use
+            // whats inside in RouteCalculationResult, we only want to know if its in the path.
+            self.waypoints = []
+            self.routes = []
+        }
+
+        public init(waypoints: [Waypoint], routes: [Route]) {
+            self.waypoints = waypoints
+            self.routes = routes
+        }
+
+        // MARK: - Public
+
+        public func encode(to encoder: any Encoder) throws {
+            // this is an empty implementation to support the NavPath workaround, as we never actually use
+            // whats inside in RouteCalculationResult, we only want to know if its in the path.
+
+            var container = encoder.unkeyedContainer()
+            try container.encode(true) // we need to encode something, else the encoder throws an error that it didnt do anything
+        }
     }
 
     @discardableResult
