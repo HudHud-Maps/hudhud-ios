@@ -25,7 +25,6 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @FocusState private var searchIsFocused: Bool
-    @State private var isPresentWebView = false
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -114,19 +113,19 @@ struct SearchSheet: View {
                                         self.mapStore.displayableItems = resolvedItems
                                     }
                                 }
-                            }
-
-                            switch self.searchStore.searchType {
-                            case let .returnPOILocation(completion):
-                                if let selectedItem = self.mapStore.selectedItem {
-                                    completion?(.waypoint(selectedItem))
-                                    self.dismiss()
+                                switch self.searchStore.searchType {
+                                case let .returnPOILocation(completion):
+                                    if let selectedItem = self.mapStore.selectedItem {
+                                        completion?(.waypoint(selectedItem))
+                                        self.dismiss()
+                                    }
+                                case .selectPOI:
+                                    break
                                 }
-                            case .selectPOI:
-                                break
+
+                                self.searchIsFocused = false
                             }
 
-                            self.searchIsFocused = false
                         }, label: {
                             SearchResultItem(prediction: item, searchViewStore: self.searchStore)
                                 .frame(maxWidth: .infinity)

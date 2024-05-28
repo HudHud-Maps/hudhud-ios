@@ -21,8 +21,6 @@ struct NavigationSheetView: View {
 
     @ObservedObject var debugStore: DebugStore
 
-    @State var searchShown: Bool = false
-
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
@@ -34,8 +32,6 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
-                    self.mapStore.routes = nil
-                    self.mapStore.waypoints = nil
                     self.dismiss()
                 }, label: {
                     ZStack {
@@ -56,7 +52,7 @@ struct NavigationSheetView: View {
             .padding(.top)
 
             if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
-                ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore, searchShown: self.$searchShown)
+                ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
                         duration: route.expectedTravelTime,
@@ -75,21 +71,6 @@ struct NavigationSheetView: View {
             if let route = self.mapStore.routes?.routes.first {
                 NavigationView(route: route, styleURL: styleURL, debugSettings: self.debugStore)
             }
-        }
-        .sheet(isPresented: self.$searchShown) {
-            // Initialize fresh instances of MapStore and SearchViewStore
-            let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
-            let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
-            freshSearchViewStore.searchType = .returnPOILocation(completion: { item in
-                self.searchViewStore.mapStore.waypoints?.append(item)
-            })
-            return SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                               searchStore: freshSearchViewStore)
-                .frame(minWidth: 320)
-                .presentationCornerRadius(21)
-                .interactiveDismissDisabled()
-                .ignoresSafeArea()
-                .presentationCompactAdaptation(.sheet)
         }
     }
 }

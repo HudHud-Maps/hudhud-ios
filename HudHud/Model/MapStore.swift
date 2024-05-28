@@ -12,67 +12,9 @@ import MapboxDirections
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import OSLog
 import POIService
 import SwiftUI
-
-// MARK: - NavPath
-
-struct NavPath {
-    var elements: [Any] = []
-}
-
-// MARK: - Decodable
-
-extension NavPath: Decodable {
-    init(from decoder: Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        self.elements = []
-
-        while !container.isAtEnd {
-            let typeName = try container.decode(String.self)
-            var type = _typeByName(typeName) as? any Decodable.Type
-            if type == nil, typeName == "POIService.ResolvedItem" {
-                // _typeByName doesn't work for things in other packages yet
-                type = POIService.ResolvedItem.self
-            }
-            if type == nil, typeName == "POIService.Toursprung.RouteCalculationResult" {
-                // _typeByName doesn't work for things in other packages yet
-                type = POIService.Toursprung.RouteCalculationResult.self
-            }
-            if type == nil, typeName == "HudHud.SheetSubView" {
-                // _typeByName doesn't work for things in other packages yet
-                type = SheetSubView.self
-            }
-            guard let type else {
-                throw DecodingError.dataCorruptedError(
-                    in: container,
-                    debugDescription: "\(typeName) is not decodable."
-                )
-            }
-
-            let encodedValue = try container.decode(String.self)
-            let value = try JSONDecoder().decode(type, from: Data(encodedValue.utf8))
-            self.elements.insert(value, at: 0)
-        }
-    }
-}
-
-extension NavigationPath {
-
-    enum CustomNavigationPathError: Error {
-        case codableIsNil
-    }
-
-    func elements() throws -> [Any] {
-        // NavigationPath offers no way to see whats currently in it, so we workaround this with its JSON encoding system
-        guard let codable = self.codable else {
-            throw CustomNavigationPathError.codableIsNil
-        }
-        let encodedData = try JSONEncoder().encode(codable)
-        let decodedPath = try JSONDecoder().decode(NavPath.self, from: encodedData)
-        return decodedPath.elements
-    }
-}
 
 // MARK: - MapStore
 
@@ -95,7 +37,7 @@ final class MapStore: ObservableObject {
 
     @Published var routes: Toursprung.RouteCalculationResult? {
         didSet {
-            if let routes {
+            if let routes, self.path.contains(Toursprung.RouteCalculationResult.self) == false {
                 self.path.append(routes)
             }
         }
@@ -230,6 +172,9 @@ final class MapStore: ObservableObject {
             case .debugView:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
+            case .navigationAddSearchView:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
             }
         }
         if let _ = navigationPathItem as? ResolvedItem {
@@ -300,7 +245,9 @@ private extension MapStore {
     }
 
     func updateCameraForMapItems() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(200)) {
+        // if the sheet and camera animations run simulataneously, things look chaotic, so lets
+        // stagger them a bit
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(250)) {
             if let routes = self.routes {
                 if let route = routes.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
                     self.camera = MapViewCamera.boundingBox(self.generateMLNCoordinateBounds(from: coordinates)!, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))

@@ -105,9 +105,9 @@ struct POIDetailSheet: View {
                     })
                     .buttonStyle(.bordered)
                 }
-                if self.item.website != nil {
+                if let website = item.website {
                     Button(action: {
-                        // PAT do the web action here directly
+                        self.openURL(website)
                     }, label: {
                         VStack(spacing: 2) {
                             Image(systemSymbol: .safariFill)
@@ -121,7 +121,7 @@ struct POIDetailSheet: View {
                     .buttonStyle(.bordered)
                 }
                 Button(action: {
-                    // PAT do the action here directly
+                    Logger.searchView.info("more item \(self.item))")
                 }, label: {
                     VStack(spacing: 2) {
                         Image(systemSymbol: .ellipsisCircleFill)

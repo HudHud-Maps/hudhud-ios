@@ -1,6 +1,15 @@
 {
   "pins" : [
     {
+      "identity" : "bettersafariview2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/lake-of-fire/BetterSafariView2.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "4e0f3af7787296e73e6b68499f7d78441b798649"
+      }
+    },
+    {
       "identity" : "mapbox-directions-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
