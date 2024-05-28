@@ -9,6 +9,7 @@
 import CoreLocation
 import MapboxDirections
 import MapLibre
+import MapLibreNavigationSwiftUI
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
@@ -45,44 +46,44 @@ struct ContentView: View {
 
     @ViewBuilder
     var mapView: some View {
-        NavigationMapView(styleSource: .url(self.styleURL), camera: self.$mapStore.camera) {
+        NavigationMapView(styleSource: .url(self.styleURL), camera: self.$mapStore.camera, route: self.$mapStore.navigatingRoute) {
             // Display preview data as a polyline on the map
-            if let route = self.mapStore.routes?.routes.first {
-                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
-                }
-
-                // Add a polyline casing for a stroke effect
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.white)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
-
-                // Add an inner (blue) polyline
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.systemBlue)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
-
-                let routePoints = self.mapStore.routePoints
-
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
-            }
+            //			if let route = self.mapStore.routes?.routes.first {
+//                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
+//                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
+//                }
+//
+//                // Add a polyline casing for a stroke effect
+//                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
+//                    .lineCap(.round)
+//                    .lineJoin(.round)
+//                    .lineColor(.white)
+//                    .lineWidth(interpolatedBy: .zoomLevel,
+//                               curveType: .linear,
+//                               parameters: NSExpression(forConstantValue: 1.5),
+//                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+//
+//                // Add an inner (blue) polyline
+//                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
+//                    .lineCap(.round)
+//                    .lineJoin(.round)
+//                    .lineColor(.systemBlue)
+//                    .lineWidth(interpolatedBy: .zoomLevel,
+//                               curveType: .linear,
+//                               parameters: NSExpression(forConstantValue: 1.5),
+//                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+//
+//                let routePoints = self.mapStore.routePoints
+//
+//                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
+//                    .radius(16)
+//                    .color(.systemRed)
+//                    .strokeWidth(2)
+//                    .strokeColor(.white)
+//                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
+//                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+//                    .iconColor(.white)
+//            }
             let pointSource = self.mapStore.points
 
             // shows the clustered pins
@@ -140,7 +141,6 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
-        .assign(route: self.mapStore.routes?.routes.first)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -195,14 +195,15 @@ struct ContentView: View {
                 if case .enabled = self.mapStore.streetView {
                     StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
                 } else {
-                    if self.mapStore.routes == nil {
+                    if self.mapStore.navigationInProgress == false {
                         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                             .presentationBackground(.thinMaterial)
                     }
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if self.mapStore.routes == nil {
+//                if self.mapStore.routes == nil {
+                if self.mapStore.navigationInProgress == false {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -258,7 +259,11 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown) {
+            .backport.sheet(isPresented: self.$mapStore.searchShown && !self.$mapStore.navigationInProgress) {
+//            .backport.sheet(isPresented: Binding<Bool>(
+                //				get: { self.mapStore.searchShown && self.mapStore.navigatingRoute == nil },
+                //				set: { self.mapStore.searchShown = $0}
+                //			)) {
                 SearchSheet(mapStore: self.mapStore,
                             searchStore: self.searchViewStore)
                     .frame(minWidth: 320)
@@ -386,4 +391,19 @@ struct SizePreferenceKey: PreferenceKey {
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi
     return ContentView(searchStore: store)
+}
+
+extension Binding where Value == Bool {
+
+    static func && (_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
+        return Binding<Bool>(get: { lhs.wrappedValue && rhs.wrappedValue },
+                             set: { _ in })
+    }
+
+    static prefix func ! (_ binding: Binding<Bool>) -> Binding<Bool> {
+        return Binding<Bool>(
+            get: { !binding.wrappedValue },
+            set: { _ in }
+        )
+    }
 }

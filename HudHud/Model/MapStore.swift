@@ -27,10 +27,20 @@ final class MapStore: ObservableObject {
 
     let motionViewModel: MotionViewModel
 
-    @Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
+    @Published var camera = MapViewCamera.center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
     @Published var streetView: StreetViewOption = .disabled
     @Published var routes: Toursprung.RouteCalculationResult?
+    @Published var navigatingRoute: Route? {
+        didSet {
+            let newValue = self.navigatingRoute != nil
+            guard newValue != self.navigationInProgress else { return }
+
+            self.navigationInProgress = newValue
+        }
+    }
+
+    @Published var navigationInProgress: Bool = false
     @Published var waypoints: [ABCRouteConfigurationItem]?
 
     @Published var displayableItems: [AnyDisplayableAsRow] = [] {

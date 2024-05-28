@@ -60,6 +60,11 @@ struct NavigationSheetView: View {
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
+                        if self.mapStore.navigatingRoute == nil {
+                            self.mapStore.navigatingRoute = route
+                        } else {
+                            self.mapStore.navigatingRoute = nil
+                        }
                         self.goPressed.toggle()
                     }
                 )
