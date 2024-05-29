@@ -73,6 +73,8 @@
 		CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */; };
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
 		CD7615652BF169C600DF2A25 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD7615642BF169C600DF2A25 /* MapViewCamera.swift */; };
+		CD7A377E2C07732700F1C2DD /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = FF82BD7DCFFCC2C9044E4E32 /* NavigationTransitions */; };
+		CD7A377F2C07732700F1C2DD /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 62678BC6BA8A80DCF2EBF8B8 /* BetterSafariView */; };
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
@@ -221,6 +223,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD7A377F2C07732700F1C2DD /* BetterSafariView in Frameworks */,
+				CD7A377E2C07732700F1C2DD /* NavigationTransitions in Frameworks */,
 				CD52C5072C04935400254AA8 /* MapLibreNavigationSwiftUI in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,

@@ -48,7 +48,8 @@ struct RootSheetView: View {
                     case .navigationAddSearchView:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
-                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
+                        let freshSearchViewStore: SearchViewStore = {
+                            let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
                                 self.searchViewStore.mapStore.waypoints?.append(item)
 
@@ -69,6 +70,7 @@ struct RootSheetView: View {
                         }
                     } onDismiss: {
                         self.mapStore.selectedItem = nil
+                        self.mapStore.displayableItems = []
                     }
                     .navigationBarBackButtonHidden()
                 }

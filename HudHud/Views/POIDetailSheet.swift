@@ -139,7 +139,6 @@ struct POIDetailSheet: View {
             AdditionalPOIDetailsView(routes: self.routes)
             DictionaryView(dictionary: self.item.userInfo)
         }
-
         .task {
             do {
                 _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
