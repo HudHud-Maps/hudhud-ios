@@ -102,6 +102,11 @@ struct RootSheetView: View {
             self.sheetSize = value
             // }
         }
+        .onDisappear {
+            withAnimation {
+                self.sheetSize = .zero
+            }
+        }
     }
 }
 
