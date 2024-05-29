@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import MapLibreSwiftUI
 import OSLog
 import POIService
 import SwiftUI
@@ -71,6 +72,7 @@ struct RootSheetView: View {
                     } onDismiss: {
                         self.mapStore.selectedItem = nil
                         self.mapStore.displayableItems = []
+                        self.mapStore.camera = MapViewCamera.trackUserLocation(zoom: self.mapStore.camera.zoom ?? MapViewCamera.Defaults.zoom)
                     }
                     .navigationBarBackButtonHidden()
                 }
