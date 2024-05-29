@@ -18,7 +18,6 @@ struct CategoriesBannerView: View {
                 ForEach(self.catagoryBannerData) { category in
                     Button(category.title, systemImage: category.iconSystemName) {
                         self.searchStore.searchText = category.title
-                        self.searchStore.selectedDetent = .medium
                     }.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
                 }
             }

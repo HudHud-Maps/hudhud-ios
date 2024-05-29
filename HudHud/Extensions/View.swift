@@ -12,3 +12,9 @@ import SwiftUI
 extension View {
     var backport: Backport<Self> { Backport(self) }
 }
+
+extension View {
+    func onOpenURL(handler: @escaping (URL) -> OpenURLAction.Result) -> some View {
+        environment(\.openURL, OpenURLAction(handler: handler))
+    }
+}
