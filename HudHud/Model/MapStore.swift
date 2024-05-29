@@ -42,6 +42,7 @@ final class MapStore: ObservableObject {
                 self.cameraTask?.cancel()
                 self.cameraTask = Task {
                     try await Task.sleep(nanoseconds: 400 * NSEC_PER_MSEC)
+                    try Task.checkCancellation()
                     await MainActor.run {
                         updateCameraForMapItems()
                     }
@@ -132,7 +133,7 @@ final class MapStore: ObservableObject {
         }
     }
 
-    var cameraTask: Task<Void, any Error>?
+    var cameraTask: Task<Void, Error>?
 
     // MARK: - Lifecycle
 
