@@ -76,7 +76,7 @@ paths:
           required: false
           schema:
             type: number
-        - name: long
+        - name: lon
           in: query
           description: ''
           required: false
@@ -117,11 +117,11 @@ paths:
                           properties:
                             lat:
                               type: number
-                            long:
+                            lon:
                               type: number
                           required:
                             - lat
-                            - long
+                            - lon
                 required:
                   - ok
                   - data
@@ -140,7 +140,7 @@ paths:
                         category: engineering - consulting
                         coordinates:
                           lat: 39.891111
-                          long: 21.3625
+                          lon: 21.3625
       security: []
   /p/{id}:
     get:
@@ -171,79 +171,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
-                    type: string
-                  address:
-                    type: string
-                  name:
-                    type: string
-                  category:
-                    type: string
-                  coordinates:
-                    type: object
-                    properties:
-                      type:
-                        type: string
-                      coordinates:
-                        type: array
-                        items:
-                          type: number
-                    required:
-                      - type
-                      - coordinates
-                  phone_number:
-                    type: string
-                  website:
-                    type: string
-                  rating:
-                    type: number
-                  ratings_count:
-                    type: integer
-                  instagram:
-                    type: string
-                  description:
-                    type: string
-                  is_open:
-                    type: boolean
-                  opening_hours:
-                    type: object
-                    properties:
-                      saturday:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            start:
-                              type: integer
-                            finish:
-                              type: integer
-                          required:
-                            - start
-                            - finish
-                      sunday:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            start:
-                              type: integer
-                            finish:
-                              type: integer
-                          required:
-                            - start
-                            - finish
-                    required:
-                      - saturday
-                      - sunday
-                  media_urls:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                        url:
-                          type: string
                   ok:
                     type: boolean
                   data:
@@ -262,11 +189,11 @@ paths:
                         properties:
                           lat:
                             type: number
-                          long:
+                          lon:
                             type: number
                         required:
                           - lat
-                          - long
+                          - lon
                       phone_number:
                         type: string
                       website:
@@ -300,19 +227,77 @@ paths:
                               required:
                                 - opens_at
                                 - closes_at
+                            nullable: true
                           sunday:
-                            type: object
-                            properties:
-                              opens_at:
-                                type: integer
-                              closes_at:
-                                type: integer
-                            required:
-                              - opens_at
-                              - closes_at
-                        required:
-                          - saturday
-                          - sunday
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                            nullable: true
+                          monday:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                              required:
+                                - opens_at
+                                - closes_at
+                            nullable: true
+                          tuesday:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                            nullable: true
+                          wednesday:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                              required:
+                                - opens_at
+                                - closes_at
+                            nullable: true
+                          thursday:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                            nullable: true
+                          friday:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                              required:
+                                - opens_at
+                                - closes_at
+                            nullable: true
+                        nullable: true
                       media_urls:
                         type: array
                         items:
@@ -337,25 +322,10 @@ paths:
                       - distance
                       - duration
                       - is_open
-                      - opening_hours
                       - media_urls
                 required:
                   - ok
                   - data
-                  - id
-                  - address
-                  - name
-                  - category
-                  - coordinates
-                  - phone_number
-                  - website
-                  - rating
-                  - ratings_count
-                  - instagram
-                  - description
-                  - is_open
-                  - opening_hours
-                  - media_urls
               examples:
                 '1':
                   summary: Success
@@ -371,7 +341,7 @@ paths:
                       category: engineering - consulting
                       coordinates:
                         lat: 39.891111
-                        long: 21.3625
+                        lon: 21.3625
                       phone_number: '0533132053'
                       website: www.darna.com.sa
                       rating: 4.5
@@ -413,8 +383,29 @@ paths:
                           - opens_at: 1000
                             closes_at: 1600
                         sunday:
-                          opens_at: 600
-                          closes_at: 720
+                          - opens_at: 600
+                            closes_at: 720
+                        monday:
+                          - opens_at: 600
+                            closes_at: 720
+                          - opens_at: 1000
+                            closes_at: 1600
+                        tuesday:
+                          - opens_at: 600
+                            closes_at: 720
+                        wednesday:
+                          - opens_at: 600
+                            closes_at: 720
+                          - opens_at: 1000
+                            closes_at: 1600
+                        thursday:
+                          - opens_at: 600
+                            closes_at: 720
+                        friday:
+                          - opens_at: 600
+                            closes_at: 720
+                          - opens_at: 1000
+                            closes_at: 1600
                       media_urls:
                         - type: image
                           url: https://media.hudhud.sa/4578.webp
@@ -532,7 +523,7 @@ paths:
           required: false
           schema:
             type: number
-        - name: long
+        - name: lon
           in: query
           description: ''
           required: false
@@ -553,6 +544,8 @@ paths:
               schema:
                 type: object
                 properties:
+                  ok:
+                    type: boolean
                   total:
                     type: integer
                   next_page_token:
@@ -576,7 +569,7 @@ paths:
                           type: number
                         price_range:
                           type: integer
-                        is_accessible:
+                        accessibility:
                           type: boolean
                         is_open:
                           type: boolean
@@ -588,32 +581,96 @@ paths:
                               items:
                                 type: object
                                 properties:
-                                  start:
+                                  opens_at:
                                     type: integer
-                                  finish:
+                                  closes_at:
                                     type: integer
-                          required:
-                            - saturday
+                                required:
+                                  - opens_at
+                                  - closes_at
+                              nullable: true
+                            sunday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens_at:
+                                    type: integer
+                                  closes_at:
+                                    type: integer
+                              nullable: true
+                            monday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens_at:
+                                    type: integer
+                                  closes_at:
+                                    type: integer
+                                required:
+                                  - opens_at
+                                  - closes_at
+                              nullable: true
+                            tuesday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens_at:
+                                    type: integer
+                                  closes_at:
+                                    type: integer
+                              nullable: true
+                            wednesday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens_at:
+                                    type: integer
+                                  closes_at:
+                                    type: integer
+                                required:
+                                  - opens_at
+                                  - closes_at
+                              nullable: true
+                            thursday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens_at:
+                                    type: integer
+                                  closes_at:
+                                    type: integer
+                              nullable: true
+                            friday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  opens_at:
+                                    type: integer
+                                  closes_at:
+                                    type: integer
+                                required:
+                                  - opens_at
+                                  - closes_at
+                              nullable: true
+                          nullable: true
                         phone_number:
                           type: string
                         coordinates:
                           type: object
                           properties:
-                            type:
-                              type: string
-                            coordinates:
-                              type: array
-                              items:
-                                type: number
                             lat:
                               type: number
-                            long:
+                            lon:
                               type: number
                           required:
                             - lat
-                            - long
-                            - type
-                            - coordinates
+                            - lon
                         website:
                           type: string
                         instagram:
@@ -627,10 +684,6 @@ paths:
                                 type: string
                               url:
                                 type: string
-                        accessibility:
-                          type: boolean
-                  ok:
-                    type: boolean
                 required:
                   - ok
                   - total
@@ -655,12 +708,38 @@ paths:
                         is_open: true
                         opening_hours:
                           saturday:
-                            - start: 400
-                              finish: 900
+                            - opens_at: 600
+                              closes_at: 720
+                            - opens_at: 1000
+                              closes_at: 1600
+                          sunday:
+                            - opens_at: 600
+                              closes_at: 720
+                          monday:
+                            - opens_at: 600
+                              closes_at: 720
+                            - opens_at: 1000
+                              closes_at: 1600
+                          tuesday:
+                            - opens_at: 600
+                              closes_at: 720
+                          wednesday:
+                            - opens_at: 600
+                              closes_at: 720
+                            - opens_at: 1000
+                              closes_at: 1600
+                          thursday:
+                            - opens_at: 600
+                              closes_at: 720
+                          friday:
+                            - opens_at: 600
+                              closes_at: 720
+                            - opens_at: 1000
+                              closes_at: 1600
                         phone_number: '+9664512'
                         coordinates:
                           lat: 39.891111
-                          long: 21.3625
+                          lon: 21.3625
                         website: https://hudhud.sa
                         instagram: ''
                         media_urls:
@@ -699,7 +778,7 @@ paths:
           required: false
           schema:
             type: number
-        - name: long
+        - name: lon
           in: query
           description: ''
           required: false
@@ -720,6 +799,8 @@ paths:
               schema:
                 type: object
                 properties:
+                  ok:
+                    type: boolean
                   next_page_token:
                     type: string
                   data:
@@ -734,11 +815,11 @@ paths:
                           properties:
                             lat:
                               type: number
-                            long:
+                            lon:
                               type: number
                           required:
                             - lat
-                            - long
+                            - lon
                         rating:
                           type: integer
                         ratings_count:
@@ -751,8 +832,6 @@ paths:
                           type: integer
                         trending_image_url:
                           type: string
-                  ok:
-                    type: boolean
                 required:
                   - ok
                   - next_page_token
@@ -767,7 +846,7 @@ paths:
                       - id: somedidsq
                         coordinates:
                           lat: 39.891111
-                          long: 21.3625
+                          lon: 21.3625
                         rating: 5
                         ratings_count: 100
                         name: َAlBaik
