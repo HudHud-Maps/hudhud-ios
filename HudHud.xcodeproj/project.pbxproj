@@ -68,6 +68,11 @@
 		CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */; };
 		CD34C5612C05C7FA006DCDBA /* RootSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */; };
 		CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C5632C05EF07006DCDBA /* BetterSafariView */; };
+		CD34C5672C0758D3006DCDBA /* openapi.yaml in Resources */ = {isa = PBXBuildFile; fileRef = CD34C5662C0758D3006DCDBA /* openapi.yaml */; };
+		CD34C5692C075901006DCDBA /* openapi-generator-config.yaml in Resources */ = {isa = PBXBuildFile; fileRef = CD34C5682C075901006DCDBA /* openapi-generator-config.yaml */; };
+		CD34C56D2C0765F3006DCDBA /* OpenAPIRuntime in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C56C2C0765F3006DCDBA /* OpenAPIRuntime */; };
+		CD34C5702C076617006DCDBA /* OpenAPIURLSession in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C56F2C076617006DCDBA /* OpenAPIURLSession */; };
+		CD34C5752C076722006DCDBA /* HudHudClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C5742C076722006DCDBA /* HudHudClient.swift */; };
 		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
@@ -188,6 +193,9 @@
 		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
+		CD34C5662C0758D3006DCDBA /* openapi.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = openapi.yaml; sourceTree = "<group>"; };
+		CD34C5682C075901006DCDBA /* openapi-generator-config.yaml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = "openapi-generator-config.yaml"; sourceTree = "<group>"; };
+		CD34C5742C076722006DCDBA /* HudHudClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudClient.swift; sourceTree = "<group>"; };
 		CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Limits.swift"; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
 		CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DictionaryView.swift; sourceTree = "<group>"; };
@@ -228,9 +236,11 @@
 				CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
+				CD34C5702C076617006DCDBA /* OpenAPIURLSession in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
 				CDE538C82BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
+				CD34C56D2C0765F3006DCDBA /* OpenAPIRuntime in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
 				CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
@@ -337,6 +347,16 @@
 			path = UIStyle;
 			sourceTree = "<group>";
 		};
+		CD34C5652C075863006DCDBA /* OpenAPI */ = {
+			isa = PBXGroup;
+			children = (
+				CD34C5662C0758D3006DCDBA /* openapi.yaml */,
+				CD34C5682C075901006DCDBA /* openapi-generator-config.yaml */,
+				CD34C5742C076722006DCDBA /* HudHudClient.swift */,
+			);
+			path = OpenAPI;
+			sourceTree = "<group>";
+		};
 		CD85CB2C2BB4650C00C99774 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -373,6 +393,7 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				CD34C5652C075863006DCDBA /* OpenAPI */,
 				CD85CB2C2BB4650C00C99774 /* Protocols */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
@@ -555,7 +576,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				3D11995E7FC33F7673756259 /* PBXTargetDependency */,
+				CD34C5722C076679006DCDBA /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -573,6 +594,8 @@
 				CD1882FD2BF63E8200C8AD49 /* MapLibreSwiftUI */,
 				CD34C55C2C03EF43006DCDBA /* NavigationTransitions */,
 				CD34C5632C05EF07006DCDBA /* BetterSafariView */,
+				CD34C56C2C0765F3006DCDBA /* OpenAPIRuntime */,
+				CD34C56F2C076617006DCDBA /* OpenAPIURLSession */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -658,6 +681,9 @@
 				CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CD34C55B2C03EF43006DCDBA /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
 				CD34C5622C05EF07006DCDBA /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
+				CD34C56A2C0765B4006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-generator" */,
+				CD34C56B2C0765F3006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */,
+				CD34C56E2C076617006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -677,6 +703,7 @@
 			files = (
 				CD1298832B99031E00EC3295 /* Preview Assets.xcassets in Resources */,
 				CD1298822B99031E00EC3295 /* Riyadh.gpx in Resources */,
+				CD34C5692C075901006DCDBA /* openapi-generator-config.yaml in Resources */,
 				CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */,
 				CDAE05A82B69358E003E5196 /* Terrain.json in Resources */,
 				CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */,
@@ -685,6 +712,7 @@
 				F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */,
 				D811C7BCC8E737CD5281D017 /* pannellum.css in Resources */,
 				C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */,
+				CD34C5672C0758D3006DCDBA /* openapi.yaml in Resources */,
 				253BCFDA8087C938D044B441 /* streetview.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -789,6 +817,7 @@
 				A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */,
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
+				CD34C5752C076722006DCDBA /* HudHudClient.swift in Sources */,
 				9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */,
 				CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */,
 				A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */,
@@ -829,8 +858,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3D11995E7FC33F7673756259 /* PBXTargetDependency */ = {
+		CD34C5722C076679006DCDBA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			productRef = CD34C5712C076679006DCDBA /* OpenAPIGenerator */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1188,6 +1218,30 @@
 				kind = branch;
 			};
 		};
+		CD34C56A2C0765B4006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-generator" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-generator";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		CD34C56B2C0765F3006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-runtime";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.4.0;
+			};
+		};
+		CD34C56E2C076617006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-openapi-urlsession";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
@@ -1272,6 +1326,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD34C5622C05EF07006DCDBA /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
 			productName = BetterSafariView;
+		};
+		CD34C56C2C0765F3006DCDBA /* OpenAPIRuntime */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD34C56B2C0765F3006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-runtime" */;
+			productName = OpenAPIRuntime;
+		};
+		CD34C56F2C076617006DCDBA /* OpenAPIURLSession */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD34C56E2C076617006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-urlsession" */;
+			productName = OpenAPIURLSession;
+		};
+		CD34C5712C076679006DCDBA /* OpenAPIGenerator */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CD34C56A2C0765B4006DCDBA /* XCRemoteSwiftPackageReference "swift-openapi-generator" */;
+			productName = "plugin:OpenAPIGenerator";
 		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;

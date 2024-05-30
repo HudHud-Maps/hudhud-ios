@@ -1,0 +1,843 @@
+openapi: 3.0.1
+info:
+  title: sinbad
+  description: ''
+  version: 1.0.0
+tags: []
+paths:
+  /m/styles:
+    get:
+      summary: Map styles
+      deprecated: false
+      description: 'Contains map style urls '
+      operationId: listMapStyles
+      tags: []
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        style_url:
+                          type: string
+                        thumbnail_url:
+                          type: string
+                required:
+                  - ok
+                  - data
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    ok: true
+                    data:
+                      - name: default
+                        style_url: https://styles.hudhud.sa/default.json
+                        thumbnail_url: https://static.hudhud.sa/default_thumb.webp
+      security: []
+  /p/typeahead:
+    get:
+      summary: POIs typeahead search
+      deprecated: false
+      description: >-
+        Search as you type feature, this endpoint searches POIs that have
+        similar prefix and sends back the auto-completed matching results.
+      operationId: getTypeahead
+      tags: []
+      parameters:
+        - name: query
+          in: query
+          description: Prefix to search for
+          required: true
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+        - name: long
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+        - name: Accept-Language
+          in: header
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        address:
+                          type: string
+                        name:
+                          type: string
+                        category:
+                          type: string
+                        coordinates:
+                          type: object
+                          properties:
+                            lat:
+                              type: number
+                            long:
+                              type: number
+                          required:
+                            - lat
+                            - long
+                required:
+                  - ok
+                  - data
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    ok: true
+                    data:
+                      - id: e3_Bn48BNW7Fxf0YbFTq
+                        address: >-
+                          Mohisini Mall, Ash Shaikh Muhammad Ibn Mani Street,
+                          Al-Awali, Makkah Al Mukarramah, Makkah Region, 24251,
+                          Saudi Arabia
+                        name: Daran Engineering Consultancy
+                        category: engineering - consulting
+                        coordinates:
+                          lat: 39.891111
+                          long: 21.3625
+      security: []
+  /p/{id}:
+    get:
+      summary: POI details
+      deprecated: false
+      description: ''
+      operationId: getPoi
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+        - name: Accept-Language
+          in: header
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  address:
+                    type: string
+                  name:
+                    type: string
+                  category:
+                    type: string
+                  coordinates:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      coordinates:
+                        type: array
+                        items:
+                          type: number
+                    required:
+                      - type
+                      - coordinates
+                  phone_number:
+                    type: string
+                  website:
+                    type: string
+                  rating:
+                    type: number
+                  ratings_count:
+                    type: integer
+                  instagram:
+                    type: string
+                  description:
+                    type: string
+                  is_open:
+                    type: boolean
+                  opening_hours:
+                    type: object
+                    properties:
+                      saturday:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            start:
+                              type: integer
+                            finish:
+                              type: integer
+                          required:
+                            - start
+                            - finish
+                      sunday:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            start:
+                              type: integer
+                            finish:
+                              type: integer
+                          required:
+                            - start
+                            - finish
+                    required:
+                      - saturday
+                      - sunday
+                  media_urls:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                        url:
+                          type: string
+                  ok:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                      address:
+                        type: string
+                      name:
+                        type: string
+                      category:
+                        type: string
+                      coordinates:
+                        type: object
+                        properties:
+                          lat:
+                            type: number
+                          long:
+                            type: number
+                        required:
+                          - lat
+                          - long
+                      phone_number:
+                        type: string
+                      website:
+                        type: string
+                      rating:
+                        type: number
+                      ratings_count:
+                        type: integer
+                      instagram:
+                        type: string
+                      description:
+                        type: string
+                      distance:
+                        type: number
+                      duration:
+                        type: number
+                      is_open:
+                        type: boolean
+                      opening_hours:
+                        type: object
+                        properties:
+                          saturday:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                opens_at:
+                                  type: integer
+                                closes_at:
+                                  type: integer
+                              required:
+                                - opens_at
+                                - closes_at
+                          sunday:
+                            type: object
+                            properties:
+                              opens_at:
+                                type: integer
+                              closes_at:
+                                type: integer
+                            required:
+                              - opens_at
+                              - closes_at
+                        required:
+                          - saturday
+                          - sunday
+                      media_urls:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            url:
+                              type: string
+                    required:
+                      - id
+                      - address
+                      - name
+                      - category
+                      - coordinates
+                      - phone_number
+                      - website
+                      - rating
+                      - ratings_count
+                      - instagram
+                      - description
+                      - distance
+                      - duration
+                      - is_open
+                      - opening_hours
+                      - media_urls
+                required:
+                  - ok
+                  - data
+                  - id
+                  - address
+                  - name
+                  - category
+                  - coordinates
+                  - phone_number
+                  - website
+                  - rating
+                  - ratings_count
+                  - instagram
+                  - description
+                  - is_open
+                  - opening_hours
+                  - media_urls
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    ok: true
+                    data:
+                      id: pWoPoI8B8Xvus8TK_yvV
+                      address: >-
+                        Mohisini Mall, Ash Shaikh Muhammad Ibn Mani Street,
+                        Al-Awali, Makkah Al Mukarramah, Makkah Region, 24251,
+                        Saudi Arabia
+                      name: Daran Engineering Consultancy
+                      category: engineering - consulting
+                      coordinates:
+                        lat: 39.891111
+                        long: 21.3625
+                      phone_number: '0533132053'
+                      website: www.darna.com.sa
+                      rating: 4.5
+                      ratings_count: 706
+                      instagram: https://www.instagram.com/darna.22/
+                      description: >-
+                        who are weDarna Engineering Consulting is a destination
+                        for those seeking excellence by providing comprehensive
+                        engineering consulting services in innovative ways and
+                        highly qualified and experienced consultants in the
+                        fields of infrastructure, designing and implementing
+                        electrical, civil and architectural plans, striving to
+                        create sustainable development in the field of
+                        consulting and design in a way that preserves the
+                        nobility of the past and the ambition of the future for
+                        an ambitious nation, a prosperous economy and a society.
+                        Vital contributors to achieving the Kingdom of Saudi
+                        Arabia’s Vision 2030.Our messageWe are committed to
+                        providing advisory and administrative services in
+                        accordance with the highest international quality
+                        standards, maintaining optimal exploitation of available
+                        resources with trained and qualified national
+                        competencies to achieve the satisfaction of our
+                        customers and partners.Our visionThe summit is our
+                        homerate usOriginality, innovation, ambition, fluency,
+                        agility, flexibility, qualityOur goalsDistinctive and
+                        attractive architectural designs, comprehensive project
+                        supervision using innovative and economical methods,
+                        project management with high technologies, and providing
+                        service that exceeds the expectations of our customers
+                        and partners.
+                      distance: 7634621.835636893
+                      duration: 31.457
+                      is_open: true
+                      opening_hours:
+                        saturday:
+                          - opens_at: 600
+                            closes_at: 720
+                          - opens_at: 1000
+                            closes_at: 1600
+                        sunday:
+                          opens_at: 600
+                          closes_at: 720
+                      media_urls:
+                        - type: image
+                          url: https://media.hudhud.sa/4578.webp
+        '404':
+          description: Record Not Found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                  message:
+                    type: string
+                  code:
+                    type: string
+                required:
+                  - ok
+                  - message
+                  - code
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    ok: false
+                    message: the requested poi was not found
+                    code: H04
+      security: []
+  /p:
+    get:
+      summary: List pois (pois search)
+      deprecated: false
+      description: ''
+      operationId: listPois
+      tags: []
+      parameters:
+        - name: page
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: integer
+        - name: sort_by
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+            enum:
+              - relevance
+              - distance
+            x-apidog:
+              enumDescriptions:
+                relevance: ''
+                distance: ''
+        - name: price_range
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
+            x-apidog:
+              enumDescriptions:
+                '1': ''
+                '2': ''
+                '3': ''
+                '4': ''
+        - name: rating
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+            minimum: 0
+            maximum: 5
+        - name: open_at
+          in: query
+          description: in UTC format
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: category
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: text
+          in: query
+          description: This should search the name,category and description ?
+          required: false
+          schema:
+            type: string
+        - name: next_page_token
+          in: query
+          description: When this is sent it takes precedence over page and limit.
+          required: false
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+        - name: long
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+        - name: Accept-Language
+          in: header
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  next_page_token:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        rating:
+                          type: number
+                        ratings_count:
+                          type: integer
+                        category:
+                          type: string
+                        distance:
+                          type: number
+                        price_range:
+                          type: integer
+                        is_accessible:
+                          type: boolean
+                        is_open:
+                          type: boolean
+                        opening_hours:
+                          type: object
+                          properties:
+                            saturday:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  start:
+                                    type: integer
+                                  finish:
+                                    type: integer
+                          required:
+                            - saturday
+                        phone_number:
+                          type: string
+                        coordinates:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            coordinates:
+                              type: array
+                              items:
+                                type: number
+                            lat:
+                              type: number
+                            long:
+                              type: number
+                          required:
+                            - lat
+                            - long
+                            - type
+                            - coordinates
+                        website:
+                          type: string
+                        instagram:
+                          type: string
+                        media_urls:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              type:
+                                type: string
+                              url:
+                                type: string
+                        accessibility:
+                          type: boolean
+                  ok:
+                    type: boolean
+                required:
+                  - ok
+                  - total
+                  - next_page_token
+                  - data
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    ok: true
+                    total: 100
+                    next_page_token: somebase64encodedstring=
+                    data:
+                      - id: 4rtfdvb7rzw
+                        name: Dunkin' donuts
+                        rating: 2.1
+                        ratings_count: 100
+                        category: café
+                        distance: 41.41
+                        price_range: 2
+                        accessibility: true
+                        is_open: true
+                        opening_hours:
+                          saturday:
+                            - start: 400
+                              finish: 900
+                        phone_number: '+9664512'
+                        coordinates:
+                          lat: 39.891111
+                          long: 21.3625
+                        website: https://hudhud.sa
+                        instagram: ''
+                        media_urls:
+                          - type: picture
+                            url: https://media.hudhud.sa/dsqdqs.jpeg
+      security: []
+  /p/trending:
+    get:
+      summary: Trending POIs
+      deprecated: false
+      description: ''
+      operationId: listTrendingPois
+      tags: []
+      parameters:
+        - name: page
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: integer
+        - name: next_page_token
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+        - name: long
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+        - name: Accept-Language
+          in: header
+          description: ''
+          required: false
+          example: ''
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  next_page_token:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        coordinates:
+                          type: object
+                          properties:
+                            lat:
+                              type: number
+                            long:
+                              type: number
+                          required:
+                            - lat
+                            - long
+                        rating:
+                          type: integer
+                        ratings_count:
+                          type: integer
+                        name:
+                          type: string
+                        category:
+                          type: string
+                        distance:
+                          type: integer
+                        trending_image_url:
+                          type: string
+                  ok:
+                    type: boolean
+                required:
+                  - ok
+                  - next_page_token
+                  - data
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    ok: true
+                    next_page_token: somebase64encodedstring=
+                    data:
+                      - id: somedidsq
+                        coordinates:
+                          lat: 39.891111
+                          long: 21.3625
+                        rating: 5
+                        ratings_count: 100
+                        name: َAlBaik
+                        category: restaurant
+                        distance: 14
+                        trending_image_url: https://media.hudhud.sa/dqdv.webp
+      security: []
+components:
+  schemas:
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Tag ID
+        name:
+          type: string
+          description: Tag Name
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Category ID
+        name:
+          type: string
+          description: Category Name
+    Pet:
+      required:
+        - name
+        - photoUrls
+        - id
+        - category
+        - tags
+        - status
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+          minimum: 1
+          description: Pet ID
+        category:
+          $ref: '#/components/schemas/Category'
+          description: group
+        name:
+          type: string
+          description: name
+          examples:
+            - doggie
+        photoUrls:
+          type: array
+          items:
+            type: string
+          description: image URL
+        tags:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tag'
+          description: tag
+        status:
+          type: string
+          description: Pet Sales Status
+          enum:
+            - available
+            - pending
+            - sold
+  securitySchemes: {}
+servers: []
