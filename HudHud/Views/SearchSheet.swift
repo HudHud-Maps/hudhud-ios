@@ -92,12 +92,14 @@ struct SearchSheet: View {
                             Task {
                                 if let resolvedItem = item.innerModel as? ResolvedItem {
                                     self.mapStore.selectedItem = resolvedItem
+                                    self.storeRecent(item: resolvedItem)
                                 } else {
                                     // Currently only ApplePOI supports resolving, so this should only be called on apple pois
                                     let resolvedItems = try await item.resolve(in: self.searchStore.apple)
 
                                     if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
                                         self.mapStore.selectedItem = resolvedItem
+                                        self.storeRecent(item: resolvedItem)
 
                                         let index = self.mapStore.displayableItems.firstIndex { itemInArray in
                                             return itemInArray.id == resolvedItem.id
@@ -144,11 +146,8 @@ struct SearchSheet: View {
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                     SearchSectionView(title: "Recents") {
-                        ForEach(self.searchStore.recentViewedItem) { item in
-                            RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
-                        }
+                        RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
                     }
-
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                     .padding(.top)

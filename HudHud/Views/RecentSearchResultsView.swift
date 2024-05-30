@@ -11,21 +11,15 @@ import POIService
 import SwiftUI
 
 struct RecentSearchResultsView: View {
-    let item: ResolvedItem
     let mapStore: MapStore
     let searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
 
     var body: some View {
-        VStack {
-            Button {
-                let selectedItem = self.item
-                let mapItems = [AnyDisplayableAsRow(self.item)]
-                self.mapStore.selectedItem = selectedItem
-                self.mapStore.displayableItems = mapItems
-            } label: {
+        List {
+            ForEach(self.searchStore.recentViewedItem, id: \.self) { item in
                 HStack(alignment: .center, spacing: 12) {
-                    Image(systemSymbol: self.item.symbol)
+                    Image(systemSymbol: item.symbol)
                         .resizable()
                         .font(.title2)
                         .aspectRatio(contentMode: .fit)
@@ -37,16 +31,16 @@ struct RecentSearchResultsView: View {
                         .layoutPriority(1)
                         .frame(minWidth: .leastNonzeroMagnitude)
                         .background(
-                            self.item.tintColor.mask(Circle())
+                            item.tintColor.mask(Circle())
                         )
 
                     VStack(alignment: .leading) {
-                        Text(self.item.title)
+                        Text(item.title)
                             .foregroundStyle(.primary)
                             .font(.headline)
                             .lineLimit(1)
                             .foregroundColor(.primary)
-                        Text(self.item.subtitle)
+                        Text(item.subtitle)
                             .foregroundStyle(.secondary)
                             .font(.body)
                             .lineLimit(1)
@@ -54,15 +48,33 @@ struct RecentSearchResultsView: View {
                     }
                     Spacer()
                 }
+                .onTapGesture {
+                    let selectedItem = item
+                    let mapItems = [AnyDisplayableAsRow(item)]
+                    self.mapStore.selectedItem = selectedItem
+                    self.mapStore.displayableItems = mapItems
+                }
             }
-            .padding(8)
+            .onMove(perform: self.moveAction)
+            .onDelete { indexSet in
+                self.searchStore.recentViewedItem.remove(atOffsets: indexSet)
+            }
+            .listRowSeparator(.hidden)
+            .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+            .padding(.top)
         }
+        .scrollDisabled(true)
+        .aspectRatio(contentMode: .fill)
     }
 
+    // MARK: - Internal
+
+    @MainActor func moveAction(from source: IndexSet, to destination: Int) {
+        self.searchStore.recentViewedItem.move(fromOffsets: source, toOffset: destination)
+    }
 }
 
 #Preview {
-    RecentSearchResultsView(item: .artwork,
-                            mapStore: .storeSetUpForPreviewing,
+    RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                             searchStore: .storeSetUpForPreviewing)
 }
