@@ -68,11 +68,11 @@ struct SearchSheet: View {
             }
             .background(.quinary)
             .cornerRadius(12)
-            .padding()
-
-            if !self.searchStore.searchText.isEmpty {
-                if self.searchStore.isSearching {
-                    List {
+            .padding(.horizontal)
+            .padding(.top)
+            List {
+                if !self.searchStore.searchText.isEmpty {
+                    if self.searchStore.isSearching {
                         ForEach(SearchSheet.fakeData.indices, id: \.self) { item in
                             Button(action: {},
                                    label: {
@@ -81,79 +81,80 @@ struct SearchSheet: View {
                                    })
                                    .redacted(reason: .placeholder)
                                    .disabled(true)
+                                   .listRowSeparator(.hidden)
+                                   .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
                         }
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
-                    }
-                    .listStyle(.plain)
-                } else {
-                    List(self.mapStore.displayableItems) { item in
-                        Button(action: {
-                            Task {
-                                if let resolvedItem = item.innerModel as? ResolvedItem {
-                                    self.mapStore.selectedItem = resolvedItem
-                                    self.storeRecent(item: resolvedItem)
-                                } else {
-                                    // Currently only ApplePOI supports resolving, so this should only be called on apple pois
-                                    let resolvedItems = try await item.resolve(in: self.searchStore.apple)
-
-                                    if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
+                    } else {
+                        ForEach(self.mapStore.displayableItems) { item in
+                            Button(action: {
+                                Task {
+                                    if let resolvedItem = item.innerModel as? ResolvedItem {
                                         self.mapStore.selectedItem = resolvedItem
                                         self.storeRecent(item: resolvedItem)
-
-                                        let index = self.mapStore.displayableItems.firstIndex { itemInArray in
-                                            return itemInArray.id == resolvedItem.id
-                                        }
-
-                                        if let index {
-                                            self.mapStore.displayableItems[index] = AnyDisplayableAsRow(resolvedItem)
-                                        } else {
-                                            Logger.searchView.error("Resolved an item that is no longer in the displayable list")
-                                        }
-
                                     } else {
-                                        self.mapStore.displayableItems = resolvedItems
+                                        // Currently only ApplePOI supports resolving, so this should only be called on apple pois
+                                        let resolvedItems = try await item.resolve(in: self.searchStore.apple)
+
+                                        if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
+                                            self.mapStore.selectedItem = resolvedItem
+                                            self.storeRecent(item: resolvedItem)
+
+                                            let index = self.mapStore.displayableItems.firstIndex { itemInArray in
+                                                return itemInArray.id == resolvedItem.id
+                                            }
+
+                                            if let index {
+                                                self.mapStore.displayableItems[index] = AnyDisplayableAsRow(resolvedItem)
+                                            } else {
+                                                Logger.searchView.error("Resolved an item that is no longer in the displayable list")
+                                            }
+
+                                        } else {
+                                            self.mapStore.displayableItems = resolvedItems
+                                        }
                                     }
-                                }
-                                switch self.searchStore.searchType {
-                                case let .returnPOILocation(completion):
-                                    if let selectedItem = self.mapStore.selectedItem {
-                                        completion?(.waypoint(selectedItem))
-                                        self.dismiss()
+                                    switch self.searchStore.searchType {
+                                    case let .returnPOILocation(completion):
+                                        if let selectedItem = self.mapStore.selectedItem {
+                                            completion?(.waypoint(selectedItem))
+                                            self.dismiss()
+                                        }
+                                    case .selectPOI:
+                                        break
                                     }
-                                case .selectPOI:
-                                    break
+
+                                    self.searchIsFocused = false
                                 }
 
-                                self.searchIsFocused = false
-                            }
-
-                        }, label: {
-                            SearchResultItem(prediction: item, searchViewStore: self.searchStore)
-                                .frame(maxWidth: .infinity)
-                                .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
-                        })
-                        .disabled(self.searchStore.isSearching)
-                        .listRowSeparator(.hidden)
-                        .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+                            }, label: {
+                                SearchResultItem(prediction: item, searchViewStore: self.searchStore)
+                                    .frame(maxWidth: .infinity)
+                                    .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
+                            })
+                            .disabled(self.searchStore.isSearching)
+                            .listRowSeparator(.hidden)
+                            .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+                        }
+                        .listStyle(.plain)
                     }
-                    .listStyle(.plain)
-                }
-            } else {
-                List {
+                } else {
                     SearchSectionView(title: "Favorites") {
                         FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
                     }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
+                    .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                    .listRowSeparator(.hidden)
+
                     SearchSectionView(title: "Recents") {
                         RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
                     }
+                    .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)
-                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
-                    .padding(.top)
                 }
-                .listStyle(.plain)
             }
+
+            .listRowSeparator(.hidden)
+            .scrollIndicators(.hidden)
+            .listStyle(.plain)
         }
     }
 
