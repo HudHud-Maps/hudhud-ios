@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import MapKit
-import POIService
 import SwiftUI
 
 struct RecentSearchResultsView: View {

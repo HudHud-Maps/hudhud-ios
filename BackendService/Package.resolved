@@ -1,15 +1,6 @@
 {
   "pins" : [
     {
-      "identity" : "bettersafariview2",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/lake-of-fire/BetterSafariView2.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "4e0f3af7787296e73e6b68499f7d78441b798649"
-      }
-    },
-    {
       "identity" : "mapbox-directions-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
@@ -23,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "6d0071977ed1f2380c739715f82ac650f99b0824",
-        "version" : "6.4.0"
+        "revision" : "816a24eb56b7cd004e389f7da404047839d5dc2b",
+        "version" : "6.4.2"
       }
     },
     {
@@ -34,33 +25,6 @@
       "state" : {
         "branch" : "main",
         "revision" : "3ffaa51d428ebf25e744fdbef8bbeeb02e959d01"
-      }
-    },
-    {
-      "identity" : "maplibre-swift-macros",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
-      "state" : {
-        "revision" : "d52adbcbfaf96bd0723a156bd838826916ff7a69",
-        "version" : "0.0.3"
-      }
-    },
-    {
-      "identity" : "maplibre-swiftui-dsl-playground",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "347c224ff81b4ed8f477f9e967367d8c6eb6d39f"
-      }
-    },
-    {
-      "identity" : "mockable",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Kolos65/Mockable.git",
-      "state" : {
-        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
-        "version" : "0.0.3"
       }
     },
     {
@@ -88,15 +52,6 @@
       "state" : {
         "revision" : "7cca2d60925876b5953a2cf7341cd80fbeac983c",
         "version" : "4.1.1"
-      }
-    },
-    {
-      "identity" : "simpletoast",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sanzaru/SimpleToast",
-      "state" : {
-        "revision" : "8dbc2e7c33cda25c0b2efafd59716cb9820c83eb",
-        "version" : "0.8.1"
       }
     },
     {
@@ -178,51 +133,6 @@
       "state" : {
         "revision" : "6efbfda5276bbbc8b4fec5d744f0ecd8c784eb47",
         "version" : "1.0.1"
-      }
-    },
-    {
-      "identity" : "swift-syntax",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
-      "state" : {
-        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
-        "version" : "509.1.1"
-      }
-    },
-    {
-      "identity" : "swiftlintplugin",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/lukepistrol/SwiftLintPlugin.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "e5dcdd16e3aaefd5945cfc2fd84a0bd802802d0e"
-      }
-    },
-    {
-      "identity" : "swiftlocation",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/SwiftLocation.git",
-      "state" : {
-        "branch" : "master",
-        "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
-      }
-    },
-    {
-      "identity" : "swiftui-introspect",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/siteline/swiftui-introspect",
-      "state" : {
-        "revision" : "7dc5b287f8040e4ad5038739850b758e78f77808",
-        "version" : "1.1.4"
-      }
-    },
-    {
-      "identity" : "swiftui-navigation-transitions",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/davdroman/swiftui-navigation-transitions.git",
-      "state" : {
-        "revision" : "a6a3c70ad5d771bd1e927fb55897231cd9592024",
-        "version" : "0.13.3"
       }
     },
     {

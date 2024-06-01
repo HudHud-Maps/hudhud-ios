@@ -31,7 +31,6 @@ public actor ToursprungPOI: POIServiceProtocol {
     }
 
     private let session: URLSession
-    private let debouncer: AsyncDebouncer<String, [ResolvedItem]>
 
     // MARK: - POIServiceProtocol
 
@@ -41,15 +40,17 @@ public actor ToursprungPOI: POIServiceProtocol {
 
     public init() {
         self.session = .shared
-        self.debouncer = AsyncDebouncer()
     }
 
     // MARK: - Public
 
-    public func predict(term: String) async throws -> [AnyDisplayableAsRow] {
-        let results = try await self.debouncer.debounce(input: term) { input in
-            return try await self.search(term: input)
-        }
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
+        
+        try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC) // debouncer
+        try Task.checkCancellation()
+        
+        let results =  try await self.search(term: term)
+        
         return results.map { item in
             return AnyDisplayableAsRow(item)
         }
