@@ -16,7 +16,7 @@ struct RecentSearchResultsView: View {
     @ScaledMetric var imageSize = 24
 
     var body: some View {
-        ForEach(self.searchStore.recentViewedItem, id: \.self) { item in
+        ForEach(self.searchStore.recentViewedItem) { item in
             HStack(alignment: .center, spacing: 12) {
                 Image(systemSymbol: item.symbol)
                     .resizable()

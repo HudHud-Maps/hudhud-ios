@@ -13,7 +13,7 @@ import SwiftUI
 struct SearchResultItem: View {
 
     let prediction: any DisplayableAsRow
-    @ObservedObject var searchViewStore: SearchViewStore
+    @Binding var searchText: String
     @ScaledMetric var imageSize = 24
 
     var body: some View {
@@ -44,7 +44,7 @@ struct SearchResultItem: View {
             }
             Spacer()
             Button(action: {
-                self.searchViewStore.searchText = self.prediction.title
+                self.searchText = self.prediction.title
             }, label: {
                 Image(systemSymbol: .arrowUpLeft)
             })
@@ -57,10 +57,10 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
-                                                title: "Starbucks",
-                                                subtitle: "Coffee",
-                                                symbol: .cupAndSaucer,
-                                                type: .appleResolved),
-                     searchViewStore: .storeSetUpForPreviewing)
+    @State var searchText: String = ""
+    return SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
+                                                       title: "Starbucks",
+                                                       subtitle: "Coffee",
+                                                       symbol: .cupAndSaucer,
+                                                       type: .appleResolved), searchText: $searchText)
 }
