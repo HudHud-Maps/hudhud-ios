@@ -6,7 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import POIService
+import BackendService
 import SwiftUI
 
 // MARK: - NotificationQueue

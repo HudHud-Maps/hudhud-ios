@@ -1,5 +1,5 @@
 //
-//  POIService.swift
+//  BackendService.swift
 //  POIService
 //
 //  Created by Patrick Kladek on 01.02.24.
@@ -18,7 +18,7 @@ public protocol POIServiceProtocol {
 
     static var serviceName: String { get }
     func lookup(id: String, prediction: Any) async throws -> [ResolvedItem]
-    func predict(term: String) async throws -> [AnyDisplayableAsRow]
+    func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - PredictionResult
@@ -27,6 +27,7 @@ public enum PredictionResult: Hashable, Codable {
     case apple(completion: MKLocalSearchCompletion)
     case appleResolved
     case toursprung
+    case hudhud
 
     enum CodingKeys: CodingKey {
         case appleResolved

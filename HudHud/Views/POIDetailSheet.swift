@@ -6,12 +6,12 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import CoreLocation
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 import OSLog
-import POIService
 import SFSafeSymbols
 import SimpleToast
 import SwiftLocation

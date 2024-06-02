@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import CoreLocation
 import Foundation
 import MapboxDirections
@@ -13,7 +14,6 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
-import POIService
 import SwiftUI
 
 // MARK: - MapStore

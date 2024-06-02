@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 @testable import HudHud
-import POIService
 import XCTest
 
 final class HudHudTests: XCTestCase {

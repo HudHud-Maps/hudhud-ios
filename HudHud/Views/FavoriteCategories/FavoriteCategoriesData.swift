@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Foundation
-import POIService
 import SFSafeSymbols
 import SwiftUI
 

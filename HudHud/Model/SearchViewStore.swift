@@ -6,9 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Combine
 import Foundation
-import POIService
 import SwiftUI
 
 // MARK: - SearchViewStore
@@ -40,6 +40,7 @@ final class SearchViewStore: ObservableObject {
         enum Provider: CaseIterable {
             case apple
             case toursprung
+            case hudhud
         }
 
         case live(provider: Provider)
@@ -51,6 +52,7 @@ final class SearchViewStore: ObservableObject {
     private var task: Task<Void, Error>?
     var apple = ApplePOI()
     private var toursprung = ToursprungPOI()
+    private var hudhud = HudHudPOI()
     private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
 
@@ -86,7 +88,7 @@ final class SearchViewStore: ObservableObject {
                         defer { self.isSearching = false }
                         self.isSearching = true
 
-                        let prediction = try await self.apple.predict(term: newValue)
+                        let prediction = try await self.apple.predict(term: newValue, coordinates: nil)
                         let items = prediction
                         self.mapStore.displayableItems = items
                     }
@@ -96,7 +98,7 @@ final class SearchViewStore: ObservableObject {
                         defer { self.isSearching = false }
                         self.isSearching = true
 
-                        let prediction = try await self.toursprung.predict(term: newValue)
+                        let prediction = try await self.toursprung.predict(term: newValue, coordinates: nil)
                         let items = prediction
                         self.mapStore.displayableItems = items
                     }
@@ -109,6 +111,16 @@ final class SearchViewStore: ObservableObject {
                         .pharmacy,
                         .supermarket
                     ]
+                case .live(provider: .hudhud):
+                    self.task?.cancel()
+                    self.task = Task {
+                        defer { self.isSearching = false }
+                        self.isSearching = true
+
+                        let prediction = try await self.hudhud.predict(term: newValue, coordinates: nil)
+                        let items = prediction
+                        self.mapStore.displayableItems = items
+                    }
                 }
             }
         if case .preview = mode {

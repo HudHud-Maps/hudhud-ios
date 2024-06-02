@@ -6,8 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import OSLog
-import POIService
 import SwiftUI
 
 struct RootSheetView: View {
