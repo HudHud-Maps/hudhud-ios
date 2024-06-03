@@ -33,70 +33,99 @@ struct POIDetailSheet: View {
     @Environment(\.openURL) private var openURL
 
     var body: some View {
-        VStack(alignment: .leading) {
-            HStack(alignment: .top) {
-                VStack {
-                    Text(self.item.title)
-                        .font(.title.bold())
-                        .frame(maxWidth: .infinity, alignment: .leading)
+        ScrollView {
+            VStack(alignment: .leading) {
+                HStack(alignment: .top) {
+                    VStack {
+                        Text(self.item.title)
+                            .font(.title.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Text(self.item.subtitle)
-                        .font(.footnote)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 8)
-                }
-
-                Button(action: {
-                    self.dismiss()
-                    self.onDismiss()
-                }, label: {
-                    ZStack {
-                        Circle()
-                            .fill(.quaternary)
-                            .frame(width: 30, height: 30)
-
-                        Image(systemSymbol: .xmark)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
+                        Text(self.item.subtitle)
+                            .font(.footnote)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.bottom, 8)
                     }
-                    .padding(8)
-                    .contentShape(Circle())
-                })
-                .buttonStyle(PlainButtonStyle())
-                .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
-            }
-            .padding([.top, .leading, .trailing])
 
-            HStack {
-                Button(action: {
-                    guard let routes else { return }
-                    self.onStart(routes)
-                }, label: {
-                    VStack(spacing: 2) {
-                        Image(systemSymbol: .carFill)
-                        Text("Start", comment: "get the navigation route")
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 2)
-                })
-                .buttonStyle(.borderedProminent)
-                .disabled(self.routes == nil)
-
-                if let phone = self.item.phone, !phone.isEmpty {
                     Button(action: {
-                        // Perform phone action
-                        if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                            self.openURL(url)
+                        self.dismiss()
+                        self.onDismiss()
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .fill(.quaternary)
+                                .frame(width: 30, height: 30)
+
+                            Image(systemSymbol: .xmark)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundColor(.white)
                         }
-                        Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
+                        .padding(8)
+                        .contentShape(Circle())
+                    })
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                }
+                .padding([.top, .leading, .trailing])
+                HStack {
+                    Button(action: {
+                        guard let routes else { return }
+                        self.onStart(routes)
                     }, label: {
                         VStack(spacing: 2) {
-                            Image(systemSymbol: .phoneFill)
-                            Text("Call", comment: "on poi detail sheet to call the poi")
+                            Image(systemSymbol: .carFill)
+                            Text("Start", comment: "get the navigation route")
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 2)
+                    })
+                    .buttonStyle(.borderedProminent)
+                    .disabled(self.routes == nil)
+
+                    if let phone = self.item.phone, !phone.isEmpty {
+                        Button(action: {
+                            // Perform phone action
+                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+                                self.openURL(url)
+                            }
+                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
+                        }, label: {
+                            VStack(spacing: 2) {
+                                Image(systemSymbol: .phoneFill)
+                                Text("Call", comment: "on poi detail sheet to call the poi")
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 2)
+                        })
+                        .buttonStyle(.bordered)
+                    }
+                    if let website = item.website {
+                        Button(action: {
+                            self.openURL(website)
+                        }, label: {
+                            VStack(spacing: 2) {
+                                Image(systemSymbol: .safariFill)
+                                Text("Web")
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.5)
+                            }
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 2)
+                        })
+                        .buttonStyle(.bordered)
+                    }
+                    Button(action: {
+                        Logger.searchView.info("more item \(self.item))")
+                    }, label: {
+                        VStack(spacing: 2) {
+                            Image(systemSymbol: .ellipsisCircleFill)
+                            Text("More", comment: "on poi detail sheet to see more info")
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.5)
                         }
@@ -105,39 +134,14 @@ struct POIDetailSheet: View {
                     })
                     .buttonStyle(.bordered)
                 }
-                if let website = item.website {
-                    Button(action: {
-                        self.openURL(website)
-                    }, label: {
-                        VStack(spacing: 2) {
-                            Image(systemSymbol: .safariFill)
-                            Text("Web")
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.5)
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 2)
-                    })
-                    .buttonStyle(.bordered)
-                }
-                Button(action: {
-                    Logger.searchView.info("more item \(self.item))")
-                }, label: {
-                    VStack(spacing: 2) {
-                        Image(systemSymbol: .ellipsisCircleFill)
-                        Text("More", comment: "on poi detail sheet to see more info")
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 2)
-                })
-                .buttonStyle(.bordered)
-            }
-            .padding(.horizontal)
+                .padding(.horizontal)
 
-            AdditionalPOIDetailsView(routes: self.routes)
-            DictionaryView(dictionary: self.item.userInfo)
+                AdditionalPOIDetailsView(routes: self.routes)
+                    .fixedSize()
+                    .padding()
+                DictionaryView(dictionary: self.item.userInfo)
+                Spacer()
+            }
         }
 
         .task {
@@ -173,8 +177,7 @@ struct POIDetailSheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    let item = ResolvedItem.starbucks
-    return POIDetailSheet(item: item) { _ in
-        Logger.searchView.info("Start \(item)")
-    } onDismiss: {}
+    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+    searchViewStore.mapStore.selectedItem = ResolvedItem.starbucks
+    return ContentView(searchStore: searchViewStore)
 }
