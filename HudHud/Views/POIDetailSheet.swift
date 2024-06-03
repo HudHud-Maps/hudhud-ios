@@ -137,6 +137,8 @@ struct POIDetailSheet: View {
             .padding(.horizontal)
 
             AdditionalPOIDetailsView(routes: self.routes)
+                .fixedSize()
+                .padding()
             DictionaryView(dictionary: self.item.userInfo)
         }
 
