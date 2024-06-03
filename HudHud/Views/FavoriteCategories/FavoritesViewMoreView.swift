@@ -16,14 +16,10 @@ import SwiftUI
 struct FavoritesViewMoreView: View {
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
-    @FocusState private var searchIsFocused: Bool
     @State var actionSheetShown: Bool = false
-    @State var searchShown: Bool = true
     @State var searchSheetShown: Bool = false
-    @State var editFormShown: Bool = false
-    @State var detailFormShown: Bool = false
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @State var clickedFav: FavoriteCategoriesData = .favoriteForPreview
+    @State var clickedFavorite: FavoriteCategoriesData = .favoriteForPreview
     @State var clickedItem: ResolvedItem = .artwork
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
     @Environment(\.dismiss) var dismiss
@@ -69,16 +65,15 @@ struct FavoritesViewMoreView: View {
             .background(.thickMaterial)
             .cornerRadius(12)
 
-            //			.padding(.vertical)
             Section { // show my favorites
                 ForEach(self.favorites.favoriteCategoriesData) { favorite in
                     if favorite.item != nil {
                         HStack {
-                            //							FavoriteItemView(favorite: favorite)
+                            FavoriteItemView(favorite: favorite)
                             Spacer()
                             Button {
                                 self.actionSheetShown = true
-                                self.clickedFav = favorite
+                                self.clickedFavorite = favorite
                                 self.clickedItem = favorite.item!
                                 self.camera = MapViewCamera.center(favorite.item!.coordinate, zoom: 14)
                             } label: {
@@ -86,9 +81,7 @@ struct FavoritesViewMoreView: View {
                                     .foregroundStyle(Color(UIColor.label))
                             }
                             .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                                Button {
-                                    self.editFormShown = true
-                                } label: {
+                                Button {} label: {
                                     Text("Edit")
                                 }
                                 Button(role: .destructive) {} label: {
@@ -99,9 +92,6 @@ struct FavoritesViewMoreView: View {
                     }
                 }
             }
-            .fullScreenCover(isPresented: self.$editFormShown, content: {
-                EditFavoritesFormView(item: self.$clickedItem, newFavorite: self.$clickedFav, camera: self.$camera)
-            })
 
             Section("Suggestions") {
                 ForEach(self.searchStore.recentViewedItem) { item in
@@ -109,10 +99,9 @@ struct FavoritesViewMoreView: View {
                         if self.favorites.favoriteCategoriesData.contains(where: { $0.item == item }) { } else {
                             RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
                             Spacer()
-                            Button {
-                                self.detailFormShown = true
+                            Button { // maybe removed
                                 self.clickedItem = item
-                                self.clickedFav = FavoriteCategoriesData(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
+                                self.clickedFavorite = FavoriteCategoriesData(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
                             } label: {
                                 Text("+")
                                     .foregroundStyle(Color(UIColor.label))
@@ -120,9 +109,6 @@ struct FavoritesViewMoreView: View {
                         }
                     }
                 }
-                .fullScreenCover(isPresented: self.$detailFormShown, content: {
-                    //					DetailFavoriteForm(item: self.$clickedItem, newFavorite: self.$clickedFav)
-                })
             }
             Spacer()
         }

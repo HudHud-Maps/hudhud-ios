@@ -18,8 +18,8 @@ struct FavoriteCategoriesView: View {
                                             sfSymbol: .plusCircleFill,
                                             tintColor: .green, item: nil, type: "Add")
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
-    @State var ViewMoreShown: Bool = false
-    @State var addNewFavorite: Bool = false
+
+//    @State var ViewMoreShown: Bool = false
 
     var body: some View {
         ScrollView(.horizontal) {
@@ -30,8 +30,6 @@ struct FavoriteCategoriesView: View {
                             let mapItems = [AnyDisplayableAsRow(selectedItem)]
                             self.mapStore.selectedItem = selectedItem
                             self.mapStore.displayableItems = mapItems
-                        } else {
-                            self.addNewFavorite = true
                         }
                     } label: {
                         Text(favorite.title)
@@ -39,17 +37,13 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
                 }
                 Button {
-                    self.addNewFavorite = true
+                    print("\(self.plusButton.title) was pressed")
                 } label: {
                     Text(self.plusButton.title)
                 }.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
             }
             Spacer()
         }
-        .backport.scrollClipDisabled()
-        .fullScreenCover(isPresented: self.$addNewFavorite, content: {
-            FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
-        })
     }
 }
 

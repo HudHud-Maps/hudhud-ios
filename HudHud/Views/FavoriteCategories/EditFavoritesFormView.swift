@@ -48,7 +48,7 @@ struct EditFavoritesFormView: View {
 
                     self.dismiss()
                 } label: {
-                    Text("Edit")
+                    Image(systemSymbol: .plus)
                         .foregroundStyle(Color(UIColor.label))
                 }
             }
@@ -57,7 +57,7 @@ struct EditFavoritesFormView: View {
                 Section {
                     TextField("Name \(!self.newFavorite.type.isEmpty ? self.newFavorite.type : self.item.title)", text: self.$newFavorite.title)
                     HStack {
-                        Text("\(self.$item.subtitle)")
+                        Text("\(self.item.subtitle)")
                         Spacer()
                         Button {} label: {
                             Image(systemSymbol: .pencil)
@@ -73,6 +73,7 @@ struct EditFavoritesFormView: View {
                 VStack(alignment: .leading) {
                     Section(header: Text("description").foregroundStyle(.gray)) {
                         TextEditor(text: self.$newFavorite.description.toUnwrapped(defaultValue: ""))
+                            .frame(minHeight: 100)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 8)
                                     .stroke(Color.gray, lineWidth: 1)
