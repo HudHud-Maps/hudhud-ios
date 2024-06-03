@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
@@ -13,7 +14,6 @@ import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
-import POIService
 import SwiftUI
 
 typealias JSONDictionary = [String: Any]

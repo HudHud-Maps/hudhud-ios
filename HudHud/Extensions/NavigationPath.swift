@@ -6,9 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Foundation
 import OSLog
-import POIService
 import SwiftUI
 
 // MARK: - NavPath
@@ -29,11 +29,11 @@ extension NavPath: Decodable {
             var type = _typeByName(typeName) as? any Decodable.Type
             if type == nil, typeName == self.stringName(of: ResolvedItem.self) {
                 // _typeByName doesn't work for things in other packages yet
-                type = POIService.ResolvedItem.self
+                type = BackendService.ResolvedItem.self
             }
-            if type == nil, typeName == self.stringName(of: POIService.Toursprung.RouteCalculationResult.self) {
+            if type == nil, typeName == self.stringName(of: BackendService.Toursprung.RouteCalculationResult.self) {
                 // _typeByName doesn't work for things in other packages yet
-                type = POIService.Toursprung.RouteCalculationResult.self
+                type = BackendService.Toursprung.RouteCalculationResult.self
             }
             if type == nil, typeName == self.stringName(of: SheetSubView.self) {
                 // _typeByName doesn't work for things in other packages yet

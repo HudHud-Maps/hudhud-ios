@@ -75,7 +75,7 @@ public actor ApplePOI: POIServiceProtocol {
         }
     }
 
-    public func predict(term: String) async throws -> [AnyDisplayableAsRow] {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
         return try await withCheckedThrowingContinuation { continuation in
             if let continuation = self.continuation {
                 self.completer.cancel()

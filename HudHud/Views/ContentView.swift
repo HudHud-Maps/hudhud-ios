@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import BetterSafariView
 import CoreLocation
 import MapboxDirections
@@ -14,7 +15,6 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import NavigationTransitions
 import OSLog
-import POIService
 import SFSafeSymbols
 import SimpleToast
 import SwiftLocation

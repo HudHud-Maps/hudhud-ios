@@ -21,10 +21,8 @@ class CustomDayStyle: DayStyle {
 
     // MARK: - Lifecycle
 
-    required init() {
-        super.init()
-        //	mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
-        styleType = .day
+    required init(mapStyleURL: URL) {
+        super.init(mapStyleURL: mapStyleURL)
     }
 
     // MARK: - Internal
@@ -51,9 +49,8 @@ class CustomNightStyle: NightStyle {
 
     // MARK: - Lifecycle
 
-    required init() {
-        super.init()
-        styleType = .night
+    required init(mapStyleURL: URL) {
+        super.init(mapStyleURL: mapStyleURL)
     }
 
     // MARK: - Internal
