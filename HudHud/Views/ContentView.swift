@@ -9,6 +9,7 @@
 import BetterSafariView
 import CoreLocation
 import MapboxDirections
+import MapboxNavigation
 import MapLibre
 import MapLibreNavigationSwiftUI
 import MapLibreSwiftDSL
@@ -46,51 +47,50 @@ struct ContentView: View {
     @State private var didTryToZoomOnUsersLocation = false
 
     @State var offsetY: CGFloat = 0
-    @State var navigationRunning: Bool = false
 
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
 
     @ViewBuilder
     var mapView: some View {
-        NavigationMapView(styleSource: .url(self.styleURL), camera: self.$mapStore.camera, route: self.$mapStore.navigatingRoute) {
+        NavigationMapView(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle(), camera: self.$mapStore.camera, route: self.$mapStore.navigatingRoute) {
             // Display preview data as a polyline on the map
-            //			if let route = self.mapStore.routes?.routes.first {
-//                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-//                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
-//                }
-//
-//                // Add a polyline casing for a stroke effect
-//                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-//                    .lineCap(.round)
-//                    .lineJoin(.round)
-//                    .lineColor(.white)
-//                    .lineWidth(interpolatedBy: .zoomLevel,
-//                               curveType: .linear,
-//                               parameters: NSExpression(forConstantValue: 1.5),
-//                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
-//
-//                // Add an inner (blue) polyline
-//                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-//                    .lineCap(.round)
-//                    .lineJoin(.round)
-//                    .lineColor(.systemBlue)
-//                    .lineWidth(interpolatedBy: .zoomLevel,
-//                               curveType: .linear,
-//                               parameters: NSExpression(forConstantValue: 1.5),
-//                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
-//
-//                let routePoints = self.mapStore.routePoints
-//
-//                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-//                    .radius(16)
-//                    .color(.systemRed)
-//                    .strokeWidth(2)
-//                    .strokeColor(.white)
-//                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-//                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-//                    .iconColor(.white)
-//            }
+            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationInProgress == false {
+                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
+                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
+                }
+
+                // Add a polyline casing for a stroke effect
+                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
+                    .lineCap(.round)
+                    .lineJoin(.round)
+                    .lineColor(.white)
+                    .lineWidth(interpolatedBy: .zoomLevel,
+                               curveType: .linear,
+                               parameters: NSExpression(forConstantValue: 1.5),
+                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+                // Add an inner (blue) polyline
+                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
+                    .lineCap(.round)
+                    .lineJoin(.round)
+                    .lineColor(.systemBlue)
+                    .lineWidth(interpolatedBy: .zoomLevel,
+                               curveType: .linear,
+                               parameters: NSExpression(forConstantValue: 1.5),
+                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+
+                let routePoints = self.mapStore.routePoints
+
+                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
+                    .radius(16)
+                    .color(.systemRed)
+                    .strokeWidth(2)
+                    .strokeColor(.white)
+                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
+                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                    .iconColor(.white)
+            }
             let pointSource = self.mapStore.points
 
             // shows the clustered pins

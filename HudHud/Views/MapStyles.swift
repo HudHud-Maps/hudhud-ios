@@ -22,9 +22,14 @@ class CustomDayStyle: DayStyle {
     // MARK: - Lifecycle
 
     required init() {
-        super.init()
-        //	mapStyleURL = URL(string: "mapbox://styles/mapbox/satellite-streets-v9")!
+        let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+        super.init(mapStyleURL: styleURL)
         styleType = .day
+    }
+
+    @available(*, deprecated, message: "Use `init()`")
+    required init(mapStyleURL _: URL) {
+        fatalError("init(mapStyleURL:) has not been implemented")
     }
 
     // MARK: - Internal
@@ -52,8 +57,14 @@ class CustomNightStyle: NightStyle {
     // MARK: - Lifecycle
 
     required init() {
-        super.init()
+        let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+        super.init(mapStyleURL: styleURL)
         styleType = .night
+    }
+
+    @available(*, deprecated, message: "Use `init()`")
+    required init(mapStyleURL _: URL) {
+        fatalError("init(mapStyleURL:) has not been implemented")
     }
 
     // MARK: - Internal
