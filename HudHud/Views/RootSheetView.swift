@@ -66,7 +66,7 @@ struct RootSheetView: View {
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
-                    }, sheetSize: self.$sheetSize, onDismiss: {
+                    }, onDismiss: {
                         self.mapStore.selectedItem = nil
                     })
                     .navigationBarBackButtonHidden()

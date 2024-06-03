@@ -6,9 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+@testable import BackendService
 @testable import MapboxDirections
 @testable import MapLibre
-@testable import POIService
 import XCTest
 
 final class CalculateTests: XCTestCase {
