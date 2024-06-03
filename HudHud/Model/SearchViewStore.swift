@@ -8,6 +8,7 @@
 
 import BackendService
 import Combine
+import CoreLocation
 import Foundation
 import SwiftUI
 
@@ -55,6 +56,7 @@ final class SearchViewStore: ObservableObject {
     private var hudhud = HudHudPOI()
     private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
+    let locationManager = CLLocationManager()
 
     // MARK: - Properties
 
@@ -88,7 +90,7 @@ final class SearchViewStore: ObservableObject {
                         defer { self.isSearching = false }
                         self.isSearching = true
 
-                        let prediction = try await self.apple.predict(term: newValue, coordinates: nil)
+                        let prediction = try await self.apple.predict(term: newValue, coordinates: CLLocationCoordinate2D(latitude: self.locationManager.location?.coordinate.latitude ?? 24.77888564128478, longitude: self.locationManager.location?.coordinate.longitude ?? 46.61555160031425))
                         let items = prediction
                         self.mapStore.displayableItems = items
                     }
@@ -117,7 +119,7 @@ final class SearchViewStore: ObservableObject {
                         defer { self.isSearching = false }
                         self.isSearching = true
 
-                        let prediction = try await self.hudhud.predict(term: newValue, coordinates: nil)
+                        let prediction = try await self.hudhud.predict(term: newValue, coordinates: CLLocationCoordinate2D(latitude: self.locationManager.location?.coordinate.latitude ?? 24.77888564128478, longitude: self.locationManager.location?.coordinate.longitude ?? 46.61555160031425))
                         let items = prediction
                         self.mapStore.displayableItems = items
                     }
