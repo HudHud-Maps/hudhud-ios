@@ -68,7 +68,7 @@ struct POIDetailSheet: View {
                 .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
             }
             .padding([.top, .leading, .trailing])
-
+            .padding(.top)
             HStack {
                 Button(action: {
                     guard let routes else { return }
