@@ -13,20 +13,12 @@ struct SearchSectionView<Content: View>: View {
     let subview: Content
 
     var body: some View {
-        Section(
-            header: Text(
-                "\(self.title)"
-            ).font(
-                .title3
-            )
-            .bold().foregroundStyle(
-                .primary
-            )
-        ) {
-            self.subview
-                .backport.scrollClipDisabled()
-                .padding(.top)
-        }
+        Section(header: Text("\(self.title)").font(.title3).bold()
+            .foregroundStyle(.primary)) {
+                self.subview
+                    .backport.scrollClipDisabled()
+                    .padding(.top)
+            }
     }
 
     // MARK: - Lifecycle
