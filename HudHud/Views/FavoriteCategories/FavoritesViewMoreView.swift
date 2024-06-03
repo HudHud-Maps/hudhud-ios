@@ -2,18 +2,152 @@
 //  FavoritesViewMoreView.swift
 //  HudHud
 //
-//  Created by Alaa . on 03/06/2024.
+//  Created by Alaa . on 30/05/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
+import MapKit
+import MapLibreSwiftUI
 import SwiftUI
 
+// MARK: - FavoritesViewMoreView
+
 struct FavoritesViewMoreView: View {
+    @ObservedObject var searchStore: SearchViewStore
+    @ObservedObject var mapStore: MapStore
+    @FocusState private var searchIsFocused: Bool
+    @State var actionSheetShown: Bool = false
+    @State var searchShown: Bool = true
+    @State var searchSheetShown: Bool = false
+    @State var editFormShown: Bool = false
+    @State var detailFormShown: Bool = false
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @State var clickedFav: FavoriteCategoriesData = .favoriteForPreview
+    @State var clickedItem: ResolvedItem = .artwork
+    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
+    @Environment(\.dismiss) var dismiss
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        VStack(alignment: .leading) {
+            HStack {
+                Button {
+                    self.dismiss()
+                } label: {
+                    Image(systemSymbol: .chevronLeft)
+                        .foregroundStyle(Color(UIColor.label))
+                }
+                Spacer()
+                Text("Favorites")
+                Spacer()
+                Button {
+                    self.searchSheetShown = true
+                } label: {
+                    Image(systemSymbol: .plus)
+                        .foregroundStyle(Color(UIColor.label))
+                }
+            }
+            .padding(.vertical)
+            VStack {
+                switch self.searchStore.searchType {
+                case .returnPOILocation:
+                    Button("Cancel", action: {
+                        self.dismiss()
+                    })
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
+                case .selectPOI:
+                    EmptyView()
+                case .favorites:
+                    Button("Cancel", action: {
+                        self.dismiss()
+                    })
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
+                }
+            }
+            .background(.thickMaterial)
+            .cornerRadius(12)
+
+            //			.padding(.vertical)
+            Section { // show my favorites
+                ForEach(self.favorites.favoriteCategoriesData) { favorite in
+                    if favorite.item != nil {
+                        HStack {
+                            //							FavoriteItemView(favorite: favorite)
+                            Spacer()
+                            Button {
+                                self.actionSheetShown = true
+                                self.clickedFav = favorite
+                                self.clickedItem = favorite.item!
+                                self.camera = MapViewCamera.center(favorite.item!.coordinate, zoom: 14)
+                            } label: {
+                                Text("...")
+                                    .foregroundStyle(Color(UIColor.label))
+                            }
+                            .confirmationDialog("action", isPresented: self.$actionSheetShown) {
+                                Button {
+                                    self.editFormShown = true
+                                } label: {
+                                    Text("Edit")
+                                }
+                                Button(role: .destructive) {} label: {
+                                    Text("Delete")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .fullScreenCover(isPresented: self.$editFormShown, content: {
+                EditFavoritesFormView(item: self.$clickedItem, newFavorite: self.$clickedFav, camera: self.$camera)
+            })
+
+            Section("Suggestions") {
+                ForEach(self.searchStore.recentViewedItem) { item in
+                    HStack {
+                        if self.favorites.favoriteCategoriesData.contains(where: { $0.item == item }) { } else {
+                            RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
+                            Spacer()
+                            Button {
+                                self.detailFormShown = true
+                                self.clickedItem = item
+                                self.clickedFav = FavoriteCategoriesData(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
+                            } label: {
+                                Text("+")
+                                    .foregroundStyle(Color(UIColor.label))
+                            }
+                        }
+                    }
+                }
+                .fullScreenCover(isPresented: self.$detailFormShown, content: {
+                    //					DetailFavoriteForm(item: self.$clickedItem, newFavorite: self.$clickedFav)
+                })
+            }
+            Spacer()
+        }
+        .padding(.horizontal)
+        .sheet(isPresented: self.$searchSheetShown) {
+            self.SearchSheetView()
+        }
+        .onChange(of: self.searchSheetShown) { _ in
+            self.mapStore.path.append(SheetSubView.favorites)
+        }
+        .onAppear {
+            print(self.favorites, "favorites")
+        }
+    }
+
+    // MARK: - Internal
+
+    func SearchSheetView() -> some View {
+        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+        let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchStore.mode)
+        freshSearchViewStore.searchType = .favorites
+        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore)
     }
 }
 
 #Preview {
-    FavoritesViewMoreView()
+    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
 }

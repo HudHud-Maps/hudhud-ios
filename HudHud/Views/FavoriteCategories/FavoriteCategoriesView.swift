@@ -13,30 +13,25 @@ import SwiftUI
 struct FavoriteCategoriesView: View {
     let mapStore: MapStore
     let searchStore: SearchViewStore
-    let favoriteCategoriesData: [FavoriteCategoriesData] = [
-        FavoriteCategoriesData(id: 1, title: "Home",
-                               sfSymbol: .houseFill,
-                               tintColor: .gray, item: .artwork),
-        FavoriteCategoriesData(id: 2, title: "Work",
-                               sfSymbol: .bagFill,
-                               tintColor: .gray, item: .ketchup),
-        FavoriteCategoriesData(id: 3, title: "School",
-                               sfSymbol: .buildingColumnsFill,
-                               tintColor: .gray, item: .pharmacy)
-    ]
+
     let plusButton = FavoriteCategoriesData(id: 4, title: "Add",
                                             sfSymbol: .plusCircleFill,
-                                            tintColor: .green, item: nil)
+                                            tintColor: .green, item: nil, type: "Add")
+    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
+    @State var ViewMoreShown: Bool = false
+    @State var addNewFavorite: Bool = false
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
-                ForEach(self.favoriteCategoriesData.prefix(4)) { favorite in
+                ForEach(self.favorites.favoriteCategoriesData.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
                             let mapItems = [AnyDisplayableAsRow(selectedItem)]
                             self.mapStore.selectedItem = selectedItem
                             self.mapStore.displayableItems = mapItems
+                        } else {
+                            self.addNewFavorite = true
                         }
                     } label: {
                         Text(favorite.title)
@@ -44,7 +39,7 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
                 }
                 Button {
-                    print("\(self.plusButton.title) was pressed")
+                    self.addNewFavorite = true
                 } label: {
                     Text(self.plusButton.title)
                 }.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
@@ -52,6 +47,9 @@ struct FavoriteCategoriesView: View {
             Spacer()
         }
         .backport.scrollClipDisabled()
+        .fullScreenCover(isPresented: self.$addNewFavorite, content: {
+            FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
+        })
     }
 }
 

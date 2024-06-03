@@ -64,6 +64,12 @@ struct SearchSheet: View {
                     .padding(.trailing)
                 case .selectPOI:
                     EmptyView()
+                case .favorites:
+                    Button("Cancel", action: {
+                        self.dismiss()
+                    })
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
                 }
             }
             .background(.quinary)
@@ -121,6 +127,8 @@ struct SearchSheet: View {
                                     }
                                 case .selectPOI:
                                     break
+                                case .favorites:
+                                    break
                                 }
 
                                 self.searchIsFocused = false
@@ -139,10 +147,12 @@ struct SearchSheet: View {
                 }
             } else {
                 List {
-                    SearchSectionView(title: "Favorites") {
-                        FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                    if self.searchStore.searchType != .favorites {
+                        SearchSectionView(title: "Favorites") {
+                            FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                     }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                     SearchSectionView(title: "Recents") {
                         ForEach(self.searchStore.recentViewedItem) { item in
                             RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
