@@ -23,6 +23,7 @@ struct POIDetailSheet: View {
 
     let item: ResolvedItem
     let onStart: (Toursprung.RouteCalculationResult) -> Void
+    @Binding var sheetSize: CGSize
 
     @State var routes: Toursprung.RouteCalculationResult?
 
@@ -36,10 +37,16 @@ struct POIDetailSheet: View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 VStack {
-                    Text(self.item.title)
-                        .font(.title.bold())
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
+                    if self.sheetSize.height < 200 {
+                        Text(self.item.title)
+                            .font(.title.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.top, 150)
+                    } else {
+                        Text(self.item.title)
+                            .font(.title.bold())
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                     Text(self.item.subtitle)
                         .font(.footnote)
                         .lineLimit(2)
@@ -140,6 +147,7 @@ struct POIDetailSheet: View {
                 .fixedSize()
                 .padding()
             DictionaryView(dictionary: self.item.userInfo)
+            Spacer()
         }
 
         .task {
@@ -176,7 +184,8 @@ struct POIDetailSheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     let item = ResolvedItem.starbucks
-    return POIDetailSheet(item: item) { _ in
+    @State var sheetSize: CGSize = .zero
+    return POIDetailSheet(item: item, onStart: { _ in
         Logger.searchView.info("Start \(item)")
-    } onDismiss: {}
+    }, sheetSize: $sheetSize, onDismiss: {})
 }

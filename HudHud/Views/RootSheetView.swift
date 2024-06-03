@@ -60,15 +60,15 @@ struct RootSheetView: View {
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item) { calculation in
+                    POIDetailSheet(item: item, onStart: { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
-                    } onDismiss: {
+                    }, sheetSize: self.$sheetSize, onDismiss: {
                         self.mapStore.selectedItem = nil
-                    }
+                    })
                     .navigationBarBackButtonHidden()
                 }
                 .navigationDestination(for: Toursprung.RouteCalculationResult.self) { _ in
