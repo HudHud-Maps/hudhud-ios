@@ -6,9 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Foundation
 import OSLog
-import POIService
 import SwiftUI
 
 // MARK: - NavPath
@@ -27,15 +27,15 @@ extension NavPath: Decodable {
         while !container.isAtEnd {
             let typeName = try container.decode(String.self)
             var type = _typeByName(typeName) as? any Decodable.Type
-            if type == nil, typeName == "POIService.ResolvedItem" {
+            if type == nil, typeName == self.stringName(of: ResolvedItem.self) {
                 // _typeByName doesn't work for things in other packages yet
-                type = POIService.ResolvedItem.self
+                type = BackendService.ResolvedItem.self
             }
-            if type == nil, typeName == "POIService.Toursprung.RouteCalculationResult" {
+            if type == nil, typeName == self.stringName(of: BackendService.Toursprung.RouteCalculationResult.self) {
                 // _typeByName doesn't work for things in other packages yet
-                type = POIService.Toursprung.RouteCalculationResult.self
+                type = BackendService.Toursprung.RouteCalculationResult.self
             }
-            if type == nil, typeName == "HudHud.SheetSubView" {
+            if type == nil, typeName == self.stringName(of: SheetSubView.self) {
                 // _typeByName doesn't work for things in other packages yet
                 type = SheetSubView.self
             }
@@ -50,6 +50,11 @@ extension NavPath: Decodable {
             let value = try JSONDecoder().decode(type, from: Data(encodedValue.utf8))
             self.elements.insert(value, at: 0)
         }
+    }
+
+    func stringName<T>(of _: T) -> String {
+        let type = String(reflecting: T.self)
+        return type.replacingOccurrences(of: ".Type", with: "")
     }
 }
 

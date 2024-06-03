@@ -6,12 +6,12 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import CoreLocation
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 import OSLog
-import POIService
 import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
@@ -139,6 +139,7 @@ struct POIDetailSheet: View {
             AdditionalPOIDetailsView(routes: self.routes)
             DictionaryView(dictionary: self.item.userInfo)
         }
+
         .task {
             do {
                 _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)

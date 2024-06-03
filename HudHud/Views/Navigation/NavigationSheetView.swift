@@ -6,10 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import CoreLocation
 import MapboxCoreNavigation
 import MapboxDirections
-import POIService
 import SwiftLocation
 import SwiftUI
 

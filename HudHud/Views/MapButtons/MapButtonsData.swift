@@ -33,6 +33,8 @@ struct MapButtonData: Identifiable, Equatable {
             .text(String("MTK"))
         case .preview:
             .icon(.pCircle)
+        case .live(provider: .hudhud):
+            .icon(.bird)
         }
     }
 }

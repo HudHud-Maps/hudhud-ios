@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import BetterSafariView
 import CoreLocation
 import MapboxDirections
@@ -16,7 +17,6 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import NavigationTransitions
 import OSLog
-import POIService
 import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
@@ -148,9 +148,9 @@ struct ContentView: View {
         .unsafeMapViewModifier { mapView in
             mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
-        .onLongPressMapGesture(onPressChanged: { MapGesture in
+        .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: MapGesture.coordinate)
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
@@ -213,7 +213,6 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-//                if self.mapStore.routes == nil {
                 if self.mapStore.navigationInProgress == false {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
@@ -265,7 +264,7 @@ struct ContentView: View {
                             CurrentLocationButton(camera: self.$mapStore.camera)
                         }
                     }
-                    .opacity(self.mapStore.selectedDetent == .small ? 1 : 0)
+                    .opacity(self.mapStore.selectedDetent == .large ? 0 : 1)
                     .padding(.horizontal)
                 }
             }
