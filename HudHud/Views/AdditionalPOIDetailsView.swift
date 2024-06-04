@@ -36,6 +36,8 @@ struct AdditionalPOIDetailsView: View {
                         .font(.title3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
+                } else {
+                    Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
@@ -49,6 +51,8 @@ struct AdditionalPOIDetailsView: View {
                         .font(.title3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
+                } else {
+                    Spacer()
                 }
             }
             .frame(maxWidth: .infinity)

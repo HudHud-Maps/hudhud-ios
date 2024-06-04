@@ -180,7 +180,7 @@ final class MapStore: ObservableObject {
      **/
 
     func updateSelectedSheetDetent(to navigationPathItem: Any?) {
-        if let navigatingRoute {
+        if self.navigatingRoute != nil {
             let closed: PresentationDetent = .height(0)
             self.allowedDetents = [closed]
             self.selectedDetent = closed

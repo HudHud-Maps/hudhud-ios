@@ -60,7 +60,7 @@ public actor ApplePOI: POIServiceProtocol {
                 }
 
                 let items = mapItems.compactMap {
-                    return ResolvedItem(id: mapItems.count == 1 ? id : UUID().uuidString,
+                    return ResolvedItem(id: mapItems.count == 1 ? id : "\($0.name ?? "")|\($0.placemark.formattedAddress ?? "")",
                                         title: $0.name ?? "",
                                         subtitle: $0.placemark.formattedAddress ?? "",
                                         category: $0.pointOfInterestCategory?.rawValue.replacingOccurrences(of: "MKPOICategory", with: ""),
@@ -91,6 +91,10 @@ public actor ApplePOI: POIServiceProtocol {
             self.continuation = continuation
             DispatchQueue.main.sync {
                 self.completer.queryFragment = term
+                if let coords = coordinates {
+                    let region = MKCoordinateRegion(center: coords, latitudinalMeters: 5000, longitudinalMeters: 5000)
+                    self.completer.region = region
+                }
             }
         }
     }
@@ -120,7 +124,7 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         let results = completer.results.compactMap {
-            let item = PredictionItem(id: UUID().uuidString,
+            let item = PredictionItem(id: "\($0.title)|\($0.subtitle)",
                                       title: $0.title,
                                       subtitle: $0.subtitle,
                                       symbol: .pin,

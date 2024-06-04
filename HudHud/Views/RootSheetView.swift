@@ -62,18 +62,18 @@ struct RootSheetView: View {
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item) { calculation in
+                    POIDetailSheet(item: item, onStart: { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
                         self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
-                    } onDismiss: {
+                    }, onDismiss: {
                         self.mapStore.selectedItem = nil
                         self.mapStore.displayableItems = []
                         self.mapStore.camera = MapViewCamera.trackUserLocation(zoom: self.mapStore.camera.zoom ?? MapViewCamera.Defaults.zoom)
-                    }
+                    })
                     .navigationBarBackButtonHidden()
                 }
                 .navigationDestination(for: Toursprung.RouteCalculationResult.self) { _ in

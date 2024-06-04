@@ -11,58 +11,57 @@ import MapKit
 import SwiftUI
 
 struct RecentSearchResultsView: View {
-    let item: ResolvedItem
     let mapStore: MapStore
-    let searchStore: SearchViewStore
+    @ObservedObject var searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
 
     var body: some View {
-        VStack {
-            Button {
-                let selectedItem = self.item
-                let mapItems = [AnyDisplayableAsRow(self.item)]
+        ForEach(self.searchStore.recentViewedItem) { item in
+            HStack(alignment: .center, spacing: 12) {
+                Image(systemSymbol: item.symbol)
+                    .resizable()
+                    .font(.title2)
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: self.imageSize, height: self.imageSize)
+                    .foregroundStyle(.white)
+                    .padding()
+                    .clipShape(Circle())
+                    .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
+                    .layoutPriority(1)
+                    .frame(minWidth: .leastNonzeroMagnitude)
+                    .background(
+                        item.tintColor.mask(Circle())
+                    )
+
+                VStack(alignment: .leading) {
+                    Text(item.title)
+                        .foregroundStyle(.primary)
+                        .font(.headline)
+                        .lineLimit(1)
+                        .foregroundColor(.primary)
+                    Text(item.subtitle)
+                        .foregroundStyle(.secondary)
+                        .font(.body)
+                        .lineLimit(1)
+                        .foregroundColor(.primary)
+                }
+                Spacer()
+            }
+            .onTapGesture {
+                let selectedItem = item
+                let mapItems = [AnyDisplayableAsRow(item)]
                 self.mapStore.selectedItem = selectedItem
                 self.mapStore.displayableItems = mapItems
-            } label: {
-                HStack(alignment: .center, spacing: 12) {
-                    Image(systemSymbol: self.item.symbol)
-                        .resizable()
-                        .font(.title2)
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: self.imageSize, height: self.imageSize)
-                        .foregroundStyle(.white)
-                        .padding()
-                        .clipShape(Circle())
-                        .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
-                        .layoutPriority(1)
-                        .frame(minWidth: .leastNonzeroMagnitude)
-                        .background(
-                            self.item.tintColor.mask(Circle())
-                        )
-
-                    VStack(alignment: .leading) {
-                        Text(self.item.title)
-                            .foregroundStyle(.primary)
-                            .font(.headline)
-                            .lineLimit(1)
-                            .foregroundColor(.primary)
-                        Text(self.item.subtitle)
-                            .foregroundStyle(.secondary)
-                            .font(.body)
-                            .lineLimit(1)
-                            .foregroundColor(.primary)
-                    }
-                    Spacer()
-                }
             }
-            .padding(8)
         }
+        .onDelete { indexSet in
+            self.searchStore.recentViewedItem.remove(atOffsets: indexSet)
+        }
+        .listRowSeparator(.hidden)
     }
-
 }
 
 #Preview {
-    RecentSearchResultsView(item: .artwork,
-                            mapStore: .storeSetUpForPreviewing,
+    RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                             searchStore: .storeSetUpForPreviewing)
 }
