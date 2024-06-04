@@ -91,6 +91,10 @@ public actor ApplePOI: POIServiceProtocol {
             self.continuation = continuation
             DispatchQueue.main.sync {
                 self.completer.queryFragment = term
+                if let coords = coordinates {
+                    let region = MKCoordinateRegion(center: coords, latitudinalMeters: 5000, longitudinalMeters: 5000)
+                    self.completer.region = region
+                }
             }
         }
     }
