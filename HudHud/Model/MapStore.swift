@@ -33,6 +33,7 @@ final class MapStore: ObservableObject {
         case defaultLocation
     }
 
+    var locationManager = CLLocationManager()
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
     @Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
@@ -46,11 +47,11 @@ final class MapStore: ObservableObject {
         }
     }
 
-    @Published var lastKnownLocationOfUser: CLLocationCoordinate2D? {
+    @Published var currentLocation: CLLocationCoordinate2D? {
         didSet {
             self.moveToUserLocation = true
-            if let lastKnownLocationOfUser {
-                updateCamera(state: .userLocation(lastKnownLocationOfUser))
+            if let currentLocation {
+                updateCamera(state: .userLocation(currentLocation))
             }
         }
     }
@@ -182,7 +183,7 @@ final class MapStore: ObservableObject {
     }
 
     private func getNearestMapItemCoordinates() -> [CLLocationCoordinate2D]? {
-        guard let userLocation = self.lastKnownLocationOfUser else { return nil }
+        guard let userLocation = self.locationManager.location?.coordinate else { return nil }
         // Sort map items by distance to the user location
         let sortedItems = self.mapItems.sorted(by: {
             $0.coordinate.distance(to: userLocation) < $1.coordinate.distance(to: userLocation)
@@ -259,7 +260,7 @@ private extension MapStore {
             // if there is more than 2 items on the map ...and the zoom level is under 13 ...zoom out and move the camera to show items
             if self.getCameraZoomLevel() <= 13 {
                 var coordinates = self.mapItems.map(\.coordinate)
-                if let userLocation = lastKnownLocationOfUser {
+                if let userLocation = self.locationManager.location?.coordinate {
                     coordinates.append(userLocation)
                 }
                 if let camera = CameraState.boundingBox(from: coordinates) {
@@ -270,7 +271,7 @@ private extension MapStore {
                 if self.isAnyItemVisible() || self.getCameraZoomLevel() >= 13 {
                     if let nearestCoordinates = getNearestMapItemCoordinates() {
                         var coordinatea = nearestCoordinates
-                        if let userLocation = lastKnownLocationOfUser {
+                        if let userLocation = self.locationManager.location?.coordinate {
                             coordinatea.append(userLocation)
                         }
                         if let camera = CameraState.boundingBox(from: coordinatea) {

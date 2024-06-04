@@ -28,7 +28,7 @@ struct CurrentLocationButton: View {
 
                     if let coordinates = userLocation.location?.coordinate {
                         withAnimation {
-                            self.mapStore.lastKnownLocationOfUser = coordinates
+                            self.mapStore.currentLocation = coordinates
                         }
                     } else {
                         Logger.searchView.error("location error: got no coordinates")

@@ -173,8 +173,8 @@ struct ContentView: View {
                         print("Could not determine user location, will not zoom...")
                         return
                     }
-                    if self.mapStore.lastKnownLocationOfUser != coordinates {
-                        self.mapStore.lastKnownLocationOfUser = coordinates
+                    if self.mapStore.currentLocation != coordinates {
+                        self.mapStore.currentLocation = coordinates
                     }
                 } catch {
                     print("location error: \(error)")
