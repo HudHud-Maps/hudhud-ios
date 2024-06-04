@@ -92,12 +92,14 @@ struct SearchSheet: View {
                             Task {
                                 if let resolvedItem = item.innerModel as? ResolvedItem {
                                     self.mapStore.selectedItem = resolvedItem
+                                    self.storeRecent(item: resolvedItem)
                                 } else {
                                     // Currently only ApplePOI supports resolving, so this should only be called on apple pois
                                     let resolvedItems = try await item.resolve(in: self.searchStore.apple)
 
                                     if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
                                         self.mapStore.selectedItem = resolvedItem
+                                        self.storeRecent(item: resolvedItem)
 
                                         let index = self.mapStore.displayableItems.firstIndex { itemInArray in
                                             return itemInArray.id == resolvedItem.id
@@ -211,10 +213,10 @@ extension [ResolvedItem]: RawRepresentable {
     }
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
-              let result = String(data: data, encoding: .utf8) else {
+        guard let data = try? JSONEncoder().encode(self) else {
             return "[]"
         }
+        let result = String(decoding: data, as: UTF8.self)
         return result
     }
 }

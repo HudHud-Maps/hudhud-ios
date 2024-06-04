@@ -80,6 +80,7 @@
 		CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB282BB343BA00C99774 /* DebugStreetView.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
+		CDA05D862C0E270600903396 /* HudHudRouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA05D852C0E270600903396 /* HudHudRouteVoiceController.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -200,6 +201,7 @@
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
+		CDA05D852C0E270600903396 /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CDAE05492B681261003E5196 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -350,6 +352,24 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		CDA05D872C0E271C00903396 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
+				CDA05D852C0E270600903396 /* HudHudRouteVoiceController.swift */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		CDA05D882C0E273E00903396 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */,
+				45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
@@ -379,6 +399,8 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				CDA05D882C0E273E00903396 /* Enums */,
+				CDA05D872C0E271C00903396 /* Classes */,
 				CD85CB2C2BB4650C00C99774 /* Protocols */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
@@ -500,9 +522,6 @@
 				CD71C3682BBBFF27009C3A1C /* CameraState.swift */,
 				CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */,
 				CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */,
-				93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */,
-				45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */,
-				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
 				CD7615642BF169C600DF2A25 /* MapViewCamera.swift */,
 				8D9E5F46B48E39DAD77D58F0 /* NavigationPath.swift */,
 			);
@@ -558,6 +577,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CDA05D842C0E25BA00903396 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -768,6 +788,7 @@
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
 				A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */,
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
+				CDA05D862C0E270600903396 /* HudHudRouteVoiceController.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
 				D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */,
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,
@@ -832,6 +853,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CDA05D842C0E25BA00903396 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CDA05D832C0E25BA00903396 /* SwiftLint */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -1334,6 +1359,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */;
 			productName = SimpleToast;
+		};
+		CDA05D832C0E25BA00903396 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
