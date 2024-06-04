@@ -128,15 +128,15 @@ struct SearchSheet: View {
                                     case .selectPOI:
                                         break
 
-                                case .favorites:
-                                    break
-                                }
+                                    case .favorites:
+                                        break
+                                    }
 
                                     self.searchIsFocused = false
                                 }
 
                             }, label: {
-                                SearchResultItem(prediction: item, searchText: self.$searchStore.searchText)
+                                SearchResultItem(prediction: item, searchViewStore: self.searchStore)
                                     .frame(maxWidth: .infinity)
                                     .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
                             })
@@ -147,15 +147,14 @@ struct SearchSheet: View {
                         .listStyle(.plain)
                     }
 
-
                 } else {
-                  if self.searchStore.searchType != .favorites {
-                    SearchSectionView(title: "Favorites") {
-                        FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                    if self.searchStore.searchType != .favorites {
+                        SearchSectionView(title: "Favorites") {
+                            FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                        .listRowSeparator(.hidden)
                     }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
-                    .listRowSeparator(.hidden)
-                  }
 
                     SearchSectionView(title: "Recents") {
                         RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
@@ -201,14 +200,13 @@ struct SearchSheet: View {
 extension Route: Identifiable {}
 
 extension SearchSheet {
-    @State static var fakeSearchBinding: String = ""
     static var fakeData = [
-        SearchResultItem(prediction: PredictionItem.starbucks, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.supermarket, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.pharmacy, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.artwork, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.ketchup, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.publicPlace, searchText: $fakeSearchBinding)
+        SearchResultItem(prediction: PredictionItem.starbucks, searchViewStore: .storeSetUpForPreviewing),
+        SearchResultItem(prediction: PredictionItem.supermarket, searchViewStore: .storeSetUpForPreviewing),
+        SearchResultItem(prediction: PredictionItem.pharmacy, searchViewStore: .storeSetUpForPreviewing),
+        SearchResultItem(prediction: PredictionItem.artwork, searchViewStore: .storeSetUpForPreviewing),
+        SearchResultItem(prediction: PredictionItem.ketchup, searchViewStore: .storeSetUpForPreviewing),
+        SearchResultItem(prediction: PredictionItem.publicPlace, searchViewStore: .storeSetUpForPreviewing)
     ]
 }
 
