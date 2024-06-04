@@ -13,17 +13,12 @@ struct SearchSectionView<Content: View>: View {
     let subview: Content
 
     var body: some View {
-        VStack {
-            HStack {
-                Text("\(self.title)")
-                    .font(.title3)
-                    .bold()
-                Spacer()
+        Section(header: Text("\(self.title)").font(.title3).bold()
+            .foregroundStyle(.primary)) {
+                self.subview
+                    .backport.scrollClipDisabled()
+                    .padding(.top)
             }
-
-            self.subview
-                .backport.scrollClipDisabled()
-        }
     }
 
     // MARK: - Lifecycle

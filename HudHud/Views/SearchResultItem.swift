@@ -49,6 +49,7 @@ struct SearchResultItem: View {
             }
             Spacer()
             Button(action: {
+
                 if self.searchViewStore.searchType == .favorites {
                     self.detailFormShown = true
                     if let resolvedItem = self.prediction as? ResolvedItem {
@@ -58,6 +59,7 @@ struct SearchResultItem: View {
                 } else {
                     self.searchViewStore.searchText = self.prediction.title
                 }
+
             }, label: {
                 Image(systemSymbol: self.searchViewStore.searchType == .favorites ? .plus : .arrowUpLeft)
             })
@@ -77,10 +79,10 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
-                                                title: "Starbucks",
-                                                subtitle: "Coffee",
-                                                symbol: .cupAndSaucer,
-                                                type: .appleResolved),
-                     searchViewStore: .storeSetUpForPreviewing)
+    @State var searchText: String = ""
+    return SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
+                                                       title: "Starbucks",
+                                                       subtitle: "Coffee",
+                                                       symbol: .cupAndSaucer,
+                                                       type: .appleResolved), searchText: $searchText)
 }
