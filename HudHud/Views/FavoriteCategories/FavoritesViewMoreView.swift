@@ -94,21 +94,8 @@ struct FavoritesViewMoreView: View {
             }
 
             Section("Suggestions") {
-                ForEach(self.searchStore.recentViewedItem) { item in
-                    HStack {
-                        if self.favorites.favoriteCategoriesData.contains(where: { $0.item == item }) { } else {
-                            RecentSearchResultsView(item: item, mapStore: self.mapStore, searchStore: self.searchStore)
-                            Spacer()
-                            Button { // maybe removed
-                                self.clickedItem = item
-                                self.clickedFavorite = FavoriteCategoriesData(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
-                            } label: {
-                                Text("+")
-                                    .foregroundStyle(Color(UIColor.label))
-                            }
-                        }
-                    }
-                }
+                RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore, searchType: .favorites)
+                Spacer()
             }
             Spacer()
         }

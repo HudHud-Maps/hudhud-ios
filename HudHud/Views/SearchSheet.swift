@@ -157,7 +157,7 @@ struct SearchSheet: View {
                     }
 
                     SearchSectionView(title: "Recents") {
-                        RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
+                        RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore, searchType: .selectPOI)
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)

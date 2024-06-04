@@ -14,6 +14,7 @@ struct RecentSearchResultsView: View {
     let mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
+    let searchType: SearchViewStore.SearchType
 
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in
@@ -46,6 +47,12 @@ struct RecentSearchResultsView: View {
                         .foregroundColor(.primary)
                 }
                 Spacer()
+                if self.searchType == .favorites {
+                    Button {} label: {
+                        Text("+")
+                            .foregroundStyle(Color(UIColor.label))
+                    }
+                }
             }
             .onTapGesture {
                 let selectedItem = item
@@ -63,5 +70,5 @@ struct RecentSearchResultsView: View {
 
 #Preview {
     RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
-                            searchStore: .storeSetUpForPreviewing)
+                            searchStore: .storeSetUpForPreviewing, searchType: .favorites)
 }

@@ -49,7 +49,6 @@ struct SearchResultItem: View {
             }
             Spacer()
             Button(action: {
-
                 if self.searchViewStore.searchType == .favorites {
                     self.detailFormShown = true
                     if let resolvedItem = self.prediction as? ResolvedItem {
@@ -79,10 +78,9 @@ struct SearchResultItem: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    @State var searchText: String = ""
     return SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
                                                        title: "Starbucks",
                                                        subtitle: "Coffee",
                                                        symbol: .cupAndSaucer,
-                                                       type: .appleResolved), searchText: $searchText)
+                                                       type: .appleResolved), searchViewStore: .storeSetUpForPreviewing)
 }
