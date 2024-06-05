@@ -67,7 +67,7 @@ struct NavigationSheetView: View {
         .fullScreenCover(isPresented: self.$goPressed) {
             let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
             if let route = self.mapStore.routes?.routes.first {
-                NavigationView(route: route, styleURL: styleURL, debugSettings: self.debugStore)
+                NavigationView(route: route, styleURL: styleURL, debugSettings: self.debugStore, mapStore: self.mapStore)
             }
         }
     }

@@ -24,21 +24,23 @@ public struct NavigationView: UIViewControllerRepresentable {
 
     public typealias UIViewControllerType = NavigationViewController
 
-    let route: Route
+    var route: Route
     let styleURL: URL
     @ObservedObject var debugSettings: DebugStore
+    @ObservedObject var mapStore: MapStore
 
     // MARK: - Lifecycle
 
-    init(route: Route, styleURL: URL, debugSettings: DebugStore) {
+    init(route: Route, styleURL: URL, debugSettings: DebugStore, mapStore: MapStore) {
         self.route = route
         self.styleURL = styleURL
         self.debugSettings = debugSettings
+        self.mapStore = mapStore
     }
 
     // MARK: - Public
 
-    public func makeUIViewController(context _: Context) -> MapboxNavigation.NavigationViewController {
+    public func makeUIViewController(context: Context) -> MapboxNavigation.NavigationViewController {
         let locationManager: NavigationLocationManager?
         if self.debugSettings.simulateRide {
             let simulatedLocationManager = SimulatedLocationManager(route: self.route)
@@ -63,11 +65,12 @@ public struct NavigationView: UIViewControllerRepresentable {
         navigationController.mapView?.logoView.image = nil // isHidden does nothing, so we set the image to nil
         navigationController.mapView?.logoView.isHidden = true
         navigationController.showsEndOfRouteFeedback = false // feedback view crashes the app on route completion
-
+        navigationController.routeController.delegate = context.coordinator
         return navigationController
     }
 
-    public func updateUIViewController(_: MapboxNavigation.NavigationViewController, context _: Context) {
+    public func updateUIViewController(_ navigationViewController: MapboxNavigation.NavigationViewController, context _: Context) {
+        navigationViewController.route = self.mapStore.routes?.routes.first
         CancelButton.appearance().setTitle("Finish", for: .normal)
         CancelButton.appearance().setImage(nil, for: .normal)
         CancelButton.appearance().textColor = .red
