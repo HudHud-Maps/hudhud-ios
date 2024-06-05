@@ -20,7 +20,7 @@ import SwiftUI
 struct EditFavoritesFormView: View {
     @Binding var item: ResolvedItem
     @Binding var newFavorite: FavoriteCategoriesData
-    @State var types = ["Home", "School", "Work", "Restuarant"]
+    @State var types = ["Home", "School", "Work", "Restaurant"]
     @State var newType = ""
     @Environment(\.dismiss) var dismiss
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
@@ -32,27 +32,6 @@ struct EditFavoritesFormView: View {
 
     var body: some View {
         VStack {
-            HStack {
-                Button {
-                    self.dismiss()
-                } label: {
-                    Image(systemSymbol: .chevronLeft)
-                        .foregroundStyle(Color(UIColor.label))
-                        .padding(.horizontal, 15)
-                }
-                Spacer()
-                Text("Edit")
-                Spacer()
-                Button {
-                    // add
-
-                    self.dismiss()
-                } label: {
-                    Image(systemSymbol: .plus)
-                        .foregroundStyle(Color(UIColor.label))
-                }
-            }
-            .padding()
             Form {
                 Section {
                     TextField("Name \(!self.newFavorite.type.isEmpty ? self.newFavorite.type : self.item.title)", text: self.$newFavorite.title)
@@ -70,17 +49,17 @@ struct EditFavoritesFormView: View {
                         .frame(height: 140)
                         .disabled(true)
                 }
-                VStack(alignment: .leading) {
-                    Section(header: Text("description").foregroundStyle(.gray)) {
-                        TextEditor(text: self.$newFavorite.description.toUnwrapped(defaultValue: ""))
-                            .frame(minHeight: 100)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray, lineWidth: 1)
-                            )
-                    }
+                .padding(-20)
+                Section(header: Text("description").foregroundStyle(.gray)) {
+                    TextEditor(text: self.$newFavorite.description.toUnwrapped(defaultValue: ""))
+                        .frame(minHeight: 100)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray, lineWidth: 1)
+                        )
+                        .padding(.vertical)
                 }
-                .padding(.vertical)
+
                 Section(header: Text("Select Type")) {
                     ForEach(self.types, id: \.self) { type in
                         HStack {
@@ -118,6 +97,10 @@ struct EditFavoritesFormView: View {
                 }
             }
             .formStyle(.automatic)
+            .navigationBarTitle("Edit", displayMode: .inline)
+            .navigationBarItems(trailing: Button("Add") {
+                self.dismiss()
+            })
         }
     }
 
@@ -151,6 +134,20 @@ struct EditFavoritesFormView: View {
     @State var favorite: FavoriteCategoriesData = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     return EditFavoritesFormView(item: $resolvedItem, newFavorite: $favorite, camera: $camera)
+}
+
+#Preview("testing title") {
+    @State var resolvedItem: ResolvedItem = .artwork
+    @State var favorite: FavoriteCategoriesData = .favoriteForPreview
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    return NavigationStack {
+        Text("root view")
+        NavigationLink {
+            EditFavoritesFormView(item: $resolvedItem, newFavorite: $favorite, camera: $camera)
+        } label: {
+            Text("edit")
+        }
+    }
 }
 
 extension Binding {

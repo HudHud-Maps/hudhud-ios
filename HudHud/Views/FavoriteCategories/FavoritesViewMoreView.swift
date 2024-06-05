@@ -26,24 +26,6 @@ struct FavoritesViewMoreView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
-            HStack {
-                Button {
-                    self.dismiss()
-                } label: {
-                    Image(systemSymbol: .chevronLeft)
-                        .foregroundStyle(Color(UIColor.label))
-                }
-                Spacer()
-                Text("Favorites")
-                Spacer()
-                Button {
-                    self.searchSheetShown = true
-                } label: {
-                    Image(systemSymbol: .plus)
-                        .foregroundStyle(Color(UIColor.label))
-                }
-            }
-            .padding(.vertical)
             VStack {
                 switch self.searchStore.searchType {
                 case .returnPOILocation:
@@ -100,6 +82,17 @@ struct FavoritesViewMoreView: View {
             Spacer()
         }
         .padding(.horizontal)
+        .padding(.top)
+        .navigationTitle("Favorites")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(
+            trailing: Button(action: {
+                self.searchSheetShown = true
+            }) {
+                Image(systemSymbol: .plus)
+            }
+        )
+
         .sheet(isPresented: self.$searchSheetShown) {
             self.SearchSheetView()
         }
@@ -123,4 +116,15 @@ struct FavoritesViewMoreView: View {
 
 #Preview {
     FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+}
+
+#Preview("testing title") {
+    NavigationStack {
+        Text("root view")
+        NavigationLink {
+            FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+        } label: {
+            Text("view more")
+        }
+    }
 }
