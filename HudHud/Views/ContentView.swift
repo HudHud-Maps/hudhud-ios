@@ -152,7 +152,7 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-
+        .backport.safeAreaPadding(.bottom, self.sheetSize.height)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
