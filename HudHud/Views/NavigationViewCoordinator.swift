@@ -14,6 +14,7 @@ import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import OSLog
 
 // MARK: - NavigationViewCoordinator
 
@@ -58,18 +59,18 @@ extension NavigationViewCoordinator: RouteControllerDelegate {
                     }
                 }
             } catch {
-                print("Updating routes failed: \(error)")
+                Logger.routing.error("Updating routes failed\(error.localizedDescription)")
             }
         }
     }
 
     public func routeController(_: RouteController, didFailToRerouteWith error: any Error) {
-        print("Failed to reroute: \(error.localizedDescription)")
+        Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
     }
 
     public func routeController(_: RouteController, didRerouteAlong route: Route, reason _: RouteController.RerouteReason) {
         self.parent.route = route
-        print("didRerouteAlong new route \(route)")
+        Logger.routing.info("didRerouteAlong new route \(route)")
     }
 
     public func routeController(_ routeController: RouteController, shouldRerouteFrom location: CLLocation) -> Bool {
