@@ -53,7 +53,9 @@ extension NavigationViewCoordinator: RouteControllerDelegate {
 
                 let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
                 DispatchQueue.main.async {
-                    self.parent.mapStore.routes = results
+                    if let route = results.routes.first {
+                        self.parent.route = route
+                    }
                 }
             } catch {
                 print("Updating routes failed: \(error)")

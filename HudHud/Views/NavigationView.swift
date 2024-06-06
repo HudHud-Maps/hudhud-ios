@@ -24,18 +24,16 @@ public struct NavigationView: UIViewControllerRepresentable {
 
     public typealias UIViewControllerType = NavigationViewController
 
-    var route: Route
+    @State var route: Route
     let styleURL: URL
     @ObservedObject var debugSettings: DebugStore
-    @ObservedObject var mapStore: MapStore
 
     // MARK: - Lifecycle
 
-    init(route: Route, styleURL: URL, debugSettings: DebugStore, mapStore: MapStore) {
+    init(route: Route, styleURL: URL, debugSettings: DebugStore) {
         self.route = route
         self.styleURL = styleURL
         self.debugSettings = debugSettings
-        self.mapStore = mapStore
     }
 
     // MARK: - Public
@@ -70,7 +68,7 @@ public struct NavigationView: UIViewControllerRepresentable {
     }
 
     public func updateUIViewController(_ navigationViewController: MapboxNavigation.NavigationViewController, context _: Context) {
-        navigationViewController.route = self.mapStore.routes?.routes.first
+        navigationViewController.route = self.route
         CancelButton.appearance().setTitle("Finish", for: .normal)
         CancelButton.appearance().setImage(nil, for: .normal)
         CancelButton.appearance().textColor = .red
