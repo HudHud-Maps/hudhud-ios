@@ -10,6 +10,7 @@ import BackendService
 import Combine
 import CoreLocation
 import Foundation
+import OSLog
 import SwiftUI
 
 // MARK: - SearchViewStore
@@ -100,9 +101,13 @@ final class SearchViewStore: ObservableObject {
                         defer { self.isSearching = false }
                         self.isSearching = true
 
-                        let prediction = try await self.toursprung.predict(term: newValue, coordinates: nil)
-                        let items = prediction
-                        self.mapStore.displayableItems = items
+                        do {
+                            let prediction = try await self.apple.predict(term: newValue, coordinates: self.getCurrentLocation())
+                            let items = prediction
+                            self.mapStore.displayableItems = items
+                        } catch {
+                            Logger.poiData.error("Predict Error: \(error)")
+                        }
                     }
                 case .preview:
                     self.mapStore.displayableItems = [
@@ -119,9 +124,13 @@ final class SearchViewStore: ObservableObject {
                         defer { self.isSearching = false }
                         self.isSearching = true
 
-                        let prediction = try await self.hudhud.predict(term: newValue, coordinates: self.getCurrentLocation())
-                        let items = prediction
-                        self.mapStore.displayableItems = items
+                        do {
+                            let prediction = try await self.hudhud.predict(term: newValue, coordinates: self.getCurrentLocation())
+                            let items = prediction
+                            self.mapStore.displayableItems = items
+                        } catch {
+                            Logger.poiData.error("Predict Error: \(error)")
+                        }
                     }
                 }
             }
