@@ -19,6 +19,7 @@ public protocol POIServiceProtocol {
     static var serviceName: String { get }
     func lookup(id: String, prediction: Any) async throws -> [ResolvedItem]
     func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow]
+    func getTrendingPOI(page: Int,nextPage: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem]
 }
 
 // MARK: - PredictionResult
@@ -253,9 +254,15 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var phone: String?
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
-
+    public var rating: Int?
+    public var ratingCount: Int?
+    public var trendingImage: String?
+    public var distance: Int?
+    
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, category, symbol, type, coordinate
+        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, distance
+        case ratingCount = "ratings_count"
+        case trendingImage = "trending_image_url"
     }
 
     public var description: String {
@@ -264,7 +271,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Int? = nil, ratingCount: Int? = nil, trendingImage: String? = nil, distance: Int? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -274,6 +281,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.coordinate = coordinate
         self.phone = phone
         self.website = website
+        self.rating = rating
+        self.ratingCount = ratingCount
+        self.trendingImage = trendingImage
+        self.distance = distance
     }
 
     public init(from decoder: Decoder) throws {
@@ -285,6 +296,12 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.symbol = try container.decode(SFSymbol.self, forKey: .symbol)
         self.type = try container.decode(PredictionResult.self, forKey: .type)
         self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
+        self.phone = try container.decode(String.self, forKey: .phone)
+        self.website = try container.decode(URL.self, forKey: .website)
+        self.rating = try container.decode(Int.self, forKey: .rating)
+        self.ratingCount = try container.decode(Int.self, forKey: .ratingCount)
+        self.trendingImage = try container.decode(String.self, forKey: .trendingImage)
+        self.distance = try container.decode(Int.self, forKey: .distance)
     }
 
     // MARK: - Public

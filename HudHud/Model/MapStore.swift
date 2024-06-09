@@ -34,7 +34,7 @@ final class MapStore: ObservableObject {
 
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-
+    @Published var trendingPOI: [ResolvedItem]?
     @Published var routes: Toursprung.RouteCalculationResult? {
         didSet {
             if let routes, self.path.contains(Toursprung.RouteCalculationResult.self) == false {

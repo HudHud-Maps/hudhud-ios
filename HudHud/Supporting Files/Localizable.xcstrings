@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "(%lld)" : {
+
+    },
     "%@" : {
       "comment" : "duration"
     },
@@ -11,16 +14,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ • %2$@"
-          }
-        }
-      }
-    },
-    "%@ • %@ • %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ • %2$@ • %3$@"
           }
         }
       }
@@ -238,6 +231,9 @@
     "No Ratings" : {
 
     },
+    "No Results: network error" : {
+
+    },
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
@@ -301,6 +297,9 @@
       }
     },
     "Traffic" : {
+
+    },
+    "Trending" : {
 
     },
     "Unknown" : {

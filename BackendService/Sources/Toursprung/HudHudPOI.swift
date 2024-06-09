@@ -84,5 +84,9 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
     
+    public func getTrendingPOI(page: Int, nextPage: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
+        return []
+    }
+    
     
 }

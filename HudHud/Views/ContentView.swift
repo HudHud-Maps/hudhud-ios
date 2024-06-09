@@ -49,6 +49,8 @@ struct ContentView: View {
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
 
+    var trendingStore = TrendingStore()
+
     @ViewBuilder
     var mapView: some View {
         MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -197,6 +199,16 @@ struct ContentView: View {
                     self.mapStore.camera = MapViewCamera.center(coordinates, zoom: 16)
                 } catch {
                     print("location error: \(error)")
+                }
+            }
+            .task {
+                do {
+                    // here should sent user loction from mapstore.userlocation
+                    let trendingPOI = try await trendingStore.getTrendingPOI(page: 1, nextPage: 2, limit: 10, coordinates: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118))
+                    self.mapStore.trendingPOI = trendingPOI
+                } catch {
+                    self.mapStore.trendingPOI = []
+                    Logger.searchView.error("\(error.localizedDescription)")
                 }
             }
             .ignoresSafeArea()

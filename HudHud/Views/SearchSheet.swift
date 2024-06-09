@@ -144,6 +144,13 @@ struct SearchSheet: View {
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)
 
+                    if self.mapStore.trendingPOI?.count != 0 {
+                        SearchSectionView(title: "Trending") {
+                            PoiTileGridView(mapStore: self.mapStore)
+                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                        .listRowSeparator(.hidden)
+                    }
                     SearchSectionView(title: "Recents") {
                         RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
                     }
