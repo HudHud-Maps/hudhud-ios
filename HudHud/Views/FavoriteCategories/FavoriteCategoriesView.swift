@@ -16,9 +16,6 @@ struct FavoriteCategoriesView: View {
     let mapStore: MapStore
     let searchStore: SearchViewStore
 
-    let plusButton = FavoritesItem(id: 4, title: "Add",
-                                   sfSymbol: .plusCircleFill,
-                                   tintColor: .green, item: nil, type: "Add")
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
     @State var ViewMoreShown: Bool = false
@@ -39,11 +36,11 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
                 }
                 Button {
-                    print("\(self.plusButton.title) was pressed")
+                    print("Add was pressed")
                     self.ViewMoreShown = true
                 } label: {
-                    Text(self.plusButton.title)
-                }.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
+                    Text("Add")
+                }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: .green))
             }
             Spacer()
         }
