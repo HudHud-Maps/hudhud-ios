@@ -207,7 +207,7 @@ struct ContentView: View {
                     let trendingPOI = try await trendingStore.getTrendingPOI(page: 1, nextPage: 2, limit: 10, coordinates: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118))
                     self.mapStore.trendingPOI = trendingPOI
                 } catch {
-                    self.mapStore.trendingPOI = []
+                    self.mapStore.trendingPOI = nil
                     Logger.searchView.error("\(error.localizedDescription)")
                 }
             }
