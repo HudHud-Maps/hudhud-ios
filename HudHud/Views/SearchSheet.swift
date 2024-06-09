@@ -136,7 +136,7 @@ struct SearchSheet: View {
                                 }
 
                             }, label: {
-                                SearchResultItem(prediction: item, searchViewStore: self.searchStore)
+                                SearchResultItem(prediction: item, searchText: nil)
                                     .frame(maxWidth: .infinity)
                                     .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
                             })
@@ -201,12 +201,12 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [
-        SearchResultItem(prediction: PredictionItem.starbucks, searchViewStore: .storeSetUpForPreviewing),
-        SearchResultItem(prediction: PredictionItem.supermarket, searchViewStore: .storeSetUpForPreviewing),
-        SearchResultItem(prediction: PredictionItem.pharmacy, searchViewStore: .storeSetUpForPreviewing),
-        SearchResultItem(prediction: PredictionItem.artwork, searchViewStore: .storeSetUpForPreviewing),
-        SearchResultItem(prediction: PredictionItem.ketchup, searchViewStore: .storeSetUpForPreviewing),
-        SearchResultItem(prediction: PredictionItem.publicPlace, searchViewStore: .storeSetUpForPreviewing)
+        SearchResultItem(prediction: PredictionItem.starbucks, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.supermarket, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.pharmacy, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.artwork, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.ketchup, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.publicPlace, searchText: nil)
     ]
 }
 

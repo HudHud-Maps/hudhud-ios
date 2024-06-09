@@ -1,5 +1,5 @@
 //
-//  FavoriteCategoriesData.swift
+//  FavoritesItem.swift
 //  HudHud
 //
 //  Created by Alaa . on 27/02/2024.
@@ -11,9 +11,9 @@ import Foundation
 import SFSafeSymbols
 import SwiftUI
 
-// MARK: - FavoriteCategoriesData
+// MARK: - FavoritesItem
 
-struct FavoriteCategoriesData: Identifiable, Codable, Equatable {
+struct FavoritesItem: Identifiable, Codable, Equatable {
     let id: Int
     var title: String // change later to localized if you can
     let sfSymbol: SFSymbol
@@ -67,10 +67,10 @@ struct FavoriteCategoriesData: Identifiable, Codable, Equatable {
 // MARK: - FavoritesResolvedItems
 
 struct FavoritesResolvedItems: RawRepresentable {
-    var favoriteCategoriesData: [FavoriteCategoriesData]
+    var favoritesItems: [FavoritesItem]
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(favoriteCategoriesData),
+        guard let data = try? JSONEncoder().encode(favoritesItems),
               let result = String(data: data, encoding: .utf8) else {
             return "[]"
         }
@@ -79,16 +79,16 @@ struct FavoritesResolvedItems: RawRepresentable {
 
     // MARK: - Lifecycle
 
-    init(items: [FavoriteCategoriesData]) {
-        self.favoriteCategoriesData = items
+    init(items: [FavoritesItem]) {
+        self.favoritesItems = items
     }
 
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
-              let result = try? JSONDecoder().decode([FavoriteCategoriesData].self, from: data) else {
+              let result = try? JSONDecoder().decode([FavoritesItem].self, from: data) else {
             return nil
         }
-        self.favoriteCategoriesData = result
+        self.favoritesItems = result
     }
 
 }
@@ -130,19 +130,19 @@ extension Color {
     }
 }
 
-extension FavoriteCategoriesData {
-    static var favoriteForPreview = FavoriteCategoriesData(id: 3, title: "School",
-                                                           sfSymbol: .buildingColumnsFill,
-                                                           tintColor: .gray, item: .pharmacy, description: " ", type: "School")
+extension FavoritesItem {
+    static var favoriteForPreview = FavoritesItem(id: 10, title: "School",
+                                                  sfSymbol: .buildingColumnsFill,
+                                                  tintColor: .gray, item: .pharmacy, description: " ", type: "School")
     static var favoritesInit = [
-        FavoriteCategoriesData(id: 1, title: "Home",
-                               sfSymbol: .houseFill,
-                               tintColor: .gray, item: .artwork, type: "Home"),
-        FavoriteCategoriesData(id: 2, title: "Work",
-                               sfSymbol: .bagFill,
-                               tintColor: .gray, type: "Work"),
-        FavoriteCategoriesData(id: 3, title: "School",
-                               sfSymbol: .buildingColumnsFill,
-                               tintColor: .gray, type: "School")
+        FavoritesItem(id: 1, title: "Home",
+                      sfSymbol: .houseFill,
+                      tintColor: .gray, item: .artwork, type: "Home"),
+        FavoritesItem(id: 2, title: "Work",
+                      sfSymbol: .bagFill,
+                      tintColor: .gray, type: "Work"),
+        FavoritesItem(id: 3, title: "School",
+                      sfSymbol: .buildingColumnsFill,
+                      tintColor: .gray, type: "School")
     ]
 }

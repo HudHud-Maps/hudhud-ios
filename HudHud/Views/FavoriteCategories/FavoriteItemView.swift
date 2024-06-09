@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct FavoriteItemView: View {
-    let favorite: FavoriteCategoriesData
+    let favorite: FavoritesItem
     @ScaledMetric var imageSize = 24
 
     var body: some View {
@@ -44,7 +44,7 @@ struct FavoriteItemView: View {
 
 #Preview {
     HStack {
-        FavoriteItemView(favorite: FavoriteCategoriesData.favoriteForPreview)
+        FavoriteItemView(favorite: FavoritesItem.favoriteForPreview)
         Spacer()
     }
 }

@@ -38,7 +38,6 @@
 
     },
     "Add" : {
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -282,6 +281,9 @@
           }
         }
       }
+    },
+    "root view" : {
+
     },
     "Routing Configuration" : {
 

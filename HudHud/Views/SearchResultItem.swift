@@ -13,12 +13,13 @@ import SwiftUI
 struct SearchResultItem: View {
 
     let prediction: any DisplayableAsRow
-    @ObservedObject var searchViewStore: SearchViewStore
+//    @ObservedObject var searchViewStore: SearchViewStore
+    @Binding var searchText: String
     @ScaledMetric var imageSize = 24
     @State var detailFormShown: Bool = false
-    @State var clickedFav: FavoriteCategoriesData = .init(id: 3, title: "School",
-                                                          sfSymbol: .buildingColumnsFill,
-                                                          tintColor: .gray, item: .pharmacy, description: " ", type: "School")
+    @State var clickedFavorite: FavoritesItem = .init(id: 3, title: "School",
+                                                      sfSymbol: .buildingColumnsFill,
+                                                      tintColor: .gray, item: .pharmacy, description: " ", type: "School")
     @State var clickedItem: ResolvedItem = .artwork
 
     var body: some View {
@@ -49,38 +50,47 @@ struct SearchResultItem: View {
             }
             Spacer()
             Button(action: {
-                if self.searchViewStore.searchType == .favorites {
-                    self.detailFormShown = true
-                    if let resolvedItem = self.prediction as? ResolvedItem {
-                        self.clickedItem = resolvedItem
-                    }
-                    self.clickedFav = FavoriteCategoriesData(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
-                } else {
-                    self.searchViewStore.searchText = self.prediction.title
-                }
+//                if self.searchViewStore.searchType == .favorites {
+//                    self.detailFormShown = true
+//                    if let resolvedItem = self.prediction as? ResolvedItem {
+//                        self.clickedItem = resolvedItem
+//                    }
+//                    self.clickedFavorite = FavoritesItem(id: .random(in: 100 ... 999), title: "\(self.clickedItem.title)", sfSymbol: self.clickedItem.symbol, tintColor: self.clickedItem.tintColor, type: self.clickedItem.category ?? "")
+//                } else {
+                self.searchText = self.prediction.title
+//                }
 
             }, label: {
-                Image(systemSymbol: self.searchViewStore.searchType == .favorites ? .plus : .arrowUpLeft)
+                Image(systemSymbol: /* self.searchViewStore.searchType == .favorites ? .plus : */ .arrowUpLeft)
             })
             .padding(.trailing)
             .foregroundStyle(.tertiary)
         }
         .padding(8)
-        .fullScreenCover(isPresented: self.$detailFormShown, content: {
-            let bindingCamera = Binding(
-                get: { self.searchViewStore.mapStore.camera },
-                set: { self.searchViewStore.mapStore.camera = $0 }
-            )
-            return EditFavoritesFormView(item: self.$clickedItem, newFavorite: self.$clickedFav, camera: bindingCamera)
-        })
+//        .fullScreenCover(isPresented: self.$detailFormShown, content: {
+//            let bindingCamera = Binding(
+//                get: { self.searchViewStore.mapStore.camera },
+//                set: { self.searchViewStore.mapStore.camera = $0 }
+//            )
+//            return EditFavoritesFormView(item: self.clickedItem, newFavorite: self.$clickedFavorite, camera: bindingCamera)
+//        })
     }
+
+    // MARK: - Lifecycle
+
+    init(prediction: any DisplayableAsRow, searchText: Binding<String>?) {
+        self.prediction = prediction
+        self._searchText = searchText ?? .constant("")
+    }
+
 }
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
+    @State var searchText: String = ""
     return SearchResultItem(prediction: PredictionItem(id: UUID().uuidString,
                                                        title: "Starbucks",
                                                        subtitle: "Coffee",
                                                        symbol: .cupAndSaucer,
-                                                       type: .appleResolved), searchViewStore: .storeSetUpForPreviewing)
+                                                       type: .appleResolved), searchText: $searchText /* , searchViewStore: .storeSetUpForPreviewing */ )
 }

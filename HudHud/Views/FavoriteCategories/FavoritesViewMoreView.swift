@@ -19,9 +19,9 @@ struct FavoritesViewMoreView: View {
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @State var clickedFavorite: FavoriteCategoriesData = .favoriteForPreview
+    @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @State var clickedItem: ResolvedItem = .artwork
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
+    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -48,7 +48,7 @@ struct FavoritesViewMoreView: View {
             .cornerRadius(12)
 
             Section { // show my favorites
-                ForEach(self.favorites.favoriteCategoriesData) { favorite in
+                ForEach(self.favorites.favoritesItems) { favorite in
                     if favorite.item != nil {
                         HStack {
                             FavoriteItemView(favorite: favorite)
@@ -99,9 +99,6 @@ struct FavoritesViewMoreView: View {
         .onChange(of: self.searchSheetShown) { _ in
             self.mapStore.path.append(SheetSubView.favorites)
         }
-        .onAppear {
-            print(self.favorites, "favorites")
-        }
     }
 
     // MARK: - Internal
@@ -115,16 +112,17 @@ struct FavoritesViewMoreView: View {
 }
 
 #Preview {
-    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+    NavigationStack {
+        FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+    }
 }
 
 #Preview("testing title") {
-    NavigationStack {
+    @State var isLinkActive = true
+    return NavigationStack {
         Text("root view")
-        NavigationLink {
-            FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
-        } label: {
-            Text("view more")
-        }
+            .navigationDestination(isPresented: $isLinkActive) {
+                FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+            }
     }
 }

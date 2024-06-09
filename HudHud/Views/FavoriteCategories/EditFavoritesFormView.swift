@@ -18,12 +18,12 @@ import SwiftUI
 // MARK: - EditFavoritesFormView
 
 struct EditFavoritesFormView: View {
-    @Binding var item: ResolvedItem
-    @Binding var newFavorite: FavoriteCategoriesData
+    let item: ResolvedItem
+    @Binding var newFavorite: FavoritesItem
     @State var types = ["Home", "School", "Work", "Restaurant"]
     @State var newType = ""
     @Environment(\.dismiss) var dismiss
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
+    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
     @State private var typeSymbols: [String: SFSymbol] = ["Home": .houseFill, "Work": .bagFill, "School": .buildingFill]
 
     private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
@@ -99,6 +99,9 @@ struct EditFavoritesFormView: View {
             .formStyle(.automatic)
             .navigationBarTitle("Edit", displayMode: .inline)
             .navigationBarItems(trailing: Button("Add") {
+                print(self.favorites, "before ==========")
+                self.updateFavorite(favorite: self.newFavorite)
+                print(self.favorites, "after ==========")
                 self.dismiss()
             })
         }
@@ -106,11 +109,14 @@ struct EditFavoritesFormView: View {
 
     // MARK: - Internal
 
-    func updateFavorite(favorite: FavoriteCategoriesData) {
-        var currentItems = self.favorites.favoriteCategoriesData
+    func updateFavorite(favorite: FavoritesItem) {
+        var currentItems = self.favorites.favoritesItems
 
-        if let existingIndex = currentItems.firstIndex(where: { $0.id == favorite.id }) {
-            currentItems[existingIndex] = favorite
+        if let existingIndex = currentItems.firstIndex(where: { $0.type == favorite.type }) {
+            currentItems[existingIndex].item = favorite.item
+            currentItems[existingIndex].title = favorite.title
+            currentItems[existingIndex].description = favorite.description
+            currentItems[existingIndex].type = favorite.type
         } else {
             currentItems.append(favorite)
         }
@@ -131,22 +137,23 @@ struct EditFavoritesFormView: View {
 
 #Preview {
     @State var resolvedItem: ResolvedItem = .artwork
-    @State var favorite: FavoriteCategoriesData = .favoriteForPreview
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    return EditFavoritesFormView(item: $resolvedItem, newFavorite: $favorite, camera: $camera)
-}
-
-#Preview("testing title") {
-    @State var resolvedItem: ResolvedItem = .artwork
-    @State var favorite: FavoriteCategoriesData = .favoriteForPreview
+    @State var favorite: FavoritesItem = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     return NavigationStack {
+        EditFavoritesFormView(item: resolvedItem, newFavorite: $favorite, camera: $camera)
+    }
+}
+
+#Preview("EditForvoritesFormView") {
+    @State var resolvedItem: ResolvedItem = .ketchup
+    @State var favorite: FavoritesItem = .favoriteForPreview
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @State var isLinkActive = true
+    return NavigationStack {
         Text("root view")
-        NavigationLink {
-            EditFavoritesFormView(item: $resolvedItem, newFavorite: $favorite, camera: $camera)
-        } label: {
-            Text("edit")
-        }
+            .navigationDestination(isPresented: $isLinkActive) {
+                EditFavoritesFormView(item: resolvedItem, newFavorite: $favorite, camera: $camera)
+            }
     }
 }
 

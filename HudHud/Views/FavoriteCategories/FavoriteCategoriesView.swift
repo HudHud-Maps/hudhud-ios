@@ -7,6 +7,8 @@
 //
 
 import BackendService
+import CoreLocation
+import MapLibreSwiftUI
 import SFSafeSymbols
 import SwiftUI
 
@@ -14,17 +16,17 @@ struct FavoriteCategoriesView: View {
     let mapStore: MapStore
     let searchStore: SearchViewStore
 
-    let plusButton = FavoriteCategoriesData(id: 4, title: "Add",
-                                            sfSymbol: .plusCircleFill,
-                                            tintColor: .green, item: nil, type: "Add")
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoriteCategoriesData.favoritesInit)
+    let plusButton = FavoritesItem(id: 4, title: "Add",
+                                   sfSymbol: .plusCircleFill,
+                                   tintColor: .green, item: nil, type: "Add")
+    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
-//    @State var ViewMoreShown: Bool = false
+    @State var ViewMoreShown: Bool = false
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
-                ForEach(self.favorites.favoriteCategoriesData.prefix(4)) { favorite in
+                ForEach(self.favorites.favoritesItems.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
                             let mapItems = [AnyDisplayableAsRow(selectedItem)]
@@ -32,12 +34,13 @@ struct FavoriteCategoriesView: View {
                             self.mapStore.displayableItems = mapItems
                         }
                     } label: {
-                        Text(favorite.title)
+                        Text(favorite.type)
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
                 }
                 Button {
                     print("\(self.plusButton.title) was pressed")
+                    self.ViewMoreShown = true
                 } label: {
                     Text(self.plusButton.title)
                 }.buttonStyle(FavoriteCategoriesButton(sfSymbol: self.plusButton.sfSymbol, tintColor: self.plusButton.tintColor))
@@ -48,19 +51,26 @@ struct FavoriteCategoriesView: View {
 }
 
 #Preview {
-    VStack(alignment: .leading) {
-        HStack {
-            Text("Favorites")
-                .font(.system(.title))
-                .bold()
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
-            Spacer()
-            Text("View More >")
-                .lineLimit(1)
-                .minimumScaleFactor(0.5)
+    NavigationStack {
+        VStack(alignment: .leading) {
+            HStack {
+                Text("Favorites")
+                    .font(.system(.title))
+                    .bold()
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                Spacer()
+                NavigationLink {
+                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+                } label: {
+                    Text("View More >")
+                        .foregroundStyle(Color(UIColor.label))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                }
+            }
+            FavoriteCategoriesView(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
         }
-        FavoriteCategoriesView(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+        .padding()
     }
-    .padding()
 }
