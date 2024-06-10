@@ -26,8 +26,8 @@ public class TrendingStore: ObservableObject{
             case .json(let jsonResponse):
                 let resolvedItem: [ResolvedItem] = jsonResponse.data.compactMap { item in
                     
-                    guard let id = item.id, let title = item.name, let subtitle = item.category, let lon = item.coordinates?.lon, let lat = item.coordinates?.lat, let rating = item.rating, let ratingCount = item.ratings_count, let trendingImage = item.trending_image_url, let distance = item.distance else { return ResolvedItem.artwork }
-                    return ResolvedItem(id: id, title: title, subtitle: subtitle, category: subtitle, symbol: .pin, type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon), phone: nil, website: nil, rating: rating, ratingCount: ratingCount, trendingImage: trendingImage, distance: distance)
+                    guard let id = item.id, let title = item.name, let subtitle = item.category, let lon = item.coordinates?.lon, let lat = item.coordinates?.lat, let rating = item.rating, let ratingCount = item.ratings_count, let trendingImage = item.trending_image_url else { return ResolvedItem.artwork }
+                    return ResolvedItem(id: id, title: title, subtitle: subtitle, category: subtitle, symbol: .pin, type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: lat, longitude: lon), phone: nil, website: nil, rating: rating, ratingCount: ratingCount, trendingImage: trendingImage)
                 }
                     return resolvedItem
                 

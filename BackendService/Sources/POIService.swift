@@ -256,10 +256,9 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var rating: Int?
     public var ratingCount: Int?
     public var trendingImage: String?
-    public var distance: Int?
     
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, distance
+        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating
         case ratingCount = "ratings_count"
         case trendingImage = "trending_image_url"
     }
@@ -283,7 +282,6 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.rating = rating
         self.ratingCount = ratingCount
         self.trendingImage = trendingImage
-        self.distance = distance
     }
 
     public init(from decoder: Decoder) throws {
@@ -300,7 +298,6 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.rating = try container.decode(Int.self, forKey: .rating)
         self.ratingCount = try container.decode(Int.self, forKey: .ratingCount)
         self.trendingImage = try container.decode(String.self, forKey: .trendingImage)
-        self.distance = try container.decode(Int.self, forKey: .distance)
     }
 
     // MARK: - Public

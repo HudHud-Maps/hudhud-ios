@@ -67,9 +67,11 @@ struct PoiTileView: View {
                 Text(self.poiTileData.title)
                     .font(.subheadline)
                 HStack {
-                    Text("\(self.poiTileData.category ?? "") \u{2022} \(self.poiTileData.distance?.getDistanceString() ?? "")")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    Text("\(self.poiTileData.category ?? "")")
+                        // comment for now ..the distance should calculate based on user location
+                        //		\u{2022} \(self.poiTileData.distance?.getDistanceString() ?? "")")
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
                 }
             }
             .padding(.leading, 5)
