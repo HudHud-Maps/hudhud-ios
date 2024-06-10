@@ -60,9 +60,6 @@ public actor ToursprungPOI: POIServiceProtocol {
         return []
     }
     
-    public func getTrendingPOI(page: Int, nextPage: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
-        return []
-    }
 }
 
 // MARK: - Private

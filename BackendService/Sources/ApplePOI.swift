@@ -98,10 +98,6 @@ public actor ApplePOI: POIServiceProtocol {
             }
         }
     }
-
-    public func getTrendingPOI(page: Int, nextPage: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
-        return []
-    }
     
     // MARK: - Internal
 

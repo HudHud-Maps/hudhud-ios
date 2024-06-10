@@ -78,7 +78,7 @@ struct PoiTileView: View {
 }
 
 #Preview {
-    let poi = ResolvedItem(id: UUID().uuidString,
+    let poi = ResolvedItem(id: "Al-Narjs - Riyadh",
                            title: "Supermarket",
                            subtitle: "Al-Narjs - Riyadh",
                            category: "Cafe", type: .hudhud,

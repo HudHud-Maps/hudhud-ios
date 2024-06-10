@@ -11,14 +11,11 @@ import MapKit
 import CoreLocation
 import OpenAPIURLSession
 
-public struct TrendingStore: POIServiceProtocol {
+public class TrendingStore: ObservableObject{
     
-    public init() {
-    }
-    
-    public static var serviceName = "HudHud"
-    
-    public func getTrendingPOI(page: Int, nextPage: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
+    @Published public var trendingPOIs : [ResolvedItem]?
+
+    public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
         let client = Client(serverURL: URL(string: "https://hudhud.sa")!, transport: URLSessionTransport())
         let response = try await client.listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude),headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
@@ -44,13 +41,7 @@ public struct TrendingStore: POIServiceProtocol {
         }
     }
     
-    public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
-        return []
+    public init(){
+        
     }
-    
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
-        return []
-    }
-    
-    
 }

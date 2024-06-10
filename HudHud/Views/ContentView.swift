@@ -39,6 +39,7 @@ struct ContentView: View {
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
+    @ObservedObject private var trendingStore: TrendingStore
 
     @State private var showUserLocation: Bool = false
     @State private var sheetSize: CGSize = .zero
@@ -48,8 +49,6 @@ struct ContentView: View {
 
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
-
-    var trendingStore = TrendingStore()
 
     @ViewBuilder
     var mapView: some View {
@@ -204,10 +203,10 @@ struct ContentView: View {
             .task {
                 do {
                     // here should sent user loction from mapstore.userlocation
-                    let trendingPOI = try await trendingStore.getTrendingPOI(page: 1, nextPage: 2, limit: 10, coordinates: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118))
-                    self.mapStore.trendingPOI = trendingPOI
+                    let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118))
+                    self.trendingStore.trendingPOIs = trendingPOI
                 } catch {
-                    self.mapStore.trendingPOI = nil
+                    self.trendingStore.trendingPOIs = nil
                     Logger.searchView.error("\(error.localizedDescription)")
                 }
             }
@@ -280,7 +279,7 @@ struct ContentView: View {
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -310,6 +309,7 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.trendingStore = TrendingStore()
         self.mapStore.routes = searchStore.mapStore.routes
     }
 }

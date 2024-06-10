@@ -12,11 +12,11 @@ import SwiftUI
 
 struct PoiTileGridView: View {
     let rows: [GridItem] = [GridItem(.adaptive(minimum: 170))]
-    var mapStore: MapStore
+    var trendingPOIs: TrendingStore
 
     var body: some View {
         ScrollView(.horizontal) {
-            if let trendingPOI = self.mapStore.trendingPOI {
+            if let trendingPOI = self.trendingPOIs.trendingPOIs {
                 LazyHGrid(rows: self.rows, alignment: .top, spacing: 10) {
                     ForEach(trendingPOI) { poiTileGrid in
                         PoiTileView(poiTileData: poiTileGrid)
@@ -32,7 +32,7 @@ struct PoiTileGridView: View {
 }
 
 #Preview {
-    let poi = ResolvedItem(id: UUID().uuidString,
+    let poi = ResolvedItem(id: "Al-Narjs - Riyadh",
                            title: "Supermarket",
                            subtitle: "Al-Narjs - Riyadh",
                            category: "Cafe", type: .hudhud,
@@ -43,7 +43,7 @@ struct PoiTileGridView: View {
                            ratingCount: 25,
                            trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77",
                            distance: 44)
-    let poi1 = ResolvedItem(id: UUID().uuidString,
+    let poi1 = ResolvedItem(id: "Al-Narjs - Riyadh",
                             title: "Supermarket",
                             subtitle: "Al-Narjs - Riyadh",
                             category: "Cafe", type: .hudhud,
@@ -55,7 +55,7 @@ struct PoiTileGridView: View {
                             trendingImage: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3",
                             distance: 44)
 
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.trendingPOI = [poi, poi1]
-    return PoiTileGridView(mapStore: searchViewStore.mapStore)
+    let trendingStroe = TrendingStore()
+    trendingStroe.trendingPOIs = [poi, poi1]
+    return PoiTileGridView(trendingPOIs: trendingStroe)
 }
