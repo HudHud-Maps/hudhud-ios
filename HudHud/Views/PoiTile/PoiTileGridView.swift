@@ -15,18 +15,25 @@ struct PoiTileGridView: View {
     var trendingPOIs: TrendingStore
 
     var body: some View {
-        ScrollView(.horizontal) {
-            if let trendingPOI = self.trendingPOIs.trendingPOIs {
+        if let trendingPOI = self.trendingPOIs.trendingPOIs {
+            ScrollView(.horizontal) {
                 LazyHGrid(rows: self.rows, alignment: .top, spacing: 10) {
                     ForEach(trendingPOI) { poiTileGrid in
                         PoiTileView(poiTileData: poiTileGrid)
                     }
                 }
-            } else {
-                Text("No Results: network error")
-                    .font(.caption)
-                    .padding(.leading)
             }
+        } else {
+            VStack(alignment: .leading) {
+                Text("No Results")
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
+                Text("\(self.trendingPOIs.lastError?.localizedDescription ?? "error not found")")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.leading)
+            }
+            .padding(.leading)
         }
     }
 }

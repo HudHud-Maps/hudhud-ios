@@ -14,7 +14,8 @@ import OpenAPIURLSession
 public class TrendingStore: ObservableObject{
     
     @Published public var trendingPOIs : [ResolvedItem]?
-
+    @Published public var lastError: Error?
+    
     public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
         let client = Client(serverURL: URL(string: "https://hudhud.sa")!, transport: URLSessionTransport())
         let response = try await client.listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude),headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
@@ -37,6 +38,7 @@ public class TrendingStore: ObservableObject{
             } else {
                 nil
             }
+            self.lastError = OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
