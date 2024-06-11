@@ -30,8 +30,6 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
-                    self.mapStore.displayableItems = []
-                    self.mapStore.selectedItem = nil
                     self.mapStore.routes = nil
                     self.mapStore.waypoints = nil
                     self.dismiss()

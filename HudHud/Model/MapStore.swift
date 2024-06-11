@@ -325,12 +325,11 @@ private extension MapStore {
         switch state {
         // show the whole route on the map
         case let .route(routes):
-            if let routes {
+            if let routes = self.routes {
                 if let route = routes.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-                    if let camera = CameraState.boundingBox(from: coordinates) {
-                        self.camera = camera
-                    }
+                    self.camera = MapViewCamera.boundingBox(self.generateMLNCoordinateBounds(from: coordinates)!, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
                 }
+                return
             }
         case let .selectedItem(selectedItem):
             // if the item selected from multi-map items(nearby poi), the camera will not move
