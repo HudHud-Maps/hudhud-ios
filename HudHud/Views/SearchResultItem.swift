@@ -53,6 +53,13 @@ struct SearchResultItem: View {
         }
         .padding(8)
     }
+
+    // MARK: - Lifecycle
+
+    init(prediction: any DisplayableAsRow, searchText: Binding<String>?) {
+        self.prediction = prediction
+        self._searchText = searchText ?? .constant("")
+    }
 }
 
 @available(iOS 17, *)

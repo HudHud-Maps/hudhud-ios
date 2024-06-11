@@ -30,6 +30,9 @@ paths:
                 properties:
                   ok:
                     type: boolean
+                    description: >-
+                      Can be ignored by clients, errors should be checked using
+                      the status code following the http standard
                   data:
                     type: array
                     items:
@@ -41,6 +44,10 @@ paths:
                           type: string
                         thumbnail_url:
                           type: string
+                      required:
+                        - name
+                        - style_url
+                        - thumbnail_url
                 required:
                   - ok
                   - data
@@ -122,6 +129,31 @@ paths:
                           required:
                             - lat
                             - lon
+                        ios_category_icon:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            color:
+                              type: string
+                              description: This should be an Apple color name
+                          required:
+                            - name
+                            - color
+                        android_category_icon:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            color:
+                              type: string
+                              description: This should be a hex color
+                          required:
+                            - name
+                            - color
+                      required:
+                        - ios_category_icon
+                        - android_category_icon
                 required:
                   - ok
                   - data
@@ -141,6 +173,12 @@ paths:
                         coordinates:
                           lat: 39.891111
                           lon: 21.3625
+                        ios_category_icon:
+                          name: restaurant
+                          color: blue
+                        android_category_icon:
+                          name: restaurant
+                          color: blue
       security: []
   /p/{id}:
     get:
@@ -173,6 +211,9 @@ paths:
                 properties:
                   ok:
                     type: boolean
+                    description: >-
+                      Can be ignored by clients, errors should be checked using
+                      the status code following the http standard
                   data:
                     type: object
                     properties:
@@ -196,22 +237,25 @@ paths:
                           - lon
                       phone_number:
                         type: string
+                        nullable: true
                       website:
                         type: string
+                        nullable: true
                       rating:
                         type: number
+                        nullable: true
                       ratings_count:
                         type: integer
+                        nullable: true
                       instagram:
                         type: string
+                        nullable: true
                       description:
                         type: string
-                      distance:
-                        type: number
-                      duration:
-                        type: number
+                        nullable: true
                       is_open:
                         type: boolean
+                        nullable: true
                       opening_hours:
                         type: object
                         properties:
@@ -307,22 +351,16 @@ paths:
                               type: string
                             url:
                               type: string
+                          required:
+                            - type
+                            - url
+                        nullable: true
                     required:
                       - id
                       - address
                       - name
                       - category
                       - coordinates
-                      - phone_number
-                      - website
-                      - rating
-                      - ratings_count
-                      - instagram
-                      - description
-                      - distance
-                      - duration
-                      - is_open
-                      - media_urls
                 required:
                   - ok
                   - data
@@ -546,6 +584,9 @@ paths:
                 properties:
                   ok:
                     type: boolean
+                    description: >-
+                      Can be ignored by clients, errors should be checked using
+                      the status code following the http standard
                   total:
                     type: integer
                   next_page_token:
@@ -561,18 +602,24 @@ paths:
                           type: string
                         rating:
                           type: number
+                          nullable: true
                         ratings_count:
                           type: integer
+                          nullable: true
                         category:
                           type: string
                         distance:
                           type: number
+                          nullable: true
                         price_range:
                           type: integer
+                          nullable: true
                         accessibility:
                           type: boolean
+                          nullable: true
                         is_open:
                           type: boolean
+                          nullable: true
                         opening_hours:
                           type: object
                           properties:
@@ -661,6 +708,7 @@ paths:
                           nullable: true
                         phone_number:
                           type: string
+                          nullable: true
                         coordinates:
                           type: object
                           properties:
@@ -673,8 +721,10 @@ paths:
                             - lon
                         website:
                           type: string
+                          nullable: true
                         instagram:
                           type: string
+                          nullable: true
                         media_urls:
                           type: array
                           items:
@@ -684,10 +734,18 @@ paths:
                                 type: string
                               url:
                                 type: string
+                            required:
+                              - type
+                              - url
+                          nullable: true
+                      required:
+                        - id
+                        - name
+                        - category
+                        - coordinates
                 required:
                   - ok
                   - total
-                  - next_page_token
                   - data
               examples:
                 '1':
@@ -801,6 +859,9 @@ paths:
                 properties:
                   ok:
                     type: boolean
+                    description: >-
+                      Can be ignored by clients, errors should be checked using
+                      the status code following the http standard
                   next_page_token:
                     type: string
                   data:
@@ -822,16 +883,25 @@ paths:
                             - lon
                         rating:
                           type: integer
+                          nullable: true
                         ratings_count:
                           type: integer
+                          nullable: true
                         name:
                           type: string
                         category:
                           type: string
                         distance:
                           type: integer
+                          nullable: true
                         trending_image_url:
                           type: string
+                      required:
+                        - id
+                        - coordinates
+                        - name
+                        - category
+                        - trending_image_url
                 required:
                   - ok
                   - next_page_token
@@ -919,5 +989,6 @@ components:
             - pending
             - sold
   securitySchemes: {}
-servers: []
-
+servers:
+  - url: https://api.dev.hudhud.sa
+    description: Develop Env
