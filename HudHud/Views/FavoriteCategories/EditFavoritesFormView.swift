@@ -135,9 +135,19 @@ struct EditFavoritesFormView: View {
             type: self.selectedType
         )
 
-        // Check if the item already exists and update or append
-        if let index = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
-            self.favorites.favoritesItems[index] = newFavoritesItem
+        // a set of types that should only be updated
+        let updatableTypes: Set<String> = ["Home", "School", "Work"]
+
+        if updatableTypes.contains(newFavoritesItem.type),
+           let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type || $0.id == newFavoritesItem.id }) {
+            // Update the existing item at the found index
+            var existingItem = self.favorites.favoritesItems[existingIndex]
+            existingItem.title = newFavoritesItem.title
+            existingItem.item = newFavoritesItem.item
+            existingItem.description = newFavoritesItem.description
+            existingItem.type = newFavoritesItem.type
+
+            self.favorites.favoritesItems[existingIndex] = existingItem
         } else {
             self.favorites.favoritesItems.append(newFavoritesItem)
         }
