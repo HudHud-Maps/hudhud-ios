@@ -10,6 +10,7 @@ import BackendService
 import CoreLocation
 import Foundation
 import MapboxDirections
+import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -38,11 +39,6 @@ final class MapStore: ObservableObject {
 
     @Published var navigatingRoute: Route? {
         didSet {
-            let newValue = self.navigatingRoute != nil
-            guard newValue != self.navigationInProgress else { return }
-
-            self.navigationInProgress = newValue
-
             if let elements = try? path.elements() {
                 print("path now: \(elements)")
                 self.updateSelectedSheetDetent(to: elements.last)
@@ -228,6 +224,15 @@ final class MapStore: ObservableObject {
             return pitch
         }
         return 0
+    }
+}
+
+// MARK: - NavigationViewControllerDelegate
+
+extension MapStore: NavigationViewControllerDelegate {
+
+    func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
+        self.navigatingRoute = nil
     }
 }
 

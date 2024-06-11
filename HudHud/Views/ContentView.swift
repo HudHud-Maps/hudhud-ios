@@ -9,10 +9,10 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
+import MapboxCoreNavigation
 import MapboxDirections
 import MapboxNavigation
 import MapLibre
-import MapLibreNavigationSwiftUI
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import NavigationTransitions
@@ -53,7 +53,7 @@ struct ContentView: View {
 
     @ViewBuilder
     var mapView: some View {
-        NavigationMapView(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle(), camera: self.$mapStore.camera, route: self.$mapStore.navigatingRoute) {
+        MapView<NavigationViewController>(makeViewController: NavigationViewController(dayStyleURL: self.styleURL), styleURL: self.styleURL, camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
             if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationInProgress == false {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
@@ -145,9 +145,21 @@ struct ContentView: View {
             }
         })
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-        .unsafeMapViewModifier { mapView in
-            mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
+        .unsafeMapViewControllerModifier { controller in
+            controller.delegate = self.mapStore
+            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationInProgress == false {
+                let locationManager = SimulatedLocationManager(route: route)
+                locationManager.speedMultiplier = 2
+                controller.startNavigation(with: route, locationManager: locationManager)
+                self.mapStore.navigationInProgress = true
+            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
+                controller.endNavigation()
+                self.mapStore.navigationInProgress = false
+            }
+
+            controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
+        .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
                 let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate)
@@ -360,4 +372,10 @@ extension Binding where Value == Bool {
             set: { _ in }
         )
     }
+}
+
+// MARK: - NavigationViewController + WrappedViewController
+
+extension NavigationViewController: WrappedViewController {
+    public typealias MapType = NavigationMapView
 }

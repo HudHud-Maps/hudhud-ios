@@ -62,7 +62,6 @@
 		CD33DFEC2C00CA670090592C /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD33DFEB2C00CA670090592C /* MapLibreSwiftDSL */; };
 		CD33DFEE2C00CA670090592C /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD33DFED2C00CA670090592C /* MapLibreSwiftUI */; };
 		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
-		CD52C5072C04935400254AA8 /* MapLibreNavigationSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD52C5062C04935400254AA8 /* MapLibreNavigationSwiftUI */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
 		CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */; };
 		CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */ = {isa = PBXBuildFile; productRef = CD59BD702B7CD967002C14F6 /* SFSafeSymbols */; };
@@ -231,7 +230,6 @@
 				CD64651C2C0DD1E400802FBD /* NavigationTransitions in Frameworks */,
 				CD7A377F2C07732700F1C2DD /* BetterSafariView in Frameworks */,
 				CD7A377E2C07732700F1C2DD /* NavigationTransitions in Frameworks */,
-				CD52C5072C04935400254AA8 /* MapLibreNavigationSwiftUI in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
@@ -592,7 +590,6 @@
 				6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */,
 				CD33DFEB2C00CA670090592C /* MapLibreSwiftDSL */,
 				CD33DFED2C00CA670090592C /* MapLibreSwiftUI */,
-				CD52C5062C04935400254AA8 /* MapLibreNavigationSwiftUI */,
 				FF82BD7DCFFCC2C9044E4E32 /* NavigationTransitions */,
 				62678BC6BA8A80DCF2EBF8B8 /* BetterSafariView */,
 				197E2670D487EB0CF03C2AF6 /* NavigationTransitions */,
@@ -1347,10 +1344,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD33DFEA2C00CA670090592C /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
 			productName = MapLibreSwiftUI;
-		};
-		CD52C5062C04935400254AA8 /* MapLibreNavigationSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapLibreNavigationSwiftUI;
 		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;
