@@ -89,7 +89,6 @@ struct PoiTileView: View {
                            website: URL(string: "https://hudhud.sa"),
                            rating: 2,
                            ratingCount: 25,
-                           trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77",
-                           distance: 44)
+                           trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")
     return PoiTileView(poiTileData: poi)
 }
