@@ -197,14 +197,13 @@ struct SearchSheet: View {
 extension Route: Identifiable {}
 
 extension SearchSheet {
-    @State static var fakeSearchBinding: String = ""
     static var fakeData = [
-        SearchResultItem(prediction: PredictionItem.starbucks, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.supermarket, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.pharmacy, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.artwork, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.ketchup, searchText: $fakeSearchBinding),
-        SearchResultItem(prediction: PredictionItem.publicPlace, searchText: $fakeSearchBinding)
+        SearchResultItem(prediction: PredictionItem.starbucks, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.supermarket, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.pharmacy, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.artwork, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.ketchup, searchText: nil),
+        SearchResultItem(prediction: PredictionItem.publicPlace, searchText: nil)
     ]
 }
 
