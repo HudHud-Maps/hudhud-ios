@@ -56,7 +56,7 @@ struct RecentSearchResultsView: View {
                         self.EditFormViewIsShown = true
                         self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
                         self.clickedFavorite = FavoritesItem(id: .random(in: 100 ... 999), title: "\(item.title)", sfSymbol: item.symbol, tintColor: item.tintColor, item: item, type: item.category ?? "")
-                        return EditFavoritesFormView(item: item, newFavorite: self.$clickedFavorite, camera: self.$camera)
+                        return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
                     } label: {
                         Text("+")
                             .foregroundStyle(Color(UIColor.label))
@@ -86,14 +86,14 @@ struct RecentSearchResultsView: View {
 
 #Preview("EditFavoritesFormView") {
     let item: ResolvedItem = .artwork
-    @State var FavoriteItem: FavoritesItem = .init(id: .random(in: 100 ... 999), title: item.title, sfSymbol: item.symbol, tintColor: item.tintColor, item: item, type: item.category ?? "")
+    @State var favoriteItem: FavoritesItem = .init(id: .random(in: 100 ... 999), title: item.title, sfSymbol: item.symbol, tintColor: item.tintColor, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
     @State var EditFormViewIsShown: Bool = true
     return NavigationStack {
         RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                                 searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $EditFormViewIsShown) {
-                EditFavoritesFormView(item: item, newFavorite: $FavoriteItem, camera: $camera)
+                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, camera: $camera)
             }
     }
 }
