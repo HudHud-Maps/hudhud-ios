@@ -61,7 +61,6 @@ public struct HudHudPOI: POIServiceProtocol {
     }
     
     public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
-        
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())
@@ -71,12 +70,12 @@ public struct HudHudPOI: POIServiceProtocol {
             
         case .ok(let okResponse):
             switch okResponse.body {
-                
             case .json(let jsonResponse):
                 let something: [AnyDisplayableAsRow] = jsonResponse.data.compactMap { somethingElse in
-                    guard let id = somethingElse.id, let title = somethingElse.name, let subtitle = somethingElse.address ?? somethingElse.category else {
-                        return nil
-                    }
+                    let id = somethingElse.id
+					let title = somethingElse.name
+					let subtitle = somethingElse.address
+					
                     return AnyDisplayableAsRow(PredictionItem(id: id, title: title, subtitle: subtitle, type: .hudhud))
                 }
                 return something
