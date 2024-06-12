@@ -253,7 +253,13 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var phone: String?
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
-    public var rating: Int?
+    public var rating: Double? {
+        didSet {
+            if let rating = rating {
+                self.rating = rating.rounded()
+            }
+        }
+    }
     public var ratingCount: Int?
     public var trendingImage: String?
     
@@ -269,7 +275,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Int? = nil, ratingCount: Int? = nil, trendingImage: String? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingCount: Int? = nil, trendingImage: String? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -295,7 +301,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
         self.phone = try container.decode(String.self, forKey: .phone)
         self.website = try container.decode(URL.self, forKey: .website)
-        self.rating = try container.decode(Int.self, forKey: .rating)
+        self.rating = try container.decode(Double.self, forKey: .rating)
         self.ratingCount = try container.decode(Int.self, forKey: .ratingCount)
         self.trendingImage = try container.decode(String.self, forKey: .trendingImage)
     }

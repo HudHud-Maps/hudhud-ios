@@ -36,7 +36,7 @@ struct PoiTileView: View {
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
                             .foregroundColor(.orange)
-                        Text("\(self.poiTileData.rating ?? 0)")
+                        Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
                             .foregroundStyle(.primary)
                             .font(.system(.caption))
                             .bold()
@@ -61,11 +61,11 @@ struct PoiTileView: View {
 //                    }
 //                    .padding(10)
                 }
-                .frame(width: 130, alignment: .center)
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(self.poiTileData.title)
                     .font(.subheadline)
+                    .lineLimit(1)
                 HStack {
                     Text("\(self.poiTileData.category ?? "")")
                         // comment for now ..the distance should calculate based on user location
@@ -73,8 +73,10 @@ struct PoiTileView: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                 }
+                .padding(.horizontal, 3)
             }
-            .padding(.leading, 5)
+            .frame(width: 130, alignment: .leading)
+            .padding(.leading, 1)
         }
     }
 }
