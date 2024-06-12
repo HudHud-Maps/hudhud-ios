@@ -146,7 +146,7 @@ struct SearchSheet: View {
                     .listRowSeparator(.hidden)
 
                     if self.trendingStore.trendingPOIs?.count != 0 {
-                        SearchSectionView(title: "Trending") {
+                        SearchSectionView(title: "Nearby Trending") {
                             PoiTileGridView(trendingPOIs: self.trendingStore)
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))

@@ -231,6 +231,9 @@
         }
       }
     },
+    "Nearby Trending" : {
+
+    },
     "No Ratings" : {
 
     },
@@ -300,9 +303,6 @@
       }
     },
     "Traffic" : {
-
-    },
-    "Trending" : {
 
     },
     "Unknown" : {
