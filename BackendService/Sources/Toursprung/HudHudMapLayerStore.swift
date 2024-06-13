@@ -12,7 +12,7 @@ import OpenAPIURLSession
 
 public class HudHudMapLayerStore: ObservableObject {
     
-    @Published public var mapLayers: [HudHudMapLayer]?
+    @Published public var hudhudMapLayers: [HudHudMapLayer]?
     @Published public var lastError: Error?
     
     public func getMaplayers() async throws -> [HudHudMapLayer] {
@@ -27,7 +27,6 @@ public class HudHudMapLayerStore: ObservableObject {
                 let mapLayer: [HudHudMapLayer] = jsonResponse.data.compactMap { mapStyle in
                     return HudHudMapLayer(name: mapStyle.name, style_url: mapStyle.style_url, thumbnail_url: mapStyle.thumbnail_url)
                 }
-                print(mapLayer, "maplayer")
                 return mapLayer
             }
         case .undocumented(statusCode: let statusCode,  let payload):

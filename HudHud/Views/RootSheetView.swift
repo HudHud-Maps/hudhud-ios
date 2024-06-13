@@ -38,7 +38,7 @@ struct RootSheetView: View {
                                 }
                             }
                             .padding(.horizontal, 30)
-                            MapLayersView(mapLayerStore: self.mapLayerStore)
+                            MapLayersView(hudhudMapLayerStore: self.mapLayerStore)
                                 .navigationBarBackButtonHidden()
                                 .presentationCornerRadius(21)
                         }

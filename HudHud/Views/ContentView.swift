@@ -203,9 +203,9 @@ struct ContentView: View {
             .task {
                 do {
                     let mapLayers = try await mapLayerStore.getMaplayers()
-                    self.mapLayerStore.mapLayers = mapLayers
+                    self.mapLayerStore.hudhudMapLayers = mapLayers
                 } catch {
-                    self.mapLayerStore.mapLayers = nil
+                    self.mapLayerStore.hudhudMapLayers = nil
                     Logger.searchView.error("\(error.localizedDescription)")
                 }
             }

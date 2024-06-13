@@ -11,12 +11,12 @@ import SwiftUI
 
 struct MapLayersView: View {
     @State var currentlySelected: String?
-    var mapLayerStore: HudHudMapLayerStore
+    var hudhudMapLayerStore: HudHudMapLayerStore
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                if let mapLayers = self.mapLayerStore.mapLayers {
+                if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
                     ForEach(mapLayers, id: \.name) { layer in
                         VStack {
                             Button {
@@ -30,7 +30,6 @@ struct MapLayersView: View {
                                     ProgressView()
                                 }
                                 .frame(width: 110, height: 110)
-                                .background(.secondary)
                                 .cornerRadius(4.0)
                                 .overlay(
                                     RoundedRectangle(cornerRadius: 4)
@@ -41,6 +40,9 @@ struct MapLayersView: View {
                                 .foregroundStyle(self.currentlySelected == layer.name ? .green : .secondary)
                         }
                     }
+                } else {
+                    Text("")
+                        .backport.contentUnavailable(label: "No Map Layers Available", SFSymbol: .globeCentralSouthAsiaFill, description: nil)
                 }
             }
         }
@@ -48,7 +50,7 @@ struct MapLayersView: View {
 }
 
 #Preview {
-    var mapLayerStore: HudHudMapLayerStore = .init()
-    return MapLayersView(mapLayerStore: mapLayerStore)
+    var hudhudMapLayerStore: HudHudMapLayerStore = .init()
+    return MapLayersView(hudhudMapLayerStore: hudhudMapLayerStore)
         .padding(.horizontal, 20)
 }
