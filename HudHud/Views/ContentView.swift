@@ -39,6 +39,7 @@ struct ContentView: View {
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
+    @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
     @State private var sheetSize: CGSize = .zero
@@ -199,6 +200,15 @@ struct ContentView: View {
                     print("location error: \(error)")
                 }
             }
+            .task {
+                do {
+                    let mapLayers = try await mapLayerStore.getMaplayers()
+                    self.mapLayerStore.mapLayers = mapLayers
+                } catch {
+                    self.mapLayerStore.mapLayers = nil
+                    Logger.searchView.error("\(error.localizedDescription)")
+                }
+            }
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, alignment: .center) {
                 if case .enabled = self.mapStore.streetView {
@@ -268,7 +278,7 @@ struct ContentView: View {
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -298,6 +308,7 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
     }
 }

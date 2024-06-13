@@ -6,38 +6,40 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import SwiftUI
 
 struct MapLayersView: View {
-    var mapLayerData: MapLayersData
     @State var currentlySelected: String?
+    var mapLayerStore: HudHudMapLayerStore
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text(self.mapLayerData.layerTitle).foregroundStyle(.secondary)
             HStack {
-                ForEach(self.mapLayerData.layers) { layer in
-                    VStack {
-                        Button {
-                            self.currentlySelected = layer.id.uuidString
-                        } label: {
-                            AsyncImage(url: URL(string: layer.imageUrl)) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            } placeholder: {
-                                ProgressView()
+                if let mapLayers = self.mapLayerStore.mapLayers {
+                    ForEach(mapLayers, id: \.name) { layer in
+                        VStack {
+                            Button {
+                                self.currentlySelected = layer.name
+                            } label: {
+                                AsyncImage(url: URL(string: layer.thumbnail_url)) { image in
+                                    image
+                                        .resizable()
+                                        .scaledToFill()
+                                } placeholder: {
+                                    ProgressView()
+                                }
+                                .frame(width: 110, height: 110)
+                                .background(.secondary)
+                                .cornerRadius(4.0)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 4)
+                                        .stroke(self.currentlySelected == layer.name ? .green : .clear, lineWidth: 2)
+                                )
                             }
-                            .frame(width: 110, height: 110)
-                            .background(.secondary)
-                            .cornerRadius(4.0)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 2)
-                            )
+                            Text(layer.name)
+                                .foregroundStyle(self.currentlySelected == layer.name ? .green : .secondary)
                         }
-                        Text(layer.imageTitle)
-                            .foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .secondary)
                     }
                 }
             }
@@ -46,10 +48,7 @@ struct MapLayersView: View {
 }
 
 #Preview {
-    let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
-    let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-    let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-    let mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
-    return MapLayersView(mapLayerData: mapLayerData)
+    var mapLayerStore: HudHudMapLayerStore = .init()
+    return MapLayersView(mapLayerStore: mapLayerStore)
         .padding(.horizontal, 20)
 }

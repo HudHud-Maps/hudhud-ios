@@ -14,6 +14,7 @@ struct RootSheetView: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
+    @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @Binding var sheetSize: CGSize
 
     var body: some View {
@@ -24,7 +25,6 @@ struct RootSheetView: View {
                     switch value {
                     case .mapStyle:
                         VStack(alignment: .center, spacing: 25) {
-                            Spacer()
                             HStack(alignment: .center) {
                                 Spacer()
                                 Text("Layers")
@@ -38,7 +38,7 @@ struct RootSheetView: View {
                                 }
                             }
                             .padding(.horizontal, 30)
-                            MainLayersView(mapLayerData: MapLayersData.getLayers())
+                            MapLayersView(mapLayerStore: self.mapLayerStore)
                                 .navigationBarBackButtonHidden()
                                 .presentationCornerRadius(21)
                         }
