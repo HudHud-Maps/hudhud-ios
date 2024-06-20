@@ -92,8 +92,7 @@ struct SearchSheet: View {
                                         self.mapStore.selectedItem = resolvedItem
                                         self.storeRecent(item: resolvedItem)
                                     } else {
-                                        // Currently only ApplePOI supports resolving, so this should only be called on apple pois
-                                        let resolvedItems = try await item.resolve(in: self.searchStore.apple)
+                                        let resolvedItems = try await self.searchStore.resolve(item: item)
 
                                         if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
                                             self.mapStore.selectedItem = resolvedItem
