@@ -89,11 +89,9 @@
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDAE06022B6BDC5A003E5196 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
-		CDE538C82BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD91D2B91E53B00A591BD /* MapboxNavigation */; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
 		CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C7AFBB29CC507D42D1538B2C /* MapboxNavigation */; };
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
-		CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
 		D14444B9E05D960BD399F8C0 /* RootSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5DC089E85AAA3355D8FCA9 /* RootSheetView.swift */; };
@@ -194,7 +192,6 @@
 		CD71C3682BBBFF27009C3A1C /* CameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
 		CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
-		CD7615632BF15DF600DF2A25 /* maplibre-navigation-ios */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-navigation-ios"; path = "../maplibre-navigation-ios"; sourceTree = "<group>"; };
 		CD7615642BF169C600DF2A25 /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
 		CD76156D2BF3993600DF2A25 /* maplibre-swiftui-dsl-playground */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = "maplibre-swiftui-dsl-playground"; path = "../maplibre-swiftui-dsl-playground"; sourceTree = "<group>"; };
 		CD85CB282BB343BA00C99774 /* DebugStreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStreetView.swift; sourceTree = "<group>"; };
@@ -231,11 +228,9 @@
 				CD7A377F2C07732700F1C2DD /* BetterSafariView in Frameworks */,
 				CD7A377E2C07732700F1C2DD /* NavigationTransitions in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
-				CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CDE538C82BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CD33DFEE2C00CA670090592C /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDAE06022B6BDC5A003E5196 /* (null) in Frameworks */,
@@ -373,7 +368,6 @@
 			children = (
 				6EA70474F6BBF082089EC329 /* BackendService */,
 				CD76156D2BF3993600DF2A25 /* maplibre-swiftui-dsl-playground */,
-				CD7615632BF15DF600DF2A25 /* maplibre-navigation-ios */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
 				CDAE05612B681263003E5196 /* HudHudUITests */,
@@ -582,12 +576,10 @@
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
 				CD59BD702B7CD967002C14F6 /* SFSafeSymbols */,
 				CD1BD8AC2B9087C100A591BD /* MapLibre */,
-				CD1BD91D2B91E53B00A591BD /* MapboxNavigation */,
 				CD8C5A1F2BA342A5002EBE8A /* SimpleToast */,
 				BC8E1D9CC7D3AAC1051857FA /* MapLibre */,
 				C7AFBB29CC507D42D1538B2C /* MapboxNavigation */,
 				DE3A66FF070A2B17657129E4 /* MapLibre */,
-				6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */,
 				CD33DFEB2C00CA670090592C /* MapLibreSwiftDSL */,
 				CD33DFED2C00CA670090592C /* MapLibreSwiftUI */,
 				FF82BD7DCFFCC2C9044E4E32 /* NavigationTransitions */,
@@ -1304,10 +1296,6 @@
 			package = 7C2F1607BA06CCD480305C70 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
 			productName = BetterSafariView;
 		};
-		6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigation;
-		};
 		8A90C00DC16DBC95E09E4CF4 /* BetterSafariView */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 60C11CEB823966EEAE3E3ED7 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
@@ -1330,10 +1318,6 @@
 		CD1BD8AC2B9087C100A591BD /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapLibre;
-		};
-		CD1BD91D2B91E53B00A591BD /* MapboxNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigation;
 		};
 		CD33DFEB2C00CA670090592C /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;
