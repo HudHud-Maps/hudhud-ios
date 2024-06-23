@@ -24,24 +24,10 @@ struct RootSheetView: View {
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
                     case .mapStyle:
-                        VStack(alignment: .center, spacing: 25) {
-                            HStack(alignment: .center) {
-                                Spacer()
-                                Text("Layers")
-                                    .foregroundStyle(.primary)
-                                Spacer()
-                                Button {
-                                    self.mapStore.path.removeLast()
-                                } label: {
-                                    Image(systemSymbol: .xmark)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.horizontal, 30)
-                            MapLayersView(hudhudMapLayerStore: self.mapLayerStore)
-                                .navigationBarBackButtonHidden()
-                                .presentationCornerRadius(21)
-                        }
+                        MapLayersView(hudhudMapLayerStore: self.mapLayerStore)
+                            .navigationBarBackButtonHidden()
+                            .presentationCornerRadius(21)
+
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
                             .navigationBarBackButtonHidden()

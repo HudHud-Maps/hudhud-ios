@@ -10,39 +10,60 @@ import BackendService
 import SwiftUI
 
 struct MapLayersView: View {
+    @Environment(\.dismiss) private var dismiss
     @State var currentlySelected: String?
     var hudhudMapLayerStore: HudHudMapLayerStore
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack {
-                if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
-                    ForEach(mapLayers, id: \.name) { layer in
-                        VStack {
-                            Button {
-                                self.currentlySelected = layer.name
-                            } label: {
-                                AsyncImage(url: URL(string: layer.thumbnail_url)) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFill()
-                                } placeholder: {
-                                    ProgressView()
-                                }
-                                .frame(width: 110, height: 110)
-                                .cornerRadius(4.0)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 4)
-                                        .stroke(self.currentlySelected == layer.name ? .green : .clear, lineWidth: 2)
-                                )
-                            }
-                            Text(layer.name)
-                                .foregroundStyle(self.currentlySelected == layer.name ? .green : .secondary)
-                        }
-                    }
+        VStack(alignment: .center, spacing: 25) {
+            HStack(alignment: .center) {
+                if self.hudhudMapLayerStore.hudhudMapLayers != nil {
+                    Spacer()
+                    Text("Layers")
+                        .foregroundStyle(.primary)
                 } else {
                     Text("")
-                        .backport.contentUnavailable(label: "No Map Layers Available", SFSymbol: .globeCentralSouthAsiaFill, description: nil)
+                        .padding(.top, 30)
+                }
+                Spacer()
+                Button {
+                    self.dismiss()
+                } label: {
+                    Image(systemSymbol: .xmark)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.horizontal, 30)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
+                        ForEach(mapLayers, id: \.name) { layer in
+                            VStack {
+                                Button {
+                                    self.currentlySelected = layer.name
+                                } label: {
+                                    AsyncImage(url: URL(string: layer.thumbnail_url)) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    .frame(width: 110, height: 110)
+                                    //									.cornerRadius(4.0)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(self.currentlySelected == layer.name ? .blue : .clear, lineWidth: 2)
+                                    )
+                                }
+                                Text(layer.name)
+                                    .foregroundStyle(self.currentlySelected == layer.name ? .blue : .secondary)
+                            }
+                        }
+                    } else {
+                        Text("")
+                            .backport.contentUnavailable(label: "No Map Layers Available", SFSymbol: .globeCentralSouthAsiaFill, description: nil)
+                    }
                 }
             }
         }
@@ -50,7 +71,7 @@ struct MapLayersView: View {
 }
 
 #Preview {
-    var hudhudMapLayerStore: HudHudMapLayerStore = .init()
+    let hudhudMapLayerStore: HudHudMapLayerStore = .init()
     return MapLayersView(hudhudMapLayerStore: hudhudMapLayerStore)
         .padding(.horizontal, 20)
 }
