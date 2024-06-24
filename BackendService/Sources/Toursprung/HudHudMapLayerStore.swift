@@ -16,7 +16,17 @@ public class HudHudMapLayerStore: ObservableObject {
     @Published public var lastError: Error?
     
     public func getMaplayers() async throws -> [HudHudMapLayer] {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())
+        let urlSessionConfiguration = URLSessionConfiguration.default
+            urlSessionConfiguration.waitsForConnectivity = true
+            urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
+
+        let urlSession = URLSession(configuration: urlSessionConfiguration)
+
+        let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
+
+        let transport = URLSessionTransport(configuration: transportConfiguration)
+        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport)
+
         let response = try await client.listMapStyles()
 
         switch response {
