@@ -32,14 +32,20 @@ public struct HudHudPOI: POIServiceProtocol {
     
     public static var serviceName = "HudHud"
     public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
-        let client = Client(serverURL: URL(string: "https://hudhud.sa")!, transport: URLSessionTransport())
+        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())
         
         let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), phone: jsonResponse.data.phone_number, website: URL(string: jsonResponse.data.website))]
+                let url: URL?
+                if let websiteString = jsonResponse.data.website {
+                    url = URL(string: websiteString)
+                } else {
+                    url = nil
+                }
+                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), phone: jsonResponse.data.phone_number, website: url)]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -54,22 +60,21 @@ public struct HudHudPOI: POIServiceProtocol {
     }
     
     public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
-        
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
-        let client = Client(serverURL: URL(string: "https://hudhud.sa")!, transport: URLSessionTransport())
+        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())
         
         let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
             
         case .ok(let okResponse):
             switch okResponse.body {
-                
             case .json(let jsonResponse):
                 let something: [AnyDisplayableAsRow] = jsonResponse.data.compactMap { somethingElse in
-                    guard let id = somethingElse.id, let title = somethingElse.name, let subtitle = somethingElse.address ?? somethingElse.category else {
-                        return nil
-                    }
+                    let id = somethingElse.id
+					let title = somethingElse.name
+					let subtitle = somethingElse.address
+					
                     return AnyDisplayableAsRow(PredictionItem(id: id, title: title, subtitle: subtitle, type: .hudhud))
                 }
                 return something
