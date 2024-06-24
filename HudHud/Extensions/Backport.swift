@@ -90,7 +90,7 @@ extension Backport where Content: View {
         }
     }
 
-    @ViewBuilder func contentUnavailable(label: String?, SFSymbol: SFSymbol?, description: String?) -> some View {
+    @ViewBuilder func contentUnavailable(label: String? = nil, SFSymbol: SFSymbol? = nil, description: String? = nil) -> some View {
         if #available(iOS 17, *) {
             ContentUnavailableView {
                 Label("\(label ?? "Content Unavailable")", systemSymbol: SFSymbol ?? .docRichtextFill)
