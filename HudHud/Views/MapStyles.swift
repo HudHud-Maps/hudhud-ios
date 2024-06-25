@@ -24,7 +24,7 @@ class CustomDayStyle: DayStyle {
     required init() {
         let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
         super.init(mapStyleURL: styleURL)
-        styleType = .day
+        self.styleType = .day
     }
 
     @available(*, deprecated, message: "Use `init()`")
@@ -59,7 +59,7 @@ class CustomNightStyle: NightStyle {
     required init() {
         let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
         super.init(mapStyleURL: styleURL)
-        styleType = .night
+        self.styleType = .night
     }
 
     @available(*, deprecated, message: "Use `init()`")
