@@ -56,11 +56,6 @@ struct RootSheetView: View {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
                     }, onDismiss: {
-                        // <<<< HEAD
-//                        self.mapStore.selectedItem = nil
-//                        self.mapStore.displayableItems = []
-//                        self.mapStore.camera = MapViewCamera.trackUserLocation(zoom: self.mapStore.camera.zoom ?? MapViewCamera.Defaults.zoom)
-                        //====
                         self.searchViewStore.mapStore.selectedItem = nil
                         self.searchViewStore.mapStore.displayableItems = []
                     })
