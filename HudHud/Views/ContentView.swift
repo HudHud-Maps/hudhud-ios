@@ -41,6 +41,7 @@ struct ContentView: View {
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
+    @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
     @State private var sheetSize: CGSize = .zero
@@ -207,10 +208,20 @@ struct ContentView: View {
                         print("Could not determine user location, will not zoom...")
                         return
                     }
-
-                    self.mapStore.camera = MapViewCamera.center(coordinates, zoom: 16)
+                    if self.mapStore.currentLocation != coordinates {
+                        self.mapStore.currentLocation = coordinates
+                    }
                 } catch {
                     print("location error: \(error)")
+                }
+            }
+            .task {
+                do {
+                    let mapLayers = try await mapLayerStore.getMaplayers()
+                    self.mapLayerStore.hudhudMapLayers = mapLayers
+                } catch {
+                    self.mapLayerStore.hudhudMapLayers = nil
+                    Logger.searchView.error("\(error.localizedDescription)")
                 }
             }
             .ignoresSafeArea()
@@ -273,7 +284,7 @@ struct ContentView: View {
                         ])
                         Spacer()
                         VStack(alignment: .trailing) {
-                            CurrentLocationButton(camera: self.$mapStore.camera)
+                            CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
                     .opacity(self.mapStore.selectedDetent == .large ? 0 : 1)
@@ -282,7 +293,7 @@ struct ContentView: View {
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown && !self.$mapStore.navigationInProgress) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -312,6 +323,7 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
     }
 }
@@ -378,4 +390,35 @@ extension Binding where Value == Bool {
 
 extension NavigationViewController: WrappedViewController {
     public typealias MapType = NavigationMapView
+}
+
+// MARK: - Preview
+
+#Preview("Itmes") {
+    let store: SearchViewStore = .storeSetUpForPreviewing
+
+    let poi = ResolvedItem(id: UUID().uuidString,
+                           title: "Half Million",
+                           subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
+                           type: .appleResolved,
+                           coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
+                           phone: "0503539560",
+                           website: URL(string: "https://hudhud.sa"))
+    let artwork = ResolvedItem(id: UUID().uuidString,
+                               title: "Artwork",
+                               subtitle: "artwork - Al-Olya - Riyadh",
+                               type: .toursprung,
+                               coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
+                               phone: "0503539560",
+                               website: URL(string: "https://hudhud.sa"))
+
+    let pharmacy = ResolvedItem(id: UUID().uuidString,
+                                title: "Pharmacy",
+                                subtitle: "Al-Olya - Riyadh",
+                                type: .toursprung,
+                                coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                                phone: "0503539560",
+                                website: URL(string: "https://hudhud.sa"))
+    store.mapStore.displayableItems = [AnyDisplayableAsRow(poi), AnyDisplayableAsRow(artwork), AnyDisplayableAsRow(pharmacy)]
+    return ContentView(searchStore: store)
 }

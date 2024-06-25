@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import SFSafeSymbols
 import SwiftUI
 
 // MARK: - Backport
@@ -86,6 +87,25 @@ extension Backport where Content: View {
             }
         } else {
             self.content.sheet(item: item, onDismiss: onDismiss, content: content)
+        }
+    }
+
+    @ViewBuilder func contentUnavailable(label: String? = nil, SFSymbol: SFSymbol? = nil, description: String? = nil) -> some View {
+        if #available(iOS 17, *) {
+            ContentUnavailableView {
+                Label("\(label ?? "Content Unavailable")", systemSymbol: SFSymbol ?? .docRichtextFill)
+            } description: {
+                Text("\(description ?? "No Content To be Shown Here.")")
+            }
+        } else {
+            VStack {
+                Image(systemSymbol: SFSymbol ?? .docRichtextFill)
+                    .font(.title2)
+                Text("\(label ?? "Content Unavailable")")
+                    .font(.title)
+                Text("\(description ?? "No Content To be Shown Here.")")
+                    .font(.body)
+            }
         }
     }
 }

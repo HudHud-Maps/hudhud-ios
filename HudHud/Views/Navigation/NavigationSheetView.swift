@@ -29,6 +29,8 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
+                    self.mapStore.routes = nil
+                    self.mapStore.waypoints = nil
                     self.dismiss()
                 }, label: {
                     ZStack {
