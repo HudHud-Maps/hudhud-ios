@@ -325,7 +325,9 @@ private extension MapStore {
             } else {
                 if self.mapItems.count > 1 {
                     // do not show any move
-                    self.camera.setZoom(self.getCameraZoomLevel())
+                    if let zoom = self.camera.zoom {
+                        self.camera.setZoom(zoom)
+                    }
                 } else {
                     // if poi choosing from Resents or directly from the search it will zoom and center around it
                     self.camera = .center(selectedItem.coordinate, zoom: 15)
@@ -355,7 +357,7 @@ private extension MapStore {
             }
         case 2...:
             // if there is more than 2 items on the map ...and the zoom level is under 13 ...zoom out and move the camera to show items
-            if self.getCameraZoomLevel() <= 13 {
+            if (self.camera.zoom ?? 0) <= 13 {
                 var coordinates = self.mapItems.map(\.coordinate)
                 if let userLocation = try? await self.locationManager.requestLocation().location?.coordinate {
                     coordinates.append(userLocation)
@@ -365,7 +367,7 @@ private extension MapStore {
                 }
             } else {
                 // if the camera zooming in...zoom out a little bit and show the nearest 4 poi around me
-                if self.isAnyItemVisible() || self.getCameraZoomLevel() >= 13 {
+                if self.isAnyItemVisible() || (self.camera.zoom ?? 0) >= 13 {
                     if let nearestCoordinates = await getNearestMapItemCoordinates() {
                         var coordinatea = nearestCoordinates
                         if let userLocation = try? await self.locationManager.requestLocation().location?.coordinate {
@@ -377,25 +379,14 @@ private extension MapStore {
                     }
                 } else {
                     // do not show any move
-                    self.camera.setZoom(self.getCameraZoomLevel())
+                    if let zoom = self.camera.zoom {
+                        self.camera.setZoom(zoom)
+                    }
                 }
             }
         default:
             break // should never occur
         }
-    }
-
-    func getCameraZoomLevel() -> Double {
-        if case let .centered(
-            onCoordinate: _,
-            zoom: zoom,
-            pitch: _,
-            pitchRange: _,
-            direction: _
-        ) = camera.state {
-            return zoom
-        }
-        return 0
     }
 
     func getCameraCoordinate() -> CLLocationCoordinate2D {
