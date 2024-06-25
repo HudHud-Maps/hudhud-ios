@@ -14,6 +14,7 @@ struct RootSheetView: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
+    @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @Binding var sheetSize: CGSize
 
     var body: some View {
@@ -23,25 +24,10 @@ struct RootSheetView: View {
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
                     case .mapStyle:
-                        VStack(alignment: .center, spacing: 25) {
-                            Spacer()
-                            HStack(alignment: .center) {
-                                Spacer()
-                                Text("Layers")
-                                    .foregroundStyle(.primary)
-                                Spacer()
-                                Button {
-                                    self.mapStore.path.removeLast()
-                                } label: {
-                                    Image(systemSymbol: .xmark)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.horizontal, 30)
-                            MainLayersView(mapLayerData: MapLayersData.getLayers())
-                                .navigationBarBackButtonHidden()
-                                .presentationCornerRadius(21)
-                        }
+                        MapLayersView(hudhudMapLayerStore: self.mapLayerStore)
+                            .navigationBarBackButtonHidden()
+                            .presentationCornerRadius(21)
+
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
                             .navigationBarBackButtonHidden()
@@ -67,7 +53,8 @@ struct RootSheetView: View {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
                     }, onDismiss: {
-                        self.mapStore.selectedItem = nil
+                        self.searchViewStore.mapStore.selectedItem = nil
+                        self.searchViewStore.mapStore.displayableItems = []
                     })
                     .navigationBarBackButtonHidden()
                 }
