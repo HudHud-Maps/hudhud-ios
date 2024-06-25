@@ -1,17 +1,27 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "(%lld)" : {
 
     },
     "%.1f" : {
-		
-	},
-    "" : {
 
     },
     "%@" : {
       "comment" : "duration"
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
     },
     "%@ • %@" : {
       "comment" : "distance • type of route",

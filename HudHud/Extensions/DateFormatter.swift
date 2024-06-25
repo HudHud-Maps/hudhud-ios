@@ -20,7 +20,8 @@ extension String {
     }
 }
 
-extension Int {
+extension Double {
+
     func getDistanceString() -> String {
         let distanceFormatter = MeasurementFormatter()
         distanceFormatter.unitOptions = .providedUnit

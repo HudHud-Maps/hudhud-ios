@@ -8,11 +8,16 @@
 
 import BackendService
 import CoreLocation
+import OSLog
 import SFSafeSymbols
+import SwiftLocation
 import SwiftUI
+
+// MARK: - PoiTileView
 
 struct PoiTileView: View {
     var poiTileData: ResolvedItem
+    @State var location: CLLocation?
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -67,17 +72,32 @@ struct PoiTileView: View {
                     .font(.subheadline)
                     .lineLimit(1)
                 HStack {
-                    Text("\(self.poiTileData.category ?? "")")
-                        // comment for now ..the distance should calculate based on user location
-                        //		\u{2022} \(self.poiTileData.distance?.getDistanceString() ?? "")")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                    Text("\(self.poiTileData.category ?? "") \(self.poiTileData.distance(from: self.location))")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 3)
             }
             .frame(width: 130, alignment: .leading)
             .padding(.leading, 1)
         }
+        .task {
+            do {
+                self.location = try await Location.forSingleRequestUsage.requestLocation().location
+            } catch {
+                Logger.poiData.error("Error requesting location, could not calculate distance for trending")
+            }
+        }
+    }
+}
+
+private extension ResolvedItem {
+
+    func distance(from location: CLLocation?) -> String {
+        guard let location else { return "" }
+
+        let distance = self.coordinate.distance(to: location.coordinate)
+        return "\u{2022} \(distance.getDistanceString())"
     }
 }
 
