@@ -564,6 +564,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CD54096A2C2B66960010594E /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -835,6 +836,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CD54096A2C2B66960010594E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CD5409692C2B66960010594E /* SwiftLint */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -1317,6 +1322,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD33DFEA2C00CA670090592C /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
 			productName = MapLibreSwiftUI;
+		};
+		CD5409692C2B66960010594E /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;

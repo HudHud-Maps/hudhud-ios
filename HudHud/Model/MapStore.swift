@@ -307,8 +307,12 @@ private extension MapStore {
         // show the whole route on the map
         case let .route(result):
             if let routes = result?.routes {
-                if let route = routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-                    self.camera = MapViewCamera.boundingBox(self.generateMLNCoordinateBounds(from: coordinates)!, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
+                if let route = routes.first,
+                   let coordinates = route.coordinates,
+                   coordinates.hasElements,
+                   let boundingBox = self.generateMLNCoordinateBounds(from: coordinates) {
+                    self.camera = MapViewCamera.boundingBox(boundingBox,
+                                                            edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
                 }
                 return
             }
@@ -422,13 +426,14 @@ private extension MapStore {
 }
 
 extension [CLLocationCoordinate2D] {
-    func boundingBox() -> MLNCoordinateBounds? {
-        guard !self.isEmpty else { return nil }
 
-        var minLat = self.first!.latitude
-        var maxLat = self.first!.latitude
-        var minLon = self.first!.longitude
-        var maxLon = self.first!.longitude
+    func boundingBox() -> MLNCoordinateBounds? {
+        guard let first = self.first else { return nil }
+
+        var minLat = first.latitude
+        var maxLat = first.latitude
+        var minLon = first.longitude
+        var maxLon = first.longitude
 
         for coordinate in self {
             if coordinate.latitude < minLat {
@@ -451,6 +456,7 @@ extension [CLLocationCoordinate2D] {
 }
 
 extension MLNCoordinateBounds {
+
     func contains(coordinate: CLLocationCoordinate2D) -> Bool {
         return coordinate.latitude >= self.sw.latitude &&
             coordinate.latitude <= self.ne.latitude &&

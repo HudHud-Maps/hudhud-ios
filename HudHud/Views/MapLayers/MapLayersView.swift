@@ -42,7 +42,7 @@ struct MapLayersView: View {
                                 Button {
                                     self.currentlySelected = layer.name
                                 } label: {
-                                    AsyncImage(url: URL(string: layer.thumbnail_url)) { image in
+                                    AsyncImage(url: layer.thumbnailUrl) { image in
                                         image
                                             .resizable()
                                             .scaledToFill()
@@ -71,7 +71,7 @@ struct MapLayersView: View {
 }
 
 #Preview {
-    let hudhudMapLayerStore: HudHudMapLayerStore = .init()
+    let hudhudMapLayerStore = HudHudMapLayerStore()
     return MapLayersView(hudhudMapLayerStore: hudhudMapLayerStore)
         .padding(.horizontal, 20)
 }
