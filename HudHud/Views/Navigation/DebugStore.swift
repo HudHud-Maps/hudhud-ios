@@ -12,6 +12,5 @@ import SwiftUI
 class DebugStore: ObservableObject {
     @AppStorage("routingHost") var routingHost: String = "gh.maptoolkit.net"
 
-    @Published var simulateRide: Bool = false
-
+    @Published var simulateRide: Bool = UIApplication.environment == .development
 }
