@@ -17,18 +17,18 @@ public class HudHudMapLayerStore: ObservableObject {
     
     public func getMaplayers() async throws -> [HudHudMapLayer] {
         let urlSessionConfiguration = URLSessionConfiguration.default
-            urlSessionConfiguration.waitsForConnectivity = true
-            urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
-
+        urlSessionConfiguration.waitsForConnectivity = true
+        urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
+        
         let urlSession = URLSession(configuration: urlSessionConfiguration)
-
+        
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
-
+        
         let transport = URLSessionTransport(configuration: transportConfiguration)
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport)
-
+        
         let response = try await client.listMapStyles()
-
+        
         switch response {
             
         case let .ok(okResponse):
@@ -41,18 +41,18 @@ public class HudHudMapLayerStore: ObservableObject {
             }
         case .undocumented(statusCode: let statusCode,  let payload):
             let bodyString: String? = if let body = payload.body {
-                            try await String(collecting: body, upTo: 1024 * 1024)
+                try await String(collecting: body, upTo: 1024 * 1024)
             } else {
-                            nil
-                        }
-                        self.lastError = OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
-                        throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+                nil
+            }
+            self.lastError = OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+            throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
     
     public init(){
-
-        }
+        
+    }
 }
 
 
