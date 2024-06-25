@@ -40,6 +40,7 @@ struct ContentView: View {
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
+    @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
     @State private var sheetSize: CGSize = .zero
@@ -203,6 +204,15 @@ struct ContentView: View {
             }
             .task {
                 do {
+                    let mapLayers = try await mapLayerStore.getMaplayers()
+                    self.mapLayerStore.hudhudMapLayers = mapLayers
+                } catch {
+                    self.mapLayerStore.hudhudMapLayers = nil
+                    Logger.searchView.error("\(error.localizedDescription)")
+                }
+            }
+            .task {
+                do {
                     let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
                     self.trendingStore.trendingPOIs = trendingPOI
                 } catch {
@@ -279,7 +289,7 @@ struct ContentView: View {
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -310,6 +320,7 @@ struct ContentView: View {
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
+        self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
     }
 }
