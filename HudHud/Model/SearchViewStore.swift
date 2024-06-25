@@ -115,9 +115,25 @@ final class SearchViewStore: ObservableObject {
         return currentLocation
     }
 
-    // MARK: - Private
+    func resolve(item: AnyDisplayableAsRow) async throws -> [AnyDisplayableAsRow] {
+        switch self.mode {
+        case .live(provider: .apple):
+            return try await item.resolve(in: self.apple)
+        case .live(provider: .toursprung):
+            return [item] // Toursprung doesn't support predict & resolve
+        case .live(provider: .hudhud):
+            return try await item.resolve(in: self.hudhud)
+        case .preview:
+            return [item]
+        }
+    }
+}
 
-    private func performSearch(with provider: Mode.Provider, term: String) {
+// MARK: - Private
+
+private extension SearchViewStore {
+
+    func performSearch(with provider: Mode.Provider, term: String) {
         self.task?.cancel()
         self.task = Task {
             defer { self.isSearching = false }
