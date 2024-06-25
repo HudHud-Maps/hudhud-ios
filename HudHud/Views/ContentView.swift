@@ -149,9 +149,13 @@ struct ContentView: View {
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
             if let route = self.mapStore.navigatingRoute, self.mapStore.navigationInProgress == false {
-                let locationManager = SimulatedLocationManager(route: route)
-                locationManager.speedMultiplier = 2
-                controller.startNavigation(with: route, locationManager: locationManager)
+                if self.debugStore.simulateRide {
+                    let locationManager = SimulatedLocationManager(route: route)
+                    locationManager.speedMultiplier = 2
+                    controller.startNavigation(with: route, locationManager: locationManager)
+                } else {
+                    controller.startNavigation(with: route)
+                }
                 self.mapStore.navigationInProgress = true
             } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
                 controller.endNavigation()
