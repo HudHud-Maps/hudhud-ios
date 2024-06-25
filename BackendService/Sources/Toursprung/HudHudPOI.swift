@@ -1,8 +1,9 @@
 //
 //  HudHudPOI.swift
+//  BackendService
 //
-//
-//  Created by patrick on 31.05.24.
+//  Created by patrick on 01.02.24.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import CoreLocation
@@ -88,6 +89,4 @@ public struct HudHudPOI: POIServiceProtocol {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
-    
-    
 }

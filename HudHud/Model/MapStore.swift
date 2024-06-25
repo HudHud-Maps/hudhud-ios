@@ -10,6 +10,7 @@ import BackendService
 import CoreLocation
 import Foundation
 import MapboxDirections
+import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -40,12 +41,22 @@ final class MapStore: ObservableObject {
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
 
-    @Published var camera = MapViewCamera.center(.riyadh, zoom: 10)
+    @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
     @Published var streetView: StreetViewOption = .disabled
-
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    @Published var waypoints: [ABCRouteConfigurationItem]?
+    @Published var navigationInProgress: Bool = false
+
+    @Published var navigatingRoute: Route? {
+        didSet {
+            if let elements = try? path.elements() {
+                print("path now: \(elements)")
+                self.updateSelectedSheetDetent(to: elements.last)
+            }
+        }
+    }
 
     @Published var routes: Toursprung.RouteCalculationResult? {
         didSet {
@@ -53,7 +64,7 @@ final class MapStore: ObservableObject {
                 self.path.append(routes)
                 self.cameraTask?.cancel()
                 self.cameraTask = Task {
-                    try await Task.sleep(nanoseconds: 400 * NSEC_PER_MSEC)
+                    try await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
                     try Task.checkCancellation()
                     await MainActor.run {
                         updateCamera(state: .route(self.routes))
@@ -71,8 +82,6 @@ final class MapStore: ObservableObject {
             }
         }
     }
-
-    @Published var waypoints: [ABCRouteConfigurationItem]?
 
     @Published var path = NavigationPath() {
         didSet {
@@ -186,6 +195,13 @@ final class MapStore: ObservableObject {
      **/
 
     func updateSelectedSheetDetent(to navigationPathItem: Any?) {
+        if self.navigatingRoute != nil {
+            let closed: PresentationDetent = .height(0)
+            self.allowedDetents = [closed]
+            self.selectedDetent = closed
+            return
+        }
+
         // If routes exist or an item is selected, use the medium detent
 
         guard let navigationPathItem else {
@@ -211,11 +227,11 @@ final class MapStore: ObservableObject {
                 self.selectedDetent = .large
             }
         }
-        if let _ = navigationPathItem as? ResolvedItem {
+        if navigationPathItem is ResolvedItem {
             self.allowedDetents = [.small, .third, .large]
             self.selectedDetent = .third
         }
-        if let _ = navigationPathItem as? Toursprung.RouteCalculationResult {
+        if navigationPathItem is Toursprung.RouteCalculationResult {
             self.allowedDetents = [.height(150), .medium]
             self.selectedDetent = .medium
         }
@@ -233,7 +249,15 @@ final class MapStore: ObservableObject {
         }
         return 0
     }
+}
 
+// MARK: - NavigationViewControllerDelegate
+
+extension MapStore: NavigationViewControllerDelegate {
+
+    func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
+        self.navigatingRoute = nil
+    }
 }
 
 // MARK: - Previewable
@@ -301,7 +325,9 @@ private extension MapStore {
             } else {
                 if self.mapItems.count > 1 {
                     // do not show any move
-                    self.camera.setZoom(self.getCameraZoomLevel())
+                    if let zoom = self.camera.zoom {
+                        self.camera.setZoom(zoom)
+                    }
                 } else {
                     // if poi choosing from Resents or directly from the search it will zoom and center around it
                     self.camera = .center(selectedItem.coordinate, zoom: 15)
@@ -331,7 +357,7 @@ private extension MapStore {
             }
         case 2...:
             // if there is more than 2 items on the map ...and the zoom level is under 13 ...zoom out and move the camera to show items
-            if self.getCameraZoomLevel() <= 13 {
+            if (self.camera.zoom ?? 0) <= 13 {
                 var coordinates = self.mapItems.map(\.coordinate)
                 if let userLocation = try? await self.locationManager.requestLocation().location?.coordinate {
                     coordinates.append(userLocation)
@@ -341,7 +367,7 @@ private extension MapStore {
                 }
             } else {
                 // if the camera zooming in...zoom out a little bit and show the nearest 4 poi around me
-                if self.isAnyItemVisible() || self.getCameraZoomLevel() >= 13 {
+                if self.isAnyItemVisible() || (self.camera.zoom ?? 0) >= 13 {
                     if let nearestCoordinates = await getNearestMapItemCoordinates() {
                         var coordinatea = nearestCoordinates
                         if let userLocation = try? await self.locationManager.requestLocation().location?.coordinate {
@@ -353,25 +379,14 @@ private extension MapStore {
                     }
                 } else {
                     // do not show any move
-                    self.camera.setZoom(self.getCameraZoomLevel())
+                    if let zoom = self.camera.zoom {
+                        self.camera.setZoom(zoom)
+                    }
                 }
             }
         default:
             break // should never occur
         }
-    }
-
-    func getCameraZoomLevel() -> Double {
-        if case let .centered(
-            onCoordinate: _,
-            zoom: zoom,
-            pitch: _,
-            pitchRange: _,
-            direction: _
-        ) = camera.state {
-            return zoom
-        }
-        return 0
     }
 
     func getCameraCoordinate() -> CLLocationCoordinate2D {

@@ -16,15 +16,13 @@ opt_in_rules:
 
 excluded: 
   - Carthage
-  - POIService/Package.swift
+  - BackendService/Package.swift
 
 # Customised rules
 force_try:
   severity: warning
 force_unwrapping:
   severity: warning
-file_length:
-  warning: 500
 identifier_name:
   min_length: 0
 empty_count:

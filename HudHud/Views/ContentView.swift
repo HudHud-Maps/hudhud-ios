@@ -9,7 +9,9 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
+import MapboxCoreNavigation
 import MapboxDirections
+import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -52,9 +54,9 @@ struct ContentView: View {
 
     @ViewBuilder
     var mapView: some View {
-        MapView(styleURL: self.styleURL, camera: self.$mapStore.camera) {
+        MapView<NavigationViewController>(makeViewController: NavigationViewController(dayStyleURL: self.styleURL), styleURL: self.styleURL, camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.mapStore.routes?.routes.first {
+            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationInProgress == false {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
                     MLNPolylineFeature(coordinates: route.coordinates ?? [])
                 }
@@ -144,12 +146,28 @@ struct ContentView: View {
             }
         })
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-        .unsafeMapViewModifier { mapView in
-            mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
+        .unsafeMapViewControllerModifier { controller in
+            controller.delegate = self.mapStore
+            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationInProgress == false {
+                if self.debugStore.simulateRide {
+                    let locationManager = SimulatedLocationManager(route: route)
+                    locationManager.speedMultiplier = 2
+                    controller.startNavigation(with: route, locationManager: locationManager)
+                } else {
+                    controller.startNavigation(with: route)
+                }
+                self.mapStore.navigationInProgress = true
+            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
+                controller.endNavigation()
+                self.mapStore.navigationInProgress = false
+            }
+
+            controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
-        .onLongPressMapGesture(onPressChanged: { MapGesture in
+        .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
+        .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: MapGesture.coordinate)
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
@@ -215,14 +233,14 @@ struct ContentView: View {
                 if case .enabled = self.mapStore.streetView {
                     StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
                 } else {
-                    if self.mapStore.routes == nil {
+                    if self.mapStore.navigationInProgress == false {
                         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                             .presentationBackground(.thinMaterial)
                     }
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if self.mapStore.routes == nil {
+                if self.mapStore.navigationInProgress == false {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -278,7 +296,7 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown) {
+            .backport.sheet(isPresented: self.$mapStore.searchShown && !self.$mapStore.navigationInProgress) {
                 RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
@@ -356,6 +374,29 @@ struct SizePreferenceKey: PreferenceKey {
     store.mapStore.selectedItem = poi
     return ContentView(searchStore: store)
 }
+
+extension Binding where Value == Bool {
+
+    static func && (_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
+        return Binding<Bool>(get: { lhs.wrappedValue && rhs.wrappedValue },
+                             set: { _ in })
+    }
+
+    static prefix func ! (_ binding: Binding<Bool>) -> Binding<Bool> {
+        return Binding<Bool>(
+            get: { !binding.wrappedValue },
+            set: { _ in }
+        )
+    }
+}
+
+// MARK: - NavigationViewController + WrappedViewController
+
+extension NavigationViewController: WrappedViewController {
+    public typealias MapType = NavigationMapView
+}
+
+// MARK: - Preview
 
 #Preview("Itmes") {
     let store: SearchViewStore = .storeSetUpForPreviewing

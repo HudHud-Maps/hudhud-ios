@@ -210,10 +210,10 @@ extension [ResolvedItem]: RawRepresentable {
     }
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
-              let result = String(data: data, encoding: .utf8) else {
+        guard let data = try? JSONEncoder().encode(self) else {
             return "[]"
         }
+        let result = String(decoding: data, as: UTF8.self)
         return result
     }
 }
