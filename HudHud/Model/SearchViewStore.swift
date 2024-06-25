@@ -11,6 +11,7 @@ import Combine
 import CoreLocation
 import Foundation
 import OSLog
+import SwiftLocation
 import SwiftUI
 
 // MARK: - SearchViewStore
@@ -57,7 +58,7 @@ final class SearchViewStore: ObservableObject {
     private var hudhud = HudHudPOI()
     private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
-    let locationManager = CLLocationManager()
+    var locationManager: Location = .forSingleRequestUsage
 
     // MARK: - Properties
 
@@ -107,8 +108,8 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: - Internal
 
-    func getCurrentLocation() -> CLLocationCoordinate2D? {
-        guard let currentLocation = self.locationManager.location?.coordinate else {
+    func getCurrentLocation() async -> CLLocationCoordinate2D? {
+        guard let currentLocation = try? await self.locationManager.requestLocation().location?.coordinate else {
             return nil
         }
         return currentLocation
