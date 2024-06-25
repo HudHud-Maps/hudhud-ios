@@ -47,8 +47,6 @@
 		CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */; };
 		CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */; };
 		CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970052B81F4C300CF9D59 /* MapLayersView.swift */; };
-		CB39700B2B81F52C00CF9D59 /* MapLayersData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39700A2B81F52C00CF9D59 /* MapLayersData.swift */; };
-		CB3970112B83429200CF9D59 /* MainLayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970102B83429200CF9D59 /* MainLayersView.swift */; };
 		CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970372B85E87300CF9D59 /* PoiTileView.swift */; };
 		CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
@@ -172,8 +170,6 @@
 		CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatagoryBannerData.swift; sourceTree = "<group>"; };
 		CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ButtonsStyle.swift; sourceTree = "<group>"; };
 		CB3970052B81F4C300CF9D59 /* MapLayersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapLayersView.swift; sourceTree = "<group>"; };
-		CB39700A2B81F52C00CF9D59 /* MapLayersData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapLayersData.swift; sourceTree = "<group>"; };
-		CB3970102B83429200CF9D59 /* MainLayersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainLayersView.swift; sourceTree = "<group>"; };
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
@@ -507,8 +503,6 @@
 			isa = PBXGroup;
 			children = (
 				CB3970052B81F4C300CF9D59 /* MapLayersView.swift */,
-				CB39700A2B81F52C00CF9D59 /* MapLayersData.swift */,
-				CB3970102B83429200CF9D59 /* MainLayersView.swift */,
 			);
 			path = MapLayers;
 			sourceTree = "<group>";
@@ -738,14 +732,12 @@
 				CD59BD4C2B768FAB002C14F6 /* DictionaryView.swift in Sources */,
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
-				CB39700B2B81F52C00CF9D59 /* MapLayersData.swift in Sources */,
 				CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */,
 				CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */,
 				CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */,
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
 				90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */,
 				CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */,
-				CB3970112B83429200CF9D59 /* MainLayersView.swift in Sources */,
 				CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */,
 				90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */,
 				CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */,

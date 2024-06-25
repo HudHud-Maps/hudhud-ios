@@ -201,8 +201,8 @@ final class MapStore: ObservableObject {
         if let sheetSubview = navigationPathItem as? SheetSubView {
             switch sheetSubview {
             case .mapStyle:
-                self.allowedDetents = [.small, .medium]
-                self.selectedDetent = .medium
+                self.allowedDetents = [.small, .third]
+                self.selectedDetent = .third
             case .debugView:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
