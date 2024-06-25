@@ -68,7 +68,8 @@ struct RootSheetView: View {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
                     }, onDismiss: {
-                        self.mapStore.selectedItem = nil
+                        self.searchViewStore.mapStore.selectedItem = nil
+                        self.searchViewStore.mapStore.displayableItems = []
                     })
                     .navigationBarBackButtonHidden()
                 }

@@ -11,6 +11,7 @@ import Combine
 import CoreLocation
 import Foundation
 import OSLog
+import SwiftLocation
 import SwiftUI
 
 // MARK: - SearchViewStore
@@ -57,7 +58,7 @@ final class SearchViewStore: ObservableObject {
     private var hudhud = HudHudPOI()
     private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
-    let locationManager = CLLocationManager()
+    var locationManager: Location = .forSingleRequestUsage
 
     // MARK: - Properties
 
@@ -85,30 +86,8 @@ final class SearchViewStore: ObservableObject {
             .removeDuplicates()
             .sink { newValue in
                 switch self.mode {
-                case .live(provider: .apple):
-                    self.task?.cancel()
-                    self.task = Task {
-                        defer { self.isSearching = false }
-                        self.isSearching = true
-
-                        let prediction = try await self.apple.predict(term: newValue, coordinates: self.getCurrentLocation())
-                        let items = prediction
-                        self.mapStore.displayableItems = items
-                    }
-                case .live(provider: .toursprung):
-                    self.task?.cancel()
-                    self.task = Task {
-                        defer { self.isSearching = false }
-                        self.isSearching = true
-
-                        do {
-                            let prediction = try await self.apple.predict(term: newValue, coordinates: self.getCurrentLocation())
-                            let items = prediction
-                            self.mapStore.displayableItems = items
-                        } catch {
-                            Logger.poiData.error("Predict Error: \(error)")
-                        }
-                    }
+                case let .live(provider):
+                    self.performSearch(with: provider, term: newValue)
                 case .preview:
                     self.mapStore.displayableItems = [
                         .starbucks,
@@ -118,20 +97,6 @@ final class SearchViewStore: ObservableObject {
                         .pharmacy,
                         .supermarket
                     ]
-                case .live(provider: .hudhud):
-                    self.task?.cancel()
-                    self.task = Task {
-                        defer { self.isSearching = false }
-                        self.isSearching = true
-
-                        do {
-                            let prediction = try await self.hudhud.predict(term: newValue, coordinates: self.getCurrentLocation())
-                            let items = prediction
-                            self.mapStore.displayableItems = items
-                        } catch {
-                            Logger.poiData.error("Predict Error: \(error)")
-                        }
-                    }
                 }
             }
         if case .preview = mode {
@@ -143,11 +108,35 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: - Internal
 
-    func getCurrentLocation() -> CLLocationCoordinate2D? {
-        guard let currentLocation = self.locationManager.location?.coordinate else {
+    func getCurrentLocation() async -> CLLocationCoordinate2D? {
+        guard let currentLocation = try? await self.locationManager.requestLocation().location?.coordinate else {
             return nil
         }
         return currentLocation
+    }
+
+    // MARK: - Private
+
+    private func performSearch(with provider: Mode.Provider, term: String) {
+        self.task?.cancel()
+        self.task = Task {
+            defer { self.isSearching = false }
+            self.isSearching = true
+
+            do {
+                let prediction: [AnyDisplayableAsRow] = switch provider {
+                case .apple:
+                    try await self.apple.predict(term: term, coordinates: self.getCurrentLocation())
+                case .toursprung:
+                    try await self.toursprung.predict(term: term, coordinates: self.getCurrentLocation())
+                case .hudhud:
+                    try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
+                }
+                self.mapStore.displayableItems = prediction
+            } catch {
+                Logger.poiData.error("Predict Error: \(error)")
+            }
+        }
     }
 }
 
