@@ -203,8 +203,7 @@ struct ContentView: View {
             }
             .task {
                 do {
-                    // here should sent user loction from mapstore.userlocation
-                    let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118))
+                    let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
                     self.trendingStore.trendingPOIs = trendingPOI
                 } catch {
                     self.trendingStore.trendingPOIs = nil

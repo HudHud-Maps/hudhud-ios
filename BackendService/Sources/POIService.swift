@@ -253,13 +253,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var phone: String?
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
-    public var rating: Double? {
-        didSet {
-            if let rating = rating {
-                self.rating = rating.rounded()
-            }
-        }
-    }
+    public var rating: Double?
     public var ratingCount: Int?
     public var trendingImage: String?
     

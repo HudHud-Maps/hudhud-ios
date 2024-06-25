@@ -15,7 +15,7 @@ struct PoiTileGridView: View {
     var trendingPOIs: TrendingStore
 
     var body: some View {
-        if let trendingPOI = self.trendingPOIs.trendingPOIs {
+        if let trendingPOI = self.trendingPOIs.trendingPOIs, !trendingPOI.isEmpty {
             ScrollView(.horizontal) {
                 LazyHGrid(rows: self.rows, alignment: .top, spacing: 10) {
                     ForEach(trendingPOI) { poiTileGrid in
@@ -49,7 +49,7 @@ struct PoiTileGridView: View {
                            rating: 2,
                            ratingCount: 25,
                            trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")
-    let poi1 = ResolvedItem(id: "Al-Narjs - Riyadh",
+    let poi1 = ResolvedItem(id: "Al-Narjs - Riyadh 2",
                             title: "Supermarket",
                             subtitle: "Al-Narjs - Riyadh",
                             category: "Cafe", type: .hudhud,
