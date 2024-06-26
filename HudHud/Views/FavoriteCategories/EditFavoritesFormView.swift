@@ -128,7 +128,7 @@ struct EditFavoritesFormView: View {
         let newFavoritesItem = FavoritesItem(
             id: favoritesItem?.id ?? Int.random(in: 1000 ... 9999),
             title: self.title,
-            sfSymbol: self.favoritesItem?.sfSymbol ?? SFSymbol.houseFill,
+            sfSymbol: self.favoritesItem?.sfSymbol ?? SFSymbol.heartFill,
             tintColor: self.favoritesItem?.tintColor ?? Color.gray,
             item: self.item,
             description: self.description.isEmpty ? nil : self.description,

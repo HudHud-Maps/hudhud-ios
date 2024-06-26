@@ -55,7 +55,7 @@ struct RecentSearchResultsView: View {
                     NavigationLink {
                         self.EditFormViewIsShown = true
                         self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
-                        self.clickedFavorite = FavoritesItem(id: .random(in: 100 ... 999), title: "\(item.title)", sfSymbol: item.symbol, tintColor: item.tintColor, item: item, type: item.category ?? "")
+                        self.clickedFavorite = FavoritesItem(id: .random(in: 100 ... 999), title: item.title, sfSymbol: item.symbol, tintColor: item.tintColor, item: item, type: item.category ?? "")
                         return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
                     } label: {
                         Text("+")

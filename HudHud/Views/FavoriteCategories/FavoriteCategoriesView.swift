@@ -60,10 +60,17 @@ struct FavoriteCategoriesView: View {
                 NavigationLink {
                     FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
                 } label: {
-                    Text("View More >")
-                        .foregroundStyle(Color(UIColor.label))
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+                    HStack {
+                        Text("View More")
+                            .foregroundStyle(Color(UIColor.label))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                        Image(systemSymbol: .chevronRight)
+                            .font(.caption)
+                            .foregroundStyle(Color(UIColor.label))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
                 }
             }
             FavoriteCategoriesView(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
