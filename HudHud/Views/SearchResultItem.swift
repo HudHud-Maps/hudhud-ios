@@ -82,7 +82,6 @@ struct SearchResultItem: View {
         self.prediction = prediction
         self._searchText = searchText ?? .constant("")
     }
-
 }
 
 @available(iOS 17, *)

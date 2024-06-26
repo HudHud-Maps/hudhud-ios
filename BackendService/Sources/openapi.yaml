@@ -30,6 +30,9 @@ paths:
                 properties:
                   ok:
                     type: boolean
+                    description: >-
+                      Can be ignored by clients, errors should be checked using
+                      the status code following the http standard
                   data:
                     type: array
                     items:
@@ -41,6 +44,10 @@ paths:
                           type: string
                         thumbnail_url:
                           type: string
+                      required:
+                        - name
+                        - style_url
+                        - thumbnail_url
                 required:
                   - ok
                   - data
@@ -76,12 +83,14 @@ paths:
           required: false
           schema:
             type: number
+            format: double
         - name: lon
           in: query
           description: ''
           required: false
           schema:
             type: number
+            format: double
         - name: Accept-Language
           in: header
           description: ''
@@ -95,36 +104,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok:
-                    type: boolean
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        address:
-                          type: string
-                        name:
-                          type: string
-                        category:
-                          type: string
-                        coordinates:
-                          type: object
-                          properties:
-                            lat:
-                              type: number
-                            lon:
-                              type: number
-                          required:
-                            - lat
-                            - lon
-                required:
-                  - ok
-                  - data
+                $ref: '#/components/schemas/PoisTypeaheadResponse'
               examples:
                 '1':
                   summary: Success
@@ -141,6 +121,12 @@ paths:
                         coordinates:
                           lat: 39.891111
                           lon: 21.3625
+                        ios_category_icon:
+                          name: restaurant
+                          color: blue
+                        android_category_icon:
+                          name: restaurant
+                          color: blue
       security: []
   /p/{id}:
     get:
@@ -169,163 +155,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok:
-                    type: boolean
-                  data:
-                    type: object
-                    properties:
-                      id:
-                        type: string
-                      address:
-                        type: string
-                      name:
-                        type: string
-                      category:
-                        type: string
-                      coordinates:
-                        type: object
-                        properties:
-                          lat:
-                            type: number
-                          lon:
-                            type: number
-                        required:
-                          - lat
-                          - lon
-                      phone_number:
-                        type: string
-                      website:
-                        type: string
-                      rating:
-                        type: number
-                      ratings_count:
-                        type: integer
-                      instagram:
-                        type: string
-                      description:
-                        type: string
-                      distance:
-                        type: number
-                      duration:
-                        type: number
-                      is_open:
-                        type: boolean
-                      opening_hours:
-                        type: object
-                        properties:
-                          saturday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                              required:
-                                - opens_at
-                                - closes_at
-                            nullable: true
-                          sunday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                            nullable: true
-                          monday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                              required:
-                                - opens_at
-                                - closes_at
-                            nullable: true
-                          tuesday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                            nullable: true
-                          wednesday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                              required:
-                                - opens_at
-                                - closes_at
-                            nullable: true
-                          thursday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                            nullable: true
-                          friday:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                opens_at:
-                                  type: integer
-                                closes_at:
-                                  type: integer
-                              required:
-                                - opens_at
-                                - closes_at
-                            nullable: true
-                        nullable: true
-                      media_urls:
-                        type: array
-                        items:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                            url:
-                              type: string
-                    required:
-                      - id
-                      - address
-                      - name
-                      - category
-                      - coordinates
-                      - phone_number
-                      - website
-                      - rating
-                      - ratings_count
-                      - instagram
-                      - description
-                      - distance
-                      - duration
-                      - is_open
-                      - media_urls
-                required:
-                  - ok
-                  - data
+                $ref: '#/components/schemas/PoiDetailsResponse'
               examples:
                 '1':
                   summary: Success
@@ -414,18 +244,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok:
-                    type: boolean
-                  message:
-                    type: string
-                  code:
-                    type: string
-                required:
-                  - ok
-                  - message
-                  - code
+                $ref: '#/components/schemas/ErrorResponse'
               examples:
                 '1':
                   summary: Success
@@ -492,6 +311,7 @@ paths:
             type: number
             minimum: 0
             maximum: 5
+            format: double
         - name: open_at
           in: query
           description: in UTC format
@@ -523,12 +343,14 @@ paths:
           required: false
           schema:
             type: number
+            format: double
         - name: lon
           in: query
           description: ''
           required: false
           schema:
             type: number
+            format: double
         - name: Accept-Language
           in: header
           description: ''
@@ -542,153 +364,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok:
-                    type: boolean
-                  total:
-                    type: integer
-                  next_page_token:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        name:
-                          type: string
-                        rating:
-                          type: number
-                        ratings_count:
-                          type: integer
-                        category:
-                          type: string
-                        distance:
-                          type: number
-                        price_range:
-                          type: integer
-                        accessibility:
-                          type: boolean
-                        is_open:
-                          type: boolean
-                        opening_hours:
-                          type: object
-                          properties:
-                            saturday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                                required:
-                                  - opens_at
-                                  - closes_at
-                              nullable: true
-                            sunday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                              nullable: true
-                            monday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                                required:
-                                  - opens_at
-                                  - closes_at
-                              nullable: true
-                            tuesday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                              nullable: true
-                            wednesday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                                required:
-                                  - opens_at
-                                  - closes_at
-                              nullable: true
-                            thursday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                              nullable: true
-                            friday:
-                              type: array
-                              items:
-                                type: object
-                                properties:
-                                  opens_at:
-                                    type: integer
-                                  closes_at:
-                                    type: integer
-                                required:
-                                  - opens_at
-                                  - closes_at
-                              nullable: true
-                          nullable: true
-                        phone_number:
-                          type: string
-                        coordinates:
-                          type: object
-                          properties:
-                            lat:
-                              type: number
-                            lon:
-                              type: number
-                          required:
-                            - lat
-                            - lon
-                        website:
-                          type: string
-                        instagram:
-                          type: string
-                        media_urls:
-                          type: array
-                          items:
-                            type: object
-                            properties:
-                              type:
-                                type: string
-                              url:
-                                type: string
-                required:
-                  - ok
-                  - total
-                  - next_page_token
-                  - data
+                $ref: '#/components/schemas/PoisListResponse'
               examples:
                 '1':
                   summary: Success
@@ -778,12 +454,14 @@ paths:
           required: false
           schema:
             type: number
+            format: double
         - name: lon
           in: query
           description: ''
           required: false
           schema:
             type: number
+            format: double
         - name: Accept-Language
           in: header
           description: ''
@@ -797,45 +475,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok:
-                    type: boolean
-                  next_page_token:
-                    type: string
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
-                        coordinates:
-                          type: object
-                          properties:
-                            lat:
-                              type: number
-                            lon:
-                              type: number
-                          required:
-                            - lat
-                            - lon
-                        rating:
-                          type: integer
-                        ratings_count:
-                          type: integer
-                        name:
-                          type: string
-                        category:
-                          type: string
-                        distance:
-                          type: integer
-                        trending_image_url:
-                          type: string
-                required:
-                  - ok
-                  - next_page_token
-                  - data
+                $ref: '#/components/schemas/PoisTrendingResponse'
               examples:
                 '1':
                   summary: Success
@@ -851,73 +491,383 @@ paths:
                         ratings_count: 100
                         name: َAlBaik
                         category: restaurant
-                        distance: 14
                         trending_image_url: https://media.hudhud.sa/dqdv.webp
       security: []
 components:
   schemas:
-    Tag:
+    OpeningHoursItem:
       type: object
       properties:
-        id:
+        start:
           type: integer
-          format: int64
-          minimum: 1
-          description: Tag ID
-        name:
-          type: string
-          description: Tag Name
-    Category:
-      type: object
-      properties:
-        id:
+        end:
           type: integer
-          format: int64
-          minimum: 1
-          description: Category ID
-        name:
-          type: string
-          description: Category Name
-    Pet:
       required:
-        - name
-        - photoUrls
-        - id
-        - category
-        - tags
-        - status
+        - start
+        - end
+    ErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: string
+        code:
+          type: string
+      required:
+        - ok
+        - message
+        - code
+    TrendingItem:
       type: object
       properties:
         id:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: double
+            lon:
+              type: number
+              format: double
+          required:
+            - lat
+            - lon
+        rating:
+          type: number
+          format: double
+        ratings_count:
           type: integer
-          format: int64
-          minimum: 1
-          description: Pet ID
-        category:
-          $ref: '#/components/schemas/Category'
-          description: group
         name:
           type: string
-          description: name
-          examples:
-            - doggie
-        photoUrls:
-          type: array
-          items:
-            type: string
-          description: image URL
-        tags:
-          type: array
-          items:
-            $ref: '#/components/schemas/Tag'
-          description: tag
-        status:
+        category:
           type: string
-          description: Pet Sales Status
+        trending_image_url:
+          type: string
+      required:
+        - id
+        - coordinates
+        - name
+        - category
+        - trending_image_url
+    PoisListItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        rating:
+          type: number
+          format: double
+          nullable: true
+        ratings_count:
+          type: integer
+          nullable: true
+        category:
+          type: string
+        distance:
+          type: number
+          format: double
+          nullable: true
+        price_range:
+          type: integer
           enum:
-            - available
-            - pending
-            - sold
+            - 1
+            - 2
+            - 3
+            - 4
+          nullable: true
+        accessibility:
+          type: boolean
+          nullable: true
+        is_open:
+          type: boolean
+          nullable: true
+        opening_hours:
+          type: object
+          properties:
+            saturday:
+              type: array
+              items: &ref_0
+                $ref: '#/components/schemas/OpeningHoursItem'
+              nullable: true
+            sunday:
+              type: array
+              items: *ref_0
+              nullable: true
+            monday:
+              type: array
+              items: *ref_0
+              nullable: true
+            tuesday:
+              type: array
+              items: *ref_0
+              nullable: true
+            wednesday:
+              type: array
+              items: *ref_0
+              nullable: true
+            thursday:
+              type: array
+              items: *ref_0
+              nullable: true
+            friday:
+              type: array
+              items: *ref_0
+              nullable: true
+          nullable: true
+        phone_number:
+          type: string
+          nullable: true
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: double
+            lon:
+              type: number
+              format: double
+          required:
+            - lat
+            - lon
+        website:
+          type: string
+          nullable: true
+        instagram:
+          type: string
+          nullable: true
+        media_urls:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+            required:
+              - type
+              - url
+          nullable: true
+      required:
+        - id
+        - name
+        - category
+        - coordinates
+    PoiDetails:
+      type: object
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: double
+            lon:
+              type: number
+              format: double
+          required:
+            - lat
+            - lon
+        phone_number:
+          type: string
+          nullable: true
+        website:
+          type: string
+          nullable: true
+        rating:
+          type: number
+          format: double
+          nullable: true
+        ratings_count:
+          type: integer
+          nullable: true
+        instagram:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        is_open:
+          type: boolean
+          nullable: true
+        opening_hours:
+          type: object
+          properties:
+            saturday:
+              type: array
+              items: *ref_0
+              nullable: true
+            sunday:
+              type: array
+              items: *ref_0
+              nullable: true
+            monday:
+              type: array
+              items: *ref_0
+              nullable: true
+            tuesday:
+              type: array
+              items: *ref_0
+              nullable: true
+            wednesday:
+              type: array
+              items: *ref_0
+              nullable: true
+            thursday:
+              type: array
+              items: *ref_0
+              nullable: true
+            friday:
+              type: array
+              items: *ref_0
+              nullable: true
+          nullable: true
+        media_urls:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+              url:
+                type: string
+            required:
+              - type
+              - url
+          nullable: true
+      required:
+        - id
+        - address
+        - name
+        - category
+        - coordinates
+    TypeaheadItem:
+      type: object
+      properties:
+        id:
+          type: string
+        address:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+        coordinates:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: double
+            lon:
+              type: number
+              format: double
+          required:
+            - lat
+            - lon
+        ios_category_icon:
+          type: object
+          properties:
+            name:
+              type: string
+            color:
+              type: string
+              description: This should be an Apple color name
+          required:
+            - name
+            - color
+        android_category_icon:
+          type: object
+          properties:
+            name:
+              type: string
+            color:
+              type: string
+              description: This should be a hex color
+          required:
+            - name
+            - color
+      required:
+        - ios_category_icon
+        - android_category_icon
+        - coordinates
+        - category
+        - name
+        - id
+        - address
+    PoisTrendingResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          description: >-
+            Can be ignored by clients, errors should be checked using the status
+            code following the http standard
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrendingItem'
+      required:
+        - ok
+        - data
+    PoisListResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          description: >-
+            Can be ignored by clients, errors should be checked using the status
+            code following the http standard
+        total:
+          type: integer
+        next_page_token:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PoisListItem'
+      required:
+        - ok
+        - total
+        - data
+    PoiDetailsResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+          description: >-
+            Can be ignored by clients, errors should be checked using the status
+            code following the http standard
+        data:
+          $ref: '#/components/schemas/PoiDetails'
+      required:
+        - ok
+        - data
+    PoisTypeaheadResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeaheadItem'
+      required:
+        - ok
+        - data
   securitySchemes: {}
-servers: []
-
+servers:
+  - url: https://api.dev.hudhud.sa
+    description: Develop Env
