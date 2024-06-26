@@ -63,6 +63,7 @@ final class SearchViewStore: ObservableObject {
     // MARK: - Properties
 
     @Published var searchText: String = ""
+    @Published var searchError: Error?
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
@@ -134,6 +135,7 @@ final class SearchViewStore: ObservableObject {
                 }
                 self.mapStore.displayableItems = prediction
             } catch {
+                self.searchError = error
                 Logger.poiData.error("Predict Error: \(error)")
             }
         }
