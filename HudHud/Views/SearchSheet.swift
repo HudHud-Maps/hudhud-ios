@@ -136,6 +136,10 @@ struct SearchSheet: View {
                             .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                         }
                         .listStyle(.plain)
+                        if self.mapStore.displayableItems.isEmpty {
+                            backport.contentUnavailable(label: "No results", SFSymbol: .magnifyingglass, description: "No results for \(self.searchStore.searchText) were found.").padding(.vertical, 50)
+                                .listRowSeparator(.hidden)
+                        }
                     }
                 } else {
                     SearchSectionView(title: "Favorites") {
