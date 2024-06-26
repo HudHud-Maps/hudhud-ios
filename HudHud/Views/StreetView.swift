@@ -16,6 +16,7 @@ struct StreetView: View {
 
     @ObservedObject var viewModel: MotionViewModel
     @Binding var camera: MapViewCamera
+    @ObservedObject var mapStore: MapStore
 
     var body: some View {
         // please do not do catch here, a view is defined by its State, by executing an action during the calculation of a view, the view is no longer state defined
@@ -30,6 +31,39 @@ struct StreetView: View {
             }
             .padding(.horizontal)
             .animation(.easeInOut, value: self.viewModel.size)
+            .overlay(alignment: .top) {
+                HStack {
+                    Button {
+                        self.viewModel.size.selectNext()
+                    } label: {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(minWidth: 25, idealWidth: 30, maxWidth: 35)
+                            .padding()
+                            .overlay {
+                                Image(systemSymbol: .arrowUpBackwardAndArrowDownForward)
+                                    .font(.body)
+                                    .foregroundStyle(.white)
+                            }
+                    }
+                    Spacer()
+                    Button {
+                        self.mapStore.streetView = .disabled
+                        self.mapStore.searchShown = true
+                    } label: {
+                        Circle()
+                            .fill(.ultraThinMaterial)
+                            .frame(minWidth: 25, idealWidth: 30, maxWidth: 35)
+                            .padding()
+                            .overlay {
+                                Image(systemSymbol: .xmark)
+                                    .font(.body)
+                                    .foregroundStyle(.white)
+                            }
+                    }
+                }
+                .padding()
+            }
     }
 }
 

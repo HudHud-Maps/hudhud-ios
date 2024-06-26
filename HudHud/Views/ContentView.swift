@@ -171,7 +171,7 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-        .backport.safeAreaPadding(.bottom, self.sheetSize.height)
+        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -231,7 +231,7 @@ struct ContentView: View {
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, alignment: .center) {
                 if case .enabled = self.mapStore.streetView {
-                    StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
+                    StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera, mapStore: self.mapStore)
                 } else {
                     if self.mapStore.navigationInProgress == false {
                         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
@@ -240,7 +240,7 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if self.mapStore.navigationInProgress == false {
+                if self.mapStore.navigationInProgress == false, case .disabled = self.mapStore.streetView {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -269,6 +269,7 @@ struct ContentView: View {
                                             self.motionViewModel.position.heading = location.course
                                         }
                                         self.mapStore.streetView = .enabled
+                                        self.mapStore.searchShown = false
                                     }
                                 } else {
                                     self.mapStore.streetView = .disabled
