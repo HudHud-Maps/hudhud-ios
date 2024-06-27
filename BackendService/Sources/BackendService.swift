@@ -296,7 +296,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.id = try container.decode(String.self, forKey: .id)
         self.title = try container.decode(String.self, forKey: .title)
         self.subtitle = try container.decode(String.self, forKey: .subtitle)
-        self.category = try container.decode(String.self, forKey: .category)
+        self.category = try container.decodeIfPresent(String.self, forKey: .category)
         self.symbol = try container.decode(SFSymbol.self, forKey: .symbol)
         self.type = try container.decode(PredictionResult.self, forKey: .type)
         self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
@@ -322,7 +322,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         try container.encode(self.title, forKey: .title)
         try container.encode(self.subtitle, forKey: .subtitle)
         try container.encode(self.coordinate, forKey: .coordinate)
-        try container.encode(self.category, forKey: .category)
+		try container.encodeIfPresent(self.category, forKey: .category)
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
     }
