@@ -39,7 +39,6 @@ struct RootSheetView: View {
                             let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
                                 self.searchViewStore.mapStore.waypoints?.append(item)
-
                             })
                             return tempStore
                         }()
