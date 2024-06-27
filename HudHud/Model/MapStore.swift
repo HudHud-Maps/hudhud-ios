@@ -85,30 +85,23 @@ final class MapStore: ObservableObject {
 
     @Published var path = NavigationPath() {
         didSet {
-            do {
-                let elements = try path.elements()
-                print("path now: \(elements)")
-                // DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) {
-                self.updateSelectedSheetDetent(to: elements.last)
-                // }
-
-            } catch {
-                print("update detent error: \(error)")
-            }
+            self.updateDetent()
         }
     }
 
     @Published var displayableItems: [AnyDisplayableAsRow] = [] {
         didSet {
             guard self.displayableItems != [] else { return }
-            updateCamera(state: .mapItems)
+
+            self.updateDetent()
+            self.updateCamera(state: .mapItems)
         }
     }
 
     @Published var selectedItem: ResolvedItem? {
         didSet {
             if let selectedItem, routes == nil {
-                updateCamera(state: .selectedItem(selectedItem))
+                self.updateCamera(state: .selectedItem(selectedItem))
                 self.path.append(selectedItem)
             } else {
                 return
@@ -350,7 +343,17 @@ private extension MapStore {
         }
     }
 
-    private func handleMapItems() async {
+    func updateDetent() {
+        do {
+            let elements = try path.elements()
+            print("path now: \(elements)")
+            self.updateSelectedSheetDetent(to: elements.last)
+        } catch {
+            print("update detent error: \(error)")
+        }
+    }
+
+    func handleMapItems() async {
         switch self.mapItems.count {
         case 0:
             break // no items, do nothing
@@ -408,7 +411,7 @@ private extension MapStore {
 
     // check if the there is an item on the Coordinate of the Camera on the map
     func isAnyItemVisible() -> Bool {
-        if let bounds = mapItems.map(\.coordinate).boundingBox() {
+        if let bounds = self.mapItems.map(\.coordinate).boundingBox() {
             return bounds.contains(coordinate: self.getCameraCoordinate())
         }
         return false
