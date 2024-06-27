@@ -63,6 +63,7 @@ final class SearchViewStore: ObservableObject {
     // MARK: - Properties
 
     @Published var searchText: String = ""
+    @Published var searchError: Error?
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
@@ -148,8 +149,10 @@ private extension SearchViewStore {
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
                 }
+                self.searchError = nil
                 self.mapStore.displayableItems = prediction
             } catch {
+                self.searchError = error
                 Logger.poiData.error("Predict Error: \(error)")
             }
         }

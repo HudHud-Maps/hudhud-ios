@@ -135,6 +135,11 @@ struct SearchSheet: View {
                             .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                         }
                         .listStyle(.plain)
+                        if self.mapStore.displayableItems.isEmpty {
+                            let label = self.searchStore.searchError?.localizedDescription != nil ? "Search Error" : "No results"
+                            backport.contentUnavailable(label: label, SFSymbol: .magnifyingglass, description: self.searchStore.searchError?.localizedDescription ?? "No results for \(self.searchStore.searchText) were found.").padding(.vertical, 50)
+                                .listRowSeparator(.hidden)
+                        }
                     }
                 } else {
                     SearchSectionView(title: "Favorites") {
