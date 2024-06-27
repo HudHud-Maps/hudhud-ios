@@ -133,6 +133,7 @@ final class SearchViewStore: ObservableObject {
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
                 }
+                self.searchError = nil
                 self.mapStore.displayableItems = prediction
             } catch {
                 self.searchError = error
