@@ -1,14 +1,16 @@
 //
 //  HudHudMapLayerStore.swift
-//  
+//  BackendService
 //
 //  Created by Alaa . on 12/06/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
+// swiftlint:disable init_usage
 
 import CoreLocation
 import Foundation
+import OSLog
 import OpenAPIURLSession
-
 
 public class HudHudMapLayerStore: ObservableObject {
     
@@ -25,7 +27,7 @@ public class HudHudMapLayerStore: ObservableObject {
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
         
         let transport = URLSessionTransport(configuration: transportConfiguration)
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport)
+        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport)	// swiftlint:disable:this force_unwrapping
         
         let response = try await client.listMapStyles()
         
@@ -35,11 +37,17 @@ public class HudHudMapLayerStore: ObservableObject {
             switch okResponse.body {
             case let .json(jsonResponse):
                 let mapLayer: [HudHudMapLayer] = jsonResponse.data.compactMap { mapStyle in
-                    return HudHudMapLayer(name: mapStyle.name, style_url: mapStyle.style_url, thumbnail_url: mapStyle.thumbnail_url)
+					guard let styleURL = URL(string: mapStyle.style_url),
+						  let thumbnailURL = URL(string: mapStyle.thumbnail_url) else {
+						Logger.parser.error("style_url or thumbnail_url missing, ignoring map layer")
+						return nil
+					}
+
+					return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL)
                 }
                 return mapLayer
             }
-        case .undocumented(statusCode: let statusCode,  let payload):
+        case .undocumented(statusCode: let statusCode, let payload):
             let bodyString: String? = if let body = payload.body {
                 try await String(collecting: body, upTo: 1024 * 1024)
             } else {
@@ -50,14 +58,14 @@ public class HudHudMapLayerStore: ObservableObject {
         }
     }
     
-    public init(){
+    public init() {
         
     }
 }
 
-
 public struct HudHudMapLayer: Hashable {
     public let name: String
-    public let style_url: String
-    public let thumbnail_url: String
+    public let styleUrl: URL
+    public let thumbnailUrl: URL
 }
+// swiftlint:enable init_usage

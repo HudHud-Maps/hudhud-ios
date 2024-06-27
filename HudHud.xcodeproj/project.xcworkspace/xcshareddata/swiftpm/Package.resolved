@@ -33,7 +33,7 @@
       "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
       "state" : {
         "branch" : "main",
-        "revision" : "3ffaa51d428ebf25e744fdbef8bbeeb02e959d01"
+        "revision" : "7c028082315e42ceeafe904f0361f1621b4e0805"
       }
     },
     {
@@ -48,10 +48,10 @@
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
       "state" : {
-        "branch" : "main",
-        "revision" : "347c224ff81b4ed8f477f9e967367d8c6eb6d39f"
+        "branch" : "enhancement/unify-navigation",
+        "revision" : "61c26af28895a3b2b4b27a6b446f272df1db191f"
       }
     },
     {

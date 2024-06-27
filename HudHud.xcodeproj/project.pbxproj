@@ -16,6 +16,7 @@
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
 		341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */; };
+		366DC582B1A191F4DF21DD43 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB4E3484F09C67A0B09D1BD /* MapViewCamera.swift */; };
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		4C8F2777E10B77217C6B2E9D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1796352BDB2448B1DC1EC645 /* ErrorView.swift */; };
@@ -26,6 +27,7 @@
 		74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */; };
 		793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E69A6191475F5E54A62147D /* DirectionModeButton.swift */; };
 		80FC33228F84547305447C36 /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7B635BBF85CDA2090358645 /* StreetView.swift */; };
+		8179D13CAED358121D8C6D65 /* UIApplication+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34E7604BA6F7C60F42503356 /* UIApplication+Environment.swift */; };
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
 		825C6676E341DD543C305950 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E21300E9BF61F5A403DE2CE /* MapStore.swift */; };
 		82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32589FE734D110C815A6168A /* LoggerSettings.swift */; };
@@ -55,8 +57,6 @@
 		CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */ = {isa = PBXBuildFile; fileRef = CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */; };
 		CD1882FC2BF63E8200C8AD49 /* MapLibreSwiftDSL in Frameworks */ = {isa = PBXBuildFile; productRef = CD1882FB2BF63E8200C8AD49 /* MapLibreSwiftDSL */; };
 		CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD1882FD2BF63E8200C8AD49 /* MapLibreSwiftUI */; };
-		CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1BD91F2B91E59200A591BD /* NavigationView.swift */; };
-		CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */; };
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
 		CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */; };
@@ -85,11 +85,10 @@
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
-		CDE538C82BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD91D2B91E53B00A591BD /* MapboxNavigation */; };
+		CDE538C82BA7868200D7FFE7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
 		CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C7AFBB29CC507D42D1538B2C /* MapboxNavigation */; };
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
-		CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
 		D811C7BCC8E737CD5281D017 /* pannellum.css in Resources */ = {isa = PBXBuildFile; fileRef = C2F990BDBBAB0AC344EDE41E /* pannellum.css */; };
@@ -133,6 +132,7 @@
 		1E69A6191475F5E54A62147D /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
 		23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
+		34E7604BA6F7C60F42503356 /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		417081C775FE86E29A6F3437 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
@@ -141,8 +141,8 @@
 		4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
 		557A9FF81C4443860134AE6F /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
-		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
-		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
+		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
+		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
 		738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
 		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
@@ -160,6 +160,7 @@
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCRouteConfigurationView.swift; sourceTree = "<group>"; };
+		BCB4E3484F09C67A0B09D1BD /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
 		BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerView.swift; sourceTree = "<group>"; };
 		C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
 		C2F990BDBBAB0AC344EDE41E /* pannellum.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = pannellum.css; sourceTree = "<group>"; };
@@ -172,12 +173,10 @@
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSheetView.swift; sourceTree = "<group>"; };
-		CD1BD91F2B91E59200A591BD /* NavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationView.swift; sourceTree = "<group>"; };
-		CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewCoordinator.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
-		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
+		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
 		CD34C5962C0B3CEB006DCDBA /* BackendService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BackendService; sourceTree = "<group>"; };
@@ -217,13 +216,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
-				CDE538CC2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
-				CDE538C82BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
+				CDE538C82BA7868200D7FFE7 /* BuildFile in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
 				CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
@@ -277,6 +275,15 @@
 			path = PadSheet;
 			sourceTree = "<group>";
 		};
+		869DD1D44194254EC031DCA6 /* Enums */ = {
+			isa = PBXGroup;
+			children = (
+				93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */,
+				45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */,
+			);
+			path = Enums;
+			sourceTree = "<group>";
+		};
 		8BC5EF59D0560111421BC3F8 /* StreetView */ = {
 			isa = PBXGroup;
 			children = (
@@ -285,6 +292,15 @@
 				AC3D481DC9A15C372F30E42E /* streetview.html */,
 			);
 			path = StreetView;
+			sourceTree = "<group>";
+		};
+		97187BF784B654E42BB17BCB /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
+				CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */,
+			);
+			path = Classes;
 			sourceTree = "<group>";
 		};
 		99E435A00BB464A6561C2838 /* MapButtons */ = {
@@ -349,7 +365,7 @@
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
 			);
 			sourceTree = "<group>";
-			usesTabs = 1;
+			usesTabs = 0;
 		};
 		CDAE05452B681261003E5196 /* Products */ = {
 			isa = PBXGroup;
@@ -371,6 +387,8 @@
 				D14C3F8A5C428C7F0A18A65A /* Views */,
 				AC313C27FE655AA88C1E9F69 /* Model */,
 				FB53CF8783EC95AF1ECE21DD /* Supporting Files */,
+				869DD1D44194254EC031DCA6 /* Enums */,
+				97187BF784B654E42BB17BCB /* Classes */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
@@ -420,8 +438,6 @@
 				CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */,
 				CD85CB282BB343BA00C99774 /* DebugStreetView.swift */,
 				CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */,
-				CD1BD91F2B91E59200A591BD /* NavigationView.swift */,
-				CD1BD9212B91E5DF00A591BD /* NavigationViewCoordinator.swift */,
 				47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */,
 				CD59BD4B2B768FAB002C14F6 /* DictionaryView.swift */,
 				007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */,
@@ -487,11 +503,9 @@
 				CD71C3682BBBFF27009C3A1C /* CameraState.swift */,
 				CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */,
 				CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */,
-				93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */,
-				45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */,
-				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
-				CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */,
 				CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */,
+				BCB4E3484F09C67A0B09D1BD /* MapViewCamera.swift */,
+				34E7604BA6F7C60F42503356 /* UIApplication+Environment.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -543,24 +557,24 @@
 			buildRules = (
 			);
 			dependencies = (
-				3D11995E7FC33F7673756259 /* PBXTargetDependency */,
+				10F308CE9BF5CDC43C029AB3 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
 				CD59BD702B7CD967002C14F6 /* SFSafeSymbols */,
 				CD1BD8AC2B9087C100A591BD /* MapLibre */,
-				CD1BD91D2B91E53B00A591BD /* MapboxNavigation */,
 				CD8C5A1F2BA342A5002EBE8A /* SimpleToast */,
 				BC8E1D9CC7D3AAC1051857FA /* MapLibre */,
 				C7AFBB29CC507D42D1538B2C /* MapboxNavigation */,
 				DE3A66FF070A2B17657129E4 /* MapLibre */,
-				6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */,
 				CD1882FB2BF63E8200C8AD49 /* MapLibreSwiftDSL */,
 				CD1882FD2BF63E8200C8AD49 /* MapLibreSwiftUI */,
 				CD34C55C2C03EF43006DCDBA /* NavigationTransitions */,
 				CD34C5632C05EF07006DCDBA /* BetterSafariView */,
 				CD34C5942C0B3CC8006DCDBA /* BackendService */,
+				DBBADFCA6A78C9BC93740D6B /* NavigationTransitions */,
+				E4493EE9767EE8EA308BA70C /* BetterSafariView */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -610,7 +624,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1520;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = HudHud;
 				TargetAttributes = {
 					CDAE05432B681261003E5196 = {
@@ -642,9 +656,12 @@
 				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */,
 				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
-				CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */,
+				CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				CD34C55B2C03EF43006DCDBA /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */,
 				CD34C5622C05EF07006DCDBA /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */,
+				E6FAFEBE24304E495FA85587 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				53D9220FD17EF7DF8E1A700F /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */,
+				78F90063EE763F3443421FD2 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -742,9 +759,7 @@
 				CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
-				CD1BD9202B91E59200A591BD /* NavigationView.swift in Sources */,
 				CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */,
-				CD1BD9222B91E5DF00A591BD /* NavigationViewCoordinator.swift in Sources */,
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
 				A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */,
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
@@ -789,6 +804,8 @@
 				D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */,
 				0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */,
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
+				366DC582B1A191F4DF21DD43 /* MapViewCamera.swift in Sources */,
+				8179D13CAED358121D8C6D65 /* UIApplication+Environment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -812,7 +829,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3D11995E7FC33F7673756259 /* PBXTargetDependency */ = {
+		10F308CE9BF5CDC43C029AB3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
@@ -1132,6 +1149,30 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		53D9220FD17EF7DF8E1A700F /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.13.3;
+			};
+		};
+		78F90063EE763F3443421FD2 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		7B3E8988F5D6A6F3D5C62413 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
@@ -1140,11 +1181,19 @@
 				kind = branch;
 			};
 		};
-		CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */ = {
+		C3A5F4BCC788F65CBFBCF338 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground.git";
+			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
-				branch = main;
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.13.3;
+			};
+		};
+		CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground";
+			requirement = {
+				branch = "enhancement/unify-navigation";
 				kind = branch;
 			};
 		};
@@ -1204,6 +1253,14 @@
 				minimumVersion = 6.2.0;
 			};
 		};
+		E6FAFEBE24304E495FA85587 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground";
+			requirement = {
+				branch = "enhancement/unify-navigation";
+				kind = branch;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1223,21 +1280,17 @@
 		};
 		CD1882FB2BF63E8200C8AD49 /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */;
+			package = CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
 			productName = MapLibreSwiftDSL;
 		};
 		CD1882FD2BF63E8200C8AD49 /* MapLibreSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground.git" */;
+			package = CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */;
 			productName = MapLibreSwiftUI;
 		};
 		CD1BD8AC2B9087C100A591BD /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapLibre;
-		};
-		CD1BD91D2B91E53B00A591BD /* MapboxNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigation;
 		};
 		CD34C55C2C03EF43006DCDBA /* NavigationTransitions */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1268,9 +1321,19 @@
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */;
 			productName = SwiftLocation;
 		};
+		DBBADFCA6A78C9BC93740D6B /* NavigationTransitions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C3A5F4BCC788F65CBFBCF338 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */;
+			productName = NavigationTransitions;
+		};
 		DE3A66FF070A2B17657129E4 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapLibre;
+		};
+		E4493EE9767EE8EA308BA70C /* BetterSafariView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7B3E8988F5D6A6F3D5C62413 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */;
+			productName = BetterSafariView;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

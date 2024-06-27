@@ -45,6 +45,7 @@ public protocol DisplayableAsRow: Identifiable, Hashable {
     var tintColor: Color { get }
 
     func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
+    func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - AnyDisplayableAsRow
@@ -86,6 +87,10 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
     public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return try await self.innerModel.resolve(in: provider)
     }
+	
+	public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+		return try await self.innerModel.resolve(in: provider)
+	}
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.title)
@@ -134,6 +139,16 @@ public struct PredictionItem: DisplayableAsRow {
         }
         return mapped
     }
+	
+	public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+		guard case .hudhud = self.type else { return [] }
+
+		let resolved = try await provider.lookup(id: self.id, prediction: self)
+		let mapped = resolved.map {
+			AnyDisplayableAsRow($0)
+		}
+		return mapped
+	}
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
@@ -309,6 +324,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public func resolve(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return [AnyDisplayableAsRow(self)]
     }
+	
+	public func resolve(in _: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+		return [AnyDisplayableAsRow(self)]
+	}
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)

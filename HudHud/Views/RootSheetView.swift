@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import MapLibreSwiftUI
 import OSLog
 import SwiftUI
 
@@ -35,7 +36,8 @@ struct RootSheetView: View {
                     case .navigationAddSearchView:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
-                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
+                        let freshSearchViewStore: SearchViewStore = {
+                            let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
                                 self.searchViewStore.mapStore.waypoints?.append(item)
 
@@ -50,6 +52,7 @@ struct RootSheetView: View {
                     POIDetailSheet(item: item, onStart: { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
+                        self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
@@ -67,7 +70,6 @@ struct RootSheetView: View {
                                 self.mapStore.waypoints = nil
                                 self.mapStore.routes = nil
                             }
-
                         })
                         .presentationCornerRadius(21)
                 }
