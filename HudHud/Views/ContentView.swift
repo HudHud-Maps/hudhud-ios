@@ -34,7 +34,7 @@ enum SheetSubView: Hashable, Codable {
 struct ContentView: View {
 
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-    private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
 
