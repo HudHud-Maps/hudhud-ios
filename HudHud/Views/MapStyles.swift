@@ -22,7 +22,7 @@ class CustomDayStyle: DayStyle {
     // MARK: - Lifecycle
 
     required init() {
-        let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+        let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
         super.init(mapStyleURL: styleURL)
         self.styleType = .day
     }
@@ -57,7 +57,7 @@ class CustomNightStyle: NightStyle {
     // MARK: - Lifecycle
 
     required init() {
-        let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+        let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
         super.init(mapStyleURL: styleURL)
         self.styleType = .night
     }
