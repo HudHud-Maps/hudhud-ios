@@ -14,7 +14,7 @@ struct FavoriteItemView: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
-            Image(systemSymbol: self.favorite.sfSymbol)
+            Image(systemSymbol: self.favorite.getSymbol(type: self.favorite.type))
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: self.imageSize, height: self.imageSize)

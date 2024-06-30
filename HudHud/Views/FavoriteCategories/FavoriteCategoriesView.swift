@@ -33,7 +33,7 @@ struct FavoriteCategoriesView: View {
                     } label: {
                         Text(favorite.type)
                     }
-                    .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.sfSymbol, tintColor: favorite.tintColor))
+                    .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor))
                 }
                 Button {
                     print("Add was pressed")

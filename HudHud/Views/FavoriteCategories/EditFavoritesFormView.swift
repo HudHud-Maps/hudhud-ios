@@ -29,9 +29,8 @@ struct EditFavoritesFormView: View {
     @State var newType: String = ""
     @State private var selectedType: String
     @State var types: [String]
-    @State private var typeSymbols: [String: SFSymbol] = ["Home": .houseFill, "Work": .bagFill, "School": .buildingFill]
+    @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.types.home: .houseFill, FavoritesItem.types.work: .bagFill, FavoritesItem.types.school: .buildingFill]
 
-    @State var freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
     @Binding var camera: MapViewCamera
     private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 
@@ -126,9 +125,8 @@ struct EditFavoritesFormView: View {
 
     private func saveChanges() {
         let newFavoritesItem = FavoritesItem(
-            id: favoritesItem?.id ?? Int.random(in: 1000 ... 9999),
+            id: favoritesItem?.id ?? UUID(),
             title: self.title,
-            sfSymbol: self.favoritesItem?.sfSymbol ?? SFSymbol.heartFill,
             tintColor: self.favoritesItem?.tintColor ?? Color.gray,
             item: self.item,
             description: self.description.isEmpty ? nil : self.description,

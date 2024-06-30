@@ -14,24 +14,22 @@ import SwiftUI
 // MARK: - FavoritesItem
 
 struct FavoritesItem: Identifiable, Codable, Equatable {
-    let id: Int
+    let id: UUID
     var title: String // change later to localized if you can
-    let sfSymbol: SFSymbol
     let tintColor: Color
     var item: ResolvedItem?
     var description: String?
     var type: String
 
     enum CodingKeys: String, CodingKey {
-        case id, title, sfSymbol, tintColor, item, description, type
+        case id, title, tintColor, item, description, type
     }
 
     // MARK: - Lifecycle
 
-    init(id: Int, title: String, sfSymbol: SFSymbol, tintColor: Color, item: ResolvedItem? = nil, description: String? = nil, type: String) {
+    init(id: UUID, title: String, tintColor: Color, item: ResolvedItem? = nil, description: String? = nil, type: String) {
         self.id = id
         self.title = title
-        self.sfSymbol = sfSymbol
         self.tintColor = tintColor
         self.item = item
         self.description = description
@@ -40,9 +38,8 @@ struct FavoritesItem: Identifiable, Codable, Equatable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(Int.self, forKey: .id)
+        self.id = try container.decode(UUID.self, forKey: .id)
         self.title = try container.decode(String.self, forKey: .title)
-        self.sfSymbol = try container.decode(SFSymbol.self, forKey: .sfSymbol)
         let tintColorHex = try container.decode(String.self, forKey: .tintColor)
         self.tintColor = Color(hex: tintColorHex) ?? Color.gray
         self.item = try container.decodeIfPresent(ResolvedItem.self, forKey: .item)
@@ -56,7 +53,6 @@ struct FavoritesItem: Identifiable, Codable, Equatable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(self.id, forKey: .id)
         try container.encode(self.title, forKey: .title)
-        try container.encode(self.sfSymbol, forKey: .sfSymbol)
         try container.encode(self.tintColor.hexString, forKey: .tintColor)
         try container.encodeIfPresent(self.item, forKey: .item)
         try container.encodeIfPresent(self.description, forKey: .description)
@@ -131,18 +127,35 @@ extension Color {
 }
 
 extension FavoritesItem {
-    static var favoriteForPreview = FavoritesItem(id: 10, title: "School",
-                                                  sfSymbol: .buildingColumnsFill,
+    static var favoriteForPreview = FavoritesItem(id: UUID(), title: "School",
                                                   tintColor: .gray, item: .pharmacy, description: " ", type: "School")
     static var favoritesInit = [
-        FavoritesItem(id: 1, title: "Home",
-                      sfSymbol: .houseFill,
-                      tintColor: .gray, item: .artwork, type: "Home"),
-        FavoritesItem(id: 2, title: "Work",
-                      sfSymbol: .bagFill,
-                      tintColor: .gray, type: "Work"),
-        FavoritesItem(id: 3, title: "School",
-                      sfSymbol: .buildingColumnsFill,
-                      tintColor: .gray, type: "School")
+        FavoritesItem(id: UUID(), title: "Home",
+                      tintColor: .gray, item: .artwork, type: types.home),
+        FavoritesItem(id: UUID(), title: "Work",
+                      tintColor: .gray, type: types.work),
+        FavoritesItem(id: UUID(), title: "School",
+                      tintColor: .gray, type: types.school)
     ]
+}
+
+extension FavoritesItem {
+    enum types {
+        static var home = "Home"
+        static var work = "Work"
+        static var school = "School"
+    }
+
+    func getSymbol(type: String) -> SFSymbol {
+        switch type {
+        case "Home":
+            return .houseFill
+        case "Work":
+            return .bagFill
+        case "School":
+            return .buildingColumnsFill
+        default:
+            return .heartFill
+        }
+    }
 }
