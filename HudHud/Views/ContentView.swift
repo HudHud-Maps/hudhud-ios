@@ -172,6 +172,7 @@ struct ContentView: View {
             }
         })
         .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
+        .animation(.easeInOut(duration: 0.01), value: self.mapStore.searchShown)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -268,11 +269,15 @@ struct ContentView: View {
                                         if location.course > 0 {
                                             self.motionViewModel.position.heading = location.course
                                         }
-                                        self.mapStore.streetView = .enabled
-                                        self.mapStore.searchShown = false
+                                        withAnimation {
+                                            self.mapStore.streetView = .enabled
+                                            self.mapStore.searchShown = false
+                                        }
                                     }
                                 } else {
-                                    self.mapStore.streetView = .disabled
+                                    withAnimation {
+                                        self.mapStore.streetView = .disabled
+                                    }
                                 }
                             },
                             MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {

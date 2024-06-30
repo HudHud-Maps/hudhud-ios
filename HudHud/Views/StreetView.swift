@@ -48,8 +48,10 @@ struct StreetView: View {
                     }
                     Spacer()
                     Button {
-                        self.mapStore.streetView = .disabled
-                        self.mapStore.searchShown = true
+                        withAnimation(.easeInOut) {
+                            self.mapStore.streetView = .disabled
+                            self.mapStore.searchShown = true
+                        }
                     } label: {
                         Circle()
                             .fill(.ultraThinMaterial)
@@ -62,7 +64,7 @@ struct StreetView: View {
                             }
                     }
                 }
-                .padding()
+                .padding(.horizontal, 10)
             }
     }
 }
