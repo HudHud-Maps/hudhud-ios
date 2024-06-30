@@ -157,9 +157,11 @@ struct ContentView: View {
                     controller.startNavigation(with: route)
                 }
                 self.mapStore.navigationInProgress = true
+                self.mapStore.navigationFinished = false
             } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
                 controller.endNavigation()
                 self.mapStore.navigationInProgress = false
+                self.mapStore.navigationFinished = true
             }
 
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled

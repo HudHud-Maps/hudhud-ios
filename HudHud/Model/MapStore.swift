@@ -48,6 +48,7 @@ final class MapStore: ObservableObject {
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
     @Published var navigationInProgress: Bool = false
+    @Published var navigationFinished: Bool = false
 
     @Published var navigatingRoute: Route? {
         didSet {
