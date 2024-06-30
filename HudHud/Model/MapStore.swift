@@ -149,6 +149,17 @@ final class MapStore: ObservableObject {
         }
     }
 
+    var selectedPoint: ShapeSource {
+        ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
+            if let selectedItem,
+               mapItems.count > 1 {
+                let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
+                feature.attributes["poi_id"] = selectedItem.id
+                feature
+            }
+        }
+    }
+
     var streetViewSource: ShapeSource {
         ShapeSource(identifier: MapSourceIdentifier.streetViewSymbols) {
             if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
