@@ -148,15 +148,20 @@ struct ContentView: View {
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
-            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationInProgress == false {
-                if self.debugStore.simulateRide {
-                    let locationManager = SimulatedLocationManager(route: route)
-                    locationManager.speedMultiplier = 2
-                    controller.startNavigation(with: route, locationManager: locationManager)
+            controller.showsEndOfRouteFeedback = true
+            if let route = self.mapStore.navigatingRoute {
+                if self.mapStore.navigationInProgress {
+                    controller.route = route
                 } else {
-                    controller.startNavigation(with: route)
+                    if self.debugStore.simulateRide {
+                        let locationManager = SimulatedLocationManager(route: route)
+                        locationManager.speedMultiplier = 2
+                        controller.startNavigation(with: route, animated: true, locationManager: locationManager)
+                    } else {
+                        controller.startNavigation(with: route, animated: true)
+                    }
+                    self.mapStore.navigationInProgress = true
                 }
-                self.mapStore.navigationInProgress = true
             } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
                 controller.endNavigation()
                 self.mapStore.navigationInProgress = false

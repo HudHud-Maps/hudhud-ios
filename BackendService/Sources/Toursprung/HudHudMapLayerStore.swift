@@ -30,9 +30,7 @@ public class HudHudMapLayerStore: ObservableObject {
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport)	// swiftlint:disable:this force_unwrapping
         
         let response = try await client.listMapStyles()
-        
         switch response {
-            
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
