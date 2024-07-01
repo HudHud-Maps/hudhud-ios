@@ -47,7 +47,7 @@ struct ContentView: View {
     @State private var sheetSize: CGSize = .zero
     @State private var didTryToZoomOnUsersLocation = false
 
-    @State var offsetY: CGFloat = 0
+    @EnvironmentObject var notificationManager: NotificationManager
 
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
@@ -226,6 +226,11 @@ struct ContentView: View {
                 } catch {
                     self.mapLayerStore.hudhudMapLayers = nil
                     Logger.searchView.error("\(error.localizedDescription)")
+                }
+            }
+            .task {
+                do {
+                    try? await self.notificationManager.requestAuthorization()
                 }
             }
             .ignoresSafeArea()

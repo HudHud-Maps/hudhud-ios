@@ -19,9 +19,12 @@ struct HudHudApp: App {
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
 
+    @StateObject private var notificationManager = NotificationManager()
+
     var body: some Scene {
         WindowGroup {
             ContentView(searchStore: self.searchStore)
+                .environmentObject(self.notificationManager)
         }
     }
 
