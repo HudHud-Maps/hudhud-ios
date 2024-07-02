@@ -38,8 +38,6 @@ struct ContentView: View {
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
-    @ObservedObject var touchVisualizerManager = TouchManager.shared
-    @State var isRecordingScreen = false
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
@@ -182,11 +180,6 @@ struct ContentView: View {
                     }
                 }
             }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)) { _ in
-            self.isRecordingScreen.toggle()
-            self.touchVisualizerManager.updateVisualizer(isScreenRecording: self.isRecordingScreen)
-            Logger.mapInteraction.log("\(self.isRecordingScreen ? "Started recording screen" : "Stopped recording screen")")
         }
     }
 

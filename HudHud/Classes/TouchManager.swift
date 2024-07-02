@@ -16,11 +16,18 @@ class TouchManager: ObservableObject {
     static let shared = TouchManager()
 
     private var window: UIWindow?
-    @Published var isTouchVisualizerEnabled: Bool
+    private var cancellable: AnyCancellable?
+    @AppStorage("isTouchVisualizerEnabled") var isTouchVisualizerEnabled: Bool = false
 
     // MARK: - Lifecycle
 
     init() {
+        self.cancellable = NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)
+            .sink { screen in
+                if let screen = screen.object as? UIScreen {
+                    self.updateVisualizer(isScreenRecording: screen.isCaptured)
+                }
+            }
         self.isTouchVisualizerEnabled = false
         self.setDefaultTouchVisualizerSetting()
     }
@@ -52,10 +59,8 @@ class TouchManager: ObservableObject {
         switch UIApplication.environment {
         case .simulator, .testFlight, .development:
             self.isTouchVisualizerEnabled = true
-            UserDefaults.standard.set(true, forKey: "touchEnabled")
         case .appStore:
             self.isTouchVisualizerEnabled = false
-            UserDefaults.standard.set(false, forKey: "touchEnabled")
         }
     }
 }
