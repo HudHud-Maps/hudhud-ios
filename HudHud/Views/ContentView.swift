@@ -56,7 +56,7 @@ struct ContentView: View {
     var mapView: some View {
         MapView<NavigationViewController>(makeViewController: NavigationViewController(dayStyleURL: self.styleURL), styleURL: self.styleURL, camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationInProgress == false {
+            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationProgress == .none {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
                     MLNPolylineFeature(coordinates: route.coordinates ?? [])
                 }
@@ -148,7 +148,7 @@ struct ContentView: View {
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
-            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationInProgress == false {
+            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationProgress == .none {
                 if self.debugStore.simulateRide {
                     let locationManager = SimulatedLocationManager(route: route)
                     locationManager.speedMultiplier = 2
@@ -156,12 +156,10 @@ struct ContentView: View {
                 } else {
                     controller.startNavigation(with: route)
                 }
-                self.mapStore.navigationInProgress = true
-                self.mapStore.navigationFinished = false
-            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
+                self.mapStore.navigationProgress = .navigating
+            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationProgress == .navigating {
                 controller.endNavigation()
-                self.mapStore.navigationInProgress = false
-                self.mapStore.navigationFinished = true
+                self.mapStore.navigationProgress = .feedback
             }
 
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
@@ -235,14 +233,14 @@ struct ContentView: View {
                 if case .enabled = self.mapStore.streetView {
                     StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
                 } else {
-                    if self.mapStore.navigationInProgress == false {
+                    if self.mapStore.navigationProgress == .none {
                         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                             .presentationBackground(.thinMaterial)
                     }
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if self.mapStore.navigationInProgress == false {
+                if self.mapStore.navigationProgress == .none {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -298,7 +296,10 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown && !self.$mapStore.navigationInProgress) {
+            .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
+                get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
+                set: { _ in }
+            )) {
                 RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in

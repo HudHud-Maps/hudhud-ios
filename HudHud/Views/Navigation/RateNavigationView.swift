@@ -22,7 +22,7 @@ struct RateNavigationView: View {
     @State private var selecteFace: Int?
     @State private var currentTask: Task<Void, Never>?
     @State private var animate = false
-    var selectedFace: (Int) -> Void?
+    var selectedFace: ((Int) -> Void)?
 
     var body: some View {
         VStack {
@@ -71,7 +71,7 @@ struct RateNavigationView: View {
             await MainActor.run {
                 if !Task.isCancelled {
                     withAnimation {
-                        self.selectedFace(face)
+                        self.selectedFace?(face)
                         self.presentationMode.wrappedValue.dismiss()
                     }
                 }

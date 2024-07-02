@@ -71,17 +71,22 @@ struct RootSheetView: View {
                         })
                         .presentationCornerRadius(21)
                 }
-                .navigationDestination(isPresented: self.$mapStore.navigationFinished) {
-                    RateNavigationView { selectedFace in
-                        // selectedFace should be sent to backend along with detial of the route
-                        self.mapStore.waypoints = nil
-                        self.searchViewStore.mapStore.selectedItem = nil
-                        self.searchViewStore.mapStore.displayableItems = []
-                        self.mapStore.routes = nil
-                        Logger.routing.log("selected Face of rating: \(selectedFace)")
-                    }
-                    .navigationBarBackButtonHidden()
-                    .presentationCornerRadius(21)
+                .navigationDestination(isPresented:
+                    Binding<Bool>(
+                        get: { self.mapStore.navigationProgress == .feedback },
+                        set: { _ in }
+                    )) {
+                        RateNavigationView { selectedFace in
+                            // selectedFace should be sent to backend along with detial of the route
+                            self.mapStore.waypoints = nil
+                            self.searchViewStore.mapStore.selectedItem = nil
+                            self.searchViewStore.mapStore.displayableItems = []
+                            self.mapStore.routes = nil
+                            self.mapStore.navigationProgress = .none
+                            Logger.routing.log("selected Face of rating: \(selectedFace)")
+                        }
+                        .navigationBarBackButtonHidden()
+                        .presentationCornerRadius(21)
                 }
         }
         .navigationTransition(.fade(.cross).animation(nil))
