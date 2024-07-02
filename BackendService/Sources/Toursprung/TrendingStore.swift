@@ -13,7 +13,7 @@ import OpenAPIURLSession
 
 public class TrendingStore: ObservableObject{
     
-    @Published public var trendingPOIs : [ResolvedItem]?
+    @Published public var trendingPOIs: [ResolvedItem]?
     @Published public var lastError: Error?
     
     public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {

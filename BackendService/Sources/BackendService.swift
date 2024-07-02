@@ -308,11 +308,11 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.symbol = try container.decode(SFSymbol.self, forKey: .symbol)
         self.type = try container.decode(PredictionResult.self, forKey: .type)
         self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
-        self.phone = try container.decode(String.self, forKey: .phone)
-        self.website = try container.decode(URL.self, forKey: .website)
-        self.rating = try container.decode(Double.self, forKey: .rating)
-        self.ratingCount = try container.decode(Int.self, forKey: .ratingCount)
-        self.trendingImage = try container.decode(String.self, forKey: .trendingImage)
+        self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        self.website = try container.decodeIfPresent(URL.self, forKey: .website)
+        self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
+        self.ratingCount = try container.decodeIfPresent(Int.self, forKey: .ratingCount)
+        self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
     }
 
     // MARK: - Public
