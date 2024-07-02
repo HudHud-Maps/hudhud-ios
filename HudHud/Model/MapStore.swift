@@ -23,6 +23,12 @@ import SwiftUI
 @MainActor
 final class MapStore: ObservableObject {
 
+    enum NavigationProgress {
+        case none
+        case navigating
+        case feedback
+    }
+
     enum StreetViewOption: Equatable {
         case disabled
         case requestedCurrentLocation
@@ -49,6 +55,7 @@ final class MapStore: ObservableObject {
     @Published var waypoints: [ABCRouteConfigurationItem]?
     @Published var navigationInProgress: Bool = false
     @Published var navigationFinished: Bool = false
+    @Published var navigationProgress: NavigationProgress = .none
 
     @Published var navigatingRoute: Route? {
         didSet {
