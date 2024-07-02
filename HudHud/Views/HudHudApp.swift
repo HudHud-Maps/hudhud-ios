@@ -25,12 +25,8 @@ struct HudHudApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView(searchStore: self.searchStore)
-                .onReceive(NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)) { screen in
-                    if let screen = screen.object as? UIScreen {
-                        self.isScreenCaptured = screen.isCaptured
-                    }
-                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: self.isScreenCaptured)
-                    Logger.mapInteraction.log("\(self.isScreenCaptured ? "Started recording screen" : "Stopped recording screen")")
+                .onAppear {
+                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
                 }
         }
     }

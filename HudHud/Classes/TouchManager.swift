@@ -8,6 +8,7 @@
 
 import Combine
 import Foundation
+import OSLog
 import SwiftUI
 import TouchVisualizer
 
@@ -26,6 +27,7 @@ class TouchManager: ObservableObject {
             .sink { screen in
                 if let screen = screen.object as? UIScreen {
                     self.updateVisualizer(isScreenRecording: screen.isCaptured)
+                    Logger.mapInteraction.log("\(screen.isCaptured ? "Started recording screen" : "Stopped recording screen")")
                 }
             }
         self.isTouchVisualizerEnabled = false
