@@ -143,7 +143,6 @@ struct POIDetailSheet: View {
                 Spacer()
             }
         }
-
         .task {
             do {
                 _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
@@ -168,6 +167,11 @@ struct POIDetailSheet: View {
                 let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
                 self.routes = results
             } catch {
+                let nsError = error as NSError
+                if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
+                    return
+                }
+
                 let notification = Notification(error: error)
                 self.notificationQueue.add(notification: notification)
             }
