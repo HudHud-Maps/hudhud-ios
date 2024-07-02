@@ -226,6 +226,15 @@
       }
     },
     {
+      "identity" : "touchvisualizer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Patrick-Kladek/TouchVisualizer",
+      "state" : {
+        "revision" : "37a36647de5cbb9549d6685913a4aa54b48f4914",
+        "version" : "5.0.0"
+      }
+    },
+    {
       "identity" : "turf-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flitsmeister/turf-swift",

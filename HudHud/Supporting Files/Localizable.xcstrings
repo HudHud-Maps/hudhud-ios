@@ -137,6 +137,9 @@
     "Duration" : {
 
     },
+    "Enable Touch Visualizer" : {
+
+    },
     "Fastest" : {
       "localizations" : {
         "ar" : {
@@ -304,6 +307,9 @@
           }
         }
       }
+    },
+    "Touch Visualizer" : {
+
     },
     "Traffic" : {
 

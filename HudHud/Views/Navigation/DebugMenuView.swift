@@ -11,6 +11,7 @@ import SwiftUI
 struct DebugMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var debugSettings: DebugStore
+    @ObservedObject var touchManager = TouchManager.shared
 
     var body: some View {
         Form {
@@ -23,6 +24,12 @@ struct DebugMenuView: View {
             Section(header: Text("Simulation")) {
                 Toggle(isOn: self.$debugSettings.simulateRide) {
                     Text("Simulate Ride during Navigation")
+                }
+            }
+
+            Section(header: Text("Touch Visualizer")) {
+                Toggle(isOn: self.$touchManager.isTouchVisualizerEnabled) {
+                    Text("Enable Touch Visualizer")
                 }
             }
         }
