@@ -182,6 +182,13 @@ struct ContentView: View {
                 }
             }
         }
+        .onChange(of: self.mapStore.selectedDetent) { _ in
+            if self.mapStore.selectedDetent == .small {
+                Task {
+                    await self.reloadPOITrending()
+                }
+            }
+        }
     }
 
     var body: some View {
@@ -230,13 +237,7 @@ struct ContentView: View {
                 }
             }
             .task {
-                do {
-                    let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
-                    self.trendingStore.trendingPOIs = trendingPOI
-                } catch {
-                    self.trendingStore.trendingPOIs = nil
-                    Logger.searchView.error("\(error.localizedDescription)")
-                }
+                await self.reloadPOITrending()
             }
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, alignment: .center) {
@@ -340,6 +341,18 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
+    }
+
+    // MARK: - Internal
+
+    func reloadPOITrending() async {
+        do {
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
+            self.trendingStore.trendingPOIs = trendingPOI
+        } catch {
+            self.trendingStore.trendingPOIs = nil
+            Logger.searchView.error("\(error.localizedDescription)")
+        }
     }
 }
 
