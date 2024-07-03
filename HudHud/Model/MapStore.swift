@@ -23,6 +23,12 @@ import SwiftUI
 @MainActor
 final class MapStore: ObservableObject {
 
+    enum NavigationProgress {
+        case none
+        case navigating
+        case feedback
+    }
+
     enum StreetViewOption: Equatable {
         case disabled
         case requestedCurrentLocation
@@ -47,7 +53,7 @@ final class MapStore: ObservableObject {
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
-    @Published var navigationInProgress: Bool = false
+    @Published var navigationProgress: NavigationProgress = .none
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -146,6 +152,17 @@ final class MapStore: ObservableObject {
         }
         return ShapeSource(identifier: MapSourceIdentifier.routePoints) {
             features
+        }
+    }
+
+    var selectedPoint: ShapeSource {
+        ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
+            if let selectedItem,
+               mapItems.count > 1 {
+                let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
+                feature.attributes["poi_id"] = selectedItem.id
+                feature
+            }
         }
     }
 
