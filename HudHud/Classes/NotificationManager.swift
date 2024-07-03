@@ -16,27 +16,10 @@ class NotificationManager: ObservableObject {
 
     func requestAuthorization() async throws {
         do {
-            try await self.center.requestAuthorization(options: [.alert, .sound, .badge, .provisional])
-            await self.checkAuthorizationStatus()
+            try await self.center.requestAuthorization(options: [.alert, .sound, .badge])
         } catch {
             print("Authorization failed: \(error)")
             throw error
-        }
-    }
-
-    func checkAuthorizationStatus() async {
-        let settings = await center.notificationSettings()
-        switch settings.authorizationStatus {
-        case .notDetermined:
-            print("Authorization not determined")
-        case .denied:
-            print("Authorization denied")
-        case .authorized, .provisional:
-            print("Authorization granted")
-        case .ephemeral:
-            print("Authorization granted ephemral")
-        @unknown default:
-            print("Unknown authorization status")
         }
     }
 }

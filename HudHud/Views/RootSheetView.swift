@@ -18,6 +18,8 @@ struct RootSheetView: View {
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @Binding var sheetSize: CGSize
 
+    @StateObject var notificationManager = NotificationManager()
+
     var body: some View {
         NavigationStack(path: self.$mapStore.path) {
             SearchSheet(mapStore: self.mapStore,
@@ -53,6 +55,11 @@ struct RootSheetView: View {
                         self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
+                        }
+                        Task {
+                            do {
+                                try? await self.notificationManager.requestAuthorization()
+                            }
                         }
                     }, onDismiss: {
                         self.searchViewStore.mapStore.selectedItem = nil
