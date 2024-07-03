@@ -118,6 +118,24 @@ struct ContentView: View {
                 .iconColor(.white)
                 .predicate(NSPredicate(format: "cluster != YES"))
 
+            // shows the selected pin
+            CircleStyleLayer(
+                identifier: MapLayerIdentifier.selectedCircle,
+                source: self.mapStore.selectedPoint
+            )
+            .radius(24)
+            .color(.systemRed)
+            .strokeWidth(2)
+            .strokeColor(.white)
+            .predicate(NSPredicate(format: "cluster != YES"))
+            SymbolStyleLayer(
+                identifier: MapLayerIdentifier.selectedCircleIcon,
+                source: self.mapStore.selectedPoint
+            )
+            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+            .iconColor(.white)
+            .predicate(NSPredicate(format: "cluster != YES"))
+
             SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
