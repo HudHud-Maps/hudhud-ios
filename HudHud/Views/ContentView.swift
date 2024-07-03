@@ -170,9 +170,9 @@ struct ContentView: View {
                 if self.debugStore.simulateRide {
                     let locationManager = SimulatedLocationManager(route: route)
                     locationManager.speedMultiplier = 2
-                    controller.startNavigation(with: route, locationManager: locationManager)
+                    controller.startNavigation(with: route, animated: true, locationManager: locationManager)
                 } else {
-                    controller.startNavigation(with: route)
+                    controller.startNavigation(with: route, animated: true)
                 }
                 self.mapStore.navigationProgress = .navigating
             } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationProgress == .navigating {
