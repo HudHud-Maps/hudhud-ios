@@ -54,7 +54,11 @@ struct ContentView: View {
 
     @ViewBuilder
     var mapView: some View {
-        MapView<NavigationViewController>(makeViewController: NavigationViewController(dayStyleURL: self.styleURL), styleURL: self.styleURL, camera: self.$mapStore.camera) {
+        MapView<NavigationViewController>(makeViewController: {
+            let viewController = NavigationViewController(dayStyleURL: self.styleURL)
+            viewController.showsEndOfRouteFeedback = false // We show our own Feedback
+            return viewController
+        }(), styleURL: self.styleURL, camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
             if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationProgress == .none {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
