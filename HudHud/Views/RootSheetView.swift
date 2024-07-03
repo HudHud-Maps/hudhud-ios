@@ -111,9 +111,7 @@ struct RootSheetView: View {
             }
         }
         .onPreferenceChange(SizePreferenceKey.self) { value in
-            // withAnimation(.easeOut) {
             self.sheetSize = value
-            // }
         }
     }
 }
