@@ -29,7 +29,7 @@ enum FontWeight {
 }
 
 extension Font {
-    static func customFont(_ weight: FontWeight, size: CGFloat) -> Font {
+    static func hudhudFont(_ weight: FontWeight, size: CGFloat) -> Font {
         switch weight {
         case .bold:
             return .custom("PlusJakartaSans-Bold", size: size)
@@ -64,7 +64,7 @@ extension Font {
 }
 
 extension Text {
-    func customFont(_ fontWeight: FontWeight? = .regular, _ size: CGFloat? = nil) -> Text {
-        return self.font(.customFont(fontWeight ?? .regular, size: size ?? 16))
+    func hudhudFont(_ fontWeight: FontWeight? = .regular, size: CGFloat? = nil) -> Text {
+        return self.font(.hudhudFont(fontWeight ?? .regular, size: size ?? 16))
     }
 }
