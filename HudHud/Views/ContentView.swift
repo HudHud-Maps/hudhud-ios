@@ -41,6 +41,7 @@ struct ContentView: View {
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
+    @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
@@ -211,6 +212,13 @@ struct ContentView: View {
                 }
             }
         }
+        .onChange(of: self.mapStore.selectedDetent) { _ in
+            if self.mapStore.selectedDetent == .small {
+                Task {
+                    await self.reloadPOITrending()
+                }
+            }
+        }
     }
 
     var body: some View {
@@ -257,6 +265,9 @@ struct ContentView: View {
                     self.mapLayerStore.hudhudMapLayers = nil
                     Logger.searchView.error("\(error.localizedDescription)")
                 }
+            }
+            .task {
+                await self.reloadPOITrending()
             }
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, alignment: .center) {
@@ -330,7 +341,7 @@ struct ContentView: View {
                 get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
                 set: { _ in }
             )) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -360,8 +371,21 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
+    }
+
+    // MARK: - Internal
+
+    func reloadPOITrending() async {
+        do {
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
+            self.trendingStore.trendingPOIs = trendingPOI
+        } catch {
+            self.trendingStore.trendingPOIs = nil
+            Logger.searchView.error("\(error.localizedDescription)")
+        }
     }
 }
 

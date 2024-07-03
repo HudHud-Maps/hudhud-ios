@@ -15,6 +15,7 @@ struct RootSheetView: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
+    @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @Binding var sheetSize: CGSize
 
@@ -23,7 +24,7 @@ struct RootSheetView: View {
     var body: some View {
         NavigationStack(path: self.$mapStore.path) {
             SearchSheet(mapStore: self.mapStore,
-                        searchStore: self.searchViewStore)
+                        searchStore: self.searchViewStore, trendingStore: self.trendingStore)
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
                     case .mapStyle:
@@ -45,7 +46,7 @@ struct RootSheetView: View {
                             return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore)
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore)
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in

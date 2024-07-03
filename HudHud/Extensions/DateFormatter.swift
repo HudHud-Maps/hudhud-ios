@@ -19,3 +19,15 @@ extension String {
         }
     }
 }
+
+extension Double {
+
+    func getDistanceString() -> String {
+        let distanceFormatter = MeasurementFormatter()
+        distanceFormatter.unitOptions = .providedUnit
+        distanceFormatter.unitStyle = .medium
+        distanceFormatter.locale = Locale.current
+        let measurement = Measurement(value: Double(self), unit: UnitLength.kilometers)
+        return distanceFormatter.string(from: measurement)
+    }
+}
