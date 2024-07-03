@@ -11,6 +11,7 @@ import Foundation
 enum MapSourceIdentifier {
     static var pedestrianPolyline = "pedestrianPolyline"
     static var points = "points"
+    static let selectedPoint = "selectedPoint"
     static var routePoints = "routePoints"
     static var streetViewSymbols = "streetViewSymbols"
 }
