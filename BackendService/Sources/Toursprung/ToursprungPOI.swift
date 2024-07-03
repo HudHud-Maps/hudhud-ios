@@ -59,6 +59,7 @@ public actor ToursprungPOI: POIServiceProtocol {
     public func lookup(id _: String, prediction _: Any) async throws -> [ResolvedItem] {
         return []
     }
+    
 }
 
 // MARK: - Private

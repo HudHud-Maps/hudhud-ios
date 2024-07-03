@@ -41,6 +41,7 @@ struct ContentView: View {
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
+    @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
@@ -168,18 +169,28 @@ struct ContentView: View {
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
-            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationProgress == .none {
-                if self.debugStore.simulateRide {
-                    let locationManager = SimulatedLocationManager(route: route)
-                    locationManager.speedMultiplier = 2
-                    controller.startNavigation(with: route, animated: true, locationManager: locationManager)
-                } else {
-                    controller.startNavigation(with: route, animated: true)
+
+            switch self.mapStore.navigationProgress {
+            case .none:
+                if let route = self.mapStore.navigatingRoute {
+                    if self.debugStore.simulateRide {
+                        let locationManager = SimulatedLocationManager(route: route)
+                        locationManager.speedMultiplier = 2
+                        controller.startNavigation(with: route, animated: true, locationManager: locationManager)
+                    } else {
+                        controller.startNavigation(with: route, animated: true)
+                    }
+                    self.mapStore.navigationProgress = .navigating
                 }
-                self.mapStore.navigationProgress = .navigating
-            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationProgress == .navigating {
-                controller.endNavigation()
-                self.mapStore.navigationProgress = .feedback
+            case .navigating:
+                if let route = self.mapStore.navigatingRoute {
+                    controller.route = route
+                } else {
+                    controller.endNavigation()
+                    self.mapStore.navigationProgress = .feedback
+                }
+            case .feedback:
+                break
             }
 
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
@@ -198,6 +209,13 @@ struct ContentView: View {
                     if let camera = CameraState.boundingBox(from: coordinates) {
                         self.mapStore.camera = camera
                     }
+                }
+            }
+        }
+        .onChange(of: self.mapStore.selectedDetent) { _ in
+            if self.mapStore.selectedDetent == .small {
+                Task {
+                    await self.reloadPOITrending()
                 }
             }
         }
@@ -247,6 +265,9 @@ struct ContentView: View {
                     self.mapLayerStore.hudhudMapLayers = nil
                     Logger.searchView.error("\(error.localizedDescription)")
                 }
+            }
+            .task {
+                await self.reloadPOITrending()
             }
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, alignment: .center) {
@@ -320,7 +341,7 @@ struct ContentView: View {
                 get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
                 set: { _ in }
             )) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -350,8 +371,21 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
+    }
+
+    // MARK: - Internal
+
+    func reloadPOITrending() async {
+        do {
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
+            self.trendingStore.trendingPOIs = trendingPOI
+        } catch {
+            self.trendingStore.trendingPOIs = nil
+            Logger.searchView.error("\(error.localizedDescription)")
+        }
     }
 }
 

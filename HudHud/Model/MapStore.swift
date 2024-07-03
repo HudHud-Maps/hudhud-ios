@@ -9,6 +9,7 @@
 import BackendService
 import CoreLocation
 import Foundation
+import MapboxCoreNavigation
 import MapboxDirections
 import MapboxNavigation
 import MapLibre
@@ -268,6 +269,39 @@ extension MapStore: NavigationViewControllerDelegate {
     func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
         self.navigatingRoute = nil
     }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        return navigationViewController.routeController?.userIsOnRoute(location) == false
+    }
+
+    func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
+        Task {
+            do {
+                guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
+                let options = NavigationRouteOptions(waypoints: [Waypoint(location: location), currentRoute])
+
+                options.shapeFormat = .polyline6
+                options.distanceMeasurementSystem = .metric
+                options.attributeOptions = []
+
+                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                if let route = results.routes.first {
+                    await self.reroute(with: route)
+                }
+            } catch {
+                Logger.routing.error("Updating routes failed\(error.localizedDescription)")
+            }
+        }
+    }
+
+    func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
+        Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
+    }
+
+    func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
+        self.navigatingRoute = route
+        Logger.routing.info("didRerouteAlong new route \(route)")
+    }
 }
 
 // MARK: - Previewable
@@ -411,6 +445,10 @@ private extension MapStore {
         default:
             break // should never occur
         }
+    }
+
+    func reroute(with route: Route) async {
+        self.navigatingRoute = route
     }
 
     func getCameraCoordinate() -> CLLocationCoordinate2D {
