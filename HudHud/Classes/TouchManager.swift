@@ -12,20 +12,28 @@ import OSLog
 import SwiftUI
 import TouchVisualizer
 
+// MARK: - TouchManager
+
 class TouchManager: ObservableObject {
 
     static let shared = TouchManager()
 
     private var window: UIWindow?
     private var cancellable: AnyCancellable?
-    @AppStorage("isTouchVisualizerEnabled") var isTouchVisualizerEnabled: Bool = false
+    @AppStorage("isTouchVisualizerEnabled") var isTouchVisualizerEnabled: Bool?
+
+    var defaultTouchVisualizerSetting: Bool {
+        switch UIApplication.environment {
+        case .simulator, .testFlight, .development:
+            return true
+        case .appStore:
+            return false
+        }
+    }
 
     // MARK: - Lifecycle
 
     init() {
-        if UserDefaults.standard.object(forKey: "isTouchVisualizerEnabled") == nil {
-            self.setDefaultTouchVisualizerSetting()
-        }
         self.cancellable = NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)
             .sink { screen in
                 if let screen = screen.object as? UIScreen {
@@ -37,9 +45,14 @@ class TouchManager: ObservableObject {
 
     // MARK: - Internal
 
+    // MARK: - TouchManager
+
     func updateVisualizer(isScreenRecording: Bool) {
-        if self.isTouchVisualizerEnabled, isScreenRecording {
-            guard let window = getKeyWindow() else { return }
+        let isTouchVisualizerEnabled = self.isTouchVisualizerEnabled ?? self.defaultTouchVisualizerSetting
+
+        if isTouchVisualizerEnabled, isScreenRecording {
+            guard let window = self.getKeyWindow() else { return }
+
             var config = Configuration()
             config.color = .red
             config.showsTouchRadius = true
@@ -48,22 +61,16 @@ class TouchManager: ObservableObject {
             Visualizer.stop()
         }
     }
+}
 
-    // MARK: - Private
+// MARK: - Private
 
-    private func getKeyWindow() -> UIWindow? {
+private extension TouchManager {
+
+    func getKeyWindow() -> UIWindow? {
         return UIApplication.shared.connectedScenes
             .compactMap { $0 as? UIWindowScene }
             .flatMap(\.windows)
             .first { $0.isKeyWindow }
-    }
-
-    private func setDefaultTouchVisualizerSetting() {
-        switch UIApplication.environment {
-        case .simulator, .testFlight, .development:
-            self.isTouchVisualizerEnabled = true
-        case .appStore:
-            self.isTouchVisualizerEnabled = false
-        }
     }
 }
