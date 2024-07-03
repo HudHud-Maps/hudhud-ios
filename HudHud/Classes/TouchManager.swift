@@ -23,6 +23,9 @@ class TouchManager: ObservableObject {
     // MARK: - Lifecycle
 
     init() {
+        if UserDefaults.standard.object(forKey: "isTouchVisualizerEnabled") == nil {
+            self.setDefaultTouchVisualizerSetting()
+        }
         self.cancellable = NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)
             .sink { screen in
                 if let screen = screen.object as? UIScreen {
@@ -30,8 +33,6 @@ class TouchManager: ObservableObject {
                     Logger.mapInteraction.log("\(screen.isCaptured ? "Started recording screen" : "Stopped recording screen")")
                 }
             }
-        self.isTouchVisualizerEnabled = false
-        self.setDefaultTouchVisualizerSetting()
     }
 
     // MARK: - Internal
