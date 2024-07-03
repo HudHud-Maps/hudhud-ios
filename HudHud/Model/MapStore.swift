@@ -269,7 +269,7 @@ extension MapStore: NavigationViewControllerDelegate {
 
                 let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
                 if let route = results.routes.first {
-                    self.navigatingRoute = route
+                    await self.reroute(with: route)
                 }
             } catch {
                 Logger.routing.error("Updating routes failed\(error.localizedDescription)")
@@ -428,6 +428,10 @@ private extension MapStore {
         default:
             break // should never occur
         }
+    }
+
+    func reroute(with route: Route) async {
+        self.navigatingRoute = route
     }
 
     func getCameraCoordinate() -> CLLocationCoordinate2D {
