@@ -10,12 +10,12 @@ import SwiftUI
 
 struct RateNavigationView: View {
 
-    let faces: [UIImage] = [
-        UIImage(named: "MOOD_SMILE-1")!,
-        UIImage(named: "MOOD_SMILE-2")!,
-        UIImage(named: "MOOD_SMILE-3")!,
-        UIImage(named: "MOOD_SMILE-4")!,
-        UIImage(named: "MOOD_SMILE-5")!
+    let faces: [ImageResource] = [
+        .MOOD_SMILE_5,
+        .MOOD_SMILE_4,
+        .MOOD_SMILE_3,
+        .MOOD_SMILE_2,
+        .MOOD_SMILE_1
     ]
 
     @Environment(\.presentationMode) var presentationMode
@@ -45,8 +45,7 @@ struct RateNavigationView: View {
                 .foregroundColor(.gray)
             HStack(spacing: 20) {
                 ForEach(self.faces.indices, id: \.self) { index in
-
-                    Image(uiImage: self.faces[index])
+                    Image(self.faces[index])
                         .renderingMode(.template)
                         .resizable()
                         .frame(width: 50, height: 50)
