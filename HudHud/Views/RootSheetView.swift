@@ -19,6 +19,8 @@ struct RootSheetView: View {
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @Binding var sheetSize: CGSize
 
+    @StateObject var notificationManager = NotificationManager()
+
     var body: some View {
         NavigationStack(path: self.$mapStore.path) {
             SearchSheet(mapStore: self.mapStore,
@@ -40,7 +42,6 @@ struct RootSheetView: View {
                             let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
                                 self.searchViewStore.mapStore.waypoints?.append(item)
-
                             })
                             return tempStore
                         }()
@@ -55,6 +56,11 @@ struct RootSheetView: View {
                         self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
+                        }
+                        Task {
+                            do {
+                                try? await self.notificationManager.requestAuthorization()
+                            }
                         }
                     }, onDismiss: {
                         self.searchViewStore.mapStore.selectedItem = nil
@@ -71,6 +77,23 @@ struct RootSheetView: View {
                                 self.mapStore.routes = nil
                             }
                         })
+                        .presentationCornerRadius(21)
+                }
+                .navigationDestination(isPresented:
+                    Binding<Bool>(
+                        get: { self.mapStore.navigationProgress == .feedback },
+                        set: { _ in }
+                    )) {
+                        RateNavigationView { selectedFace in
+                            // selectedFace should be sent to backend along with detial of the route
+                            self.mapStore.waypoints = nil
+                            self.searchViewStore.mapStore.selectedItem = nil
+                            self.searchViewStore.mapStore.displayableItems = []
+                            self.mapStore.routes = nil
+                            self.mapStore.navigationProgress = .none
+                            Logger.routing.log("selected Face of rating: \(selectedFace)")
+                        }
+                        .navigationBarBackButtonHidden()
                         .presentationCornerRadius(21)
                 }
         }

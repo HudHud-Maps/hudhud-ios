@@ -177,6 +177,9 @@
     "Heading: %@" : {
       "comment" : "street view"
     },
+    "Help improve HudHud maps." : {
+
+    },
     "Home" : {
       "localizations" : {
         "ar" : {
@@ -192,6 +195,9 @@
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
+    },
+    "How was the navigation on this trip?" : {
+
     },
     "Layers" : {
       "localizations" : {
@@ -355,6 +361,9 @@
           }
         }
       }
+    },
+    "You Have Arrived" : {
+
     }
   },
   "version" : "1.0"

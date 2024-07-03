@@ -11,6 +11,7 @@
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */; };
+		1124C5ED1D2A1D9E0217ADA6 /* RateNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5309AC8CA8465A16213318A1 /* RateNavigationView.swift */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
 		253BCFDA8087C938D044B441 /* streetview.html in Resources */ = {isa = PBXBuildFile; fileRef = AC3D481DC9A15C372F30E42E /* streetview.html */; };
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
@@ -42,6 +43,7 @@
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
 		A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49E3EE7EB638EED6A6D564 /* View.swift */; };
 		A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */; };
+		A427435F3376EF9A50ACA727 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01230F51640F335F826FEF9D /* NotificationManager.swift */; };
 		A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
@@ -122,6 +124,7 @@
 
 /* Begin PBXFileReference section */
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
+		01230F51640F335F826FEF9D /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalPOIDetailsView.swift; sourceTree = "<group>"; };
 		043900014DB7FBFB28D75FE7 /* pannellum.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pannellum.js; sourceTree = "<group>"; };
 		0501F8CA3F8917530B09D712 /* MapStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStyles.swift; sourceTree = "<group>"; };
@@ -140,6 +143,7 @@
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
 		4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
+		5309AC8CA8465A16213318A1 /* RateNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateNavigationView.swift; sourceTree = "<group>"; };
 		557A9FF81C4443860134AE6F /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
 		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
 		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
@@ -299,6 +303,7 @@
 			children = (
 				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
 				CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */,
+				01230F51640F335F826FEF9D /* NotificationManager.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -320,6 +325,7 @@
 				CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */,
 				5936D87E2BF09A2600A258BE /* DebugStore.swift */,
 				5936D8802BF09A4D00A258BE /* DebugMenuView.swift */,
+				5309AC8CA8465A16213318A1 /* RateNavigationView.swift */,
 			);
 			path = Navigation;
 			sourceTree = "<group>";
@@ -806,6 +812,8 @@
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
 				366DC582B1A191F4DF21DD43 /* MapViewCamera.swift in Sources */,
 				8179D13CAED358121D8C6D65 /* UIApplication+Environment.swift in Sources */,
+				A427435F3376EF9A50ACA727 /* NotificationManager.swift in Sources */,
+				1124C5ED1D2A1D9E0217ADA6 /* RateNavigationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1264,10 +1272,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6C0BD39C33C2BAB304AA9B75 /* MapboxNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigation;
-		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
