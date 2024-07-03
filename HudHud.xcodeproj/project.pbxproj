@@ -99,6 +99,7 @@
 		DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417081C775FE86E29A6F3437 /* SafariWebView.swift */; };
 		E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */; };
 		EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */; };
+		EEF2F43166FE281A370D45B0 /* TouchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = A16A3478CA46AA9BA2F8065A /* TouchManager.swift */; };
 		F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */; };
 		FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */; };
 		FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */; };
@@ -160,6 +161,7 @@
 		912B1ACD8511E9B4FB445AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
+		A16A3478CA46AA9BA2F8065A /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
@@ -304,6 +306,7 @@
 				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
 				CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */,
 				01230F51640F335F826FEF9D /* NotificationManager.swift */,
+				A16A3478CA46AA9BA2F8065A /* TouchManager.swift */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -581,6 +584,7 @@
 				CD34C5942C0B3CC8006DCDBA /* BackendService */,
 				DBBADFCA6A78C9BC93740D6B /* NavigationTransitions */,
 				E4493EE9767EE8EA308BA70C /* BetterSafariView */,
+				8E250AD506E7C1ACA30FA309 /* TouchVisualizer */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -668,6 +672,7 @@
 				E6FAFEBE24304E495FA85587 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 				53D9220FD17EF7DF8E1A700F /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */,
 				78F90063EE763F3443421FD2 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */,
+				1901FE8DD13000325B51BA5C /* XCRemoteSwiftPackageReference "TouchVisualizer" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -814,6 +819,7 @@
 				8179D13CAED358121D8C6D65 /* UIApplication+Environment.swift in Sources */,
 				A427435F3376EF9A50ACA727 /* NotificationManager.swift in Sources */,
 				1124C5ED1D2A1D9E0217ADA6 /* RateNavigationView.swift in Sources */,
+				EEF2F43166FE281A370D45B0 /* TouchManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1157,6 +1163,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		1901FE8DD13000325B51BA5C /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Patrick-Kladek/TouchVisualizer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+		2BB6B7815ECDF40117F4519E /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Patrick-Kladek/TouchVisualizer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
 		53D9220FD17EF7DF8E1A700F /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
@@ -1272,6 +1294,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8E250AD506E7C1ACA30FA309 /* TouchVisualizer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2BB6B7815ECDF40117F4519E /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
+			productName = TouchVisualizer;
+		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;

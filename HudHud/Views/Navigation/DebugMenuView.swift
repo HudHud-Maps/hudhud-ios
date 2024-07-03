@@ -8,9 +8,12 @@
 
 import SwiftUI
 
+// MARK: - DebugMenuView
+
 struct DebugMenuView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var debugSettings: DebugStore
+    @ObservedObject var touchManager = TouchManager.shared
 
     var body: some View {
         Form {
@@ -23,6 +26,12 @@ struct DebugMenuView: View {
             Section(header: Text("Simulation")) {
                 Toggle(isOn: self.$debugSettings.simulateRide) {
                     Text("Simulate Ride during Navigation")
+                }
+            }
+
+            Section(header: Text("Touch Visualizer")) {
+                Toggle(isOn: self.$touchManager.isTouchVisualizerEnabled ?? self.touchManager.defaultTouchVisualizerSetting) {
+                    Text("Enable Touch Visualizer")
                 }
             }
         }
@@ -41,4 +50,16 @@ struct DebugMenuView: View {
     @StateObject var debugSettings = DebugStore()
 
     return DebugMenuView(debugSettings: debugSettings)
+}
+
+func OptionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T> {
+    return Binding<T>(get: {
+        return binding.wrappedValue ?? defaultValue
+    }, set: {
+        binding.wrappedValue = $0
+    })
+}
+
+func ?? <T>(left: Binding<T?>, right: T) -> Binding<T> {
+    return OptionalBinding(left, right)
 }
