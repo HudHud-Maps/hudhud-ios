@@ -47,8 +47,6 @@ struct ContentView: View {
     @State private var sheetSize: CGSize = .zero
     @State private var didTryToZoomOnUsersLocation = false
 
-    @State var offsetY: CGFloat = 0
-
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
 
