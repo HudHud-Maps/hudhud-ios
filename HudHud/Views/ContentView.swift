@@ -21,6 +21,7 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
+import TouchVisualizer
 
 // MARK: - SheetSubView
 
@@ -37,7 +38,6 @@ struct ContentView: View {
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
-
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
