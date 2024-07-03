@@ -168,18 +168,28 @@ struct ContentView: View {
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
-            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationProgress == .none {
-                if self.debugStore.simulateRide {
-                    let locationManager = SimulatedLocationManager(route: route)
-                    locationManager.speedMultiplier = 2
-                    controller.startNavigation(with: route, animated: true, locationManager: locationManager)
-                } else {
-                    controller.startNavigation(with: route, animated: true)
+
+            switch self.mapStore.navigationProgress {
+            case .none:
+                if let route = self.mapStore.navigatingRoute {
+                    if self.debugStore.simulateRide {
+                        let locationManager = SimulatedLocationManager(route: route)
+                        locationManager.speedMultiplier = 2
+                        controller.startNavigation(with: route, animated: true, locationManager: locationManager)
+                    } else {
+                        controller.startNavigation(with: route, animated: true)
+                    }
+                    self.mapStore.navigationProgress = .navigating
                 }
-                self.mapStore.navigationProgress = .navigating
-            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationProgress == .navigating {
-                controller.endNavigation()
-                self.mapStore.navigationProgress = .feedback
+            case .navigating:
+                if let route = self.mapStore.navigatingRoute {
+                    controller.route = route
+                } else {
+                    controller.endNavigation()
+                    self.mapStore.navigationProgress = .feedback
+                }
+            case .feedback:
+                break
             }
 
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
