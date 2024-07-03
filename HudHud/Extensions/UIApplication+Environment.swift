@@ -14,6 +14,7 @@ public extension UIApplication {
         case development
         case testFlight
         case appStore
+        case simulator
     }
 
     // MARK: - Properties
@@ -27,13 +28,25 @@ public extension UIApplication {
         #endif
     }
 
+    private nonisolated static var isSimulator: Bool {
+        #if targetEnvironment(simulator)
+            return true
+        #else
+            return false
+        #endif
+    }
+
     nonisolated static var environment: Environment {
         if self.isDebug {
             return .development
         } else if isTestFlight {
             return .testFlight
         } else {
-            return .appStore
+            if self.isSimulator {
+                return .simulator
+            } else {
+                return .appStore
+            }
         }
     }
 }
