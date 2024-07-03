@@ -23,6 +23,15 @@ public struct Backport<Content> {
 }
 
 extension Backport where Content: View {
+
+    @ViewBuilder func symbolEffect(animate: Bool) -> some View {
+        if #available(iOS 17, *) {
+            content.symbolEffect(.bounce.down, value: animate)
+        } else {
+            self.content
+        }
+    }
+
     @ViewBuilder func safeAreaPadding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> some View {
         if #available(iOS 17, *) {
             content.safeAreaPadding(edges, length)

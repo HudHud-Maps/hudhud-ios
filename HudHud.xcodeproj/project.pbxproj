@@ -49,6 +49,7 @@
 		CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970372B85E87300CF9D59 /* PoiTileView.swift */; };
 		CB39703C2B85E8B100CF9D59 /* PoiTileData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
+		CB46AD9A2C3166BE00788C08 /* RateNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB46AD992C3166BE00788C08 /* RateNavigationView.swift */; };
 		CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */; };
 		CD1298822B99031E00EC3295 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CD1298832B99031E00EC3295 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054E2B681263003E5196 /* Preview Assets.xcassets */; };
@@ -175,6 +176,7 @@
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB39703B2B85E8B100CF9D59 /* PoiTileData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileData.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
+		CB46AD992C3166BE00788C08 /* RateNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateNavigationView.swift; sourceTree = "<group>"; };
 		CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSheetView.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				CD33DFDD2C00C5EF0090592C /* DebugStore.swift */,
 				90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */,
 				90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */,
+				CB46AD992C3166BE00788C08 /* RateNavigationView.swift */,
 				CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */,
 			);
 			path = Navigation;
@@ -800,6 +803,7 @@
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
 				4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */,
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
+				CB46AD9A2C3166BE00788C08 /* RateNavigationView.swift in Sources */,
 				4C8F2777E10B77217C6B2E9D /* ErrorView.swift in Sources */,
 				9628E8F074C51BC707B44367 /* WebView.swift in Sources */,
 				80FC33228F84547305447C36 /* StreetView.swift in Sources */,
