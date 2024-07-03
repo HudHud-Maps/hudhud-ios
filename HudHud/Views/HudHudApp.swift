@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftLocation
 import SwiftUI
 
@@ -18,10 +19,15 @@ struct HudHudApp: App {
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
+    @State private var isScreenCaptured = UIScreen.main.isCaptured
+    @ObservedObject var touchVisualizerManager = TouchManager.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView(searchStore: self.searchStore)
+                .onAppear {
+                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+                }
         }
     }
 

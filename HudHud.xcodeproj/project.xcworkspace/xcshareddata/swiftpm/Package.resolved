@@ -30,10 +30,10 @@
     {
       "identity" : "maplibre-navigation-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
+      "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "7c028082315e42ceeafe904f0361f1621b4e0805"
+        "branch" : "swiftui-optimization",
+        "revision" : "427721ac9163c556eee7260598a0dc46a7019df6"
       }
     },
     {
@@ -223,6 +223,15 @@
       "state" : {
         "revision" : "a6a3c70ad5d771bd1e927fb55897231cd9592024",
         "version" : "0.13.3"
+      }
+    },
+    {
+      "identity" : "touchvisualizer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Patrick-Kladek/TouchVisualizer",
+      "state" : {
+        "revision" : "37a36647de5cbb9549d6685913a4aa54b48f4914",
+        "version" : "5.0.0"
       }
     },
     {

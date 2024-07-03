@@ -16,6 +16,8 @@ enum MapLayerIdentifier {
     static var simpleCirclesClustered = "simpleCirclesClustered"
     static var simpleSymbolsClustered = "simpleSymbolsClustered"
     static var simpleCircles = "simpleCircles"
+    static let selectedCircle = "selectedCircle"
+    static let selectedCircleIcon = "selectedCircleIcon"
     static var simpleSymbols = "simpleSymbols"
     static var streetViewSymbols = "streetViewSymbols"
 

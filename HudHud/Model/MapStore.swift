@@ -9,6 +9,7 @@
 import BackendService
 import CoreLocation
 import Foundation
+import MapboxCoreNavigation
 import MapboxDirections
 import MapboxNavigation
 import MapLibre
@@ -22,6 +23,12 @@ import SwiftUI
 
 @MainActor
 final class MapStore: ObservableObject {
+
+    enum NavigationProgress {
+        case none
+        case navigating
+        case feedback
+    }
 
     enum StreetViewOption: Equatable {
         case disabled
@@ -47,7 +54,7 @@ final class MapStore: ObservableObject {
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
-    @Published var navigationInProgress: Bool = false
+    @Published var navigationProgress: NavigationProgress = .none
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -85,30 +92,23 @@ final class MapStore: ObservableObject {
 
     @Published var path = NavigationPath() {
         didSet {
-            do {
-                let elements = try path.elements()
-                print("path now: \(elements)")
-                // DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(600)) {
-                self.updateSelectedSheetDetent(to: elements.last)
-                // }
-
-            } catch {
-                print("update detent error: \(error)")
-            }
+            self.updateDetent()
         }
     }
 
     @Published var displayableItems: [AnyDisplayableAsRow] = [] {
         didSet {
             guard self.displayableItems != [] else { return }
-            updateCamera(state: .mapItems)
+
+            self.updateDetent()
+            self.updateCamera(state: .mapItems)
         }
     }
 
     @Published var selectedItem: ResolvedItem? {
         didSet {
             if let selectedItem, routes == nil {
-                updateCamera(state: .selectedItem(selectedItem))
+                self.updateCamera(state: .selectedItem(selectedItem))
                 self.path.append(selectedItem)
             } else {
                 return
@@ -153,6 +153,17 @@ final class MapStore: ObservableObject {
         }
         return ShapeSource(identifier: MapSourceIdentifier.routePoints) {
             features
+        }
+    }
+
+    var selectedPoint: ShapeSource {
+        ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
+            if let selectedItem,
+               mapItems.count > 1 {
+                let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
+                feature.attributes["poi_id"] = selectedItem.id
+                feature
+            }
         }
     }
 
@@ -258,6 +269,39 @@ extension MapStore: NavigationViewControllerDelegate {
     func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
         self.navigatingRoute = nil
     }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        return navigationViewController.routeController?.userIsOnRoute(location) == false
+    }
+
+    func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
+        Task {
+            do {
+                guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
+                let options = NavigationRouteOptions(waypoints: [Waypoint(location: location), currentRoute])
+
+                options.shapeFormat = .polyline6
+                options.distanceMeasurementSystem = .metric
+                options.attributeOptions = []
+
+                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                if let route = results.routes.first {
+                    await self.reroute(with: route)
+                }
+            } catch {
+                Logger.routing.error("Updating routes failed\(error.localizedDescription)")
+            }
+        }
+    }
+
+    func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
+        Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
+    }
+
+    func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
+        self.navigatingRoute = route
+        Logger.routing.info("didRerouteAlong new route \(route)")
+    }
 }
 
 // MARK: - Previewable
@@ -350,7 +394,17 @@ private extension MapStore {
         }
     }
 
-    private func handleMapItems() async {
+    func updateDetent() {
+        do {
+            let elements = try path.elements()
+            print("path now: \(elements)")
+            self.updateSelectedSheetDetent(to: elements.last)
+        } catch {
+            print("update detent error: \(error)")
+        }
+    }
+
+    func handleMapItems() async {
         switch self.mapItems.count {
         case 0:
             break // no items, do nothing
@@ -393,6 +447,10 @@ private extension MapStore {
         }
     }
 
+    func reroute(with route: Route) async {
+        self.navigatingRoute = route
+    }
+
     func getCameraCoordinate() -> CLLocationCoordinate2D {
         if case let .centered(
             onCoordinate: onCoordinate,
@@ -408,7 +466,7 @@ private extension MapStore {
 
     // check if the there is an item on the Coordinate of the Camera on the map
     func isAnyItemVisible() -> Bool {
-        if let bounds = mapItems.map(\.coordinate).boundingBox() {
+        if let bounds = self.mapItems.map(\.coordinate).boundingBox() {
             return bounds.contains(coordinate: self.getCameraCoordinate())
         }
         return false
