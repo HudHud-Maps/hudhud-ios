@@ -77,6 +77,7 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -231,6 +232,7 @@
     },
     "More" : {
       "comment" : "on poi detail sheet to see more info",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -296,6 +298,7 @@
     },
     "Start" : {
       "comment" : "get the navigation route",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -325,6 +328,7 @@
       }
     },
     "Web" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

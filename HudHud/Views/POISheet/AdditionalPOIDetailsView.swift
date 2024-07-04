@@ -14,61 +14,73 @@ struct AdditionalPOIDetailsView: View {
     var formatter = Formatters()
 
     var body: some View {
-        // HSTACk - 4 VSTACK - Distance - duration
         HStack {
-            VStack {
+            VStack(alignment: .leading) {
                 Text("Hours")
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                 Text("Unknown")
                     .bold()
                     .font(.title3)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.5)
             }
             .frame(maxWidth: .infinity)
             Divider()
-            VStack {
+            VStack(alignment: .leading) {
                 Text("Distance")
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDistance(distance: route.distance))")
                         .bold()
                         .font(.title3)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        .minimumScaleFactor(0.5)
                 } else {
                     Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
             Divider()
-            VStack {
+            VStack(alignment: .leading) {
                 Text("Duration")
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDuration(duration: route.expectedTravelTime))")
                         .bold()
                         .font(.title3)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.7)
+                        .minimumScaleFactor(0.5)
                 } else {
                     Spacer()
                 }
             }
             .frame(maxWidth: .infinity)
             Divider()
-            VStack {
+            VStack(alignment: .leading) {
                 Text("Ratings")
                     .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
                 Text("No Ratings")
                     .bold()
                     .font(.title3)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.5)
             }
-            .frame(maxWidth: .infinity)
+            Spacer()
+                .frame(maxWidth: .infinity)
         }
-        .padding(.vertical, 9)
-        .padding(.horizontal, 6)
+    }
+}
+
+#Preview {
+    return VStack {
+        AdditionalPOIDetailsView(routes: .none)
     }
 }
