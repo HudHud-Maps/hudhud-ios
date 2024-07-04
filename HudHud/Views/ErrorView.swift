@@ -20,11 +20,11 @@ struct ErrorView: View {
                 .bold()
             if let message = self.error.message {
                 Text(message)
-                    .font(Font.system(size: 15, weight: Font.Weight.medium, design: Font.Design.default))
+                    .hudhudFont(.medium, size: 15)
             }
             if let hint = self.error.hint {
                 Text(hint)
-                    .font(Font.system(size: 12, weight: Font.Weight.medium, design: Font.Design.default))
+                    .hudhudFont(.medium, size: 12)
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)

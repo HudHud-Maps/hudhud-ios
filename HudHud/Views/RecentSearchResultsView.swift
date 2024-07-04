@@ -35,13 +35,13 @@ struct RecentSearchResultsView: View {
 
                 VStack(alignment: .leading) {
                     Text(item.title)
+                        .hudhudFont(textStyle: .headline)
                         .foregroundStyle(.primary)
-                        .font(.headline)
                         .lineLimit(1)
                         .foregroundColor(.primary)
                     Text(item.subtitle)
+                        .hudhudFont(textStyle: .body)
                         .foregroundStyle(.secondary)
-                        .font(.body)
                         .lineLimit(1)
                         .foregroundColor(.primary)
                 }

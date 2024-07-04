@@ -20,8 +20,7 @@ struct AdditionalPOIDetailsView: View {
                 Text("Hours")
                     .foregroundStyle(.secondary)
                 Text("Unknown")
-                    .bold()
-                    .font(.title3)
+                    .hudhudFont(.bold, textStyle: .title3)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
@@ -32,8 +31,7 @@ struct AdditionalPOIDetailsView: View {
                     .foregroundStyle(.secondary)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDistance(distance: route.distance))")
-                        .bold()
-                        .font(.title3)
+                        .hudhudFont(.bold, textStyle: .title3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 } else {
@@ -47,8 +45,7 @@ struct AdditionalPOIDetailsView: View {
                     .foregroundStyle(.secondary)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDuration(duration: route.expectedTravelTime))")
-                        .bold()
-                        .font(.title3)
+                        .hudhudFont(.bold, textStyle: .title3)
                         .lineLimit(1)
                         .minimumScaleFactor(0.7)
                 } else {
@@ -61,8 +58,7 @@ struct AdditionalPOIDetailsView: View {
                 Text("Ratings")
                     .foregroundStyle(.secondary)
                 Text("No Ratings")
-                    .bold()
-                    .font(.title3)
+                    .hudhudFont(.bold, textStyle: .title3)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
             }
