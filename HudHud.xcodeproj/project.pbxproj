@@ -43,6 +43,7 @@
 		A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49E3EE7EB638EED6A6D564 /* View.swift */; };
 		A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */; };
 		A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */; };
+		AF1BD7F02C39B8AA00F9866F /* MapViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1BD7EF2C39B8AA00F9866F /* MapViewStore.swift */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
 		CB2171E82C3567D500CB4512 /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = CB2171DA2C3567D400CB4512 /* PlusJakartaSans-ExtraBold.ttf */; };
@@ -180,6 +181,7 @@
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
+		AF1BD7EF2C39B8AA00F9866F /* MapViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewStore.swift; sourceTree = "<group>"; };
 		B231E657556B47FFBDEBE3CC /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCRouteConfigurationView.swift; sourceTree = "<group>"; };
@@ -356,6 +358,7 @@
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
 				CD2219572BBFDBEE00042564 /* MotionViewModel.swift */,
+				AF1BD7EF2C39B8AA00F9866F /* MapViewStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -835,6 +838,7 @@
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
 				90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */,
 				CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */,
+				AF1BD7F02C39B8AA00F9866F /* MapViewStore.swift in Sources */,
 				CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */,
 				90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */,
 				CD7615652BF169C600DF2A25 /* MapViewCamera.swift in Sources */,

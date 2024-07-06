@@ -49,6 +49,7 @@ struct ContentView: View {
     @State private var didTryToZoomOnUsersLocation = false
 
     @StateObject var debugStore = DebugStore()
+    var mapViewStore: MapViewStore
     @State var safariURL: URL?
 
     @ViewBuilder
@@ -143,29 +144,9 @@ struct ContentView: View {
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
         }
-        .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
-            // Pick the first feature (which may be a port or a cluster), ideally selecting
-            // the one nearest nearest one to the touch point.
-            guard let feature = features.first,
-                  let placeID = feature.attribute(forKey: "poi_id") as? String else {
-                // user tapped nothing - deselect
-                Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-                self.searchViewStore.mapStore.selectedItem = nil
-                return
-            }
-
-            let mapItems = self.searchViewStore.mapStore.mapItems
-            let poi = mapItems.first { poi in
-                poi.id == placeID
-            }
-
-            if let poi {
-                Logger.mapInteraction.debug("setting poi")
-                self.searchViewStore.mapStore.selectedItem = poi
-            } else {
-                Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
-            }
-        })
+        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
+            self.mapViewStore.didTapOnMap(containing: features)
+        }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
@@ -282,8 +263,7 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-
-                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView { 
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -380,6 +360,7 @@ struct ContentView: View {
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
+        self.mapViewStore = MapViewStore(mapStore: searchStore.mapStore)
         self.mapStore.routes = searchStore.mapStore.routes
     }
 
@@ -489,4 +470,12 @@ extension NavigationViewController: WrappedViewController {
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [AnyDisplayableAsRow(poi), AnyDisplayableAsRow(artwork), AnyDisplayableAsRow(pharmacy)]
     return ContentView(searchStore: store)
+}
+
+extension MapLayerIdentifier {
+    nonisolated static let tapLayers: Set<String> = [
+        Self.restaurants,
+        Self.shops,
+        Self.simpleCircles
+    ]
 }
