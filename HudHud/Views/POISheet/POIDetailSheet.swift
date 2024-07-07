@@ -36,10 +36,10 @@ struct POIDetailSheet: View {
         ScrollView {
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
-                    VStack {
+                    VStack(spacing: 0.0) {
                         Text(self.item.title)
                             .font(.title.bold())
-                            .minimumScaleFactor(0.8)
+                            .minimumScaleFactor(0.7)
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -50,14 +50,14 @@ struct POIDetailSheet: View {
                                 .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.bottom, 8)
+//                                .padding(.bottom, 8)
                         }
                         Text(self.item.subtitle)
                             .font(.footnote)
                             .lineLimit(2)
                             .fixedSize(horizontal: false, vertical: true)
                             .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.bottom, 8)
+//                            .padding(.bottom, 8)
                     }
                     Button(action: {
                         self.dismiss()
@@ -65,17 +65,17 @@ struct POIDetailSheet: View {
                     }, label: {
                         ZStack {
                             Circle()
-                                .fill(.quaternary)
+                                .fill(.quinary.opacity(0.7))
                                 .frame(width: 30, height: 30)
 
                             Image(systemSymbol: .xmark)
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
+                                .foregroundStyle(.secondary)
                         }
                         .padding(8)
                         .contentShape(Circle())
                     })
-                    .buttonStyle(PlainButtonStyle())
+                    .tint(.secondary)
                     .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
                 }
                 .padding([.top, .leading, .trailing], 20)
@@ -130,8 +130,8 @@ struct POIDetailSheet: View {
                 }
                 .padding(.vertical, -15)
                 VStack {
-                    AdditionalPOIDetailsView(routes: self.routes)
-                        .fixedSize()
+                    AdditionalPOIDetailsView(item: self.item, routes: self.routes)
+                        .padding(.top)
                     DictionaryView(dictionary: self.item.userInfo)
                 }
                 .padding(.leading, 20)

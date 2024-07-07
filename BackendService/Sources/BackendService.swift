@@ -268,6 +268,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var phone: String?
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
+    
+    public var rating: Double?
+    public var ratingsCount: Int?
+    public var isOpen: Bool?
 
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, category, symbol, type, coordinate
@@ -279,7 +283,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -289,6 +293,9 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.coordinate = coordinate
         self.phone = phone
         self.website = website
+        self.rating = rating
+        self.ratingsCount = ratingsCount
+        self.isOpen = isOpen
     }
 
     public init(from decoder: Decoder) throws {

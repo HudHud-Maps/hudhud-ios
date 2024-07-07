@@ -236,6 +236,7 @@ struct ContentView: View {
                     if self.mapStore.navigationInProgress == false {
                         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                             .presentationBackground(.thinMaterial)
+                            .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                     }
                 }
             }
@@ -291,7 +292,7 @@ struct ContentView: View {
                             CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
-                    .opacity(self.mapStore.selectedDetent == .large ? 0 : 1)
+                    .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                     .padding(.horizontal)
                 }
             }
