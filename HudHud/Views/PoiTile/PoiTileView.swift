@@ -33,7 +33,7 @@ struct PoiTileView: View {
                         LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.5), Color.clear]),
                                        startPoint: .top,
                                        endPoint: .center)
-                            .frame(height: 75)
+                            .frame(height: 100)
                             .cornerRadius(7.0)
                     }
                 } placeholder: {
