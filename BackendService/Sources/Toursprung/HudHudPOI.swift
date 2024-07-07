@@ -1,9 +1,11 @@
 //
 //  HudHudPOI.swift
+//  BackendService
 //
+//  Created by patrick on 01.02.24.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
-//  Created by patrick on 31.05.24.
-//
+// swiftlint:disable init_usage
 
 import CoreLocation
 import Foundation
@@ -32,7 +34,7 @@ public struct HudHudPOI: POIServiceProtocol {
     
     public static var serviceName = "HudHud"
     public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())
+        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())	// swiftlint:disable:this force_unwrapping
         
         let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
@@ -62,7 +64,7 @@ public struct HudHudPOI: POIServiceProtocol {
     public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())
+        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())	// swiftlint:disable:this force_unwrapping
         
         let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
@@ -88,6 +90,5 @@ public struct HudHudPOI: POIServiceProtocol {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
-    
-    
 }
+// swiftlint:enable init_usage

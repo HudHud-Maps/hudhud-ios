@@ -1,4 +1,7 @@
 //
+//  HudHudRouteVoiceController.swift
+//  HudHud
+//
 //  Created by patrick on 17.05.24.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
@@ -114,7 +117,9 @@ class HudHudRouteVoiceController: RouteVoiceController {
     }
 
     func scriptOf(character: Character) -> LanguageScript {
-        let scalarValue = character.unicodeScalars.first!.value
+        guard let scalarValue = character.unicodeScalars.first?.value else {
+            return .other
+        }
 
         switch scalarValue {
         case 0x0600 ... 0x06FF: return .arabic

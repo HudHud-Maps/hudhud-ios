@@ -30,10 +30,10 @@
     {
       "identity" : "maplibre-navigation-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
+      "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "3ffaa51d428ebf25e744fdbef8bbeeb02e959d01"
+        "branch" : "swiftui-optimization",
+        "revision" : "427721ac9163c556eee7260598a0dc46a7019df6"
       }
     },
     {
@@ -48,10 +48,15 @@
     {
       "identity" : "maplibre-swiftui-dsl-playground",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground.git",
+      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
       "state" : {
+<<<<<<< HEAD
         "branch" : "main",
         "revision" : "40eac45942321eec9f3aa7cf3facb2bb34a42718"
+=======
+        "branch" : "enhancement/unify-navigation",
+        "revision" : "61c26af28895a3b2b4b27a6b446f272df1db191f"
+>>>>>>> develop
       }
     },
     {
@@ -131,8 +136,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "94cf62b3ba8d4bed62680a282d4c25f9c63c2efb",
-        "version" : "1.1.0"
+        "revision" : "ee97538f5b81ae89698fd95938896dec5217b148",
+        "version" : "1.1.1"
       }
     },
     {
@@ -140,8 +145,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-types",
       "state" : {
-        "revision" : "9bee2fdb79cc740081abd8ebd80738063d632286",
-        "version" : "1.1.0"
+        "revision" : "1ddbea1ee34354a6a2532c60f98501c35ae8edfa",
+        "version" : "1.2.0"
       }
     },
     {
@@ -223,6 +228,15 @@
       "state" : {
         "revision" : "a6a3c70ad5d771bd1e927fb55897231cd9592024",
         "version" : "0.13.3"
+      }
+    },
+    {
+      "identity" : "touchvisualizer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Patrick-Kladek/TouchVisualizer",
+      "state" : {
+        "revision" : "37a36647de5cbb9549d6685913a4aa54b48f4914",
+        "version" : "5.0.0"
       }
     },
     {

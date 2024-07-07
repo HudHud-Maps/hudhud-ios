@@ -11,6 +11,7 @@ import Combine
 import CoreLocation
 import Foundation
 import OSLog
+import SwiftLocation
 import SwiftUI
 
 // MARK: - SearchViewStore
@@ -60,11 +61,12 @@ final class SearchViewStore: ObservableObject {
     private var hudhud = HudHudPOI()
     private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
-    let locationManager = CLLocationManager()
+    var locationManager: Location = .forSingleRequestUsage
 
     // MARK: - Properties
 
     @Published var searchText: String = ""
+    @Published var searchError: Error?
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
@@ -110,16 +112,32 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: - Internal
 
-    func getCurrentLocation() -> CLLocationCoordinate2D? {
-        guard let currentLocation = self.locationManager.location?.coordinate else {
+    func getCurrentLocation() async -> CLLocationCoordinate2D? {
+        guard let currentLocation = try? await self.locationManager.requestLocation().location?.coordinate else {
             return nil
         }
         return currentLocation
     }
 
-    // MARK: - Private
+    func resolve(item: AnyDisplayableAsRow) async throws -> [AnyDisplayableAsRow] {
+        switch self.mode {
+        case .live(provider: .apple):
+            return try await item.resolve(in: self.apple)
+        case .live(provider: .toursprung):
+            return [item] // Toursprung doesn't support predict & resolve
+        case .live(provider: .hudhud):
+            return try await item.resolve(in: self.hudhud)
+        case .preview:
+            return [item]
+        }
+    }
+}
 
-    private func performSearch(with provider: Mode.Provider, term: String) {
+// MARK: - Private
+
+private extension SearchViewStore {
+
+    func performSearch(with provider: Mode.Provider, term: String) {
         self.task?.cancel()
         self.task = Task {
             defer { self.isSearching = false }
@@ -134,8 +152,10 @@ final class SearchViewStore: ObservableObject {
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
                 }
+                self.searchError = nil
                 self.mapStore.displayableItems = prediction
             } catch {
+                self.searchError = error
                 Logger.poiData.error("Predict Error: \(error)")
             }
         }

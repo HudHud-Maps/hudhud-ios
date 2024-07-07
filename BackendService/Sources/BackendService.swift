@@ -45,6 +45,7 @@ public protocol DisplayableAsRow: Identifiable, Hashable {
     var tintColor: Color { get }
 
     func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
+    func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - AnyDisplayableAsRow
@@ -86,6 +87,10 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
     public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return try await self.innerModel.resolve(in: provider)
     }
+	
+	public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+		return try await self.innerModel.resolve(in: provider)
+	}
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.title)
@@ -134,6 +139,16 @@ public struct PredictionItem: DisplayableAsRow {
         }
         return mapped
     }
+	
+	public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+		guard case .hudhud = self.type else { return [] }
+
+		let resolved = try await provider.lookup(id: self.id, prediction: self)
+		let mapped = resolved.map {
+			AnyDisplayableAsRow($0)
+		}
+		return mapped
+	}
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
@@ -253,9 +268,14 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var phone: String?
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
-
+    public var rating: Double?
+    public var ratingCount: Int?
+    public var trendingImage: String?
+    
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, category, symbol, type, coordinate
+        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating
+        case ratingCount = "ratings_count"
+        case trendingImage = "trending_image_url"
     }
 
     public var description: String {
@@ -264,7 +284,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingCount: Int? = nil, trendingImage: String? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -274,6 +294,9 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.coordinate = coordinate
         self.phone = phone
         self.website = website
+        self.rating = rating
+        self.ratingCount = ratingCount
+        self.trendingImage = trendingImage
     }
 
     public init(from decoder: Decoder) throws {
@@ -281,10 +304,15 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.id = try container.decode(String.self, forKey: .id)
         self.title = try container.decode(String.self, forKey: .title)
         self.subtitle = try container.decode(String.self, forKey: .subtitle)
-        self.category = try container.decode(String.self, forKey: .category)
+        self.category = try container.decodeIfPresent(String.self, forKey: .category)
         self.symbol = try container.decode(SFSymbol.self, forKey: .symbol)
         self.type = try container.decode(PredictionResult.self, forKey: .type)
         self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
+        self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        self.website = try container.decodeIfPresent(URL.self, forKey: .website)
+        self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
+        self.ratingCount = try container.decodeIfPresent(Int.self, forKey: .ratingCount)
+        self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
     }
 
     // MARK: - Public
@@ -296,6 +324,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public func resolve(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return [AnyDisplayableAsRow(self)]
     }
+	
+	public func resolve(in _: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+		return [AnyDisplayableAsRow(self)]
+	}
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -303,7 +335,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         try container.encode(self.title, forKey: .title)
         try container.encode(self.subtitle, forKey: .subtitle)
         try container.encode(self.coordinate, forKey: .coordinate)
-        try container.encode(self.category, forKey: .category)
+		try container.encodeIfPresent(self.category, forKey: .category)
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
     }
