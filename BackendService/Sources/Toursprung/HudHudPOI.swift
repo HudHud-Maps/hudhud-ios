@@ -74,10 +74,17 @@ public struct HudHudPOI: POIServiceProtocol {
             case .json(let jsonResponse):
                 let something: [AnyDisplayableAsRow] = jsonResponse.data.compactMap { somethingElse in
                     let id = somethingElse.id
-					let title = somethingElse.name
-					let subtitle = somethingElse.address
-					
-                    return AnyDisplayableAsRow(PredictionItem(id: id, title: title, subtitle: subtitle, type: .hudhud))
+                    let title = somethingElse.name
+                    let subtitle = somethingElse.address
+                    let latitude = somethingElse.coordinates.lat
+                    let longitude = somethingElse.coordinates.lon
+                    return AnyDisplayableAsRow(ResolvedItem(
+                        id: id,
+                        title: title,
+                        subtitle: subtitle,
+                        type: .hudhud, 
+                        coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+                    ))
                 }
                 return something
             }

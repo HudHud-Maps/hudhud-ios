@@ -136,9 +136,14 @@ private extension SearchViewStore {
 
     func performSearch(with provider: Mode.Provider, term: String) {
         self.task?.cancel()
+        if term.isEmpty {
+            self.mapStore.displayableItems = []
+            return
+        }
         self.task = Task {
             defer { self.isSearching = false }
             self.isSearching = true
+            self.mapStore.selectedDetent = .third
 
             do {
                 let prediction: [AnyDisplayableAsRow] = switch provider {
@@ -151,6 +156,11 @@ private extension SearchViewStore {
                 }
                 self.searchError = nil
                 self.mapStore.displayableItems = prediction
+                self.mapStore.selectedDetent = if provider == .hudhud {
+                    .small // hudhud provider has coordinates in the response, so we can show the results in the map
+                } else {
+                    .large // other providers do not return coordinates, so we show the result in a list in full page
+                }
             } catch {
                 self.searchError = error
                 Logger.poiData.error("Predict Error: \(error)")
