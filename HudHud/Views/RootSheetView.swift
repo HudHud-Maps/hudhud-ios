@@ -90,6 +90,7 @@ struct RootSheetView: View {
                             self.searchViewStore.mapStore.selectedItem = nil
                             self.searchViewStore.mapStore.displayableItems = []
                             self.mapStore.routes = nil
+                            self.searchViewStore.searchText = ""
                             self.mapStore.navigationProgress = .none
                             Logger.routing.log("selected Face of rating: \(selectedFace)")
                         }
