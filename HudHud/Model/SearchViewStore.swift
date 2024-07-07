@@ -56,7 +56,6 @@ final class SearchViewStore: ObservableObject {
     var apple = ApplePOI()
     private var toursprung = ToursprungPOI()
     private var hudhud = HudHudPOI()
-    private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
     var locationManager: Location = .forSingleRequestUsage
 
@@ -83,7 +82,7 @@ final class SearchViewStore: ObservableObject {
         self.mapStore = mapStore
         self.mode = mode
 
-        self.cancellable = self.$searchText
+        self.$searchText
             .removeDuplicates()
             .sink { newValue in
                 switch self.mode {
@@ -100,6 +99,7 @@ final class SearchViewStore: ObservableObject {
                     ]
                 }
             }
+            .store(in: &self.cancellables)
         if case .preview = mode {
             let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh)
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
