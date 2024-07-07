@@ -7,11 +7,15 @@
 //
 
 import Foundation
+import OSLog
 import SwiftUI
 
 class DebugStore: ObservableObject {
     @AppStorage("routingHost") var routingHost: String = "gh.maptoolkit.net"
 
-    @Published var simulateRide: Bool = false
-
+    @Published var simulateRide: Bool = UIApplication.environment == .development {
+        didSet {
+            Logger.routing.notice("simulate ride: \(self.simulateRide)")
+        }
+    }
 }

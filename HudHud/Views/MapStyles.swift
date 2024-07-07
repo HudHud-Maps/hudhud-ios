@@ -21,8 +21,15 @@ class CustomDayStyle: DayStyle {
 
     // MARK: - Lifecycle
 
-    required init(mapStyleURL: URL) {
-        super.init(mapStyleURL: mapStyleURL)
+    required init() {
+        let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
+        super.init(mapStyleURL: styleURL)
+        self.styleType = .day
+    }
+
+    @available(*, deprecated, message: "Use `init()`")
+    required init(mapStyleURL _: URL) {
+        fatalError("init(mapStyleURL:) has not been implemented")
     }
 
     // MARK: - Internal
@@ -49,8 +56,15 @@ class CustomNightStyle: NightStyle {
 
     // MARK: - Lifecycle
 
-    required init(mapStyleURL: URL) {
-        super.init(mapStyleURL: mapStyleURL)
+    required init() {
+        let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
+        super.init(mapStyleURL: styleURL)
+        self.styleType = .night
+    }
+
+    @available(*, deprecated, message: "Use `init()`")
+    required init(mapStyleURL _: URL) {
+        fatalError("init(mapStyleURL:) has not been implemented")
     }
 
     // MARK: - Internal

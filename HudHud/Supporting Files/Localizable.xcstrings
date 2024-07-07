@@ -1,11 +1,31 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+<<<<<<< HEAD
     "..." : {
+=======
+    "" : {
+
+    },
+    "(%lld)" : {
+
+    },
+    "%.1f" : {
+>>>>>>> develop
 
     },
     "%@" : {
       "comment" : "duration"
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
     },
     "%@ • %@" : {
       "comment" : "distance • type of route",
@@ -14,16 +34,6 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ • %2$@"
-          }
-        }
-      }
-    },
-    "%@ • %@ • %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ • %2$@ • %3$@"
           }
         }
       }
@@ -152,7 +162,11 @@
     "Duration" : {
 
     },
+<<<<<<< HEAD
     "Edit" : {
+=======
+    "Enable Touch Visualizer" : {
+>>>>>>> develop
 
     },
     "Fastest" : {
@@ -189,6 +203,9 @@
     "Heading: %@" : {
       "comment" : "street view"
     },
+    "Help improve HudHud maps." : {
+
+    },
     "Home" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -206,6 +223,9 @@
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
     },
+    "How was the navigation on this trip?" : {
+
+    },
     "Layers" : {
       "localizations" : {
         "ar" : {
@@ -217,6 +237,7 @@
       }
     },
     "Map Details" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -227,6 +248,7 @@
       }
     },
     "Map Type" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -257,10 +279,17 @@
         }
       }
     },
+<<<<<<< HEAD
     "Name" : {
+=======
+    "Nearby Trending" : {
+>>>>>>> develop
 
     },
     "No Ratings" : {
+
+    },
+    "No Results" : {
 
     },
     "Occupancy Range" : {
@@ -332,7 +361,11 @@
         }
       }
     },
+<<<<<<< HEAD
     "Suggestions" : {
+=======
+    "Touch Visualizer" : {
+>>>>>>> develop
 
     },
     "Traffic" : {
@@ -374,6 +407,9 @@
           }
         }
       }
+    },
+    "You Have Arrived" : {
+
     }
   },
   "version" : "1.0"

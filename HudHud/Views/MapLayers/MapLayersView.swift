@@ -6,38 +6,63 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import SwiftUI
 
 struct MapLayersView: View {
-    var mapLayerData: MapLayersData
+    @Environment(\.dismiss) private var dismiss
     @State var currentlySelected: String?
+    var hudhudMapLayerStore: HudHudMapLayerStore
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text(self.mapLayerData.layerTitle).foregroundStyle(.secondary)
-            HStack {
-                ForEach(self.mapLayerData.layers) { layer in
-                    VStack {
-                        Button {
-                            self.currentlySelected = layer.id.uuidString
-                        } label: {
-                            AsyncImage(url: URL(string: layer.imageUrl)) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                            } placeholder: {
-                                ProgressView()
+        VStack(alignment: .center, spacing: 25) {
+            HStack(alignment: .center) {
+                if self.hudhudMapLayerStore.hudhudMapLayers != nil {
+                    Spacer()
+                    Text("Layers")
+                        .foregroundStyle(.primary)
+                } else {
+                    Text("")
+                        .padding(.top, 30)
+                }
+                Spacer()
+                Button {
+                    self.dismiss()
+                } label: {
+                    Image(systemSymbol: .xmark)
+                        .foregroundColor(.secondary)
+                }
+            }
+            .padding(.horizontal, 30)
+            VStack(alignment: .leading, spacing: 10) {
+                HStack {
+                    if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
+                        ForEach(mapLayers, id: \.name) { layer in
+                            VStack {
+                                Button {
+                                    self.currentlySelected = layer.name
+                                } label: {
+                                    AsyncImage(url: layer.thumbnailUrl) { image in
+                                        image
+                                            .resizable()
+                                            .scaledToFill()
+                                    } placeholder: {
+                                        ProgressView()
+                                    }
+                                    .frame(width: 110, height: 110)
+                                    //									.cornerRadius(4.0)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(self.currentlySelected == layer.name ? .blue : .clear, lineWidth: 2)
+                                    )
+                                }
+                                Text(layer.name)
+                                    .foregroundStyle(self.currentlySelected == layer.name ? .blue : .secondary)
                             }
-                            .frame(width: 110, height: 110)
-                            .background(.secondary)
-                            .cornerRadius(4.0)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 4)
-                                    .stroke(self.currentlySelected == layer.id.uuidString ? .green : .clear, lineWidth: 2)
-                            )
                         }
-                        Text(layer.imageTitle)
-                            .foregroundStyle(self.currentlySelected == layer.id.uuidString ? .green : .secondary)
+                    } else {
+                        Text("")
+                            .backport.contentUnavailable(label: "No Map Layers Available", SFSymbol: .globeCentralSouthAsiaFill)
                     }
                 }
             }
@@ -46,10 +71,7 @@ struct MapLayersView: View {
 }
 
 #Preview {
-    let layer = Layer(imageTitle: "Map 1", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: false)
-    let layer1 = Layer(imageTitle: "Map 2", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-    let layer2 = Layer(imageTitle: "Map 3", imageUrl: "https://i.ibb.co/NSRMfxC/1.jpg", isSelected: true)
-    let mapLayerData = MapLayersData(layerTitle: "Map Type", layers: [layer, layer1, layer2])
-    return MapLayersView(mapLayerData: mapLayerData)
+    let hudhudMapLayerStore = HudHudMapLayerStore()
+    return MapLayersView(hudhudMapLayerStore: hudhudMapLayerStore)
         .padding(.horizontal, 20)
 }
