@@ -19,7 +19,6 @@ struct NavigationSheetView: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
     @Environment(\.dismiss) private var dismiss
-    @State var goPressed = false
 
     var body: some View {
         VStack(spacing: 5) {
@@ -30,6 +29,8 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
+                    self.mapStore.routes = nil
+                    self.mapStore.waypoints = nil
                     self.dismiss()
                 }, label: {
                     ZStack {
@@ -57,19 +58,17 @@ struct NavigationSheetView: View {
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
-                        self.goPressed.toggle()
+                        if self.mapStore.navigatingRoute == nil {
+                            self.mapStore.navigatingRoute = route
+                        } else {
+                            self.mapStore.navigatingRoute = nil
+                        }
                     }
                 )
                 .padding(.bottom)
             }
         }
         .padding()
-        .fullScreenCover(isPresented: self.$goPressed) {
-            let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
-            if let route = self.mapStore.routes?.routes.first {
-                NavigationView(route: route, styleURL: styleURL, debugSettings: self.debugStore)
-            }
-        }
     }
 }
 

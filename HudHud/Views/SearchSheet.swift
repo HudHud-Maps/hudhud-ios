@@ -24,6 +24,7 @@ struct SearchSheet: View {
 
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
+    @ObservedObject var trendingStore: TrendingStore
     @FocusState private var searchIsFocused: Bool
     @Environment(\.dismiss) var dismiss
 
@@ -98,8 +99,7 @@ struct SearchSheet: View {
                                         self.mapStore.selectedItem = resolvedItem
                                         self.storeRecent(item: resolvedItem)
                                     } else {
-                                        // Currently only ApplePOI supports resolving, so this should only be called on apple pois
-                                        let resolvedItems = try await item.resolve(in: self.searchStore.apple)
+                                        let resolvedItems = try await self.searchStore.resolve(item: item)
 
                                         if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
                                             self.mapStore.selectedItem = resolvedItem
@@ -145,6 +145,11 @@ struct SearchSheet: View {
                             .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                         }
                         .listStyle(.plain)
+                        if self.mapStore.displayableItems.isEmpty {
+                            let label = self.searchStore.searchError?.localizedDescription != nil ? "Search Error" : "No results"
+                            backport.contentUnavailable(label: label, SFSymbol: .magnifyingglass, description: self.searchStore.searchError?.localizedDescription ?? "No results for \(self.searchStore.searchText) were found.").padding(.vertical, 50)
+                                .listRowSeparator(.hidden)
+                        }
                     }
 
                 } else {
@@ -156,6 +161,13 @@ struct SearchSheet: View {
                         .listRowSeparator(.hidden)
                     }
 
+                    if let trendingPOIs = self.trendingStore.trendingPOIs, !trendingPOIs.isEmpty {
+                        SearchSectionView(title: "Nearby Trending") {
+                            PoiTileGridView(trendingPOIs: self.trendingStore)
+                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                        .listRowSeparator(.hidden)
+                    }
                     SearchSectionView(title: "Recents") {
                         RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore, searchType: .selectPOI)
                     }
@@ -172,9 +184,10 @@ struct SearchSheet: View {
 
     // MARK: - Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
+        self.trendingStore = trendingStore
         self.searchIsFocused = false
     }
 
@@ -223,15 +236,16 @@ extension [ResolvedItem]: RawRepresentable {
     }
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self),
-              let result = String(data: data, encoding: .utf8) else {
+        guard let data = try? JSONEncoder().encode(self) else {
             return "[]"
         }
+        let result = String(decoding: data, as: UTF8.self)
         return result
     }
 }
 
 #Preview {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
+    let trendingStroe = TrendingStore()
+    return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore, trendingStore: trendingStroe)
 }
