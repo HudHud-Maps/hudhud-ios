@@ -273,8 +273,14 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var ratingsCount: Int?
     public var isOpen: Bool?
 
+    public var trendingImage: String?
+    public var mediaURLs: [MediaURLs]?
+    
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, category, symbol, type, coordinate
+        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, isOpen
+        case ratingsCount = "ratings_count"
+        case trendingImage = "trending_image_url"
+        case mediaURLs = "media_urls"
     }
 
     public var description: String {
@@ -283,7 +289,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -296,6 +302,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.rating = rating
         self.ratingsCount = ratingsCount
         self.isOpen = isOpen
+        self.trendingImage = trendingImage
+        self.mediaURLs = mediaURLs
     }
 
     public init(from decoder: Decoder) throws {
@@ -307,6 +315,13 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.symbol = try container.decode(SFSymbol.self, forKey: .symbol)
         self.type = try container.decode(PredictionResult.self, forKey: .type)
         self.coordinate = try container.decode(CLLocationCoordinate2D.self, forKey: .coordinate)
+        self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
+        self.website = try container.decodeIfPresent(URL.self, forKey: .website)
+        self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
+        self.ratingsCount = try container.decodeIfPresent(Int.self, forKey: .ratingsCount)
+        self.isOpen = try container.decodeIfPresent(Bool.self, forKey: .isOpen)
+        self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
+        self.mediaURLs = try container.decodeIfPresent([MediaURLs].self, forKey: .mediaURLs)
     }
 
     // MARK: - Public
@@ -436,6 +451,10 @@ public extension AnyDisplayableAsRow {
     static let supermarket = AnyDisplayableAsRow(ResolvedItem.supermarket)
 }
 
+public struct MediaURLs: Codable {
+    public var type: String?
+    public var url: String?
+}
 /*
  public extension POI {
 

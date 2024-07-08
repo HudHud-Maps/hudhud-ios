@@ -32,6 +32,8 @@ struct POIDetailSheet: View {
     @EnvironmentObject var notificationQueue: NotificationQueue
     @Environment(\.openURL) private var openURL
 
+    @State var viewMore: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -39,7 +41,7 @@ struct POIDetailSheet: View {
                     VStack(spacing: 0.0) {
                         Text(self.item.title)
                             .font(.title.bold())
-                            .minimumScaleFactor(0.7)
+                            .minimumScaleFactor(0.6)
                             .lineLimit(2)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
@@ -50,14 +52,21 @@ struct POIDetailSheet: View {
                                 .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-//                                .padding(.bottom, 8)
+                                .padding(.bottom, 4)
                         }
-                        Text(self.item.subtitle)
+                        HStack {
+                            Text(self.item.subtitle)
+                                .font(.footnote)
+                                .multilineTextAlignment(.leading)
+                                .lineLimit(self.viewMore ? 3 : 1)
+                            Button(self.viewMore ? "Read Less" : "Read More") {
+                                self.viewMore.toggle()
+                            }
                             .font(.footnote)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-//                            .padding(.bottom, 8)
+                        }
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .padding(.bottom, 4)
                     }
                     Button(action: {
                         self.dismiss()
@@ -72,7 +81,7 @@ struct POIDetailSheet: View {
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
                                 .foregroundStyle(.secondary)
                         }
-                        .padding(8)
+                        .padding(4)
                         .contentShape(Circle())
                     })
                     .tint(.secondary)
@@ -131,13 +140,12 @@ struct POIDetailSheet: View {
                 .padding(.vertical, -15)
                 VStack {
                     AdditionalPOIDetailsView(item: self.item, routes: self.routes)
-                        .padding(.top)
+                        .fixedSize()
+                        .padding([.top, .trailing])
                     DictionaryView(dictionary: self.item.userInfo)
                 }
-                .padding(.leading, 20)
             }
         }
-
         .task {
             do {
                 _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
@@ -162,6 +170,11 @@ struct POIDetailSheet: View {
                 let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
                 self.routes = results
             } catch {
+                let nsError = error as NSError
+                if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
+                    return
+                }
+
                 let notification = Notification(error: error)
                 self.notificationQueue.add(notification: notification)
             }
@@ -172,6 +185,6 @@ struct POIDetailSheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.selectedItem = ResolvedItem.starbucks
+    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), rating: 4.4, ratingsCount: 230, isOpen: true)
     return ContentView(searchStore: searchViewStore)
 }

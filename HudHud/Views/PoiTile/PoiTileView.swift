@@ -6,76 +6,111 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import CoreLocation
+import OSLog
 import SFSafeSymbols
+import SwiftLocation
 import SwiftUI
 
+// MARK: - PoiTileView
+
 struct PoiTileView: View {
-    var poiTileData: PoiTileData
+    var poiTileData: ResolvedItem
+    @State var location: CLLocation?
 
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topLeading) {
-                AsyncImage(url: self.poiTileData.imageUrl) { image in
+                AsyncImage(url: URL(string: self.poiTileData.trendingImage ?? "")) { image in
                     image
                         .resizable()
                         .scaledToFill()
-                        .frame(width: 175, height: 175)
+                        .frame(width: 130, height: 140)
                 } placeholder: {
                     ProgressView()
+                        .progressViewStyle(.automatic)
+                        .frame(width: 130, height: 140)
+                        .background(.secondary)
+                        .cornerRadius(7.0)
                 }
                 .background(.secondary)
                 .cornerRadius(7.0)
                 HStack {
-                    HStack(spacing: 5) {
+                    HStack(spacing: 2) {
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
                             .foregroundColor(.orange)
-                        Text(self.poiTileData.rating ?? "0")
+                        Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
                             .foregroundStyle(.primary)
                             .font(.system(.caption))
+                            .bold()
+                            .foregroundStyle(.background)
+                        Text("(\(self.poiTileData.ratingsCount ?? 0))")
+                            .foregroundStyle(.primary)
+                            .font(.system(.caption))
+                            .bold()
                             .foregroundStyle(.background)
                     }
-                    .padding(10)
+                    .padding(5)
                     Spacer()
-                    HStack(spacing: 5) {
-                        Text(self.poiTileData.followersNumbers ?? "0")
-                            .foregroundStyle(.primary)
-                            .font(.system(.caption))
-                            .foregroundStyle(.background)
-                        Image(systemSymbol: self.poiTileData.isFollowed ? .heartFill : .heart)
-                            .font(.footnote)
-                            .foregroundColor(.orange)
-                    }
-                    .padding(10)
+                    // Currently hidding in v1
+//                    HStack(spacing: 5) {
+                    //						Text("\(self.poiTileData.rating ?? 0)")
+//                            .foregroundStyle(.primary)
+//                            .font(.system(.caption))
+//                            .foregroundStyle(.background)
+//                        Image(systemSymbol: self.poiTileData.isFollowed ? .heartFill : .heart)
+//                            .font(.footnote)
+//                            .foregroundColor(.orange)
+//                    }
+//                    .padding(10)
                 }
-                .frame(width: 175, alignment: .center)
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(self.poiTileData.title)
                     .font(.subheadline)
+                    .lineLimit(1)
                 HStack {
-                    Text("\(self.poiTileData.poiType) \u{2022} \(self.poiTileData.grtDistanceString()) \u{2022} \(self.poiTileData.pricing?.rawValue ?? "")")
+                    Text("\(self.poiTileData.category ?? "") \(self.poiTileData.distance(from: self.location))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+                .padding(.horizontal, 3)
             }
-            .padding(.leading, 10)
+            .frame(width: 130, alignment: .leading)
+            .padding(.leading, 1)
+        }
+        .task {
+            do {
+                self.location = try await Location.forSingleRequestUsage.requestLocation().location
+            } catch {
+                Logger.poiData.error("Error requesting location, could not calculate distance for trending")
+            }
         }
     }
 }
 
-#Preview {
-    let pointA = CLLocation(latitude: 24.69239471955797, longitude: 46.633261389241845)
-    let pointB = CLLocation(latitude: 24.722823776812756, longitude: 46.626575919314305)
+private extension ResolvedItem {
 
-    let poi = PoiTileData(title: "Laduree",
-                          imageUrl: URL(string: "https://www.adobe.com/content/dam/cc/us/en/creative-cloud/photography/discover/food-photography/CODERED_B1_food-photography_p4b_690x455.jpg.img.jpg"),
-                          poiType: "Cafe",
-                          locationDistance: pointA.distance(from: pointB),
-                          rating: "4.0",
-                          followersNumbers: "20",
-                          isFollowed: false,
-                          pricing: .medium)
+    func distance(from location: CLLocation?) -> String {
+        guard let location else { return "" }
+
+        let distance = self.coordinate.distance(to: location.coordinate)
+        return "\u{2022} \(distance.getDistanceString())"
+    }
+}
+
+#Preview {
+    let poi = ResolvedItem(id: "Al-Narjs - Riyadh",
+                           title: "Supermarket",
+                           subtitle: "Al-Narjs - Riyadh",
+                           category: "Cafe", type: .hudhud,
+                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
+                           phone: "0503539560",
+                           website: URL(string: "https://hudhud.sa"),
+                           rating: 2,
+                           ratingsCount: 25,
+                           trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")
     return PoiTileView(poiTileData: poi)
 }

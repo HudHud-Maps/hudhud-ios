@@ -24,6 +24,7 @@ struct SearchSheet: View {
 
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
+    @ObservedObject var trendingStore: TrendingStore
     @FocusState private var searchIsFocused: Bool
     @Environment(\.dismiss) var dismiss
 
@@ -148,6 +149,13 @@ struct SearchSheet: View {
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)
 
+                    if let trendingPOIs = self.trendingStore.trendingPOIs, !trendingPOIs.isEmpty {
+                        SearchSectionView(title: "Nearby Trending") {
+                            PoiTileGridView(trendingPOIs: self.trendingStore)
+                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                        .listRowSeparator(.hidden)
+                    }
                     SearchSectionView(title: "Recents") {
                         RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
                     }
@@ -164,9 +172,10 @@ struct SearchSheet: View {
 
     // MARK: - Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
+        self.trendingStore = trendingStore
         self.searchIsFocused = false
     }
 
@@ -225,5 +234,6 @@ extension [ResolvedItem]: RawRepresentable {
 
 #Preview {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore)
+    let trendingStroe = TrendingStore()
+    return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore, trendingStore: trendingStroe)
 }

@@ -98,7 +98,7 @@ public actor ApplePOI: POIServiceProtocol {
             }
         }
     }
-
+    
     // MARK: - Internal
 
     func update(results: [AnyDisplayableAsRow]) async {

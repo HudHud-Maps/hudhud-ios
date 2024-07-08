@@ -21,6 +21,7 @@ import SFSafeSymbols
 import SimpleToast
 import SwiftLocation
 import SwiftUI
+import TouchVisualizer
 
 // MARK: - SheetSubView
 
@@ -37,26 +38,28 @@ struct ContentView: View {
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
-
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
+    @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
     @State private var sheetSize: CGSize = .zero
     @State private var didTryToZoomOnUsersLocation = false
 
-    @State var offsetY: CGFloat = 0
-
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
 
     @ViewBuilder
     var mapView: some View {
-        MapView<NavigationViewController>(makeViewController: NavigationViewController(dayStyleURL: self.styleURL), styleURL: self.styleURL, camera: self.$mapStore.camera) {
+        MapView<NavigationViewController>(makeViewController: {
+            let viewController = NavigationViewController(dayStyleURL: self.styleURL)
+            viewController.showsEndOfRouteFeedback = false // We show our own Feedback
+            return viewController
+        }(), styleURL: self.styleURL, camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationInProgress == false {
+            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationProgress == .none {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
                     MLNPolylineFeature(coordinates: route.coordinates ?? [])
                 }
@@ -118,6 +121,24 @@ struct ContentView: View {
                 .iconColor(.white)
                 .predicate(NSPredicate(format: "cluster != YES"))
 
+            // shows the selected pin
+            CircleStyleLayer(
+                identifier: MapLayerIdentifier.selectedCircle,
+                source: self.mapStore.selectedPoint
+            )
+            .radius(24)
+            .color(.systemRed)
+            .strokeWidth(2)
+            .strokeColor(.white)
+            .predicate(NSPredicate(format: "cluster != YES"))
+            SymbolStyleLayer(
+                identifier: MapLayerIdentifier.selectedCircleIcon,
+                source: self.mapStore.selectedPoint
+            )
+            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+            .iconColor(.white)
+            .predicate(NSPredicate(format: "cluster != YES"))
+
             SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
@@ -148,18 +169,28 @@ struct ContentView: View {
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
-            if let route = self.mapStore.navigatingRoute, self.mapStore.navigationInProgress == false {
-                if self.debugStore.simulateRide {
-                    let locationManager = SimulatedLocationManager(route: route)
-                    locationManager.speedMultiplier = 2
-                    controller.startNavigation(with: route, animated: true, locationManager: locationManager)
-                } else {
-                    controller.startNavigation(with: route, animated: true)
+
+            switch self.mapStore.navigationProgress {
+            case .none:
+                if let route = self.mapStore.navigatingRoute {
+                    if self.debugStore.simulateRide {
+                        let locationManager = SimulatedLocationManager(route: route)
+                        locationManager.speedMultiplier = 2
+                        controller.startNavigation(with: route, animated: true, locationManager: locationManager)
+                    } else {
+                        controller.startNavigation(with: route, animated: true)
+                    }
+                    self.mapStore.navigationProgress = .navigating
                 }
-                self.mapStore.navigationInProgress = true
-            } else if self.mapStore.navigatingRoute == nil, self.mapStore.navigationInProgress == true {
-                controller.endNavigation()
-                self.mapStore.navigationInProgress = false
+            case .navigating:
+                if let route = self.mapStore.navigatingRoute {
+                    controller.route = route
+                } else {
+                    controller.endNavigation()
+                    self.mapStore.navigationProgress = .feedback
+                }
+            case .feedback:
+                break
             }
 
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
@@ -171,13 +202,20 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-        .backport.safeAreaPadding(.bottom, self.sheetSize.height)
+        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
                     if let camera = CameraState.boundingBox(from: coordinates) {
                         self.mapStore.camera = camera
                     }
+                }
+            }
+        }
+        .onChange(of: self.mapStore.selectedDetent) { _ in
+            if self.mapStore.selectedDetent == .small {
+                Task {
+                    await self.reloadPOITrending()
                 }
             }
         }
@@ -228,12 +266,15 @@ struct ContentView: View {
                     Logger.searchView.error("\(error.localizedDescription)")
                 }
             }
+            .task {
+                await self.reloadPOITrending()
+            }
             .ignoresSafeArea()
             .safeAreaInset(edge: .top, alignment: .center) {
                 if case .enabled = self.mapStore.streetView {
-                    StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera)
+                    StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera, mapStore: self.mapStore)
                 } else {
-                    if self.mapStore.navigationInProgress == false {
+                    if self.mapStore.navigationProgress == .none {
                         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                             .presentationBackground(.thinMaterial)
                             .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -241,7 +282,7 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-                if self.mapStore.navigationInProgress == false {
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -269,10 +310,15 @@ struct ContentView: View {
                                         if location.course > 0 {
                                             self.motionViewModel.position.heading = location.course
                                         }
-                                        self.mapStore.streetView = .enabled
+                                        withAnimation {
+                                            self.mapStore.streetView = .enabled
+                                            self.mapStore.searchShown = false
+                                        }
                                     }
                                 } else {
-                                    self.mapStore.streetView = .disabled
+                                    withAnimation {
+                                        self.mapStore.streetView = .disabled
+                                    }
                                 }
                             },
                             MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
@@ -297,8 +343,11 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown && !self.$mapStore.navigationInProgress) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+            .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
+                get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
+                set: { _ in }
+            )) {
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -328,8 +377,21 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapStore.routes = searchStore.mapStore.routes
+    }
+
+    // MARK: - Internal
+
+    func reloadPOITrending() async {
+        do {
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
+            self.trendingStore.trendingPOIs = trendingPOI
+        } catch {
+            self.trendingStore.trendingPOIs = nil
+            Logger.searchView.error("\(error.localizedDescription)")
+        }
     }
 }
 

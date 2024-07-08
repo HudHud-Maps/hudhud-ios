@@ -1,49 +1,48 @@
 //
-//  HudHudMapLayerStore.swift
-//  BackendService
+//  TrendingStore.swift
+//	BackendService
 //
-//  Created by Alaa . on 12/06/2024.
+//  Created by Fatima Aljaber on 06/06/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 // swiftlint:disable init_usage
 
-import CoreLocation
 import Foundation
-import OSLog
+import SwiftUI
+import MapKit
+import CoreLocation
 import OpenAPIURLSession
 
-public class HudHudMapLayerStore: ObservableObject {
+public class TrendingStore: ObservableObject {
     
-    @Published public var hudhudMapLayers: [HudHudMapLayer]?
+    @Published public var trendingPOIs: [ResolvedItem]?
     @Published public var lastError: Error?
     
-    public func getMaplayers() async throws -> [HudHudMapLayer] {
+    public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
+        
         let urlSessionConfiguration = URLSessionConfiguration.default
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
         
         let urlSession = URLSession(configuration: urlSessionConfiguration)
-        
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
-        
         let transport = URLSessionTransport(configuration: transportConfiguration)
+   
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport)	// swiftlint:disable:this force_unwrapping
         
-        let response = try await client.listMapStyles()
+        let response = try await client.listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
-        case let .ok(okResponse):
+        case .ok(let okResponse):
             switch okResponse.body {
-            case let .json(jsonResponse):
-                let mapLayer: [HudHudMapLayer] = jsonResponse.data.compactMap { mapStyle in
-					guard let styleURL = URL(string: mapStyle.style_url),
-						  let thumbnailURL = URL(string: mapStyle.thumbnail_url) else {
-						Logger.parser.error("style_url or thumbnail_url missing, ignoring map layer")
-						return nil
-					}
-
-					return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL)
+            
+            case .json(let jsonResponse):
+                let resolvedItem: [ResolvedItem] = jsonResponse.data.compactMap { item in
+                    
+                    guard let ratingCount = item.ratings_count else { return ResolvedItem.artwork }
+                    return ResolvedItem(id: item.id, title: item.name, subtitle: item.category, category: item.category, symbol: .pin, type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: item.coordinates.lat, longitude: item.coordinates.lon), phone: nil, website: nil, rating: item.rating, ratingsCount: ratingCount, trendingImage: item.trending_image_url)
                 }
-                return mapLayer
+                    return resolvedItem
+                
             }
         case .undocumented(statusCode: let statusCode, let payload):
             let bodyString: String? = if let body = payload.body {
@@ -59,11 +58,5 @@ public class HudHudMapLayerStore: ObservableObject {
     public init() {
         
     }
-}
-
-public struct HudHudMapLayer: Hashable {
-    public let name: String
-    public let styleUrl: URL
-    public let thumbnailUrl: URL
 }
 // swiftlint:enable init_usage

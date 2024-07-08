@@ -4,8 +4,24 @@
     "" : {
 
     },
+    "(%lld)" : {
+
+    },
+    "%.1f" : {
+
+    },
     "%@" : {
       "comment" : "duration"
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
     },
     "%@ • %@" : {
       "comment" : "distance • type of route",
@@ -17,19 +33,6 @@
           }
         }
       }
-    },
-    "%@ • %@ • %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ • %2$@ • %3$@"
-          }
-        }
-      }
-    },
-    "%lf" : {
-
     },
     "%lld" : {
 
@@ -141,6 +144,9 @@
     "Duration" : {
 
     },
+    "Enable Touch Visualizer" : {
+
+    },
     "Fastest" : {
       "localizations" : {
         "ar" : {
@@ -175,6 +181,9 @@
     "Heading: %@" : {
       "comment" : "street view"
     },
+    "Help improve HudHud maps." : {
+
+    },
     "Home" : {
       "localizations" : {
         "ar" : {
@@ -190,6 +199,9 @@
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
+    },
+    "How was the navigation on this trip?" : {
+
     },
     "Layers" : {
       "localizations" : {
@@ -245,7 +257,13 @@
         }
       }
     },
+    "Nearby Trending" : {
+
+    },
     "No Ratings" : {
+
+    },
+    "No Results" : {
 
     },
     "Occupancy Range" : {
@@ -255,6 +273,12 @@
       "comment" : "street view"
     },
     "Ratings" : {
+
+    },
+    "Read Less" : {
+
+    },
+    "Read More" : {
 
     },
     "Recents" : {
@@ -311,6 +335,9 @@
         }
       }
     },
+    "Touch Visualizer" : {
+
+    },
     "Traffic" : {
 
     },
@@ -350,6 +377,9 @@
           }
         }
       }
+    },
+    "You Have Arrived" : {
+
     }
   },
   "version" : "1.0"

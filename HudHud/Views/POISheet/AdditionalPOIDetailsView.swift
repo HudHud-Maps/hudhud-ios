@@ -18,21 +18,19 @@ struct AdditionalPOIDetailsView: View {
         HStack(alignment: .top) {
             VStack(alignment: .leading) {
                 Text("Hours")
-                    .font(.body)
+                    .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let isOpen = self.item.isOpen {
                     Text("\(isOpen ? "Open" : "Closed")")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                         .foregroundStyle(isOpen ? .blue : .red)
                 } else {
                     Text("Unknown")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
@@ -41,20 +39,18 @@ struct AdditionalPOIDetailsView: View {
             Divider()
             VStack(alignment: .leading) {
                 Text("Distance")
-                    .font(.body)
+                    .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDistance(distance: route.distance))")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
                     Text("")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
@@ -63,20 +59,18 @@ struct AdditionalPOIDetailsView: View {
             Divider()
             VStack(alignment: .leading) {
                 Text("Duration")
-                    .font(.body)
+                    .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDuration(duration: route.expectedTravelTime))")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
                     Text("")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
@@ -85,20 +79,27 @@ struct AdditionalPOIDetailsView: View {
             Divider()
             VStack(alignment: .leading) {
                 Text("Ratings")
-                    .font(.body)
+                    .font(.footnote)
                     .foregroundStyle(.secondary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let rating = self.item.rating {
-                    Text("\(rating)")
-                        .bold()
-                        .font(.title3)
-                        .lineLimit(1)
-                        .minimumScaleFactor(0.5)
+                    HStack {
+                        Image(systemSymbol: .starFill)
+                            .font(.footnote)
+                            .foregroundColor(.orange)
+                        Text("\(rating, specifier: "%.1f")")
+                            .font(.body.bold())
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                        Text("(\(self.item.ratingsCount ?? 0))")
+                            .font(.body.bold())
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
                 } else {
                     Text("No Ratings")
-                        .bold()
-                        .font(.title3)
+                        .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
