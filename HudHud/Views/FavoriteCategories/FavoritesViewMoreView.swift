@@ -107,7 +107,7 @@ struct FavoritesViewMoreView: View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
         let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites
-        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore)
+        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore())
     }
 }
 

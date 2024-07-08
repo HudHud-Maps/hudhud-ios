@@ -151,7 +151,6 @@ struct SearchSheet: View {
                                 .listRowSeparator(.hidden)
                         }
                     }
-
                 } else {
                     if self.searchStore.searchType != .favorites {
                         SearchSectionView(title: "Favorites") {

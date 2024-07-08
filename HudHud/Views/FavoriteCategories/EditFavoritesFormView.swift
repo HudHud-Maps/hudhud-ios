@@ -49,7 +49,7 @@ struct EditFavoritesFormView: View {
                     }
                 }
                 Section {
-                    MapView(styleURL: self.styleURL, camera: self.$camera)
+                    MapView<MapViewController>(styleURL: self.styleURL, camera: self.$camera)
                         .frame(height: 140)
                         .disabled(true)
                 }
