@@ -90,7 +90,7 @@ final class SearchViewStore: ObservableObject {
                     self.performSearch(with: provider, term: newValue)
                 case .preview:
                     self.mapStore.displayableItems = [
-                        .starbucks,
+                        DisplayableRow.starbucks,
                         .ketchup,
                         .publicPlace,
                         .artwork,
@@ -101,8 +101,8 @@ final class SearchViewStore: ObservableObject {
             }
             .store(in: &self.cancellables)
         if case .preview = mode {
-            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh)
-            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
+            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh, systemColor: .systemRed)
+            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh, systemColor: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
     }
@@ -116,7 +116,7 @@ final class SearchViewStore: ObservableObject {
         return currentLocation
     }
 
-    func resolve(item: AnyDisplayableAsRow) async throws -> [AnyDisplayableAsRow] {
+    func resolve(item: DisplayableRow) async throws -> [DisplayableRow] {
         switch self.mode {
         case .live(provider: .apple):
             return try await item.resolve(in: self.apple)
@@ -146,7 +146,7 @@ private extension SearchViewStore {
             self.mapStore.selectedDetent = .third
 
             do {
-                let prediction: [AnyDisplayableAsRow] = switch provider {
+                let prediction: [DisplayableRow] = switch provider {
                 case .apple:
                     try await self.apple.predict(term: term, coordinates: self.getCurrentLocation())
                 case .toursprung:

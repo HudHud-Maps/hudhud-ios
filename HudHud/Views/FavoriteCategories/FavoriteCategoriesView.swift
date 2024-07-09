@@ -34,9 +34,8 @@ struct FavoriteCategoriesView: View {
                 ForEach(self.favoriteCategoriesData.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
-                            let mapItems = [AnyDisplayableAsRow(selectedItem)]
                             self.mapStore.selectedItem = selectedItem
-                            self.mapStore.displayableItems = mapItems
+                            self.mapStore.displayableItems = [DisplayableRow.resolvedItem(selectedItem)]
                         }
                     } label: {
                         Text(favorite.title)

@@ -30,7 +30,7 @@ struct RecentSearchResultsView: View {
                     .layoutPriority(1)
                     .frame(minWidth: .leastNonzeroMagnitude)
                     .background(
-                        item.tintColor.mask(Circle())
+                        item.systemColor.color.mask(Circle())
                     )
 
                 VStack(alignment: .leading) {
@@ -49,7 +49,7 @@ struct RecentSearchResultsView: View {
             }
             .onTapGesture {
                 let selectedItem = item
-                let mapItems = [AnyDisplayableAsRow(item)]
+                let mapItems = [DisplayableRow.resolvedItem(item)]
                 self.mapStore.selectedItem = selectedItem
                 self.mapStore.displayableItems = mapItems
             }

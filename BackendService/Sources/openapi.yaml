@@ -61,6 +61,32 @@ paths:
                         style_url: https://styles.hudhud.sa/default.json
                         thumbnail_url: https://static.hudhud.sa/default_thumb.webp
       security: []
+  /t/rate:
+    post:
+      summary: Rate trip
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TripRateInput'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse'
+        '422':
+          description: Parameter Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+      security: []
   /p/typeahead:
     get:
       summary: POIs typeahead search
@@ -142,6 +168,20 @@ paths:
           required: true
           schema:
             type: string
+        - name: lat
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+            format: float64
+        - name: lon
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: number
+            format: float64
         - name: Accept-Language
           in: header
           description: ''
@@ -208,34 +248,34 @@ paths:
                       is_open: true
                       opening_hours:
                         saturday:
-                          - opens_at: 600
-                            closes_at: 720
-                          - opens_at: 1000
-                            closes_at: 1600
+                          - start: 600
+                            end: 720
+                          - start: 1000
+                            end: 1600
                         sunday:
-                          - opens_at: 600
-                            closes_at: 720
+                          - start: 600
+                            end: 720
                         monday:
-                          - opens_at: 600
-                            closes_at: 720
-                          - opens_at: 1000
-                            closes_at: 1600
+                          - start: 600
+                            end: 720
+                          - start: 1000
+                            end: 1600
                         tuesday:
-                          - opens_at: 600
-                            closes_at: 720
+                          - start: 600
+                            end: 720
                         wednesday:
-                          - opens_at: 600
-                            closes_at: 720
-                          - opens_at: 1000
-                            closes_at: 1600
+                          - start: 600
+                            end: 720
+                          - start: 1000
+                            end: 1600
                         thursday:
-                          - opens_at: 600
-                            closes_at: 720
+                          - start: 600
+                            end: 720
                         friday:
-                          - opens_at: 600
-                            closes_at: 720
-                          - opens_at: 1000
-                            closes_at: 1600
+                          - start: 600
+                            end: 720
+                          - start: 1000
+                            end: 1600
                       media_urls:
                         - type: image
                           url: https://media.hudhud.sa/4578.webp
@@ -351,6 +391,12 @@ paths:
           schema:
             type: number
             format: double
+        - name: top_rated
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: boolean
         - name: Accept-Language
           in: header
           description: ''
@@ -495,6 +541,56 @@ paths:
       security: []
 components:
   schemas:
+    SuccessResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: object
+          properties: {}
+          nullable: true
+      required:
+        - ok
+    ValidationError:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: object
+          properties: {}
+        code:
+          type: string
+      required:
+        - ok
+        - message
+        - code
+    TripRateInput:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+        rating:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+        trip_info:
+          type: object
+          properties: {}
+        timestamp:
+          type: integer
+          format: uint64
+      required:
+        - id
+        - rating
+        - trip_info
+        - timestamp
     OpeningHoursItem:
       type: object
       properties:
@@ -546,6 +642,10 @@ components:
           type: string
         trending_image_url:
           type: string
+        distance:
+          type: number
+          format: double
+          description: in meters
       required:
         - id
         - coordinates
@@ -748,6 +848,16 @@ components:
               - type
               - url
           nullable: true
+        distance:
+          type: number
+          format: double
+          description: distance in meters
+          nullable: true
+        duration:
+          type: number
+          format: double
+          description: duration in seconds
+          nullable: true
       required:
         - id
         - address
@@ -757,6 +867,11 @@ components:
     TypeaheadItem:
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - poi
+            - category
         id:
           type: string
         address:
@@ -802,11 +917,8 @@ components:
       required:
         - ios_category_icon
         - android_category_icon
-        - coordinates
-        - category
         - name
-        - id
-        - address
+        - type
     PoisTrendingResponse:
       type: object
       properties:

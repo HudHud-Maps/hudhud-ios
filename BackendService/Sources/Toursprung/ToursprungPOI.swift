@@ -44,7 +44,7 @@ public actor ToursprungPOI: POIServiceProtocol {
 
     // MARK: - Public
 
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [DisplayableRow] {
         
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC) // debouncer
         try Task.checkCancellation()
@@ -52,7 +52,7 @@ public actor ToursprungPOI: POIServiceProtocol {
         let results =  try await self.search(term: term)
         
         return results.map { item in
-            return AnyDisplayableAsRow(item)
+            return .resolvedItem(item)
         }
     }
 
@@ -102,7 +102,7 @@ private extension ToursprungPOI {
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
             let symbol = self.symbol(from: $0.type)
-            var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, category: $0.type.lowercased(), symbol: symbol, type: .toursprung, coordinate: coordinate)
+            var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, category: $0.type.lowercased(), symbol: symbol, type: .toursprung, coordinate: coordinate, systemColor: .systemRed)
 
             let mirror = Mirror(reflecting: $0)
             mirror.children.forEach { child in

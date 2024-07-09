@@ -89,13 +89,13 @@ struct SearchSheet: View {
                         ForEach(self.mapStore.displayableItems) { item in
                             Button(action: {
                                 Task {
-                                    if let resolvedItem = item.innerModel as? ResolvedItem {
+                                    if let resolvedItem = item.resolvedItem {
                                         self.mapStore.selectedItem = resolvedItem
                                         self.storeRecent(item: resolvedItem)
                                     } else {
                                         let resolvedItems = try await self.searchStore.resolve(item: item)
 
-                                        if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
+                                        if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.resolvedItem {
                                             self.mapStore.selectedItem = resolvedItem
                                             self.storeRecent(item: resolvedItem)
 
@@ -104,12 +104,13 @@ struct SearchSheet: View {
                                             }
 
                                             if let index {
-                                                self.mapStore.displayableItems[index] = AnyDisplayableAsRow(resolvedItem)
+                                                self.mapStore.displayableItems[index] = DisplayableRow.resolvedItem(resolvedItem)
                                             } else {
                                                 Logger.searchView.error("Resolved an item that is no longer in the displayable list")
                                             }
 
                                         } else {
+                                            self.mapStore.selectedDetent = .small
                                             self.mapStore.displayableItems = resolvedItems
                                         }
                                     }
@@ -127,7 +128,7 @@ struct SearchSheet: View {
                                 }
 
                             }, label: {
-                                SearchResultItem(prediction: item, searchText: self.$searchStore.searchText)
+                                SearchResultItemView(item: SearchResultItem(item), searchText: self.$searchStore.searchText)
                                     .frame(maxWidth: .infinity)
                                     .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
                             })
@@ -202,12 +203,12 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [
-        SearchResultItem(prediction: PredictionItem.starbucks, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.supermarket, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.pharmacy, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.artwork, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.ketchup, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.publicPlace, searchText: nil)
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.starbucks), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.ketchup), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.supermarket), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.publicPlace), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.artwork), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.pharmacy), searchText: nil)
     ]
 }
 

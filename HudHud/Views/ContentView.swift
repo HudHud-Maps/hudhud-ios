@@ -198,7 +198,7 @@ struct ContentView: View {
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate)
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate, systemColor: SystemColor.systemRed)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
@@ -282,8 +282,7 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-
-                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView { 
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
@@ -433,6 +432,7 @@ struct SizePreferenceKey: PreferenceKey {
                            subtitle: "Al-Olya - Riyadh",
                            type: .toursprung,
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                           systemColor: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi
@@ -470,6 +470,7 @@ extension NavigationViewController: WrappedViewController {
                            subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
                            type: .appleResolved,
                            coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
+                           systemColor: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     let artwork = ResolvedItem(id: UUID().uuidString,
@@ -477,6 +478,7 @@ extension NavigationViewController: WrappedViewController {
                                subtitle: "artwork - Al-Olya - Riyadh",
                                type: .toursprung,
                                coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
+                               systemColor: .systemRed,
                                phone: "0503539560",
                                website: URL(string: "https://hudhud.sa"))
 
@@ -485,8 +487,9 @@ extension NavigationViewController: WrappedViewController {
                                 subtitle: "Al-Olya - Riyadh",
                                 type: .toursprung,
                                 coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                                systemColor: .systemRed,
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
-    store.mapStore.displayableItems = [AnyDisplayableAsRow(poi), AnyDisplayableAsRow(artwork), AnyDisplayableAsRow(pharmacy)]
+    store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
     return ContentView(searchStore: store)
 }
