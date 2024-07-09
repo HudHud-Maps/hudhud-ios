@@ -34,6 +34,8 @@ struct EditFavoritesFormView: View {
     @Binding var camera: MapViewCamera
     private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 
+    @ScaledMetric var imageSize = 30
+
     var body: some View {
         VStack {
             Form {
@@ -68,8 +70,10 @@ struct EditFavoritesFormView: View {
                     ForEach(self.types, id: \.self) { type in
                         HStack {
                             Image(systemSymbol: self.typeSymbols[type] ?? .heartFill)
-                                .font(.title)
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
                                 .foregroundColor(.white)
+                                .frame(width: self.imageSize, height: self.imageSize)
                                 .padding(10)
                                 .background(Circle().fill(Color.blue))
                             Text(type)
