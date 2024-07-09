@@ -8,12 +8,17 @@
 
 import BackendService
 import MapKit
+import MapLibreSwiftUI
 import SwiftUI
 
 struct RecentSearchResultsView: View {
     let mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
+    let searchType: SearchViewStore.SearchType
+    @State var EditFormViewIsShown: Bool = false
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @State var clickedFavorite = FavoritesItem.favoriteForPreview
 
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in
@@ -46,6 +51,17 @@ struct RecentSearchResultsView: View {
                         .foregroundColor(.primary)
                 }
                 Spacer()
+                if self.searchType == .favorites {
+                    NavigationLink {
+                        self.EditFormViewIsShown = true
+                        self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
+                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.tintColor, item: item, type: item.category ?? "")
+                        return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
+                    } label: {
+                        Text("+")
+                            .foregroundStyle(Color(UIColor.label))
+                    }
+                }
             }
             .onTapGesture {
                 let selectedItem = item
@@ -62,6 +78,22 @@ struct RecentSearchResultsView: View {
 }
 
 #Preview {
-    RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
-                            searchStore: .storeSetUpForPreviewing)
+    NavigationStack {
+        RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
+                                searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+    }
+}
+
+#Preview("EditFavoritesFormView") {
+    let item: ResolvedItem = .artwork
+    @State var favoriteItem: FavoritesItem = .init(id: UUID(), title: item.title, tintColor: item.tintColor, item: item, type: item.category ?? "")
+    @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
+    @State var EditFormViewIsShown: Bool = true
+    return NavigationStack {
+        RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
+                                searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+            .navigationDestination(isPresented: $EditFormViewIsShown) {
+                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, camera: $camera)
+            }
+    }
 }
