@@ -23,10 +23,19 @@ struct PoiTileView: View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topLeading) {
                 AsyncImage(url: URL(string: self.poiTileData.trendingImage ?? "")) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 130, height: 140)
+                    ZStack(alignment: .top) {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 130, height: 140)
+
+                        // Dark shadow gradient
+                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.5), Color.clear]),
+                                       startPoint: .top,
+                                       endPoint: .center)
+                            .frame(height: 100)
+                            .cornerRadius(7.0)
+                    }
                 } placeholder: {
                     ProgressView()
                         .progressViewStyle(.automatic)
@@ -36,19 +45,19 @@ struct PoiTileView: View {
                 }
                 .background(.secondary)
                 .cornerRadius(7.0)
+
                 HStack {
                     HStack(spacing: 2) {
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
                             .foregroundColor(.orange)
+                            .bold()
                         Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
-                            .hudhudFont(.caption)
-                            .foregroundStyle(.primary)
-                            .foregroundStyle(.background)
+                            .hudhudFont(.footnote)
+                            .foregroundStyle(.white)
                         Text("(\(self.poiTileData.ratingCount ?? 0))")
                             .hudhudFont(.caption)
-                            .foregroundStyle(.primary)
-                            .foregroundStyle(.background)
+                            .foregroundStyle(.white)
                     }
                     .padding(5)
                     Spacer()

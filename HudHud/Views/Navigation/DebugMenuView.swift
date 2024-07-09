@@ -52,7 +52,7 @@ struct DebugMenuView: View {
     return DebugMenuView(debugSettings: debugSettings)
 }
 
-func OptionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T> {
+func optionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T> {
     return Binding<T>(get: {
         return binding.wrappedValue ?? defaultValue
     }, set: {
@@ -61,5 +61,5 @@ func OptionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T>
 }
 
 func ?? <T>(left: Binding<T?>, right: T) -> Binding<T> {
-    return OptionalBinding(left, right)
+    return optionalBinding(left, right)
 }
