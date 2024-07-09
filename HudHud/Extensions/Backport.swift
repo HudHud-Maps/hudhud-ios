@@ -111,9 +111,9 @@ extension Backport where Content: View {
                 Image(systemSymbol: SFSymbol ?? .docRichtextFill)
                     .font(.title2)
                 Text("\(label ?? "Content Unavailable")")
-                    .font(.title)
+                    .hudhudFont(.title)
                 Text("\(description ?? "No Content To be Shown Here.")")
-                    .font(.body)
+                    .hudhudFont(.body)
             }
         }
     }
