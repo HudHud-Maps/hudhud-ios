@@ -35,7 +35,7 @@ enum SheetSubView: Hashable, Codable {
 struct ContentView: View {
 
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
+    private let styleURL = URL(string: "https://subzero.eu/hudhuddefaultv1.json")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
     @ObservedObject private var motionViewModel: MotionViewModel
@@ -142,6 +142,16 @@ struct ContentView: View {
             SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
+
+            SymbolStyleLayer(identifier: "patPOICircle", source: MLNSource(identifier: "hpoi_background"), sourceLayerIdentifier: "public.poi")
+                .iconImage(SFSymbolSpriteSheet.circle)
+                .iconColor(featurePropertyNamed: "ios_category_icon_color")
+                .iconAllowsOverlap(false)
+
+            SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
+                .iconImage(featurePropertyNamed: "ios_category_icon_name", mappings: SFSymbolSpriteSheet.spriteMapping, default: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                .iconAllowsOverlap(false)
+                .iconColor(featurePropertyNamed: "ios_category_icon_color")
         }
         .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
             // Pick the first feature (which may be a port or a cluster), ideally selecting
@@ -282,8 +292,7 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-
-                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView { 
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {

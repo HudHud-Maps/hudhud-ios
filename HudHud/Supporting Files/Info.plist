@@ -2,14 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSMinimumSystemVersion</key>
 	<string>14.0.0</string>
 	<key>MGLMapboxAccessToken</key>
 	<string>NOTAREALACCESSTOKEN</string>
+	<key>MLNCollisionBehaviorPre4_0</key>
+	<false/>
 	<key>NSUserNotificationsUsageDescription</key>
 	<string>Allows HudHud to send real-time navigation updates and traffic alerts.</string>
 	<key>UIAppFonts</key>
