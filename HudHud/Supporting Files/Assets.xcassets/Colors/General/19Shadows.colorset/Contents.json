@@ -1,0 +1,56 @@
+{
+  "colors": [
+    {
+      "color": {
+        "color-space": "srgb",
+        "components": {
+          "alpha": "1.000",
+          "blue": "0.584",
+          "green": "0.549",
+          "red": "0.522"
+        }
+      },
+      "idiom": "universal"
+    },
+    {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "light"
+        }
+      ],
+      "color": {
+        "color-space": "srgb",
+        "components": {
+          "alpha": "1.000",
+          "blue": "0.584",
+          "green": "0.549",
+          "red": "0.522"
+        }
+      },
+      "idiom": "universal"
+    },
+    {
+      "appearances": [
+        {
+          "appearance": "luminosity",
+          "value": "dark"
+        }
+      ],
+      "color": {
+        "color-space": "srgb",
+        "components": {
+          "alpha": "1.000",
+          "blue": "0.243",
+          "green": "0.184",
+          "red": "0.141"
+        }
+      },
+      "idiom": "universal"
+    }
+  ],
+  "info": {
+    "author": "color2code-xcode-exporter",
+    "version": 1
+  }
+}
