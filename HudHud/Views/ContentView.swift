@@ -365,13 +365,13 @@ struct ContentView: View {
                             .padding(.horizontal, 8)
                     }
                 })
-        }
-        VStack {
-            if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
-                CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
-                    .presentationBackground(.thinMaterial)
+            VStack {
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
+                    CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
+                        .presentationBackground(.thinMaterial)
+                }
+                Spacer()
             }
-            Spacer()
         }
     }
 
