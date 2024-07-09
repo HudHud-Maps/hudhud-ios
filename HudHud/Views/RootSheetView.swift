@@ -47,6 +47,15 @@ struct RootSheetView: View {
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
                                     searchStore: freshSearchViewStore, trendingStore: self.trendingStore)
+                    case .favorites:
+                        // Initialize fresh instances of MapStore and SearchViewStore
+                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
+                            tempStore.searchType = .favorites
+                            return tempStore
+                        }()
+                        SearchSheet(mapStore: freshSearchViewStore.mapStore,
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore)
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
@@ -90,6 +99,7 @@ struct RootSheetView: View {
                             self.searchViewStore.mapStore.selectedItem = nil
                             self.searchViewStore.mapStore.displayableItems = []
                             self.mapStore.routes = nil
+                            self.searchViewStore.searchText = ""
                             self.mapStore.navigationProgress = .none
                             Logger.routing.log("selected Face of rating: \(selectedFace)")
                         }

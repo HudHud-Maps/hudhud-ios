@@ -26,7 +26,7 @@ import TouchVisualizer
 // MARK: - SheetSubView
 
 enum SheetSubView: Hashable, Codable {
-    case mapStyle, debugView, navigationAddSearchView
+    case mapStyle, debugView, navigationAddSearchView, favorites
 }
 
 // MARK: - ContentView

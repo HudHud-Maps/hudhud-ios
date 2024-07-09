@@ -21,12 +21,11 @@ struct DirectionsSummaryView: View {
             VStack(alignment: .leading) {
                 // 20 min AKA duration
                 Text("\(self.formatter.formatDuration(duration: self.directionPreviewData.duration))", comment: "duration")
-                    .font(.system(.largeTitle))
-                    .fontWeight(.semibold)
+                    .hudhudFont(.title)
                     .lineLimit(1)
                 // distance • type of route
                 Text("\(self.formatter.formatDistance(distance: self.directionPreviewData.distance)) • \(self.directionPreviewData.typeOfRoute)", comment: "distance • type of route")
-                    .font(.system(.body))
+                    .hudhudFont(.body)
                     .lineLimit(1)
             }
             Spacer()
@@ -35,8 +34,7 @@ struct DirectionsSummaryView: View {
                 self.go()
             } label: {
                 Text("Go", comment: "start navigation")
-                    .font(.system(.title2))
-                    .bold()
+                    .hudhudFont(.title)
                     .lineLimit(1)
                     .foregroundStyle(Color.white)
                     .padding()
