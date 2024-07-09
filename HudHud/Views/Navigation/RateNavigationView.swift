@@ -35,13 +35,12 @@ struct RateNavigationView: View {
                 .backport.symbolEffect(animate: self.animate)
 
             Text("You Have Arrived")
-                .font(.title)
-                .bold()
+                .hudhudFont(.title)
             Text("Help improve HudHud maps.")
-                .font(.subheadline)
+                .hudhudFont(.subheadline)
                 .foregroundColor(.gray)
             Text("How was the navigation on this trip?")
-                .font(.subheadline)
+                .hudhudFont(.subheadline)
                 .foregroundColor(.gray)
             HStack(spacing: 20) {
                 ForEach(self.faces.indices, id: \.self) { index in
