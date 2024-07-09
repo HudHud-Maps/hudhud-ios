@@ -26,7 +26,7 @@ import TouchVisualizer
 // MARK: - SheetSubView
 
 enum SheetSubView: Hashable, Codable {
-    case mapStyle, debugView, navigationAddSearchView
+    case mapStyle, debugView, navigationAddSearchView, favorites
 }
 
 // MARK: - ContentView
@@ -282,8 +282,7 @@ struct ContentView: View {
                 }
             }
             .safeAreaInset(edge: .bottom) {
-
-                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView { 
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     HStack(alignment: .bottom) {
                         MapButtonsView(mapButtonsData: [
                             MapButtonData(sfSymbol: .icon(.map)) {
