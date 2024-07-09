@@ -26,10 +26,10 @@ struct PoiTileGridView: View {
         } else {
             VStack(alignment: .leading) {
                 Text("No Results")
-                    .font(.headline)
+                    .hudhudFont(.headline)
                     .multilineTextAlignment(.leading)
                 Text("\(self.trendingPOIs.lastError?.localizedDescription ?? "error not found")")
-                    .font(.caption)
+                    .hudhudFont(.caption)
                     .foregroundColor(.secondary)
                     .multilineTextAlignment(.leading)
             }

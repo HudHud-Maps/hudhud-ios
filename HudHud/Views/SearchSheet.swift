@@ -65,6 +65,12 @@ struct SearchSheet: View {
                     .padding(.trailing)
                 case .selectPOI:
                     EmptyView()
+                case .favorites:
+                    Button("Cancel", action: {
+                        self.dismiss()
+                    })
+                    .foregroundColor(.gray)
+                    .padding(.trailing)
                 }
             }
             .background(.quinary)
@@ -122,13 +128,16 @@ struct SearchSheet: View {
                                         }
                                     case .selectPOI:
                                         break
+
+                                    case .favorites:
+                                        break
                                     }
 
                                     self.searchIsFocused = false
                                 }
 
                             }, label: {
-                                SearchResultItemView(item: SearchResultItem(item), searchText: self.$searchStore.searchText)
+                                SearchResultItemView(item: SearchResultItem(item), searchText: nil)
                                     .frame(maxWidth: .infinity)
                                     .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
                             })
@@ -144,11 +153,13 @@ struct SearchSheet: View {
                         }
                     }
                 } else {
-                    SearchSectionView(title: "Favorites") {
-                        FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                    if self.searchStore.searchType != .favorites {
+                        SearchSectionView(title: "Favorites") {
+                            FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                        }
+                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                        .listRowSeparator(.hidden)
                     }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
-                    .listRowSeparator(.hidden)
 
                     if let trendingPOIs = self.trendingStore.trendingPOIs, !trendingPOIs.isEmpty {
                         SearchSectionView(title: "Nearby Trending") {
@@ -158,7 +169,7 @@ struct SearchSheet: View {
                         .listRowSeparator(.hidden)
                     }
                     SearchSectionView(title: "Recents") {
-                        RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore)
+                        RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore, searchType: .selectPOI)
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)
