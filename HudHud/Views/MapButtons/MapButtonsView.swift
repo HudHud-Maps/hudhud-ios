@@ -40,7 +40,7 @@ struct MapButtonsView: View {
             Image(systemSymbol: symbol).font(.title2)
         case let .text(text):
             Text(text)
-                .hudhudFont(textStyle: .title2)
+                .hudhudFont(.title2)
                 .fontWidth(.compressed)
                 .padding(.vertical, -0.8)
         }

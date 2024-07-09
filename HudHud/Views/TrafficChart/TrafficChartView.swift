@@ -54,7 +54,7 @@ struct TrafficChartView: View {
 
     return VStack(alignment: .leading) {
         Text("Traffic")
-            .hudhudFont(textStyle: .title)
+            .hudhudFont(.title)
             .frame(width: .infinity)
         TrafficChartView(chartData: TrafficChartData(date: Date(), traffic: trafic))
             .frame(maxHeight: 200)

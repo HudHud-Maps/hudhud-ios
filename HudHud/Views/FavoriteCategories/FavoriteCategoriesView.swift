@@ -59,7 +59,7 @@ struct FavoriteCategoriesView: View {
     VStack(alignment: .leading) {
         HStack {
             Text("Favorites")
-                .hudhudFont(.bold, textStyle: .title)
+                .hudhudFont(.title)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
             Spacer()

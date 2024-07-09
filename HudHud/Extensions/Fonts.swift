@@ -57,6 +57,39 @@ enum Fonts {
             return 17
         }
     }
+
+    static func getWeight(for textStyle: Font.TextStyle) -> FontWeight {
+        switch textStyle {
+        case .largeTitle:
+            return .bold
+        case .title:
+            return .semiBold
+        case .title2:
+            return .medium
+        case .title3:
+            return .regular
+        case .headline:
+            return .semiBold
+        case .subheadline:
+            return .medium
+        case .body:
+            return .regular
+        case .callout:
+            return .regular
+        case .footnote:
+            return .regular
+        case .caption:
+            return .regular
+        case .caption2:
+            return .regular
+        case .extraLargeTitle:
+            return .bold
+        case .extraLargeTitle2:
+            return .semiBold
+        @unknown default:
+            return .regular
+        }
+    }
 }
 
 extension Font {
@@ -95,7 +128,11 @@ extension Font {
 }
 
 extension Text {
-    func hudhudFont(_ fontWeight: FontWeight? = .regular, size: CGFloat? = nil, textStyle: Font.TextStyle = .body) -> Text {
-        return self.font(.hudhudFont(fontWeight ?? .regular, size: size ?? Fonts.getSize(for: textStyle)))
+    func hudhudFont(size: CGFloat, fontWeight: FontWeight = .regular) -> Text {
+        return self.font(.hudhudFont(fontWeight, size: size))
+    }
+
+    func hudhudFont(_ textStyle: Font.TextStyle = .body) -> Text {
+        return self.font(.hudhudFont(Fonts.getWeight(for: textStyle), size: Fonts.getSize(for: textStyle)))
     }
 }

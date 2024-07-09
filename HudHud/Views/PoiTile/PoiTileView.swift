@@ -42,11 +42,11 @@ struct PoiTileView: View {
                             .font(.footnote)
                             .foregroundColor(.orange)
                         Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
-                            .hudhudFont(.bold, textStyle: .caption)
+                            .hudhudFont(.caption)
                             .foregroundStyle(.primary)
                             .foregroundStyle(.background)
                         Text("(\(self.poiTileData.ratingCount ?? 0))")
-                            .hudhudFont(.bold, textStyle: .caption)
+                            .hudhudFont(.caption)
                             .foregroundStyle(.primary)
                             .foregroundStyle(.background)
                     }
@@ -67,11 +67,11 @@ struct PoiTileView: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(self.poiTileData.title)
-                    .hudhudFont(textStyle: .subheadline)
+                    .hudhudFont(.subheadline)
                     .lineLimit(1)
                 HStack {
                     Text("\(self.poiTileData.category ?? "") \(self.poiTileData.distance(from: self.location))")
-                        .hudhudFont(textStyle: .caption)
+                        .hudhudFont(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 3)
