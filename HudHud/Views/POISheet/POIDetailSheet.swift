@@ -74,10 +74,10 @@ struct POIDetailSheet: View {
                     }, label: {
                         ZStack {
                             Circle()
-                                .fill(.quinary.opacity(0.7))
+                                .fill(.quinary.opacity(0.5))
                                 .frame(width: 30, height: 30)
 
-                            Image(systemSymbol: .xmark)
+                            Image(.closeIcon)
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
                                 .foregroundStyle(.secondary)
                         }
@@ -89,7 +89,7 @@ struct POIDetailSheet: View {
                 }
                 .padding([.top, .leading, .trailing], 20)
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
+                    HStack(spacing: 4.0) {
                         Button(action: {
                             guard let routes else { return }
                             self.onStart(routes)

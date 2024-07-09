@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import CoreLocation
 import SwiftUI
 
 struct AdditionalPOIDetailsView: View {
@@ -49,7 +50,7 @@ struct AdditionalPOIDetailsView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
-                    Text("")
+                    Text("N/A")
                         .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
@@ -69,7 +70,7 @@ struct AdditionalPOIDetailsView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
-                    Text("")
+                    Text("N/A")
                         .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
@@ -84,9 +85,9 @@ struct AdditionalPOIDetailsView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let rating = self.item.rating {
-                    HStack {
+                    HStack(spacing: 1) {
                         Image(systemSymbol: .starFill)
-                            .font(.footnote)
+                            .font(.caption)
                             .foregroundColor(.orange)
                         Text("\(rating, specifier: "%.1f")")
                             .font(.body.bold())
@@ -96,6 +97,7 @@ struct AdditionalPOIDetailsView: View {
                             .font(.body.bold())
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
+                            .foregroundStyle(.secondary)
                     }
                 } else {
                     Text("No Ratings")
@@ -114,4 +116,11 @@ struct AdditionalPOIDetailsView: View {
     return VStack {
         AdditionalPOIDetailsView(item: .artwork, routes: .none)
     }
+}
+
+@available(iOS 17, *)
+#Preview(traits: .sizeThatFitsLayout) {
+    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), rating: 4.4, ratingsCount: 230, isOpen: true)
+    return ContentView(searchStore: searchViewStore)
 }
