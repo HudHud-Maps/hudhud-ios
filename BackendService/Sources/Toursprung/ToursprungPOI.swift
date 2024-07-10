@@ -44,16 +44,17 @@ public actor ToursprungPOI: POIServiceProtocol {
 
     // MARK: - Public
 
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [DisplayableRow] {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
         
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC) // debouncer
         try Task.checkCancellation()
         
-        let results =  try await self.search(term: term)
+        let results = try await self.search(term: term)
         
-        return results.map { item in
+        let items: [DisplayableRow] = results.map { item in
             return .resolvedItem(item)
         }
+        return POIResponse(items: items, hasCategory: false)
     }
 
     public func lookup(id _: String, prediction _: Any) async throws -> [ResolvedItem] {

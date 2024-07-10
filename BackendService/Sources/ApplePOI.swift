@@ -18,7 +18,7 @@ public actor ApplePOI: POIServiceProtocol {
 
     private var localSearch: MKLocalSearch?
     private var completer: MKLocalSearchCompleter
-    private var continuation: CheckedContinuation<[DisplayableRow], Error>?
+    private var continuation: CheckedContinuation<POIResponse, Error>?
     private let delegate: DelegateWrapper
 
     // MARK: - POIServiceProtocol
@@ -76,16 +76,16 @@ public actor ApplePOI: POIServiceProtocol {
         }
     }
 
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [DisplayableRow] {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
         return try await withCheckedThrowingContinuation { continuation in
             if let continuation = self.continuation {
                 self.completer.cancel()
-                continuation.resume(returning: [])
+                continuation.resume(returning: POIResponse(items: [], hasCategory: false))
                 self.continuation = nil
             }
 
             if term.isEmpty {
-                continuation.resume(returning: [])
+                continuation.resume(returning: POIResponse(items: [], hasCategory: false))
                 return
             }
 
@@ -103,7 +103,7 @@ public actor ApplePOI: POIServiceProtocol {
     // MARK: - Internal
 
     func update(results: [DisplayableRow]) async {
-        self.continuation?.resume(returning: results)
+        self.continuation?.resume(returning: POIResponse(items: results, hasCategory: false))
         self.continuation = nil
     }
 

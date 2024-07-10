@@ -18,7 +18,7 @@ public protocol POIServiceProtocol {
 
     static var serviceName: String { get }
     func lookup(id: String, prediction: Any) async throws -> [ResolvedItem]
-    func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [DisplayableRow]
+    func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse
 }
 
 // MARK: - PredictionResult

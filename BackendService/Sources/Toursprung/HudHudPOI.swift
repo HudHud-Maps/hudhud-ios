@@ -28,6 +28,11 @@ enum HudHudClientError: Error {
     
 }
 
+public struct POIResponse {
+    public let items: [DisplayableRow]
+    public let hasCategory: Bool
+}
+
 public enum DisplayableRow: Hashable, Identifiable {
     case category(Category)
     case resolvedItem(ResolvedItem)
@@ -125,7 +130,7 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
     
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [DisplayableRow] {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())	// swiftlint:disable:this force_unwrapping
@@ -136,11 +141,13 @@ public struct HudHudPOI: POIServiceProtocol {
         case .ok(let okResponse):
             switch okResponse.body {
             case .json(let jsonResponse):
-                let something: [DisplayableRow] = jsonResponse.data.compactMap { somethingElse in
+                var hasCategory = false
+                let items: [DisplayableRow] = jsonResponse.data.compactMap { somethingElse in
                     // we need to parse this symbol from the backend, and we cannot do it in a type safe way
                     let icon = SFSymbol(rawValue: somethingElse.ios_category_icon.name) // swiftlint:disable:this sf_symbol_init
                     switch somethingElse._type {
                     case .category:
+                        hasCategory = true
                         return .category(Category(
                             name: somethingElse.name,
                             icon: icon,
@@ -151,10 +158,9 @@ public struct HudHudPOI: POIServiceProtocol {
                            let subtitle = somethingElse.address,
                            let latitude = somethingElse.coordinates?.lat,
                            let longitude = somethingElse.coordinates?.lon {
-                            let title = somethingElse.name
                             return .resolvedItem(ResolvedItem(
                                 id: id,
-                                title: title,
+                                title: somethingElse.name,
                                 subtitle: subtitle,
                                 category: somethingElse.category,
                                 symbol: icon,
@@ -168,7 +174,7 @@ public struct HudHudPOI: POIServiceProtocol {
                         return nil
                     }
                 }
-                return something
+                return POIResponse(items: items, hasCategory: hasCategory)
             }
         case .undocumented(statusCode: let statusCode, let payload):
             let bodyString: String? = if let body = payload.body {
@@ -181,8 +187,6 @@ public struct HudHudPOI: POIServiceProtocol {
     }
 }
 // swiftlint:enable init_usage
-
-import SwiftUI
 
 extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload {
     var swiftUIColor: Color {

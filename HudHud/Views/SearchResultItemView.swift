@@ -109,7 +109,7 @@ struct SearchResultItem {
             category.color
         case let .resolvedItem(resolvedItem):
             resolvedItem.color
-        case let .predictionItem(predictionItem):
+        case .predictionItem:
             Color(.systemRed)
         }
     }
