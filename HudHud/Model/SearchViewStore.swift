@@ -134,6 +134,7 @@ final class SearchViewStore: ObservableObject {
 
     func fetch(category: String) async {
         self.isSheetLoading = true
+        self.mapStore.selectedDetent = .third
         defer { isSheetLoading = false }
         do {
             let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
