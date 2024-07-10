@@ -11,6 +11,7 @@ import CoreLocation
 import Foundation
 import OpenAPIURLSession
 import SFSafeSymbols
+import SwiftUI
 
 // generic errors that could come from any API
 enum OpenAPIClientError: Error {
@@ -87,112 +88,7 @@ public enum DisplayableRow: Hashable, Identifiable {
 public struct Category: Hashable {
     public let name: String
     public let icon: SFSymbol
-    public let systemColor: SystemColor
-}
-
-public enum SystemColor: RawRepresentable, Codable {
-    public init?(rawValue: String) {
-        switch rawValue {
-        case "systemGray":
-            self = .systemGray
-        case "systemGray2":
-            self = .systemGray2
-        case "systemGray3":
-            self = .systemGray3
-        case "systemGray4":
-            self = .systemGray4
-        case "systemGray5":
-            self = .systemGray5
-        case "systemGray6":
-            self = .systemGray6
-        case "systemRed":
-            self = .systemRed
-        case "systemGreen":
-            self = .systemGreen
-        case "systemBlue":
-            self = .systemBlue
-        case "systemOrange":
-            self = .systemOrange
-        case "systemYellow":
-            self = .systemYellow
-        case "systemPink":
-            self = .systemPink
-        case "systemPurple":
-            self = .systemPurple
-        case "systemTeal":
-            self = .systemTeal
-        case "systemIndigo":
-            self = .systemIndigo
-        case "systemBrown":
-            self = .systemBrown
-        case "systemMint":
-            self = .systemMint
-        case "systemCyan":
-            self = .systemCyan
-        default:
-            return nil
-        }
-    }
-    
-    case systemGray
-    case systemGray2
-    case systemGray3
-    case systemGray4
-    case systemGray5
-    case systemGray6
-    case systemRed
-    case systemGreen
-    case systemBlue
-    case systemOrange
-    case systemYellow
-    case systemPink
-    case systemPurple
-    case systemTeal
-    case systemIndigo
-    case systemBrown
-    case systemMint
-    case systemCyan
-    
-    public var rawValue: String {
-        switch self {
-        case .systemGray:
-            "systemGray"
-        case .systemGray2:
-            "systemGray2"
-        case .systemGray3:
-            "systemGray3"
-        case .systemGray4:
-            "systemGray4"
-        case .systemGray5:
-            "systemGray5"
-        case .systemGray6:
-            "systemGray6"
-        case .systemRed:
-            "systemRed"
-        case .systemGreen:
-            "systemGreen"
-        case .systemBlue:
-            "systemBlue"
-        case .systemOrange:
-            "systemOrange"
-        case .systemYellow:
-            "systemYellow"
-        case .systemPink:
-            "systemPink"
-        case .systemPurple:
-            "systemPurple"
-        case .systemTeal:
-            "systemTeal"
-        case .systemIndigo:
-            "systemIndigo"
-        case .systemBrown:
-            "systemBrown"
-        case .systemMint:
-            "systemMint"
-        case .systemCyan:
-            "systemCyan"
-        }
-    }
+    public let color: Color
 }
 
 public struct HudHudPOI: POIServiceProtocol {
@@ -215,7 +111,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     url = nil
                 }
-                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), systemColor: .systemRed, phone: jsonResponse.data.phone_number, website: url)]
+                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: Color(.systemRed), phone: jsonResponse.data.phone_number, website: url)]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -248,7 +144,7 @@ public struct HudHudPOI: POIServiceProtocol {
                         return .category(Category(
                             name: somethingElse.name,
                             icon: icon,
-                            systemColor: .systemBlue
+                            color: somethingElse.ios_category_icon.color.swiftUIColor
                         ))
                     case .poi:
                         if let id = somethingElse.id,
@@ -264,7 +160,7 @@ public struct HudHudPOI: POIServiceProtocol {
                                 symbol: icon,
                                 type: .hudhud,
                                 coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                                systemColor: .systemRed
+                                color: somethingElse.ios_category_icon.color.swiftUIColor
                             ))
                         } else {
                             assertionFailure("should have all the data here")
@@ -285,3 +181,48 @@ public struct HudHudPOI: POIServiceProtocol {
     }
 }
 // swiftlint:enable init_usage
+
+import SwiftUI
+
+extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload {
+    var swiftUIColor: Color {
+        switch self {
+        case .systemGray:
+            Color(.systemGray)
+        case .systemGray2:
+            Color(.systemGray2)
+        case .systemGray3:
+            Color(.systemGray3)
+        case .systemGray4:
+            Color(.systemGray4)
+        case .systemGray5:
+            Color(.systemGray5)
+        case .systemGray6:
+            Color(.systemGray6)
+        case .systemRed:
+            Color(.systemRed)
+        case .systemGreen:
+            Color(.systemGreen)
+        case .systemBlue:
+            Color(.systemBlue)
+        case .systemOrange:
+            Color(.systemOrange)
+        case .systemYellow:
+            Color(.systemYellow)
+        case .systemPink:
+            Color(.systemPink)
+        case .systemPurple:
+            Color(.systemPurple)
+        case .systemTeal:
+            Color(.systemTeal)
+        case .systemIndigo:
+            Color(.systemIndigo)
+        case .systemBrown:
+            Color(.systemBrown)
+        case .systemMint:
+            Color(.systemMint)
+        case .systemCyan:
+            Color(.systemCyan)
+        }
+    }
+}

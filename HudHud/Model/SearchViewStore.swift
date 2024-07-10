@@ -104,8 +104,8 @@ final class SearchViewStore: ObservableObject {
             }
             .store(in: &self.cancellables)
         if case .preview = mode {
-            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh, systemColor: .systemRed)
-            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh, systemColor: .systemRed)
+            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh, color: Color(.systemRed))
+            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh, color: Color(.systemRed))
             self.recentViewedItem = [itemOne, itemTwo]
         }
     }

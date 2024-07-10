@@ -44,7 +44,6 @@
 		A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */; };
 		A8ED4AD2D032B72F260DBD93 /* EditFavoritesFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8232AC2436288708553ED16 /* EditFavoritesFormView.swift */; };
 		A911B23F449A2EF31C7CCD42 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DE8B2A492D814BFAA412962 /* FavoriteItemView.swift */; };
-		AF1BD7F22C3D850200F9866F /* SystemColor+SwiftUIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF1BD7F12C3D850200F9866F /* SystemColor+SwiftUIColor.swift */; };
 		AF1BD7F72C3D9D3E00F9866F /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 197E2670D487EB0CF03C2AF6 /* NavigationTransitions */; };
 		AF1BD7F82C3D9D3E00F9866F /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 8A90C00DC16DBC95E09E4CF4 /* BetterSafariView */; };
 		AF1BD7F92C3D9D3E00F9866F /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 16C899CF51549F0E68B441D0 /* TouchVisualizer */; };
@@ -185,7 +184,6 @@
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
-		AF1BD7F12C3D850200F9866F /* SystemColor+SwiftUIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SystemColor+SwiftUIColor.swift"; sourceTree = "<group>"; };
 		B231E657556B47FFBDEBE3CC /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B8232AC2436288708553ED16 /* EditFavoritesFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoritesFormView.swift; sourceTree = "<group>"; };
@@ -581,7 +579,6 @@
 				CD7615642BF169C600DF2A25 /* MapViewCamera.swift */,
 				8D9E5F46B48E39DAD77D58F0 /* NavigationPath.swift */,
 				CD5409652C2B1A710010594E /* UIApplication+Environment.swift */,
-				AF1BD7F12C3D850200F9866F /* SystemColor+SwiftUIColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -862,7 +859,6 @@
 				A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */,
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
 				CDA05D862C0E270600903396 /* HudHudRouteVoiceController.swift in Sources */,
-				AF1BD7F22C3D850200F9866F /* SystemColor+SwiftUIColor.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
 				D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */,
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,

@@ -900,6 +900,25 @@ components:
             color:
               type: string
               description: This should be an Apple color name
+              enum:
+                - systemGray
+                - systemGray2
+                - systemGray3
+                - systemGray4
+                - systemGray5
+                - systemGray6
+                - systemRed
+                - systemGreen
+                - systemBlue
+                - systemOrange
+                - systemYellow
+                - systemPink
+                - systemPurple
+                - systemTeal
+                - systemIndigo
+                - systemBrown
+                - systemMint
+                - systemCyan
           required:
             - name
             - color

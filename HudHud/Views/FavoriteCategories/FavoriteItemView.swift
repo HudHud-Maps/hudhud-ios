@@ -25,7 +25,7 @@ struct FavoriteItemView: View {
                 .layoutPriority(1)
                 .frame(minWidth: .leastNonzeroMagnitude)
                 .background(
-                    self.favorite.item!.systemColor.color.mask(Circle())
+                    self.favorite.item!.color.mask(Circle())
                 )
 
             VStack(alignment: .leading) {

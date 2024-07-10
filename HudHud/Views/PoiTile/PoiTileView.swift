@@ -114,7 +114,7 @@ private extension ResolvedItem {
                            subtitle: "Al-Narjs - Riyadh",
                            category: "Cafe", type: .hudhud,
                            coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
-                           systemColor: SystemColor.systemRed,
+                           color: Color(.systemRed),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"),
                            rating: 2,

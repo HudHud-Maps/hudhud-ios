@@ -106,9 +106,9 @@ struct SearchResultItem {
     public var color: Color {
         switch self.displayableRow {
         case let .category(category):
-            category.systemColor.color
+            category.color
         case let .resolvedItem(resolvedItem):
-            resolvedItem.systemColor.color
+            resolvedItem.color
         case let .predictionItem(predictionItem):
             Color(.systemRed)
         }
