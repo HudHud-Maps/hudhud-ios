@@ -74,7 +74,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    @Published var isSearching = false
+    @Published var isSheetLoading = false
     @Published var searchType: SearchType = .selectPOI
 
     @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
@@ -131,6 +131,19 @@ final class SearchViewStore: ObservableObject {
             return [item]
         }
     }
+
+    func fetch(category: String) async {
+        self.isSheetLoading = true
+        defer { isSheetLoading = false }
+        do {
+            let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
+            self.mapStore.selectedDetent = .small
+            self.mapStore.displayableItems = items.map(DisplayableRow.resolvedItem)
+        } catch {
+            self.searchError = error
+            Logger.poiData.error("fetching category error: \(error)")
+        }
+    }
 }
 
 // MARK: - Private
@@ -144,8 +157,8 @@ private extension SearchViewStore {
             return
         }
         self.task = Task {
-            defer { self.isSearching = false }
-            self.isSearching = true
+            defer { self.isSheetLoading = false }
+            self.isSheetLoading = true
             self.mapStore.selectedDetent = .third
 
             do {

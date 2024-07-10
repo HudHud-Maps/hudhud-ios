@@ -98,14 +98,15 @@ public struct Category: Hashable {
 
 public struct HudHudPOI: POIServiceProtocol {
     
+    private let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
+    
     public init() {
     }
     
     public static var serviceName = "HudHud"
     public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())	// swiftlint:disable:this force_unwrapping
         
-        let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
+        let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -133,9 +134,8 @@ public struct HudHudPOI: POIServiceProtocol {
     public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport())	// swiftlint:disable:this force_unwrapping
         
-        let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
+        let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: currentLanguage))
         switch response {
             
         case .ok(let okResponse):
@@ -184,6 +184,43 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
+    }
+    
+    public func items(for category: String, location: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
+        try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
+        try Task.checkCancellation()
+        
+        let response = try await client.listPois(
+            query: .init(category: category, lat: location?.latitude, lon: location?.longitude),
+            headers: .init(Accept_hyphen_Language: currentLanguage)
+        )
+        
+        switch response {
+        case .ok(let success):
+            let body = try success.body.json
+            return body.data.map { item -> ResolvedItem in
+                ResolvedItem(
+                    id: item.id,
+                    title: item.name,
+                    subtitle: "",
+                    category: item.category,
+                    type: .hudhud,
+                    coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
+                    color: Color(.systemRed)
+                )
+            }
+        case let .undocumented(statusCode: statusCode, payload):
+            let bodyString: String? = if let body = payload.body {
+                try await String(collecting: body, upTo: 1024 * 1024)
+            } else {
+                nil
+            }
+            throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        }
+    }
+    
+    private var currentLanguage: String {
+        Locale.preferredLanguages.first ?? "en-US"
     }
 }
 // swiftlint:enable init_usage

@@ -79,7 +79,7 @@ struct SearchSheet: View {
             .padding(.top)
             List {
                 if !self.searchStore.searchText.isEmpty {
-                    if self.searchStore.isSearching {
+                    if self.searchStore.isSheetLoading {
                         ForEach(SearchSheet.fakeData.indices, id: \.self) { item in
                             Button(action: {},
                                    label: {
@@ -139,9 +139,9 @@ struct SearchSheet: View {
                             }, label: {
                                 SearchResultItemView(item: SearchResultItem(item), searchText: nil)
                                     .frame(maxWidth: .infinity)
-                                    .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
+                                    .redacted(reason: self.searchStore.isSheetLoading ? .placeholder : [])
                             })
-                            .disabled(self.searchStore.isSearching)
+                            .disabled(self.searchStore.isSheetLoading)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                         }
