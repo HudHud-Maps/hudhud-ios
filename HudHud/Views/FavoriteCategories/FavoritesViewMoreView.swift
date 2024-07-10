@@ -94,7 +94,7 @@ struct FavoritesViewMoreView: View {
         )
 
         .sheet(isPresented: self.$searchSheetShown) {
-            self.SearchSheetView()
+            self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) { _ in
             self.mapStore.path.append(SheetSubView.favorites)
@@ -103,7 +103,7 @@ struct FavoritesViewMoreView: View {
 
     // MARK: - Internal
 
-    func SearchSheetView() -> some View {
+    func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
         let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites

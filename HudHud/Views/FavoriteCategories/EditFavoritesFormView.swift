@@ -29,7 +29,7 @@ struct EditFavoritesFormView: View {
     @State var newType: String = ""
     @State private var selectedType: String
     @State var types: [String]
-    @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.types.home: .houseFill, FavoritesItem.types.work: .bagFill, FavoritesItem.types.school: .buildingFill]
+    @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.Types.home: .houseFill, FavoritesItem.Types.work: .bagFill, FavoritesItem.Types.school: .buildingFill]
 
     @Binding var camera: MapViewCamera
     private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping

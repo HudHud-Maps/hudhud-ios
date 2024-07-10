@@ -634,6 +634,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				AF1BD7FB2C3EBECE00F9866F /* PBXTargetDependency */,
 				9F035647C36F25452656EE0D /* PBXTargetDependency */,
 			);
 			name = HudHud;
@@ -932,6 +933,10 @@
 /* Begin PBXTargetDependency section */
 		9F035647C36F25452656EE0D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+		};
+		AF1BD7FB2C3EBECE00F9866F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = AF1BD7FA2C3EBECE00F9866F /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1428,6 +1433,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 60C11CEB823966EEAE3E3ED7 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
 			productName = BetterSafariView;
+		};
+		AF1BD7FA2C3EBECE00F9866F /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
