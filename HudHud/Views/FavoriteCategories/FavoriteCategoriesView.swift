@@ -18,7 +18,7 @@ struct FavoriteCategoriesView: View {
 
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
-    @State var ViewMoreShown: Bool = false
+    @State var viewMoreShown: Bool = false
 
     var body: some View {
         ScrollView(.horizontal) {
@@ -37,7 +37,7 @@ struct FavoriteCategoriesView: View {
                 }
                 Button {
                     print("Add was pressed")
-                    self.ViewMoreShown = true
+                    self.viewMoreShown = true
                 } label: {
                     Text("Add")
                 }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: .green))
