@@ -25,6 +25,7 @@ struct RootSheetView: View {
         NavigationStack(path: self.$mapStore.path) {
             SearchSheet(mapStore: self.mapStore,
                         searchStore: self.searchViewStore, trendingStore: self.trendingStore)
+                .background(Color(.Colors.General._05WhiteBackground))
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
                     case .mapStyle:
