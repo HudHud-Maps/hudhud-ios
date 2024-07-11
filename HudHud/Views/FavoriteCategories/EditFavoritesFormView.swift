@@ -79,7 +79,7 @@ struct EditFavoritesFormView: View {
                             Text(type)
                             Spacer()
                             if self.selectedType == type {
-                                Image(systemName: "checkmark")
+                                Image(systemSymbol: .checkmark)
                                     .foregroundColor(.blue)
                             }
                         }
@@ -93,10 +93,10 @@ struct EditFavoritesFormView: View {
                 Section {
                     HStack {
                         TextField("Add Type", text: self.$newType)
-                        Button(action: {
+                        Button {
                             self.addNewOption()
-                        }) {
-                            Image(systemName: "plus.circle")
+                        } label: {
+                            Image(systemSymbol: .plusCircle)
                                 .foregroundStyle(Color(UIColor.label))
                         }
                     }

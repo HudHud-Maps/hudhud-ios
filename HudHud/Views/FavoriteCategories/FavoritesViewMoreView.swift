@@ -56,8 +56,11 @@ struct FavoritesViewMoreView: View {
                             Button {
                                 self.actionSheetShown = true
                                 self.clickedFavorite = favorite
-                                self.clickedItem = favorite.item!
-                                self.camera = MapViewCamera.center(favorite.item!.coordinate, zoom: 14)
+                                if let item = favorite.item {
+                                    self.clickedItem = item
+
+                                    self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
+                                }
                             } label: {
                                 Text("...")
                                     .foregroundStyle(Color(UIColor.label))
@@ -86,9 +89,9 @@ struct FavoritesViewMoreView: View {
         .navigationTitle("Favorites")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(
-            trailing: Button(action: {
+            trailing: Button {
                 self.searchSheetShown = true
-            }) {
+            } label: {
                 Image(systemSymbol: .plus)
             }
         )

@@ -170,12 +170,15 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
     public var rating: Double?
-    public var ratingCount: Int?
+    public var ratingsCount: Int?
+    public var isOpen: Bool?
     public var trendingImage: String?
     
+    public var mediaURLs: [MediaURLs]?
+    
     enum CodingKeys: String, CodingKey {
-        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating
-        case ratingCount = "ratings_count"
+        case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, isOpen
+        case ratingsCount = "ratings_count"
         case trendingImage = "trending_image_url"
         case color
     }
@@ -186,7 +189,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: Color, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingCount: Int? = nil, trendingImage: String? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: Color, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -197,8 +200,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.phone = phone
         self.website = website
         self.rating = rating
-        self.ratingCount = ratingCount
+        self.ratingsCount = ratingsCount
+        self.isOpen = isOpen
         self.trendingImage = trendingImage
+        self.mediaURLs = mediaURLs
         self.color = color
     }
 
@@ -214,7 +219,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.phone = try container.decodeIfPresent(String.self, forKey: .phone)
         self.website = try container.decodeIfPresent(URL.self, forKey: .website)
         self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
-        self.ratingCount = try container.decodeIfPresent(Int.self, forKey: .ratingCount)
+        self.ratingsCount = try container.decodeIfPresent(Int.self, forKey: .ratingsCount)
         self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
         self.color = try container.decode(Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload.self, forKey: .color).swiftUIColor
     }
@@ -249,6 +254,11 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         hasher.combine(self.title)
         hasher.combine(self.subtitle)
     }
+}
+
+public struct MediaURLs: Codable {
+    public var type: String?
+    public var url: String?
 }
 
 extension SFSymbol: Codable {}

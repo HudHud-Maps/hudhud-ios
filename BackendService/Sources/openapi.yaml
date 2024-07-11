@@ -87,6 +87,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/ValidationError'
       security: []
+  /sv/nearby:
+    get:
+      summary: Get nearest Streetview image
+      deprecated: false
+      description: ''
+      operationId: GetNearestStreetViewImage
+      tags: []
+      parameters:
+        - name: lat
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: number
+            format: float64
+        - name: lon
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: number
+            format: float64
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NearestStreetViewImageResponse'
+      security: []
   /p/typeahead:
     get:
       summary: POIs typeahead search
@@ -541,6 +571,58 @@ paths:
       security: []
 components:
   schemas:
+    NearestStreetViewImageResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StreetViewImageItem'
+      required:
+        - ok
+        - data
+    StreetViewImageItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        metadata:
+          type: string
+        geom:
+          type: string
+        point:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float64
+            lon:
+              type: number
+              format: float64
+          required:
+            - lat
+            - lon
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        distance:
+          type: number
+          format: float64
+        url:
+          type: string
+      required:
+        - id
+        - name
+        - point
+        - created_at
+        - updated_at
+        - distance
+        - url
     SuccessResponse:
       type: object
       properties:

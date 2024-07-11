@@ -86,7 +86,7 @@ struct RecentSearchResultsView: View {
 
 #Preview("EditFavoritesFormView") {
     let item: ResolvedItem = .artwork
-    @State var favoriteItem: FavoritesItem = .init(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
+    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
     @State var editFormViewIsShown: Bool = true
     return NavigationStack {

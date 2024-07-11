@@ -53,9 +53,9 @@ struct PoiTileView: View {
                             .foregroundColor(.orange)
                             .bold()
                         Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
-                            .hudhudFont(.footnote)
+                            .hudhudFont(.caption)
                             .foregroundStyle(.white)
-                        Text("(\(self.poiTileData.ratingCount ?? 0))")
+                        Text("(\(self.poiTileData.ratingsCount ?? 0))")
                             .hudhudFont(.caption)
                             .foregroundStyle(.white)
                     }
@@ -118,7 +118,7 @@ private extension ResolvedItem {
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"),
                            rating: 2,
-                           ratingCount: 25,
+                           ratingsCount: 25,
                            trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")
     return PoiTileView(poiTileData: poi)
 }
