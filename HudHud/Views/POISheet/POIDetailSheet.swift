@@ -34,6 +34,11 @@ struct POIDetailSheet: View {
 
     @State var viewMore: Bool = false
 
+    private var shouldShowButton: Bool {
+        let maxCharacters = 30
+        return self.item.subtitle.count > maxCharacters
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
@@ -59,10 +64,12 @@ struct POIDetailSheet: View {
                                 .font(.footnote)
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(self.viewMore ? 3 : 1)
-                            Button(self.viewMore ? "Read Less" : "Read More") {
-                                self.viewMore.toggle()
+                            if self.shouldShowButton {
+                                Button(self.viewMore ? "Read Less" : "Read More") {
+                                    self.viewMore.toggle()
+                                }
+                                .font(.footnote)
                             }
-                            .font(.footnote)
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
