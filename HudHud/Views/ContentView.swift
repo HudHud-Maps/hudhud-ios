@@ -204,7 +204,6 @@ struct ContentView: View {
             }
         })
         .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
-        .animation(.easeInOut(duration: 0.01), value: self.mapStore.searchShown)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -349,7 +348,7 @@ struct ContentView: View {
                                 CurrentLocationButton(mapStore: self.mapStore)
                             }
                         }
-                        .opacity(self.mapStore.selectedDetent == .large ? 0 : 1)
+                        .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                         .padding(.horizontal)
                     }
                 }
@@ -383,6 +382,7 @@ struct ContentView: View {
                 if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
+                        .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
             }

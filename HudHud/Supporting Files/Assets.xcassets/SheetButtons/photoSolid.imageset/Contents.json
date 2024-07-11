@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "photoSolid.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
