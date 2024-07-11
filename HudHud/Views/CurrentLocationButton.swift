@@ -22,7 +22,7 @@ struct CurrentLocationButton: View {
     private var trackingUI: some View {
         switch self.mapStore.trackingState {
         case .none:
-            Image(systemName: "location")
+            Image(systemSymbol: .location)
                 .font(.title2)
                 .padding(10)
                 .foregroundColor(.gray)
@@ -33,13 +33,13 @@ struct CurrentLocationButton: View {
                     .padding(13)
                     .foregroundColor(.gray)
             } else {
-                Image(systemName: "location.fill")
+                Image(systemSymbol: .locationFill)
                     .font(.title2)
                     .padding(10)
                     .foregroundColor(.gray)
             }
         case .keepTracking:
-            Image(systemName: "location.north.fill")
+            Image(systemSymbol: .locationNorthFill)
                 .font(.title2)
                 .padding(10)
                 .foregroundColor(.gray)
