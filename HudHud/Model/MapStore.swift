@@ -242,8 +242,8 @@ final class MapStore: ObservableObject {
             }
         }
         if navigationPathItem is ResolvedItem {
-            self.allowedDetents = [.small, .third, .large]
-            self.selectedDetent = .third
+            self.allowedDetents = [.small, .third, .nearHalf, .large]
+            self.selectedDetent = .nearHalf
         }
         if navigationPathItem is Toursprung.RouteCalculationResult {
             self.allowedDetents = [.height(150), .medium]
