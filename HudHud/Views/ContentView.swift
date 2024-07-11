@@ -95,6 +95,21 @@ struct ContentView: View {
                     .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
                     .iconColor(.white)
             }
+
+            SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
+                .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
+                .iconAllowsOverlap(false)
+                .text(featurePropertyNamed: "name_en")
+                .textFontSize(11)
+                .maximumTextWidth(8.0)
+                .textHaloColor(UIColor.white)
+                .textHaloWidth(1.0)
+                .textHaloBlur(0.5)
+                .textAnchor("top")
+                .textOffset(CGVector(dx: 0, dy: 1.2))
+                .minimumZoomLevel(13.0)
+                .maximumZoomLevel(22.0)
+
             let pointSource = self.mapStore.points
 
             // shows the clustered pins
@@ -142,20 +157,6 @@ struct ContentView: View {
             SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
-
-            SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
-                .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
-                .iconAllowsOverlap(false)
-                .text(featurePropertyNamed: "name_en")
-                .textFontSize(11)
-                .maximumTextWidth(8.0)
-                .textHaloColor(UIColor.white)
-                .textHaloWidth(1.0)
-                .textHaloBlur(0.5)
-                .textAnchor("top")
-                .textOffset(CGVector(dx: 0, dy: 1.2))
-                .minimumZoomLevel(13.0)
-                .maximumZoomLevel(22.0)
         }
         .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
             // Pick the first feature (which may be a port or a cluster), ideally selecting
