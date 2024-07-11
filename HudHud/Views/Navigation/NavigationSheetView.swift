@@ -24,8 +24,7 @@ struct NavigationSheetView: View {
         VStack(spacing: 5) {
             HStack {
                 Text("Directions", comment: "navigation sheet header")
-                    .font(.system(.title))
-                    .fontWeight(.semibold)
+                    .hudhudFont(.title)
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
