@@ -236,6 +236,9 @@ final class MapStore: ObservableObject {
             case .navigationAddSearchView:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
+            case .favorites:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
             }
         }
         if navigationPathItem is ResolvedItem {

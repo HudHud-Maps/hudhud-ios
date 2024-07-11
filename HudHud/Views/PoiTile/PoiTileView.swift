@@ -23,10 +23,19 @@ struct PoiTileView: View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topLeading) {
                 AsyncImage(url: URL(string: self.poiTileData.trendingImage ?? "")) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 130, height: 140)
+                    ZStack(alignment: .top) {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 130, height: 140)
+
+                        // Dark shadow gradient
+                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.5), Color.clear]),
+                                       startPoint: .top,
+                                       endPoint: .center)
+                            .frame(height: 100)
+                            .cornerRadius(7.0)
+                    }
                 } placeholder: {
                     ProgressView()
                         .progressViewStyle(.automatic)
@@ -36,21 +45,19 @@ struct PoiTileView: View {
                 }
                 .background(.secondary)
                 .cornerRadius(7.0)
+
                 HStack {
                     HStack(spacing: 2) {
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
                             .foregroundColor(.orange)
+                            .bold()
                         Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
-                            .foregroundStyle(.primary)
-                            .font(.system(.caption))
-                            .bold()
-                            .foregroundStyle(.background)
+                            .hudhudFont(.caption)
+                            .foregroundStyle(.white)
                         Text("(\(self.poiTileData.ratingsCount ?? 0))")
-                            .foregroundStyle(.primary)
-                            .font(.system(.caption))
-                            .bold()
-                            .foregroundStyle(.background)
+                            .hudhudFont(.caption)
+                            .foregroundStyle(.white)
                     }
                     .padding(5)
                     Spacer()
@@ -69,11 +76,11 @@ struct PoiTileView: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(self.poiTileData.title)
-                    .font(.subheadline)
+                    .hudhudFont(.subheadline)
                     .lineLimit(1)
                 HStack {
                     Text("\(self.poiTileData.category ?? "") \(self.poiTileData.distance(from: self.location))")
-                        .font(.caption)
+                        .hudhudFont(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 3)

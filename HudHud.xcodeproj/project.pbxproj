@@ -20,6 +20,8 @@
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		4C8F2777E10B77217C6B2E9D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1796352BDB2448B1DC1EC645 /* ErrorView.swift */; };
+		52781E298E569805284F1AC8 /* FavoritesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = F25E7D7FABCDC015720B68B1 /* FavoritesItem.swift */; };
+		549A2F0DDF2886081C6A36D1 /* FavoritesViewMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3AD07B38FABF388B726B83E4 /* FavoritesViewMoreView.swift */; };
 		597D5C922C33F4F3006A1946 /* POISheetButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 597D5C912C33F4F3006A1946 /* POISheetButtonStyle.swift */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
 		655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */; };
@@ -31,7 +33,7 @@
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
 		825C6676E341DD543C305950 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E21300E9BF61F5A403DE2CE /* MapStore.swift */; };
 		82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32589FE734D110C815A6168A /* LoggerSettings.swift */; };
-		854A602E692EA22AC381F9CA /* FavoriteCategoriesData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */; };
+		8699EE00173F40BE6748EB0C /* EditFavoritesFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939AF5AABF576068E824135C /* EditFavoritesFormView.swift */; };
 		8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */; };
 		907F1F7E2BD4F95100B4993E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 907F1F7D2BD4F95100B4993E /* Localizable.xcstrings */; };
 		90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */; };
@@ -71,9 +73,6 @@
 		CD1298822B99031E00EC3295 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CD1298832B99031E00EC3295 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054E2B681263003E5196 /* Preview Assets.xcassets */; };
 		CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */ = {isa = PBXBuildFile; fileRef = CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */; };
-		CD1640882C36A6E8009CD4C4 /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 197E2670D487EB0CF03C2AF6 /* NavigationTransitions */; };
-		CD1640892C36A6E8009CD4C4 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 8A90C00DC16DBC95E09E4CF4 /* BetterSafariView */; };
-		CD16408A2C36A6E8009CD4C4 /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 16C899CF51549F0E68B441D0 /* TouchVisualizer */; };
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
 		CD33DFDE2C00C5EF0090592C /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD33DFDC2C00C5EF0090592C /* DebugMenuView.swift */; };
@@ -105,7 +104,7 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
-		CDAE06022B6BDC5A003E5196 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CDAE06022B6BDC5A003E5196 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
 		CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C7AFBB29CC507D42D1538B2C /* MapboxNavigation */; };
@@ -119,6 +118,7 @@
 		DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417081C775FE86E29A6F3437 /* SafariWebView.swift */; };
 		E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */; };
 		EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */; };
+		F39C86018C626C3C0B8551E1 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48E35281D535807EC70C031 /* FavoriteItemView.swift */; };
 		F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */; };
 		FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */; };
 		FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */; };
@@ -156,6 +156,7 @@
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
+		3AD07B38FABF388B726B83E4 /* FavoritesViewMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewMoreView.swift; sourceTree = "<group>"; };
 		417081C775FE86E29A6F3437 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceIdentifier.swift; sourceTree = "<group>"; };
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
@@ -164,7 +165,6 @@
 		4DA5C0BEF087A344112910E5 /* RateNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateNavigationView.swift; sourceTree = "<group>"; };
 		557A9FF81C4443860134AE6F /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
 		597D5C912C33F4F3006A1946 /* POISheetButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetButtonStyle.swift; sourceTree = "<group>"; };
-		64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesData.swift; sourceTree = "<group>"; };
 		6EA70474F6BBF082089EC329 /* BackendService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BackendService; sourceTree = "<group>"; };
 		738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
 		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
@@ -178,6 +178,7 @@
 		90CBC72A2BD79D4C00F98199 /* InfoPlist.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 		912B1ACD8511E9B4FB445AD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
+		939AF5AABF576068E824135C /* EditFavoritesFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoritesFormView.swift; sourceTree = "<group>"; };
 		9B5DC089E85AAA3355D8FCA9 /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
@@ -246,7 +247,9 @@
 		D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesButton.swift; sourceTree = "<group>"; };
 		DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
 		E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
+		E48E35281D535807EC70C031 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
 		EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchResultsView.swift; sourceTree = "<group>"; };
+		F25E7D7FABCDC015720B68B1 /* FavoritesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesItem.swift; sourceTree = "<group>"; };
 		F3BB5BFA8CB42C0446317C57 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
 		FA63BF2B1B13F7E78F62BAE0 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -256,9 +259,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD16408A2C36A6E8009CD4C4 /* TouchVisualizer in Frameworks */,
-				CD1640892C36A6E8009CD4C4 /* BetterSafariView in Frameworks */,
-				CD1640882C36A6E8009CD4C4 /* NavigationTransitions in Frameworks */,
 				CD64651E2C0DD1E400802FBD /* BackendService in Frameworks */,
 				CD7A377F2C07732700F1C2DD /* BetterSafariView in Frameworks */,
 				CD7A377E2C07732700F1C2DD /* NavigationTransitions in Frameworks */,
@@ -268,7 +268,7 @@
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD33DFEE2C00CA670090592C /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CDAE06022B6BDC5A003E5196 /* (null) in Frameworks */,
+				CDAE06022B6BDC5A003E5196 /* BuildFile in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD33DFEC2C00CA670090592C /* MapLibreSwiftDSL in Frameworks */,
 				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
@@ -615,8 +615,11 @@
 			isa = PBXGroup;
 			children = (
 				D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */,
-				64B93F731419F3A3A1A2869D /* FavoriteCategoriesData.swift */,
 				38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */,
+				F25E7D7FABCDC015720B68B1 /* FavoritesItem.swift */,
+				3AD07B38FABF388B726B83E4 /* FavoritesViewMoreView.swift */,
+				939AF5AABF576068E824135C /* EditFavoritesFormView.swift */,
+				E48E35281D535807EC70C031 /* FavoriteItemView.swift */,
 			);
 			path = FavoriteCategories;
 			sourceTree = "<group>";
@@ -636,7 +639,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				CD16408C2C36A727009CD4C4 /* PBXTargetDependency */,
 				9F035647C36F25452656EE0D /* PBXTargetDependency */,
 			);
 			name = HudHud;
@@ -744,6 +746,7 @@
 				002A114EC5CED45A52C1AD2E /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				FBEDEF1CFE739BF4E219A7F2 /* XCRemoteSwiftPackageReference "TouchVisualizer" */,
 				A526244ADD0FDD45DFCF644E /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
+				7DAC0158AA86BE055BBB04BB /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -870,7 +873,6 @@
 				01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */,
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
 				CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */,
-				854A602E692EA22AC381F9CA /* FavoriteCategoriesData.swift in Sources */,
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
@@ -907,6 +909,10 @@
 				92D12261D6E18DE071B8ED63 /* TouchManager.swift in Sources */,
 				2409D3C3AFE6295AB6393DB8 /* NotificationManager.swift in Sources */,
 				7742B361095204C62D370E88 /* RateNavigationView.swift in Sources */,
+				F39C86018C626C3C0B8551E1 /* FavoriteItemView.swift in Sources */,
+				8699EE00173F40BE6748EB0C /* EditFavoritesFormView.swift in Sources */,
+				52781E298E569805284F1AC8 /* FavoritesItem.swift in Sources */,
+				549A2F0DDF2886081C6A36D1 /* FavoritesViewMoreView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -932,10 +938,6 @@
 /* Begin PBXTargetDependency section */
 		9F035647C36F25452656EE0D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-		};
-		CD16408C2C36A727009CD4C4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = CD16408B2C36A727009CD4C4 /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1149,6 +1151,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YN76B7J2LN;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHudTests;
@@ -1167,6 +1170,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YN76B7J2LN;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHudTests;
@@ -1184,6 +1188,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YN76B7J2LN;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHudUITests;
@@ -1201,6 +1206,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = YN76B7J2LN;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.map.HudHudUITests;
@@ -1275,6 +1281,14 @@
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
 				branch = main;
+				kind = branch;
+			};
+		};
+		7DAC0158AA86BE055BBB04BB /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground";
+			requirement = {
+				branch = "enhancement/unify-navigation";
 				kind = branch;
 			};
 		};
@@ -1434,11 +1448,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
-		};
-		CD16408B2C36A727009CD4C4 /* SwiftLint */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
-			productName = "plugin:SwiftLint";
 		};
 		CD1BD8AC2B9087C100A591BD /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;

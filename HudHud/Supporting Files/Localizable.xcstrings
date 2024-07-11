@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "..." : {
+        
+    },
     "" : {
 
     },
@@ -37,6 +40,12 @@
     "%lld" : {
 
     },
+    "+" : {
+
+    },
+    "action" : {
+
+    },
     "Add" : {
       "localizations" : {
         "ar" : {
@@ -57,6 +66,9 @@
           }
         }
       }
+    },
+    "Add Type" : {
+
     },
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
@@ -120,6 +132,12 @@
     "Debug Menu" : {
 
     },
+    "Delete" : {
+
+    },
+    "description" : {
+
+    },
     "Direction" : {
       "comment" : "navigation sheet header",
       "extractionState" : "stale",
@@ -143,6 +161,9 @@
     },
     "Duration" : {
 
+    },
+    "Edit" : {
+        
     },
     "Enable Touch Visualizer" : {
 
@@ -185,6 +206,7 @@
 
     },
     "Home" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -258,6 +280,9 @@
       }
     },
     "N/A" : {
+        
+    },
+    "Name" : {
 
     },
     "Nearby Trending" : {
@@ -294,6 +319,9 @@
         }
       }
     },
+    "root view" : {
+
+    },
     "Routing Configuration" : {
 
     },
@@ -301,6 +329,7 @@
 
     },
     "School" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -320,6 +349,9 @@
         }
       }
     },
+    "Select Type" : {
+
+    },
     "Simulate Ride during Navigation" : {
 
     },
@@ -338,6 +370,9 @@
         }
       }
     },
+    "Suggestions" : {
+
+    },
     "Touch Visualizer" : {
 
     },
@@ -347,7 +382,7 @@
     "Unknown" : {
 
     },
-    "View More >" : {
+    "View More" : {
 
     },
     "walk" : {
@@ -372,6 +407,7 @@
       }
     },
     "Work" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

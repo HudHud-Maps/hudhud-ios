@@ -11,7 +11,6 @@ import MapKit
 import SwiftUI
 
 struct SearchResultItem: View {
-
     let prediction: any DisplayableAsRow
     @Binding var searchText: String
     @ScaledMetric var imageSize = 24
