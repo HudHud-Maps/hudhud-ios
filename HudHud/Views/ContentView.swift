@@ -193,7 +193,7 @@ struct ContentView: View {
                 break
             }
 
-            controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .follow : .none
+            controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithHeading : .none
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
