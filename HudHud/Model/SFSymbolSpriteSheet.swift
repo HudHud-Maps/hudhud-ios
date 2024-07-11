@@ -13,10 +13,10 @@ enum SFSymbolSpriteSheet {
 
     static var spriteMapping: [String: UIImage] = Self.generate()
 
-    static var defaultMapPin: UIImage = {
-        let size = CGSize(width: 38, height: 38)
-        let internalSize = CGSize(width: 34, height: 34)
+    private static let size = CGSize(width: 30, height: 30)
+    private static let internalSize = CGSize(width: 24, height: 24)
 
+    static var defaultMapPin: UIImage = {
         let renderer = UIGraphicsImageRenderer(size: size)
 
         return Self.createSymbolImageWithCircle(symbolImage: UIImage(systemName: "mappin")!, backgroundColor: .systemIndigo, renderer: renderer, size: size, internalSize: internalSize)
@@ -37,8 +37,6 @@ enum SFSymbolSpriteSheet {
     // MARK: - Private
 
     private static func generateCircle() -> UIImage {
-        let size = CGSize(width: 38, height: 38)
-
         let renderer = UIGraphicsImageRenderer(size: size)
         let image = renderer.image { _ in
             let rect = CGRect(origin: .zero, size: size)
@@ -74,15 +72,12 @@ enum SFSymbolSpriteSheet {
 
         var tempDict: [String: UIImage] = [:]
 
-        let size = CGSize(width: 38, height: 38)
-        let internalSize = CGSize(width: 34, height: 34)
-
         let renderer = UIGraphicsImageRenderer(size: size)
         for icon in icons {
             let symbolImage = self.rawImage(for: icon)
             for color in self.adaptiveColors {
                 let name = "\(icon)\(color.name)"
-                tempDict[name] = self.createSymbolImageWithCircle(symbolImage: symbolImage, backgroundColor: color.color, renderer: renderer, size: size, internalSize: internalSize)
+                tempDict[name] = self.createSymbolImageWithCircle(symbolImage: symbolImage, backgroundColor: color.color, renderer: renderer, size: self.size, internalSize: self.internalSize)
             }
         }
 
@@ -90,10 +85,11 @@ enum SFSymbolSpriteSheet {
     }
 
     private static func rawImage(for symbolName: String) -> UIImage {
-        let symbolImage: UIImage = if let resolvedImage = UIImage(systemName: symbolName) {
+        let symbolConfiguration = UIImage.SymbolConfiguration(textStyle: .caption1)
+        let symbolImage: UIImage = if let resolvedImage = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration) {
             resolvedImage
         } else {
-            UIImage(systemName: "mappin")!
+            UIImage(systemName: "mappin", withConfiguration: symbolConfiguration)!
         }
         return symbolImage
     }

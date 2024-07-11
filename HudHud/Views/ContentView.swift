@@ -152,7 +152,9 @@ struct ContentView: View {
                 .textHaloWidth(1.0)
                 .textHaloBlur(0.5)
                 .textAnchor("top")
-                .textOffset(CGVector(dx: 0, dy: 1.6))
+                .textOffset(CGVector(dx: 0, dy: 1.2))
+                .minimumZoomLevel(13.0)
+                .maximumZoomLevel(22.0)
         }
         .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
             // Pick the first feature (which may be a pin or a cluster), ideally selecting
