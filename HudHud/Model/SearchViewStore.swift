@@ -119,16 +119,57 @@ final class SearchViewStore: ObservableObject {
         return currentLocation
     }
 
-    func resolve(item: DisplayableRow) async throws -> [DisplayableRow] {
-        switch self.mode {
-        case .live(provider: .apple):
-            return try await item.resolve(in: self.apple)
-        case .live(provider: .toursprung):
-            return [item] // Toursprung doesn't support predict & resolve
-        case .live(provider: .hudhud):
-            return try await item.resolve(in: self.hudhud)
-        case .preview:
-            return [item]
+    func storeInRecent(_ item: ResolvedItem) {
+        if self.recentViewedItem.count > 9 {
+            self.recentViewedItem.removeLast()
+        }
+        if self.recentViewedItem.contains(item) {
+            self.recentViewedItem.removeAll(where: { $0 == item })
+        }
+        self.recentViewedItem.append(item)
+    }
+
+    func didSelect(_ item: DisplayableRow) async {
+        switch item {
+        case let .resolvedItem(resolvedItem):
+            self.mapStore.selectedDetent = .third
+            self.mapStore.selectedItem = resolvedItem
+        case let .category(category):
+            await self.fetch(category: category.name)
+        case .predictionItem:
+            await self.resolve(item: item)
+        }
+    }
+
+    func resolve(item: DisplayableRow) async {
+        self.mapStore.selectedDetent = .third
+        self.isSheetLoading = true
+        defer { self.isSheetLoading = false }
+        do {
+            let items = switch self.mode {
+            case .live(provider: .apple):
+                try await item.resolve(in: self.apple)
+            case .live(provider: .toursprung):
+                [item] // Toursprung doesn't support predict & resolve
+            case .live(provider: .hudhud):
+                try await item.resolve(in: self.hudhud)
+            case .preview:
+                [item]
+            }
+            guard let firstItem = items.first,
+                  let resolvedItem = firstItem.resolvedItem,
+                  items.count == 1,
+                  let resolvedItemIndex = self.mapStore.displayableItems.firstIndex(where: { $0.id == resolvedItem.id }) else {
+                self.mapStore.selectedDetent = .large
+                self.mapStore.displayableItems = items
+                return
+            }
+            self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
+            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.selectedDetent = .third
+
+        } catch {
+            self.searchError = error
         }
     }
 

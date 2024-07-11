@@ -62,20 +62,14 @@ public enum DisplayableRow: Hashable, Identifiable {
         guard case let .apple(completion) = self.type else { return [] }
 
         let resolved = try await provider.lookup(id: self.id, prediction: completion)
-        let mapped = resolved.map {
-            DisplayableRow.resolvedItem($0)
-        }
-        return mapped
+        return resolved.map(DisplayableRow.resolvedItem)
     }
     
     public func resolve(in provider: HudHudPOI) async throws -> [DisplayableRow] {
         guard case .hudhud = self.type else { return [] }
 
         let resolved = try await provider.lookup(id: self.id, prediction: self)
-        let mapped = resolved.map {
-            DisplayableRow.resolvedItem($0)
-        }
-        return mapped
+        return resolved.map(DisplayableRow.resolvedItem)
     }
     
     private var type: PredictionResult? {

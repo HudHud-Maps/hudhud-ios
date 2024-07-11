@@ -93,32 +93,12 @@ struct SearchSheet: View {
                         }
                     } else {
                         ForEach(self.mapStore.displayableItems) { item in
-                            Button(action: {
+                            Button {
                                 Task {
-                                    if let resolvedItem = item.resolvedItem {
-                                        self.mapStore.selectedItem = resolvedItem
+                                    self.searchIsFocused = false
+                                    await self.searchStore.didSelect(item)
+                                    if let resolvedItem = mapStore.selectedItem {
                                         self.storeRecent(item: resolvedItem)
-                                    } else {
-                                        let resolvedItems = try await self.searchStore.resolve(item: item)
-
-                                        if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.resolvedItem {
-                                            self.mapStore.selectedItem = resolvedItem
-                                            self.storeRecent(item: resolvedItem)
-
-                                            let index = self.mapStore.displayableItems.firstIndex { itemInArray in
-                                                return itemInArray.id == resolvedItem.id
-                                            }
-
-                                            if let index {
-                                                self.mapStore.displayableItems[index] = DisplayableRow.resolvedItem(resolvedItem)
-                                            } else {
-                                                Logger.searchView.error("Resolved an item that is no longer in the displayable list")
-                                            }
-
-                                        } else {
-                                            self.mapStore.selectedDetent = .small
-                                            self.mapStore.displayableItems = resolvedItems
-                                        }
                                     }
                                     switch self.searchStore.searchType {
                                     case let .returnPOILocation(completion):
@@ -132,15 +112,12 @@ struct SearchSheet: View {
                                     case .favorites:
                                         break
                                     }
-
-                                    self.searchIsFocused = false
                                 }
-
-                            }, label: {
+                            } label: {
                                 SearchResultItemView(item: SearchResultItem(item), searchText: nil)
                                     .frame(maxWidth: .infinity)
                                     .redacted(reason: self.searchStore.isSheetLoading ? .placeholder : [])
-                            })
+                            }
                             .disabled(self.searchStore.isSheetLoading)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
@@ -195,13 +172,7 @@ struct SearchSheet: View {
 
     func storeRecent(item: ResolvedItem) {
         withAnimation {
-            if self.searchStore.recentViewedItem.count > 9 {
-                self.searchStore.recentViewedItem.removeLast()
-            }
-            if self.searchStore.recentViewedItem.contains(item) {
-                self.searchStore.recentViewedItem.removeAll(where: { $0 == item })
-            }
-            self.searchStore.recentViewedItem.append(item)
+            self.searchStore.storeInRecent(item)
         }
     }
 
