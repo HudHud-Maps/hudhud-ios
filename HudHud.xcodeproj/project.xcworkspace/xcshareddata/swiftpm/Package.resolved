@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "maplibre-swiftui-dsl-playground",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
+      "state" : {
+        "branch" : "mapstyle-pois",
+        "revision" : "4a69c57bd2cf404d6a801191a3645f0a5578ba50"
+      }
+    },
+    {
       "identity" : "mockable",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
@@ -169,15 +178,6 @@
       "state" : {
         "revision" : "6efbfda5276bbbc8b4fec5d744f0ecd8c784eb47",
         "version" : "1.0.1"
-      }
-    },
-    {
-      "identity" : "swift-snapshot-testing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
-      "state" : {
-        "revision" : "d2341adf332dc7341b4acad8761dff65e905d63c",
-        "version" : "1.16.2"
       }
     },
     {
