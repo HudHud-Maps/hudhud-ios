@@ -167,7 +167,6 @@ final class SearchViewStore: ObservableObject {
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
             self.mapStore.selectedItem = resolvedItem
             self.mapStore.selectedDetent = .third
-
         } catch {
             self.searchError = error
         }

@@ -247,6 +247,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		try container.encodeIfPresent(self.category, forKey: .category)
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
+        try container.encode(Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload(color: self.color), forKey: .color)
     }
 
     public func hash(into hasher: inout Hasher) {

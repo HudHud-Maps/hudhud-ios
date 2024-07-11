@@ -260,4 +260,47 @@ extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload
             Color(.systemCyan)
         }
     }
+    
+    init?(color: Color) {
+        switch color {
+        case Color(.systemGray):
+            self = .systemGray
+        case Color(.systemGray2):
+            self = .systemGray2
+        case Color(.systemGray3):
+            self = .systemGray3
+        case Color(.systemGray4):
+            self = .systemGray4
+        case Color(.systemGray5):
+            self = .systemGray5
+        case Color(.systemGray6):
+            self = .systemGray6
+        case Color(.systemRed):
+            self = .systemRed
+        case Color(.systemGreen):
+            self = .systemGreen
+        case Color(.systemBlue):
+            self = .systemBlue
+        case Color(.systemOrange):
+            self = .systemOrange
+        case Color(.systemYellow):
+            self = .systemYellow
+        case Color(.systemPink):
+            self = .systemPink
+        case Color(.systemPurple):
+            self = .systemPurple
+        case Color(.systemTeal):
+            self = .systemTeal
+        case Color(.systemIndigo):
+            self = .systemIndigo
+        case Color(.systemBrown):
+            self = .systemBrown
+        case Color(.systemMint):
+            self = .systemMint
+        case Color(.systemCyan):
+            self = .systemCyan
+        default:
+            return nil
+        }
+    }
 }
