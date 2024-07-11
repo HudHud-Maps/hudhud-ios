@@ -24,16 +24,14 @@ struct FavoriteItemView: View {
                 .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
                 .layoutPriority(1)
                 .frame(minWidth: .leastNonzeroMagnitude)
-                .background(
-                    self.favorite.item!.tintColor.mask(Circle())
-                )
+                .background((self.favorite.item?.tintColor ?? Color.gray).mask(Circle()))
 
             VStack(alignment: .leading) {
                 Text(self.favorite.title)
                     .foregroundStyle(.primary)
                     .font(.headline)
                     .lineLimit(1)
-                Text(self.favorite.item!.subtitle)
+                Text(self.favorite.item?.subtitle ?? "Address Not Available")
                     .foregroundStyle(.secondary)
                     .font(.body)
                     .lineLimit(1)
