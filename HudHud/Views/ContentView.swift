@@ -34,8 +34,7 @@ enum SheetSubView: Hashable, Codable {
 @MainActor
 struct ContentView: View {
 
-    // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-    private let styleURL = URL(string: "https://subzero.eu/hudhuddefaultv1.json")! // swiftlint:disable:this force_unwrapping
+    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
     @ObservedObject private var motionViewModel: MotionViewModel
@@ -143,18 +142,20 @@ struct ContentView: View {
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
 
-            SymbolStyleLayer(identifier: "patPOICircle", source: MLNSource(identifier: "hpoi_background"), sourceLayerIdentifier: "public.poi")
-                .iconImage(SFSymbolSpriteSheet.circle)
-                .iconColor(featurePropertyNamed: "ios_category_icon_color")
-                .iconAllowsOverlap(false)
-
             SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
-                .iconImage(featurePropertyNamed: "ios_category_icon_name", mappings: SFSymbolSpriteSheet.spriteMapping, default: UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                 .iconAllowsOverlap(false)
-                .iconColor(featurePropertyNamed: "ios_category_icon_color")
+                .text(featurePropertyNamed: "name_en")
+                .textFontSize(11)
+                .maximumTextWidth(8.0)
+                .textHaloColor(UIColor.white)
+                .textHaloWidth(1.0)
+                .textHaloBlur(0.5)
+                .textAnchor("top")
+                .textOffset(CGVector(dx: 0, dy: 1.6))
         }
         .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
-            // Pick the first feature (which may be a port or a cluster), ideally selecting
+            // Pick the first feature (which may be a pin or a cluster), ideally selecting
             // the one nearest nearest one to the touch point.
             guard let feature = features.first,
                   let placeID = feature.attribute(forKey: "poi_id") as? String else {
