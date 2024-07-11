@@ -66,11 +66,10 @@ struct FavoritesResolvedItems: RawRepresentable {
     var favoritesItems: [FavoritesItem]
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(favoritesItems),
-              let result = String(data: data, encoding: .utf8) else {
+        guard let data = try? JSONEncoder().encode(favoritesItems) else {
             return "[]"
         }
-        return result
+        return String(decoding: data, as: UTF8.self)
     }
 
     // MARK: - Lifecycle
@@ -131,16 +130,16 @@ extension FavoritesItem {
                                                   tintColor: .gray, item: .pharmacy, description: " ", type: "School")
     static var favoritesInit = [
         FavoritesItem(id: UUID(), title: "Home",
-                      tintColor: .gray, item: .artwork, type: types.home),
+                      tintColor: .gray, item: .artwork, type: Types.home),
         FavoritesItem(id: UUID(), title: "Work",
-                      tintColor: .gray, type: types.work),
+                      tintColor: .gray, type: Types.work),
         FavoritesItem(id: UUID(), title: "School",
-                      tintColor: .gray, type: types.school)
+                      tintColor: .gray, type: Types.school)
     ]
 }
 
 extension FavoritesItem {
-    enum types {
+    enum Types {
         static var home = "Home"
         static var work = "Work"
         static var school = "School"

@@ -56,8 +56,11 @@ struct FavoritesViewMoreView: View {
                             Button {
                                 self.actionSheetShown = true
                                 self.clickedFavorite = favorite
-                                self.clickedItem = favorite.item!
-                                self.camera = MapViewCamera.center(favorite.item!.coordinate, zoom: 14)
+                                if let item = favorite.item {
+                                    self.clickedItem = item
+
+                                    self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
+                                }
                             } label: {
                                 Text("...")
                                     .foregroundStyle(Color(UIColor.label))
@@ -86,15 +89,15 @@ struct FavoritesViewMoreView: View {
         .navigationTitle("Favorites")
         .navigationBarTitleDisplayMode(.inline)
         .navigationBarItems(
-            trailing: Button(action: {
+            trailing: Button {
                 self.searchSheetShown = true
-            }) {
+            } label: {
                 Image(systemSymbol: .plus)
             }
         )
 
         .sheet(isPresented: self.$searchSheetShown) {
-            self.SearchSheetView()
+            self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) { _ in
             self.mapStore.path.append(SheetSubView.favorites)
@@ -103,7 +106,7 @@ struct FavoritesViewMoreView: View {
 
     // MARK: - Internal
 
-    func SearchSheetView() -> some View {
+    func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
         let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites
