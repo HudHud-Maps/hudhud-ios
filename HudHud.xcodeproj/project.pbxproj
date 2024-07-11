@@ -80,6 +80,9 @@
 		CD33DFEE2C00CA670090592C /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD33DFED2C00CA670090592C /* MapLibreSwiftUI */; };
 		CD358E1B2C3D33350073F5FE /* SFSymbolSpriteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD358E1A2C3D33350073F5FE /* SFSymbolSpriteSheet.swift */; };
 		CD358E1D2C3FDFB10073F5FE /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD358E1C2C3FDFB10073F5FE /* SymbolStyleLayer.swift */; };
+		CD358E1E2C3FF3D50073F5FE /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 197E2670D487EB0CF03C2AF6 /* NavigationTransitions */; };
+		CD358E1F2C3FF3D50073F5FE /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 8A90C00DC16DBC95E09E4CF4 /* BetterSafariView */; };
+		CD358E202C3FF3D50073F5FE /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 16C899CF51549F0E68B441D0 /* TouchVisualizer */; };
 		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
 		CD5409662C2B1A710010594E /* UIApplication+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5409652C2B1A710010594E /* UIApplication+Environment.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
@@ -105,7 +108,7 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
-		CDAE06022B6BDC5A003E5196 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		CDAE06022B6BDC5A003E5196 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
 		CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C7AFBB29CC507D42D1538B2C /* MapboxNavigation */; };
@@ -261,6 +264,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD358E202C3FF3D50073F5FE /* TouchVisualizer in Frameworks */,
+				CD358E1F2C3FF3D50073F5FE /* BetterSafariView in Frameworks */,
+				CD358E1E2C3FF3D50073F5FE /* NavigationTransitions in Frameworks */,
 				CD64651E2C0DD1E400802FBD /* BackendService in Frameworks */,
 				CD7A377F2C07732700F1C2DD /* BetterSafariView in Frameworks */,
 				CD7A377E2C07732700F1C2DD /* NavigationTransitions in Frameworks */,
@@ -270,7 +276,7 @@
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD33DFEE2C00CA670090592C /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CDAE06022B6BDC5A003E5196 /* BuildFile in Frameworks */,
+				CDAE06022B6BDC5A003E5196 /* (null) in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD33DFEC2C00CA670090592C /* MapLibreSwiftDSL in Frameworks */,
 				CD59BD712B7CD967002C14F6 /* SFSafeSymbols in Frameworks */,
@@ -730,18 +736,17 @@
 			);
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
-				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */,
-				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */,
-				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */,
+				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
+				CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */,
+				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
 				CD33DFEA2C00CA670090592C /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
-				E08FFC1B85D7863F0FC15363 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */,
-				9FFA28B753F4978E75DBEA8F /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */,
-				E14252BA6A0FF1D3C429EBF3 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */,
-				002A114EC5CED45A52C1AD2E /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */,
+				E08FFC1B85D7863F0FC15363 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
+				9FFA28B753F4978E75DBEA8F /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
+				E14252BA6A0FF1D3C429EBF3 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
+				002A114EC5CED45A52C1AD2E /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				FBEDEF1CFE739BF4E219A7F2 /* XCRemoteSwiftPackageReference "TouchVisualizer" */,
 				A526244ADD0FDD45DFCF644E /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
-				30259D3D19FB857ED05E36E1 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1258,7 +1263,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		002A114EC5CED45A52C1AD2E /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
+		002A114EC5CED45A52C1AD2E /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
@@ -1266,15 +1271,7 @@
 				kind = branch;
 			};
 		};
-		30259D3D19FB857ED05E36E1 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground";
-			requirement = {
-				branch = "enhancement/unify-navigation";
-				kind = branch;
-			};
-		};
-		60C11CEB823966EEAE3E3ED7 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
+		60C11CEB823966EEAE3E3ED7 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
@@ -1282,7 +1279,7 @@
 				kind = branch;
 			};
 		};
-		7C2F1607BA06CCD480305C70 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
+		7C2F1607BA06CCD480305C70 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
@@ -1290,7 +1287,7 @@
 				kind = branch;
 			};
 		};
-		9FFA28B753F4978E75DBEA8F /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
+		9FFA28B753F4978E75DBEA8F /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
@@ -1306,7 +1303,7 @@
 				kind = branch;
 			};
 		};
-		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */ = {
+		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
 			requirement = {
@@ -1314,7 +1311,7 @@
 				kind = branch;
 			};
 		};
-		AE116796150E0553085890D9 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
+		AE116796150E0553085890D9 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
@@ -1322,7 +1319,7 @@
 				minimumVersion = 0.13.3;
 			};
 		};
-		AFEDCC53B7AC4D6CACADE2F7 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
+		AFEDCC53B7AC4D6CACADE2F7 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
@@ -1346,7 +1343,7 @@
 				kind = branch;
 			};
 		};
-		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */ = {
+		CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SFSafeSymbols/SFSafeSymbols.git";
 			requirement = {
@@ -1362,7 +1359,7 @@
 				minimumVersion = 0.8.1;
 			};
 		};
-		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */ = {
+		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/SwiftLocation.git";
 			requirement = {
@@ -1370,7 +1367,7 @@
 				kind = branch;
 			};
 		};
-		CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */ = {
+		CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
 			requirement = {
@@ -1378,7 +1375,7 @@
 				kind = branch;
 			};
 		};
-		E08FFC1B85D7863F0FC15363 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
+		E08FFC1B85D7863F0FC15363 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
@@ -1386,7 +1383,7 @@
 				minimumVersion = 0.13.3;
 			};
 		};
-		E14252BA6A0FF1D3C429EBF3 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
+		E14252BA6A0FF1D3C429EBF3 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
@@ -1394,7 +1391,7 @@
 				minimumVersion = 0.13.3;
 			};
 		};
-		E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */ = {
+		E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
 			requirement = {
@@ -1420,22 +1417,22 @@
 		};
 		197E2670D487EB0CF03C2AF6 /* NavigationTransitions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AFEDCC53B7AC4D6CACADE2F7 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */;
+			package = AFEDCC53B7AC4D6CACADE2F7 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
 			productName = NavigationTransitions;
 		};
 		62678BC6BA8A80DCF2EBF8B8 /* BetterSafariView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 7C2F1607BA06CCD480305C70 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */;
+			package = 7C2F1607BA06CCD480305C70 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
 			productName = BetterSafariView;
 		};
 		8A90C00DC16DBC95E09E4CF4 /* BetterSafariView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 60C11CEB823966EEAE3E3ED7 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */;
+			package = 60C11CEB823966EEAE3E3ED7 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
 			productName = BetterSafariView;
 		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution.git" */;
+			package = E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */;
 			productName = MapLibre;
 		};
 		C59FBA3C1C46E50602C5C2DC /* BackendService */ = {
@@ -1444,7 +1441,7 @@
 		};
 		C7AFBB29CC507D42D1538B2C /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios.git" */;
+			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
 		};
 		CD1BD8AC2B9087C100A591BD /* MapLibre */ = {
@@ -1463,7 +1460,7 @@
 		};
 		CD59BD702B7CD967002C14F6 /* SFSafeSymbols */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols.git" */;
+			package = CD59BD6F2B7CD967002C14F6 /* XCRemoteSwiftPackageReference "SFSafeSymbols" */;
 			productName = SFSafeSymbols;
 		};
 		CD8C5A1F2BA342A5002EBE8A /* SimpleToast */ = {
@@ -1473,7 +1470,7 @@
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */;
+			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
 			productName = SwiftLocation;
 		};
 		DE3A66FF070A2B17657129E4 /* MapLibre */ = {
@@ -1482,7 +1479,7 @@
 		};
 		FF82BD7DCFFCC2C9044E4E32 /* NavigationTransitions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = AE116796150E0553085890D9 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */;
+			package = AE116796150E0553085890D9 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
 			productName = NavigationTransitions;
 		};
 /* End XCSwiftPackageProductDependency section */
