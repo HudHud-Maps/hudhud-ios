@@ -228,11 +228,6 @@ struct ContentView: View {
                     }
                 }
         )
-        .onTapGesture {
-            if self.mapStore.trackingState != .none {
-                self.mapStore.trackingState = .none
-            }
-        }
     }
 
     var body: some View {
