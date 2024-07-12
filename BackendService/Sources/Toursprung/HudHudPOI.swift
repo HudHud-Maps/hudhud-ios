@@ -73,9 +73,10 @@ public struct HudHudPOI: POIServiceProtocol {
             switch okResponse.body {
             case .json(let jsonResponse):
                 let something: [AnyDisplayableAsRow] = jsonResponse.data.compactMap { somethingElse in
-                    let id = somethingElse.id
+					guard let id = somethingElse.id else { return nil }
+					
 					let title = somethingElse.name
-					let subtitle = somethingElse.address
+					guard let subtitle = somethingElse.address else { return nil }
 					
                     return AnyDisplayableAsRow(PredictionItem(id: id, title: title, subtitle: subtitle, type: .hudhud))
                 }
