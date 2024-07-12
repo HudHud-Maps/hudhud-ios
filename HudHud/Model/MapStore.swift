@@ -24,6 +24,12 @@ import SwiftUI
 @MainActor
 final class MapStore: ObservableObject {
 
+    enum TrackingState {
+        case none
+        case locateOnce
+        case keepTracking
+    }
+
     enum NavigationProgress {
         case none
         case navigating
@@ -55,7 +61,7 @@ final class MapStore: ObservableObject {
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
     @Published var navigationProgress: NavigationProgress = .none
-
+    @Published var trackingState: TrackingState = .none
     @Published var navigatingRoute: Route? {
         didSet {
             if let elements = try? path.elements() {

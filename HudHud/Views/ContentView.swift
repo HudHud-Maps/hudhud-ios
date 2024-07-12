@@ -193,6 +193,7 @@ struct ContentView: View {
                 break
             }
 
+            controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithHeading : .none
             controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
@@ -219,6 +220,14 @@ struct ContentView: View {
                 }
             }
         }
+        .gesture(
+            DragGesture()
+                .onChanged { _ in
+                    if self.mapStore.trackingState != .none {
+                        self.mapStore.trackingState = .none
+                    }
+                }
+        )
     }
 
     var body: some View {
