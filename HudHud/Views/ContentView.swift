@@ -139,13 +139,30 @@ struct ContentView: View {
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
 
-            SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
-                .iconImage(UIImage.lookAroundPin)
-                .iconRotation(featurePropertyNamed: "heading")
+//            SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
+//                .iconImage(UIImage.lookAroundPin)
+//                .iconRotation(featurePropertyNamed: "heading")
+
+            CircleStyleLayer(
+                identifier: MapLayerIdentifier.street360ViewPoint,
+                source: self.mapStore.street360ViewSource
+            )
+            .radius(16)
+            .color(.systemBlue)
+            .strokeWidth(2)
+            .strokeColor(.white)
         }
-        .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
+        .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles, MapLayerIdentifier.street360ViewPoint], onTapChanged: { _, features in
             // Pick the first feature (which may be a port or a cluster), ideally selecting
             // the one nearest nearest one to the touch point.
+
+            if let feature = features.first,
+               let placeID = feature.attribute(forKey: "sv_id") as? Int {
+                // user tapped nothing - deselect
+                self.mapStore.street360View = true
+                return
+            }
+
             guard let feature = features.first,
                   let placeID = feature.attribute(forKey: "poi_id") as? String else {
                 // user tapped nothing - deselect
@@ -303,26 +320,47 @@ struct ContentView: View {
                                         Logger.searchView.info("Map Mode toursprung")
                                     }
                                 },
-                                MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
-                                    if self.mapStore.streetView == .disabled {
+//                                MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
+//                                    if self.mapStore.streetView == .disabled {
+//                                        Task {
+//                                            self.mapStore.streetView = .requestedCurrentLocation
+//                                            let location = try await Location.forSingleRequestUsage.requestLocation()
+//                                            guard let location = location.location else { return }
+//
+//                                            print("set new streetViewPoint")
+//                                            self.motionViewModel.coordinate = location.coordinate
+//                                            if location.course > 0 {
+//                                                self.motionViewModel.position.heading = location.course
+//                                            }
+//                                            withAnimation {
+//                                                self.mapStore.streetView = .enabled
+//                                                self.mapStore.searchShown = false
+//                                            }
+//                                        }
+//                                    } else {
+//                                        withAnimation {
+//                                            self.mapStore.streetView = .disabled
+//                                        }
+//                                    }
+//                                },
+                                MapButtonData(sfSymbol: .icon(self.mapStore.street360ViewPins == false ? .pano : .panoFill)) {
+                                    if self.mapStore.street360ViewPins == false {
                                         Task {
-                                            self.mapStore.streetView = .requestedCurrentLocation
                                             let location = try await Location.forSingleRequestUsage.requestLocation()
                                             guard let location = location.location else { return }
-
                                             print("set new streetViewPoint")
+                                            self.mapStore.street360ViewPins = true
+                                            await self.mapStore.loadNearbyStreetView(location.coordinate)
                                             self.motionViewModel.coordinate = location.coordinate
-                                            if location.course > 0 {
-                                                self.motionViewModel.position.heading = location.course
-                                            }
                                             withAnimation {
-                                                self.mapStore.streetView = .enabled
                                                 self.mapStore.searchShown = false
                                             }
                                         }
                                     } else {
                                         withAnimation {
-                                            self.mapStore.streetView = .disabled
+                                            self.mapStore.street360ViewPins = false
+                                            self.mapStore.searchShown = true
+                                            self.mapStore.street360ViewItems.removeAll()
                                         }
                                     }
                                 },
@@ -380,6 +418,19 @@ struct ContentView: View {
                         .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
+            }
+            .overlay(alignment: .top) {
+                if self.mapStore.street360View, let item = mapStore.street360ViewItems.first {
+                    Street360View(streetViewItem: item, mapStore: self.mapStore,
+                                  expandedView: { expand in
+
+                                      self.mapStore.searchShown = !expand
+
+                                  }, closeView: {
+                                      self.mapStore.street360View = false
+                                      self.mapStore.searchShown = true
+                                  })
+                }
             }
         }
     }

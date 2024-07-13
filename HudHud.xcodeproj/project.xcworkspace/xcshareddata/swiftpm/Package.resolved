@@ -10,6 +10,14 @@
       }
     },
     {
+      "identity" : "logmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/martinmaly21/LogManager",
+      "state" : {
+        "revision" : "43246309d90d7754a5e9afec82eed5fa4eeb1a1d"
+      }
+    },
+    {
       "identity" : "mapbox-directions-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
@@ -109,6 +117,14 @@
       }
     },
     {
+      "identity" : "soundmanager",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/martinmaly21/SoundManager",
+      "state" : {
+        "revision" : "9b0100240d5364b545c1be3f610987de200f4780"
+      }
+    },
+    {
       "identity" : "swift-algorithms",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-algorithms",
@@ -190,6 +206,14 @@
       }
     },
     {
+      "identity" : "swiftletutilities",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/martinmaly21/SwiftletUtilities",
+      "state" : {
+        "revision" : "36b64e715a46117abb05f04ee32b5d6045b726ec"
+      }
+    },
+    {
       "identity" : "swiftlintplugin",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin.git",
@@ -223,6 +247,15 @@
       "state" : {
         "revision" : "a6a3c70ad5d771bd1e927fb55897231cd9592024",
         "version" : "0.13.3"
+      }
+    },
+    {
+      "identity" : "swiftuipanoramaviewer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/martinmaly21/SwiftUIPanoramaViewer",
+      "state" : {
+        "branch" : "main",
+        "revision" : "62fe64f3b901bbdf11dc33a71e21434564a44feb"
       }
     },
     {

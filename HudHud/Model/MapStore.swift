@@ -62,6 +62,12 @@ final class MapStore: ObservableObject {
     @Published var waypoints: [ABCRouteConfigurationItem]?
     @Published var navigationProgress: NavigationProgress = .none
     @Published var trackingState: TrackingState = .none
+
+    var hudhudStreetView = HudhudStreetView()
+    @Published var street360ViewPins: Bool = false
+    @Published var street360View: Bool = false
+    @Published var street360ViewItems = [StreetViewItem]()
+
     @Published var navigatingRoute: Route? {
         didSet {
             if let elements = try? path.elements() {
@@ -179,6 +185,17 @@ final class MapStore: ObservableObject {
                 let streetViewPoint = StreetViewPoint(location: coordinate,
                                                       heading: self.motionViewModel.position.heading)
                 streetViewPoint.feature
+            }
+        }
+    }
+
+    var street360ViewSource: ShapeSource {
+        return ShapeSource(identifier: MapSourceIdentifier.street360ViewPoint,
+                           options: [.clustered: false]) {
+            self.street360ViewItems.compactMap { item in
+                return MLNPointFeature(coordinate: item.coordinate) { feature in
+                    feature.attributes["sv_id"] = item.id
+                }
             }
         }
     }
@@ -311,6 +328,33 @@ extension MapStore: NavigationViewControllerDelegate {
         self.navigatingRoute = route
         Logger.routing.info("didRerouteAlong new route \(route)")
     }
+}
+
+extension MapStore {
+
+    func loadNearbyStreetView(_: CLLocationCoordinate2D) async {
+        do {
+//                guard let userLocation = try await self.locationManager.requestLocation().location?.coordinate else {
+//                    return
+//                }
+
+            // TODO: since the API only return the pin if the user id close to the street view
+            // I hardcoded the lat and lon for testing only...
+            let lat = 24.7051777777778
+            let lon = 46.7044388888889
+            if let svPoints = try await hudhudStreetView.getStreetView(lat: lat, lon: lon) {
+                print(svPoints)
+                self.street360ViewItems = [svPoints]
+            }
+            if let boundingBox = self.generateMLNCoordinateBounds(from: [CLLocationCoordinate2D(latitude: lat, longitude: lon)]) {
+                self.camera = MapViewCamera.boundingBox(boundingBox, edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
+            }
+
+        } catch {
+            print("error \(error)")
+        }
+    }
+
 }
 
 // MARK: - Previewable

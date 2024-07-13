@@ -20,5 +20,5 @@ enum MapLayerIdentifier {
     static let selectedCircleIcon = "selectedCircleIcon"
     static var simpleSymbols = "simpleSymbols"
     static var streetViewSymbols = "streetViewSymbols"
-
+    static var street360ViewPoint = "street360ViewPoint"
 }
