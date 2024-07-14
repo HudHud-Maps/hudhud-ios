@@ -23,10 +23,19 @@ struct PoiTileView: View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topLeading) {
                 AsyncImage(url: URL(string: self.poiTileData.trendingImage ?? "")) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 130, height: 140)
+                    ZStack(alignment: .top) {
+                        image
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 130, height: 140)
+
+                        // Dark shadow gradient
+                        LinearGradient(gradient: Gradient(colors: [Color.black.opacity(0.5), Color.clear]),
+                                       startPoint: .top,
+                                       endPoint: .center)
+                            .frame(height: 100)
+                            .cornerRadius(7.0)
+                    }
                 } placeholder: {
                     ProgressView()
                         .progressViewStyle(.automatic)
@@ -36,21 +45,19 @@ struct PoiTileView: View {
                 }
                 .background(.secondary)
                 .cornerRadius(7.0)
+
                 HStack {
                     HStack(spacing: 2) {
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
                             .foregroundColor(.orange)
+                            .bold()
                         Text("\(self.poiTileData.rating ?? 0, specifier: "%.1f")")
-                            .foregroundStyle(.primary)
-                            .font(.system(.caption))
-                            .bold()
-                            .foregroundStyle(.background)
-                        Text("(\(self.poiTileData.ratingCount ?? 0))")
-                            .foregroundStyle(.primary)
-                            .font(.system(.caption))
-                            .bold()
-                            .foregroundStyle(.background)
+                            .hudhudFont(.caption)
+                            .foregroundStyle(.white)
+                        Text("(\(self.poiTileData.ratingsCount ?? 0))")
+                            .hudhudFont(.caption)
+                            .foregroundStyle(.white)
                     }
                     .padding(5)
                     Spacer()
@@ -69,11 +76,11 @@ struct PoiTileView: View {
             }
             VStack(alignment: .leading, spacing: 3) {
                 Text(self.poiTileData.title)
-                    .font(.subheadline)
+                    .hudhudFont(.subheadline)
                     .lineLimit(1)
                 HStack {
                     Text("\(self.poiTileData.category ?? "") \(self.poiTileData.distance(from: self.location))")
-                        .font(.caption)
+                        .hudhudFont(.caption)
                         .foregroundStyle(.secondary)
                 }
                 .padding(.horizontal, 3)
@@ -110,7 +117,7 @@ private extension ResolvedItem {
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"),
                            rating: 2,
-                           ratingCount: 25,
+                           ratingsCount: 25,
                            trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")
     return PoiTileView(poiTileData: poi)
 }

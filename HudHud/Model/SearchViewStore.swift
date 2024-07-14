@@ -23,6 +23,7 @@ final class SearchViewStore: ObservableObject {
 
         case selectPOI
         case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
+        case favorites
 
         // MARK: - Internal
 
@@ -33,6 +34,8 @@ final class SearchViewStore: ObservableObject {
             case let (.returnPOILocation(lhsCompletion), .returnPOILocation(rhsCompletion)):
                 // Compare the optional closures using their identity
                 return lhsCompletion as AnyObject === rhsCompletion as AnyObject
+            case (.favorites, .favorites):
+                return true
             default:
                 return false
             }

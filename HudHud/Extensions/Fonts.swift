@@ -28,6 +28,70 @@ enum FontWeight {
     case semiBoldItalic
 }
 
+// MARK: - Fonts
+
+enum Fonts {
+    static func getSize(for textStyle: Font.TextStyle) -> CGFloat {
+        switch textStyle {
+        case .largeTitle:
+            return 34
+        case .title:
+            return 28
+        case .title2:
+            return 22
+        case .title3:
+            return 20
+        case .headline, .body:
+            return 17
+        case .callout:
+            return 16
+        case .subheadline:
+            return 15
+        case .footnote:
+            return 13
+        case .caption:
+            return 12
+        case .caption2:
+            return 11
+        @unknown default:
+            return 17
+        }
+    }
+
+    static func getWeight(for textStyle: Font.TextStyle) -> FontWeight {
+        switch textStyle {
+        case .largeTitle:
+            return .bold
+        case .title:
+            return .semiBold
+        case .title2:
+            return .medium
+        case .title3:
+            return .regular
+        case .headline:
+            return .semiBold
+        case .subheadline:
+            return .medium
+        case .body:
+            return .regular
+        case .callout:
+            return .regular
+        case .footnote:
+            return .regular
+        case .caption:
+            return .regular
+        case .caption2:
+            return .regular
+        case .extraLargeTitle:
+            return .bold
+        case .extraLargeTitle2:
+            return .semiBold
+        @unknown default:
+            return .regular
+        }
+    }
+}
+
 extension Font {
     static func hudhudFont(_ weight: FontWeight, size: CGFloat) -> Font {
         switch weight {
@@ -64,7 +128,11 @@ extension Font {
 }
 
 extension Text {
-    func hudhudFont(_ fontWeight: FontWeight? = .regular, size: CGFloat? = nil) -> Text {
-        return self.font(.hudhudFont(fontWeight ?? .regular, size: size ?? 16))
+    func hudhudFont(size: CGFloat, fontWeight: FontWeight = .regular) -> Text {
+        return self.font(.hudhudFont(fontWeight, size: size))
+    }
+
+    func hudhudFont(_ textStyle: Font.TextStyle = .body) -> Text {
+        return self.font(.hudhudFont(Fonts.getWeight(for: textStyle), size: Fonts.getSize(for: textStyle)))
     }
 }

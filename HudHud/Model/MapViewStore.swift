@@ -99,7 +99,7 @@ class MapViewStore {
             phone: feature.attribute(forKey: "phone_number") as? String,
             website: self.website(from: feature),
             rating: feature.attribute(forKey: "rating") as? Double,
-            ratingCount: feature.attribute(forKey: "ratings_count") as? Int
+            ratingsCount: feature.attribute(forKey: "ratings_count") as? Int
         )
     }
 

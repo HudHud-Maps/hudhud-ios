@@ -47,7 +47,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     url = nil
                 }
-                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), phone: jsonResponse.data.phone_number, website: url)]
+                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: [MediaURLs(type: jsonResponse.data.media_urls?.first?._type, url: jsonResponse.data.media_urls?.first?.url)])]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -73,9 +73,10 @@ public struct HudHudPOI: POIServiceProtocol {
             switch okResponse.body {
             case .json(let jsonResponse):
                 let something: [AnyDisplayableAsRow] = jsonResponse.data.compactMap { somethingElse in
-                    let id = somethingElse.id
+					guard let id = somethingElse.id else { return nil }
+					
 					let title = somethingElse.name
-					let subtitle = somethingElse.address
+					guard let subtitle = somethingElse.address else { return nil }
 					
                     return AnyDisplayableAsRow(PredictionItem(id: id, title: title, subtitle: subtitle, type: .hudhud))
                 }
