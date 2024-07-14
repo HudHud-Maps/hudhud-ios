@@ -29,10 +29,10 @@ struct POIMediaView: View {
                                 .progressViewStyle(.automatic)
                                 .frame(width: 160, height: 140)
                                 .background(.secondary)
-                                .cornerRadius(7.0)
+                                .cornerRadius(10)
                         }
                         .background(.secondary)
-                        .cornerRadius(7.0)
+                        .cornerRadius(10)
                     }
                 }
             }

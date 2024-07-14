@@ -130,7 +130,7 @@ extension FavoritesItem {
                                                   tintColor: .gray, item: .pharmacy, description: " ", type: "School")
     static var favoritesInit = [
         FavoritesItem(id: UUID(), title: "Home",
-                      tintColor: .gray, item: .artwork, type: Types.home),
+                      tintColor: .gray, type: Types.home),
         FavoritesItem(id: UUID(), title: "Work",
                       tintColor: .gray, type: Types.work),
         FavoritesItem(id: UUID(), title: "School",
