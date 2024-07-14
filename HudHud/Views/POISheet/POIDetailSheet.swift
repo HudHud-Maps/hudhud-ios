@@ -150,7 +150,7 @@ struct POIDetailSheet: View {
                 VStack {
                     AdditionalPOIDetailsView(item: self.item, routes: self.routes)
                         .fixedSize()
-                        .padding([.top, .trailing])
+                        .padding([.top, .trailing, .leading])
                     DictionaryView(dictionary: self.item.userInfo)
                     POIMediaView(item: self.item)
                 }

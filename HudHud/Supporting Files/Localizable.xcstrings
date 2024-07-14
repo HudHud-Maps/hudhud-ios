@@ -1,10 +1,10 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "..." : {
-        
-    },
     "" : {
+
+    },
+    "..." : {
 
     },
     "(%lld)" : {
@@ -163,7 +163,7 @@
 
     },
     "Edit" : {
-        
+
     },
     "Enable Touch Visualizer" : {
 
@@ -279,8 +279,8 @@
         }
       }
     },
-    "N/A" : {
-        
+    "N / A" : {
+
     },
     "Name" : {
 

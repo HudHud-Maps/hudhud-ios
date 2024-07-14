@@ -38,7 +38,8 @@ struct AdditionalPOIDetailsView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            Divider()
+            .padding(.trailing, 6)
+            Divider().foregroundStyle(Color.Colors.General._04GreyForLines).frame(height: 25).padding(.top, 8)
             VStack(alignment: .leading) {
                 Text("Distance")
                     .hudhudFont(.footnote)
@@ -59,7 +60,8 @@ struct AdditionalPOIDetailsView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            Divider()
+            .padding(.horizontal, 6)
+            Divider().foregroundStyle(Color.Colors.General._04GreyForLines).frame(height: 25).padding(.top, 8)
             VStack(alignment: .leading) {
                 Text("Duration")
                     .hudhudFont(.footnote)
@@ -81,7 +83,8 @@ struct AdditionalPOIDetailsView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            Divider()
+            .padding(.horizontal, 6)
+            Divider().foregroundStyle(Color.Colors.General._04GreyForLines).frame(height: 25).padding(.top, 8)
             VStack(alignment: .leading) {
                 Text("Ratings")
                     .hudhudFont(.footnote)
@@ -113,6 +116,7 @@ struct AdditionalPOIDetailsView: View {
                         .minimumScaleFactor(0.5)
                 }
             }
+            .padding(.leading, 6)
             Spacer()
                 .frame(maxWidth: .infinity)
         }
