@@ -35,6 +35,7 @@ struct POIMediaView: View {
                         .cornerRadius(10)
                     }
                 }
+                .padding(.leading)
             }
         }
     }

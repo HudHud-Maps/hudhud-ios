@@ -45,7 +45,7 @@ struct POIDetailSheet: View {
                 HStack(alignment: .top) {
                     VStack(spacing: 0.0) {
                         Text(self.item.title)
-                            .font(.title.bold())
+                            .hudhudFont(.title)
                             .foregroundStyle(Color.Colors.General._01Black)
                             .lineLimit(2)
                             .minimumScaleFactor(0.6)
@@ -53,16 +53,16 @@ struct POIDetailSheet: View {
 
                         if let category = self.item.category {
                             Text(category)
-                                .font(.footnote)
+                                .hudhudFont(.footnote)
                                 .foregroundStyle(Color.Colors.General._02Grey)
                                 .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.bottom, 4)
+                                .padding(.vertical, 6)
                         }
                         HStack {
                             Text(self.item.subtitle)
-                                .font(.footnote)
+                                .hudhudFont(.footnote)
                                 .foregroundStyle(Color.Colors.General._01Black)
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(self.viewMore ? 3 : 1)
@@ -153,7 +153,6 @@ struct POIDetailSheet: View {
                         .padding([.top, .trailing])
                     DictionaryView(dictionary: self.item.userInfo)
                     POIMediaView(item: self.item)
-                        .padding(.leading)
                 }
             }
         }
