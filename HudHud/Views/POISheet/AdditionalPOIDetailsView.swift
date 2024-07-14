@@ -49,6 +49,7 @@ struct AdditionalPOIDetailsView: View {
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDistance(distance: route.distance))")
                         .hudhudFont(.headline)
+                        .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
