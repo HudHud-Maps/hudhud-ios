@@ -46,14 +46,15 @@ struct POIDetailSheet: View {
                     VStack(spacing: 0.0) {
                         Text(self.item.title)
                             .font(.title.bold())
-                            .minimumScaleFactor(0.6)
+                            .foregroundStyle(Color.Colors.General._01Black)
                             .lineLimit(2)
+                            .minimumScaleFactor(0.6)
                             .frame(maxWidth: .infinity, alignment: .leading)
 
                         if let category = self.item.category {
                             Text(category)
                                 .font(.footnote)
-                                .foregroundStyle(.secondary)
+                                .foregroundStyle(Color.Colors.General._02Grey)
                                 .lineLimit(2)
                                 .fixedSize(horizontal: false, vertical: true)
                                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -62,6 +63,7 @@ struct POIDetailSheet: View {
                         HStack {
                             Text(self.item.subtitle)
                                 .font(.footnote)
+                                .foregroundStyle(Color.Colors.General._01Black)
                                 .multilineTextAlignment(.leading)
                                 .lineLimit(self.viewMore ? 3 : 1)
                             if self.shouldShowButton {
@@ -69,6 +71,7 @@ struct POIDetailSheet: View {
                                     self.viewMore.toggle()
                                 }
                                 .font(.footnote)
+                                .foregroundStyle(Color.Colors.General._07BlueMain)
                             }
                         }
                         .fixedSize(horizontal: false, vertical: true)
@@ -81,12 +84,11 @@ struct POIDetailSheet: View {
                     }, label: {
                         ZStack {
                             Circle()
-                                .fill(.quinary.opacity(0.5))
+                                .fill(Color.Colors.General._03LightGrey)
                                 .frame(width: 30, height: 30)
 
                             Image(.closeIcon)
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
-                                .foregroundStyle(.secondary)
                         }
                         .padding(4)
                         .contentShape(Circle())
@@ -101,7 +103,7 @@ struct POIDetailSheet: View {
                             guard let routes else { return }
                             self.onStart(routes)
                         }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .blue, fontColor: .white))
+                            .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
                             .disabled(self.routes == nil)
 
                         if let phone = self.item.phone, !phone.isEmpty {

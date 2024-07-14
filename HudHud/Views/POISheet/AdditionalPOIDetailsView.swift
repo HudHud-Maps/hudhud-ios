@@ -20,7 +20,7 @@ struct AdditionalPOIDetailsView: View {
             VStack(alignment: .leading) {
                 Text("Hours")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.Colors.General._02Grey)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let isOpen = self.item.isOpen {
@@ -28,10 +28,11 @@ struct AdditionalPOIDetailsView: View {
                         .font(.body.bold())
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
-                        .foregroundStyle(isOpen ? .blue : .red)
+                        .foregroundStyle(isOpen ? Color(.Colors.General._07BlueMain) : Color(.Colors.General._12Red))
                 } else {
                     Text("Unknown")
                         .font(.body.bold())
+                        .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
@@ -41,7 +42,7 @@ struct AdditionalPOIDetailsView: View {
             VStack(alignment: .leading) {
                 Text("Distance")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.Colors.General._02Grey)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let route = routes?.routes.first {
@@ -50,8 +51,9 @@ struct AdditionalPOIDetailsView: View {
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
-                    Text("N/A")
+                    Text("N / A")
                         .font(.body.bold())
+                        .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
@@ -61,17 +63,19 @@ struct AdditionalPOIDetailsView: View {
             VStack(alignment: .leading) {
                 Text("Duration")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.Colors.General._02Grey)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let route = routes?.routes.first {
                     Text("\(self.formatter.formatDuration(duration: route.expectedTravelTime))")
                         .font(.body.bold())
+                        .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 } else {
-                    Text("N/A")
+                    Text("N / A")
                         .font(.body.bold())
+                        .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }
@@ -81,20 +85,22 @@ struct AdditionalPOIDetailsView: View {
             VStack(alignment: .leading) {
                 Text("Ratings")
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
+                    .foregroundStyle(Color.Colors.General._02Grey)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 if let rating = self.item.rating {
                     HStack(spacing: 1) {
                         Image(systemSymbol: .starFill)
                             .font(.caption)
-                            .foregroundColor(.orange)
+                            .foregroundColor(.Colors.General._13Orange)
                         Text("\(rating, specifier: "%.1f")")
                             .font(.body.bold())
+                            .foregroundStyle(Color.Colors.General._01Black)
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
                         Text("(\(self.item.ratingsCount ?? 0))")
                             .font(.body.bold())
+                            .foregroundStyle(Color.Colors.General._02Grey)
                             .lineLimit(1)
                             .minimumScaleFactor(0.5)
                             .foregroundStyle(.secondary)
@@ -102,6 +108,7 @@ struct AdditionalPOIDetailsView: View {
                 } else {
                     Text("No Ratings")
                         .font(.body.bold())
+                        .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
                         .minimumScaleFactor(0.5)
                 }

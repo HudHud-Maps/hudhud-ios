@@ -27,7 +27,7 @@ struct POISheetButtonStyle: ButtonStyle {
                 .frame(width: self.imageSize, height: self.imageSize)
                 .padding(.top, 9)
             Text(self.title)
-                .foregroundStyle(self.fontColor ?? .primary)
+                .foregroundStyle(self.fontColor ?? .Colors.General._01Black)
                 .font(.subheadline.bold())
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
