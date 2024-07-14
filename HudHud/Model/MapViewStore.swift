@@ -68,7 +68,9 @@ class MapViewStore {
         }
     }
 
-    func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
+    // MARK: - Private
+
+    private func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
         for feature in features {
             if let poi = feature.attribute(forKey: "poi_id") as? String {
                 return .searchSuggestion(id: poi)
@@ -79,20 +81,26 @@ class MapViewStore {
         return nil
     }
 
-    // MARK: - Private
-
     private func extractItem(from feature: any MLNFeature) -> ResolvedItem? {
         guard let feature = feature as? MLNPointFeature,
               let id = feature.attribute(forKey: "id") as? Int,
-              let name = (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String,
-              let description = (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) as? String else {
-            return nil
-        }
+              (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String != nil,
+              (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) as? String != nil else { return nil }
+
         return ResolvedItem(
             id: String(id),
-            title: name,
-            subtitle: description,
-            category: feature.attribute(forKey: "category_en") as? String,
+            title: localized(
+                english: feature.attribute(forKey: "name_en") as? String,
+                arabic: feature.attribute(forKey: "name_ar") as? String
+            ),
+            subtitle: localized(
+                english: feature.attribute(forKey: "description_en") as? String,
+                arabic: feature.attribute(forKey: "description_ar") as? String
+            ),
+            category: localized(
+                english: feature.attribute(forKey: "category_en") as? String,
+                arabic: feature.attribute(forKey: "category_ar") as? String
+            ),
             symbol: self.symbol(from: feature) ?? .pin,
             type: .hudhud,
             coordinate: feature.coordinate,

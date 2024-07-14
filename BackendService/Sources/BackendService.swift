@@ -32,6 +32,7 @@ public enum PredictionResult: Hashable, Codable {
     enum CodingKeys: CodingKey {
         case appleResolved
         case toursprung
+        case hudhud
     }
 }
 
