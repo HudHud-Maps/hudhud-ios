@@ -106,7 +106,7 @@
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
-		CDE538C82BA7868200D7FFE7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		CDE538C82BA7868200D7FFE7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
 		CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C7AFBB29CC507D42D1538B2C /* MapboxNavigation */; };
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
@@ -271,7 +271,7 @@
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
-				CDE538C82BA7868200D7FFE7 /* BuildFile in Frameworks */,
+				CDE538C82BA7868200D7FFE7 /* (null) in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
 				CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
@@ -645,7 +645,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				59A290012C3ECA2600780307 /* PBXTargetDependency */,
 				3D11995E7FC33F7673756259 /* PBXTargetDependency */,
 			);
 			name = HudHud;
@@ -945,10 +944,6 @@
 /* Begin PBXTargetDependency section */
 		3D11995E7FC33F7673756259 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-		};
-		59A290012C3ECA2600780307 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = 59A290002C3ECA2600780307 /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1414,11 +1409,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
 			productName = TouchVisualizer;
-		};
-		59A290002C3ECA2600780307 /* SwiftLint */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
-			productName = "plugin:SwiftLint";
 		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;

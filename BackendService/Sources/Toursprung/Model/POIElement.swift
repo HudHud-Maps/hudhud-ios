@@ -68,3 +68,38 @@ extension POIElement: CustomStringConvertible {
         return "POI Element"
     }
 }
+
+public extension POIElement {
+
+    static let starbucksKualaLumpur = POIElement(placeID: 374_426_437,
+                                                 licence: "Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright",
+                                                 osmType: "node",
+                                                 osmID: 11_363_949_513,
+                                                 boundingbox: ["3.177196", "3.177296", "101.7506882", "101.7507882"],
+                                                 lat: "3.177246",
+                                                 lon: "101.7507382",
+                                                 displayName: "Starbucks, Kuala Lumpur, Malaysia",
+                                                 poiClass: "amenity",
+                                                 type: "cafe",
+                                                 importance: 0.6758606469435616,
+                                                 address: Address(hamlet: nil,
+                                                                  county: nil,
+                                                                  state: nil,
+                                                                  iso31662Lvl4: "MY-14",
+                                                                  country: "Malaysia",
+                                                                  countryCode: "my",
+                                                                  town: nil,
+                                                                  postcode: "54200",
+                                                                  village: nil,
+                                                                  iso31662Lvl6: nil,
+                                                                  municipality: nil,
+                                                                  region: nil,
+                                                                  natural: nil,
+                                                                  stateDistrict: nil,
+                                                                  city: "Kuala Lumpur",
+                                                                  road: "Jalan Taman Setiawangsa",
+                                                                  quarter: nil,
+                                                                  suburb: "Setiawangsa",
+                                                                  iso31662Lvl3: nil),
+                                                 category: "poi")
+}

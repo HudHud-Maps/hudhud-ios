@@ -45,7 +45,6 @@ final class SearchViewStore: ObservableObject {
     enum Mode {
         enum Provider: CaseIterable {
             case apple
-            case toursprung
             case hudhud
         }
 
@@ -57,7 +56,6 @@ final class SearchViewStore: ObservableObject {
 
     private var task: Task<Void, Error>?
     var apple = ApplePOI()
-    private var toursprung = ToursprungPOI()
     private var hudhud = HudHudPOI()
     private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
@@ -104,8 +102,8 @@ final class SearchViewStore: ObservableObject {
                 }
             }
         if case .preview = mode {
-            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh)
-            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
+            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh)
+            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh)
             self.recentViewedItem = [itemOne, itemTwo]
         }
     }
@@ -123,8 +121,6 @@ final class SearchViewStore: ObservableObject {
         switch self.mode {
         case .live(provider: .apple):
             return try await item.resolve(in: self.apple)
-        case .live(provider: .toursprung):
-            return [item] // Toursprung doesn't support predict & resolve
         case .live(provider: .hudhud):
             return try await item.resolve(in: self.hudhud)
         case .preview:
@@ -147,8 +143,6 @@ private extension SearchViewStore {
                 let prediction: [AnyDisplayableAsRow] = switch provider {
                 case .apple:
                     try await self.apple.predict(term: term, coordinates: self.getCurrentLocation())
-                case .toursprung:
-                    try await self.toursprung.predict(term: term, coordinates: self.getCurrentLocation())
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
                 }

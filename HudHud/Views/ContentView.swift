@@ -199,7 +199,7 @@ struct ContentView: View {
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate)
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
@@ -299,7 +299,7 @@ struct ContentView: View {
                                         self.searchViewStore.mode = .live(provider: provider.next())
                                         Logger.searchView.info("Map Mode live")
                                     case .preview:
-                                        self.searchViewStore.mode = .live(provider: .toursprung)
+                                        self.searchViewStore.mode = .live(provider: .hudhud)
                                         Logger.searchView.info("Map Mode toursprung")
                                     }
                                 },
@@ -444,7 +444,7 @@ struct SizePreferenceKey: PreferenceKey {
     let poi = ResolvedItem(id: UUID().uuidString,
                            title: "Pharmacy",
                            subtitle: "Al-Olya - Riyadh",
-                           type: .toursprung,
+                           type: .hudhud,
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
@@ -488,7 +488,7 @@ extension NavigationViewController: WrappedViewController {
     let artwork = ResolvedItem(id: UUID().uuidString,
                                title: "Artwork",
                                subtitle: "artwork - Al-Olya - Riyadh",
-                               type: .toursprung,
+                               type: .hudhud,
                                coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
                                phone: "0503539560",
                                website: URL(string: "https://hudhud.sa"))
@@ -496,7 +496,7 @@ extension NavigationViewController: WrappedViewController {
     let pharmacy = ResolvedItem(id: UUID().uuidString,
                                 title: "Pharmacy",
                                 subtitle: "Al-Olya - Riyadh",
-                                type: .toursprung,
+                                type: .hudhud,
                                 coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))

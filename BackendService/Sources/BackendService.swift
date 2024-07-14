@@ -26,12 +26,10 @@ public protocol POIServiceProtocol {
 public enum PredictionResult: Hashable, Codable {
     case apple(completion: MKLocalSearchCompletion)
     case appleResolved
-    case toursprung
     case hudhud
 
     enum CodingKeys: CodingKey {
         case appleResolved
-        case toursprung
     }
 }
 
@@ -397,7 +395,7 @@ public extension ResolvedItem {
     static let ketchup = ResolvedItem(id: UUID().uuidString,
                                       title: "Ketch up",
                                       subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
-                                      type: .toursprung,
+                                      type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
@@ -405,7 +403,7 @@ public extension ResolvedItem {
     static let starbucks = ResolvedItem(id: UUID().uuidString,
                                         title: "Starbucks",
                                         subtitle: "The Beach",
-                                        type: .toursprung,
+                                        type: .hudhud,
                                         coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
                                         phone: "0503539560",
                                         website: URL(string: "https://hudhud.sa"))
@@ -413,13 +411,13 @@ public extension ResolvedItem {
     static let publicPlace = ResolvedItem(id: UUID().uuidString,
                                           title: "publicPlace",
                                           subtitle: "Garden - Alyasmen - Riyadh",
-                                          type: .toursprung,
+                                          type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346))
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
                                       title: "Artwork",
                                       subtitle: "artwork - Al-Olya - Riyadh",
-                                      type: .toursprung,
+                                      type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
@@ -427,7 +425,7 @@ public extension ResolvedItem {
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
                                        title: "Pharmacy",
                                        subtitle: "Al-Olya - Riyadh",
-                                       type: .toursprung,
+                                       type: .hudhud,
                                        coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                                        phone: "0503539560",
                                        website: URL(string: "https://hudhud.sa"))
@@ -435,7 +433,7 @@ public extension ResolvedItem {
     static let supermarket = ResolvedItem(id: UUID().uuidString,
                                           title: "Supermarket",
                                           subtitle: "Al-Narjs - Riyadh",
-                                          type: .toursprung,
+                                          type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
                                           phone: "0503539560",
                                           website: URL(string: "https://hudhud.sa"))
