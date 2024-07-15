@@ -62,7 +62,7 @@ class MapViewStore {
             let itemIfAvailable = self.mapStore.displayableItems
                 .first { $0.id == resolvedItem.id }
             if itemIfAvailable == nil {
-                self.mapStore.displayableItems.append(AnyDisplayableAsRow(resolvedItem))
+                self.mapStore.displayableItems.append(.resolvedItem(resolvedItem))
             }
             self.mapStore.selectedItem = resolvedItem
         }
@@ -87,6 +87,8 @@ class MapViewStore {
               (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String != nil,
               (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) as? String != nil else { return nil }
 
+        let colorString = feature.attribute(forKey: "ios_category_icon_color") as? String
+
         return ResolvedItem(
             id: String(id),
             title: localized(
@@ -104,6 +106,7 @@ class MapViewStore {
             symbol: self.symbol(from: feature) ?? .pin,
             type: .hudhud,
             coordinate: feature.coordinate,
+            color: SystemColor(rawValue: colorString ?? "") ?? .systemRed,
             phone: feature.attribute(forKey: "phone_number") as? String,
             website: self.website(from: feature),
             rating: feature.attribute(forKey: "rating") as? Double,
