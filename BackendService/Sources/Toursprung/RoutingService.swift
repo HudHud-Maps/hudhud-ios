@@ -1,5 +1,5 @@
 //
-//  Toursprung.swift
+//  RoutingService.swift
 //  BackendService
 //
 //  Created by Patrick Kladek on 06.03.24.
@@ -15,9 +15,9 @@ import OSLog
 
 public typealias JSONDictionary = [String: Any]
 
-// MARK: - Toursprung
+// MARK: - RoutingService
 
-public class Toursprung {
+public class RoutingService {
 
     public enum ToursprungError: LocalizedError, Equatable {
         case invalidUrl(message: String?)
@@ -126,7 +126,7 @@ public class Toursprung {
 
     public typealias RouteCompletionHandler = (_ waypoints: [Waypoint]?, _ routes: [Route]?, _ error: Error?) -> Void
 
-    public static let shared = Toursprung()
+    public static let shared = RoutingService()
 
     // MARK: - Lifecycle
 
@@ -248,7 +248,7 @@ private extension RouteOptions {
             URLQueryItem(name: "voice_units", value: "metric")
         ]
         guard let url = components.url else {
-            throw Toursprung.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
+            throw RoutingService.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
         }
 
         return url

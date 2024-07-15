@@ -22,9 +22,9 @@ import SwiftUI
 struct POIDetailSheet: View {
 
     let item: ResolvedItem
-    let onStart: (Toursprung.RouteCalculationResult) -> Void
+    let onStart: (RoutingService.RouteCalculationResult) -> Void
 
-    @State var routes: Toursprung.RouteCalculationResult?
+    @State var routes: RoutingService.RouteCalculationResult?
 
     @Environment(\.dismiss) private var dismiss
     let onDismiss: () -> Void
@@ -173,7 +173,7 @@ struct POIDetailSheet: View {
                 options.distanceMeasurementSystem = .metric
                 options.attributeOptions = []
 
-                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
                 self.routes = results
             } catch {
                 let nsError = error as NSError

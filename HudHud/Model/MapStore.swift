@@ -43,7 +43,7 @@ final class MapStore: ObservableObject {
     }
 
     enum CameraUpdateState {
-        case route(Toursprung.RouteCalculationResult?)
+        case route(RoutingService.RouteCalculationResult?)
         case selectedItem(ResolvedItem)
         case userLocation(CLLocationCoordinate2D)
         case mapItems
@@ -71,9 +71,9 @@ final class MapStore: ObservableObject {
         }
     }
 
-    @Published var routes: Toursprung.RouteCalculationResult? {
+    @Published var routes: RoutingService.RouteCalculationResult? {
         didSet {
-            if let routes, self.path.contains(Toursprung.RouteCalculationResult.self) == false {
+            if let routes, self.path.contains(RoutingService.RouteCalculationResult.self) == false {
                 self.path.append(routes)
                 self.cameraTask?.cancel()
                 self.cameraTask = Task {
@@ -251,7 +251,7 @@ final class MapStore: ObservableObject {
             self.allowedDetents = [.small, .third, .nearHalf, .large]
             self.selectedDetent = .nearHalf
         }
-        if navigationPathItem is Toursprung.RouteCalculationResult {
+        if navigationPathItem is RoutingService.RouteCalculationResult {
             self.allowedDetents = [.height(150), .medium]
             self.selectedDetent = .medium
         }
@@ -293,7 +293,7 @@ extension MapStore: NavigationViewControllerDelegate {
                 options.distanceMeasurementSystem = .metric
                 options.attributeOptions = []
 
-                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
                 if let route = results.routes.first {
                     await self.reroute(with: route)
                 }

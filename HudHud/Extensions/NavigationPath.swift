@@ -31,9 +31,9 @@ extension NavPath: Decodable {
                 // _typeByName doesn't work for things in other packages yet
                 type = BackendService.ResolvedItem.self
             }
-            if type == nil, typeName == self.stringName(of: BackendService.Toursprung.RouteCalculationResult.self) {
+            if type == nil, typeName == self.stringName(of: BackendService.RoutingService.RouteCalculationResult.self) {
                 // _typeByName doesn't work for things in other packages yet
-                type = BackendService.Toursprung.RouteCalculationResult.self
+                type = BackendService.RoutingService.RouteCalculationResult.self
             }
             if type == nil, typeName == self.stringName(of: SheetSubView.self) {
                 // _typeByName doesn't work for things in other packages yet

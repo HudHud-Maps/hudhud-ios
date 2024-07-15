@@ -12,7 +12,7 @@ import SwiftUI
 
 struct AdditionalPOIDetailsView: View {
     let item: ResolvedItem
-    let routes: Toursprung.RouteCalculationResult?
+    let routes: RoutingService.RouteCalculationResult?
     var formatter = Formatters()
 
     var body: some View {
