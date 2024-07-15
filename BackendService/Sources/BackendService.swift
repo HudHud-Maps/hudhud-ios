@@ -18,7 +18,7 @@ public protocol POIServiceProtocol {
 
     static var serviceName: String { get }
     func lookup(id: String, prediction: Any) async throws -> [ResolvedItem]
-    func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow]
+    func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse
 }
 
 // MARK: - PredictionResult
@@ -30,6 +30,7 @@ public enum PredictionResult: Hashable, Codable {
 
     enum CodingKeys: CodingKey {
         case appleResolved
+        case hudhud
     }
 }
 
@@ -40,7 +41,6 @@ public protocol DisplayableAsRow: Identifiable, Hashable {
     var title: String { get }
     var subtitle: String { get }
     var symbol: SFSymbol { get }
-    var tintColor: Color { get }
 
     func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
     func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow]
@@ -60,10 +60,6 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 
     public var symbol: SFSymbol {
         self.innerModel.symbol
-    }
-
-    public var tintColor: Color {
-        self.innerModel.tintColor
     }
 
     public var innerModel: any DisplayableAsRow
@@ -100,7 +96,7 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 
 // MARK: - PredictionItem
 
-public struct PredictionItem: DisplayableAsRow {
+public struct PredictionItem: DisplayableAsRow, Hashable {
 
     public var id: String
     public var title: String
@@ -163,101 +159,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var title: String
     public var subtitle: String
     public var symbol: SFSymbol
-    public var tintColor: Color {
-        switch self.category?.lowercased() {
-        case "cafe":
-            return .brown
-        case "restaurant":
-            return .orange
-        case "accomodation", "appartment", "camp_site", "caravan_site", "chalet", "guest_house", "hostel", "hotel", "motel", "wilderness_hut":
-            return .green
-        case "alpine_hut":
-            return .purple
-        // Animals
-        case "animal_boarding", "animal_shelter", "veterinary":
-            return .red
-        // Arts and Culture
-        case "arts_centre", "gallery", "museum":
-            return .pink
-        case "library":
-            return .brown
-        case "place_of_worship":
-            return .brown
-        case "studio":
-            return .purple
-        // Education
-        case "college", "kindergarten", "language_school", "music_school", "school", "university":
-            return .yellow
-        case "driving_school":
-            return .yellow
-
-        // Facilities
-        case "bench", "shelter", "table", "toilets":
-            return .cyan
-        case "clock", "post_box", "telephone":
-            return .cyan
-        case "drinking_water", "water_point":
-            return .cyan
-        case "fountain":
-            return .cyan
-        case "recycling", "recycling_station", "waste_basket", "waste_disposal":
-            return .cyan
-        case "shower":
-            return .cyan
-        // Financial
-        case "atm":
-            return .green
-        case "bank", "bureau_de_change":
-            return .green
-
-        // Healthcare
-        case "baby_hatch", "clinic", "dentist", "doctors", "hospital", "nursing_home", "retirement_home", "social_facility":
-            return .cyan
-
-        // Leisure and Entertainment
-        case "amusement_arcade", "adult_gaming_centre", "cinema", "nightclub", "theme_park", "zoo":
-            return .red
-        case "beach_resort", "park", "picnic_site", "playground":
-            return .red
-        case "dog_park":
-            return .red
-        case "swimming_pool", "water_park":
-            return .cyan
-        // Tourism
-        case "aquarium", "artwork", "attraction", "viewpoint":
-            return .cyan
-        case "information":
-            return .yellow
-
-        // Shop
-        case "bakery", "beverages", "butcher", "cheese", "chocolate", "coffee", "confectionery", "dairy", "deli", "farm", "fish", "greengrocer", "tea":
-            return .brown
-        case "bicycle", "bicycle_parking", "bicycle_rental", "bicycle_repair_station":
-            return .cyan
-        case "book", "books":
-            return .brown
-        case "clothes", "fashion":
-            return .pink
-        case "convenience", "supermarket":
-            return .red
-        case "pharmacy":
-            return .cyan
-        // Food & Drink
-        case "bar", "biergarten", "fast_food", "food_court", "ice_cream", "pub":
-            return .red
-
-        // Transport
-        case "boat_sharing", "bus_station", "bus_stop", "car_rental", "car_repair", "car_sharing", "car_wash", "charging_station", "ev_charging", "ferry_terminal", "fuel", "motorcycle_parking", "parking", "parking_entrance", "parking_space", "taxi":
-            return .brown
-        case "individual":
-            return .green
-        case "search nearby":
-            return .blue
-
-        default:
-            return .blue
-        }
-    }
+    public let systemColor: SystemColor
 
     public var category: String?
 
@@ -266,19 +168,18 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var phone: String?
     public var website: URL?
     public var userInfo: [String: AnyHashable] = [:]
-    
     public var rating: Double?
     public var ratingsCount: Int?
     public var isOpen: Bool?
-
     public var trendingImage: String?
+    
     public var mediaURLs: [MediaURLs]?
     
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, isOpen
         case ratingsCount = "ratings_count"
         case trendingImage = "trending_image_url"
-        case mediaURLs = "media_urls"
+        case color
     }
 
     public var description: String {
@@ -287,7 +188,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -302,6 +203,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.isOpen = isOpen
         self.trendingImage = trendingImage
         self.mediaURLs = mediaURLs
+        self.systemColor = color
     }
 
     public init(from decoder: Decoder) throws {
@@ -317,9 +219,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.website = try container.decodeIfPresent(URL.self, forKey: .website)
         self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
         self.ratingsCount = try container.decodeIfPresent(Int.self, forKey: .ratingsCount)
-        self.isOpen = try container.decodeIfPresent(Bool.self, forKey: .isOpen)
         self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
-        self.mediaURLs = try container.decodeIfPresent([MediaURLs].self, forKey: .mediaURLs)
+        self.systemColor = try container.decode(SystemColor.self, forKey: .color)
     }
 
     // MARK: - Public
@@ -345,6 +246,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		try container.encodeIfPresent(self.category, forKey: .category)
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
+        try container.encode(self.systemColor, forKey: .color)
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -352,6 +254,15 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         hasher.combine(self.title)
         hasher.combine(self.subtitle)
     }
+    
+    public var color: Color {
+        systemColor.swiftUIColor
+    }
+}
+
+public struct MediaURLs: Codable {
+    public var type: String?
+    public var url: String?
 }
 
 extension SFSymbol: Codable {}
@@ -397,7 +308,8 @@ public extension ResolvedItem {
                                       subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
-                                      phone: "0503539560",
+                                      color: .systemRed, 
+									  phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
@@ -405,21 +317,24 @@ public extension ResolvedItem {
                                         subtitle: "The Beach",
                                         type: .hudhud,
                                         coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
-                                        phone: "0503539560",
+                                        color: .systemRed, 
+										phone: "0503539560",
                                         website: URL(string: "https://hudhud.sa"))
 
     static let publicPlace = ResolvedItem(id: UUID().uuidString,
                                           title: "publicPlace",
                                           subtitle: "Garden - Alyasmen - Riyadh",
                                           type: .hudhud,
-                                          coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346))
+                                          coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
+										  color: .systemRed)
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
                                       title: "Artwork",
                                       subtitle: "artwork - Al-Olya - Riyadh",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                                      phone: "0503539560",
+                                      color: .systemRed, 
+									  phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
 
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
@@ -427,7 +342,8 @@ public extension ResolvedItem {
                                        subtitle: "Al-Olya - Riyadh",
                                        type: .hudhud,
                                        coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                                       phone: "0503539560",
+                                       color: .systemRed,
+									   phone: "0503539560",
                                        website: URL(string: "https://hudhud.sa"))
 
     static let supermarket = ResolvedItem(id: UUID().uuidString,
@@ -435,24 +351,21 @@ public extension ResolvedItem {
                                           subtitle: "Al-Narjs - Riyadh",
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
-                                          phone: "0503539560",
+                                          color: .systemRed,
+										  phone: "0503539560",
                                           website: URL(string: "https://hudhud.sa"))
 }
 
-public extension AnyDisplayableAsRow {
+public extension DisplayableRow {
 
-    static let ketchup = AnyDisplayableAsRow(ResolvedItem.ketchup)
-    static let starbucks = AnyDisplayableAsRow(ResolvedItem.starbucks)
-    static let publicPlace = AnyDisplayableAsRow(ResolvedItem.publicPlace)
-    static let artwork = AnyDisplayableAsRow(ResolvedItem.artwork)
-    static let pharmacy = AnyDisplayableAsRow(ResolvedItem.pharmacy)
-    static let supermarket = AnyDisplayableAsRow(ResolvedItem.supermarket)
+    static let ketchup: DisplayableRow = .resolvedItem(ResolvedItem.ketchup)
+    static let starbucks: DisplayableRow = .resolvedItem(ResolvedItem.starbucks)
+    static let publicPlace: DisplayableRow = .resolvedItem(ResolvedItem.publicPlace)
+    static let artwork: DisplayableRow = .resolvedItem(ResolvedItem.artwork)
+    static let pharmacy: DisplayableRow = .resolvedItem(ResolvedItem.pharmacy)
+    static let supermarket: DisplayableRow = .resolvedItem(ResolvedItem.supermarket)
 }
 
-public struct MediaURLs: Codable {
-    public var type: String?
-    public var url: String?
-}
 /*
  public extension POI {
 

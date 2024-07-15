@@ -39,7 +39,7 @@ public class TrendingStore: ObservableObject {
                 let resolvedItem: [ResolvedItem] = jsonResponse.data.compactMap { item in
                     
                     guard let ratingCount = item.ratings_count else { return ResolvedItem.artwork }
-                    return ResolvedItem(id: item.id, title: item.name, subtitle: item.category, category: item.category, symbol: .pin, type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: item.coordinates.lat, longitude: item.coordinates.lon), phone: nil, website: nil, rating: item.rating, ratingsCount: ratingCount, trendingImage: item.trending_image_url)
+                    return ResolvedItem(id: item.id, title: item.name, subtitle: item.category, category: item.category, symbol: .pin, type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: item.coordinates.lat, longitude: item.coordinates.lon), color: .systemRed, phone: nil, website: nil, rating: item.rating, ratingsCount: ratingCount, trendingImage: item.trending_image_url)
                 }
                     return resolvedItem
                 

@@ -102,7 +102,7 @@ final class MapStore: ObservableObject {
         }
     }
 
-    @Published var displayableItems: [AnyDisplayableAsRow] = [] {
+    @Published var displayableItems: [DisplayableRow] = [] {
         didSet {
             guard self.displayableItems != [] else { return }
 
@@ -115,7 +115,12 @@ final class MapStore: ObservableObject {
         didSet {
             if let selectedItem, routes == nil {
                 self.updateCamera(state: .selectedItem(selectedItem))
-                self.path.append(selectedItem)
+                if self.path.isEmpty {
+                    self.path.append(selectedItem)
+                } else {
+                    self.path.removeLast()
+                    self.path.append(selectedItem)
+                }
             } else {
                 return
             }
@@ -123,14 +128,14 @@ final class MapStore: ObservableObject {
     }
 
     var mapItems: [ResolvedItem] {
-        let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
+        let allItems = Set(self.displayableItems)
 
         if let selectedItem {
-            let items = allItems.union([AnyDisplayableAsRow(selectedItem)])
-            return items.compactMap { $0.innerModel as? ResolvedItem }
+            let items = allItems.union([DisplayableRow.resolvedItem(selectedItem)])
+            return items.compactMap(\.resolvedItem)
         }
 
-        return self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
+        return self.displayableItems.compactMap(\.resolvedItem)
     }
 
     var points: ShapeSource {
@@ -392,7 +397,7 @@ private extension MapStore {
             }
         case let .userLocation(userLocation):
             self.moveToUserLocation = false
-            self.camera = MapViewCamera.center(userLocation, zoom: 15)
+            self.camera = MapViewCamera.center(userLocation, zoom: 14)
 
         case .mapItems:
             Task {
