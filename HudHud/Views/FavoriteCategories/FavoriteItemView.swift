@@ -24,7 +24,7 @@ struct FavoriteItemView: View {
                 .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
                 .layoutPriority(1)
                 .frame(minWidth: .leastNonzeroMagnitude)
-                .background((self.favorite.item?.tintColor ?? Color.gray).mask(Circle()))
+                .background((self.favorite.item?.color ?? Color.gray).mask(Circle()))
 
             VStack(alignment: .leading) {
                 Text(self.favorite.title)
