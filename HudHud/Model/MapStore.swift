@@ -115,7 +115,12 @@ final class MapStore: ObservableObject {
         didSet {
             if let selectedItem, routes == nil {
                 self.updateCamera(state: .selectedItem(selectedItem))
-                self.path.append(selectedItem)
+                if self.path.isEmpty {
+                    self.path.append(selectedItem)
+                } else {
+                    self.path.removeLast()
+                    self.path.append(selectedItem)
+                }
             } else {
                 return
             }
