@@ -13,6 +13,8 @@ import OpenAPIURLSession
 import SFSafeSymbols
 import SwiftUI
 
+// MARK: - OpenAPIClientError
+
 // generic errors that could come from any API
 enum OpenAPIClientError: Error {
     case notFound
@@ -25,64 +27,73 @@ enum OpenAPIClientError: Error {
 // errors specific to our backend
 enum HudHudClientError: Error {
     case poiIDNotFound
-    
+
 }
+
+// MARK: - POIResponse
 
 public struct POIResponse {
     public let items: [DisplayableRow]
     public let hasCategory: Bool
 }
 
+// MARK: - DisplayableRow
+
 public enum DisplayableRow: Hashable, Identifiable {
     case category(Category)
     case resolvedItem(ResolvedItem)
     case predictionItem(PredictionItem)
-    
+
     public var resolvedItem: ResolvedItem? {
         switch self {
         case .category, .predictionItem:
             nil
-        case .resolvedItem(let resolvedItem):
+        case let .resolvedItem(resolvedItem):
             resolvedItem
         }
     }
-    
+
     public var id: String {
         switch self {
-        case .category(let category):
+        case let .category(category):
             category.name
-        case .resolvedItem(let resolvedItem):
+        case let .resolvedItem(resolvedItem):
             resolvedItem.id
-        case .predictionItem(let predictionItem):
+        case let .predictionItem(predictionItem):
             predictionItem.id
         }
     }
-    
+
+    private var type: PredictionResult? {
+        switch self {
+        case .category:
+            nil
+        case let .resolvedItem(resolvedItem):
+            resolvedItem.type
+        case let .predictionItem(predictionItem):
+            predictionItem.type
+        }
+    }
+
+    // MARK: - Public
+
     public func resolve(in provider: ApplePOI) async throws -> [DisplayableRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
         let resolved = try await provider.lookup(id: self.id, prediction: completion)
         return resolved.map(DisplayableRow.resolvedItem)
     }
-    
+
     public func resolve(in provider: HudHudPOI) async throws -> [DisplayableRow] {
         guard case .hudhud = self.type else { return [] }
 
         let resolved = try await provider.lookup(id: self.id, prediction: self)
         return resolved.map(DisplayableRow.resolvedItem)
     }
-    
-    private var type: PredictionResult? {
-        switch self {
-        case .category:
-            nil
-        case .resolvedItem(let resolvedItem):
-            resolvedItem.type
-        case .predictionItem(let predictionItem):
-            predictionItem.type
-        }
-    }
+
 }
+
+// MARK: - Category
 
 public struct Category: Hashable {
     public let name: String
@@ -90,26 +101,34 @@ public struct Category: Hashable {
     public let color: Color
 }
 
+// MARK: - HudHudPOI
+
 public struct HudHudPOI: POIServiceProtocol {
-    
+
     private let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-    
-    public init() {
-    }
-    
+
     public static var serviceName = "HudHud"
-    public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
-        
-        let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: currentLanguage))
+
+    private var currentLanguage: String {
+        Locale.preferredLanguages.first ?? "en-US"
+    }
+
+    // MARK: - Lifecycle
+
+    public init() {}
+
+    // MARK: - Public
+
+    public func lookup(id: String, prediction _: Any) async throws -> [ResolvedItem] {
+        let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let url: URL?
-                if let websiteString = jsonResponse.data.website {
-                    url = URL(string: websiteString)
+                let url: URL? = if let websiteString = jsonResponse.data.website {
+                    URL(string: websiteString)
                 } else {
-                    url = nil
+                    nil
                 }
                 return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: Color(.systemRed), phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: [MediaURLs(type: jsonResponse.data.media_urls?.first?._type, url: jsonResponse.data.media_urls?.first?.url)])]
             }
@@ -124,17 +143,16 @@ public struct HudHudPOI: POIServiceProtocol {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
-    
+
     public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
-        
-        let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: currentLanguage))
+
+        let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
-            
-        case .ok(let okResponse):
+        case let .ok(okResponse):
             switch okResponse.body {
-            case .json(let jsonResponse):
+            case let .json(jsonResponse):
                 var hasCategory = false
                 let items: [DisplayableRow] = jsonResponse.data.compactMap { somethingElse in
                     // we need to parse this symbol from the backend, and we cannot do it in a type safe way
@@ -170,7 +188,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 }
                 return POIResponse(items: items, hasCategory: hasCategory)
             }
-        case .undocumented(statusCode: let statusCode, let payload):
+        case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {
                 try await String(collecting: body, upTo: 1024 * 1024)
             } else {
@@ -179,18 +197,18 @@ public struct HudHudPOI: POIServiceProtocol {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
-    
+
     public func items(for category: String, location: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
-        
+
         let response = try await client.listPois(
             query: .init(category: category, lat: location?.latitude, lon: location?.longitude),
-            headers: .init(Accept_hyphen_Language: currentLanguage)
+            headers: .init(Accept_hyphen_Language: self.currentLanguage)
         )
-        
+
         switch response {
-        case .ok(let success):
+        case let .ok(success):
             let body = try success.body.json
             return body.data.map { item -> ResolvedItem in
                 ResolvedItem(
@@ -212,11 +230,9 @@ public struct HudHudPOI: POIServiceProtocol {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
-    
-    private var currentLanguage: String {
-        Locale.preferredLanguages.first ?? "en-US"
-    }
+
 }
+
 // swiftlint:enable init_usage
 
 extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload {
@@ -260,7 +276,7 @@ extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload
             Color(.systemCyan)
         }
     }
-    
+
     init?(color: Color) {
         switch color {
         case Color(.systemGray):
