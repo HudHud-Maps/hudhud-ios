@@ -102,7 +102,7 @@ final class MapStore: ObservableObject {
         }
     }
 
-    @Published var displayableItems: [AnyDisplayableAsRow] = [] {
+    @Published var displayableItems: [DisplayableRow] = [] {
         didSet {
             guard self.displayableItems != [] else { return }
 
@@ -123,14 +123,14 @@ final class MapStore: ObservableObject {
     }
 
     var mapItems: [ResolvedItem] {
-        let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
+        let allItems = Set(self.displayableItems)
 
         if let selectedItem {
-            let items = allItems.union([AnyDisplayableAsRow(selectedItem)])
-            return items.compactMap { $0.innerModel as? ResolvedItem }
+            let items = allItems.union([DisplayableRow.resolvedItem(selectedItem)])
+            return items.compactMap(\.resolvedItem)
         }
 
-        return self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
+        return self.displayableItems.compactMap(\.resolvedItem)
     }
 
     var points: ShapeSource {
