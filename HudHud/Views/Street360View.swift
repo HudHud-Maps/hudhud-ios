@@ -16,6 +16,7 @@ struct Street360View: View {
     @State var mapStore: MapStore
 
     @State var rotationIndicator: Float = 0.0
+    @State var rotationZIndicator: Float = 0.0
     @State var expandView: Bool = false
 
     @State var svimage: UIImage?
@@ -86,9 +87,61 @@ struct Street360View: View {
         .onAppear(perform: {
             PanoramaManager.shouldUpdateImage = true
             PanoramaManager.shouldResetCameraAngle = false
-        })
-        .onAppear {
             self.loadSVImage()
+        })
+    }
+
+    var streetNavigationButtons: some View {
+        VStack {
+            Spacer()
+            VStack {
+                Button {
+                    print("Head North")
+                } label: {
+                    Image(systemSymbol: .chevronUpCircleFill)
+                        .resizable()
+                        .frame(width: 26, height: 26)
+                        .accentColor(.white)
+                        .shadow(radius: 26)
+                }
+
+                HStack {
+                    Button {
+                        print("Head West")
+                    } label: {
+                        Image(systemSymbol: .chevronLeftCircleFill)
+                            .resizable()
+                            .frame(width: 26, height: 26)
+                            .accentColor(.white)
+                            .shadow(radius: 26)
+                    }
+                    Spacer()
+                        .frame(width: 52)
+                    Button {
+                        print("Head East")
+                    } label: {
+                        Image(systemSymbol: .chevronRightCircleFill)
+                            .resizable()
+                            .frame(width: 26, height: 26)
+                            .accentColor(.white)
+                            .shadow(radius: 26)
+                    }
+                }
+
+                Button {
+                    print("Head South")
+                } label: {
+                    Image(systemSymbol: .chevronDownCircleFill)
+                        .resizable()
+                        .frame(width: 26, height: 26)
+                        .accentColor(.white)
+                        .shadow(radius: 26)
+                }
+            }
+            .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
+            .rotation3DEffect(.degrees(Double(self.rotationZIndicator)), axis: (x: 1, y: 0, z: 0))
+            .padding()
+            .padding(.bottom, 44)
         }
     }
 
@@ -135,6 +188,7 @@ struct Street360View: View {
             } cameraMoved: { pitch, yaw, roll in
                 DispatchQueue.main.async {
                     self.rotationIndicator = yaw
+                    self.rotationZIndicator = pitch * 2 + 30
                 }
                 print("-=-=-=-=-=-=-")
                 print("pitch: \(pitch)")
@@ -156,6 +210,11 @@ struct Street360View: View {
                 }
                 .padding()
             }
+
+            if self.expandView {
+                self.streetNavigationButtons
+            }
         }
     }
+
 }
