@@ -67,7 +67,7 @@ public actor ApplePOI: POIServiceProtocol {
                                         symbol: $0.pointOfInterestCategory?.symbol ?? .pin,
                                         type: .appleResolved,
                                         coordinate: $0.placemark.coordinate, 
-                                        color: Color(.systemRed),
+                                        color: .systemRed,
                                         phone: $0.phoneNumber,
                                         website: $0.url)
                 }

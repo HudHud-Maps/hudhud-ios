@@ -87,7 +87,17 @@ public enum DisplayableRow: Hashable, Identifiable {
 public struct Category: Hashable {
     public let name: String
     public let icon: SFSymbol
-    public let color: Color
+    public let systemColor: SystemColor
+    
+    init(name: String, icon: SFSymbol, color: SystemColor) {
+        self.name = name
+        self.icon = icon
+        self.systemColor = color
+    }
+    
+    public var color: Color {
+        systemColor.swiftUIColor
+    }
 }
 
 public struct HudHudPOI: POIServiceProtocol {
@@ -111,7 +121,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     url = nil
                 }
-                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: Color(.systemRed), phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: [MediaURLs(type: jsonResponse.data.media_urls?.first?._type, url: jsonResponse.data.media_urls?.first?.url)])]
+                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: .systemRed, phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: [MediaURLs(type: jsonResponse.data.media_urls?.first?._type, url: jsonResponse.data.media_urls?.first?.url)])]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -145,7 +155,7 @@ public struct HudHudPOI: POIServiceProtocol {
                         return .category(Category(
                             name: somethingElse.name,
                             icon: icon,
-                            color: somethingElse.ios_category_icon.color.swiftUIColor
+                            color: SystemColor(color: somethingElse.ios_category_icon.color)
                         ))
                     case .poi:
                         if let id = somethingElse.id,
@@ -160,7 +170,7 @@ public struct HudHudPOI: POIServiceProtocol {
                                 symbol: icon,
                                 type: .hudhud,
                                 coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                                color: somethingElse.ios_category_icon.color.swiftUIColor
+                                color: SystemColor(color: somethingElse.ios_category_icon.color)
                             ))
                         } else {
                             assertionFailure("should have all the data here")
@@ -200,7 +210,7 @@ public struct HudHudPOI: POIServiceProtocol {
                     category: item.category,
                     type: .hudhud,
                     coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
-                    color: Color(.systemRed)
+                    color: .systemRed
                 )
             }
         case let .undocumented(statusCode: statusCode, payload):
@@ -219,8 +229,27 @@ public struct HudHudPOI: POIServiceProtocol {
 }
 // swiftlint:enable init_usage
 
-extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload {
-    var swiftUIColor: Color {
+public enum SystemColor: String, Codable {
+    case systemGray
+    case systemGray2
+    case systemGray3
+    case systemGray4
+    case systemGray5
+    case systemGray6
+    case systemRed
+    case systemGreen
+    case systemBlue
+    case systemOrange
+    case systemYellow
+    case systemPink
+    case systemPurple
+    case systemTeal
+    case systemIndigo
+    case systemBrown
+    case systemMint
+    case systemCyan
+    
+    public var swiftUIColor: Color {
         switch self {
         case .systemGray:
             Color(.systemGray)
@@ -261,46 +290,44 @@ extension Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload
         }
     }
     
-    init?(color: Color) {
+    init(color: Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload) {
         switch color {
-        case Color(.systemGray):
+        case .systemGray:
             self = .systemGray
-        case Color(.systemGray2):
+        case .systemGray2:
             self = .systemGray2
-        case Color(.systemGray3):
+        case .systemGray3:
             self = .systemGray3
-        case Color(.systemGray4):
+        case .systemGray4:
             self = .systemGray4
-        case Color(.systemGray5):
+        case .systemGray5:
             self = .systemGray5
-        case Color(.systemGray6):
+        case .systemGray6:
             self = .systemGray6
-        case Color(.systemRed):
+        case .systemRed:
             self = .systemRed
-        case Color(.systemGreen):
+        case .systemGreen:
             self = .systemGreen
-        case Color(.systemBlue):
+        case .systemBlue:
             self = .systemBlue
-        case Color(.systemOrange):
+        case .systemOrange:
             self = .systemOrange
-        case Color(.systemYellow):
+        case .systemYellow:
             self = .systemYellow
-        case Color(.systemPink):
+        case .systemPink:
             self = .systemPink
-        case Color(.systemPurple):
+        case .systemPurple:
             self = .systemPurple
-        case Color(.systemTeal):
+        case .systemTeal:
             self = .systemTeal
-        case Color(.systemIndigo):
+        case .systemIndigo:
             self = .systemIndigo
-        case Color(.systemBrown):
+        case .systemBrown:
             self = .systemBrown
-        case Color(.systemMint):
+        case .systemMint:
             self = .systemMint
-        case Color(.systemCyan):
+        case .systemCyan:
             self = .systemCyan
-        default:
-            return nil
         }
     }
 }

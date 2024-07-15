@@ -103,7 +103,7 @@ private extension ToursprungPOI {
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: lon)
 
             let symbol = self.symbol(from: $0.type)
-            var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, category: $0.type.lowercased(), symbol: symbol, type: .toursprung, coordinate: coordinate, color: Color(.systemRed))
+            var item = ResolvedItem(id: "\($0.placeID)", title: $0.displayName, subtitle: $0.address.description, category: $0.type.lowercased(), symbol: symbol, type: .toursprung, coordinate: coordinate, color: .systemRed)
 
             let mirror = Mirror(reflecting: $0)
             mirror.children.forEach { child in
