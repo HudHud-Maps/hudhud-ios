@@ -392,7 +392,7 @@ private extension MapStore {
             }
         case let .userLocation(userLocation):
             self.moveToUserLocation = false
-            self.camera = MapViewCamera.center(userLocation, zoom: 15)
+            self.camera = MapViewCamera.center(userLocation, zoom: 14)
 
         case .mapItems:
             Task {
