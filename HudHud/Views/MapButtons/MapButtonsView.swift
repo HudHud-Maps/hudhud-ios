@@ -55,7 +55,7 @@ struct MapButtonsView: View {
         MapButtonData(sfSymbol: .icon(.pano)) {
             print("Provider button tapped")
         },
-        MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: .live(provider: .toursprung))) {
+        MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: .live(provider: .hudhud))) {
             print("Provider button tapped")
         },
         MapButtonData(sfSymbol: .icon(.cube)) {

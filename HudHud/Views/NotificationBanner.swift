@@ -105,6 +105,6 @@ struct NotificationBanner: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    NotificationBanner(notification: Notification(error: Toursprung.ToursprungError.invalidUrl(message: nil)))
+    NotificationBanner(notification: Notification(error: RoutingService.ToursprungError.invalidUrl(message: nil)))
         .padding()
 }
