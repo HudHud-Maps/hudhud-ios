@@ -265,6 +265,13 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 public struct MediaURLs: Codable {
     public var type: String?
     public var url: String?
+
+    // MARK: - Lifecycle
+
+    public init(type: String?, url: String?) {
+        self.type = type
+        self.url = url
+    }
 }
 
 extension SFSymbol: Codable {}
