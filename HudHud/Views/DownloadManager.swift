@@ -24,9 +24,9 @@ class DownloadManager {
         let ext = (link as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
 
-        let newPath_th = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
+        let newPathTh = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
         let newURL = URL(filePath: newPath)
-        let newURL_th = URL(filePath: newPath_th)
+        let newURLTh = URL(filePath: newPathTh)
 
         if FileManager.default.fileExists(atPath: newPath) {
             return newPath
@@ -43,13 +43,13 @@ class DownloadManager {
         let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
 
         let thumb = "\(isThumb ? "_th" : "")"
-        let newPath_th = NSTemporaryDirectory() + path.sha265 + thumb + ".\(ext)"
+        let newPathTh = NSTemporaryDirectory() + path.sha265 + thumb + ".\(ext)"
         let newURL = URL(filePath: newPath)
-        let newURL_th = URL(filePath: newPath_th)
+        let newURLTh = URL(filePath: newPathTh)
 
         if isThumb {
-            guard FileManager.default.fileExists(atPath: newPath_th) == false else {
-                block(newPath_th, nil)
+            guard FileManager.default.fileExists(atPath: newPathTh) == false else {
+                block(newPathTh, nil)
                 return
             }
         } else {
@@ -93,9 +93,9 @@ class DownloadManager {
                         if let image = UIImage(contentsOfFile: newPath) {
                             let thumb = image.thumbnail(pixelSize: 200)
                             if newPath.isPNG() {
-                                try? thumb.pngData()?.write(to: newURL_th)
+                                try? thumb.pngData()?.write(to: newURLTh)
                             } else if newPath.isJPEG() {
-                                try? thumb.jpegData(compressionQuality: 1)?.write(to: newURL_th)
+                                try? thumb.jpegData(compressionQuality: 1)?.write(to: newURLTh)
                             }
                         }
                     }
