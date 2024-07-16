@@ -210,7 +210,7 @@ struct Street360View: View {
         ZStack {
             PanoramaViewer(image: SwiftUIPanoramaViewer.bindImage(img),
                            panoramaType: .spherical,
-                           controlMethod: .touch) { key in
+                           controlMethod: .both) { key in
                 print(key)
             } cameraMoved: { pitch, yaw, roll in
                 DispatchQueue.main.async {
