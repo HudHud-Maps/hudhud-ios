@@ -66,6 +66,7 @@ paths:
       summary: Rate trip
       deprecated: false
       description: ''
+      operationId: rateTrip
       tags: []
       parameters: []
       requestBody:
@@ -92,7 +93,7 @@ paths:
       summary: Get nearest Streetview image
       deprecated: false
       description: ''
-      operationId: GetNearestStreetViewImage
+      operationId: getNearestStreetViewImage
       tags: []
       parameters:
         - name: lat
@@ -183,6 +184,72 @@ paths:
                         android_category_icon:
                           name: restaurant
                           color: blue
+      security: []
+  /sv/scene/{id}:
+    get:
+      summary: Get streetview scene by id
+      deprecated: false
+      description: ''
+      operationId: getStreetViewScene
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreetViewSceneResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: &ref_0
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Record Not Found
+          content:
+            application/json:
+              schema: *ref_0
+      security: []
+  /sv/{id}:
+    get:
+      summary: Get streetview image by id
+      deprecated: false
+      description: ''
+      operationId: getStreetViewImage
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreetViewDetailResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: &ref_0
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Record Not Found
+          content:
+            application/json:
+              schema: *ref_0
       security: []
   /p/{id}:
     get:
@@ -313,8 +380,7 @@ paths:
           description: Record Not Found
           content:
             application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
+              schema: *ref_0
               examples:
                 '1':
                   summary: Success
@@ -571,6 +637,123 @@ paths:
       security: []
 components:
   schemas:
+    StreetViewScene:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        next_id:
+          type: integer
+          nullable: true
+        next_name:
+          type: string
+          nullable: true
+        previous_id:
+          type: integer
+          nullable: true
+        previous_name:
+          type: string
+          nullable: true
+        west_id:
+          type: integer
+          nullable: true
+        west_name:
+          type: string
+          nullable: true
+        east_id:
+          type: integer
+          nullable: true
+        east_name:
+          type: string
+          nullable: true
+        metadata:
+          type: string
+        geom:
+          type: string
+        point:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float64
+            lon:
+              type: number
+              format: float64
+          required:
+            - lat
+            - lon
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        url:
+          type: string
+      required:
+        - id
+        - name
+        - point
+        - created_at
+        - updated_at
+    StreetViewImageDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        metadata:
+          type: string
+        geom:
+          type: string
+        point:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float64
+            lon:
+              type: number
+              format: float64
+          required:
+            - lat
+            - lon
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+      required:
+        - id
+        - name
+        - point
+        - created_at
+        - updated_at
+        - url
+    StreetViewDetailResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StreetViewImageDetails'
+      required:
+        - ok
+        - data
+    StreetViewSceneResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StreetViewScene'
+      required:
+        - ok
+        - data
     NearestStreetViewImageResponse:
       type: object
       properties:
@@ -580,7 +763,6 @@ components:
           $ref: '#/components/schemas/StreetViewImageItem'
       required:
         - ok
-        - data
     StreetViewImageItem:
       type: object
       properties:
@@ -606,8 +788,10 @@ components:
             - lon
         created_at:
           type: string
+          format: date-time
         updated_at:
           type: string
+          format: date-time
         distance:
           type: number
           format: float64
@@ -771,32 +955,32 @@ components:
           properties:
             saturday:
               type: array
-              items: &ref_0
+              items: &ref_1
                 $ref: '#/components/schemas/OpeningHoursItem'
               nullable: true
             sunday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             monday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             tuesday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             wednesday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             thursday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             friday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
           nullable: true
         phone_number:
@@ -888,31 +1072,31 @@ components:
           properties:
             saturday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             sunday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             monday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             tuesday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             wednesday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             thursday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
             friday:
               type: array
-              items: *ref_0
+              items: *ref_1
               nullable: true
           nullable: true
         media_urls:

@@ -10,9 +10,11 @@ import BackendService
 import SwiftUI
 import SwiftUIPanoramaViewer
 
+// MARK: - Street360View
+
 struct Street360View: View {
 
-    var streetViewItem: StreetViewItem
+    @State var streetViewScene: StreetViewScene
     @State var mapStore: MapStore
 
     @State var rotationIndicator: Float = 0.0
@@ -20,10 +22,19 @@ struct Street360View: View {
     @State var expandView: Bool = false
 
     @State var svimage: UIImage?
+    @State var svimageId: String = ""
     @State var errorMsg: String?
+
+    @State var isLoading: Bool = false
+
+    enum NavDirection { case next; case previous; case east; case west }
 
     var expandedView: (_ expand: Bool) -> Void
     var closeView: () -> Void
+
+    var showLoading: Bool {
+        (self.svimage == nil && self.errorMsg == nil) || self.isLoading
+    }
 
     var body: some View {
         ZStack {
@@ -35,13 +46,15 @@ struct Street360View: View {
                         .multilineTextAlignment(.center)
                         .foregroundStyle(.red)
                         .padding()
-                } else {
-                    VStack {
-                        ProgressView()
-                            .tint(.white)
-                        Text("Loading...")
-                            .foregroundStyle(.white)
-                    }
+                }
+            }
+
+            if self.showLoading {
+                VStack {
+                    ProgressView()
+                        .tint(.white)
+                    Text("Loading...")
+                        .foregroundStyle(.white)
                 }
             }
 
@@ -85,57 +98,69 @@ struct Street360View: View {
         .ignoresSafeArea()
         .padding(.top, self.expandView ? 0 : 60)
         .onAppear(perform: {
-            PanoramaManager.shouldUpdateImage = true
-            PanoramaManager.shouldResetCameraAngle = false
+            PanoramaManager.shouldUpdateImage = false
+            PanoramaManager.shouldResetCameraAngle = true
             self.loadSVImage()
+            print("streetViewScene: \(self.streetViewScene)")
         })
     }
 
     var streetNavigationButtons: some View {
         VStack {
             Spacer()
+
             VStack {
                 Button {
                     print("Head North")
+                    loadImage(.previous)
                 } label: {
                     Image(systemSymbol: .chevronUpCircleFill)
                         .resizable()
                         .frame(width: 26, height: 26)
                         .accentColor(.white)
                         .shadow(radius: 26)
+                        .opacity(self.streetViewScene.previousId != nil ? 1.0 : 0.0)
                 }
 
                 HStack {
                     Button {
                         print("Head West")
+                        loadImage(.west)
                     } label: {
                         Image(systemSymbol: .chevronLeftCircleFill)
                             .resizable()
                             .frame(width: 26, height: 26)
                             .accentColor(.white)
                             .shadow(radius: 26)
+                            .opacity(self.streetViewScene.westId != nil ? 1.0 : 0.0)
                     }
+
                     Spacer()
                         .frame(width: 52)
+
                     Button {
                         print("Head East")
+                        loadImage(.east)
                     } label: {
                         Image(systemSymbol: .chevronRightCircleFill)
                             .resizable()
                             .frame(width: 26, height: 26)
                             .accentColor(.white)
                             .shadow(radius: 26)
+                            .opacity(self.streetViewScene.eastId != nil ? 1.0 : 0.0)
                     }
                 }
 
                 Button {
                     print("Head South")
+                    loadImage(.next)
                 } label: {
                     Image(systemSymbol: .chevronDownCircleFill)
                         .resizable()
                         .frame(width: 26, height: 26)
                         .accentColor(.white)
                         .shadow(radius: 26)
+                        .opacity(self.streetViewScene.nextId != nil ? 1.0 : 0.0)
                 }
             }
             .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
@@ -159,23 +184,24 @@ struct Street360View: View {
         }
     }
 
-    func loadSVImage() {
-        guard let url = URL(string: streetViewItem.imageURL) else {
-            self.setMessage("Invalid URL")
-            return
-        }
+    func getImageURL(_ name: String) -> String {
+        let link = "https://streetview.khaled-7ed.workers.dev/\(name)?api_key=34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh"
+        return link
+    }
 
-        DispatchQueue.global().async {
-            do {
-                // TODO: Update to cache the image
-                let data = try Data(contentsOf: url)
-                DispatchQueue.main.async {
-                    self.svimage = UIImage(data: data)
+    func loadSVImage() {
+        let link = self.getImageURL(self.streetViewScene.name)
+
+        DownloadManager.downloadFile(link, isThumb: false) { path, error in
+            self.isLoading = false
+            if let path {
+                if self.svimageId != path {
+                    self.svimageId = path
+                    self.svimage = UIImage(contentsOfFile: path)
                 }
-            } catch {
-                DispatchQueue.main.async {
-                    self.setMessage("Could not load the image - \(error.localizedDescription)")
-                }
+            } else {
+                print(error ?? "Error!!!")
+                self.setMessage("Could not load the image - \(error ?? "N/A")")
             }
         }
     }
@@ -183,6 +209,7 @@ struct Street360View: View {
     func panoramaView(_ img: UIImage) -> some View {
         ZStack {
             PanoramaViewer(image: SwiftUIPanoramaViewer.bindImage(img),
+                           panoramaType: .spherical,
                            controlMethod: .touch) { key in
                 print(key)
             } cameraMoved: { pitch, yaw, roll in
@@ -196,6 +223,7 @@ struct Street360View: View {
                 print("roll: \(roll)")
                 print("-=-=-=-=-=-=-")
             }
+            .id(img)
             .onTapGesture {
                 print(self.rotationIndicator)
             }
@@ -205,15 +233,59 @@ struct Street360View: View {
                 HStack {
                     CompassView()
                         .frame(width: 50.0, height: 50.0)
-                        .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
+                        .rotationEffect(Angle(degrees: Double(self.rotationIndicator * -1)))
                     Spacer()
                 }
                 .padding()
             }
 
-            if self.expandView {
+            if self.expandView, self.showLoading == false {
                 self.streetNavigationButtons
             }
+        }
+    }
+
+}
+
+extension Street360View {
+
+    func loadImage(_ direction: NavDirection) {
+        Task {
+            let nextItem = self.getNextID(direction)
+            guard let nextId = nextItem.id else { return }
+            guard let nextName = nextItem.name else { return }
+            let link = self.getImageURL(nextName)
+            if let path = DownloadManager.getLocalFilePath(link),
+               let img = UIImage(contentsOfFile: path), svimageId != path {
+                self.svimageId = path
+                self.svimage = img
+
+            } else {
+                self.errorMsg = nil
+                self.isLoading = true
+            }
+
+            await self.mapStore.loadStreetViewScene(id: nextId) { item in
+                if let item {
+                    self.streetViewScene = item
+                    self.loadSVImage()
+                } else {
+                    self.isLoading = false
+                }
+            }
+        }
+    }
+
+    func getNextID(_ direction: NavDirection) -> (id: Int?, name: String?) {
+        switch direction {
+        case .next:
+            return (self.streetViewScene.nextId, self.streetViewScene.nextName)
+        case .previous:
+            return (self.streetViewScene.previousId, self.streetViewScene.previousName)
+        case .east:
+            return (self.streetViewScene.eastId, self.streetViewScene.eastName)
+        case .west:
+            return (self.streetViewScene.westId, self.streetViewScene.westName)
         }
     }
 

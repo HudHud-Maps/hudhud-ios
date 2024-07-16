@@ -19,6 +19,8 @@ enum SelectedPointOfInterest {
     case searchSuggestion(id: String)
     // selected item from the map itself
     case mapElement(ResolvedItem)
+    // selected item from street view
+    case streetViewScene(id: Int)
 }
 
 // MARK: - MapViewStore
@@ -65,6 +67,10 @@ class MapViewStore {
                 self.mapStore.displayableItems.append(.resolvedItem(resolvedItem))
             }
             self.mapStore.selectedItem = resolvedItem
+
+        case let .streetViewScene(sceneID):
+            print("streetViewScene id:  \(sceneID)")
+            self.mapStore.loadStreetViewScene(id: sceneID, block: nil)
         }
     }
 
@@ -76,6 +82,8 @@ class MapViewStore {
                 return .searchSuggestion(id: poi)
             } else if let item = extractItem(from: feature) {
                 return .mapElement(item)
+            } else if let item = extractStreetViewSceneItem(from: feature) {
+                return .streetViewScene(id: item)
             }
         }
         return nil
@@ -112,6 +120,19 @@ class MapViewStore {
             rating: feature.attribute(forKey: "rating") as? Double,
             ratingsCount: feature.attribute(forKey: "ratings_count") as? Int
         )
+    }
+
+    private func extractStreetViewSceneItem(from feature: any MLNFeature) -> Int? {
+        guard let feature = feature as? MLNPointFeature else { return nil }
+
+        if feature.attribute(forKey: "source") as? String == "mosaic" {
+            guard let id = feature.attribute(forKey: "id") as? Int else { return nil }
+            return id
+//            guard let fileName = feature.attribute(forKey: "FileName") as? String else { return nil }
+//            return StreetViewScene(id: id, name: fileName, nextId: nil, nextName: nil, previousId: nil, previousName: nil, westId: nil, westName: nil, eastId: nil, eastName: nil, lat: 0.0, lon: 0.0)
+        }
+
+        return nil
     }
 
     private func website(from feature: MLNPointFeature) -> URL? {
