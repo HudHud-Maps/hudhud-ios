@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
       "state" : {
-        "revision" : "d52adbcbfaf96bd0723a156bd838826916ff7a69",
-        "version" : "0.0.3"
+        "revision" : "236215c13bff962009e0f0257d6d8349be33442f",
+        "version" : "0.0.4"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
       "state" : {
-        "branch" : "enhancement/unify-navigation",
-        "revision" : "5ed30bd60644237e6fb5c7698a92a130c637f8ad"
+        "branch" : "mapstyle-pois",
+        "revision" : "4a69c57bd2cf404d6a801191a3645f0a5578ba50"
       }
     },
     {
