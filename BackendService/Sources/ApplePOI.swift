@@ -66,7 +66,7 @@ public actor ApplePOI: POIServiceProtocol {
                                         category: $0.pointOfInterestCategory?.rawValue.replacingOccurrences(of: "MKPOICategory", with: ""),
                                         symbol: $0.pointOfInterestCategory?.symbol ?? .pin,
                                         type: .appleResolved,
-                                        coordinate: $0.placemark.coordinate, 
+                                        coordinate: $0.placemark.coordinate,
                                         color: .systemRed,
                                         phone: $0.phoneNumber,
                                         website: $0.url)
@@ -99,7 +99,7 @@ public actor ApplePOI: POIServiceProtocol {
             }
         }
     }
-    
+
     // MARK: - Internal
 
     func update(results: [DisplayableRow]) async {

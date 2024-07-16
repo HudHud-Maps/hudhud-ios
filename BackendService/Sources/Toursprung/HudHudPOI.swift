@@ -99,15 +99,17 @@ public struct Category: Hashable {
     public let name: String
     public let icon: SFSymbol
     public let systemColor: SystemColor
-    
+
+    public var color: Color {
+        self.systemColor.swiftUIColor
+    }
+
+    // MARK: - Lifecycle
+
     init(name: String, icon: SFSymbol, color: SystemColor) {
         self.name = name
         self.icon = icon
         self.systemColor = color
-    }
-    
-    public var color: Color {
-        systemColor.swiftUIColor
     }
 }
 
@@ -140,7 +142,8 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     nil
                 }
-                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: .systemRed, phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: [MediaURLs(type: jsonResponse.data.media_urls?.first?._type, url: jsonResponse.data.media_urls?.first?.url)])]
+                var mediaURLsList = jsonResponse.data.media_urls?.map { MediaURLs(type: $0._type, url: $0.url) }
+                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: .systemRed, phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: mediaURLsList)]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -243,6 +246,8 @@ public struct HudHudPOI: POIServiceProtocol {
 
 }
 
+// MARK: - SystemColor
+
 // swiftlint:enable init_usage
 
 public enum SystemColor: String, Codable {
@@ -264,7 +269,7 @@ public enum SystemColor: String, Codable {
     case systemBrown
     case systemMint
     case systemCyan
-    
+
     public var swiftUIColor: Color {
         switch self {
         case .systemGray:
@@ -305,6 +310,8 @@ public enum SystemColor: String, Codable {
             Color(.systemCyan)
         }
     }
+
+    // MARK: - Lifecycle
 
     init(color: Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload) {
         switch color {

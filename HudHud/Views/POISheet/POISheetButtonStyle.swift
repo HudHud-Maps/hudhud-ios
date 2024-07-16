@@ -13,8 +13,8 @@ import SwiftUI
 struct POISheetButtonStyle: ButtonStyle {
     let title: String
     let icon: UIImage
-    var backgroundColor: Color? = .white
-    var fontColor: Color? = .primary
+    var backgroundColor: Color? = .Colors.General._20ActionButtons
+    var fontColor: Color? = .Colors.General._01Black
     @ScaledMetric var imageSize = 24
     @ScaledMetric var buttonHeight = 48
     @ScaledMetric var buttonWidth = 66
@@ -27,8 +27,8 @@ struct POISheetButtonStyle: ButtonStyle {
                 .frame(width: self.imageSize, height: self.imageSize)
                 .padding(.top, 9)
             Text(self.title)
-                .foregroundStyle(self.fontColor ?? .primary)
-                .font(.subheadline.bold())
+                .hudhudFont(.subheadline)
+                .foregroundStyle(self.fontColor ?? .Colors.General._01Black)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
                 .padding(.vertical, 8)
