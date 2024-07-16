@@ -19,7 +19,7 @@ enum SFSymbolSpriteSheet {
     static var defaultMapPin: UIImage = {
         let renderer = UIGraphicsImageRenderer(size: size)
 
-        return Self.createSymbolImageWithCircle(symbolImage: UIImage(systemName: "mappin")!, backgroundColor: .systemIndigo, renderer: renderer, size: size, internalSize: internalSize)
+        return Self.createSymbolImageWithCircle(symbolImage: UIImage(systemSymbol: .mappin), backgroundColor: .systemIndigo, renderer: renderer, size: size, internalSize: internalSize)
     }()
 
     static let adaptiveColors: [(name: String, color: UIColor)] = [
@@ -70,7 +70,6 @@ enum SFSymbolSpriteSheet {
     }
 
     private static func generate() -> [String: UIImage] {
-        let startDate = Date()
         let icons = [
             "cart.fill",
             "fork.knife",
@@ -106,10 +105,10 @@ enum SFSymbolSpriteSheet {
 
     private static func rawImage(for symbolName: String) -> UIImage {
         let symbolConfiguration = UIImage.SymbolConfiguration(textStyle: .caption1)
-        let symbolImage: UIImage = if let resolvedImage = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration) {
+        let symbolImage: UIImage = if let resolvedImage = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration) { // swiftlint:disable:this sf_safe_symbol
             resolvedImage
         } else {
-            UIImage(systemName: "mappin", withConfiguration: symbolConfiguration)!
+            UIImage(systemSymbol: .mappin, withConfiguration: symbolConfiguration)
         }
         return symbolImage
     }
