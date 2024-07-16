@@ -1,8 +1,9 @@
 //
 //  DownloadManager.swift
-//  ADAEmployee
+//  HudHud
 //
 //  Created by Aziz Dev on 24/02/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import CommonCrypto

@@ -1,8 +1,9 @@
 //
 //  HudhudStreetView.swift
-//
+//	HudHud
 //
 //  Created by Aziz Dev on 11/07/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import CoreLocation
@@ -47,7 +48,7 @@ public struct HudhudStreetView {
 
     public func getStreetView(lat: Double, lon: Double) async throws -> StreetViewItem? {
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-        let response = try await client.getNearestStreetViewImage(query: .init(lat: lat, lon: lon))
+        let response = try await client.getNearestStreetViewImage(query: .init(lat: lat, lon: lon)) // swiftlint:disable:this init_usage
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -73,7 +74,7 @@ public struct HudhudStreetView {
 
     public func getStreetViewDetails(id: Int) async throws -> StreetViewItem? {
         let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-        let response = try await client.getStreetViewImage(path: .init(id: id))
+        let response = try await client.getStreetViewImage(path: .init(id: id)) // swiftlint:disable:this init_usage
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
