@@ -79,7 +79,7 @@ struct SearchSheet: View {
             .padding(.top)
             List {
                 if !self.searchStore.searchText.isEmpty {
-                    if self.searchStore.isSearching {
+                    if self.searchStore.isSheetLoading {
                         ForEach(SearchSheet.fakeData.indices, id: \.self) { item in
                             Button(action: {},
                                    label: {
@@ -93,31 +93,12 @@ struct SearchSheet: View {
                         }
                     } else {
                         ForEach(self.mapStore.displayableItems) { item in
-                            Button(action: {
+                            Button {
                                 Task {
-                                    if let resolvedItem = item.innerModel as? ResolvedItem {
-                                        self.mapStore.selectedItem = resolvedItem
+                                    self.searchIsFocused = false
+                                    await self.searchStore.didSelect(item)
+                                    if let resolvedItem = mapStore.selectedItem {
                                         self.storeRecent(item: resolvedItem)
-                                    } else {
-                                        let resolvedItems = try await self.searchStore.resolve(item: item)
-
-                                        if resolvedItems.count == 1, let firstItem = resolvedItems.first, let resolvedItem = firstItem.innerModel as? ResolvedItem {
-                                            self.mapStore.selectedItem = resolvedItem
-                                            self.storeRecent(item: resolvedItem)
-
-                                            let index = self.mapStore.displayableItems.firstIndex { itemInArray in
-                                                return itemInArray.id == resolvedItem.id
-                                            }
-
-                                            if let index {
-                                                self.mapStore.displayableItems[index] = AnyDisplayableAsRow(resolvedItem)
-                                            } else {
-                                                Logger.searchView.error("Resolved an item that is no longer in the displayable list")
-                                            }
-
-                                        } else {
-                                            self.mapStore.displayableItems = resolvedItems
-                                        }
                                     }
                                     switch self.searchStore.searchType {
                                     case let .returnPOILocation(completion):
@@ -131,16 +112,13 @@ struct SearchSheet: View {
                                     case .favorites:
                                         break
                                     }
-
-                                    self.searchIsFocused = false
                                 }
-
-                            }, label: {
-                                SearchResultItem(prediction: item, searchText: nil)
+                            } label: {
+                                SearchResultItemView(item: SearchResultItem(item), searchText: nil)
                                     .frame(maxWidth: .infinity)
-                                    .redacted(reason: self.searchStore.isSearching ? .placeholder : [])
-                            })
-                            .disabled(self.searchStore.isSearching)
+                                    .redacted(reason: self.searchStore.isSheetLoading ? .placeholder : [])
+                            }
+                            .disabled(self.searchStore.isSheetLoading)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                         }
@@ -194,13 +172,7 @@ struct SearchSheet: View {
 
     func storeRecent(item: ResolvedItem) {
         withAnimation {
-            if self.searchStore.recentViewedItem.count > 9 {
-                self.searchStore.recentViewedItem.removeLast()
-            }
-            if self.searchStore.recentViewedItem.contains(item) {
-                self.searchStore.recentViewedItem.removeAll(where: { $0 == item })
-            }
-            self.searchStore.recentViewedItem.append(item)
+            self.searchStore.storeInRecent(item)
         }
     }
 
@@ -213,12 +185,12 @@ extension Route: Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [
-        SearchResultItem(prediction: PredictionItem.starbucks, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.supermarket, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.pharmacy, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.artwork, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.ketchup, searchText: nil),
-        SearchResultItem(prediction: PredictionItem.publicPlace, searchText: nil)
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.starbucks), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.ketchup), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.supermarket), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.publicPlace), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.artwork), searchText: nil),
+        SearchResultItemView(item: SearchResultItem(DisplayableRow.pharmacy), searchText: nil)
     ]
 }
 

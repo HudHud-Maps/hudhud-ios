@@ -1,8 +1,9 @@
 //
-//  Toursprung.swift
-//  Navigation
+//  RoutingService.swift
+//  BackendService
 //
 //  Created by Patrick Kladek on 06.03.24.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import Foundation
@@ -14,9 +15,9 @@ import OSLog
 
 public typealias JSONDictionary = [String: Any]
 
-// MARK: - Toursprung
+// MARK: - RoutingService
 
-public class Toursprung {
+public class RoutingService {
 
     public enum ToursprungError: LocalizedError, Equatable {
         case invalidUrl(message: String?)
@@ -125,7 +126,7 @@ public class Toursprung {
 
     public typealias RouteCompletionHandler = (_ waypoints: [Waypoint]?, _ routes: [Route]?, _ error: Error?) -> Void
 
-    public static let shared = Toursprung()
+    public static let shared = RoutingService()
 
     // MARK: - Lifecycle
 
@@ -247,7 +248,7 @@ private extension RouteOptions {
             URLQueryItem(name: "voice_units", value: "metric")
         ]
         guard let url = components.url else {
-            throw Toursprung.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
+            throw RoutingService.ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
         }
 
         return url
@@ -272,57 +273,5 @@ private extension RouteOptions {
             Route(json: $0, waypoints: waypoints, options: self)
         }
         return (namedWaypoints, routes)
-    }
-}
-
-public extension CLLocationCoordinate2D {
-
-    enum GeoJSONError: LocalizedError {
-        case invalidCoordinates
-        case invalidType
-
-        public var errorDescription: String? {
-            switch self {
-            case .invalidCoordinates:
-                "Can not read coordinates"
-            case .invalidType:
-                "Expecting different GeoJSON type"
-            }
-        }
-
-        public var failureReason: String? {
-            switch self {
-            case .invalidCoordinates:
-                "data has more or less then 2 coordinates, expecting exactly 2"
-            case .invalidType:
-                "type should be either LineString or Point"
-            }
-        }
-    }
-
-    init(geoJSON array: [Double]) throws {
-        guard array.count == 2 else {
-            throw GeoJSONError.invalidCoordinates
-        }
-
-        self.init(latitude: array[1], longitude: array[0])
-    }
-
-    init(geoJSON point: JSONDictionary) throws {
-        guard point["type"] as? String == "Point" else {
-            throw GeoJSONError.invalidType
-        }
-
-        try self.init(geoJSON: point["coordinates"] as? [Double] ?? [])
-    }
-
-    static func coordinates(geoJSON lineString: JSONDictionary) throws -> [CLLocationCoordinate2D] {
-        let type = lineString["type"] as? String
-        guard type == "LineString" || type == "Point" else {
-            throw GeoJSONError.invalidType
-        }
-
-        let coordinates = lineString["coordinates"] as? [[Double]] ?? []
-        return try coordinates.map { try self.init(geoJSON: $0) }
     }
 }
