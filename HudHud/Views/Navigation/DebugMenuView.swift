@@ -34,6 +34,12 @@ struct DebugMenuView: View {
                     Text("Enable Touch Visualizer")
                 }
             }
+
+            Section(header: Text("SF Symbols on Map")) {
+                Toggle(isOn: self.$debugSettings.customMapSymbols ?? false) {
+                    Text("Use SF Symbols for POIs on map")
+                }
+            }
         }
         .navigationTitle("Debug Menu")
         .toolbar {
