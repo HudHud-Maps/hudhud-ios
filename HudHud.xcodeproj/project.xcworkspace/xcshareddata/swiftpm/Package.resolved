@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "3f712ee1e65ef7ed6ca6db07658689aa3d185064",
-        "version" : "6.5.0"
+        "revision" : "039ef525064a685c291db5118f6b5f6e8b090bb0",
+        "version" : "6.5.2"
       }
     },
     {
@@ -33,7 +33,7 @@
       "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
         "branch" : "user-puck-positioning",
-        "revision" : "62f8f454f2f0ecb6a724ffad50d845992f5ff395"
+        "revision" : "b4741b0911a652fcb18b272aa4c7dbadab0a6f3e"
       }
     },
     {
@@ -51,7 +51,7 @@
       "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
       "state" : {
         "branch" : "mapstyle-pois",
-        "revision" : "4a69c57bd2cf404d6a801191a3645f0a5578ba50"
+        "revision" : "05d6cf3e639bdf05f22f93df3a02c4e5c74005c2"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "3b79620f2b916941035b5544bbca321fa7b33ed4",
-        "version" : "0.0.3"
+        "branch" : "main",
+        "revision" : "ccec0efd3e4a48b85b5407f788916de265c986dc"
       }
     },
     {
@@ -131,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "ee97538f5b81ae89698fd95938896dec5217b148",
-        "version" : "1.1.1"
+        "revision" : "3d2dc41a01f9e49d84f0a3925fb858bed64f702d",
+        "version" : "1.1.2"
       }
     },
     {
@@ -183,7 +183,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"
@@ -248,8 +248,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/jpsim/Yams",
       "state" : {
-        "revision" : "9234124cff5e22e178988c18d8b95a8ae8007f76",
-        "version" : "5.1.2"
+        "revision" : "3036ba9d69cf1fd04d433527bc339dc0dc75433d",
+        "version" : "5.1.3"
       }
     }
   ],
