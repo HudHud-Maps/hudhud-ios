@@ -18,4 +18,6 @@ class DebugStore: ObservableObject {
             Logger.routing.notice("simulate ride: \(self.simulateRide)")
         }
     }
+
+    @AppStorage("SFSymbolsMap") var customMapSymbols: Bool?
 }
