@@ -92,38 +92,59 @@ enum Fonts {
     }
 }
 
+extension UIFont {
+
+    static func hudhudFont(_ weight: FontWeight, size: CGFloat) -> UIFont {
+        func font(with name: String) -> UIFont? {
+            switch weight {
+            case .bold:
+                return UIFont(name: "\(name)-Bold", size: size)
+            case .boldItalic:
+                return UIFont(name: "\(name)-BoldItalic", size: size)
+            case .extraBold:
+                return UIFont(name: "\(name)-ExtraBold", size: size)
+            case .extraBoldItalic:
+                return UIFont(name: "\(name)-ExtraBoldItalic", size: size)
+            case .extraLight:
+                return UIFont(name: "\(name)-ExtraLight", size: size)
+            case .extraLightItalic:
+                return UIFont(name: "\(name)-ExtraLightItalic", size: size)
+            case .italic:
+                return UIFont(name: "\(name)-Italic", size: size)
+            case .light:
+                return UIFont(name: "\(name)-Light", size: size)
+            case .lightItalic:
+                return UIFont(name: "\(name)-LightItalic", size: size)
+            case .medium:
+                return UIFont(name: "\(name)-Medium", size: size)
+            case .mediumItalic:
+                return UIFont(name: "\(name)-MediumItalic", size: size)
+            case .regular:
+                return UIFont(name: "\(name)-Regular", size: size)
+            case .semiBold:
+                return UIFont(name: "\(name)-SemiBold", size: size)
+            case .semiBoldItalic:
+                return UIFont(name: "\(name)-SemiBoldItalic", size: size)
+            }
+        }
+
+        guard let font = font(with: "PlusJakartaSans") else {
+            assertionFailure("Font not found, make sure its packaged via the build pipeline")
+            return .systemFont(ofSize: size)
+        }
+        return font
+    }
+
+    static func hudhudFont(_ textStyle: Font.TextStyle = .body) -> UIFont {
+        let size = Fonts.getSize(for: textStyle)
+        let weight = Fonts.getWeight(for: textStyle)
+        return self.hudhudFont(weight, size: size)
+    }
+}
+
 extension Font {
     static func hudhudFont(_ weight: FontWeight, size: CGFloat) -> Font {
-        switch weight {
-        case .bold:
-            return .custom("PlusJakartaSans-Bold", size: size)
-        case .boldItalic:
-            return .custom("PlusJakartaSans-BoldItalic", size: size)
-        case .extraBold:
-            return .custom("PlusJakartaSans-ExtraBold", size: size)
-        case .extraBoldItalic:
-            return .custom("PlusJakartaSans-ExtraBoldItalic", size: size)
-        case .extraLight:
-            return .custom("PlusJakartaSans-ExtraLight", size: size)
-        case .extraLightItalic:
-            return .custom("PlusJakartaSans-ExtraLightItalic", size: size)
-        case .italic:
-            return .custom("PlusJakartaSans-Italic", size: size)
-        case .light:
-            return .custom("PlusJakartaSans-Light", size: size)
-        case .lightItalic:
-            return .custom("PlusJakartaSans-LightItalic", size: size)
-        case .medium:
-            return .custom("PlusJakartaSans-Medium", size: size)
-        case .mediumItalic:
-            return .custom("PlusJakartaSans-MediumItalic", size: size)
-        case .regular:
-            return .custom("PlusJakartaSans-Regular", size: size)
-        case .semiBold:
-            return .custom("PlusJakartaSans-SemiBold", size: size)
-        case .semiBoldItalic:
-            return .custom("PlusJakartaSans-SemiBoldItalic", size: size)
-        }
+        return Font(UIFont.hudhudFont(weight, size: size))
     }
 }
 

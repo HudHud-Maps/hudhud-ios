@@ -55,7 +55,7 @@ struct ContentView: View {
     @ViewBuilder
     var mapView: some View {
         MapView<NavigationViewController>(makeViewController: {
-            let viewController = NavigationViewController(dayStyleURL: self.styleURL)
+            let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
             return viewController
         }(), styleURL: self.styleURL, camera: self.$mapStore.camera) {
