@@ -48,7 +48,7 @@ enum SFSymbolSpriteSheet {
             "systemTeal", UIColor.systemTeal.hex(),
             "systemIndigo", UIColor.systemIndigo.hex(),
             "systemGray", UIColor.systemGray.hex(),
-            UIColor.systemPink.hex()
+            UIColor.label.hex() // fallback when no color matches
         ])
 
         return colorMatchExpression
