@@ -35,7 +35,7 @@ struct RecentSearchResultsView: View {
                     .layoutPriority(1)
                     .frame(minWidth: .leastNonzeroMagnitude)
                     .background(
-                        item.tintColor.mask(Circle())
+                        item.color.mask(Circle())
                     )
 
                 VStack(alignment: .leading) {
@@ -55,7 +55,7 @@ struct RecentSearchResultsView: View {
                     NavigationLink {
                         self.editFormViewIsShown = true
                         self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
-                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.tintColor, item: item, type: item.category ?? "")
+                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
                         return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
                     } label: {
                         Text("+")
@@ -65,7 +65,7 @@ struct RecentSearchResultsView: View {
             }
             .onTapGesture {
                 let selectedItem = item
-                let mapItems = [AnyDisplayableAsRow(item)]
+                let mapItems = [DisplayableRow.resolvedItem(item)]
                 self.mapStore.selectedItem = selectedItem
                 self.mapStore.displayableItems = mapItems
             }
@@ -86,7 +86,7 @@ struct RecentSearchResultsView: View {
 
 #Preview("EditFavoritesFormView") {
     let item: ResolvedItem = .artwork
-    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.tintColor, item: item, type: item.category ?? "")
+    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
     @State var editFormViewIsShown: Bool = true
     return NavigationStack {

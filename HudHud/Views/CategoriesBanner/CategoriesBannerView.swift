@@ -17,7 +17,9 @@ struct CategoriesBannerView: View {
             HStack(alignment: .top, spacing: 10) {
                 ForEach(self.catagoryBannerData) { category in
                     Button(category.title, systemImage: category.iconSystemName) {
-                        self.searchStore.searchText = category.title
+                        Task {
+                            await self.searchStore.fetch(category: category.title)
+                        }
                     }.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
                 }
             }

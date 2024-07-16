@@ -45,7 +45,6 @@ final class SearchViewStore: ObservableObject {
     enum Mode {
         enum Provider: CaseIterable {
             case apple
-            case toursprung
             case hudhud
         }
 
@@ -57,9 +56,7 @@ final class SearchViewStore: ObservableObject {
 
     private var task: Task<Void, Error>?
     var apple = ApplePOI()
-    private var toursprung = ToursprungPOI()
     private var hudhud = HudHudPOI()
-    private var cancellable: AnyCancellable?
     private var cancellables: Set<AnyCancellable> = []
     var locationManager: Location = .forSingleRequestUsage
 
@@ -75,7 +72,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    @Published var isSearching = false
+    @Published var isSheetLoading = false
     @Published var searchType: SearchType = .selectPOI
 
     @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
@@ -86,7 +83,7 @@ final class SearchViewStore: ObservableObject {
         self.mapStore = mapStore
         self.mode = mode
 
-        self.cancellable = self.$searchText
+        self.$searchText
             .removeDuplicates()
             .sink { newValue in
                 switch self.mode {
@@ -94,7 +91,7 @@ final class SearchViewStore: ObservableObject {
                     self.performSearch(with: provider, term: newValue)
                 case .preview:
                     self.mapStore.displayableItems = [
-                        .starbucks,
+                        DisplayableRow.starbucks,
                         .ketchup,
                         .publicPlace,
                         .artwork,
@@ -103,9 +100,10 @@ final class SearchViewStore: ObservableObject {
                     ]
                 }
             }
+            .store(in: &self.cancellables)
         if case .preview = mode {
-            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .toursprung, coordinate: .riyadh)
-            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .toursprung, coordinate: .riyadh)
+            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
+            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
     }
@@ -119,16 +117,68 @@ final class SearchViewStore: ObservableObject {
         return currentLocation
     }
 
-    func resolve(item: AnyDisplayableAsRow) async throws -> [AnyDisplayableAsRow] {
-        switch self.mode {
-        case .live(provider: .apple):
-            return try await item.resolve(in: self.apple)
-        case .live(provider: .toursprung):
-            return [item] // Toursprung doesn't support predict & resolve
-        case .live(provider: .hudhud):
-            return try await item.resolve(in: self.hudhud)
-        case .preview:
-            return [item]
+    func storeInRecent(_ item: ResolvedItem) {
+        if self.recentViewedItem.count > 9 {
+            self.recentViewedItem.removeLast()
+        }
+        if self.recentViewedItem.contains(item) {
+            self.recentViewedItem.removeAll(where: { $0 == item })
+        }
+        self.recentViewedItem.append(item)
+    }
+
+    func didSelect(_ item: DisplayableRow) async {
+        switch item {
+        case let .resolvedItem(resolvedItem):
+            self.mapStore.selectedDetent = .third
+            self.mapStore.selectedItem = resolvedItem
+        case let .category(category):
+            await self.fetch(category: category.name)
+        case .predictionItem:
+            await self.resolve(item: item)
+        }
+    }
+
+    func resolve(item: DisplayableRow) async {
+        self.mapStore.selectedDetent = .third
+        self.isSheetLoading = true
+        defer { self.isSheetLoading = false }
+        do {
+            let items = switch self.mode {
+            case .live(provider: .apple):
+                try await item.resolve(in: self.apple)
+            case .live(provider: .hudhud):
+                try await item.resolve(in: self.hudhud)
+            case .preview:
+                [item]
+            }
+            guard let firstItem = items.first,
+                  let resolvedItem = firstItem.resolvedItem,
+                  items.count == 1,
+                  let resolvedItemIndex = self.mapStore.displayableItems.firstIndex(where: { $0.id == resolvedItem.id }) else {
+                self.mapStore.selectedDetent = .large
+                self.mapStore.displayableItems = items
+                return
+            }
+            self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
+            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.selectedDetent = .third
+        } catch {
+            self.searchError = error
+        }
+    }
+
+    func fetch(category: String) async {
+        self.isSheetLoading = true
+        self.mapStore.selectedDetent = .third
+        defer { isSheetLoading = false }
+        do {
+            let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
+            self.mapStore.selectedDetent = .small
+            self.mapStore.displayableItems = items.map(DisplayableRow.resolvedItem)
+        } catch {
+            self.searchError = error
+            Logger.poiData.error("fetching category error: \(error)")
         }
     }
 }
@@ -139,21 +189,29 @@ private extension SearchViewStore {
 
     func performSearch(with provider: Mode.Provider, term: String) {
         self.task?.cancel()
+        if term.isEmpty {
+            self.mapStore.displayableItems = []
+            return
+        }
         self.task = Task {
-            defer { self.isSearching = false }
-            self.isSearching = true
+            defer { self.isSheetLoading = false }
+            self.isSheetLoading = true
+            self.mapStore.selectedDetent = .third
 
             do {
-                let prediction: [AnyDisplayableAsRow] = switch provider {
+                let result = switch provider {
                 case .apple:
                     try await self.apple.predict(term: term, coordinates: self.getCurrentLocation())
-                case .toursprung:
-                    try await self.toursprung.predict(term: term, coordinates: self.getCurrentLocation())
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
                 }
                 self.searchError = nil
-                self.mapStore.displayableItems = prediction
+                self.mapStore.displayableItems = result.items
+                self.mapStore.selectedDetent = if provider == .hudhud, result.hasCategory {
+                    .small // hudhud provider has coordinates in the response, so we can show the results in the map
+                } else {
+                    .large // other providers do not return coordinates, so we show the result in a list in full page
+                }
             } catch {
                 self.searchError = error
                 Logger.poiData.error("Predict Error: \(error)")

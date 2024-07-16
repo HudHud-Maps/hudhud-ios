@@ -18,7 +18,7 @@ public actor ApplePOI: POIServiceProtocol {
 
     private var localSearch: MKLocalSearch?
     private var completer: MKLocalSearchCompleter
-    private var continuation: CheckedContinuation<[AnyDisplayableAsRow], Error>?
+    private var continuation: CheckedContinuation<POIResponse, Error>?
     private let delegate: DelegateWrapper
 
     // MARK: - POIServiceProtocol
@@ -67,6 +67,7 @@ public actor ApplePOI: POIServiceProtocol {
                                         symbol: $0.pointOfInterestCategory?.symbol ?? .pin,
                                         type: .appleResolved,
                                         coordinate: $0.placemark.coordinate,
+                                        color: .systemRed,
                                         phone: $0.phoneNumber,
                                         website: $0.url)
                 }
@@ -75,16 +76,16 @@ public actor ApplePOI: POIServiceProtocol {
         }
     }
 
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> [AnyDisplayableAsRow] {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
         return try await withCheckedThrowingContinuation { continuation in
             if let continuation = self.continuation {
                 self.completer.cancel()
-                continuation.resume(returning: [])
+                continuation.resume(returning: POIResponse(items: [], hasCategory: false))
                 self.continuation = nil
             }
 
             if term.isEmpty {
-                continuation.resume(returning: [])
+                continuation.resume(returning: POIResponse(items: [], hasCategory: false))
                 return
             }
 
@@ -98,11 +99,11 @@ public actor ApplePOI: POIServiceProtocol {
             }
         }
     }
-    
+
     // MARK: - Internal
 
-    func update(results: [AnyDisplayableAsRow]) async {
-        self.continuation?.resume(returning: results)
+    func update(results: [DisplayableRow]) async {
+        self.continuation?.resume(returning: POIResponse(items: results, hasCategory: false))
         self.continuation = nil
     }
 
@@ -123,13 +124,13 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
     // MARK: - MKLocalSearchCompleterDelegate
 
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        let results = completer.results.compactMap {
+        let results: [DisplayableRow] = completer.results.compactMap {
             let item = PredictionItem(id: "\($0.title)|\($0.subtitle)",
                                       title: $0.title,
                                       subtitle: $0.subtitle,
                                       symbol: .pin,
                                       type: .apple(completion: $0))
-            return AnyDisplayableAsRow(item)
+            return .predictionItem(item)
         }
         Task {
             await self.apple?.update(results: results)

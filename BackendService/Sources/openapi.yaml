@@ -580,6 +580,7 @@ components:
           $ref: '#/components/schemas/StreetViewImageItem'
       required:
         - ok
+        - data
     StreetViewImageItem:
       type: object
       properties:

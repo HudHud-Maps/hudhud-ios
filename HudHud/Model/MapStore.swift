@@ -43,7 +43,7 @@ final class MapStore: ObservableObject {
     }
 
     enum CameraUpdateState {
-        case route(Toursprung.RouteCalculationResult?)
+        case route(RoutingService.RouteCalculationResult?)
         case selectedItem(ResolvedItem)
         case userLocation(CLLocationCoordinate2D)
         case mapItems
@@ -77,9 +77,9 @@ final class MapStore: ObservableObject {
         }
     }
 
-    @Published var routes: Toursprung.RouteCalculationResult? {
+    @Published var routes: RoutingService.RouteCalculationResult? {
         didSet {
-            if let routes, self.path.contains(Toursprung.RouteCalculationResult.self) == false {
+            if let routes, self.path.contains(RoutingService.RouteCalculationResult.self) == false {
                 self.path.append(routes)
                 self.cameraTask?.cancel()
                 self.cameraTask = Task {
@@ -108,7 +108,7 @@ final class MapStore: ObservableObject {
         }
     }
 
-    @Published var displayableItems: [AnyDisplayableAsRow] = [] {
+    @Published var displayableItems: [DisplayableRow] = [] {
         didSet {
             guard self.displayableItems != [] else { return }
 
@@ -121,7 +121,12 @@ final class MapStore: ObservableObject {
         didSet {
             if let selectedItem, routes == nil {
                 self.updateCamera(state: .selectedItem(selectedItem))
-                self.path.append(selectedItem)
+                if self.path.isEmpty {
+                    self.path.append(selectedItem)
+                } else {
+                    self.path.removeLast()
+                    self.path.append(selectedItem)
+                }
             } else {
                 return
             }
@@ -129,14 +134,14 @@ final class MapStore: ObservableObject {
     }
 
     var mapItems: [ResolvedItem] {
-        let allItems: Set<AnyDisplayableAsRow> = Set(self.displayableItems)
+        let allItems = Set(self.displayableItems)
 
         if let selectedItem {
-            let items = allItems.union([AnyDisplayableAsRow(selectedItem)])
-            return items.compactMap { $0.innerModel as? ResolvedItem }
+            let items = allItems.union([DisplayableRow.resolvedItem(selectedItem)])
+            return items.compactMap(\.resolvedItem)
         }
 
-        return self.displayableItems.compactMap { $0.innerModel as? ResolvedItem }
+        return self.displayableItems.compactMap(\.resolvedItem)
     }
 
     var points: ShapeSource {
@@ -268,7 +273,7 @@ final class MapStore: ObservableObject {
             self.allowedDetents = [.small, .third, .nearHalf, .large]
             self.selectedDetent = .nearHalf
         }
-        if navigationPathItem is Toursprung.RouteCalculationResult {
+        if navigationPathItem is RoutingService.RouteCalculationResult {
             self.allowedDetents = [.height(150), .medium]
             self.selectedDetent = .medium
         }
@@ -310,7 +315,7 @@ extension MapStore: NavigationViewControllerDelegate {
                 options.distanceMeasurementSystem = .metric
                 options.attributeOptions = []
 
-                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
                 if let route = results.routes.first {
                     await self.reroute(with: route)
                 }
@@ -436,7 +441,7 @@ private extension MapStore {
             }
         case let .userLocation(userLocation):
             self.moveToUserLocation = false
-            self.camera = MapViewCamera.center(userLocation, zoom: 15)
+            self.camera = MapViewCamera.center(userLocation, zoom: 14)
 
         case .mapItems:
             Task {

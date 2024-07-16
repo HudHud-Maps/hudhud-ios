@@ -22,9 +22,9 @@ import SwiftUI
 struct POIDetailSheet: View {
 
     let item: ResolvedItem
-    let onStart: (Toursprung.RouteCalculationResult) -> Void
+    let onStart: (RoutingService.RouteCalculationResult) -> Void
 
-    @State var routes: Toursprung.RouteCalculationResult?
+    @State var routes: RoutingService.RouteCalculationResult?
 
     @Environment(\.dismiss) private var dismiss
     let onDismiss: () -> Void
@@ -148,8 +148,7 @@ struct POIDetailSheet: View {
                 VStack {
                     AdditionalPOIDetailsView(item: self.item, routes: self.routes)
                         .fixedSize()
-                        .padding([.top, .trailing])
-                    DictionaryView(dictionary: self.item.userInfo)
+                        .padding([.leading, .top, .trailing])
                 }
             }
         }
@@ -174,7 +173,7 @@ struct POIDetailSheet: View {
                 options.distanceMeasurementSystem = .metric
                 options.attributeOptions = []
 
-                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
                 self.routes = results
             } catch {
                 let nsError = error as NSError
@@ -192,6 +191,6 @@ struct POIDetailSheet: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), rating: 4.4, ratingsCount: 230, isOpen: true)
+    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), color: .systemRed, rating: 4.4, ratingsCount: 230, isOpen: true)
     return ContentView(searchStore: searchViewStore)
 }

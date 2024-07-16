@@ -12,7 +12,7 @@ import SwiftUI
 
 struct AdditionalPOIDetailsView: View {
     let item: ResolvedItem
-    let routes: Toursprung.RouteCalculationResult?
+    let routes: RoutingService.RouteCalculationResult?
     var formatter = Formatters()
 
     var body: some View {
@@ -121,6 +121,6 @@ struct AdditionalPOIDetailsView: View {
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), rating: 4.4, ratingsCount: 230, isOpen: true)
+    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), color: .systemRed, rating: 4.4, ratingsCount: 230, isOpen: true)
     return ContentView(searchStore: searchViewStore)
 }
