@@ -44,20 +44,22 @@ struct PoiTileGridView: View {
                            subtitle: "Al-Narjs - Riyadh",
                            category: "Cafe", type: .hudhud,
                            coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
+                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"),
                            rating: 2,
-                           ratingCount: 25,
+                           ratingsCount: 25,
                            trendingImage: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")
     let poi1 = ResolvedItem(id: "Al-Narjs - Riyadh 2",
                             title: "Supermarket",
                             subtitle: "Al-Narjs - Riyadh",
                             category: "Cafe", type: .hudhud,
                             coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
+                            color: .systemRed,
                             phone: "0503539560",
                             website: URL(string: "https://hudhud.sa"),
                             rating: 2,
-                            ratingCount: 25,
+                            ratingsCount: 25,
                             trendingImage: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")
 
     let trendingStroe = TrendingStore()

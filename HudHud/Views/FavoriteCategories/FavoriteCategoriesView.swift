@@ -18,7 +18,7 @@ struct FavoriteCategoriesView: View {
 
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
-    @State var ViewMoreShown: Bool = false
+    @State var viewMoreShown: Bool = false
 
     var body: some View {
         ScrollView(.horizontal) {
@@ -26,9 +26,8 @@ struct FavoriteCategoriesView: View {
                 ForEach(self.favorites.favoritesItems.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
-                            let mapItems = [AnyDisplayableAsRow(selectedItem)]
                             self.mapStore.selectedItem = selectedItem
-                            self.mapStore.displayableItems = mapItems
+                            self.mapStore.displayableItems = [DisplayableRow.resolvedItem(selectedItem)]
                         }
                     } label: {
                         Text(favorite.type)
@@ -37,7 +36,7 @@ struct FavoriteCategoriesView: View {
                 }
                 Button {
                     print("Add was pressed")
-                    self.ViewMoreShown = true
+                    self.viewMoreShown = true
                 } label: {
                     Text("Add")
                 }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: .green))

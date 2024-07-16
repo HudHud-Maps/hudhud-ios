@@ -34,7 +34,7 @@ struct CatagoryBannerData: Identifiable {
         CatagoryBannerData(
             buttonColor: Color(UIColor.systemBackground),
             textColor: .orange,
-            title: "Hotels",
+            title: "Hotel",
             iconSystemName: "bed.double.fill"
         ),
         CatagoryBannerData(
