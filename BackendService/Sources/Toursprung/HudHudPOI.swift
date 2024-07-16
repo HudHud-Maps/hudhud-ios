@@ -47,15 +47,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     url = nil
                 }
-                var mediaURLsList: [MediaURLs] = []
-
-                if let mediaURLs = jsonResponse.data.media_urls {
-                    for media in mediaURLs {
-                        let type = media._type
-                        let mediaUrl = media.url
-                        mediaURLsList.append(MediaURLs(type: type, url: mediaUrl))
-                    }
-                }
+                var mediaURLsList = jsonResponse.data.media_urls?.map { MediaURLs(type: $0._type, url: $0.url) }
                 return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: mediaURLsList)]
             }
         case .notFound:
