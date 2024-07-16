@@ -11,4 +11,5 @@ import SwiftUI
 extension PresentationDetent {
     static let small: PresentationDetent = .height(80)
     static let third: PresentationDetent = .fraction(0.33)
+    static let nearHalf: PresentationDetent = .height(UIScreen.main.bounds.height / 2.5)
 }

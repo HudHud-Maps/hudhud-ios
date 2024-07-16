@@ -1,2 +1,2 @@
 #!/bin/bash
-./.tools/git-format-staged --formatter "./.tools/swiftformat stdin --stdinpath '{}'" "HudHud/*.swift" "HudHudTests/*.swift" "HudHudUITests/*.swift" "POIService/*.swift"
+./.tools/git-format-staged --formatter "./.tools/swiftformat stdin --stdinpath '{}'" "HudHud/*.swift" "HudHudTests/*.swift" "HudHudUITests/*.swift" "BackendService/*.swift"

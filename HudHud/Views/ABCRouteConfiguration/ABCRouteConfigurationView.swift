@@ -112,7 +112,7 @@ struct ABCRouteConfigurationView: View {
                 options.distanceMeasurementSystem = .metric
                 options.attributeOptions = []
 
-                let results = try await Toursprung.shared.calculate(host: DebugStore().routingHost, options: options)
+                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
                 self.mapStore.routes = results
             } catch {
                 Logger.routing.error("Updating routes: \(error)")
@@ -129,7 +129,7 @@ struct ABCRouteConfigurationView: View {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     return ABCRouteConfigurationView(routeConfigurations: [
         .myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
-        .waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))),
-        .waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .toursprung, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331)))
+        .waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), color: .systemRed)),
+        .waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), color: .systemRed))
     ], mapStore: searchViewStore.mapStore, searchViewStore: searchViewStore)
 }

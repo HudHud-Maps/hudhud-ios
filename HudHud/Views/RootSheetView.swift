@@ -63,7 +63,7 @@ struct RootSheetView: View {
                     POIDetailSheet(item: item, onStart: { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
-                        self.mapStore.displayableItems = [AnyDisplayableAsRow(item)]
+                        self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
                         if let location = calculation.waypoints.first {
                             self.mapStore.waypoints = [.myLocation(location), .waypoint(item)]
                         }
@@ -78,11 +78,11 @@ struct RootSheetView: View {
                     })
                     .navigationBarBackButtonHidden()
                 }
-                .navigationDestination(for: Toursprung.RouteCalculationResult.self) { _ in
+                .navigationDestination(for: RoutingService.RouteCalculationResult.self) { _ in
                     NavigationSheetView(searchViewStore: self.searchViewStore, mapStore: self.mapStore, debugStore: self.debugStore)
                         .navigationBarBackButtonHidden()
                         .onDisappear(perform: {
-                            if self.mapStore.path.contains(Toursprung.RouteCalculationResult.self) == false {
+                            if self.mapStore.path.contains(RoutingService.RouteCalculationResult.self) == false {
                                 self.mapStore.waypoints = nil
                                 self.mapStore.routes = nil
                             }

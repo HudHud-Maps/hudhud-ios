@@ -16,7 +16,7 @@ struct RecentSearchResultsView: View {
     @ObservedObject var searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
     let searchType: SearchViewStore.SearchType
-    @State var EditFormViewIsShown: Bool = false
+    @State var editFormViewIsShown: Bool = false
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     @State var clickedFavorite = FavoritesItem.favoriteForPreview
 
@@ -35,7 +35,7 @@ struct RecentSearchResultsView: View {
                     .layoutPriority(1)
                     .frame(minWidth: .leastNonzeroMagnitude)
                     .background(
-                        item.tintColor.mask(Circle())
+                        item.color.mask(Circle())
                     )
 
                 VStack(alignment: .leading) {
@@ -53,9 +53,9 @@ struct RecentSearchResultsView: View {
                 Spacer()
                 if self.searchType == .favorites {
                     NavigationLink {
-                        self.EditFormViewIsShown = true
+                        self.editFormViewIsShown = true
                         self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
-                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.tintColor, item: item, type: item.category ?? "")
+                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
                         return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
                     } label: {
                         Text("+")
@@ -65,7 +65,7 @@ struct RecentSearchResultsView: View {
             }
             .onTapGesture {
                 let selectedItem = item
-                let mapItems = [AnyDisplayableAsRow(item)]
+                let mapItems = [DisplayableRow.resolvedItem(item)]
                 self.mapStore.selectedItem = selectedItem
                 self.mapStore.displayableItems = mapItems
             }
@@ -86,13 +86,13 @@ struct RecentSearchResultsView: View {
 
 #Preview("EditFavoritesFormView") {
     let item: ResolvedItem = .artwork
-    @State var favoriteItem: FavoritesItem = .init(id: UUID(), title: item.title, tintColor: item.tintColor, item: item, type: item.category ?? "")
+    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
-    @State var EditFormViewIsShown: Bool = true
+    @State var editFormViewIsShown: Bool = true
     return NavigationStack {
         RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                                 searchStore: .storeSetUpForPreviewing, searchType: .favorites)
-            .navigationDestination(isPresented: $EditFormViewIsShown) {
+            .navigationDestination(isPresented: $editFormViewIsShown) {
                 EditFavoritesFormView(item: item, favoritesItem: favoriteItem, camera: $camera)
             }
     }

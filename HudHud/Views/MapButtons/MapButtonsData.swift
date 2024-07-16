@@ -29,8 +29,6 @@ struct MapButtonData: Identifiable, Equatable {
         switch mode {
         case .live(.apple):
             .icon(.appleLogo)
-        case .live(.toursprung):
-            .text(String("MTK"))
         case .preview:
             .icon(.pCircle)
         case .live(provider: .hudhud):

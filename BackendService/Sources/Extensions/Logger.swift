@@ -10,7 +10,7 @@ import Foundation
 import OSLog
 
 extension Logger {
-	private static var subsystem = Bundle(for: Toursprung.self).bundleIdentifier! // swiftlint:disable:this force_unwrapping
+    private static var subsystem = Bundle(for: RoutingService.self).bundleIdentifier! // swiftlint:disable:this force_unwrapping
 
-	static let parser = Logger(subsystem: subsystem, category: "Parser")
+    static let parser = Logger(subsystem: subsystem, category: "Parser")
 }
