@@ -96,6 +96,24 @@ struct ContentView: View {
                     .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
                     .iconColor(.white)
             }
+
+            if self.debugStore.customMapSymbols == true {
+                SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
+                    .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
+                    .iconAllowsOverlap(false)
+                    .text(featurePropertyNamed: "name_en")
+                    .textFontSize(11)
+                    .maximumTextWidth(8.0)
+                    .textHaloColor(UIColor.white)
+                    .textHaloWidth(1.0)
+                    .textHaloBlur(0.5)
+                    .textAnchor("top")
+                    .textColor(expression: SFSymbolSpriteSheet.colorExpression)
+                    .textOffset(CGVector(dx: 0, dy: 1.2))
+                    .minimumZoomLevel(13.0)
+                    .maximumZoomLevel(22.0)
+            }
+
             let pointSource = self.mapStore.points
 
             // shows the clustered pins
@@ -362,6 +380,16 @@ struct ContentView: View {
                 }
                 Spacer()
             }
+            .overlay(alignment: .top) {
+                if self.mapStore.street360View, let item = mapStore.streetViewScene {
+                    Street360View(streetViewScene: item, mapStore: self.mapStore, expandedView: { expand in
+                        self.mapStore.searchShown = !expand
+                    }, closeView: {
+                        self.mapStore.street360View = false
+                        self.mapStore.searchShown = true
+                    })
+                }
+            }
         }
     }
 
@@ -494,6 +522,7 @@ extension MapLayerIdentifier {
     nonisolated static let tapLayers: Set<String> = [
         Self.restaurants,
         Self.shops,
-        Self.simpleCircles
+        Self.simpleCircles,
+        Self.streetView
     ]
 }

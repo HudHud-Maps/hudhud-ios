@@ -232,6 +232,9 @@
         }
       }
     },
+    "Loading..." : {
+
+    },
     "Map Details" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -349,6 +352,9 @@
     "Select Type" : {
 
     },
+    "SF Symbols on Map" : {
+
+    },
     "Simulate Ride during Navigation" : {
 
     },
@@ -377,6 +383,9 @@
 
     },
     "Unknown" : {
+
+    },
+    "Use SF Symbols for POIs on map" : {
 
     },
     "View More" : {
