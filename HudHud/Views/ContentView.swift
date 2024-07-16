@@ -106,6 +106,7 @@ struct ContentView: View {
                 .textHaloWidth(1.0)
                 .textHaloBlur(0.5)
                 .textAnchor("top")
+                .textColor(expression: SFSymbolSpriteSheet.colorExpression)
                 .textOffset(CGVector(dx: 0, dy: 1.2))
                 .minimumZoomLevel(13.0)
                 .maximumZoomLevel(22.0)

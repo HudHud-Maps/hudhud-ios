@@ -83,6 +83,7 @@
 		CD358E1E2C3FF3D50073F5FE /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = 197E2670D487EB0CF03C2AF6 /* NavigationTransitions */; };
 		CD358E1F2C3FF3D50073F5FE /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = 8A90C00DC16DBC95E09E4CF4 /* BetterSafariView */; };
 		CD358E202C3FF3D50073F5FE /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 16C899CF51549F0E68B441D0 /* TouchVisualizer */; };
+		CD358E232C46B7C40073F5FE /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD358E222C46B7C40073F5FE /* UIColor.swift */; };
 		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
 		CD5409662C2B1A710010594E /* UIApplication+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD5409652C2B1A710010594E /* UIApplication+Environment.swift */; };
 		CD59BD4A2B762CB7002C14F6 /* SearchResultItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */; };
@@ -224,6 +225,7 @@
 		CD33DFDD2C00C5EF0090592C /* DebugStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
 		CD358E1A2C3D33350073F5FE /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		CD358E1C2C3FDFB10073F5FE /* SymbolStyleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolStyleLayer.swift; sourceTree = "<group>"; };
+		CD358E222C46B7C40073F5FE /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Limits.swift"; sourceTree = "<group>"; };
 		CD5409652C2B1A710010594E /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		CD59BD492B762CB7002C14F6 /* SearchResultItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItem.swift; sourceTree = "<group>"; };
@@ -585,6 +587,7 @@
 				8D9E5F46B48E39DAD77D58F0 /* NavigationPath.swift */,
 				CD5409652C2B1A710010594E /* UIApplication+Environment.swift */,
 				CD358E1C2C3FDFB10073F5FE /* SymbolStyleLayer.swift */,
+				CD358E222C46B7C40073F5FE /* UIColor.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -867,6 +870,7 @@
 				CDA05D862C0E270600903396 /* HudHudRouteVoiceController.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
 				D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */,
+				CD358E232C46B7C40073F5FE /* UIColor.swift in Sources */,
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,
 				CD33DFDF2C00C5EF0090592C /* DebugStore.swift in Sources */,
 				CB2171F82C356CBA00CB4512 /* Fonts.swift in Sources */,

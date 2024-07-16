@@ -34,6 +34,26 @@ enum SFSymbolSpriteSheet {
         ("systemIndigo", .systemIndigo)
     ]
 
+    // JSON object based expression that turns adaptive color strings into their color representation
+    static let colorExpression: NSExpression = {
+        let colorMatchExpression = NSExpression(mglJSONObject: [
+            "match", ["get", "ios_category_icon_color"],
+            "systemRed", UIColor.systemRed.hex(),
+            "systemGreen", UIColor.systemGreen.hex(),
+            "systemBlue", UIColor.systemBlue.hex(),
+            "systemOrange", UIColor.systemOrange.hex(),
+            "systemYellow", UIColor.systemYellow.hex(),
+            "systemPink", UIColor.systemPink.hex(),
+            "systemPurple", UIColor.systemPurple.hex(),
+            "systemTeal", UIColor.systemTeal.hex(),
+            "systemIndigo", UIColor.systemIndigo.hex(),
+            "systemGray", UIColor.systemGray.hex(),
+            UIColor.systemPink.hex()
+        ])
+
+        return colorMatchExpression
+    }()
+
     // MARK: - Private
 
     private static func generateCircle() -> UIImage {
