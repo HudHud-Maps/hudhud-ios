@@ -26,12 +26,10 @@ public protocol POIServiceProtocol {
 public enum PredictionResult: Hashable, Codable {
     case apple(completion: MKLocalSearchCompletion)
     case appleResolved
-    case toursprung
     case hudhud
 
     enum CodingKeys: CodingKey {
         case appleResolved
-        case toursprung
         case hudhud
     }
 }
@@ -161,7 +159,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var title: String
     public var subtitle: String
     public var symbol: SFSymbol
-    public let color: Color
+    public let systemColor: SystemColor
 
     public var category: String?
 
@@ -190,7 +188,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: Color, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -205,7 +203,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.isOpen = isOpen
         self.trendingImage = trendingImage
         self.mediaURLs = mediaURLs
-        self.color = color
+        self.systemColor = color
     }
 
     public init(from decoder: Decoder) throws {
@@ -222,7 +220,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.rating = try container.decodeIfPresent(Double.self, forKey: .rating)
         self.ratingsCount = try container.decodeIfPresent(Int.self, forKey: .ratingsCount)
         self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
-        self.color = try container.decode(Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload.self, forKey: .color).swiftUIColor
+        self.systemColor = try container.decode(SystemColor.self, forKey: .color)
     }
 
     // MARK: - Public
@@ -248,13 +246,17 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 		try container.encodeIfPresent(self.category, forKey: .category)
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
-        try container.encode(Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload(color: self.color), forKey: .color)
+        try container.encode(self.systemColor, forKey: .color)
     }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
         hasher.combine(self.title)
         hasher.combine(self.subtitle)
+    }
+    
+    public var color: Color {
+        systemColor.swiftUIColor
     }
 }
 
@@ -304,48 +306,53 @@ public extension ResolvedItem {
     static let ketchup = ResolvedItem(id: UUID().uuidString,
                                       title: "Ketch up",
                                       subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
-                                      type: .toursprung,
+                                      type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
-                                      color: Color(.systemRed), phone: "0503539560",
+                                      color: .systemRed, 
+									  phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
                                         title: "Starbucks",
                                         subtitle: "The Beach",
-                                        type: .toursprung,
+                                        type: .hudhud,
                                         coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
-                                        color: Color(.systemRed), phone: "0503539560",
+                                        color: .systemRed, 
+										phone: "0503539560",
                                         website: URL(string: "https://hudhud.sa"))
 
     static let publicPlace = ResolvedItem(id: UUID().uuidString,
                                           title: "publicPlace",
                                           subtitle: "Garden - Alyasmen - Riyadh",
-                                          type: .toursprung,
+                                          type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
-                                          color: Color(.systemRed))
+										  color: .systemRed)
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
                                       title: "Artwork",
                                       subtitle: "artwork - Al-Olya - Riyadh",
-                                      type: .toursprung,
+                                      type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                                      color: Color(.systemRed), phone: "0503539560",
+                                      color: .systemRed, 
+									  phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
 
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
                                        title: "Pharmacy",
                                        subtitle: "Al-Olya - Riyadh",
-                                       type: .toursprung,
+                                       type: .hudhud,
                                        coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                                       color: Color(.systemRed), phone: "0503539560",
+                                       color: .systemRed,
+									   phone: "0503539560",
                                        website: URL(string: "https://hudhud.sa"))
 
     static let supermarket = ResolvedItem(id: UUID().uuidString,
                                           title: "Supermarket",
                                           subtitle: "Al-Narjs - Riyadh",
-                                          type: .toursprung,
+                                          type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
-                                          color: Color(.systemRed), phone: "0503539560",
+                                          color: .systemRed,
+										  phone: "0503539560",
                                           website: URL(string: "https://hudhud.sa"))
 }
 

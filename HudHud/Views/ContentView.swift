@@ -49,6 +49,7 @@ struct ContentView: View {
     @State private var didTryToZoomOnUsersLocation = false
 
     @StateObject var debugStore = DebugStore()
+    var mapViewStore: MapViewStore
     @State var safariURL: URL?
 
     @ViewBuilder
@@ -143,29 +144,9 @@ struct ContentView: View {
                 .iconImage(UIImage.lookAroundPin)
                 .iconRotation(featurePropertyNamed: "heading")
         }
-        .onTapMapGesture(on: [MapLayerIdentifier.simpleCircles], onTapChanged: { _, features in
-            // Pick the first feature (which may be a port or a cluster), ideally selecting
-            // the one nearest nearest one to the touch point.
-            guard let feature = features.first,
-                  let placeID = feature.attribute(forKey: "poi_id") as? String else {
-                // user tapped nothing - deselect
-                Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-                self.searchViewStore.mapStore.selectedItem = nil
-                return
-            }
-
-            let mapItems = self.searchViewStore.mapStore.mapItems
-            let poi = mapItems.first { poi in
-                poi.id == placeID
-            }
-
-            if let poi {
-                Logger.mapInteraction.debug("setting poi")
-                self.searchViewStore.mapStore.selectedItem = poi
-            } else {
-                Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
-            }
-        })
+        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
+            self.mapViewStore.didTapOnMap(containing: features)
+        }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
@@ -199,7 +180,7 @@ struct ContentView: View {
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .toursprung, coordinate: mapGesture.coordinate, color: Color(.systemRed))
+                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
@@ -299,7 +280,7 @@ struct ContentView: View {
                                         self.searchViewStore.mode = .live(provider: provider.next())
                                         Logger.searchView.info("Map Mode live")
                                     case .preview:
-                                        self.searchViewStore.mode = .live(provider: .toursprung)
+                                        self.searchViewStore.mode = .live(provider: .hudhud)
                                         Logger.searchView.info("Map Mode toursprung")
                                     }
                                 },
@@ -393,6 +374,7 @@ struct ContentView: View {
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
+        self.mapViewStore = MapViewStore(mapStore: searchStore.mapStore)
         self.mapStore.routes = searchStore.mapStore.routes
     }
 
@@ -444,9 +426,9 @@ struct SizePreferenceKey: PreferenceKey {
     let poi = ResolvedItem(id: UUID().uuidString,
                            title: "Pharmacy",
                            subtitle: "Al-Olya - Riyadh",
-                           type: .toursprung,
+                           type: .hudhud,
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                           color: Color(.systemRed),
+                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi
@@ -484,26 +466,34 @@ extension NavigationViewController: WrappedViewController {
                            subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
                            type: .appleResolved,
                            coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
-                           color: Color(.systemRed),
+                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     let artwork = ResolvedItem(id: UUID().uuidString,
                                title: "Artwork",
                                subtitle: "artwork - Al-Olya - Riyadh",
-                               type: .toursprung,
+                               type: .hudhud,
                                coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                               color: Color(.systemRed),
+                               color: .systemRed,
                                phone: "0503539560",
                                website: URL(string: "https://hudhud.sa"))
 
     let pharmacy = ResolvedItem(id: UUID().uuidString,
                                 title: "Pharmacy",
                                 subtitle: "Al-Olya - Riyadh",
-                                type: .toursprung,
+                                type: .hudhud,
                                 coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                                color: Color(.systemRed),
+                                color: .systemRed,
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
     return ContentView(searchStore: store)
+}
+
+extension MapLayerIdentifier {
+    nonisolated static let tapLayers: Set<String> = [
+        Self.restaurants,
+        Self.shops,
+        Self.simpleCircles
+    ]
 }
