@@ -651,8 +651,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				3D11995E7FC33F7673756259 /* PBXTargetDependency */,
-				BA969B80673924F5FFFA00B0 /* PBXTargetDependency */,
+				A51BF31ED733B98D82C9A4EE /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -951,7 +950,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3D11995E7FC33F7673756259 /* PBXTargetDependency */ = {
+		A51BF31ED733B98D82C9A4EE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		BA969B80673924F5FFFA00B0 /* PBXTargetDependency */ = {

@@ -162,6 +162,9 @@ struct ContentView: View {
                         controller.startNavigation(with: route, animated: true)
                     }
                     self.mapStore.navigationProgress = .navigating
+                } else {
+                    controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
+                    controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
                 }
             case .navigating:
                 if let route = self.mapStore.navigatingRoute {
@@ -173,9 +176,6 @@ struct ContentView: View {
             case .feedback:
                 break
             }
-
-            controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithHeading : .none
-            controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
         }
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
         .onLongPressMapGesture(onPressChanged: { mapGesture in
