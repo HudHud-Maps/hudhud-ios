@@ -95,7 +95,7 @@ enum Fonts {
 extension UIFont {
 
     static func hudhudFont(_ weight: FontWeight, size: CGFloat) -> UIFont {
-        func font(with name: String, size: CGFloat) -> UIFont? {
+        func font(with name: String) -> UIFont? {
             switch weight {
             case .bold:
                 return UIFont(name: "\(name)-Bold", size: size)
@@ -128,7 +128,7 @@ extension UIFont {
             }
         }
 
-        guard let font = font(with: "PlusJakartaSans", size: size) else {
+        guard let font = font(with: "PlusJakartaSans") else {
             assertionFailure("Font not found, make sure its packaged via the build pipeline")
             return .systemFont(ofSize: size)
         }
