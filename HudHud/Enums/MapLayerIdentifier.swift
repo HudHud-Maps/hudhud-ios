@@ -25,4 +25,5 @@ enum MapLayerIdentifier {
     // we use them to query metadata related to points from our map
     static let restaurants = "hpoi_resturant"
     static let shops = "hpoi_shop"
+    static let streetView = "hpoi_sv"
 }

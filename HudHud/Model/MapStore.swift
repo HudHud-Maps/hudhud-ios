@@ -62,6 +62,11 @@ final class MapStore: ObservableObject {
     @Published var waypoints: [ABCRouteConfigurationItem]?
     @Published var navigationProgress: NavigationProgress = .none
     @Published var trackingState: TrackingState = .none
+
+    var hudhudStreetView = HudhudStreetView()
+    @Published var street360View: Bool = false
+    @Published var streetViewScene: StreetViewScene?
+
     @Published var navigatingRoute: Route? {
         didSet {
             if let elements = try? path.elements() {
@@ -316,6 +321,25 @@ extension MapStore: NavigationViewControllerDelegate {
         self.navigatingRoute = route
         Logger.routing.info("didRerouteAlong new route \(route)")
     }
+}
+
+extension MapStore {
+
+    func loadStreetViewScene(id: Int, block: ((_ item: StreetViewScene?) -> Void)?) {
+        Task {
+            do {
+                if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+                    print(streetViewScene)
+                    self.streetViewScene = streetViewScene
+                    self.street360View = true
+                    block?(streetViewScene)
+                }
+            } catch {
+                print("error \(error)")
+            }
+        }
+    }
+
 }
 
 // MARK: - Previewable

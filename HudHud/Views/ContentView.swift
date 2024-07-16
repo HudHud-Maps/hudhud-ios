@@ -380,6 +380,16 @@ struct ContentView: View {
                 }
                 Spacer()
             }
+            .overlay(alignment: .top) {
+                if self.mapStore.street360View, let item = mapStore.streetViewScene {
+                    Street360View(streetViewScene: item, mapStore: self.mapStore, expandedView: { expand in
+                        self.mapStore.searchShown = !expand
+                    }, closeView: {
+                        self.mapStore.street360View = false
+                        self.mapStore.searchShown = true
+                    })
+                }
+            }
         }
     }
 
@@ -512,6 +522,7 @@ extension MapLayerIdentifier {
     nonisolated static let tapLayers: Set<String> = [
         Self.restaurants,
         Self.shops,
-        Self.simpleCircles
+        Self.simpleCircles,
+        Self.streetView
     ]
 }
