@@ -81,10 +81,10 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
     public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return try await self.innerModel.resolve(in: provider)
     }
-	
-	public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
-		return try await self.innerModel.resolve(in: provider)
-	}
+
+    public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+        return try await self.innerModel.resolve(in: provider)
+    }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.title)
@@ -133,16 +133,16 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
         }
         return mapped
     }
-	
-	public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
-		guard case .hudhud = self.type else { return [] }
 
-		let resolved = try await provider.lookup(id: self.id, prediction: self)
-		let mapped = resolved.map {
-			AnyDisplayableAsRow($0)
-		}
-		return mapped
-	}
+    public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+        guard case .hudhud = self.type else { return [] }
+
+        let resolved = try await provider.lookup(id: self.id, prediction: self)
+        let mapped = resolved.map {
+            AnyDisplayableAsRow($0)
+        }
+        return mapped
+    }
 
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
@@ -172,9 +172,9 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var ratingsCount: Int?
     public var isOpen: Bool?
     public var trendingImage: String?
-    
+
     public var mediaURLs: [MediaURLs]?
-    
+
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, isOpen
         case ratingsCount = "ratings_count"
@@ -184,6 +184,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     public var description: String {
         return "\(self.title), \(self.subtitle), coordinate: \(self.coordinate)"
+    }
+
+    public var color: Color {
+        self.systemColor.swiftUIColor
     }
 
     // MARK: - Lifecycle
@@ -232,10 +236,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public func resolve(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return [AnyDisplayableAsRow(self)]
     }
-	
-	public func resolve(in _: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
-		return [AnyDisplayableAsRow(self)]
-	}
+
+    public func resolve(in _: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+        return [AnyDisplayableAsRow(self)]
+    }
 
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -243,7 +247,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         try container.encode(self.title, forKey: .title)
         try container.encode(self.subtitle, forKey: .subtitle)
         try container.encode(self.coordinate, forKey: .coordinate)
-		try container.encodeIfPresent(self.category, forKey: .category)
+        try container.encodeIfPresent(self.category, forKey: .category)
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
         try container.encode(self.systemColor, forKey: .color)
@@ -254,15 +258,20 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         hasher.combine(self.title)
         hasher.combine(self.subtitle)
     }
-    
-    public var color: Color {
-        systemColor.swiftUIColor
-    }
 }
+
+// MARK: - MediaURLs
 
 public struct MediaURLs: Codable {
     public var type: String?
     public var url: String?
+
+    // MARK: - Lifecycle
+
+    public init(type: String?, url: String?) {
+        self.type = type
+        self.url = url
+    }
 }
 
 extension SFSymbol: Codable {}
@@ -308,8 +317,8 @@ public extension ResolvedItem {
                                       subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
-                                      color: .systemRed, 
-									  phone: "0503539560",
+                                      color: .systemRed,
+                                      phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
@@ -317,8 +326,8 @@ public extension ResolvedItem {
                                         subtitle: "The Beach",
                                         type: .hudhud,
                                         coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
-                                        color: .systemRed, 
-										phone: "0503539560",
+                                        color: .systemRed,
+                                        phone: "0503539560",
                                         website: URL(string: "https://hudhud.sa"))
 
     static let publicPlace = ResolvedItem(id: UUID().uuidString,
@@ -326,15 +335,15 @@ public extension ResolvedItem {
                                           subtitle: "Garden - Alyasmen - Riyadh",
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
-										  color: .systemRed)
+                                          color: .systemRed)
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
                                       title: "Artwork",
                                       subtitle: "artwork - Al-Olya - Riyadh",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                                      color: .systemRed, 
-									  phone: "0503539560",
+                                      color: .systemRed,
+                                      phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"))
 
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
@@ -343,7 +352,7 @@ public extension ResolvedItem {
                                        type: .hudhud,
                                        coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                                        color: .systemRed,
-									   phone: "0503539560",
+                                       phone: "0503539560",
                                        website: URL(string: "https://hudhud.sa"))
 
     static let supermarket = ResolvedItem(id: UUID().uuidString,
@@ -352,7 +361,7 @@ public extension ResolvedItem {
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
                                           color: .systemRed,
-										  phone: "0503539560",
+                                          phone: "0503539560",
                                           website: URL(string: "https://hudhud.sa"))
 }
 

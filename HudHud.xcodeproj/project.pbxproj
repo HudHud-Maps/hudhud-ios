@@ -24,6 +24,7 @@
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		418B9CAC977F2065A7F10078 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3913B2AE9070B0023DFF9B4F /* FavoriteItemView.swift */; };
+		4517E144BD433995207C654F /* POIMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FADC4292E358F09C37766B33 /* POIMediaView.swift */; };
 		4C8F2777E10B77217C6B2E9D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1796352BDB2448B1DC1EC645 /* ErrorView.swift */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
 		655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */; };
@@ -261,6 +262,7 @@
 		F3BB5BFA8CB42C0446317C57 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
 		FA2182853D526527F5DE28BC /* EditFavoritesFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoritesFormView.swift; sourceTree = "<group>"; };
 		FA63BF2B1B13F7E78F62BAE0 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
+		FADC4292E358F09C37766B33 /* POIMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIMediaView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -607,6 +609,7 @@
 				007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */,
 				032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */,
 				78DDA3717EED9804252D5AFE /* POISheetButtonStyle.swift */,
+				FADC4292E358F09C37766B33 /* POIMediaView.swift */,
 			);
 			path = POISheet;
 			sourceTree = "<group>";
@@ -931,6 +934,7 @@
 				1EBCE2AEA5ED1912E16A0D08 /* MapViewStore.swift in Sources */,
 				2874764FCF19CF536B0FDD57 /* Locale+isArabic.swift in Sources */,
 				06F66190D6F7F68689B93710 /* SearchResultItemView.swift in Sources */,
+				4517E144BD433995207C654F /* POIMediaView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
