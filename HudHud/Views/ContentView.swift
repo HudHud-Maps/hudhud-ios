@@ -129,17 +129,18 @@ struct ContentView: View {
                 .predicate(NSPredicate(format: "cluster == YES"))
 
             // shows the unclustered pins
-            CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
-                .radius(16)
-                .color(.systemRed)
-                .strokeWidth(2)
-                .strokeColor(.white)
-                .predicate(NSPredicate(format: "cluster != YES"))
-            SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
-                .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                .iconColor(.white)
-                .predicate(NSPredicate(format: "cluster != YES"))
-
+            if self.mapStore.navigationProgress != .navigating {
+                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
+                    .radius(16)
+                    .color(.systemRed)
+                    .strokeWidth(2)
+                    .strokeColor(.white)
+                    .predicate(NSPredicate(format: "cluster != YES"))
+                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
+                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                    .iconColor(.white)
+                    .predicate(NSPredicate(format: "cluster != YES"))
+            }
             // shows the selected pin
             CircleStyleLayer(
                 identifier: MapLayerIdentifier.selectedCircle,
