@@ -667,7 +667,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				CDB4902B2C46A8C2004CDC0B /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -977,10 +976,6 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
-		};
-		CDB4902B2C46A8C2004CDC0B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = CDB4902A2C46A8C2004CDC0B /* SwiftLint */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1457,11 +1452,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
 			productName = SwiftLocation;
-		};
-		CDB4902A2C46A8C2004CDC0B /* SwiftLint */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
-			productName = "plugin:SwiftLint";
 		};
 		DE3A66FF070A2B17657129E4 /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;
