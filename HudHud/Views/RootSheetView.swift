@@ -48,6 +48,8 @@ struct RootSheetView: View {
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
                                     searchStore: freshSearchViewStore, trendingStore: self.trendingStore)
+                            .navigationBarBackButtonHidden()
+
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)

@@ -24,9 +24,14 @@ struct DirectionsSummaryView: View {
                     .hudhudFont(.title)
                     .lineLimit(1)
                 // distance • type of route
-                Text("\(self.formatter.formatDistance(distance: self.directionPreviewData.distance)) • \(self.directionPreviewData.typeOfRoute)", comment: "distance • type of route")
-                    .hudhudFont(.body)
-                    .lineLimit(1)
+                HStack {
+                    Text("\(self.formatter.formatDistance(distance: self.directionPreviewData.distance))")
+                        .hudhudFont(.headline)
+                    Text("•")
+                    Text("\(self.directionPreviewData.typeOfRoute)", comment: "distance • type of route").hudhudFont(.headline)
+                }
+                .foregroundColor(Color(.Colors.General._02Grey))
+                .lineLimit(1)
             }
             Spacer()
             // Go button
@@ -34,13 +39,13 @@ struct DirectionsSummaryView: View {
                 self.go()
             } label: {
                 Text("Go", comment: "start navigation")
-                    .hudhudFont(.title)
+                    .hudhudFont(.title2)
                     .lineLimit(1)
-                    .foregroundStyle(Color.white)
-                    .padding()
-                    .padding(.horizontal)
+                    .foregroundStyle(Color(.Colors.General._05WhiteBackground))
+                    .frame(width: 100, height: 56, alignment: .center)
+                    .background(Color(.Colors.General._07BlueMain))
                     .background(.blue)
-                    .cornerRadius(8)
+                    .cornerRadius(10)
             }
         }
         .frame(maxWidth: .infinity)

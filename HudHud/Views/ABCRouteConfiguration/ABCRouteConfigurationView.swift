@@ -23,47 +23,61 @@ struct ABCRouteConfigurationView: View {
     var body: some View {
         VStack {
             List {
-                ForEach(self.routeConfigurations, id: \.self) { route in
-                    HStack {
-                        route.icon
-                            .font(.title3)
-                            .frame(width: .leastNormalMagnitude)
-                            .padding(.horizontal, 8)
-                            .anchorPreference(key: ItemBoundsKey.self, value: .bounds, transform: { anchor in
-                                [route.id: anchor]
-                            })
-                        Text(route.name)
-                            .foregroundColor(.primary)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                        Spacer()
-                        Image(systemSymbol: .line3Horizontal)
+                Section {
+                    ForEach(self.routeConfigurations, id: \.self) { route in
+                        HStack {
+                            route.icon
+                                .font(.title3)
+                                .foregroundColor(Color(.Colors.General._02Grey))
+                                .frame(width: .leastNormalMagnitude)
+                                .padding(.trailing, 12)
+                                .anchorPreference(key: ItemBoundsKey.self, value: .bounds, transform: { anchor in
+                                    [route.id: anchor]
+                                })
+                            Text(route.name)
+                                .hudhudFont(.subheadline)
+                                .foregroundColor(Color(.Colors.General._01Black))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                            Spacer()
+                            Image(systemSymbol: .line3Horizontal)
+                                .foregroundColor(Color(.Colors.General._02Grey))
+                        }
+                        .padding(.leading, 5)
                     }
-                    .foregroundColor(.secondary)
-                }
-                // List Adjustments
-                .onMove(perform: self.moveAction)
-                .onDelete { indexSet in
-                    self.routeConfigurations.remove(atOffsets: indexSet)
-                }
-                .listRowBackground(Color(.quaternarySystemFill))
-                // Add location button
-                Button {
-                    self.mapStore.path.append(SheetSubView.navigationAddSearchView)
-                } label: {
-                    HStack {
-                        Image(systemSymbol: .plus)
-                            .foregroundColor(.blue)
-                        Text("Add Location")
-                            .foregroundColor(.blue)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
+                    // List Adjustments
+                    .onMove(perform: self.moveAction)
+                    .onDelete { indexSet in
+                        self.routeConfigurations.remove(atOffsets: indexSet)
                     }
+
+                    .environment(\.defaultMinListRowHeight, 55)
+                    .listRowBackground(Color(.quaternarySystemFill))
                 }
-                .listRowBackground(Color(.systemBackground))
-                .listRowSeparator(.hidden)
+
+                footer: {
+                    Button {
+                        self.mapStore.path.append(SheetSubView.navigationAddSearchView)
+                    } label: {
+                        HStack {
+                            Image(systemSymbol: .plus)
+                                .font(.title3)
+                                .foregroundColor(.blue)
+                                .frame(width: .leastNormalMagnitude)
+                                .padding(.trailing, 12)
+                            Text("Add Location")
+                                .hudhudFont(.subheadline)
+                                .foregroundColor(Color(.Colors.General._07BlueMain))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.5)
+                        }
+                    }
+                    .padding(.leading, 5)
+                    .padding(.top, 14)
+                    .listRowSeparator(.hidden)
+                }
             }
-            .listStyle(.grouped)
+            .listStyle(.insetGrouped)
             .scrollContentBackground(.hidden)
             .scrollIndicators(.hidden)
             .overlayPreferenceValue(ItemBoundsKey.self) { bounds in
@@ -74,7 +88,7 @@ struct ABCRouteConfigurationView: View {
                         if let from = bounds[item.id], let to = bounds[next.id] {
                             Line(from: proxy[from][.bottom], to: proxy[to][.top])
                                 .stroke(style: StrokeStyle(lineWidth: 1.2, lineCap: .round, dash: [0.5, 5], dashPhase: 4))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(Color(.Colors.General._04GreyForLines))
                                 .opacity(next == self.routeConfigurations.last ? 0 : 1) // Hide line for last row
                         }
                     }

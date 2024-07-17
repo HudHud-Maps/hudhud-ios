@@ -19,6 +19,7 @@ struct RecentSearchResultsView: View {
     @State var editFormViewIsShown: Bool = false
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     @State var clickedFavorite = FavoritesItem.favoriteForPreview
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in
@@ -68,6 +69,18 @@ struct RecentSearchResultsView: View {
                 let mapItems = [AnyDisplayableAsRow(item)]
                 self.mapStore.selectedItem = selectedItem
                 self.mapStore.displayableItems = mapItems
+                switch self.searchType {
+                case let .returnPOILocation(completion):
+                    if let selectedItem = self.mapStore.selectedItem {
+                        completion?(.waypoint(selectedItem))
+                        self.dismiss()
+                    }
+                case .selectPOI:
+                    break
+
+                case .favorites:
+                    break
+                }
             }
         }
         .onDelete { indexSet in

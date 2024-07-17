@@ -21,36 +21,39 @@ struct NavigationSheetView: View {
     @Environment(\.dismiss) private var dismiss
 
     var body: some View {
-        VStack(spacing: 5) {
-            HStack {
+        VStack(alignment: .leading) {
+            HStack(alignment: .bottom) {
                 Text("Directions", comment: "navigation sheet header")
-                    .hudhudFont(.title)
+                    .font(.title.bold())
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
                     self.mapStore.routes = nil
                     self.mapStore.waypoints = nil
+                    self.mapStore.navigationProgress = .none
                     self.dismiss()
                 }, label: {
                     ZStack {
                         Circle()
-                            .fill(.quaternary)
+                            .fill(.quinary.opacity(0.5))
                             .frame(width: 30, height: 30)
 
-                        Image(systemSymbol: .xmark)
+                        Image(.closeIcon)
                             .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundColor(.white)
+                            .foregroundStyle(.secondary)
                     }
-                    .padding(8)
+                    .padding(4)
                     .contentShape(Circle())
                 })
-                .buttonStyle(PlainButtonStyle())
+                .tint(.secondary)
                 .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
             }
-            .padding(.top)
-
+            .frame(height: 20)
+            .padding(.horizontal)
+            .padding(.top, 30)
             if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
                 ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore)
+                //   .padding(.top,-25)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
                         duration: route.expectedTravelTime,
@@ -64,10 +67,9 @@ struct NavigationSheetView: View {
                         }
                     }
                 )
-                .padding(.bottom)
+                .padding([.horizontal, .bottom])
             }
         }
-        .padding()
     }
 }
 
