@@ -17,12 +17,13 @@ struct RateNavigationView: View {
         .MOOD_SMILE_2,
         .MOOD_SMILE_1
     ]
-
-    @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var mapStore: MapStore
     @State private var selecteFace: Int?
     @State private var currentTask: Task<Void, Never>?
     @State private var animate = false
+
     var selectedFace: ((Int) -> Void)?
+    let onDismiss: () -> Void
 
     var body: some View {
         VStack {
@@ -53,7 +54,13 @@ struct RateNavigationView: View {
                             self.selectFace(index)
                         }
                 }
+            }.onChange(of: self.mapStore.selectedDetent) { _ in
+                if self.mapStore.selectedDetent == .small {
+                    self.onDismiss()
+                }
             }
+        }.onAppear {
+            self.mapStore.allowedDetents = [.small, .third]
         }
     }
 
@@ -70,7 +77,7 @@ struct RateNavigationView: View {
                 if !Task.isCancelled {
                     withAnimation {
                         self.selectedFace?(face)
-                        self.presentationMode.wrappedValue.dismiss()
+                        self.onDismiss()
                     }
                 }
             }
@@ -80,7 +87,9 @@ struct RateNavigationView: View {
 }
 
 #Preview {
-    RateNavigationView(selectedFace: { face in
+    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+
+    return RateNavigationView(mapStore: searchViewStore.mapStore, selectedFace: { face in
         print(face)
-    })
+    }, onDismiss: {})
 }
