@@ -52,10 +52,15 @@ struct ContentView: View {
     var mapViewStore: MapViewStore
     @State var safariURL: URL?
 
+    @State var safeAreaInsets: UIEdgeInsets = .zero
+
     @ViewBuilder
     var mapView: some View {
-        MapView<NavigationViewController>(makeViewController: {
-            let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
+        MapView<MapNavigationViewController>(makeViewController: {
+            let viewController = MapNavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
+            viewController.onViewSafeAreaInsetsDidChange = { insets in
+                self.safeAreaInsets = insets
+            }
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
             return viewController
         }(), styleURL: self.styleURL, camera: self.$mapStore.camera) {
@@ -204,8 +209,8 @@ struct ContentView: View {
             }
         })
         .mapViewContentInset(UIEdgeInsets(
-            top: 0,
-            left: 0,
+            top: self.safeAreaInsets.top + 40,
+            left: self.safeAreaInsets.left + 53,
             bottom: self.bottomPadding,
             right: 0
         ))

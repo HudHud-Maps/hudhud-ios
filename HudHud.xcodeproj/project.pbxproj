@@ -65,6 +65,7 @@
 		A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128EEC335247DA2600CF82C6 /* NotificationManager.swift */; };
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
+		AFA32A572C4D494900FA0986 /* MapNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA32A562C4D494900FA0986 /* MapNavigationController.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
@@ -210,6 +211,7 @@
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
+		AFA32A562C4D494900FA0986 /* MapNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapNavigationController.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetButtonStyle.swift; sourceTree = "<group>"; };
@@ -525,6 +527,7 @@
 				AA1E80A95AFCDC7507E3B613 /* Navigation */,
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
+				AFA32A562C4D494900FA0986 /* MapNavigationController.swift */,
 				CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */,
 				CD85CB282BB343BA00C99774 /* DebugStreetView.swift */,
 				CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */,
@@ -876,6 +879,7 @@
 				CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */,
 				594C48792C0DBBA900756633 /* EditFavoritesFormView.swift in Sources */,
 				CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */,
+				AFA32A572C4D494900FA0986 /* MapNavigationController.swift in Sources */,
 				90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */,
 				CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */,
 				CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */,
