@@ -40,13 +40,15 @@ extension Backport where Content: View {
         }
     }
 
-    @ViewBuilder func buttonSafeArea(length: CGSize) -> some View {
+    @ViewBuilder func buttonSafeArea(length: CGFloat) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            self.safeAreaPadding(.leading, length.width)
+            self.safeAreaPadding(.leading, length)
         } else {
-            self.safeAreaPadding(.bottom, length.height + 8)
+            self.safeAreaPadding(.bottom, length + 8)
         }
     }
+
+//    @ViewBuilder func
 
     @ViewBuilder func scrollClipDisabled() -> some View {
         if #available(iOS 17, *) {

@@ -210,7 +210,7 @@ struct ContentView: View {
         })
         .mapViewContentInset(UIEdgeInsets(
             top: self.safeAreaInsets.top + 40,
-            left: self.safeAreaInsets.left + 53,
+            left: 0,
             bottom: self.bottomPadding,
             right: 0
         ))
@@ -357,7 +357,8 @@ struct ContentView: View {
                         .padding(.horizontal)
                     }
                 }
-                .backport.buttonSafeArea(length: self.sheetSize)
+                .backport.buttonSafeArea(length: self.buttonPadding)
+                .animation(.bouncy(duration: 0.25), value: self.buttonPadding)
                 .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
                     get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
                     set: { _ in }
@@ -410,6 +411,21 @@ struct ContentView: View {
             UIScreen.main.bounds.height / 2
         } else {
             80
+        }
+    }
+
+    private var buttonPadding: CGFloat {
+        switch self.mapStore.selectedDetent {
+        case .small:
+            80
+        case .third:
+            (UIScreen.main.bounds.height * 0.33) - 30
+        case .nearHalf:
+            UIScreen.main.bounds.height / 2.5
+        case .height(150):
+            150
+        default:
+            0
         }
     }
 
