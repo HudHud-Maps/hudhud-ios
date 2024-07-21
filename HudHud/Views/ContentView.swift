@@ -203,7 +203,12 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
+        .mapViewContentInset(UIEdgeInsets(
+            top: 0,
+            left: 0,
+            bottom: self.bottomPadding,
+            right: 0
+        ))
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -391,6 +396,15 @@ struct ContentView: View {
                     })
                 }
             }
+        }
+    }
+
+    private var bottomPadding: CGFloat {
+        guard self.mapStore.searchShown else { return 0 }
+        return if self.mapStore.path.contains(RoutingService.RouteCalculationResult.self) {
+            UIScreen.main.bounds.height / 2
+        } else {
+            80
         }
     }
 
