@@ -18,4 +18,9 @@ extension Logger {
     static let mapInteraction = Logger(subsystem: subsystem, category: "MapInteraction")
     static let streetView = Logger(subsystem: subsystem, category: "StreetView")
     static let sheet = Logger(subsystem: subsystem, category: "Sheet")
+    static let mapButtons = Logger(subsystem: subsystem, category: "mapButtons")
+    static let navigationPath = Logger(subsystem: subsystem, category: "navigationPath")
+    static let notificationAuth = Logger(subsystem: subsystem, category: "notificationAuth")
+    static let navigationViewRating = Logger(subsystem: subsystem, category: "navigationViewRating")
+    static let currentLocation = Logger(subsystem: subsystem, category: "currentLocation")
 }

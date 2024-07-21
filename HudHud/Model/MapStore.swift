@@ -70,7 +70,7 @@ final class MapStore: ObservableObject {
     @Published var navigatingRoute: Route? {
         didSet {
             if let elements = try? path.elements() {
-                print("path now: \(elements)")
+                Logger.navigationPath.log("path now: \(elements)")
                 self.updateSelectedSheetDetent(to: elements.last)
             }
         }
@@ -435,10 +435,10 @@ private extension MapStore {
     func updateDetent() {
         do {
             let elements = try path.elements()
-            print("path now: \(elements)")
+            Logger.navigationPath.log("path now: \(elements)")
             self.updateSelectedSheetDetent(to: elements.last)
         } catch {
-            print("update detent error: \(error)")
+            Logger.navigationPath.error("update detent error: \(error)")
         }
     }
 

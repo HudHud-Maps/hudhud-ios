@@ -50,16 +50,16 @@ struct MapButtonsView: View {
 #Preview {
     MapButtonsView(mapButtonsData: [
         MapButtonData(sfSymbol: .icon(.map)) {
-            print("Map button tapped")
+            Logger.mapButtons.log("Map button tapped")
         },
         MapButtonData(sfSymbol: .icon(.pano)) {
-            print("Provider button tapped")
+            Logger.mapButtons.log("Provider button tapped")
         },
         MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: .live(provider: .hudhud))) {
-            print("Provider button tapped")
+            Logger.mapButtons.log("Provider button tapped")
         },
         MapButtonData(sfSymbol: .icon(.cube)) {
-            print("StreetView button tapped")
+            Logger.mapButtons.log("StreetView button tapped")
         }
     ])
 }

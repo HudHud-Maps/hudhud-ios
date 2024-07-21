@@ -105,9 +105,7 @@ struct EditFavoritesFormView: View {
             .formStyle(.automatic)
             .navigationBarTitle("Edit", displayMode: .inline)
             .navigationBarItems(trailing: Button("Add") {
-                print(self.favorites, "before ==========")
                 self.saveChanges()
-                print(self.favorites, "after ==========")
                 self.dismiss()
             })
         }

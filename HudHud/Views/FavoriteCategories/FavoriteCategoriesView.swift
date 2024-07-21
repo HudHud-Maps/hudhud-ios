@@ -35,7 +35,6 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor))
                 }
                 Button {
-                    print("Add was pressed")
                     self.viewMoreShown = true
                 } label: {
                     Text("Add")

@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftUI
 
 struct RateNavigationView: View {
@@ -81,6 +82,6 @@ struct RateNavigationView: View {
 
 #Preview {
     RateNavigationView(selectedFace: { face in
-        print(face)
+        Logger.navigationViewRating.log("\(face)")
     })
 }
