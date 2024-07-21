@@ -45,7 +45,6 @@ struct ContentView: View {
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
     @State private var showUserLocation: Bool = false
-    @State private var sheetSize: CGSize = .zero
     @State private var didTryToZoomOnUsersLocation = false
 
     @StateObject var debugStore = DebugStore()
@@ -363,7 +362,7 @@ struct ContentView: View {
                     get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
                     set: { _ in }
                 )) {
-                    RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+                    RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore)
                 }
                 .safariView(item: self.$safariURL) { url in
                     SafariView(url: url)
@@ -459,18 +458,6 @@ struct ContentView: View {
 
 extension SimpleToastOptions {
     static let notification = SimpleToastOptions(alignment: .top, hideAfter: 5, modifierType: .slide)
-}
-
-// MARK: - SizePreferenceKey
-
-struct SizePreferenceKey: PreferenceKey {
-    static var defaultValue: CGSize = .zero
-
-    // MARK: - Internal
-
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
 }
 
 #Preview("Main Map") {
