@@ -667,6 +667,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CB7A30612C4CE9C60094F800 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -967,6 +968,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CB7A30612C4CE9C60094F800 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CB7A30602C4CE9C60094F800 /* SwiftLint */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -1416,6 +1421,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
+		};
+		CB7A30602C4CE9C60094F800 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CD1882FB2BF63E8200C8AD49 /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;

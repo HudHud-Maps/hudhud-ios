@@ -40,9 +40,10 @@ struct DirectionsSummaryView: View {
             } label: {
                 Text("Go", comment: "start navigation")
                     .hudhudFont(.title2)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 12)
                     .lineLimit(1)
                     .foregroundStyle(Color(.Colors.General._05WhiteBackground))
-                    .frame(width: 100, height: 56, alignment: .center)
                     .background(Color(.Colors.General._07BlueMain))
                     .background(.blue)
                     .cornerRadius(10)
