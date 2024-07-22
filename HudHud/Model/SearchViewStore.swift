@@ -124,7 +124,7 @@ final class SearchViewStore: ObservableObject {
         if self.recentViewedItem.contains(item) {
             self.recentViewedItem.removeAll(where: { $0 == item })
         }
-        self.recentViewedItem.append(item)
+        self.recentViewedItem.insert(item, at: 0)
     }
 
     func didSelect(_ item: DisplayableRow) async {
