@@ -42,13 +42,11 @@ extension Backport where Content: View {
 
     @ViewBuilder func buttonSafeArea(length: CGFloat) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            self.safeAreaPadding(.leading, length)
+            self.safeAreaPadding(.leading, length * 4)
         } else {
             self.safeAreaPadding(.bottom, length + 8)
         }
     }
-
-//    @ViewBuilder func
 
     @ViewBuilder func scrollClipDisabled() -> some View {
         if #available(iOS 17, *) {
@@ -70,7 +68,7 @@ extension Backport where Content: View {
                     PadSheetView {
                         content()
                     }
-                    .padding(.top)
+                    .padding(.top, 100)
                 }
                 .shadow(radius: 0.5)
                 .padding(.horizontal)
