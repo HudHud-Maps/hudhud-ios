@@ -164,17 +164,10 @@ struct ContentView: View {
                 .iconRotation(featurePropertyNamed: "heading")
         }
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-            self.mapViewStore.didTapOnMap(containing: features)
-        }
-        .onTapMapGesture { _ in
             if self.mapStore.navigationProgress == .feedback {
-                self.mapStore.navigationProgress = .none
-                self.mapStore.waypoints = nil
-                self.searchViewStore.mapStore.selectedItem = nil
-                self.searchViewStore.mapStore.displayableItems = []
-                self.mapStore.routes = nil
-                self.searchViewStore.searchText = ""
+                self.searchViewStore.endTrip()
             }
+            self.mapViewStore.didTapOnMap(containing: features)
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in

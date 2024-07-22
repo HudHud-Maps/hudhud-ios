@@ -17,7 +17,6 @@ struct RootSheetView: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
-    @Environment(\.presentationMode) var presentationMode
     @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
@@ -97,20 +96,10 @@ struct RootSheetView: View {
                     )) {
                         RateNavigationView(mapStore: self.mapStore, selectedFace: { selectedFace in
                             // selectedFace should be sent to backend along with detial of the route
-                            self.mapStore.waypoints = nil
-                            self.searchViewStore.mapStore.selectedItem = nil
-                            self.searchViewStore.mapStore.displayableItems = []
-                            self.mapStore.routes = nil
-                            self.searchViewStore.searchText = ""
-                            self.mapStore.navigationProgress = .none
+                            self.searchViewStore.endTrip()
                             Logger.routing.log("selected Face of rating: \(selectedFace)")
                         }, onDismiss: {
-                            self.mapStore.waypoints = nil
-                            self.searchViewStore.mapStore.selectedItem = nil
-                            self.searchViewStore.mapStore.displayableItems = []
-                            self.mapStore.routes = nil
-                            self.searchViewStore.searchText = ""
-                            self.mapStore.navigationProgress = .none
+                            self.searchViewStore.endTrip()
                             Logger.routing.log("Dismiss Rating")
                         })
                         .navigationBarBackButtonHidden()
