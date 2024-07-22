@@ -166,6 +166,16 @@ struct ContentView: View {
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
             self.mapViewStore.didTapOnMap(containing: features)
         }
+        .onTapMapGesture { _ in
+            if self.mapStore.navigationProgress == .feedback {
+                self.mapStore.navigationProgress = .none
+                self.mapStore.waypoints = nil
+                self.searchViewStore.mapStore.selectedItem = nil
+                self.searchViewStore.mapStore.displayableItems = []
+                self.mapStore.routes = nil
+                self.searchViewStore.searchText = ""
+            }
+        }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             controller.delegate = self.mapStore
