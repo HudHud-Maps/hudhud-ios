@@ -262,8 +262,8 @@ final class MapStore: ObservableObject {
             self.selectedDetent = .nearHalf
         }
         if navigationPathItem is RoutingService.RouteCalculationResult {
-            self.allowedDetents = [.height(150), .medium]
-            self.selectedDetent = .medium
+            self.allowedDetents = [.height(150), .nearHalf]
+            self.selectedDetent = .nearHalf
         }
     }
 
