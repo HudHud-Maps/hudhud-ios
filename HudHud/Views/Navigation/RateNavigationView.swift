@@ -33,16 +33,17 @@ struct RateNavigationView: View {
                     .foregroundColor(.green)
                     .scaledToFit()
                     .frame(width: 75, height: 75)
-                    .padding(.top)
                     .backport.symbolEffect(animate: self.animate)
-                Text("You Have Arrived")
-                    .hudhudFont(.title)
-                Text("Help improve HudHud maps.")
-                    .hudhudFont(.subheadline)
-                    .foregroundColor(.gray)
-                Text("How was the navigation on this trip?")
-                    .hudhudFont(.subheadline)
-                    .foregroundColor(.gray)
+                VStack(alignment: .center, spacing: 5) {
+                    Text("You Have Arrived")
+                        .hudhudFont(.title)
+                    Text("Help improve HudHud maps.")
+                        .hudhudFont(.subheadline)
+                        .foregroundColor(.gray)
+                    Text("How was the navigation on this trip?")
+                        .hudhudFont(.subheadline)
+                        .foregroundColor(.gray)
+                }
                 HStack(spacing: 20) {
                     ForEach(self.faces.indices, id: \.self) { index in
                         Image(self.faces[index])
@@ -54,17 +55,18 @@ struct RateNavigationView: View {
                                 self.selectFace(index)
                             }
                     }
-                }.onChange(of: self.mapStore.selectedDetent) { _ in
+                }
+                .padding(.top)
+                .onChange(of: self.mapStore.selectedDetent) { _ in
                     if self.mapStore.selectedDetent == .small {
                         self.onDismiss()
                     }
                 }
             }
-
+            .padding(.top)
             .onAppear {
                 self.mapStore.allowedDetents = [.small, .third]
             }
-
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button(action: {
@@ -86,7 +88,7 @@ struct RateNavigationView: View {
                     .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
                 }
             }
-            .padding(.top, -50)
+            .edgesIgnoringSafeArea(.vertical)
         }
     }
 
