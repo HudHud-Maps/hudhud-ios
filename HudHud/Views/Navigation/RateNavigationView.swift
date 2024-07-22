@@ -26,41 +26,67 @@ struct RateNavigationView: View {
     let onDismiss: () -> Void
 
     var body: some View {
-        VStack {
-            Image(systemSymbol: .checkmarkCircleFill)
-                .resizable()
-                .foregroundColor(.green)
-                .scaledToFit()
-                .frame(width: 75, height: 75)
-                .padding(.top)
-                .backport.symbolEffect(animate: self.animate)
-
-            Text("You Have Arrived")
-                .hudhudFont(.title)
-            Text("Help improve HudHud maps.")
-                .hudhudFont(.subheadline)
-                .foregroundColor(.gray)
-            Text("How was the navigation on this trip?")
-                .hudhudFont(.subheadline)
-                .foregroundColor(.gray)
-            HStack(spacing: 20) {
-                ForEach(self.faces.indices, id: \.self) { index in
-                    Image(self.faces[index])
-                        .renderingMode(.template)
-                        .resizable()
-                        .frame(width: 50, height: 50)
-                        .foregroundColor(index == self.selecteFace ? .green : .gray)
-                        .onTapGesture {
-                            self.selectFace(index)
-                        }
-                }
-            }.onChange(of: self.mapStore.selectedDetent) { _ in
-                if self.mapStore.selectedDetent == .small {
-                    self.onDismiss()
+        NavigationStack {
+            VStack(alignment: .center) {
+                Image(systemSymbol: .checkmarkCircleFill)
+                    .resizable()
+                    .foregroundColor(.green)
+                    .scaledToFit()
+                    .frame(width: 75, height: 75)
+                    .padding(.top)
+                    .backport.symbolEffect(animate: self.animate)
+                Text("You Have Arrived")
+                    .hudhudFont(.title)
+                Text("Help improve HudHud maps.")
+                    .hudhudFont(.subheadline)
+                    .foregroundColor(.gray)
+                Text("How was the navigation on this trip?")
+                    .hudhudFont(.subheadline)
+                    .foregroundColor(.gray)
+                HStack(spacing: 20) {
+                    ForEach(self.faces.indices, id: \.self) { index in
+                        Image(self.faces[index])
+                            .renderingMode(.template)
+                            .resizable()
+                            .frame(width: 50, height: 50)
+                            .foregroundColor(index == self.selecteFace ? .green : .gray)
+                            .onTapGesture {
+                                self.selectFace(index)
+                            }
+                    }
+                }.onChange(of: self.mapStore.selectedDetent) { _ in
+                    if self.mapStore.selectedDetent == .small {
+                        self.onDismiss()
+                    }
                 }
             }
-        }.onAppear {
-            self.mapStore.allowedDetents = [.small, .third]
+
+            .onAppear {
+                self.mapStore.allowedDetents = [.small, .third]
+            }
+
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button(action: {
+                        self.onDismiss()
+                    }, label: {
+                        ZStack {
+                            Circle()
+                                .fill(.quaternary)
+                                .frame(width: 30, height: 30)
+
+                            Image(systemSymbol: .xmark)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundColor(.white)
+                        }
+                        .padding(8)
+                        .contentShape(Circle())
+                    })
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                }
+            }
+            .padding(.top, -50)
         }
     }
 
