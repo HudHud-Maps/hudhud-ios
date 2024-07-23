@@ -37,7 +37,7 @@ class DownloadManager {
 
     class func downloadFile(_ path: String,
                             isThumb: Bool,
-                            progress: ((_ profress: Float) -> Void)? = nil,
+                            progress _: ((_ profress: Float) -> Void)? = nil,
                             block: @escaping CallBackBlock) {
         let ext = (path as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
@@ -74,8 +74,8 @@ class DownloadManager {
 
         let downloader = FileDownloader()
 
-        downloader.progressHandler = { progress in
-            Logger.streetViewScene.log("Download progress: \(progress)")
+        downloader.progressHandler = { _ in
+//            Logger.streetViewScene.log("Download progress: \(progress)") // I think this should be removed
         }
 
         downloader.completionHandler = { location, error in
