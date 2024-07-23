@@ -7,6 +7,7 @@
 //
 
 import CommonCrypto
+import OSLog
 import UIKit
 
 // MARK: - DownloadManager
@@ -26,8 +27,6 @@ class DownloadManager {
         let newPath = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
 
         let newPathTh = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
-        let newURL = URL(filePath: newPath)
-        let newURLTh = URL(filePath: newPathTh)
 
         if FileManager.default.fileExists(atPath: newPath) {
             return newPath
@@ -76,7 +75,7 @@ class DownloadManager {
         let downloader = FileDownloader()
 
         downloader.progressHandler = { progress in
-            print("Download progress: \(progress)")
+            Logger.streetViewScene.log("Download progress: \(progress)")
         }
 
         downloader.completionHandler = { location, error in

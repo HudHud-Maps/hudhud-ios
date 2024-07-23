@@ -310,7 +310,7 @@ struct ContentView: View {
                                             let location = try await Location.forSingleRequestUsage.requestLocation()
                                             guard let location = location.location else { return }
 
-                                            print("set new streetViewPoint")
+                                            Logger.streetView.info("set new streetViewPoint")
                                             self.motionViewModel.coordinate = location.coordinate
                                             if location.course > 0 {
                                                 self.motionViewModel.position.heading = location.course

@@ -329,13 +329,12 @@ extension MapStore {
         Task {
             do {
                 if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
-                    print(streetViewScene)
                     self.streetViewScene = streetViewScene
                     self.street360View = true
                     block?(streetViewScene)
                 }
             } catch {
-                print("error \(error)")
+                Logger.streetViewScene.error("error \(error)")
             }
         }
     }

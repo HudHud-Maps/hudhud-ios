@@ -70,6 +70,6 @@ custom_rules:
     severity: warning
   print_usage:
     name: "print usage"
-    message: "Use OSLog instead of print"
+    message: "Import OSLog and use one of the logging options available in HudHud/Extensions/LoggerSettings.swift instead of print"
     regex: '\bprint\s*\('
     severity: warning
