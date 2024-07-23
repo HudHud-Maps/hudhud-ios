@@ -166,6 +166,7 @@ struct ContentView: View {
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
             if self.mapStore.navigationProgress == .feedback {
                 self.searchViewStore.endTrip()
+                return
             }
             self.mapViewStore.didTapOnMap(containing: features)
         }
