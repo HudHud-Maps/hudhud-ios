@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "A0682829-474F-4CFC-85F0-95201763B220",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:HudHud.xcodeproj",
+        "identifier" : "CDAE05532B681263003E5196",
+        "name" : "HudHudTests"
+      }
+    }
+  ],
+  "version" : 1
+}
