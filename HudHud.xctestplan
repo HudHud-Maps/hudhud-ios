@@ -27,16 +27,15 @@
       "parallelizable" : true,
       "target" : {
         "containerPath" : "container:HudHud.xcodeproj",
-        "identifier" : "CDAE05532B681263003E5196",
-        "name" : "HudHudTests"
+        "identifier" : "CDAE055D2B681263003E5196",
+        "name" : "HudHudUITests"
       }
     },
     {
-      "parallelizable" : true,
       "target" : {
         "containerPath" : "container:HudHud.xcodeproj",
-        "identifier" : "CDAE055D2B681263003E5196",
-        "name" : "HudHudUITests"
+        "identifier" : "CDAE05532B681263003E5196",
+        "name" : "HudHudTests"
       }
     }
   ],

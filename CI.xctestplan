@@ -9,7 +9,14 @@
     }
   ],
   "defaultOptions" : {
-    "testTimeoutsEnabled" : true
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:HudHud.xcodeproj",
+      "identifier" : "CDAE05432B681261003E5196",
+      "name" : "HudHud"
+    },
+    "testRepetitionMode" : "fixedIterations",
+    "testTimeoutsEnabled" : true,
+    "uiTestingScreenshotsLifetime" : "keepAlways"
   },
   "testTargets" : [
     {
