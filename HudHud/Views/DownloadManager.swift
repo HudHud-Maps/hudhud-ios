@@ -26,8 +26,6 @@ class DownloadManager {
         let ext = (link as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
 
-        let newPathTh = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
-
         if FileManager.default.fileExists(atPath: newPath) {
             return newPath
         }
