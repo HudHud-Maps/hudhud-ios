@@ -17,6 +17,7 @@ struct RootSheetView: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
+    @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
 
@@ -115,6 +116,14 @@ struct RootSheetView: View {
         .interactiveDismissDisabled()
         .ignoresSafeArea()
         .presentationCompactAdaptation(.sheet)
+        .overlay {
+            GeometryReader { geometry in
+                Color.clear.preference(key: SizePreferenceKey.self, value: geometry.size)
+            }
+        }
+        .onPreferenceChange(SizePreferenceKey.self) { value in
+            self.sheetSize = value
+        }
     }
 }
 
