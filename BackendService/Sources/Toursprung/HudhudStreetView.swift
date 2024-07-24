@@ -57,7 +57,6 @@ public struct HudhudStreetView {
                     let item = StreetViewItem(id: data.id,
                                               coordinate: CLLocationCoordinate2D(latitude: data.point.lat, longitude: data.point.lon),
                                               imageURL: data.url)
-                    print(item)
                     return item
                 }
                 return nil
@@ -83,7 +82,6 @@ public struct HudhudStreetView {
                 let item = StreetViewItem(id: data.id,
                                           coordinate: CLLocationCoordinate2D(latitude: data.point.lat, longitude: data.point.lon),
                                           imageURL: data.url)
-                print(item)
                 return item
             }
         case let .undocumented(statusCode: statusCode, payload):
@@ -107,7 +105,6 @@ public struct HudhudStreetView {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                print(jsonResponse)
                 let item = jsonResponse.data
                 let streetViewScene = StreetViewScene(id: item.id,
                                                       name: item.name,

@@ -15,6 +15,5 @@ final class ToursprungTests: XCTestCase {
         let geocoder = Geocoder(session: .shared)
 
         let pois = try await geocoder.search(term: "Starbucks", countryCode: "de")
-        print(pois)
     }
 }

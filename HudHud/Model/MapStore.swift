@@ -70,7 +70,7 @@ final class MapStore: ObservableObject {
     @Published var navigatingRoute: Route? {
         didSet {
             if let elements = try? path.elements() {
-                print("path now: \(elements)")
+                Logger.navigationPath.log("path now: \(elements)")
                 self.updateSelectedSheetDetent(to: elements.last)
             }
         }
@@ -329,13 +329,12 @@ extension MapStore {
         Task {
             do {
                 if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
-                    print(streetViewScene)
                     self.streetViewScene = streetViewScene
                     self.street360View = true
                     block?(streetViewScene)
                 }
             } catch {
-                print("error \(error)")
+                Logger.streetViewScene.error("error \(error)")
             }
         }
     }
@@ -435,10 +434,10 @@ private extension MapStore {
     func updateDetent() {
         do {
             let elements = try path.elements()
-            print("path now: \(elements)")
+            Logger.navigationPath.log("path now: \(elements)")
             self.updateSelectedSheetDetent(to: elements.last)
         } catch {
-            print("update detent error: \(error)")
+            Logger.navigationPath.error("update detent error: \(error)")
         }
     }
 

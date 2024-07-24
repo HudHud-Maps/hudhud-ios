@@ -69,7 +69,6 @@ class MapViewStore {
             self.mapStore.selectedItem = resolvedItem
 
         case let .streetViewScene(sceneID):
-            print("streetViewScene id:  \(sceneID)")
             self.mapStore.loadStreetViewScene(id: sceneID, block: nil)
         }
     }
