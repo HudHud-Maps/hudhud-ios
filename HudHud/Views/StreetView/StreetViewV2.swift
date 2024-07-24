@@ -1,5 +1,5 @@
 //
-//  Street360View.swift
+//  StreetViewV2.swift
 //  HudHud
 //
 //  Created by Aziz Dev on 10/07/2024.
@@ -11,16 +11,16 @@ import OSLog
 import SwiftUI
 import SwiftUIPanoramaViewer
 
-// MARK: - Street360View
+// MARK: - StreetViewV2
 
-struct Street360View: View {
+struct StreetViewV2: View {
 
-    @State var streetViewScene: StreetViewScene
+    @Binding var streetViewScene: StreetViewScene?
     @State var mapStore: MapStore
+    @Binding var fullScreenStreetView: Bool
 
     @State var rotationIndicator: Float = 0.0
     @State var rotationZIndicator: Float = 0.0
-    @State var expandView: Bool = false
 
     @State var svimage: UIImage?
     @State var svimageId: String = ""
@@ -29,9 +29,6 @@ struct Street360View: View {
     @State var isLoading: Bool = false
 
     enum NavDirection { case next; case previous; case east; case west }
-
-    var expandedView: (_ expand: Bool) -> Void
-    var closeView: () -> Void
 
     var showLoading: Bool {
         (self.svimage == nil && self.errorMsg == nil) || self.isLoading
@@ -75,12 +72,11 @@ struct Street360View: View {
 
                     Button {
                         withAnimation {
-                            self.expandView.toggle()
+                            self.fullScreenStreetView.toggle()
                         }
-                        self.expandedView(self.expandView)
 
                     } label: {
-                        Image(systemSymbol: self.expandView ? .arrowDownRightAndArrowUpLeftCircleFill : .arrowUpLeftAndArrowDownRightCircleFill)
+                        Image(systemSymbol: self.fullScreenStreetView ? .arrowDownRightAndArrowUpLeftCircleFill : .arrowUpLeftAndArrowDownRightCircleFill)
                             .resizable()
                             .frame(width: 26, height: 26)
                             .accentColor(.white)
@@ -89,15 +85,15 @@ struct Street360View: View {
                 }
                 Spacer()
             }
-            .padding(.top, self.expandView ? 64 : 16)
+            .padding(.top, self.fullScreenStreetView ? 64 : 16)
             .padding(.horizontal, 16)
         }
         .background(Color.black)
         .cornerRadius(16)
-        .frame(width: UIScreen.main.bounds.width - (self.expandView ? 0 : 20),
-               height: UIScreen.main.bounds.height - (self.expandView ? 0 : UIScreen.main.bounds.height / 1.5))
+        .frame(width: UIScreen.main.bounds.width - (self.fullScreenStreetView ? 0 : 20),
+               height: UIScreen.main.bounds.height - (self.fullScreenStreetView ? 0 : UIScreen.main.bounds.height / 1.5))
         .ignoresSafeArea()
-        .padding(.top, self.expandView ? 0 : 60)
+        .padding(.top, self.fullScreenStreetView ? 0 : 60)
         .onAppear(perform: {
             PanoramaManager.shouldUpdateImage = false
             PanoramaManager.shouldResetCameraAngle = true
@@ -118,7 +114,7 @@ struct Street360View: View {
                         .frame(width: 26, height: 26)
                         .accentColor(.white)
                         .shadow(radius: 26)
-                        .opacity(self.streetViewScene.previousId != nil ? 1.0 : 0.0)
+                        .opacity(self.streetViewScene?.previousId != nil ? 1.0 : 0.0)
                 }
 
                 HStack {
@@ -130,7 +126,7 @@ struct Street360View: View {
                             .frame(width: 26, height: 26)
                             .accentColor(.white)
                             .shadow(radius: 26)
-                            .opacity(self.streetViewScene.westId != nil ? 1.0 : 0.0)
+                            .opacity(self.streetViewScene?.westId != nil ? 1.0 : 0.0)
                     }
 
                     Spacer()
@@ -144,7 +140,7 @@ struct Street360View: View {
                             .frame(width: 26, height: 26)
                             .accentColor(.white)
                             .shadow(radius: 26)
-                            .opacity(self.streetViewScene.eastId != nil ? 1.0 : 0.0)
+                            .opacity(self.streetViewScene?.eastId != nil ? 1.0 : 0.0)
                     }
                 }
 
@@ -156,7 +152,7 @@ struct Street360View: View {
                         .frame(width: 26, height: 26)
                         .accentColor(.white)
                         .shadow(radius: 26)
-                        .opacity(self.streetViewScene.nextId != nil ? 1.0 : 0.0)
+                        .opacity(self.streetViewScene?.nextId != nil ? 1.0 : 0.0)
                 }
             }
             .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
@@ -169,7 +165,7 @@ struct Street360View: View {
     // MARK: - Internal
 
     func dismissView() {
-        self.closeView()
+        self.streetViewScene = nil
         // Do any cleanup...
     }
 
@@ -186,7 +182,8 @@ struct Street360View: View {
     }
 
     func loadSVImage() {
-        let link = self.getImageURL(self.streetViewScene.name)
+        guard let imageName = self.streetViewScene?.name else { return }
+        let link = self.getImageURL(imageName)
 
         DownloadManager.downloadFile(link, isThumb: false) { path, error in
             self.isLoading = false
@@ -206,7 +203,7 @@ struct Street360View: View {
         ZStack {
             PanoramaViewer(image: SwiftUIPanoramaViewer.bindImage(img),
                            panoramaType: .spherical,
-                           controlMethod: .both) { key in
+                           controlMethod: .touch) { key in
                 Logger.panoramaView.info("\(key)")
             } cameraMoved: { pitch, yaw, roll in
                 DispatchQueue.main.async {
@@ -216,9 +213,6 @@ struct Street360View: View {
                 Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
             }
             .id(img)
-            .onTapGesture {
-                Logger.panoramaView.info("\(self.rotationIndicator)")
-            }
 
             VStack {
                 Spacer()
@@ -231,7 +225,7 @@ struct Street360View: View {
                 .padding()
             }
 
-            if self.expandView, self.showLoading == false {
+            if self.fullScreenStreetView, self.showLoading == false {
                 self.streetNavigationButtons
             }
         }
@@ -239,7 +233,7 @@ struct Street360View: View {
 
 }
 
-extension Street360View {
+extension StreetViewV2 {
 
     func loadImage(_ direction: NavDirection) {
         Task {
@@ -271,13 +265,13 @@ extension Street360View {
     func getNextID(_ direction: NavDirection) -> (id: Int?, name: String?) {
         switch direction {
         case .next:
-            return (self.streetViewScene.nextId, self.streetViewScene.nextName)
+            return (self.streetViewScene?.nextId, self.streetViewScene?.nextName)
         case .previous:
-            return (self.streetViewScene.previousId, self.streetViewScene.previousName)
+            return (self.streetViewScene?.previousId, self.streetViewScene?.previousName)
         case .east:
-            return (self.streetViewScene.eastId, self.streetViewScene.eastName)
+            return (self.streetViewScene?.eastId, self.streetViewScene?.eastName)
         case .west:
-            return (self.streetViewScene.westId, self.streetViewScene.westName)
+            return (self.streetViewScene?.westId, self.streetViewScene?.westName)
         }
     }
 

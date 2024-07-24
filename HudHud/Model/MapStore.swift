@@ -64,8 +64,8 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
-    @Published var street360View: Bool = false
     @Published var streetViewScene: StreetViewScene?
+    @Published var fullScreenStreetView: Bool = false
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -330,7 +330,6 @@ extension MapStore {
             do {
                 if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
                     self.streetViewScene = streetViewScene
-                    self.street360View = true
                     block?(streetViewScene)
                 }
             } catch {

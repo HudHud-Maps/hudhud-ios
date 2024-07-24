@@ -382,13 +382,16 @@ struct ContentView: View {
                 Spacer()
             }
             .overlay(alignment: .top) {
-                if self.mapStore.street360View, let item = mapStore.streetViewScene {
-                    Street360View(streetViewScene: item, mapStore: self.mapStore, expandedView: { expand in
-                        self.mapStore.searchShown = !expand
-                    }, closeView: {
-                        self.mapStore.street360View = false
-                        self.mapStore.searchShown = true
-                    })
+                if self.mapStore.streetViewScene != nil {
+                    StreetViewV2(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
+                        .onChange(of: self.mapStore.streetViewScene) { newValue in
+                            if newValue == nil {
+                                self.mapStore.searchShown = true
+                            }
+                        }
+                        .onChange(of: self.mapStore.fullScreenStreetView) { newValue in
+                            self.mapStore.searchShown = !newValue
+                        }
                 }
             }
         }
