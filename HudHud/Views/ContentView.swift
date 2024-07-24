@@ -54,336 +54,156 @@ struct ContentView: View {
 
     @State var safeAreaInsets: UIEdgeInsets = .zero
 
-    @ViewBuilder
-    var mapView: some View {
-        MapView<MapNavigationViewController>(makeViewController: {
-            let viewController = MapNavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
-            viewController.onViewSafeAreaInsetsDidChange = { insets in
-                self.safeAreaInsets = insets
-            }
-            viewController.showsEndOfRouteFeedback = false // We show our own Feedback
-            return viewController
-        }(), styleURL: self.styleURL, camera: self.$mapStore.camera) {
-            // Display preview data as a polyline on the map
-            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationProgress == .none {
-                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
-                }
-
-                // Add a polyline casing for a stroke effect
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.white)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
-
-                // Add an inner (blue) polyline
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.systemBlue)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
-
-                let routePoints = self.mapStore.routePoints
-
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
-            }
-
-            if self.debugStore.customMapSymbols == true {
-                SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
-                    .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
-                    .iconAllowsOverlap(false)
-                    .text(featurePropertyNamed: "name_en")
-                    .textFontSize(11)
-                    .maximumTextWidth(8.0)
-                    .textHaloColor(UIColor.white)
-                    .textHaloWidth(1.0)
-                    .textHaloBlur(0.5)
-                    .textAnchor("top")
-                    .textColor(expression: SFSymbolSpriteSheet.colorExpression)
-                    .textOffset(CGVector(dx: 0, dy: 1.2))
-                    .minimumZoomLevel(13.0)
-                    .maximumZoomLevel(22.0)
-            }
-
-            let pointSource = self.mapStore.points
-
-            // shows the clustered pins
-            CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered, source: pointSource)
-                .radius(16)
-                .color(.systemRed)
-                .strokeWidth(2)
-                .strokeColor(.white)
-                .predicate(NSPredicate(format: "cluster == YES"))
-            SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsClustered, source: pointSource)
-                .textColor(.white)
-                .text(expression: NSExpression(format: "CAST(point_count, 'NSString')"))
-                .predicate(NSPredicate(format: "cluster == YES"))
-
-            // shows the unclustered pins
-            if self.mapStore.navigationProgress != .navigating {
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
-            }
-            // shows the selected pin
-            CircleStyleLayer(
-                identifier: MapLayerIdentifier.selectedCircle,
-                source: self.mapStore.selectedPoint
-            )
-            .radius(24)
-            .color(.systemRed)
-            .strokeWidth(2)
-            .strokeColor(.white)
-            .predicate(NSPredicate(format: "cluster != YES"))
-            SymbolStyleLayer(
-                identifier: MapLayerIdentifier.selectedCircleIcon,
-                source: self.mapStore.selectedPoint
-            )
-            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-            .iconColor(.white)
-            .predicate(NSPredicate(format: "cluster != YES"))
-
-            SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
-                .iconImage(UIImage.lookAroundPin)
-                .iconRotation(featurePropertyNamed: "heading")
-        }
-        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-            self.mapViewStore.didTapOnMap(containing: features)
-        }
-        .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-        .unsafeMapViewControllerModifier { controller in
-            controller.delegate = self.mapStore
-
-            switch self.mapStore.navigationProgress {
-            case .none:
-                if let route = self.mapStore.navigatingRoute {
-                    if self.debugStore.simulateRide {
-                        let locationManager = SimulatedLocationManager(route: route)
-                        locationManager.speedMultiplier = 2
-                        controller.startNavigation(with: route, animated: true, locationManager: locationManager)
-                    } else {
-                        controller.startNavigation(with: route, animated: true)
-                    }
-                    self.mapStore.navigationProgress = .navigating
-                } else {
-                    controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                    controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
-                }
-            case .navigating:
-                if let route = self.mapStore.navigatingRoute {
-                    controller.route = route
-                } else {
-                    controller.endNavigation()
-                    self.mapStore.navigationProgress = .feedback
-                }
-            case .feedback:
-                break
-            }
-        }
-        .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
-        .onLongPressMapGesture(onPressChanged: { mapGesture in
-            if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                self.searchViewStore.mapStore.selectedItem = selectedItem
-            }
-        })
-        .mapViewContentInset(UIEdgeInsets(
-            top: self.safeAreaInsets.top + 40,
-            left: 0,
-            bottom: self.bottomPadding,
-            right: 0
-        ))
-        .onChange(of: self.mapStore.routes) { newRoute in
-            if let routeUnwrapped = newRoute {
-                if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-                    if let camera = CameraState.boundingBox(from: coordinates) {
-                        self.mapStore.camera = camera
-                    }
-                }
-            }
-        }
-        .onChange(of: self.mapStore.selectedDetent) { _ in
-            if self.mapStore.selectedDetent == .small {
-                Task {
-                    await self.reloadPOITrending()
-                }
-            }
-        }
-        .gesture(
-            DragGesture()
-                .onChanged { _ in
-                    if self.mapStore.trackingState != .none {
-                        self.mapStore.trackingState = .none
-                    }
-                }
-        )
-    }
-
     var body: some View {
         ZStack {
-            self.mapView
-                .task {
-                    for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
-                        Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
-                        self.showUserLocation = event.authorizationStatus.allowed
+            HudhudMapView(
+                mapStore: self.mapStore,
+                debugStore: self.debugStore,
+                trendingStore: self.trendingStore,
+                safeAreaInsets: self.$safeAreaInsets,
+                showUserLocation: self.showUserLocation
+            )
+            .task {
+                for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
+                    Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
+                    self.showUserLocation = event.authorizationStatus.allowed
+                }
+            }
+            .task {
+                self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
+                Logger.searchView.debug("Authorization status authorizedAllowed")
+            }
+            .task {
+                do {
+                    guard self.didTryToZoomOnUsersLocation == false else {
+                        return
                     }
-                }
-                .task {
-                    self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
-                    Logger.searchView.debug("Authorization status authorizedAllowed")
-                }
-                .task {
-                    do {
-                        guard self.didTryToZoomOnUsersLocation == false else {
-                            return
-                        }
-                        self.didTryToZoomOnUsersLocation = true
-                        let userLocation = try await Location.forSingleRequestUsage.requestLocation()
-                        var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
-                        if coordinates == nil {
-                            // fall back to any location that was found, even if bad
-                            // accuracy
-                            coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
-                        }
-                        guard let coordinates else {
-                            print("Could not determine user location, will not zoom...")
-                            return
-                        }
-                        if self.mapStore.currentLocation != coordinates {
-                            self.mapStore.currentLocation = coordinates
-                        }
-                    } catch {
-                        print("location error: \(error)")
+                    self.didTryToZoomOnUsersLocation = true
+                    let userLocation = try await Location.forSingleRequestUsage.requestLocation()
+                    var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
+                    if coordinates == nil {
+                        // fall back to any location that was found, even if bad
+                        // accuracy
+                        coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
                     }
-                }
-                .task {
-                    do {
-                        let mapLayers = try await mapLayerStore.getMaplayers()
-                        self.mapLayerStore.hudhudMapLayers = mapLayers
-                    } catch {
-                        self.mapLayerStore.hudhudMapLayers = nil
-                        Logger.searchView.error("\(error.localizedDescription)")
+                    guard let coordinates else {
+                        print("Could not determine user location, will not zoom...")
+                        return
                     }
-                }
-                .task {
-                    await self.reloadPOITrending()
-                }
-                .ignoresSafeArea()
-                .edgesIgnoringSafeArea(.all)
-                .safeAreaInset(edge: .top, alignment: .center) {
-                    if case .enabled = self.mapStore.streetView {
-                        StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera, mapStore: self.mapStore)
+                    if self.mapStore.currentLocation != coordinates {
+                        self.mapStore.currentLocation = coordinates
                     }
+                } catch {
+                    print("location error: \(error)")
                 }
-                .safeAreaInset(edge: .bottom) {
-                    if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
-                        HStack(alignment: .bottom) {
-                            MapButtonsView(mapButtonsData: [
-                                MapButtonData(sfSymbol: .icon(.map)) {
-                                    self.mapStore.path.append(SheetSubView.mapStyle)
-                                },
-                                MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-                                    switch self.searchViewStore.mode {
-                                    case let .live(provider):
-                                        self.searchViewStore.mode = .live(provider: provider.next())
-                                        Logger.searchView.info("Map Mode live")
-                                    case .preview:
-                                        self.searchViewStore.mode = .live(provider: .hudhud)
-                                        Logger.searchView.info("Map Mode toursprung")
-                                    }
-                                },
-                                MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
-                                    if self.mapStore.streetView == .disabled {
-                                        Task {
-                                            self.mapStore.streetView = .requestedCurrentLocation
-                                            let location = try await Location.forSingleRequestUsage.requestLocation()
-                                            guard let location = location.location else { return }
-
-                                            print("set new streetViewPoint")
-                                            self.motionViewModel.coordinate = location.coordinate
-                                            if location.course > 0 {
-                                                self.motionViewModel.position.heading = location.course
-                                            }
-                                            withAnimation {
-                                                self.mapStore.streetView = .enabled
-                                                self.mapStore.searchShown = false
-                                            }
-                                        }
-                                    } else {
-                                        withAnimation {
-                                            self.mapStore.streetView = .disabled
-                                        }
-                                    }
-                                },
-                                MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
-                                    if self.mapStore.getCameraPitch() > 0 {
-                                        self.mapStore.camera.setPitch(0)
-                                    } else {
-                                        self.mapStore.camera.setZoom(17)
-                                        self.mapStore.camera.setPitch(60)
-                                    }
-                                },
-                                MapButtonData(sfSymbol: .icon(.terminal)) {
-                                    self.mapStore.path.append(SheetSubView.debugView)
+            }
+            .task {
+                do {
+                    let mapLayers = try await mapLayerStore.getMaplayers()
+                    self.mapLayerStore.hudhudMapLayers = mapLayers
+                } catch {
+                    self.mapLayerStore.hudhudMapLayers = nil
+                    Logger.searchView.error("\(error.localizedDescription)")
+                }
+            }
+            .task {
+                await self.reloadPOITrending()
+            }
+            .ignoresSafeArea()
+            .edgesIgnoringSafeArea(.all)
+            .safeAreaInset(edge: .top, alignment: .center) {
+                if case .enabled = self.mapStore.streetView {
+                    StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera, mapStore: self.mapStore)
+                }
+            }
+            .safeAreaInset(edge: .bottom) {
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
+                    HStack(alignment: .bottom) {
+                        MapButtonsView(mapButtonsData: [
+                            MapButtonData(sfSymbol: .icon(.map)) {
+                                self.mapStore.path.append(SheetSubView.mapStyle)
+                            },
+                            MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+                                switch self.searchViewStore.mode {
+                                case let .live(provider):
+                                    self.searchViewStore.mode = .live(provider: provider.next())
+                                    Logger.searchView.info("Map Mode live")
+                                case .preview:
+                                    self.searchViewStore.mode = .live(provider: .hudhud)
+                                    Logger.searchView.info("Map Mode toursprung")
                                 }
-                            ])
-                            Spacer()
-                            VStack(alignment: .trailing) {
-                                CurrentLocationButton(mapStore: self.mapStore)
+                            },
+                            MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
+                                if self.mapStore.streetView == .disabled {
+                                    Task {
+                                        self.mapStore.streetView = .requestedCurrentLocation
+                                        let location = try await Location.forSingleRequestUsage.requestLocation()
+                                        guard let location = location.location else { return }
+
+                                        print("set new streetViewPoint")
+                                        self.motionViewModel.coordinate = location.coordinate
+                                        if location.course > 0 {
+                                            self.motionViewModel.position.heading = location.course
+                                        }
+                                        withAnimation {
+                                            self.mapStore.streetView = .enabled
+                                            self.mapStore.searchShown = false
+                                        }
+                                    }
+                                } else {
+                                    withAnimation {
+                                        self.mapStore.streetView = .disabled
+                                    }
+                                }
+                            },
+                            MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
+                                if self.mapStore.getCameraPitch() > 0 {
+                                    self.mapStore.camera.setPitch(0)
+                                } else {
+                                    self.mapStore.camera.setZoom(17)
+                                    self.mapStore.camera.setPitch(60)
+                                }
+                            },
+                            MapButtonData(sfSymbol: .icon(.terminal)) {
+                                self.mapStore.path.append(SheetSubView.debugView)
                             }
+                        ])
+                        Spacer()
+                        VStack(alignment: .trailing) {
+                            CurrentLocationButton(mapStore: self.mapStore)
                         }
-                        .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
-                        .padding(.horizontal)
                     }
+                    .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
+                    .padding(.horizontal)
                 }
-                .backport.buttonSafeArea(length: self.sheetSize.height)
-                .animation(.bouncy(duration: 0.25), value: self.buttonPadding)
-                .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
-                    get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
-                    set: { _ in }
-                )) {
-                    RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+            }
+            .backport.buttonSafeArea(length: self.sheetSize.height)
+            .animation(.bouncy(duration: 0.25), value: self.buttonPadding)
+            .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
+                get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
+                set: { _ in }
+            )) {
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+            }
+            .safariView(item: self.$safariURL) { url in
+                SafariView(url: url)
+            }
+            .onOpenURL(handler: { url in
+                if let scheme = url.scheme, scheme == "https" || scheme == "http" {
+                    self.safariURL = url
+                    return .handled
                 }
-                .safariView(item: self.$safariURL) { url in
-                    SafariView(url: url)
+                return .systemAction
+            })
+            .environmentObject(self.notificationQueue)
+            .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
+                self.notificationQueue.removeFirst()
+            }, content: {
+                if let notification = self.notificationQueue.currentNotification {
+                    NotificationBanner(notification: notification)
+                        .padding(.horizontal, 8)
                 }
-                .onOpenURL(handler: { url in
-                    if let scheme = url.scheme, scheme == "https" || scheme == "http" {
-                        self.safariURL = url
-                        return .handled
-                    }
-                    return .systemAction
-                })
-                .environmentObject(self.notificationQueue)
-                .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
-                    self.notificationQueue.removeFirst()
-                }, content: {
-                    if let notification = self.notificationQueue.currentNotification {
-                        NotificationBanner(notification: notification)
-                            .padding(.horizontal, 8)
-                    }
-                })
+            })
             VStack {
                 if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
@@ -400,6 +220,13 @@ struct ContentView: View {
                         self.mapStore.street360View = false
                         self.mapStore.searchShown = true
                     })
+                }
+            }
+            .onChange(of: self.mapStore.selectedDetent) { _ in
+                if self.mapStore.selectedDetent == .small {
+                    Task {
+                        await self.reloadPOITrending()
+                    }
                 }
             }
         }

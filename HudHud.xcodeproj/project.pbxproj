@@ -66,6 +66,7 @@
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
 		AFA32A572C4D494900FA0986 /* MapNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFA32A562C4D494900FA0986 /* MapNavigationController.swift */; };
+		AFF29CCC2C513C2000AC294A /* HudhudMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF29CCB2C51375300AC294A /* HudhudMapView.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
@@ -212,6 +213,7 @@
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
 		AFA32A562C4D494900FA0986 /* MapNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapNavigationController.swift; sourceTree = "<group>"; };
+		AFF29CCB2C51375300AC294A /* HudhudMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudMapView.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetButtonStyle.swift; sourceTree = "<group>"; };
@@ -522,6 +524,7 @@
 		D14C3F8A5C428C7F0A18A65A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				AFF29CCB2C51375300AC294A /* HudhudMapView.swift */,
 				14EB9DF8741B47192AE67646 /* CategoriesBanner */,
 				EA1DDF0CC8C6FE9D396004B2 /* MapLayers */,
 				AA1E80A95AFCDC7507E3B613 /* Navigation */,
@@ -867,6 +870,7 @@
 			files = (
 				CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */,
 				90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */,
+				AFF29CCC2C513C2000AC294A /* HudhudMapView.swift in Sources */,
 				CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */,
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
