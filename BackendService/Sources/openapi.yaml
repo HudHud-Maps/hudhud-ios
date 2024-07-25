@@ -26,31 +26,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  ok:
-                    type: boolean
-                    description: >-
-                      Can be ignored by clients, errors should be checked using
-                      the status code following the http standard
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        style_url:
-                          type: string
-                        thumbnail_url:
-                          type: string
-                      required:
-                        - name
-                        - style_url
-                        - thumbnail_url
-                required:
-                  - ok
-                  - data
+                $ref: '#/components/schemas/MapStylesResponse'
               examples:
                 '1':
                   summary: Success
@@ -184,39 +160,6 @@ paths:
                         android_category_icon:
                           name: restaurant
                           color: blue
-      security: []
-  /sv/scene/{id}:
-    get:
-      summary: Get streetview scene by id
-      deprecated: false
-      description: ''
-      operationId: getStreetViewScene
-      tags: []
-      parameters:
-        - name: id
-          in: path
-          description: ''
-          required: true
-          schema:
-            type: integer
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StreetViewSceneResponse'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema: &ref_0
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
-          description: Record Not Found
-          content:
-            application/json:
-              schema: *ref_0
       security: []
   /sv/{id}:
     get:
@@ -564,6 +507,38 @@ paths:
                           - type: picture
                             url: https://media.hudhud.sa/dsqdqs.jpeg
       security: []
+  /sv/scene/{id}:
+    get:
+      summary: Get streetview scene by id
+      deprecated: false
+      description: ''
+      operationId: getStreetViewScene
+      tags: []
+      parameters:
+        - name: id
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StreetViewSceneResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: *ref_0
+        '404':
+          description: Record Not Found
+          content:
+            application/json:
+              schema: *ref_0
+      security: []
   /p/trending:
     get:
       summary: Trending POIs
@@ -668,8 +643,6 @@ components:
         east_name:
           type: string
           nullable: true
-        metadata:
-          type: string
         geom:
           type: string
         point:
@@ -688,14 +661,53 @@ components:
           type: string
         updated_at:
           type: string
-        url:
-          type: string
       required:
-        - id
-        - name
         - point
         - created_at
         - updated_at
+        - id
+        - name
+    StreetViewSceneResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StreetViewScene'
+        ok:
+          type: boolean
+      required:
+        - ok
+        - data
+    MapStyleItem:
+      type: object
+      properties:
+        name:
+          type: string
+        style_url:
+          type: string
+        thumbnail_url:
+          type: string
+        type:
+          type: string
+          enum:
+            - map_type
+            - map_details
+      required:
+        - name
+        - style_url
+        - thumbnail_url
+        - type
+    MapStylesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MapStyleItem'
+        ok:
+          type: boolean
+      required:
+        - data
+        - ok
     StreetViewImageDetails:
       type: object
       properties:
@@ -741,16 +753,6 @@ components:
           type: boolean
         data:
           $ref: '#/components/schemas/StreetViewImageDetails'
-      required:
-        - ok
-        - data
-    StreetViewSceneResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        data:
-          $ref: '#/components/schemas/StreetViewScene'
       required:
         - ok
         - data
@@ -1106,6 +1108,9 @@ components:
             properties:
               type:
                 type: string
+                enum:
+                  - image
+                  - video
               url:
                 type: string
             required:
