@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import OSLog
 import SwiftUI
 import SwiftUIPanoramaViewer
 
@@ -101,7 +102,6 @@ struct Street360View: View {
             PanoramaManager.shouldUpdateImage = false
             PanoramaManager.shouldResetCameraAngle = true
             self.loadSVImage()
-            print("streetViewScene: \(self.streetViewScene)")
         })
     }
 
@@ -111,7 +111,6 @@ struct Street360View: View {
 
             VStack {
                 Button {
-                    print("Head North")
                     loadImage(.previous)
                 } label: {
                     Image(systemSymbol: .chevronUpCircleFill)
@@ -124,7 +123,6 @@ struct Street360View: View {
 
                 HStack {
                     Button {
-                        print("Head West")
                         loadImage(.west)
                     } label: {
                         Image(systemSymbol: .chevronLeftCircleFill)
@@ -139,7 +137,6 @@ struct Street360View: View {
                         .frame(width: 52)
 
                     Button {
-                        print("Head East")
                         loadImage(.east)
                     } label: {
                         Image(systemSymbol: .chevronRightCircleFill)
@@ -152,7 +149,6 @@ struct Street360View: View {
                 }
 
                 Button {
-                    print("Head South")
                     loadImage(.next)
                 } label: {
                     Image(systemSymbol: .chevronDownCircleFill)
@@ -200,8 +196,8 @@ struct Street360View: View {
                     self.svimage = UIImage(contentsOfFile: path)
                 }
             } else {
-                print(error ?? "Error!!!")
                 self.setMessage("Could not load the image - \(error ?? "N/A")")
+                Logger.streetViewScene.error("Could not load the image - \(error ?? "N/A")")
             }
         }
     }
@@ -211,21 +207,17 @@ struct Street360View: View {
             PanoramaViewer(image: SwiftUIPanoramaViewer.bindImage(img),
                            panoramaType: .spherical,
                            controlMethod: .both) { key in
-                print(key)
+                Logger.panoramaView.info("\(key)")
             } cameraMoved: { pitch, yaw, roll in
                 DispatchQueue.main.async {
                     self.rotationIndicator = yaw
                     self.rotationZIndicator = pitch * 2 + 30
                 }
-                print("-=-=-=-=-=-=-")
-                print("pitch: \(pitch)")
-                print("yaw: \(yaw)")
-                print("roll: \(roll)")
-                print("-=-=-=-=-=-=-")
+                Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
             }
             .id(img)
             .onTapGesture {
-                print(self.rotationIndicator)
+                Logger.panoramaView.info("\(self.rotationIndicator)")
             }
 
             VStack {

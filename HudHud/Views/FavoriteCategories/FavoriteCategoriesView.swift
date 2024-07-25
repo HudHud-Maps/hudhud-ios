@@ -31,15 +31,16 @@ struct FavoriteCategoriesView: View {
                         }
                     } label: {
                         Text(favorite.type)
+                            .hudhudFont(size: 12, fontWeight: .medium)
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor))
                 }
                 Button {
-                    print("Add was pressed")
                     self.viewMoreShown = true
                 } label: {
                     Text("Add")
-                }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: .green))
+                        .hudhudFont(size: 12, fontWeight: .medium)
+                }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
             }
             Spacer()
         }

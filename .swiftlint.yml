@@ -68,4 +68,8 @@ custom_rules:
     message: "Use Location.forSingleRequestUsage or similar, using one Location() object through the whole app allows us to use things like .lastLocation"
     regex: "\\bLocation\\(\\)"
     severity: warning
-    
+  print_usage:
+    name: "print usage"
+    message: "Import OSLog and use one of the logging options available in HudHud/Extensions/LoggerSettings.swift instead of print"
+    regex: '\bprint\s*\('
+    severity: warning

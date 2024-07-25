@@ -7,6 +7,7 @@
 //
 
 import CommonCrypto
+import OSLog
 import UIKit
 
 // MARK: - DownloadManager
@@ -25,10 +26,6 @@ class DownloadManager {
         let ext = (link as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
 
-        let newPathTh = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
-        let newURL = URL(filePath: newPath)
-        let newURLTh = URL(filePath: newPathTh)
-
         if FileManager.default.fileExists(atPath: newPath) {
             return newPath
         }
@@ -38,7 +35,7 @@ class DownloadManager {
 
     class func downloadFile(_ path: String,
                             isThumb: Bool,
-                            progress: ((_ profress: Float) -> Void)? = nil,
+                            progress _: ((_ profress: Float) -> Void)? = nil,
                             block: @escaping CallBackBlock) {
         let ext = (path as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
@@ -75,8 +72,8 @@ class DownloadManager {
 
         let downloader = FileDownloader()
 
-        downloader.progressHandler = { progress in
-            print("Download progress: \(progress)")
+        downloader.progressHandler = { _ in
+//            Logger.streetViewScene.log("Download progress: \(progress)") // I think this should be removed
         }
 
         downloader.completionHandler = { location, error in

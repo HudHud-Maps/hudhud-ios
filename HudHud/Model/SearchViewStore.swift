@@ -212,9 +212,15 @@ private extension SearchViewStore {
                 } else {
                     .large // other providers do not return coordinates, so we show the result in a list in full page
                 }
+            } catch is CancellationError {
+                Logger.poiData.debug("Task cancelled")
             } catch {
-                self.searchError = error
-                Logger.poiData.error("Predict Error: \(error)")
+                if Task.isCancelled {
+                    Logger.poiData.error("Task cancelled")
+                } else {
+                    self.searchError = error
+                    Logger.poiData.error("Predict Error: \(error)")
+                }
             }
         }
     }
