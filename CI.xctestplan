@@ -1,18 +1,14 @@
 {
   "configurations" : [
     {
-      "id" : "5D5AFB6B-A0FB-4088-8180-608034B3945B",
-      "name" : "Test Scheme Action",
+      "id" : "A0682829-474F-4CFC-85F0-95201763B220",
+      "name" : "Configuration 1",
       "options" : {
 
       }
     }
   ],
   "defaultOptions" : {
-    "codeCoverage" : false,
-    "locationScenario" : {
-      "identifier" : "..\/..\/HudHud\/Preview Content\/Riyadh.gpx"
-    },
     "targetForVariableExpansion" : {
       "containerPath" : "container:HudHud.xcodeproj",
       "identifier" : "CDAE05432B681261003E5196",
@@ -23,14 +19,6 @@
     "uiTestingScreenshotsLifetime" : "keepAlways"
   },
   "testTargets" : [
-    {
-      "parallelizable" : true,
-      "target" : {
-        "containerPath" : "container:HudHud.xcodeproj",
-        "identifier" : "CDAE055D2B681263003E5196",
-        "name" : "HudHudUITests"
-      }
-    },
     {
       "target" : {
         "containerPath" : "container:HudHud.xcodeproj",

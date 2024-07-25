@@ -231,6 +231,7 @@
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
+		CD2507BE2C4F9DFF005795CC /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
@@ -453,6 +454,7 @@
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
+				CD2507BE2C4F9DFF005795CC /* CI.xctestplan */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
