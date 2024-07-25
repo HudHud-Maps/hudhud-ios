@@ -85,4 +85,24 @@ final class CalculateTests: XCTestCase {
         }
     }
 
+    func testCalculateHudHudServiceValidCoordinatesReturnsRouteWithSteps() async throws {
+        // Given
+        let routingService = RoutingService()
+
+        // When
+        let startCoordinate = CLLocationCoordinate2D(latitude: 24.6875, longitude: 46.6845) //  Alfaisaliah Tower, Riyadh
+        let endCoordinate = CLLocationCoordinate2D(latitude: 24.7311, longitude: 46.6701) // Kingdom Tower, Riyadh
+
+        // Create route options with valid waypoints
+        let waypoints = [Waypoint(coordinate: startCoordinate), Waypoint(coordinate: endCoordinate)]
+        let options = RouteOptions(waypoints: waypoints)
+
+        // Perform route calculation
+        let result = try await routingService.calculate(host: "gh.map.dev.hudhud.sa", options: options)
+
+        // Then
+        XCTAssertGreaterThan(result.routes.count, 0)
+        XCTAssertGreaterThan(result.routes[0].legs.count, 0)
+        XCTAssertGreaterThan(result.routes[0].legs[0].steps.count, 0)
+    }
 }

@@ -13,8 +13,8 @@ struct SearchSectionView<Content: View>: View {
     let subview: Content
 
     var body: some View {
-        Section(header: Text("\(self.title)").font(.title3).bold()
-            .foregroundStyle(.primary)) {
+        Section(header: Text("\(self.title)").hudhudFont(size: 18, fontWeight: .semiBold)
+            .foregroundStyle(Color.Colors.General._01Black)) {
                 self.subview
                     .backport.scrollClipDisabled()
                     .padding(.top)
