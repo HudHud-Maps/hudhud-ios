@@ -29,7 +29,7 @@ struct RootSheetView: View {
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
                     case .mapStyle:
-                        MapLayersView(hudhudMapLayerStore: self.mapLayerStore)
+                        MapLayersView(mapStore: self.mapStore, hudhudMapLayerStore: self.mapLayerStore)
                             .navigationBarBackButtonHidden()
                             .presentationCornerRadius(21)
 

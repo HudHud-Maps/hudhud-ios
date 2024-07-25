@@ -54,6 +54,9 @@ final class MapStore: ObservableObject {
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
 
+    @Published var styleURL: URL = .init(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
+    @AppStorage("mapStyleURL") private var mapStyleURLString: String?
+
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
     @Published var streetView: StreetViewOption = .disabled
@@ -198,6 +201,7 @@ final class MapStore: ObservableObject {
     // MARK: - Lifecycle
 
     init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
+        self.mapStyleURLString = ""
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
@@ -244,8 +248,8 @@ final class MapStore: ObservableObject {
         if let sheetSubview = navigationPathItem as? SheetSubView {
             switch sheetSubview {
             case .mapStyle:
-                self.allowedDetents = [.small, .third]
-                self.selectedDetent = .third
+                self.allowedDetents = [.small, .medium]
+                self.selectedDetent = .medium
             case .debugView:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
