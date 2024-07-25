@@ -261,14 +261,14 @@ struct ContentView: View {
                             coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
                         }
                         guard let coordinates else {
-                            print("Could not determine user location, will not zoom...")
+                            Logger.currentLocation.debug("Could not determine user location, will not zoom...")
                             return
                         }
                         if self.mapStore.currentLocation != coordinates {
                             self.mapStore.currentLocation = coordinates
                         }
                     } catch {
-                        print("location error: \(error)")
+                        Logger.currentLocation.error("location error: \(error)")
                     }
                 }
                 .task {
@@ -314,7 +314,7 @@ struct ContentView: View {
                                             let location = try await Location.forSingleRequestUsage.requestLocation()
                                             guard let location = location.location else { return }
 
-                                            print("set new streetViewPoint")
+                                            Logger.streetView.info("set new streetViewPoint")
                                             self.motionViewModel.coordinate = location.coordinate
                                             if location.course > 0 {
                                                 self.motionViewModel.position.heading = location.course

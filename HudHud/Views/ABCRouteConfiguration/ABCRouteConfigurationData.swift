@@ -39,7 +39,7 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
         case .myLocation:
             return Image(systemSymbol: .location)
         case .waypoint:
-            return Image(systemSymbol: .mappin)
+            return Image(.markerPinIcon)
         }
     }
 }

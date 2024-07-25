@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftUI
 
 struct RateNavigationView: View {
@@ -120,4 +121,5 @@ struct RateNavigationView: View {
     return RateNavigationView(mapStore: searchViewStore.mapStore, selectedFace: { face in
         print(face)
     }, onDismiss: {})
+
 }

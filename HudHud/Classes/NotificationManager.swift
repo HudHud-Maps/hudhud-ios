@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import OSLog
 import UserNotifications
 
 class NotificationManager: ObservableObject {
@@ -18,7 +19,7 @@ class NotificationManager: ObservableObject {
         do {
             try await self.center.requestAuthorization(options: [.alert, .sound, .badge])
         } catch {
-            print("Authorization failed: \(error)")
+            Logger.notificationAuth.error("Authorization failed: \(error)")
             throw error
         }
     }

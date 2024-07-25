@@ -15,7 +15,7 @@ final class CalculateTests: XCTestCase {
 
     func testCalculateValidCoordinatesReturnsRouteWithSteps() async throws {
         // Given
-        let toursprung = Toursprung()
+        let routingService = RoutingService()
 
         // When
         let startCoordinate = CLLocationCoordinate2D(latitude: 24.6875, longitude: 46.6845) //  Alfaisaliah Tower, Riyadh
@@ -26,7 +26,7 @@ final class CalculateTests: XCTestCase {
         let options = RouteOptions(waypoints: waypoints)
 
         // Perform route calculation
-        let result = try await toursprung.calculate(host: "gh.maptoolkit.net", options: options)
+        let result = try await routingService.calculate(host: "gh.maptoolkit.net", options: options)
 
         // Then
         XCTAssertGreaterThan(result.routes.count, 0)
@@ -36,7 +36,7 @@ final class CalculateTests: XCTestCase {
 
     func testCalculateWithInvalidStartCoordinateThrowsInvalidInputError() async throws {
         // Given
-        let toursprung = Toursprung()
+        let routingService = RoutingService()
 
         // When
         let startCoordinate = CLLocationCoordinate2D(latitude: 1000.0, longitude: 2000.0) // Invalid start coordinate
@@ -47,12 +47,12 @@ final class CalculateTests: XCTestCase {
 
         // Then
         do {
-            let result = try await toursprung.calculate(host: "gh.maptoolkit.net", options: options)
+            let result = try await routingService.calculate(host: "gh.maptoolkit.net", options: options)
             XCTFail("Expected an error but received a result: \(result)") // Fail the test if no error is thrown
-        } catch let error as Toursprung.ToursprungError {
+        } catch let error as RoutingService.ToursprungError {
             // Assert that the correct error is thrown with the expected message
             let expectedErrorMessage = "Point 0 is out of bounds: 1000.0,2000.0, the bounds are: -180.0,180.0,-85.0511284,82.5254024,-4100.47900390625,8775.1728515625"
-            XCTAssertEqual(error, Toursprung.ToursprungError.invalidInput(message: expectedErrorMessage))
+            XCTAssertEqual(error, RoutingService.ToursprungError.invalidInput(message: expectedErrorMessage))
         } catch {
             XCTFail("Unexpected error: \(error)")
         }
@@ -60,7 +60,7 @@ final class CalculateTests: XCTestCase {
 
     func testCalculateImpossibleRouteThrowsNoRouteError() async throws {
         // Given
-        let toursprung = Toursprung()
+        let routingService = RoutingService()
 
         // When
         // Define coordinates that result in an impossible route (across a large body of water)
@@ -72,9 +72,9 @@ final class CalculateTests: XCTestCase {
 
         // Then
         do {
-            let result = try await toursprung.calculate(host: "gh.maptoolkit.net", options: options)
+            let result = try await routingService.calculate(host: "gh.maptoolkit.net", options: options)
             XCTFail("Expected an error but received a result: \(result)")
-        } catch let error as Toursprung.ToursprungError {
+        } catch let error as RoutingService.ToursprungError {
             if case let .invalidInput(message) = error {
                 XCTAssertEqual(message, "Point 1 is too far from Point 0: 24.7194294,46.6463473", "Invalid input message mismatch")
             } else {
