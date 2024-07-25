@@ -54,8 +54,7 @@ final class MapStore: ObservableObject {
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
 
-    @Published var styleURL: URL = .init(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
-    @AppStorage("mapStyleURL") private var mapStyleURLString: String?
+    @AppStorage("mapStyleURL") var mapStyleURLString: String = "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud"
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
@@ -201,7 +200,6 @@ final class MapStore: ObservableObject {
     // MARK: - Lifecycle
 
     init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
-        self.mapStyleURLString = ""
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel

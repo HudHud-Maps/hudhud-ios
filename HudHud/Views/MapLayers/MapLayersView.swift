@@ -89,8 +89,13 @@ struct MapLayersView: View {
                     VStack(alignment: .center, spacing: 10) {
                         Button {
                             self.currentlySelected = layer.name
-                            self.mapStore.styleURL = layer.styleUrl
-                            Logger().info("\(layer.name) selected as map Style")
+                            // this if just for testing I will remove it before the merge
+                            if layer.name == "Satellite" {
+                                self.mapStore.mapStyleURLString = "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=NuXvtnILACeadkgsn5xZ"
+                            } else {
+                                self.mapStore.mapStyleURLString = layer.styleUrl.absoluteString
+                                Logger().info("\(layer.name) selected as map Style")
+                            }
                         } label: {
                             AsyncImage(url: layer.thumbnailUrl) { image in
                                 image
