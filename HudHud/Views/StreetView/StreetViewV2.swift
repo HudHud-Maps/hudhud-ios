@@ -187,9 +187,7 @@ struct StreetViewV2: View {
         }
 
         let link = self.getImageURL(imageName)
-        DownloadManager.downloadFile(link, progress: { _ in
-
-        }, block: { path, error in
+        DownloadManager.downloadFile(link, block: { path, error in
             if let path {
                 if self.svimageId != path {
                     AppQueue.main {

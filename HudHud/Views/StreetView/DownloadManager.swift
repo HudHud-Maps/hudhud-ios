@@ -35,7 +35,7 @@ class DownloadManager {
 
     class func downloadFile(_ path: String,
                             isThumb: Bool = false,
-                            progress: ((_ progress: Float) -> Void)? = nil,
+                            downloadProgress: ((_ progress: Float) -> Void)? = nil,
                             block: @escaping CallBackBlock) {
         let ext = (path as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
@@ -67,7 +67,7 @@ class DownloadManager {
         let downloader = FileDownloader()
 
         downloader.progressHandler = { progress in
-            progress?(progress)
+            downloadProgress?(progress)
         }
 
         downloader.completionHandler = { location, error in
