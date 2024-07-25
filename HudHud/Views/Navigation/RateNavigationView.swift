@@ -106,7 +106,6 @@ struct RateNavigationView: View {
                 if !Task.isCancelled {
                     withAnimation {
                         self.selectedFace?(face)
-                        self.onDismiss()
                     }
                 }
             }
@@ -121,5 +120,4 @@ struct RateNavigationView: View {
     return RateNavigationView(mapStore: searchViewStore.mapStore, selectedFace: { face in
         print(face)
     }, onDismiss: {})
-
 }

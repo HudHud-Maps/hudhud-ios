@@ -35,6 +35,10 @@ struct RootSheetView: View {
 
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
+                            .onDisappear(perform: {
+                                self.searchViewStore.mapStore.allowedDetents = [.small, .medium, .large]
+                                self.searchViewStore.mapStore.selectedDetent = .small
+                            })
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:
                         // Initialize fresh instances of MapStore and SearchViewStore
@@ -75,6 +79,9 @@ struct RootSheetView: View {
                     }, onDismiss: {
                         self.searchViewStore.mapStore.selectedItem = nil
                         self.searchViewStore.mapStore.displayableItems = []
+                        if !self.mapStore.path.isEmpty {
+                            self.mapStore.path.removeLast()
+                        }
                     })
                     .navigationBarBackButtonHidden()
                 }
@@ -94,7 +101,7 @@ struct RootSheetView: View {
                         get: { self.mapStore.navigationProgress == .feedback },
                         set: { _ in }
                     )) {
-                        RateNavigationView(mapStore: self.mapStore, selectedFace: { selectedFace in
+                        RateNavigationView(mapStore: self.searchViewStore.mapStore, selectedFace: { selectedFace in
                             // selectedFace should be sent to backend along with detial of the route
                             self.searchViewStore.endTrip()
                             Logger.routing.log("selected Face of rating: \(selectedFace)")
