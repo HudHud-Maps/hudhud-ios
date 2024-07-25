@@ -12,22 +12,25 @@ import SwiftUI
 struct FavoriteCategoriesButton: ButtonStyle {
     let sfSymbol: SFSymbol?
     let tintColor: Color?
+    @ScaledMetric var imageSize = 24
 
     // MARK: - Internal
 
     func makeBody(configuration: Configuration) -> some View {
         VStack {
             Image(systemSymbol: self.sfSymbol ?? .houseFill)
-                .font(.title)
+                .resizable()
+                .scaledToFit()
+                .frame(width: self.imageSize, height: self.imageSize)
                 .foregroundColor(self.tintColor)
-                .padding(15)
+                .padding(17)
                 .background {
                     Circle()
-                        .foregroundColor(.white)
-                        .shadow(color: .black.opacity(configuration.isPressed ? 0.4 : 0.15), radius: 10, y: 10)
+                        .foregroundColor(Color.Colors.General._20ActionButtons)
+                        .shadow(color: Color(red: 133, green: 140, blue: 149).opacity(configuration.isPressed ? 0.3 : 0.1), radius: 7, y: 5)
                 }
             configuration.label
-                .tint(.primary)
+                .tint(Color.Colors.General._01Black)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
         }
