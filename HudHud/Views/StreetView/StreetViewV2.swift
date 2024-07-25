@@ -36,8 +36,8 @@ struct StreetViewV2: View {
 
     var body: some View {
         ZStack {
-            if let svimage {
-                self.panoramaView(svimage)
+            if self.svimage != nil {
+                self.panoramaView(self.$svimage)
             } else {
                 if let errorMsg {
                     Text(errorMsg)
@@ -95,8 +95,6 @@ struct StreetViewV2: View {
         .ignoresSafeArea()
         .padding(.top, self.fullScreenStreetView ? 0 : 60)
         .onAppear(perform: {
-            PanoramaManager.shouldUpdateImage = false
-            PanoramaManager.shouldResetCameraAngle = true
             self.loadSVImage()
         })
     }
@@ -166,6 +164,7 @@ struct StreetViewV2: View {
 
     func dismissView() {
         self.streetViewScene = nil
+        self.fullScreenStreetView = false
         // Do any cleanup...
     }
 
@@ -182,29 +181,38 @@ struct StreetViewV2: View {
     }
 
     func loadSVImage() {
-        guard let imageName = self.streetViewScene?.name else { return }
-        let link = self.getImageURL(imageName)
-
-        DownloadManager.downloadFile(link, isThumb: false) { path, error in
+        guard let imageName = self.streetViewScene?.name else {
             self.isLoading = false
+            return
+        }
+
+        let link = self.getImageURL(imageName)
+        DownloadManager.downloadFile(link, progress: { _ in
+
+        }, block: { path, error in
             if let path {
                 if self.svimageId != path {
-                    self.svimageId = path
-                    self.svimage = UIImage(contentsOfFile: path)
+                    AppQueue.main {
+                        PanoramaManager.shouldUpdateImage = true
+                        PanoramaManager.shouldResetCameraAngle = false
+                        let img = UIImage(contentsOfFile: path)
+                        self.svimage = img
+                        self.isLoading = false
+                        self.svimageId = path
+                    }
                 }
             } else {
                 self.setMessage("Could not load the image - \(error ?? "N/A")")
-                Logger.streetViewScene.error("Could not load the image - \(error ?? "N/A")")
+                self.isLoading = false
             }
-        }
+        })
     }
 
-    func panoramaView(_ img: UIImage) -> some View {
+    func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: SwiftUIPanoramaViewer.bindImage(img),
+            PanoramaViewer(image: img,
                            panoramaType: .spherical,
-                           controlMethod: .touch) { key in
-                Logger.panoramaView.info("\(key)")
+                           controlMethod: .touch) { _ in
             } cameraMoved: { pitch, yaw, roll in
                 DispatchQueue.main.async {
                     self.rotationIndicator = yaw
@@ -212,7 +220,6 @@ struct StreetViewV2: View {
                 }
                 Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
             }
-            .id(img)
 
             VStack {
                 Spacer()
@@ -243,22 +250,20 @@ extension StreetViewV2 {
             let link = self.getImageURL(nextName)
             if let path = DownloadManager.getLocalFilePath(link),
                let img = UIImage(contentsOfFile: path), svimageId != path {
-                self.svimageId = path
-                self.svimage = img
-
+                AppQueue.main {
+                    self.svimageId = path
+                    PanoramaManager.shouldUpdateImage = true
+                    PanoramaManager.shouldResetCameraAngle = false
+                    self.svimage = img
+                }
+                return
             } else {
                 self.errorMsg = nil
                 self.isLoading = true
             }
 
-            await self.mapStore.loadStreetViewScene(id: nextId) { item in
-                if let item {
-                    self.streetViewScene = item
-                    self.loadSVImage()
-                } else {
-                    self.isLoading = false
-                }
-            }
+            await self.mapStore.loadStreetViewScene(id: nextId)
+            self.loadSVImage()
         }
     }
 

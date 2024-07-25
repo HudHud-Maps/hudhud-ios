@@ -382,17 +382,19 @@ struct ContentView: View {
                 Spacer()
             }
             .overlay(alignment: .top) {
-                if self.mapStore.streetViewScene != nil {
-                    StreetViewV2(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
-                        .onChange(of: self.mapStore.streetViewScene) { newValue in
-                            if newValue == nil {
-                                self.mapStore.searchShown = true
+                VStack {
+                    if self.mapStore.streetViewScene != nil {
+                        StreetViewV2(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
+                            .onChange(of: self.mapStore.fullScreenStreetView) { newValue in
+                                self.mapStore.searchShown = !newValue
                             }
-                        }
-                        .onChange(of: self.mapStore.fullScreenStreetView) { newValue in
-                            self.mapStore.searchShown = !newValue
-                        }
+                    }
                 }
+                .onChange(of: self.mapStore.streetViewScene) { newValue in
+                    if newValue == nil {
+                        self.mapStore.searchShown = true
+                    }
+                } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
         }
     }

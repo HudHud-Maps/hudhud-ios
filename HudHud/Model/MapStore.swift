@@ -325,15 +325,14 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
-    func loadStreetViewScene(id: Int, block: ((_ item: StreetViewScene?) -> Void)?) {
+    func loadStreetViewScene(id: Int) {
         Task {
             do {
                 if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
                     self.streetViewScene = streetViewScene
-                    block?(streetViewScene)
                 }
             } catch {
-                Logger.streetViewScene.error("error \(error)")
+                Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
             }
         }
     }
