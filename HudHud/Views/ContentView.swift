@@ -369,14 +369,6 @@ struct ContentView: View {
                     return .systemAction
                 })
                 .environmentObject(self.notificationQueue)
-                .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
-                    self.notificationQueue.removeFirst()
-                }, content: {
-                    if let notification = self.notificationQueue.currentNotification {
-                        NotificationBanner(notification: notification)
-                            .padding(.horizontal, 8)
-                    }
-                })
             VStack {
                 if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
