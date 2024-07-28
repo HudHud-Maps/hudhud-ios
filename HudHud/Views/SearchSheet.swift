@@ -44,13 +44,13 @@ struct SearchSheet: View {
                             HStack {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
-                                    Button(action: {
+                                    Button {
                                         self.searchStore.searchText = ""
-                                    }, label: {
+                                    } label: {
                                         Image(systemSymbol: .multiplyCircleFill)
                                             .foregroundColor(.gray)
-                                            .padding(.vertical)
-                                    })
+                                            .frame(minWidth: 44, minHeight: 44)
+                                    }
                                 }
                             }
                         )
