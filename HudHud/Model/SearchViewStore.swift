@@ -110,6 +110,16 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: - Internal
 
+    func endTrip() {
+        self.mapStore.waypoints = nil
+        self.mapStore.selectedItem = nil
+        self.mapStore.displayableItems = []
+        self.mapStore.routes = nil
+        self.searchText = ""
+        self.mapStore.navigationProgress = .none
+        self.mapStore.allowedDetents = [.small, .third, .large]
+    }
+
     func getCurrentLocation() async -> CLLocationCoordinate2D? {
         guard let currentLocation = try? await self.locationManager.requestLocation().location?.coordinate else {
             return nil

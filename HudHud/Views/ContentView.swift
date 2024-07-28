@@ -164,6 +164,10 @@ struct ContentView: View {
                 .iconRotation(featurePropertyNamed: "heading")
         }
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
+            if self.mapStore.navigationProgress == .feedback {
+                self.searchViewStore.endTrip()
+                return
+            }
             self.mapViewStore.didTapOnMap(containing: features)
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
