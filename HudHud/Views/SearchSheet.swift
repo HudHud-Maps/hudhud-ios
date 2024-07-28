@@ -57,13 +57,13 @@ struct SearchSheet: View {
                         .padding(.horizontal, 10)
                 }
                 switch self.searchStore.searchType {
-                case .returnPOILocation, .favorites, .categories:
+                case .returnPOILocation, .favorites:
                     Button("Cancel", action: {
                         self.dismiss()
                     })
                     .foregroundColor(.gray)
                     .padding(.trailing)
-                case .selectPOI:
+                case .selectPOI, .categories:
                     EmptyView()
                 }
             }

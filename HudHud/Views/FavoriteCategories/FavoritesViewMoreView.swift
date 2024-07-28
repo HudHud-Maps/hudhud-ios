@@ -28,13 +28,13 @@ struct FavoritesViewMoreView: View {
         VStack(alignment: .leading) {
             VStack {
                 switch self.searchStore.searchType {
-                case .returnPOILocation, .categories, .favorites:
+                case .returnPOILocation, .favorites:
                     Button("Cancel", action: {
                         self.dismiss()
                     })
                     .foregroundColor(.gray)
                     .padding(.trailing)
-                case .selectPOI:
+                case .selectPOI, .categories:
                     EmptyView()
                 }
             }
