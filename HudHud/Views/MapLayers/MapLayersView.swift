@@ -41,7 +41,7 @@ struct MapLayersView: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
-                        var groupedLayers = Dictionary(grouping: mapLayers, by: { $0.type })
+                        let groupedLayers = Dictionary(grouping: mapLayers, by: { $0.type })
                         let sortedTypes = groupedLayers.keys.sorted {
                             $0 == "map_type" ? true : $1 == "map_details"
                         }
