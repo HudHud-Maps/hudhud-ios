@@ -58,7 +58,7 @@ struct ContentView: View {
             let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
             return viewController
-        }(), styleURL: URL(string: self.mapStore.mapStyleURLString)!, camera: self.$mapStore.camera) {
+        }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
             if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationProgress == .none {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
@@ -271,6 +271,7 @@ struct ContentView: View {
                     do {
                         let mapLayers = try await mapLayerStore.getMaplayers()
                         self.mapLayerStore.hudhudMapLayers = mapLayers
+                        self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
                     } catch {
                         self.mapLayerStore.hudhudMapLayers = nil
                         Logger.searchView.error("\(error.localizedDescription)")

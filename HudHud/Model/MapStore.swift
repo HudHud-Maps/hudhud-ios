@@ -54,7 +54,7 @@ final class MapStore: ObservableObject {
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
 
-    @AppStorage("mapStyleURL") var mapStyleURLString: String = "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud"
+    @AppStorage("mapStyleURL") var mapStyleURLString: String = ""
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
@@ -281,6 +281,37 @@ final class MapStore: ObservableObject {
         }
         return 0
     }
+
+    func mapStyleUrl() -> URL {
+        guard let styleUrl = URL(string: self.mapStyleURLString) else {
+            return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
+        }
+        return styleUrl
+    }
+
+    func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
+        // On first launch weuse the first one returned and set it as default.
+        if self.mapStyleURLString.isEmpty {
+            // Set the first map style as default
+            if let firstLayer = mapLayers.first {
+                self.mapStyleURLString = firstLayer.styleUrl.absoluteString
+            } else {
+                // Handle the case where no map layers are returned from the server
+                Logger().error("No available map layers from the server.")
+            }
+        } else {
+            if !mapLayers.contains(where: { $0.styleUrl.absoluteString == self.mapStyleURLString }) {
+                // The currently used style is not included in the map layers from the server
+                if let firstLayer = mapLayers.first {
+                    self.mapStyleURLString = firstLayer.styleUrl.absoluteString
+                } else {
+                    // Handle the case where mapLayers is empty if needed
+                    Logger().error("No available map layers from the server.")
+                }
+            }
+        }
+    }
+
 }
 
 // MARK: - NavigationViewControllerDelegate

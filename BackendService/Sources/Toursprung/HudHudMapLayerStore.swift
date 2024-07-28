@@ -50,7 +50,6 @@ public class HudHudMapLayerStore: ObservableObject {
                     }
                     return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL, type: mapStyle._type.rawValue)
                 }
-                print(mapLayer)
                 return mapLayer
             }
         case let .undocumented(statusCode: statusCode, payload):
