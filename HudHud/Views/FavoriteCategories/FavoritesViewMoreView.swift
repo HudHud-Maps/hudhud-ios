@@ -28,7 +28,7 @@ struct FavoritesViewMoreView: View {
         VStack(alignment: .leading) {
             VStack {
                 switch self.searchStore.searchType {
-                case .returnPOILocation:
+                case .returnPOILocation, .categories, .favorites:
                     Button("Cancel", action: {
                         self.dismiss()
                     })
@@ -36,12 +36,6 @@ struct FavoritesViewMoreView: View {
                     .padding(.trailing)
                 case .selectPOI:
                     EmptyView()
-                case .favorites:
-                    Button("Cancel", action: {
-                        self.dismiss()
-                    })
-                    .foregroundColor(.gray)
-                    .padding(.trailing)
                 }
             }
             .background(.thickMaterial)

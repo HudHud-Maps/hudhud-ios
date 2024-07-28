@@ -57,7 +57,7 @@ struct SearchSheet: View {
                         .padding(.horizontal, 10)
                 }
                 switch self.searchStore.searchType {
-                case .returnPOILocation, .favorites:
+                case .returnPOILocation, .favorites, .categories:
                     Button("Cancel", action: {
                         self.dismiss()
                     })
@@ -100,10 +100,7 @@ struct SearchSheet: View {
                                             completion?(.waypoint(selectedItem))
                                             self.dismiss()
                                         }
-                                    case .selectPOI:
-                                        break
-
-                                    case .favorites:
+                                    case .selectPOI, .categories, .favorites:
                                         break
                                     }
                                 }

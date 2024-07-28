@@ -23,6 +23,7 @@ final class SearchViewStore: ObservableObject {
 
         case selectPOI
         case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
+        case categories
         case favorites
 
         // MARK: - Internal
@@ -179,12 +180,12 @@ final class SearchViewStore: ObservableObject {
     }
 
     func fetch(category: String) async {
+        self.searchType = .categories
         self.isSheetLoading = true
         self.mapStore.selectedDetent = .third
         defer { isSheetLoading = false }
         do {
             let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
-            self.mapStore.selectedDetent = .small
             self.mapStore.displayableItems = items.map(DisplayableRow.resolvedItem)
         } catch {
             self.searchError = error
