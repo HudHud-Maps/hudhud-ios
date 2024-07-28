@@ -55,6 +55,7 @@ final class MapStore: ObservableObject {
     var moveToUserLocation = false
 
     @AppStorage("mapStyleURL") var mapStyleURLString: String = ""
+    @AppStorage("mapStyleLayer") var mapStyleLayer: String = "" // only for testing the selected layers
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
@@ -295,6 +296,7 @@ final class MapStore: ObservableObject {
             // Set the first map style as default
             if let firstLayer = mapLayers.first {
                 self.mapStyleURLString = firstLayer.styleUrl.absoluteString
+                self.mapStyleLayer = mapLayers.first?.name ?? "" // only for testing
             } else {
                 // Handle the case where no map layers are returned from the server
                 Logger().error("No available map layers from the server.")

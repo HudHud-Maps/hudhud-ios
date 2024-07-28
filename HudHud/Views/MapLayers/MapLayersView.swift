@@ -13,7 +13,6 @@ import SwiftUI
 struct MapLayersView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var mapStore: MapStore
-    @State var currentlySelected: String?
     var hudhudMapLayerStore: HudHudMapLayerStore
 
     var body: some View {
@@ -88,11 +87,13 @@ struct MapLayersView: View {
                     }
                     VStack(alignment: .center, spacing: 10) {
                         Button {
-                            self.currentlySelected = layer.name
                             // this if just for testing I will remove it before the merge
                             if layer.name == "Satellite" {
+                                self.mapStore.mapStyleLayer = layer.name // only for testing
                                 self.mapStore.mapStyleURLString = "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=NuXvtnILACeadkgsn5xZ"
+                                Logger().info("Satellite selected as map Style")
                             } else {
+                                self.mapStore.mapStyleLayer = layer.name // only for testing
                                 self.mapStore.mapStyleURLString = layer.styleUrl.absoluteString
                                 Logger().info("\(layer.name) selected as map Style")
                             }
@@ -107,14 +108,18 @@ struct MapLayersView: View {
                             .frame(width: (UIScreen.main.bounds.width / 2) - 20, height: 119)
                             .background(Color.Colors.General._03LightGrey)
                             .cornerRadius(12)
+                            // here the checknig should only for the url..but currently all the urls are the same so we will check the names of the layer
+                            //  self.mapStore.mapStyleURLString == layer.styleUrl.absoluteString
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.currentlySelected == layer.name ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
+                                    .stroke(self.mapStore.mapStyleLayer == layer.name ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
                             )
                         }
                         Text(layer.name)
                             .hudhudFont(.footnote)
-                            .foregroundStyle(self.currentlySelected == layer.name ? Color.Colors.General._07BlueMain : Color.Colors.General._02Grey)
+                            // here the checknig should only for the url..but currently all the urls are the same so we will check the names of the layer
+                            //  self.mapStore.mapStyleURLString == layer.styleUrl.absoluteString
+                            .foregroundStyle(self.mapStore.mapStyleLayer == layer.name ? Color.Colors.General._07BlueMain : Color.Colors.General._02Grey)
                     }
                 }
             }
