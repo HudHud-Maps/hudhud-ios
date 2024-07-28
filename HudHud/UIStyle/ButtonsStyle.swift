@@ -10,8 +10,8 @@ import Foundation
 import SwiftUI
 
 struct IconButton: ButtonStyle {
-    let backgroundColor: Color?
-    let foregroundColor: Color?
+    let backgroundColor: Color
+    let foregroundColor: Color
 
     // MARK: - Internal
 
@@ -19,7 +19,7 @@ struct IconButton: ButtonStyle {
         configuration.label
             .padding(.horizontal, 15)
             .padding(.vertical, 8)
-            .foregroundStyle(self.foregroundColor ?? .black)
+            .foregroundStyle(self.foregroundColor)
             .bold()
             .background(self.backgroundColor)
             .clipShape(Capsule())

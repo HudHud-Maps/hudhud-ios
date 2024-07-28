@@ -383,9 +383,6 @@ struct ContentView: View {
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
-                Spacer()
-            }
-            .overlay(alignment: .top) {
                 if self.mapStore.street360View, let item = mapStore.streetViewScene {
                     Street360View(streetViewScene: item, mapStore: self.mapStore, expandedView: { expand in
                         self.mapStore.searchShown = !expand
@@ -394,6 +391,7 @@ struct ContentView: View {
                         self.mapStore.searchShown = true
                     })
                 }
+                Spacer()
             }
         }
     }
