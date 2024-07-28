@@ -57,7 +57,7 @@ struct SearchSheet: View {
                         .padding(.horizontal, 10)
                 }
                 switch self.searchStore.searchType {
-                case .returnPOILocation:
+                case .returnPOILocation, .favorites:
                     Button("Cancel", action: {
                         self.dismiss()
                     })
@@ -65,12 +65,6 @@ struct SearchSheet: View {
                     .padding(.trailing)
                 case .selectPOI:
                     EmptyView()
-                case .favorites:
-                    Button("Cancel", action: {
-                        self.dismiss()
-                    })
-                    .foregroundColor(.gray)
-                    .padding(.trailing)
                 }
             }
             .background(.quinary)
