@@ -207,7 +207,7 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-        .backport.safeAreaPadding(.bottom, self.mapPadding() ? self.sheetPaddingSize() : 0).animation(.easeInOut(duration: 0.5), value: self.mapPadding())
+        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -421,13 +421,6 @@ struct ContentView: View {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
         }
-    }
-
-    func mapPadding() -> Bool {
-        if self.mapStore.searchShown, self.notificationQueue.currentNotification.isNil {
-            return true
-        }
-        return false
     }
 
     func sheetPaddingSize() -> Double {
