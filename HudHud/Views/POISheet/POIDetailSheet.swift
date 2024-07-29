@@ -156,13 +156,23 @@ struct POIDetailSheet: View {
             }
         }
         .task {
+            self.calculateRoute(for: self.item)
+        }
+        .onChange(of: self.item) { newItem in
+            self.calculateRoute(for: newItem)
+        }
+    }
+
+    // MARK: - Private
+
+    private func calculateRoute(for item: ResolvedItem) {
+        Task {
             do {
                 _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
                 guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
                     return
                 }
-                let mapItem = self.item
-                let locationCoordinate = mapItem.coordinate
+                let locationCoordinate = item.coordinate
                 let waypoint1 = Waypoint(location: userLocation)
                 let waypoint2 = Waypoint(coordinate: locationCoordinate)
 

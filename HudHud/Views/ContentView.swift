@@ -202,7 +202,7 @@ struct ContentView: View {
         }
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
         .onLongPressMapGesture(onPressChanged: { mapGesture in
-            if self.searchViewStore.mapStore.selectedItem == nil {
+            if self.searchViewStore.mapStore.selectedItem == nil, self.mapStore.path.isEmpty {
                 let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }

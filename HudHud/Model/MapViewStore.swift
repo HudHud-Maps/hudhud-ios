@@ -45,6 +45,9 @@ class MapViewStore {
         guard let item = extractItemTapped(from: features) else {
             // user tapped nothing - deselect
             Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
+            if !self.mapStore.path.isEmpty {
+                self.mapStore.path.removeLast()
+            }
             self.mapStore.selectedItem = nil
             return
         }
