@@ -207,7 +207,7 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
+        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -378,7 +378,7 @@ struct ContentView: View {
                     }
                 })
             VStack {
-                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
+                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -418,6 +418,14 @@ struct ContentView: View {
         } catch {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
+        }
+    }
+
+    func sheetPaddingSize() -> Double {
+        if self.sheetSize.height > 80 {
+            return 80
+        } else {
+            return self.sheetSize.height
         }
     }
 }
