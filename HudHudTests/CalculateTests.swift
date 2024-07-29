@@ -26,7 +26,7 @@ final class CalculateTests: XCTestCase {
         let options = RouteOptions(waypoints: waypoints)
 
         // Perform route calculation
-        let result = try await routingService.calculate(host: "gh.maptoolkit.net", options: options)
+        let result = try await routingService.calculate(host: "gh.map.dev.hudhud.sa", options: options)
 
         // Then
         XCTAssertGreaterThan(result.routes.count, 0)
@@ -47,7 +47,7 @@ final class CalculateTests: XCTestCase {
 
         // Then
         do {
-            let result = try await routingService.calculate(host: "gh.maptoolkit.net", options: options)
+            let result = try await routingService.calculate(host: "gh.map.dev.hudhud.sa", options: options)
             XCTFail("Expected an error but received a result: \(result)") // Fail the test if no error is thrown
         } catch let error as RoutingService.ToursprungError {
             // Assert that the correct error is thrown with the expected message
@@ -72,7 +72,7 @@ final class CalculateTests: XCTestCase {
 
         // Then
         do {
-            let result = try await routingService.calculate(host: "gh.maptoolkit.net", options: options)
+            let result = try await routingService.calculate(host: "gh.map.dev.hudhud.sa", options: options)
             XCTFail("Expected an error but received a result: \(result)")
         } catch let error as RoutingService.ToursprungError {
             if case let .invalidInput(message) = error {

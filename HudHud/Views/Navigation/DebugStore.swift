@@ -11,7 +11,7 @@ import OSLog
 import SwiftUI
 
 class DebugStore: ObservableObject {
-    @AppStorage("routingHost") var routingHost: String = "gh.maptoolkit.net"
+    @AppStorage("routingHost") var routingHost: String = "gh.map.dev.hudhud.sa"
 
     @Published var simulateRide: Bool = UIApplication.environment == .development {
         didSet {
