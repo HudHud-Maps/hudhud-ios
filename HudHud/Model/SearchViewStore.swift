@@ -181,31 +181,6 @@ final class SearchViewStore: ObservableObject {
             Logger.poiData.error("fetching category error: \(error)")
         }
     }
-
-    // MARK: - Private
-
-    private func bindSearchAutoComplete() {
-        self.$searchText
-            .removeDuplicates()
-            .sink { [weak self] searchTerm in
-                guard let self, self.searchType != .categories else { return }
-                switch self.mode {
-                case let .live(provider):
-                    self.performSearch(with: provider, term: searchTerm)
-                case .preview:
-                    self.mapStore.displayableItems = [
-                        DisplayableRow.starbucks,
-                        .ketchup,
-                        .publicPlace,
-                        .artwork,
-                        .pharmacy,
-                        .supermarket
-                    ]
-                }
-            }
-            .store(in: &self.cancellables)
-    }
-
 }
 
 // MARK: - Private
@@ -249,6 +224,29 @@ private extension SearchViewStore {
             }
         }
     }
+
+    func bindSearchAutoComplete() {
+        self.$searchText
+            .removeDuplicates()
+            .sink { [weak self] searchTerm in
+                guard let self, self.searchType != .categories else { return }
+                switch self.mode {
+                case let .live(provider):
+                    self.performSearch(with: provider, term: searchTerm)
+                case .preview:
+                    self.mapStore.displayableItems = [
+                        DisplayableRow.starbucks,
+                        .ketchup,
+                        .publicPlace,
+                        .artwork,
+                        .pharmacy,
+                        .supermarket
+                    ]
+                }
+            }
+            .store(in: &self.cancellables)
+    }
+
 }
 
 // MARK: - Previewable
