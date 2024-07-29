@@ -173,13 +173,14 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var isOpen: Bool?
     public var trendingImage: String?
 
-    public var mediaURLs: [MediaURLs]?
+    public var mediaURLs: [URL]
 
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, isOpen
         case ratingsCount = "ratings_count"
         case trendingImage = "trending_image_url"
         case color
+        case mediaURLs = "media_urls"
     }
 
     public var description: String {
@@ -192,7 +193,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [MediaURLs]? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = []) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -225,6 +226,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.ratingsCount = try container.decodeIfPresent(Int.self, forKey: .ratingsCount)
         self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
         self.systemColor = try container.decode(SystemColor.self, forKey: .color)
+        self.mediaURLs = try container.decode([URL].self, forKey: .mediaURLs)
     }
 
     // MARK: - Public
@@ -257,20 +259,6 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         hasher.combine(self.id)
         hasher.combine(self.title)
         hasher.combine(self.subtitle)
-    }
-}
-
-// MARK: - MediaURLs
-
-public struct MediaURLs: Codable {
-    public var type: String?
-    public var url: String?
-
-    // MARK: - Lifecycle
-
-    public init(type: String?, url: String?) {
-        self.type = type
-        self.url = url
     }
 }
 
@@ -319,7 +307,8 @@ public extension ResolvedItem {
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
                                       color: .systemRed,
                                       phone: "0503539560",
-                                      website: URL(string: "https://hudhud.sa"))
+                                      website: URL(string: "https://hudhud.sa"),
+                                      mediaURLs: .mediaURLs)
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
                                         title: "Starbucks",
@@ -328,14 +317,16 @@ public extension ResolvedItem {
                                         coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
                                         color: .systemRed,
                                         phone: "0503539560",
-                                        website: URL(string: "https://hudhud.sa"))
+                                        website: URL(string: "https://hudhud.sa"),
+                                        mediaURLs: .mediaURLs)
 
     static let publicPlace = ResolvedItem(id: UUID().uuidString,
                                           title: "publicPlace",
                                           subtitle: "Garden - Alyasmen - Riyadh",
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
-                                          color: .systemRed)
+                                          color: .systemRed,
+                                          mediaURLs: .mediaURLs)
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
                                       title: "Artwork",
@@ -344,7 +335,8 @@ public extension ResolvedItem {
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
                                       color: .systemRed,
                                       phone: "0503539560",
-                                      website: URL(string: "https://hudhud.sa"))
+                                      website: URL(string: "https://hudhud.sa"),
+                                      mediaURLs: .mediaURLs)
 
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
                                        title: "Pharmacy",
@@ -353,7 +345,8 @@ public extension ResolvedItem {
                                        coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                                        color: .systemRed,
                                        phone: "0503539560",
-                                       website: URL(string: "https://hudhud.sa"))
+                                       website: URL(string: "https://hudhud.sa"),
+                                       mediaURLs: .mediaURLs)
 
     static let supermarket = ResolvedItem(id: UUID().uuidString,
                                           title: "Supermarket",
@@ -362,7 +355,8 @@ public extension ResolvedItem {
                                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
                                           color: .systemRed,
                                           phone: "0503539560",
-                                          website: URL(string: "https://hudhud.sa"))
+                                          website: URL(string: "https://hudhud.sa"),
+                                          mediaURLs: .mediaURLs)
 }
 
 public extension DisplayableRow {
@@ -474,3 +468,14 @@ public extension DisplayableRow {
  	}
  }
  */
+
+public extension [URL] {
+    static let mediaURLs: Self = [
+        // swiftlint:disable:next force_unwrapping
+        URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
+        // swiftlint:disable:next force_unwrapping
+        URL(string: "https://img.freepik.com/free-photo/seafood-sushi-dish-with-details-simple-black-background_23-2151349421.jpg?t=st=1720950213~exp=1720953813~hmac=f62de410f692c7d4b775f8314723f42038aab9b54498e588739272b9879b4895&w=826")!,
+        // swiftlint:disable:next force_unwrapping
+        URL(string: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")!
+    ]
+}
