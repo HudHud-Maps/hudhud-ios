@@ -53,9 +53,7 @@ final class MapStore: ObservableObject {
     var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
-
-    @AppStorage("mapStyleURL") var mapStyleURLString: String = ""
-    @AppStorage("mapStyleLayer") var mapStyleLayer: String = "" // only for testing the selected layers
+    @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
@@ -247,7 +245,7 @@ final class MapStore: ObservableObject {
         if let sheetSubview = navigationPathItem as? SheetSubView {
             switch sheetSubview {
             case .mapStyle:
-                self.allowedDetents = [.small, .medium]
+                self.allowedDetents = [.medium]
                 self.selectedDetent = .medium
             case .debugView:
                 self.allowedDetents = [.large]
@@ -284,32 +282,31 @@ final class MapStore: ObservableObject {
     }
 
     func mapStyleUrl() -> URL {
-        guard let styleUrl = URL(string: self.mapStyleURLString) else {
+        guard let styleUrl = self.mapStyleLayer?.styleUrl else {
             return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
         }
         return styleUrl
     }
 
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
-        // On first launch weuse the first one returned and set it as default.
-        if self.mapStyleURLString.isEmpty {
-            // Set the first map style as default
-            if let firstLayer = mapLayers.first {
-                self.mapStyleURLString = firstLayer.styleUrl.absoluteString
-                self.mapStyleLayer = mapLayers.first?.name ?? "" // only for testing
-            } else {
-                // Handle the case where no map layers are returned from the server
-                Logger().error("No available map layers from the server.")
-            }
-        } else {
-            if !mapLayers.contains(where: { $0.styleUrl.absoluteString == self.mapStyleURLString }) {
+        // On first launch we use the first one returned and set it as default.
+        if let mapLayer = self.mapStyleLayer {
+            if !mapLayers.contains(mapLayer) {
                 // The currently used style is not included in the map layers from the server
                 if let firstLayer = mapLayers.first {
-                    self.mapStyleURLString = firstLayer.styleUrl.absoluteString
+                    self.mapStyleLayer = firstLayer
                 } else {
                     // Handle the case where mapLayers is empty if needed
                     Logger().error("No available map layers from the server.")
                 }
+            }
+        } else {
+            // Set the first map style as default
+            if let firstLayer = mapLayers.first {
+                self.mapStyleLayer = firstLayer
+            } else {
+                // Handle the case where no map layers are returned from the server
+                Logger().error("No available map layers from the server.")
             }
         }
     }

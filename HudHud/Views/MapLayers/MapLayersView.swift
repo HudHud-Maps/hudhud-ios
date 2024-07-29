@@ -40,7 +40,7 @@ struct MapLayersView: View {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
-                        let groupedLayers = Dictionary(grouping: mapLayers, by: { $0.type })
+                        let groupedLayers = Dictionary(grouping: mapLayers, by: { $0.type.rawValue })
                         let sortedTypes = groupedLayers.keys.sorted {
                             $0 == "map_type" ? true : $1 == "map_details"
                         }
@@ -64,7 +64,7 @@ struct MapLayersView: View {
 
     func mapLayerView(mapLayers: [HudHudMapLayer]) -> some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text(mapLayers.first?.displayType ?? "")
+            Text(mapLayers.first?.type.description ?? "")
                 .hudhudFont(.footnote)
                 .foregroundStyle(Color.Colors.General._02Grey)
                 .padding(.leading, 10)
@@ -72,6 +72,7 @@ struct MapLayersView: View {
                 ScrollView(.horizontal) {
                     self.layersView(mapLayers: mapLayers)
                 }.scrollIndicators(.hidden)
+                    .padding(.horizontal)
             } else {
                 self.layersView(mapLayers: mapLayers)
             }
@@ -82,21 +83,13 @@ struct MapLayersView: View {
         HStack {
             ForEach(mapLayers, id: \.self) { layer in
                 HStack {
-                    if mapLayers.last?.type != layer.type {
+                    if mapLayers.last?.type.description != layer.type.description {
                         Divider()
                     }
                     VStack(alignment: .center, spacing: 10) {
                         Button {
-                            // this if just for testing I will remove it before the merge
-                            if layer.name == "Satellite" {
-                                self.mapStore.mapStyleLayer = layer.name // only for testing
-                                self.mapStore.mapStyleURLString = "https://api.maptiler.com/tiles/v3-openmaptiles/tiles.json?key=NuXvtnILACeadkgsn5xZ"
-                                Logger().info("Satellite selected as map Style")
-                            } else {
-                                self.mapStore.mapStyleLayer = layer.name // only for testing
-                                self.mapStore.mapStyleURLString = layer.styleUrl.absoluteString
-                                Logger().info("\(layer.name) selected as map Style")
-                            }
+                            self.mapStore.mapStyleLayer = layer
+                            Logger().info("\(layer.name) selected as map Style")
                         } label: {
                             AsyncImage(url: layer.thumbnailUrl) { image in
                                 image
@@ -108,18 +101,15 @@ struct MapLayersView: View {
                             .frame(width: (UIScreen.main.bounds.width / 2) - 20, height: 119)
                             .background(Color.Colors.General._03LightGrey)
                             .cornerRadius(12)
-                            // here the checknig should only for the url..but currently all the urls are the same so we will check the names of the layer
-                            //  self.mapStore.mapStyleURLString == layer.styleUrl.absoluteString
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.mapStore.mapStyleLayer == layer.name ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
+                                    .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
                             )
                         }
                         Text(layer.name)
                             .hudhudFont(.footnote)
-                            // here the checknig should only for the url..but currently all the urls are the same so we will check the names of the layer
-                            //  self.mapStore.mapStyleURLString == layer.styleUrl.absoluteString
-                            .foregroundStyle(self.mapStore.mapStyleLayer == layer.name ? Color.Colors.General._07BlueMain : Color.Colors.General._02Grey)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                            .foregroundStyle(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : Color.Colors.General._02Grey)
                     }
                 }
             }
