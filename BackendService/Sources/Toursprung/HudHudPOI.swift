@@ -42,13 +42,14 @@ public struct POIResponse {
 public enum DisplayableRow: Hashable, Identifiable {
     case category(Category)
     case resolvedItem(ResolvedItem)
+    case categoryItem(ResolvedItem)
     case predictionItem(PredictionItem)
 
     public var resolvedItem: ResolvedItem? {
         switch self {
         case .category, .predictionItem:
             nil
-        case let .resolvedItem(resolvedItem):
+        case let .resolvedItem(resolvedItem), let .categoryItem(resolvedItem):
             resolvedItem
         }
     }
@@ -61,6 +62,8 @@ public enum DisplayableRow: Hashable, Identifiable {
             resolvedItem.id
         case let .predictionItem(predictionItem):
             predictionItem.id
+        case let .categoryItem(resolvedItem):
+            resolvedItem.id
         }
     }
 
@@ -72,6 +75,8 @@ public enum DisplayableRow: Hashable, Identifiable {
             resolvedItem.type
         case let .predictionItem(predictionItem):
             predictionItem.type
+        case let .categoryItem(resolvedItem):
+            resolvedItem.type
         }
     }
 
