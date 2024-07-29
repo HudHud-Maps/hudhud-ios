@@ -155,7 +155,7 @@ struct POIDetailSheet: View {
                 }
             }
         }
-        .task {
+        .onAppear {
             self.calculateRoute(for: self.item)
         }
         .onChange(of: self.item) { newItem in
