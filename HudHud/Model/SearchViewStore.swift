@@ -23,6 +23,7 @@ final class SearchViewStore: ObservableObject {
 
         case selectPOI
         case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
+        case categories
         case favorites
 
         // MARK: - Internal
@@ -30,14 +31,16 @@ final class SearchViewStore: ObservableObject {
         static func == (lhs: SearchType, rhs: SearchType) -> Bool {
             switch (lhs, rhs) {
             case (.selectPOI, .selectPOI):
-                return true
+                true
             case let (.returnPOILocation(lhsCompletion), .returnPOILocation(rhsCompletion)):
                 // Compare the optional closures using their identity
-                return lhsCompletion as AnyObject === rhsCompletion as AnyObject
+                lhsCompletion as AnyObject === rhsCompletion as AnyObject
             case (.favorites, .favorites):
-                return true
+                true
+            case (.categories, categories):
+                true
             default:
-                return false
+                false
             }
         }
     }
@@ -83,24 +86,7 @@ final class SearchViewStore: ObservableObject {
         self.mapStore = mapStore
         self.mode = mode
 
-        self.$searchText
-            .removeDuplicates()
-            .sink { newValue in
-                switch self.mode {
-                case let .live(provider):
-                    self.performSearch(with: provider, term: newValue)
-                case .preview:
-                    self.mapStore.displayableItems = [
-                        DisplayableRow.starbucks,
-                        .ketchup,
-                        .publicPlace,
-                        .artwork,
-                        .pharmacy,
-                        .supermarket
-                    ]
-                }
-            }
-            .store(in: &self.cancellables)
+        self.bindSearchAutoComplete()
         if case .preview = mode {
             let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
@@ -179,12 +165,16 @@ final class SearchViewStore: ObservableObject {
     }
 
     func fetch(category: String) async {
-        self.isSheetLoading = true
+        self.searchType = .categories
+        defer { self.searchType = .selectPOI }
+
+        self.searchText = category
         self.mapStore.selectedDetent = .third
+
+        self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
             let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
-            self.mapStore.selectedDetent = .small
             self.mapStore.displayableItems = items.map(DisplayableRow.resolvedItem)
         } catch {
             self.searchError = error
@@ -234,6 +224,29 @@ private extension SearchViewStore {
             }
         }
     }
+
+    func bindSearchAutoComplete() {
+        self.$searchText
+            .removeDuplicates()
+            .sink { [weak self] searchTerm in
+                guard let self, self.searchType != .categories else { return }
+                switch self.mode {
+                case let .live(provider):
+                    self.performSearch(with: provider, term: searchTerm)
+                case .preview:
+                    self.mapStore.displayableItems = [
+                        DisplayableRow.starbucks,
+                        .ketchup,
+                        .publicPlace,
+                        .artwork,
+                        .pharmacy,
+                        .supermarket
+                    ]
+                }
+            }
+            .store(in: &self.cancellables)
+    }
+
 }
 
 // MARK: - Previewable
