@@ -36,7 +36,7 @@ struct CategoryItemView: View {
                     Text(self.item.category ?? "")
                     if let distance = item.distance {
                         Text("•")
-                        Text("\(distanceFormatter.string(fromMeters: distance))")
+                        Text("\(LengthFormatter.distance.string(fromMeters: distance))")
                     }
                     Spacer()
                 }
@@ -125,12 +125,6 @@ struct RatingView: View {
     }
 }
 
-let distanceFormatter: LengthFormatter = {
-    let formatter = LengthFormatter()
-    formatter.unitStyle = .short
-    return formatter
-}()
-
 // MARK: - CategoryIconButton
 
 private struct CategoryIconButton: View {
@@ -152,6 +146,14 @@ private struct CategoryIconButton: View {
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .shadow(radius: 5)
     }
+}
+
+private extension LengthFormatter {
+    static let distance: LengthFormatter = {
+        let formatter = LengthFormatter()
+        formatter.unitStyle = .short
+        return formatter
+    }()
 }
 
 #Preview {
