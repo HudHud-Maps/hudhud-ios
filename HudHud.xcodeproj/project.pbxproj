@@ -122,7 +122,7 @@
 		F20D974B2C46B9E300457928 /* DownloadFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20D97492C46B9E300457928 /* DownloadFile.swift */; };
 		F20D974E2C46C65600457928 /* SearchResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20D974D2C46C65600457928 /* SearchResultItemView.swift */; };
 		F22401782C58D61B008865AE /* SwiftUIPanoramaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */; };
-		F2E81DD82C3EC45C00B1F3DD /* StreetViewV2.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E81DD72C3EC45C00B1F3DD /* StreetViewV2.swift */; };
+		F2E81DD82C3EC45C00B1F3DD /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */; };
 		F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */; };
 		F4A353E85F0E0AF34C4240CE /* PlusJakartaSans-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D96678092BFF998BE9F3D925 /* PlusJakartaSans-ExtraLight.ttf */; };
 		F7056410CE68B8E8068BD2F2 /* PlusJakartaSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBD57BB347BF0665C6B93EF9 /* PlusJakartaSans-Bold.ttf */; };
@@ -263,7 +263,7 @@
 		F20D97482C46B9E300457928 /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		F20D97492C46B9E300457928 /* DownloadFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadFile.swift; sourceTree = "<group>"; };
 		F20D974D2C46C65600457928 /* SearchResultItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItemView.swift; sourceTree = "<group>"; };
-		F2E81DD72C3EC45C00B1F3DD /* StreetViewV2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewV2.swift; sourceTree = "<group>"; };
+		F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
 		F3BB5BFA8CB42C0446317C57 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -618,7 +618,7 @@
 		F2AF14EE2C50F6F4003E4F54 /* StreetView */ = {
 			isa = PBXGroup;
 			children = (
-				F2E81DD72C3EC45C00B1F3DD /* StreetViewV2.swift */,
+				F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */,
 				F20D97492C46B9E300457928 /* DownloadFile.swift */,
 				F20D97482C46B9E300457928 /* DownloadManager.swift */,
 			);
@@ -910,7 +910,7 @@
 				061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */,
 				793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */,
 				A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */,
-				F2E81DD82C3EC45C00B1F3DD /* StreetViewV2.swift in Sources */,
+				F2E81DD82C3EC45C00B1F3DD /* StreetView.swift in Sources */,
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
 				F20D974B2C46B9E300457928 /* DownloadFile.swift in Sources */,
