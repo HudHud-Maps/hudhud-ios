@@ -29,6 +29,7 @@ enum SelectedPointOfInterest {
 class MapViewStore {
 
     private let mapStore: MapStore
+    private let hudhudResolver = HudHudPOI()
 
     // MARK: - Lifecycle
 
@@ -61,19 +62,30 @@ class MapViewStore {
                 Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
             }
         case let .mapElement(resolvedItem):
-            let itemIfAvailable = self.mapStore.displayableItems
-                .first { $0.id == resolvedItem.id }
-            if itemIfAvailable == nil {
-                self.mapStore.displayableItems.append(.resolvedItem(resolvedItem))
+            Task {
+                await self.handle(mapElement: resolvedItem)
             }
-            self.mapStore.selectedItem = resolvedItem
-
         case let .streetViewScene(sceneID):
             self.mapStore.loadStreetViewScene(id: sceneID)
         }
     }
 
     // MARK: - Private
+
+    private func handle(mapElement item: ResolvedItem) async {
+        let itemIfAvailable = self.mapStore.displayableItems
+            .first { $0.id == item.id }
+        if itemIfAvailable == nil {
+            self.mapStore.displayableItems.append(.resolvedItem(item))
+        }
+        self.mapStore.selectedItem = item
+        guard let detailedItem = try? await hudhudResolver.lookup(id: item.id),
+              // we make sure that this item is still selected
+              detailedItem.id == self.mapStore.selectedItem?.id,
+              let index = self.mapStore.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
+        self.mapStore.displayableItems[index] = .resolvedItem(detailedItem)
+        self.mapStore.selectedItem = detailedItem
+    }
 
     private func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
         for feature in features {

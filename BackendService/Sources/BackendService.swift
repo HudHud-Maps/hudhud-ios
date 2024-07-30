@@ -232,10 +232,6 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Public
 
-    public static func == (lhs: ResolvedItem, rhs: ResolvedItem) -> Bool {
-        return lhs.id == rhs.id
-    }
-
     public func resolve(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         return [AnyDisplayableAsRow(self)]
     }

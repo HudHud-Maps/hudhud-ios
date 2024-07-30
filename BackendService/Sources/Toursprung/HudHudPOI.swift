@@ -136,6 +136,10 @@ public struct HudHudPOI: POIServiceProtocol {
 
     // MARK: - Public
 
+    public func lookup(id: String) async throws -> ResolvedItem? {
+        try await self.lookup(id: id, prediction: ()).first
+    }
+
     public func lookup(id: String, prediction _: Any) async throws -> [ResolvedItem] {
         let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
