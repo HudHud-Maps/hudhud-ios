@@ -132,7 +132,7 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
             let decoded = try decoder.decode(HudHudMapLayer.self, from: data)
             self = decoded
         } catch {
-            print("Decoding error: \(error)")
+            Logger().error("Decoding error: \(error)")
             return nil
         }
     }
