@@ -40,8 +40,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "user-puck-positioning",
-        "revision" : "b4741b0911a652fcb18b272aa4c7dbadab0a6f3e"
+        "branch" : "show-current-speed",
+        "revision" : "b31175a1b0990ea97eb4d7a234ff637be0002a41"
       }
     },
     {
