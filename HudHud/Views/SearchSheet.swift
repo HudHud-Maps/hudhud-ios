@@ -89,10 +89,13 @@ struct SearchSheet: View {
                         ForEach(self.mapStore.displayableItems) { item in
                             switch item {
                             case let .categoryItem(categoryItem):
-                                CategoryItemView(item: categoryItem)
-                                    .listRowSeparator(.hidden)
-                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-                                    .listRowSpacing(0)
+                                CategoryItemView(item: categoryItem) {
+                                    self.mapStore.selectedDetent = .third
+                                    self.mapStore.selectedItem = categoryItem
+                                }
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
                                 Button {
                                     Task {

@@ -238,7 +238,12 @@ public struct HudHudPOI: POIServiceProtocol {
                     coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
                     color: .systemRed,
                     phone: item.phone_number,
-                    website: URL(string: item.website ?? "")
+                    website: URL(string: item.website ?? ""),
+                    rating: item.rating,
+                    ratingsCount: item.ratings_count,
+                    mediaURLs: item.media_urls?
+                        .compactMap { URL(string: $0.url) } ?? [],
+                    distance: item.distance
                 )
             }
         case let .undocumented(statusCode: statusCode, payload):

@@ -14,6 +14,7 @@ import SwiftUI
 struct CategoryItemView: View {
 
     let item: ResolvedItem
+    let directions: () -> Void
     @Environment(\.openURL) var openURL
 
     var body: some View {
@@ -33,9 +34,13 @@ struct CategoryItemView: View {
                 }
                 HStack {
                     Text(self.item.category ?? "")
-                        .hudhudFont(.caption)
+                    if let distance = item.distance {
+                        Text("•")
+                        Text("\(distanceFormatter.string(fromMeters: distance))")
+                    }
                     Spacer()
                 }
+                .hudhudFont(.caption)
                 .foregroundStyle(Color.Colors.General._02Grey)
                 if self.item.isOpen ?? false {
                     Text("Open")
@@ -50,10 +55,9 @@ struct CategoryItemView: View {
                         icon: "arrowright_circle_icon_fill",
                         title: "Directions",
                         foregroundColor: .white,
-                        backgroundColor: Color.Colors.General._07BlueMain
-                    ) {
-                        print("clicked!")
-                    }
+                        backgroundColor: Color.Colors.General._07BlueMain,
+                        onClick: self.directions
+                    )
 
                     if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
                         CategoryIconButton(
@@ -84,6 +88,7 @@ struct CategoryItemView: View {
             }
             .scrollIndicators(.hidden)
         }
+        .padding(.top)
     }
 }
 
@@ -120,6 +125,12 @@ struct RatingView: View {
     }
 }
 
+let distanceFormatter: LengthFormatter = {
+    let formatter = LengthFormatter()
+    formatter.unitStyle = .short
+    return formatter
+}()
+
 // MARK: - CategoryIconButton
 
 private struct CategoryIconButton: View {
@@ -144,5 +155,5 @@ private struct CategoryIconButton: View {
 }
 
 #Preview {
-    CategoryItemView(item: .ketchup)
+    CategoryItemView(item: .ketchup) {}
 }

@@ -160,9 +160,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var subtitle: String
     public var symbol: SFSymbol
     public let systemColor: SystemColor
-
     public var category: String?
-
     public let type: PredictionResult
     public var coordinate: CLLocationCoordinate2D
     public var phone: String?
@@ -172,8 +170,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var ratingsCount: Int?
     public var isOpen: Bool?
     public var trendingImage: String?
-
     public var mediaURLs: [URL]
+    public let distance: Double?
 
     enum CodingKeys: String, CodingKey {
         case id, title, subtitle, category, symbol, type, coordinate, phone, website, rating, isOpen
@@ -181,6 +179,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         case trendingImage = "trending_image_url"
         case color
         case mediaURLs = "media_urls"
+        case distance
     }
 
     public var description: String {
@@ -193,7 +192,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
 
     // MARK: - Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = []) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -209,6 +208,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.trendingImage = trendingImage
         self.mediaURLs = mediaURLs
         self.systemColor = color
+        self.distance = distance
     }
 
     public init(from decoder: Decoder) throws {
@@ -227,6 +227,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         self.trendingImage = try container.decodeIfPresent(String.self, forKey: .trendingImage)
         self.systemColor = try container.decode(SystemColor.self, forKey: .color)
         self.mediaURLs = try container.decode([URL].self, forKey: .mediaURLs)
+        self.distance = try container.decodeIfPresent(Double.self, forKey: .distance)
     }
 
     // MARK: - Public
@@ -253,6 +254,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
         try container.encode(self.systemColor, forKey: .color)
+        try container.encodeIfPresent(self.distance, forKey: .distance)
     }
 
     public func hash(into hasher: inout Hasher) {
