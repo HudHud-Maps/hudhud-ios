@@ -14,5 +14,4 @@ enum MapSourceIdentifier {
     static let selectedPoint = "selectedPoint"
     static var routePoints = "routePoints"
     static var streetViewSymbols = "streetViewSymbols"
-    static var street360ViewPoint = "street360ViewPoint"
 }

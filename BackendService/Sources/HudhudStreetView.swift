@@ -21,7 +21,7 @@ public struct StreetViewItem {
 
 // MARK: - StreetViewScene
 
-public struct StreetViewScene {
+public struct StreetViewScene: Equatable {
     public let id: Int
     public let name: String
     public let nextId: Int?

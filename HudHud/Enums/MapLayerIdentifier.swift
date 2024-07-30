@@ -19,7 +19,6 @@ enum MapLayerIdentifier {
     static let selectedCircle = "selectedCircle"
     static let selectedCircleIcon = "selectedCircleIcon"
     static var simpleSymbols = "simpleSymbols"
-    static var streetViewSymbols = "streetViewSymbols"
 
     // layers that our backend put on our map
     // we use them to query metadata related to points from our map

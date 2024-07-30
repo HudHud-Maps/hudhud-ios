@@ -34,8 +34,8 @@ class DownloadManager {
     }
 
     class func downloadFile(_ path: String,
-                            isThumb: Bool,
-                            progress _: ((_ profress: Float) -> Void)? = nil,
+                            isThumb: Bool = false,
+                            downloadProgress: ((_ progress: Float) -> Void)? = nil,
                             block: @escaping CallBackBlock) {
         let ext = (path as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
@@ -45,16 +45,10 @@ class DownloadManager {
         let newURL = URL(filePath: newPath)
         let newURLTh = URL(filePath: newPathTh)
 
-        if isThumb {
-            guard FileManager.default.fileExists(atPath: newPathTh) == false else {
-                block(newPathTh, nil)
-                return
-            }
-        } else {
-            guard FileManager.default.fileExists(atPath: newPath) == false else {
-                block(newPath, nil)
-                return
-            }
+        let localPath = isThumb ? newPathTh : newPath
+        guard FileManager.default.fileExists(atPath: localPath) == false else {
+            block(localPath, nil)
+            return
         }
 
         guard let fileURL = URL(string: path) else {
@@ -72,8 +66,8 @@ class DownloadManager {
 
         let downloader = FileDownloader()
 
-        downloader.progressHandler = { _ in
-//            Logger.streetViewScene.log("Download progress: \(progress)") // I think this should be removed
+        downloader.progressHandler = { progress in
+            downloadProgress?(progress)
         }
 
         downloader.completionHandler = { location, error in
@@ -111,7 +105,6 @@ class DownloadManager {
                         tmpBlock(newSavedPath, errorMessage)
                     }
                 }
-                // block(newSavedPath, errorMessage)
             }
         }
 

@@ -36,12 +36,6 @@ final class MapStore: ObservableObject {
         case feedback
     }
 
-    enum StreetViewOption: Equatable {
-        case disabled
-        case requestedCurrentLocation
-        case enabled
-    }
-
     enum CameraUpdateState {
         case route(RoutingService.RouteCalculationResult?)
         case selectedItem(ResolvedItem)
@@ -57,7 +51,6 @@ final class MapStore: ObservableObject {
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
-    @Published var streetView: StreetViewOption = .disabled
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
@@ -65,8 +58,8 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
-    @Published var street360View: Bool = false
     @Published var streetViewScene: StreetViewScene?
+    @Published var fullScreenStreetView: Bool = false
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -180,16 +173,6 @@ final class MapStore: ObservableObject {
                 let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
                 feature.attributes["poi_id"] = selectedItem.id
                 feature
-            }
-        }
-    }
-
-    var streetViewSource: ShapeSource {
-        ShapeSource(identifier: MapSourceIdentifier.streetViewSymbols) {
-            if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
-                let streetViewPoint = StreetViewPoint(location: coordinate,
-                                                      heading: self.motionViewModel.position.heading)
-                streetViewPoint.feature
             }
         }
     }
@@ -357,16 +340,14 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
-    func loadStreetViewScene(id: Int, block: ((_ item: StreetViewScene?) -> Void)?) {
+    func loadStreetViewScene(id: Int) {
         Task {
             do {
                 if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
                     self.streetViewScene = streetViewScene
-                    self.street360View = true
-                    block?(streetViewScene)
                 }
             } catch {
-                Logger.streetViewScene.error("error \(error)")
+                Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
             }
         }
     }
