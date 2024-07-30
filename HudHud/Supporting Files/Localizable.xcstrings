@@ -84,7 +84,6 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
-      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -224,9 +223,6 @@
         }
       }
     },
-    "Loading..." : {
-
-    },
     "Map Details" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -288,6 +284,9 @@
     },
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
+    },
+    "Open" : {
+
     },
     "Pitch: %@" : {
       "comment" : "street view"
@@ -403,6 +402,9 @@
           }
         }
       }
+    },
+    "Website" : {
+
     },
     "Work" : {
       "extractionState" : "stale",

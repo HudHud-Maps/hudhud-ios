@@ -36,12 +36,6 @@ final class MapStore: ObservableObject {
         case feedback
     }
 
-    enum StreetViewOption: Equatable {
-        case disabled
-        case requestedCurrentLocation
-        case enabled
-    }
-
     enum CameraUpdateState {
         case route(RoutingService.RouteCalculationResult?)
         case selectedItem(ResolvedItem)
@@ -53,10 +47,10 @@ final class MapStore: ObservableObject {
     var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
+    @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
-    @Published var streetView: StreetViewOption = .disabled
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
@@ -64,8 +58,8 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
-    @Published var street360View: Bool = false
     @Published var streetViewScene: StreetViewScene?
+    @Published var fullScreenStreetView: Bool = false
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -183,16 +177,6 @@ final class MapStore: ObservableObject {
         }
     }
 
-    var streetViewSource: ShapeSource {
-        ShapeSource(identifier: MapSourceIdentifier.streetViewSymbols) {
-            if case .enabled = self.streetView, let coordinate = self.motionViewModel.coordinate {
-                let streetViewPoint = StreetViewPoint(location: coordinate,
-                                                      heading: self.motionViewModel.position.heading)
-                streetViewPoint.feature
-            }
-        }
-    }
-
     var cameraTask: Task<Void, Error>?
 
     // MARK: - Lifecycle
@@ -244,8 +228,8 @@ final class MapStore: ObservableObject {
         if let sheetSubview = navigationPathItem as? SheetSubView {
             switch sheetSubview {
             case .mapStyle:
-                self.allowedDetents = [.small, .third]
-                self.selectedDetent = .third
+                self.allowedDetents = [.medium]
+                self.selectedDetent = .medium
             case .debugView:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
@@ -279,6 +263,37 @@ final class MapStore: ObservableObject {
         }
         return 0
     }
+
+    func mapStyleUrl() -> URL {
+        guard let styleUrl = self.mapStyleLayer?.styleUrl else {
+            return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
+        }
+        return styleUrl
+    }
+
+    func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
+        // On first launch we use the first one returned and set it as default.
+        if let mapLayer = self.mapStyleLayer {
+            if !mapLayers.contains(mapLayer) {
+                // The currently used style is not included in the map layers from the server
+                if let firstLayer = mapLayers.first {
+                    self.mapStyleLayer = firstLayer
+                } else {
+                    // Handle the case where mapLayers is empty if needed
+                    Logger().error("No available map layers from the server.")
+                }
+            }
+        } else {
+            // Set the first map style as default
+            if let firstLayer = mapLayers.first {
+                self.mapStyleLayer = firstLayer
+            } else {
+                // Handle the case where no map layers are returned from the server
+                Logger().error("No available map layers from the server.")
+            }
+        }
+    }
+
 }
 
 // MARK: - NavigationViewControllerDelegate
@@ -325,16 +340,14 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
-    func loadStreetViewScene(id: Int, block: ((_ item: StreetViewScene?) -> Void)?) {
+    func loadStreetViewScene(id: Int) {
         Task {
             do {
                 if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
                     self.streetViewScene = streetViewScene
-                    self.street360View = true
-                    block?(streetViewScene)
                 }
             } catch {
-                Logger.streetViewScene.error("error \(error)")
+                Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
             }
         }
     }

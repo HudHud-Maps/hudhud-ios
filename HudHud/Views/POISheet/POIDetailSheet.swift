@@ -151,7 +151,7 @@ struct POIDetailSheet: View {
                     AdditionalPOIDetailsView(item: self.item, routes: self.routes)
                         .fixedSize()
                         .padding([.top, .trailing, .leading])
-                    POIMediaView(item: self.item)
+                    POIMediaView(mediaURLs: self.item.mediaURLs)
                 }
             }
         }
@@ -203,10 +203,7 @@ struct POIDetailSheet: View {
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
-    let mediaURLs = [MediaURLs(type: "image", url: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77"),
-                     MediaURLs(type: "image", url: "https://img.freepik.com/free-photo/seafood-sushi-dish-with-details-simple-black-background_23-2151349421.jpg?t=st=1720950213~exp=1720953813~hmac=f62de410f692c7d4b775f8314723f42038aab9b54498e588739272b9879b4895&w=826"),
-                     MediaURLs(type: "image", url: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")]
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.selectedItem = ResolvedItem(id: UUID().uuidString, title: "Nozomi", subtitle: "7448 King Fahad Rd, Al Olaya, 4255, Riyadh 12331", category: "Restaurant", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118), color: .systemRed, rating: 4.4, ratingsCount: 230, isOpen: true, mediaURLs: mediaURLs)
+    searchViewStore.mapStore.selectedItem = .artwork
     return ContentView(searchStore: searchViewStore)
 }
