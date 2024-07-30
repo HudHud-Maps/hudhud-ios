@@ -20,7 +20,12 @@ struct CategoriesBannerView: View {
                         Task {
                             await self.searchStore.fetch(category: category.title)
                         }
-                    }.buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white, foregroundColor: category.textColor ?? .black))
+                    }
+                    .frame(minWidth: 44, minHeight: 44) // needed to make the button easier to tap
+                    .buttonStyle(IconButton(
+                        backgroundColor: category.buttonColor ?? .white,
+                        foregroundColor: category.textColor ?? .black
+                    ))
                 }
             }
             .padding(.horizontal)

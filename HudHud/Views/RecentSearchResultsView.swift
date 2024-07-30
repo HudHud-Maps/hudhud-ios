@@ -75,10 +75,7 @@ struct RecentSearchResultsView: View {
                         completion?(.waypoint(selectedItem))
                         self.dismiss()
                     }
-                case .selectPOI:
-                    break
-
-                case .favorites:
+                case .selectPOI, .categories, .favorites:
                     break
                 }
             }
