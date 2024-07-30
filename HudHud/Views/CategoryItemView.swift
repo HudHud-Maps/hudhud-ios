@@ -73,7 +73,7 @@ struct CategoryItemView: View {
                     if let website = item.website {
                         CategoryIconButton(
                             icon: "website_icon_fill",
-                            title: "Web Site",
+                            title: "Website",
                             foregroundColor: Color.Colors.General._01Black,
                             backgroundColor: Color.Colors.General._20ActionButtons
                         ) {
