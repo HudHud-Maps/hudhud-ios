@@ -53,6 +53,7 @@ final class MapStore: ObservableObject {
     var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
+    @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
@@ -244,8 +245,8 @@ final class MapStore: ObservableObject {
         if let sheetSubview = navigationPathItem as? SheetSubView {
             switch sheetSubview {
             case .mapStyle:
-                self.allowedDetents = [.small, .third]
-                self.selectedDetent = .third
+                self.allowedDetents = [.medium]
+                self.selectedDetent = .medium
             case .debugView:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
@@ -279,6 +280,37 @@ final class MapStore: ObservableObject {
         }
         return 0
     }
+
+    func mapStyleUrl() -> URL {
+        guard let styleUrl = self.mapStyleLayer?.styleUrl else {
+            return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
+        }
+        return styleUrl
+    }
+
+    func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
+        // On first launch we use the first one returned and set it as default.
+        if let mapLayer = self.mapStyleLayer {
+            if !mapLayers.contains(mapLayer) {
+                // The currently used style is not included in the map layers from the server
+                if let firstLayer = mapLayers.first {
+                    self.mapStyleLayer = firstLayer
+                } else {
+                    // Handle the case where mapLayers is empty if needed
+                    Logger().error("No available map layers from the server.")
+                }
+            }
+        } else {
+            // Set the first map style as default
+            if let firstLayer = mapLayers.first {
+                self.mapStyleLayer = firstLayer
+            } else {
+                // Handle the case where no map layers are returned from the server
+                Logger().error("No available map layers from the server.")
+            }
+        }
+    }
+
 }
 
 // MARK: - NavigationViewControllerDelegate
