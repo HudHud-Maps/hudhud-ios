@@ -351,6 +351,7 @@ struct ContentView: View {
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
+                Spacer()
             }
             .overlay(alignment: .top) {
                 VStack {
@@ -362,9 +363,7 @@ struct ContentView: View {
                     }
                 }
                 .onChange(of: self.mapStore.streetViewScene) { newValue in
-                    if newValue == nil {
-                        self.mapStore.searchShown = true
-                    }
+                    self.mapStore.searchShown = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
         }
