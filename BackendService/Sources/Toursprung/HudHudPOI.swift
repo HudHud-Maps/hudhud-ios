@@ -236,7 +236,9 @@ public struct HudHudPOI: POIServiceProtocol {
                     category: item.category,
                     type: .hudhud,
                     coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
-                    color: .systemRed
+                    color: .systemRed,
+                    phone: item.phone_number,
+                    website: URL(string: item.website ?? "")
                 )
             }
         case let .undocumented(statusCode: statusCode, payload):

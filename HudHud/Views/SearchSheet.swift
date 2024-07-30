@@ -29,7 +29,7 @@ struct SearchSheet: View {
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
-        return VStack {
+        VStack {
             HStack(spacing: 0) {
                 HStack {
                     Image(systemSymbol: .magnifyingglass)
@@ -87,31 +87,39 @@ struct SearchSheet: View {
                         }
                     } else {
                         ForEach(self.mapStore.displayableItems) { item in
-                            Button {
-                                Task {
-                                    self.searchIsFocused = false
-                                    await self.searchStore.didSelect(item)
-                                    if let resolvedItem = mapStore.selectedItem {
-                                        self.storeRecent(item: resolvedItem)
-                                    }
-                                    switch self.searchStore.searchType {
-                                    case let .returnPOILocation(completion):
-                                        if let selectedItem = self.mapStore.selectedItem {
-                                            completion?(.waypoint(selectedItem))
-                                            self.dismiss()
+                            switch item {
+                            case let .categoryItem(categoryItem):
+                                CategoryItemView(item: categoryItem)
+                                    .listRowSeparator(.hidden)
+                                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                                    .listRowSpacing(0)
+                            case .predictionItem, .category, .resolvedItem:
+                                Button {
+                                    Task {
+                                        self.searchIsFocused = false
+                                        await self.searchStore.didSelect(item)
+                                        if let resolvedItem = mapStore.selectedItem {
+                                            self.storeRecent(item: resolvedItem)
                                         }
-                                    case .selectPOI, .categories, .favorites:
-                                        break
+                                        switch self.searchStore.searchType {
+                                        case let .returnPOILocation(completion):
+                                            if let selectedItem = self.mapStore.selectedItem {
+                                                completion?(.waypoint(selectedItem))
+                                                self.dismiss()
+                                            }
+                                        case .selectPOI, .categories, .favorites:
+                                            break
+                                        }
                                     }
+                                } label: {
+                                    SearchResultItemView(item: SearchResultItem(item), searchText: nil)
+                                        .frame(maxWidth: .infinity)
+                                        .redacted(reason: self.searchStore.isSheetLoading ? .placeholder : [])
                                 }
-                            } label: {
-                                SearchResultItemView(item: SearchResultItem(item), searchText: nil)
-                                    .frame(maxWidth: .infinity)
-                                    .redacted(reason: self.searchStore.isSheetLoading ? .placeholder : [])
+                                .disabled(self.searchStore.isSheetLoading)
+                                .listRowSeparator(.hidden)
+                                .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                             }
-                            .disabled(self.searchStore.isSheetLoading)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                         }
                         .listStyle(.plain)
                         if self.mapStore.displayableItems.isEmpty {
@@ -143,8 +151,6 @@ struct SearchSheet: View {
                     .listRowSeparator(.hidden)
                 }
             }
-
-            .listRowSeparator(.hidden)
             .scrollIndicators(.hidden)
             .listStyle(.plain)
         }

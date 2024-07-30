@@ -303,11 +303,14 @@ public extension ResolvedItem {
     static let ketchup = ResolvedItem(id: UUID().uuidString,
                                       title: "Ketch up",
                                       subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
+                                      category: "Restaurant",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
                                       color: .systemRed,
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"),
+                                      rating: 4,
+                                      ratingsCount: 56,
                                       mediaURLs: .mediaURLs)
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,

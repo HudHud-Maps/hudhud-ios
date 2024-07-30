@@ -175,7 +175,7 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
-            self.mapStore.displayableItems = items.map(DisplayableRow.resolvedItem)
+            self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
