@@ -42,13 +42,14 @@ public struct POIResponse {
 public enum DisplayableRow: Hashable, Identifiable {
     case category(Category)
     case resolvedItem(ResolvedItem)
+    case categoryItem(ResolvedItem)
     case predictionItem(PredictionItem)
 
     public var resolvedItem: ResolvedItem? {
         switch self {
         case .category, .predictionItem:
             nil
-        case let .resolvedItem(resolvedItem):
+        case let .resolvedItem(resolvedItem), let .categoryItem(resolvedItem):
             resolvedItem
         }
     }
@@ -61,6 +62,8 @@ public enum DisplayableRow: Hashable, Identifiable {
             resolvedItem.id
         case let .predictionItem(predictionItem):
             predictionItem.id
+        case let .categoryItem(resolvedItem):
+            resolvedItem.id
         }
     }
 
@@ -72,6 +75,8 @@ public enum DisplayableRow: Hashable, Identifiable {
             resolvedItem.type
         case let .predictionItem(predictionItem):
             predictionItem.type
+        case let .categoryItem(resolvedItem):
+            resolvedItem.type
         }
     }
 
@@ -142,7 +147,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     nil
                 }
-                let mediaURLsList = jsonResponse.data.media_urls?.map { MediaURLs(type: $0._type.rawValue, url: $0.url) }
+                let mediaURLsList = jsonResponse.data.media_urls?.compactMap { URL(string: $0.url) } ?? []
                 return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), color: .systemRed, phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: mediaURLsList)]
             }
         case .notFound:
@@ -231,7 +236,14 @@ public struct HudHudPOI: POIServiceProtocol {
                     category: item.category,
                     type: .hudhud,
                     coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
-                    color: .systemRed
+                    color: .systemRed,
+                    phone: item.phone_number,
+                    website: URL(string: item.website ?? ""),
+                    rating: item.rating,
+                    ratingsCount: item.ratings_count,
+                    mediaURLs: item.media_urls?
+                        .compactMap { URL(string: $0.url) } ?? [],
+                    distance: item.distance
                 )
             }
         case let .undocumented(statusCode: statusCode, payload):

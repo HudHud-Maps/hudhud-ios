@@ -148,12 +148,12 @@ extension Font {
     }
 }
 
-extension Text {
-    func hudhudFont(size: CGFloat, fontWeight: FontWeight = .regular) -> Text {
+extension View {
+    func hudhudFont(size: CGFloat, fontWeight: FontWeight = .regular) -> some View {
         return self.font(.hudhudFont(fontWeight, size: size))
     }
 
-    func hudhudFont(_ textStyle: Font.TextStyle = .body) -> Text {
+    func hudhudFont(_ textStyle: Font.TextStyle = .body) -> some View {
         return self.font(.hudhudFont(Fonts.getWeight(for: textStyle), size: Fonts.getSize(for: textStyle)))
     }
 }

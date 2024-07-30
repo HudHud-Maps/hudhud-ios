@@ -78,6 +78,8 @@ struct SearchResultItem {
             resolvedItem.symbol
         case let .predictionItem(predictionItem):
             predictionItem.symbol
+        case let .categoryItem(resolvedItem):
+            resolvedItem.symbol
         }
     }
 
@@ -89,6 +91,8 @@ struct SearchResultItem {
             resolvedItem.title
         case let .predictionItem(predictionItem):
             predictionItem.title
+        case let .categoryItem(resolvedItem):
+            resolvedItem.title
         }
     }
 
@@ -100,6 +104,8 @@ struct SearchResultItem {
             resolvedItem.subtitle
         case let .predictionItem(predictionItem):
             predictionItem.subtitle
+        case let .categoryItem(resolvedItem):
+            resolvedItem.subtitle
         }
     }
 
@@ -111,6 +117,8 @@ struct SearchResultItem {
             resolvedItem.color
         case .predictionItem:
             Color(.systemRed)
+        case let .categoryItem(resolvedItem):
+            resolvedItem.color
         }
     }
 
