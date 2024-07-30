@@ -313,7 +313,7 @@ public extension ResolvedItem {
                                       website: URL(string: "https://hudhud.sa"),
                                       rating: 4,
                                       ratingsCount: 56,
-                                      mediaURLs: .mediaURLs)
+                                      mediaURLs: .previewMediaURLs)
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
                                         title: "Starbucks",
@@ -323,7 +323,7 @@ public extension ResolvedItem {
                                         color: .systemRed,
                                         phone: "0503539560",
                                         website: URL(string: "https://hudhud.sa"),
-                                        mediaURLs: .mediaURLs)
+                                        mediaURLs: .previewMediaURLs)
 
     static let publicPlace = ResolvedItem(id: UUID().uuidString,
                                           title: "publicPlace",
@@ -331,7 +331,7 @@ public extension ResolvedItem {
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
                                           color: .systemRed,
-                                          mediaURLs: .mediaURLs)
+                                          mediaURLs: .previewMediaURLs)
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
                                       title: "Artwork",
@@ -341,7 +341,7 @@ public extension ResolvedItem {
                                       color: .systemRed,
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"),
-                                      mediaURLs: .mediaURLs)
+                                      mediaURLs: .previewMediaURLs)
 
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
                                        title: "Pharmacy",
@@ -351,7 +351,7 @@ public extension ResolvedItem {
                                        color: .systemRed,
                                        phone: "0503539560",
                                        website: URL(string: "https://hudhud.sa"),
-                                       mediaURLs: .mediaURLs)
+                                       mediaURLs: .previewMediaURLs)
 
     static let supermarket = ResolvedItem(id: UUID().uuidString,
                                           title: "Supermarket",
@@ -361,7 +361,7 @@ public extension ResolvedItem {
                                           color: .systemRed,
                                           phone: "0503539560",
                                           website: URL(string: "https://hudhud.sa"),
-                                          mediaURLs: .mediaURLs)
+                                          mediaURLs: .previewMediaURLs)
 }
 
 public extension DisplayableRow {
@@ -475,7 +475,7 @@ public extension DisplayableRow {
  */
 
 public extension [URL] {
-    static let mediaURLs: Self = [
+    static let previewMediaURLs: Self = [
         // swiftlint:disable:next force_unwrapping
         URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
         // swiftlint:disable:next force_unwrapping

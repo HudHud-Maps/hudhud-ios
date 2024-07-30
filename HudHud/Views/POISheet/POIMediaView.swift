@@ -41,5 +41,5 @@ struct POIMediaView: View {
 }
 
 #Preview {
-    return POIMediaView(mediaURLs: .mediaURLs)
+    return POIMediaView(mediaURLs: .previewMediaURLs)
 }
