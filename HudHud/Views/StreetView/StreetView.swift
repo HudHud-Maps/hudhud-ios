@@ -1,5 +1,5 @@
 //
-//  StreetViewV2.swift
+//  StreetView.swift
 //  HudHud
 //
 //  Created by Aziz Dev on 10/07/2024.
@@ -11,9 +11,9 @@ import OSLog
 import SwiftUI
 import SwiftUIPanoramaViewer
 
-// MARK: - StreetViewV2
+// MARK: - StreetView
 
-struct StreetViewV2: View {
+struct StreetView: View {
 
     @Binding var streetViewScene: StreetViewScene?
     @State var mapStore: MapStore
@@ -27,11 +27,16 @@ struct StreetViewV2: View {
     @State var errorMsg: String?
 
     @State var isLoading: Bool = false
+    @State var progress: Float = 0
 
-    enum NavDirection { case next; case previous; case east; case west }
+    enum NavDirection: Int { case next; case previous; case east; case west }
 
     var showLoading: Bool {
         (self.svimage == nil && self.errorMsg == nil) || self.isLoading
+    }
+
+    var loadingProgress: String {
+        return self.progress > 0 ? "\n\(String(format: "%.2f", self.progress * 100.0))%" : ""
     }
 
     var body: some View {
@@ -51,8 +56,9 @@ struct StreetViewV2: View {
                 VStack {
                     ProgressView()
                         .tint(.white)
-                    Text("Loading...")
+                    Text("Loading..." + self.loadingProgress)
                         .foregroundStyle(.white)
+                        .multilineTextAlignment(.center)
                 }
             }
 
@@ -153,7 +159,8 @@ struct StreetViewV2: View {
                         .opacity(self.streetViewScene?.nextId != nil ? 1.0 : 0.0)
                 }
             }
-            .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
+//            .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
+            .rotation3DEffect(.degrees(Double(self.rotationIndicator)), axis: (x: 0, y: 0, z: 1))
             .rotation3DEffect(.degrees(Double(self.rotationZIndicator)), axis: (x: 1, y: 0, z: 0))
             .padding()
             .padding(.bottom, 44)
@@ -187,23 +194,31 @@ struct StreetViewV2: View {
         }
 
         let link = self.getImageURL(imageName)
-        DownloadManager.downloadFile(link, block: { path, error in
-            if let path {
-                if self.svimageId != path {
-                    AppQueue.main {
-                        PanoramaManager.shouldUpdateImage = true
-                        PanoramaManager.shouldResetCameraAngle = false
-                        let img = UIImage(contentsOfFile: path)
-                        self.svimage = img
-                        self.isLoading = false
-                        self.svimageId = path
-                    }
-                }
-            } else {
-                self.setMessage("Could not load the image - \(error ?? "N/A")")
-                self.isLoading = false
-            }
-        })
+
+        let downloadProgress: ((_ progress: Float) -> Void) = { progress in
+            self.progress = progress
+        }
+
+        DownloadManager.downloadFile(link, downloadProgress: downloadProgress,
+                                     block: { path, error in
+                                         if let path {
+                                             if self.svimageId != path {
+                                                 AppQueue.main {
+                                                     PanoramaManager.shouldUpdateImage = true
+                                                     PanoramaManager.shouldResetCameraAngle = false
+                                                     let img = UIImage(contentsOfFile: path)
+                                                     self.svimage = img
+                                                     self.isLoading = false
+                                                     self.svimageId = path
+                                                 }
+                                             } else {
+                                                 self.isLoading = false
+                                             }
+                                         } else {
+                                             self.setMessage("Could not load the image - \(error ?? "N/A")")
+                                             self.isLoading = false
+                                         }
+                                     })
     }
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
@@ -238,13 +253,17 @@ struct StreetViewV2: View {
 
 }
 
-extension StreetViewV2 {
+extension StreetView {
 
     func loadImage(_ direction: NavDirection) {
         Task {
             let nextItem = self.getNextID(direction)
-            guard let nextId = nextItem.id else { return }
-            guard let nextName = nextItem.name else { return }
+            guard let nextId = nextItem.id else {
+                return
+            }
+            guard let nextName = nextItem.name else {
+                return
+            }
             let link = self.getImageURL(nextName)
             if let path = DownloadManager.getLocalFilePath(link),
                let img = UIImage(contentsOfFile: path), svimageId != path {
@@ -260,12 +279,14 @@ extension StreetViewV2 {
                 self.isLoading = true
             }
 
+            self.progress = 0.0
             await self.mapStore.loadStreetViewScene(id: nextId)
             self.loadSVImage()
         }
     }
 
     func getNextID(_ direction: NavDirection) -> (id: Int?, name: String?) {
+        Logger.streetView.debug("Direction: \(direction.rawValue)")
         switch direction {
         case .next:
             return (self.streetViewScene?.nextId, self.streetViewScene?.nextName)

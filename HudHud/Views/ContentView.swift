@@ -158,10 +158,6 @@ struct ContentView: View {
             .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
-
-            SymbolStyleLayer(identifier: MapLayerIdentifier.streetViewSymbols, source: self.mapStore.streetViewSource)
-                .iconImage(UIImage.lookAroundPin)
-                .iconRotation(featurePropertyNamed: "heading")
         }
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
             self.mapViewStore.didTapOnMap(containing: features)
@@ -183,7 +179,7 @@ struct ContentView: View {
                     self.mapStore.navigationProgress = .navigating
                 } else {
                     controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                    controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetView == .disabled
+                    controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetViewScene == nil
                 }
             case .navigating:
                 if let route = self.mapStore.navigatingRoute {
@@ -281,13 +277,8 @@ struct ContentView: View {
                 }
                 .ignoresSafeArea()
                 .edgesIgnoringSafeArea(.all)
-                .safeAreaInset(edge: .top, alignment: .center) {
-                    if case .enabled = self.mapStore.streetView {
-                        StreetView(viewModel: self.motionViewModel, camera: self.$mapStore.camera, mapStore: self.mapStore)
-                    }
-                }
                 .safeAreaInset(edge: .bottom) {
-                    if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
+                    if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
                         HStack(alignment: .bottom) {
                             MapButtonsView(mapButtonsData: [
                                 MapButtonData(sfSymbol: .icon(.map)) {
@@ -301,29 +292,6 @@ struct ContentView: View {
                                     case .preview:
                                         self.searchViewStore.mode = .live(provider: .hudhud)
                                         Logger.searchView.info("Map Mode toursprung")
-                                    }
-                                },
-                                MapButtonData(sfSymbol: .icon(self.mapStore.streetView == .disabled ? .pano : .panoFill)) {
-                                    if self.mapStore.streetView == .disabled {
-                                        Task {
-                                            self.mapStore.streetView = .requestedCurrentLocation
-                                            let location = try await Location.forSingleRequestUsage.requestLocation()
-                                            guard let location = location.location else { return }
-
-                                            Logger.streetView.info("set new streetViewPoint")
-                                            self.motionViewModel.coordinate = location.coordinate
-                                            if location.course > 0 {
-                                                self.motionViewModel.position.heading = location.course
-                                            }
-                                            withAnimation {
-                                                self.mapStore.streetView = .enabled
-                                                self.mapStore.searchShown = false
-                                            }
-                                        }
-                                    } else {
-                                        withAnimation {
-                                            self.mapStore.streetView = .disabled
-                                        }
                                     }
                                 },
                                 MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
@@ -374,7 +342,7 @@ struct ContentView: View {
                     }
                 })
             VStack {
-                if self.mapStore.navigationProgress == .none, case .disabled = self.mapStore.streetView {
+                if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -384,7 +352,7 @@ struct ContentView: View {
             .overlay(alignment: .top) {
                 VStack {
                     if self.mapStore.streetViewScene != nil {
-                        StreetViewV2(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
+                        StreetView(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
                             .onChange(of: self.mapStore.fullScreenStreetView) { newValue in
                                 self.mapStore.searchShown = !newValue
                             }

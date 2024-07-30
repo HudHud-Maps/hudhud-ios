@@ -224,9 +224,6 @@
         }
       }
     },
-    "Loading..." : {
-
-    },
     "Map Details" : {
       "extractionState" : "stale",
       "localizations" : {
