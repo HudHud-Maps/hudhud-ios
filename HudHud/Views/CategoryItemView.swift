@@ -144,7 +144,10 @@ private struct CategoryIconButton: View {
         }
         .background(self.backgroundColor)
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(radius: 5)
+        .shadow(
+            color: Color(red: 133, green: 140, blue: 149).opacity(0.3),
+            radius: 7, y: 5
+        )
     }
 }
 
