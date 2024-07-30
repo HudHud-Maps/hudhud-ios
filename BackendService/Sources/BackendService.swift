@@ -254,6 +254,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
         try container.encode(self.symbol, forKey: .symbol)
         try container.encode(self.type, forKey: .type)
         try container.encode(self.systemColor, forKey: .color)
+        try container.encode(self.mediaURLs, forKey: .mediaURLs)
         try container.encodeIfPresent(self.distance, forKey: .distance)
     }
 
