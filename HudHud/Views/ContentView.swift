@@ -57,6 +57,7 @@ struct ContentView: View {
         MapView<NavigationViewController>(makeViewController: {
             let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
+            viewController.mapView.compassViewMargins.y = 50
             return viewController
         }(), styleURL: self.styleURL, camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
