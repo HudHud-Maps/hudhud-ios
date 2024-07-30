@@ -160,6 +160,10 @@ struct ContentView: View {
             .predicate(NSPredicate(format: "cluster != YES"))
         }
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
+            if self.mapStore.navigationProgress == .feedback {
+                self.searchViewStore.endTrip()
+                return
+            }
             self.mapViewStore.didTapOnMap(containing: features)
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
@@ -199,7 +203,7 @@ struct ContentView: View {
                 self.searchViewStore.mapStore.selectedItem = selectedItem
             }
         })
-        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetSize.height : 0)
+        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
         .onChange(of: self.mapStore.routes) { newRoute in
             if let routeUnwrapped = newRoute {
                 if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
@@ -342,12 +346,11 @@ struct ContentView: View {
                     }
                 })
             VStack {
-                if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
+                if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
-                Spacer()
             }
             .overlay(alignment: .top) {
                 VStack {
@@ -389,6 +392,14 @@ struct ContentView: View {
         } catch {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
+        }
+    }
+
+    func sheetPaddingSize() -> Double {
+        if self.sheetSize.height > 80 {
+            return 80
+        } else {
+            return self.sheetSize.height
         }
     }
 }

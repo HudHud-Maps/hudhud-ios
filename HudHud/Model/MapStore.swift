@@ -404,9 +404,7 @@ private extension MapStore {
             self.camera = MapViewCamera.center(userLocation, zoom: 14)
 
         case .mapItems:
-            Task {
-                await self.handleMapItems()
-            }
+            self.handleMapItems()
         default:
             self.camera = MapViewCamera.center(.riyadh, zoom: 16)
         }
@@ -422,7 +420,7 @@ private extension MapStore {
         }
     }
 
-    func handleMapItems() async {
+    func handleMapItems() {
         switch self.mapItems.count {
         case 0:
             break // no items, do nothing
@@ -432,33 +430,9 @@ private extension MapStore {
                 self.camera = .center(item.coordinate, zoom: 16)
             }
         case 2...:
-            // if there is more than 2 items on the map ...and the zoom level is under 13 ...zoom out and move the camera to show items
-            if (self.camera.zoom ?? 0) <= 13 {
-                var coordinates = self.mapItems.map(\.coordinate)
-                if let userLocation = try? await self.locationManager.requestLocation().location?.coordinate {
-                    coordinates.append(userLocation)
-                }
-                if let camera = CameraState.boundingBox(from: coordinates) {
-                    self.camera = camera
-                }
-            } else {
-                // if the camera zooming in...zoom out a little bit and show the nearest 4 poi around me
-                if self.isAnyItemVisible() || (self.camera.zoom ?? 0) >= 13 {
-                    if let nearestCoordinates = await getNearestMapItemCoordinates() {
-                        var coordinatea = nearestCoordinates
-                        if let userLocation = try? await self.locationManager.requestLocation().location?.coordinate {
-                            coordinatea.append(userLocation)
-                        }
-                        if let camera = CameraState.boundingBox(from: coordinatea) {
-                            self.camera = camera
-                        }
-                    }
-                } else {
-                    // do not show any move
-                    if let zoom = self.camera.zoom {
-                        self.camera.setZoom(zoom)
-                    }
-                }
+            let coordinates = self.mapItems.map(\.coordinate)
+            if let camera = CameraState.boundingBox(from: coordinates) {
+                self.camera = camera
             }
         default:
             break // should never occur
@@ -488,16 +462,6 @@ private extension MapStore {
             return bounds.contains(coordinate: self.getCameraCoordinate())
         }
         return false
-    }
-
-    func getNearestMapItemCoordinates() async -> [CLLocationCoordinate2D]? {
-        guard let userLocation = try? await self.locationManager.requestLocation().location?.coordinate else { return nil }
-        // Sort map items by distance to the user location
-        let sortedItems = self.mapItems.sorted(by: {
-            $0.coordinate.distance(to: userLocation) < $1.coordinate.distance(to: userLocation)
-        })
-        // Return the coordinates of the 4 nearest items, if available
-        return Array(sortedItems.prefix(4)).map(\.coordinate)
     }
 }
 

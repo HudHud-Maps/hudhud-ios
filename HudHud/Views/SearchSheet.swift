@@ -44,33 +44,27 @@ struct SearchSheet: View {
                             HStack {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
-                                    Button(action: {
+                                    Button {
                                         self.searchStore.searchText = ""
-                                    }, label: {
+                                    } label: {
                                         Image(systemSymbol: .multiplyCircleFill)
                                             .foregroundColor(.gray)
-                                            .padding(.vertical)
-                                    })
+                                            .frame(minWidth: 44, minHeight: 44)
+                                    }
                                 }
                             }
                         )
                         .padding(.horizontal, 10)
                 }
                 switch self.searchStore.searchType {
-                case .returnPOILocation:
-                    Button("Cancel", action: {
+                case .returnPOILocation, .favorites:
+                    Button("Cancel") {
                         self.dismiss()
-                    })
+                    }
                     .foregroundColor(.gray)
                     .padding(.trailing)
-                case .selectPOI:
+                case .selectPOI, .categories:
                     EmptyView()
-                case .favorites:
-                    Button("Cancel", action: {
-                        self.dismiss()
-                    })
-                    .foregroundColor(.gray)
-                    .padding(.trailing)
                 }
             }
             .background(.quinary)
@@ -106,10 +100,7 @@ struct SearchSheet: View {
                                             completion?(.waypoint(selectedItem))
                                             self.dismiss()
                                         }
-                                    case .selectPOI:
-                                        break
-
-                                    case .favorites:
+                                    case .selectPOI, .categories, .favorites:
                                         break
                                     }
                                 }
