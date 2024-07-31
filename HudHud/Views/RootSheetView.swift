@@ -38,6 +38,9 @@ struct RootSheetView: View {
                             .onDisappear(perform: {
                                 self.searchViewStore.mapStore.allowedDetents = [.small, .medium, .large]
                                 self.searchViewStore.mapStore.selectedDetent = .small
+                                if !self.mapStore.path.isEmpty {
+                                    self.mapStore.path.removeLast()
+                                }
                             })
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:
