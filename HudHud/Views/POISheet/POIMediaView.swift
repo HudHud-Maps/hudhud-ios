@@ -46,7 +46,7 @@ struct POIMediaView: View {
         .sheet(item: self.$selectedMedia) { mediaURL in
             FullPageImage(
                 mediaURL: mediaURL,
-                selectedMediaURL: self.$selectedMedia
+                mediaURLs: self.mediaURLs
             )
         }
     }
@@ -55,25 +55,32 @@ struct POIMediaView: View {
 // MARK: - FullPageImage
 
 struct FullPageImage: View {
-    let mediaURL: URL
-    @Binding var selectedMediaURL: URL?
+    @State var mediaURL: URL
+    let mediaURLs: [URL]
+    @Environment(\.dismiss) var dismiss
 
     var body: some View {
         NavigationStack {
-            AsyncImage(url: self.mediaURL) { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-            } placeholder: {
-                ProgressView()
-                    .progressViewStyle(.automatic)
+            TabView(selection: self.$mediaURL) {
+                ForEach(self.mediaURLs, id: \.self) { mediaURL in
+                    AsyncImage(url: mediaURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFit()
+                    } placeholder: {
+                        ProgressView()
+                            .progressViewStyle(.automatic)
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .tag(mediaURL)
+                }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .tabViewStyle(.page(indexDisplayMode: .always))
             .background(.black)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
-                        self.selectedMediaURL = nil
+                        self.dismiss()
                     } label: {
                         Image(systemSymbol: .xCircleFill)
                             .tint(.gray)
