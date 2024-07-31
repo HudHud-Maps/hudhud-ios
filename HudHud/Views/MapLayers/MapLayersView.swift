@@ -29,6 +29,9 @@ struct MapLayersView: View {
                 }
                 Spacer()
                 Button {
+                    if !self.mapStore.path.isEmpty {
+                        self.mapStore.path.removeLast()
+                    }
                     self.dismiss()
                 } label: {
                     Image(systemSymbol: .xmark)
