@@ -10,8 +10,11 @@ import BackendService
 import CoreLocation
 import SwiftUI
 
+// MARK: - POIMediaView
+
 struct POIMediaView: View {
     var mediaURLs: [URL]
+    @State private var selectedMedia: URL?
 
     var body: some View {
         ScrollView(.horizontal) {
@@ -32,11 +35,52 @@ struct POIMediaView: View {
                     }
                     .background(.secondary)
                     .cornerRadius(10)
+                    .onTapGesture {
+                        self.selectedMedia = mediaURL
+                    }
                 }
             }
             .padding(.leading)
         }
         .scrollIndicators(.hidden)
+        .sheet(item: self.$selectedMedia) { mediaURL in
+            FullPageImage(
+                mediaURL: mediaURL,
+                selectedMediaURL: self.$selectedMedia
+            )
+        }
+    }
+}
+
+// MARK: - FullPageImage
+
+struct FullPageImage: View {
+    let mediaURL: URL
+    @Binding var selectedMediaURL: URL?
+
+    var body: some View {
+        NavigationStack {
+            AsyncImage(url: self.mediaURL) { image in
+                image
+                    .resizable()
+                    .scaledToFit()
+            } placeholder: {
+                ProgressView()
+                    .progressViewStyle(.automatic)
+            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.black)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button {
+                        self.selectedMediaURL = nil
+                    } label: {
+                        Image(systemSymbol: .xCircleFill)
+                            .tint(.gray)
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -58,6 +58,7 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
+    private let hudhudResolver = HudHudPOI()
     @Published var streetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
 
@@ -294,6 +295,20 @@ final class MapStore: ObservableObject {
         }
     }
 
+    func resolve(_ item: ResolvedItem) async {
+        let itemIfAvailable = self.displayableItems
+            .first { $0.id == item.id }
+        if itemIfAvailable == nil {
+            self.displayableItems.append(.resolvedItem(item))
+        }
+        self.selectedItem = item
+        guard let detailedItem = try? await hudhudResolver.lookup(id: item.id),
+              // we make sure that this item is still selected
+              detailedItem.id == self.selectedItem?.id,
+              let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
+        self.displayableItems[index] = .resolvedItem(detailedItem)
+        self.selectedItem = detailedItem
+    }
 }
 
 // MARK: - NavigationViewControllerDelegate

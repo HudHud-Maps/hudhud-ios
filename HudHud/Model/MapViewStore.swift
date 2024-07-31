@@ -29,6 +29,7 @@ enum SelectedPointOfInterest {
 class MapViewStore {
 
     private let mapStore: MapStore
+    private let hudhudResolver = HudHudPOI()
 
     // MARK: - Lifecycle
 
@@ -63,14 +64,10 @@ class MapViewStore {
             } else {
                 Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
             }
-        case let .mapElement(resolvedItem):
-            let itemIfAvailable = self.mapStore.displayableItems
-                .first { $0.id == resolvedItem.id }
-            if itemIfAvailable == nil {
-                self.mapStore.displayableItems.append(.resolvedItem(resolvedItem))
+        case let .mapElement(item):
+            Task {
+                await self.mapStore.resolve(item)
             }
-            self.mapStore.selectedItem = resolvedItem
-
         case let .streetViewScene(sceneID):
             self.mapStore.loadStreetViewScene(id: sceneID)
         }

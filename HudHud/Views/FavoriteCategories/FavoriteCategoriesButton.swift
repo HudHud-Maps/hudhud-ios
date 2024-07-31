@@ -27,7 +27,7 @@ struct FavoriteCategoriesButton: ButtonStyle {
                 .background {
                     Circle()
                         .foregroundColor(Color.Colors.General._20ActionButtons)
-                        .shadow(color: Color(red: 133, green: 140, blue: 149).opacity(configuration.isPressed ? 0.3 : 0.1), radius: 7, y: 5)
+                        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.1), radius: 5, y: 4)
                 }
             configuration.label
                 .tint(Color.Colors.General._01Black)

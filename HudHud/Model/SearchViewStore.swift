@@ -125,7 +125,9 @@ final class SearchViewStore: ObservableObject {
 
     func didSelect(_ item: DisplayableRow) async {
         switch item {
-        case let .resolvedItem(resolvedItem), let .categoryItem(resolvedItem):
+        case let .resolvedItem(item):
+            await self.mapStore.resolve(item)
+        case let .categoryItem(resolvedItem):
             self.mapStore.selectedDetent = .third
             self.mapStore.selectedItem = resolvedItem
         case let .category(category):
