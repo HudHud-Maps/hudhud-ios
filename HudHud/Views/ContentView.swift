@@ -148,7 +148,7 @@ struct ContentView: View {
                 source: self.mapStore.selectedPoint
             )
             .radius(24)
-            .color(.systemRed)
+            .color(UIColor(self.mapStore.selectedItem?.color ?? .red))
             .strokeWidth(2)
             .strokeColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
@@ -156,7 +156,7 @@ struct ContentView: View {
                 identifier: MapLayerIdentifier.selectedCircleIcon,
                 source: self.mapStore.selectedPoint
             )
-            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+            .iconImage(UIImage(systemSymbol: SFSymbol(rawValue: self.mapStore.selectedItem?.symbol.rawValue ?? "mappin")).withRenderingMode(.alwaysTemplate))
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
         }

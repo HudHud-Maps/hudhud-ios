@@ -159,7 +159,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Equatable, Hashable, Cust
     public var title: String
     public var subtitle: String
     public var symbol: SFSymbol
-    public let systemColor: SystemColor
+    public var systemColor: SystemColor
     public var category: String?
     public let type: PredictionResult
     public var coordinate: CLLocationCoordinate2D

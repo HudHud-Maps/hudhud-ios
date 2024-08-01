@@ -308,6 +308,8 @@ final class MapStore: ObservableObject {
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
         self.displayableItems[index] = .resolvedItem(detailedItem)
         self.selectedItem = detailedItem
+        self.selectedItem?.systemColor = item.systemColor
+        self.selectedItem?.symbol = item.symbol
     }
 }
 
