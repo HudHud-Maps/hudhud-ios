@@ -118,6 +118,6 @@ struct RateNavigationView: View {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
 
     return RateNavigationView(mapStore: searchViewStore.mapStore, selectedFace: { face in
-        print(face)
+        Logger.navigationViewRating.log("\(face)")
     }, onDismiss: {})
 }

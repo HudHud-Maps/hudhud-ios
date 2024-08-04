@@ -180,16 +180,6 @@ final class MapStore: ObservableObject {
 
     var cameraTask: Task<Void, Error>?
 
-    // MARK: - Lifecycle
-
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
-        self.camera = camera
-        self.searchShown = searchShown
-        self.motionViewModel = motionViewModel
-    }
-
-    // MARK: - Internal
-
     /**
      This function determines the appropriate sheet detent based on the current state of the map store and search text.
 
@@ -267,7 +257,7 @@ final class MapStore: ObservableObject {
 
     func mapStyleUrl() -> URL {
         guard let styleUrl = self.mapStyleLayer?.styleUrl else {
-            return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
+            return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
         }
         return styleUrl
     }
@@ -309,6 +299,15 @@ final class MapStore: ObservableObject {
         self.displayableItems[index] = .resolvedItem(detailedItem)
         self.selectedItem = detailedItem
     }
+
+    // MARK: - Lifecycle
+
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
+        self.camera = camera
+        self.searchShown = searchShown
+        self.motionViewModel = motionViewModel
+    }
+
 }
 
 // MARK: - NavigationViewControllerDelegate
@@ -449,7 +448,6 @@ private extension MapStore {
         case let .userLocation(userLocation):
             self.moveToUserLocation = false
             self.camera = MapViewCamera.center(userLocation, zoom: 14)
-
         case .mapItems:
             self.handleMapItems()
         default:
