@@ -89,7 +89,7 @@ struct ContentView: View {
                 let routePoints = self.mapStore.routePoints
 
                 CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                    .radius(16)
+                    .radius(self.mapStore.selectedPOIsSize)
                     .color(.systemRed)
                     .strokeWidth(2)
                     .strokeColor(.white)
@@ -119,7 +119,7 @@ struct ContentView: View {
 
             // shows the clustered pins
             CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered, source: pointSource)
-                .radius(16)
+                .radius(self.mapStore.poisSize)
                 .color(.systemRed)
                 .strokeWidth(2)
                 .strokeColor(.white)
@@ -132,7 +132,7 @@ struct ContentView: View {
             // shows the unclustered pins
             if self.mapStore.navigationProgress != .navigating {
                 CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
-                    .radius(16)
+                    .radius(self.mapStore.poisSize)
                     .color(.systemRed)
                     .strokeWidth(2)
                     .strokeColor(.white)
@@ -147,8 +147,8 @@ struct ContentView: View {
                 identifier: MapLayerIdentifier.selectedCircle,
                 source: self.mapStore.selectedPoint
             )
-            .radius(24)
-            .color(UIColor(self.mapStore.selectedItem?.color ?? .red))
+            .radius(self.mapStore.selectedPOIsSize)
+            .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
             .strokeWidth(2)
             .strokeColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
@@ -156,7 +156,7 @@ struct ContentView: View {
                 identifier: MapLayerIdentifier.selectedCircleIcon,
                 source: self.mapStore.selectedPoint
             )
-            .iconImage(UIImage(systemSymbol: SFSymbol(rawValue: self.mapStore.selectedItem?.symbol.rawValue ?? "mappin")).withRenderingMode(.alwaysTemplate))
+            .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin).withRenderingMode(.alwaysTemplate))
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
         }
