@@ -89,7 +89,7 @@ struct ContentView: View {
                 let routePoints = self.mapStore.routePoints
 
                 CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                    .radius(self.mapStore.selectedPOIsSize)
+                    .radius(16)
                     .color(.systemRed)
                     .strokeWidth(2)
                     .strokeColor(.white)
@@ -119,7 +119,7 @@ struct ContentView: View {
 
             // shows the clustered pins
             CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesClustered, source: pointSource)
-                .radius(self.mapStore.poisSize)
+                .radius(16)
                 .color(.systemRed)
                 .strokeWidth(2)
                 .strokeColor(.white)
@@ -132,7 +132,7 @@ struct ContentView: View {
             // shows the unclustered pins
             if self.mapStore.navigationProgress != .navigating {
                 CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
-                    .radius(self.mapStore.poisSize)
+                    .radius(16)
                     .color(.systemRed)
                     .strokeWidth(2)
                     .strokeColor(.white)
@@ -147,7 +147,7 @@ struct ContentView: View {
                 identifier: MapLayerIdentifier.selectedCircle,
                 source: self.mapStore.selectedPoint
             )
-            .radius(self.mapStore.selectedPOIsSize)
+            .radius(30)
             .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
             .strokeWidth(2)
             .strokeColor(.white)

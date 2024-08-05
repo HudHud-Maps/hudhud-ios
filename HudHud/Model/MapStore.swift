@@ -52,8 +52,6 @@ final class MapStore: ObservableObject {
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
     @Published var selectedDetent: PresentationDetent = .small
-    @Published var selectedPOIsSize: Double = 24
-    @Published var poisSize: Double = 16
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var waypoints: [ABCRouteConfigurationItem]?
     @Published var navigationProgress: NavigationProgress = .none
@@ -110,14 +108,12 @@ final class MapStore: ObservableObject {
 
             self.updateDetent()
             self.updateCamera(state: .mapItems)
-            self.updatePOISize()
         }
     }
 
     @Published var selectedItem: ResolvedItem? {
         didSet {
             if let selectedItem, routes == nil {
-                self.updatePOISize()
                 self.updateCamera(state: .selectedItem(selectedItem))
                 if self.path.isEmpty {
                     self.path.append(selectedItem)
@@ -315,18 +311,6 @@ final class MapStore: ObservableObject {
         detailedItemUpdate.symbol = item.symbol
         self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
         self.selectedItem = detailedItemUpdate
-    }
-
-    func updatePOISize() {
-        // if there muliple pois on the map and just one selected .. make nearby POIs smaller, in the same size of the pois in the map layer. and Selected pois bigger
-        if self.selectedItem != nil, self.mapItems.count > 1, self.routes == nil {
-            self.poisSize = 10
-            self.selectedPOIsSize = 28
-        } else {
-            // The map has no selected poi..display the pois in reugler size
-            self.poisSize = 16
-            self.selectedPOIsSize = 16
-        }
     }
 }
 
