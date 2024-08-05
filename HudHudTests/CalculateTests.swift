@@ -34,7 +34,7 @@ final class CalculateTests: XCTestCase {
         XCTAssertGreaterThan(result.routes[0].legs[0].steps.count, 0)
     }
 
-    /**
+    /*
      These two function commented for now cause they trigger an error that will be fixed later:
      In this particular case we expect an error returned from the backend as its an impossible route (Brazil to Riyadh, no road as there is an ocean in between) Point 1 is too far from Point 0 . Instead we are getting: "Point 0 is out of bounds: -8.2862722,-38.0328413, the bounds are: 33.9470146,59.8364067,16.1558757,33.4669626,-45.70500183105469,2981.10107421875" .
 
