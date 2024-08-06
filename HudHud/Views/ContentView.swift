@@ -44,9 +44,7 @@ struct ContentView: View {
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
 
-    @State private var showUserLocation: Bool = false
     @State private var sheetSize: CGSize = .zero
-    @State private var didTryToZoomOnUsersLocation = false
 
     @StateObject var debugStore = DebugStore()
     var mapViewStore: MapViewStore
@@ -58,44 +56,8 @@ struct ContentView: View {
                 mapStore: self.mapStore,
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
-                sheetSize: self.sheetSize,
-                mapViewStore: self.mapViewStore,
-                safariURL: self.safariURL
+                sheetSize: self.sheetSize
             )
-            .task {
-                for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
-                    Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
-                    self.showUserLocation = event.authorizationStatus.allowed
-                }
-            }
-            .task {
-                self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
-                Logger.searchView.debug("Authorization status authorizedAllowed")
-            }
-            .task {
-                do {
-                    guard self.didTryToZoomOnUsersLocation == false else {
-                        return
-                    }
-                    self.didTryToZoomOnUsersLocation = true
-                    let userLocation = try await Location.forSingleRequestUsage.requestLocation()
-                    var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
-                    if coordinates == nil {
-                        // fall back to any location that was found, even if bad
-                        // accuracy
-                        coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
-                    }
-                    guard let coordinates else {
-                        Logger.currentLocation.debug("Could not determine user location, will not zoom...")
-                        return
-                    }
-                    if self.mapStore.currentLocation != coordinates {
-                        self.mapStore.currentLocation = coordinates
-                    }
-                } catch {
-                    Logger.currentLocation.error("location error: \(error)")
-                }
-            }
             .task {
                 do {
                     let mapLayers = try await mapLayerStore.getMaplayers()
@@ -337,4 +299,10 @@ extension MapLayerIdentifier {
         Self.simpleCircles,
         Self.streetView
     ]
+}
+
+#Preview("map preview") {
+    let mapStore: MapStore = .storeSetUpForPreviewing
+    let searchStore: SearchViewStore = .storeSetUpForPreviewing
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, sheetSize: CGSize(size: 0))
 }

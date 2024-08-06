@@ -12,6 +12,8 @@ import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
+import OSLog
+import SwiftLocation
 import SwiftUI
 
 struct MapViewContainer: View {
@@ -23,7 +25,6 @@ struct MapViewContainer: View {
     var sheetSize: CGSize
 
     var mapViewStore: MapViewStore
-    @State var safariURL: URL?
 
     var body: some View {
         MapView<NavigationViewController>(makeViewController: {
@@ -198,6 +199,55 @@ struct MapViewContainer: View {
                     }
                 }
         )
+        .task {
+            for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
+                Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
+                self.showUserLocation = event.authorizationStatus.allowed
+            }
+        }
+        .task {
+            self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
+            Logger.searchView.debug("Authorization status authorizedAllowed")
+        }
+        .task {
+            do {
+                guard self.didTryToZoomOnUsersLocation == false else {
+                    return
+                }
+                self.didTryToZoomOnUsersLocation = true
+                let userLocation = try await Location.forSingleRequestUsage.requestLocation()
+                var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
+                if coordinates == nil {
+                    // fall back to any location that was found, even if bad
+                    // accuracy
+                    coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
+                }
+                guard let coordinates else {
+                    Logger.currentLocation.debug("Could not determine user location, will not zoom...")
+                    return
+                }
+                if self.mapStore.currentLocation != coordinates {
+                    self.mapStore.currentLocation = coordinates
+                }
+            } catch {
+                Logger.currentLocation.error("location error: \(error)")
+            }
+        }
+    }
+
+    // MARK: - Lifecycle
+
+    init(
+        mapStore: MapStore,
+        debugStore: DebugStore,
+        searchViewStore: SearchViewStore,
+        sheetSize: CGSize
+    ) {
+        self.mapStore = mapStore
+        self.debugStore = debugStore
+        self.searchViewStore = searchViewStore
+        self.sheetSize = sheetSize
+        self.mapViewStore = MapViewStore(mapStore: mapStore)
     }
 
     // MARK: - Internal
@@ -209,4 +259,11 @@ struct MapViewContainer: View {
             return self.sheetSize.height
         }
     }
+
+}
+
+#Preview {
+    let mapStore: MapStore = .storeSetUpForPreviewing
+    let searchStore: SearchViewStore = .storeSetUpForPreviewing
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, sheetSize: CGSize(size: 80))
 }
