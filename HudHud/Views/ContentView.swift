@@ -156,7 +156,7 @@ struct ContentView: View {
                 identifier: MapLayerIdentifier.selectedCircleIcon,
                 source: self.mapStore.selectedPoint
             )
-            .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin).withRenderingMode(.alwaysTemplate))
+            .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
         }
