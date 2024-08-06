@@ -66,7 +66,7 @@ struct RateNavigationView: View {
             }
             .padding(.top)
             .onAppear {
-                self.mapStore.allowedDetents = [.small, .third]
+                self.mapStore.allowedDetents = (UIScreen.main.bounds.height < 700 ? [.nearHalf] : [.small, .third])
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
