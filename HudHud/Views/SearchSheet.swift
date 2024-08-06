@@ -54,6 +54,11 @@ struct SearchSheet: View {
                                 }
                             }
                         )
+                        .onSubmit {
+                            Task {
+                                await self.searchStore.fetchEnterResults(text: self.searchStore.searchText)
+                            }
+                        }
                         .padding(.horizontal, 10)
                 }
                 switch self.searchStore.searchType {
