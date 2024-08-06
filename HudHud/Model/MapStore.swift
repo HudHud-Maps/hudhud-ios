@@ -143,6 +143,9 @@ final class MapStore: ObservableObject {
             self.mapItems.compactMap { item in
                 return MLNPointFeature(coordinate: item.coordinate) { feature in
                     feature.attributes["poi_id"] = item.id
+                    feature.attributes["ios_category_icon_name"] = item.symbol.rawValue
+                    feature.attributes["ios_category_icon_color"] = item.systemColor.rawValue
+                    feature.attributes["name"] = item.title
                 }
             }
         }
