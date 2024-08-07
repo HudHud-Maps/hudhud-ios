@@ -36,6 +36,7 @@ struct SearchSheet: View {
                         .foregroundStyle(.tertiary)
                         .padding(.leading, 8)
                     TextField("Search", text: self.$searchStore.searchText)
+                        .submitLabel(.search)
                         .focused(self.$searchIsFocused)
                         .padding(.vertical, 10)
                         .padding(.horizontal, 0)
@@ -54,6 +55,11 @@ struct SearchSheet: View {
                                 }
                             }
                         )
+                        .onSubmit {
+                            Task {
+                                await self.searchStore.fetchEnterResults()
+                            }
+                        }
                         .padding(.horizontal, 10)
                 }
                 switch self.searchStore.searchType {
