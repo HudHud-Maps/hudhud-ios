@@ -47,7 +47,6 @@ struct ContentView: View {
     @State private var sheetSize: CGSize = .zero
 
     @StateObject var debugStore = DebugStore()
-    var mapViewStore: MapViewStore
     @State var safariURL: URL?
 
     var body: some View {
@@ -187,7 +186,6 @@ struct ContentView: View {
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
-        self.mapViewStore = MapViewStore(mapStore: searchStore.mapStore)
         self.mapStore.routes = searchStore.mapStore.routes
     }
 
