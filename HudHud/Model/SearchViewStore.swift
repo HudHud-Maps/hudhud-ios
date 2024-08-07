@@ -176,7 +176,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let items = try await hudhud.items(for: category, location: self.getCurrentLocation())
+            let items = try await hudhud.items(for: category, location: self.mapStore.currentLocation)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
@@ -203,9 +203,9 @@ private extension SearchViewStore {
             do {
                 let result = switch provider {
                 case .apple:
-                    try await self.apple.predict(term: term, coordinates: self.getCurrentLocation())
+                    try await self.apple.predict(term: term, coordinates: self.mapStore.currentLocation)
                 case .hudhud:
-                    try await self.hudhud.predict(term: term, coordinates: self.getCurrentLocation())
+                    try await self.hudhud.predict(term: term, coordinates: self.mapStore.currentLocation)
                 }
                 self.searchError = nil
                 self.mapStore.displayableItems = result.items
