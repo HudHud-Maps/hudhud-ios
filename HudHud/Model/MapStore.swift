@@ -296,8 +296,11 @@ final class MapStore: ObservableObject {
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
-        self.displayableItems[index] = .resolvedItem(detailedItem)
-        self.selectedItem = detailedItem
+        var detailedItemUpdate = detailedItem
+        detailedItemUpdate.systemColor = item.systemColor
+        detailedItemUpdate.symbol = item.symbol
+        self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
+        self.selectedItem = detailedItemUpdate
     }
 
     // MARK: - Lifecycle

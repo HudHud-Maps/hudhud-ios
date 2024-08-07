@@ -108,22 +108,6 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
     public var symbol: SFSymbol
     public var type: PredictionResult
 
-    // MARK: - Lifecycle
-
-    public init(id: String, title: String, subtitle: String, symbol: SFSymbol = .pin, type: PredictionResult) {
-        self.id = id
-        self.title = title
-        self.subtitle = subtitle
-        self.symbol = symbol
-        self.type = type
-    }
-
-    // MARK: - Public
-
-    public static func == (lhs: PredictionItem, rhs: PredictionItem) -> Bool {
-        return lhs.id == rhs.id
-    }
-
     public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
@@ -144,6 +128,22 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
         return mapped
     }
 
+    // MARK: - Lifecycle
+
+    public init(id: String, title: String, subtitle: String, symbol: SFSymbol = .pin, type: PredictionResult) {
+        self.id = id
+        self.title = title
+        self.subtitle = subtitle
+        self.symbol = symbol
+        self.type = type
+    }
+
+    // MARK: - Public
+
+    public static func == (lhs: PredictionItem, rhs: PredictionItem) -> Bool {
+        return lhs.id == rhs.id
+    }
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
         hasher.combine(self.title)
@@ -159,7 +159,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var title: String
     public var subtitle: String
     public var symbol: SFSymbol
-    public let systemColor: SystemColor
+    public var systemColor: SystemColor
     public var category: String?
     public let type: PredictionResult
     public var coordinate: CLLocationCoordinate2D
