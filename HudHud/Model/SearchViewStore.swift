@@ -158,18 +158,17 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    // will called if the user pressed Enter(return) in keyboard
-    func fetchEnterResults(text: String) async {
+    // will called if the user pressed search in keyboard
+    func fetchEnterResults() async {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
-        self.searchText = text
         self.mapStore.selectedDetent = .third
 
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let results = try await self.hudhud.predict(term: text, coordinates: self.getCurrentLocation())
+            let results = try await self.hudhud.predict(term: self.searchText, coordinates: self.mapStore.currentLocation)
             self.mapStore.displayableItems = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
                     return DisplayableRow.categoryItem(resolvedItem)
