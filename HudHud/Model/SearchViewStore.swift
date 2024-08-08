@@ -57,7 +57,7 @@ final class SearchViewStore: ObservableObject {
 
     private var task: Task<Void, Error>?
     var apple = ApplePOI()
-    private var hudhud = HudHudPOI()
+    private var hudhud = HudHudPOI(baseURL: DebugStore().baseURL)
     private var cancellables: Set<AnyCancellable> = []
     var locationManager: Location = .forSingleRequestUsage
 

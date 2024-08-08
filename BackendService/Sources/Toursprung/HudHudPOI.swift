@@ -80,8 +80,6 @@ public enum DisplayableRow: Hashable, Identifiable {
         }
     }
 
-    // MARK: - Public
-
     public func resolve(in provider: ApplePOI) async throws -> [DisplayableRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
@@ -122,22 +120,19 @@ public struct Category: Hashable {
 
 public struct HudHudPOI: POIServiceProtocol {
 
-    private let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-
+    private var client: Client
     public static var serviceName = "HudHud"
 
     private var currentLanguage: String {
         Locale.preferredLanguages.first ?? "en-US"
     }
 
-    // MARK: - Lifecycle
-
-    public init() {}
-
-    // MARK: - Public
-
-    public func lookup(id: String) async throws -> ResolvedItem? {
-        try await self.lookup(id: id, prediction: ()).first
+    public init(baseURL: String) {
+        if let baseURL = URL(string: baseURL) {
+            self.client = Client(serverURL: baseURL, transport: URLSessionTransport())
+        } else {
+            self.client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
+        }
     }
 
     public func lookup(id: String, prediction _: Any) async throws -> [ResolvedItem] {
@@ -258,6 +253,12 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
+    }
+
+    // MARK: - Public
+
+    public func lookup(id: String) async throws -> ResolvedItem? {
+        try await self.lookup(id: id, prediction: ()).first
     }
 
 }

@@ -12,6 +12,7 @@ import SwiftUI
 
 class DebugStore: ObservableObject {
     @AppStorage("routingHost") var routingHost: String = "gh.map.dev.hudhud.sa"
+    @AppStorage("baseurl") var baseURL: String = "https://api.dev.hudhud.sa"
 
     @Published var simulateRide: Bool = UIApplication.environment == .development {
         didSet {

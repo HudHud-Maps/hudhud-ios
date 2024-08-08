@@ -58,7 +58,7 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
-    private let hudhudResolver = HudHudPOI()
+    private let hudhudResolver = HudHudPOI(baseURL: DebugStore().baseURL)
     @Published var streetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
 
@@ -357,7 +357,7 @@ extension MapStore {
     func loadStreetViewScene(id: Int) {
         Task {
             do {
-                if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+                if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
                     self.streetViewScene = streetViewScene
                 }
             } catch {

@@ -59,7 +59,7 @@ struct ContentView: View {
             )
             .task {
                 do {
-                    let mapLayers = try await mapLayerStore.getMaplayers()
+                    let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
                     self.mapLayerStore.hudhudMapLayers = mapLayers
                     self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
                 } catch {
@@ -169,7 +169,7 @@ struct ContentView: View {
 
     func reloadPOITrending() async {
         do {
-            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation)
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
             self.trendingStore.trendingPOIs = nil

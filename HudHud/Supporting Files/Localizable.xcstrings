@@ -62,6 +62,9 @@
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
     },
+    "Base URL" : {
+
+    },
     "bicycle" : {
       "localizations" : {
         "ar" : {
@@ -309,6 +312,9 @@
           }
         }
       }
+    },
+    "Reset" : {
+
     },
     "root view" : {
 

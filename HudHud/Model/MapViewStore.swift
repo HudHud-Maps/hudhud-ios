@@ -29,15 +29,7 @@ enum SelectedPointOfInterest {
 class MapViewStore {
 
     private let mapStore: MapStore
-    private let hudhudResolver = HudHudPOI()
-
-    // MARK: - Lifecycle
-
-    init(mapStore: MapStore) {
-        self.mapStore = mapStore
-    }
-
-    // MARK: - Internal
+    private let hudhudResolver = HudHudPOI(baseURL: DebugStore().baseURL)
 
     func didTapOnMap(containing features: [any MLNFeature]) {
         if self.mapStore.displayableItems.count == 1 {
@@ -72,8 +64,6 @@ class MapViewStore {
             self.mapStore.loadStreetViewScene(id: sceneID)
         }
     }
-
-    // MARK: - Private
 
     private func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
         for feature in features {
@@ -150,4 +140,11 @@ class MapViewStore {
             nil
         }
     }
+
+    // MARK: - Lifecycle
+
+    init(mapStore: MapStore) {
+        self.mapStore = mapStore
+    }
+
 }

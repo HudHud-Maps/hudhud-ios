@@ -18,13 +18,7 @@ public class TrendingStore: ObservableObject {
     @Published public var trendingPOIs: [ResolvedItem]?
     @Published public var lastError: Error?
 
-    // MARK: - Lifecycle
-
-    public init() {}
-
-    // MARK: - Public
-
-    public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
+    public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
         let urlSessionConfiguration = URLSessionConfiguration.default
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
@@ -33,8 +27,13 @@ public class TrendingStore: ObservableObject {
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
         let transport = URLSessionTransport(configuration: transportConfiguration)
 
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: transport) // swiftlint:disable:this force_unwrapping
-
+        let client: Client
+        if let baseURL = URL(string: baseURL) {
+            client = Client(serverURL: baseURL, transport: transport)
+        } else {
+            let fallbackURL = URL(string: "https://api.dev.hudhud.sa")!
+            client = Client(serverURL: fallbackURL, transport: transport) // swiftlint:disable:this force_unwrapping
+        }
         let response = try await client.listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
         case let .ok(okResponse):
@@ -57,6 +56,11 @@ public class TrendingStore: ObservableObject {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
+
+    // MARK: - Lifecycle
+
+    public init() {}
+
 }
 
 // swiftlint:enable init_usage

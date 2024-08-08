@@ -23,6 +23,19 @@ struct DebugMenuView: View {
                     .disableAutocorrection(true)
             }
 
+            Section(header: Text("Base URL")) {
+                TextField("Base URL", text: self.$debugSettings.baseURL)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .onChange(of: self.debugSettings.baseURL) { newValue in
+                        if newValue.isEmpty {
+                            self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
+                        } else {
+                            self.debugSettings.baseURL = newValue
+                        }
+                    }
+            }
+
             Section(header: Text("Simulation")) {
                 Toggle(isOn: self.$debugSettings.simulateRide) {
                     Text("Simulate Ride during Navigation")
@@ -43,6 +56,12 @@ struct DebugMenuView: View {
         }
         .navigationTitle("Debug Menu")
         .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button("Reset") {
+                    self.debugSettings.routingHost = "gh.map.dev.hudhud.sa"
+                    self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
+                }
+            }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Done") {
                     self.dismiss()
