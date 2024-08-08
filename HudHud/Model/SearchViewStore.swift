@@ -158,7 +158,6 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-
     // will called if the user pressed search in keyboard
     func fetchEnterResults() async {
         self.searchType = .categories

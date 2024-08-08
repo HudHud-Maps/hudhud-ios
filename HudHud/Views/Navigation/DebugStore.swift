@@ -6,7 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
 import Foundation
+import MapboxCoreNavigation
 import OSLog
 import SwiftUI
 
@@ -20,4 +22,5 @@ class DebugStore: ObservableObject {
     }
 
     @AppStorage("SFSymbolsMap") var customMapSymbols: Bool?
+    @AppStorage("RouteControllerMaximumDistanceBeforeRecalculating") var maximumDistanceBeforeRecalculating: CLLocationDistance = RouteControllerMaximumDistanceBeforeRecalculating
 }

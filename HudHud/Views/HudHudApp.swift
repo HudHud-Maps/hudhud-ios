@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import MapboxCoreNavigation
 import OSLog
 import SwiftLocation
 import SwiftUI
@@ -34,6 +35,7 @@ struct HudHudApp: App {
     // MARK: - Lifecycle
 
     init() {
+        RouteControllerMaximumDistanceBeforeRecalculating = DebugStore().maximumDistanceBeforeRecalculating
         self.motionViewModel = .shared
         self.mapStore = MapStore(motionViewModel: self.motionViewModel)
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .hudhud))

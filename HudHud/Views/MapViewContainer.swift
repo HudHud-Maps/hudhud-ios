@@ -104,15 +104,20 @@ struct MapViewContainer: View {
 
             // shows the unclustered pins
             if self.mapStore.navigationProgress != .navigating {
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
+                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource.makeMGLSource())
+                    .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
+                    .iconAllowsOverlap(false)
+                    .text(featurePropertyNamed: "name")
+                    .textFontSize(11)
+                    .maximumTextWidth(8.0)
+                    .textHaloColor(UIColor.white)
+                    .textHaloWidth(1.0)
+                    .textHaloBlur(0.5)
+                    .textAnchor("top")
+                    .textColor(expression: SFSymbolSpriteSheet.colorExpression)
+                    .textOffset(CGVector(dx: 0, dy: 1.2))
+                    .minimumZoomLevel(13.0)
+                    .maximumZoomLevel(22.0)
                     .predicate(NSPredicate(format: "cluster != YES"))
             }
             // shows the selected pin
