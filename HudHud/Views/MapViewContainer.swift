@@ -72,7 +72,7 @@ struct MapViewContainer: View {
             }
 
             if self.debugStore.customMapSymbols == true {
-                SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
+                SymbolStyleLayer(identifier: MapLayerIdentifier.patPOI, source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
                     .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                     .iconAllowsOverlap(false)
                     .text(featurePropertyNamed: "name_en")
