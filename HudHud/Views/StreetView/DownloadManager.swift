@@ -20,8 +20,6 @@ class DownloadManager {
 
     var inDownload = [String: [CallBackBlock]]()
 
-    // MARK: - Internal
-
     class func getLocalFilePath(_ link: String) -> String? {
         let ext = (link as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + link.sha265 + ".\(ext)"
@@ -34,10 +32,11 @@ class DownloadManager {
     }
 
     class func downloadFile(_ path: String,
+                            fileName: String? = nil,
                             isThumb: Bool = false,
                             downloadProgress: ((_ progress: Float) -> Void)? = nil,
                             block: @escaping CallBackBlock) {
-        let ext = (path as NSString).pathExtension
+        let ext = ((fileName ?? path) as NSString).pathExtension
         let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
 
         let thumb = "\(isThumb ? "_th" : "")"
@@ -109,6 +108,24 @@ class DownloadManager {
         }
 
         downloader.downloadFile(from: fileURL)
+    }
+
+    class func fileExistOrLoading(_ path: String,
+                                  fileName: String? = nil,
+                                  isThumb: Bool = false) -> Bool {
+        let ext = ((fileName ?? path) as NSString).pathExtension
+        let newPath = NSTemporaryDirectory() + path.sha265 + ".\(ext)"
+
+        let thumb = "\(isThumb ? "_th" : "")"
+        let newPathTh = NSTemporaryDirectory() + path.sha265 + thumb + ".\(ext)"
+        let newURL = URL(filePath: newPath)
+        let newURLTh = URL(filePath: newPathTh)
+
+        let localPath = isThumb ? newPathTh : newPath
+        if FileManager.default.fileExists(atPath: localPath) || DownloadManager.shared.inDownload[path.sha265] != nil {
+            return true
+        }
+        return false
     }
 
 }
@@ -199,6 +216,8 @@ class AppQueue {
         let when = DispatchTime.now() + delay
         DispatchQueue.main.asyncAfter(deadline: when, execute: closure)
     }
+
+    // MARK: - Internal
 
     class func background(work: @escaping () -> Void) {
         DispatchQueue.global(qos: .default).async {

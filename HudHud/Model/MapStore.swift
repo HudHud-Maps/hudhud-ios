@@ -61,6 +61,7 @@ final class MapStore: ObservableObject {
     private let hudhudResolver = HudHudPOI()
     @Published var streetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
+    var cachedScenes = [Int: StreetViewScene]()
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -360,15 +361,34 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
-    func loadStreetViewScene(id: Int) {
-        Task {
-            do {
-                if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
-                    self.streetViewScene = streetViewScene
-                }
-            } catch {
-                Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+    func loadStreetViewScene(id: Int) async {
+        if let item = self.cachedScenes[id] {
+            self.streetViewScene = item
+            return
+        }
+
+        do {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+                Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
+                self.streetViewScene = streetViewScene
+                self.cachedScenes[streetViewScene.id] = streetViewScene
             }
+        } catch {
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+        }
+    }
+
+    func preloadStreetViewScene(id: Int) async {
+        if let item = self.cachedScenes[id] {
+            return
+        }
+
+        do {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+                self.cachedScenes[streetViewScene.id] = streetViewScene
+            }
+        } catch {
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
         }
     }
 
