@@ -1,5 +1,5 @@
 //
-//  clientClass.swift
+//  ClientClass.swift
 //
 //
 //  Created by Fatima Aljaber on 11/08/2024.

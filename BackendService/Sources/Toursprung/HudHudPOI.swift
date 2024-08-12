@@ -250,7 +250,7 @@ public struct HudHudPOI: POIServiceProtocol {
     // MARK: - Lifecycle
 
     public init(baseURL: String) {
-        self.client = clientClass.makeClient(using: baseURL)
+        self.client = ClientClass.makeClient(using: baseURL)
     }
 
     // MARK: - Public
