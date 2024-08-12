@@ -143,6 +143,9 @@ final class MapStore: ObservableObject {
             self.mapItems.compactMap { item in
                 return MLNPointFeature(coordinate: item.coordinate) { feature in
                     feature.attributes["poi_id"] = item.id
+                    feature.attributes["ios_category_icon_name"] = item.symbol.rawValue
+                    feature.attributes["ios_category_icon_color"] = item.systemColor.rawValue
+                    feature.attributes["name"] = item.title
                 }
             }
         }
@@ -296,8 +299,11 @@ final class MapStore: ObservableObject {
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
-        self.displayableItems[index] = .resolvedItem(detailedItem)
-        self.selectedItem = detailedItem
+        var detailedItemUpdate = detailedItem
+        detailedItemUpdate.systemColor = item.systemColor
+        detailedItemUpdate.symbol = item.symbol
+        self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
+        self.selectedItem = detailedItemUpdate
     }
 
     // MARK: - Lifecycle

@@ -213,6 +213,9 @@
     "How was the navigation on this trip?" : {
 
     },
+    "In meters" : {
+
+    },
     "Layers" : {
       "localizations" : {
         "ar" : {
@@ -244,6 +247,9 @@
           }
         }
       }
+    },
+    "maximum distance before recalculating" : {
+
     },
     "metro" : {
       "localizations" : {
