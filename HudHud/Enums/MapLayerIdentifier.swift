@@ -25,5 +25,6 @@ enum MapLayerIdentifier {
     static let restaurants = "hpoi_resturant"
     static let shops = "hpoi_shop"
     static let streetView = "hpoi_sv"
-    static let patPOI = "patPOI"
+
+    static let customPOI = "patPOI"
 }

@@ -296,7 +296,7 @@ extension MapLayerIdentifier {
         Self.shops,
         Self.simpleCircles,
         Self.streetView,
-        patPOI
+        customPOI
     ]
 }
 
