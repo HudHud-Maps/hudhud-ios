@@ -27,14 +27,7 @@ public class TrendingStore: ObservableObject {
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
         let transport = URLSessionTransport(configuration: transportConfiguration)
 
-        let client: Client
-        if let baseURL = URL(string: baseURL) {
-            client = Client(serverURL: baseURL, transport: transport)
-        } else {
-            let fallbackURL = URL(string: "https://api.dev.hudhud.sa")!
-            client = Client(serverURL: fallbackURL, transport: transport) // swiftlint:disable:this force_unwrapping
-        }
-        let response = try await client.listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
+        let response = try await clientClass.makeClient(using: baseURL, transport: transport).listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

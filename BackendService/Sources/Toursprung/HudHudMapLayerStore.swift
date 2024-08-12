@@ -29,16 +29,8 @@ public class HudHudMapLayerStore: ObservableObject {
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
 
         let transport = URLSessionTransport(configuration: transportConfiguration)
-        let client: Client
-        if let baseURL = URL(string: baseURL) {
-            Logger().debug("baseURL: \(baseURL)")
-            client = Client(serverURL: baseURL, transport: transport)
-        } else {
-            let fallbackURL = URL(string: "https://api.dev.hudhud.sa")!
-            Logger().debug("fallbackURL: \(baseURL)")
-            client = Client(serverURL: fallbackURL, transport: transport) // swiftlint:disable:this force_unwrapping
-        }
-        let response = try await client.listMapStyles()
+
+        let response = try await clientClass.makeClient(using: baseURL, transport: transport).listMapStyles()
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

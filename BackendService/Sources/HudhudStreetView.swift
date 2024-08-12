@@ -72,14 +72,7 @@ public struct HudhudStreetView {
     }
 
     public func getStreetViewDetails(id: Int, baseURL: String) async throws -> StreetViewItem? {
-        let client: Client
-        if let baseURL = URL(string: baseURL) {
-            client = Client(serverURL: baseURL, transport: URLSessionTransport())
-        } else {
-            let fallbackURL = URL(string: "https://api.dev.hudhud.sa")!
-            client = Client(serverURL: fallbackURL, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-        }
-        let response = try await client.getStreetViewImage(path: .init(id: id)) // swiftlint:disable:this init_usage
+        let response = try await clientClass.makeClient(using: baseURL).getStreetViewImage(path: .init(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -105,14 +98,7 @@ public struct HudhudStreetView {
     }
 
     public func getStreetViewScene(id: Int, baseURL: String) async throws -> StreetViewScene? {
-        let client: Client
-        if let baseURL = URL(string: baseURL) {
-            client = Client(serverURL: baseURL, transport: URLSessionTransport())
-        } else {
-            let fallbackURL = URL(string: "https://api.dev.hudhud.sa")!
-            client = Client(serverURL: fallbackURL, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-        }
-        let response = try await client.getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
+        let response = try await clientClass.makeClient(using: baseURL).getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

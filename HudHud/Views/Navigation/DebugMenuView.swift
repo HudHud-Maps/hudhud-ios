@@ -23,7 +23,7 @@ struct DebugMenuView: View {
                     .disableAutocorrection(true)
             }
 
-            Section(header: Text("Base URL")) {
+            Section(header: Text("Base URL"), footer: Text("Note: Changing the URL requires restarting the app for the changes to take effect.")) {
                 TextField("Base URL", text: self.$debugSettings.baseURL)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)

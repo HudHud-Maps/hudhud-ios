@@ -65,6 +65,9 @@
     "Base URL" : {
 
     },
+    "Base URL:" : {
+
+    },
     "bicycle" : {
       "localizations" : {
         "ar" : {
@@ -108,6 +111,9 @@
           }
         }
       }
+    },
+    "Changing the URL requires restarting the app for the changes to take effect." : {
+
     },
     "Close" : {
       "comment" : "accesibility label instead of x",
