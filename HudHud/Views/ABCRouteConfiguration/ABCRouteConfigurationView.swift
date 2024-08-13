@@ -115,24 +115,22 @@ struct ABCRouteConfigurationView: View {
         }
     }
 
-    // MARK: - Internal
-
     // Update routes by making a network request
     func updateRoutes(wayPoints: [Waypoint]) {
         Task {
             do {
-                let options = NavigationRouteOptions(waypoints: wayPoints, profileIdentifier: .automobileAvoidingTraffic)
-                options.shapeFormat = .polyline6
-                options.distanceMeasurementSystem = .metric
-                options.attributeOptions = []
-
-                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
-                self.mapStore.routes = results
+                guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
+                    return
+                }
+                let routes = try await self.mapStore.calculateRoute(from: userLocation, to: nil, additionalWaypoints: wayPoints)
+                self.mapStore.routes = routes
             } catch {
                 Logger.routing.error("Updating routes: \(error)")
             }
         }
     }
+
+    // MARK: - Internal
 
     func moveAction(from source: IndexSet, to destination: Int) {
         self.routeConfigurations.move(fromOffsets: source, toOffset: destination)

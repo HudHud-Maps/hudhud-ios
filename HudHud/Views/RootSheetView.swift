@@ -32,7 +32,6 @@ struct RootSheetView: View {
                         MapLayersView(mapStore: self.mapStore, hudhudMapLayerStore: self.mapLayerStore)
                             .navigationBarBackButtonHidden()
                             .presentationCornerRadius(21)
-
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
                             .onDisappear(perform: {
@@ -67,7 +66,7 @@ struct RootSheetView: View {
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item, onStart: { calculation in
+                    POIDetailSheet(item: item, mapStore: self.mapStore, onStart: { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
                         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
