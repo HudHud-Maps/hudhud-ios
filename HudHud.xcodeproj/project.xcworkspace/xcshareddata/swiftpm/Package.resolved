@@ -230,8 +230,7 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/azizdev/SwiftUIPanoramaViewer.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "9efa5c7845d57ef36d24626c8e93d100a46a3ac3"
+        "revision" : "ebfa204ba720e03263dc3a0c859bdfa16c471a86"
       }
     },
     {

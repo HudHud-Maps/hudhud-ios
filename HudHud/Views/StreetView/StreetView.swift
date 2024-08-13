@@ -115,7 +115,7 @@ struct StreetView: View {
                 } label: {
                     Image(systemSymbol: .chevronUpCircleFill)
                         .resizable()
-                        .frame(width: 26, height: 26)
+                        .frame(width: 36, height: 36)
                         .accentColor(.white)
                         .shadow(radius: 26)
                         .opacity(self.streetViewScene?.previousId != nil ? 1.0 : 0.0)
@@ -127,7 +127,7 @@ struct StreetView: View {
                     } label: {
                         Image(systemSymbol: .chevronLeftCircleFill)
                             .resizable()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 36, height: 36)
                             .accentColor(.white)
                             .shadow(radius: 26)
                             .opacity(self.streetViewScene?.westId != nil ? 1.0 : 0.0)
@@ -141,7 +141,7 @@ struct StreetView: View {
                     } label: {
                         Image(systemSymbol: .chevronRightCircleFill)
                             .resizable()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 36, height: 36)
                             .accentColor(.white)
                             .shadow(radius: 26)
                             .opacity(self.streetViewScene?.eastId != nil ? 1.0 : 0.0)
@@ -153,7 +153,7 @@ struct StreetView: View {
                 } label: {
                     Image(systemSymbol: .chevronDownCircleFill)
                         .resizable()
-                        .frame(width: 26, height: 26)
+                        .frame(width: 36, height: 36)
                         .accentColor(.white)
                         .shadow(radius: 26)
                         .opacity(self.streetViewScene?.nextId != nil ? 1.0 : 0.0)
