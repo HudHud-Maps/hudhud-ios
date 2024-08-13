@@ -309,6 +309,33 @@ final class MapStore: ObservableObject {
         self.selectedItem = detailedItemUpdate
     }
 
+    // Unified route calculation function
+    func calculateRoute(
+        from location: CLLocation,
+        to destination: CLLocationCoordinate2D?,
+        additionalWaypoints: [Waypoint] = []
+    ) async throws -> RoutingService.RouteCalculationResult {
+        let startWaypoint = Waypoint(location: location)
+
+        var waypoints = [startWaypoint]
+        if let destinationCoordinate = destination {
+            let destinationWaypoint = Waypoint(coordinate: destinationCoordinate)
+            waypoints.append(destinationWaypoint)
+        }
+        waypoints.append(contentsOf: additionalWaypoints)
+
+        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
+        options.shapeFormat = .polyline6
+        options.distanceMeasurementSystem = .metric
+        options.attributeOptions = []
+
+        // Calculate the routes
+        let result = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
+
+        // Return the routes from the result
+        return result
+    }
+
     // MARK: - Lifecycle
 
     init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
@@ -335,18 +362,12 @@ extension MapStore: NavigationViewControllerDelegate {
         Task {
             do {
                 guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
-                let options = NavigationRouteOptions(waypoints: [Waypoint(location: location), currentRoute])
-
-                options.shapeFormat = .polyline6
-                options.distanceMeasurementSystem = .metric
-                options.attributeOptions = []
-
-                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
-                if let route = results.routes.first {
+                let routes = try await self.calculateRoute(from: location, to: nil, additionalWaypoints: [currentRoute])
+                if let route = routes.routes.first {
                     await self.reroute(with: route)
                 }
             } catch {
-                Logger.routing.error("Updating routes failed\(error.localizedDescription)")
+                Logger.routing.error("Updating routes failed: \(error.localizedDescription)")
             }
         }
     }

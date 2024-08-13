@@ -22,6 +22,7 @@ import SwiftUI
 struct POIDetailSheet: View {
 
     let item: ResolvedItem
+    @ObservedObject var mapStore: MapStore
     let onStart: (RoutingService.RouteCalculationResult) -> Void
 
     @State var routes: RoutingService.RouteCalculationResult?
@@ -163,8 +164,6 @@ struct POIDetailSheet: View {
         }
     }
 
-    // MARK: - Private
-
     private func calculateRoute(for item: ResolvedItem) {
         Task {
             do {
@@ -172,22 +171,8 @@ struct POIDetailSheet: View {
                 guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
                     return
                 }
-                let locationCoordinate = item.coordinate
-                let waypoint1 = Waypoint(location: userLocation)
-                let waypoint2 = Waypoint(coordinate: locationCoordinate)
-
-                let waypoints = [
-                    waypoint1,
-                    waypoint2
-                ]
-
-                let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
-                options.shapeFormat = .polyline6
-                options.distanceMeasurementSystem = .metric
-                options.attributeOptions = []
-
-                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
-                self.routes = results
+                let routes = try await self.mapStore.calculateRoute(from: userLocation, to: item.coordinate)
+                self.routes = routes
             } catch {
                 let nsError = error as NSError
                 if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
