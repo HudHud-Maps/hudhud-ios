@@ -522,18 +522,50 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StreetViewSceneResponse'
-        '400':
+                $ref: "#/components/schemas/StreetViewSceneResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema: *ref_0
-        '404':
+        "404":
+          description: Record Not Found
+          content:
+            application/json:
+              schema: *ref_0
+      security: []
+  /sv/scene/bbox:
+    get:
+      summary: Get streetview scene by bounding box
+      deprecated: false
+      description: ""
+      operationId: getStreetViewSceneBBox
+      tags: []
+      parameters:
+        - name: bbox
+          in: query
+          description: "the format is <min_lon>,<min_lat>,<max_lon>,<max_lat> for example 46.5424,24.5708,46.8534,24.8595"
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StreetViewSceneResponse"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema: *ref_0
+        "404":
           description: Record Not Found
           content:
             application/json:
@@ -790,10 +822,8 @@ components:
             - lon
         created_at:
           type: string
-          format: date-time
         updated_at:
           type: string
-          format: date-time
         distance:
           type: number
           format: float64
