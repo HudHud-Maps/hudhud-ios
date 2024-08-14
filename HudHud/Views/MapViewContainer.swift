@@ -125,7 +125,7 @@ struct MapViewContainer: View {
                 identifier: MapLayerIdentifier.selectedCircle,
                 source: self.mapStore.selectedPoint
             )
-            .radius(30)
+            .radius(24)
             .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
             .strokeWidth(2)
             .strokeColor(.white)
