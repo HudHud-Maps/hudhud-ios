@@ -31,14 +31,6 @@ class MapViewStore {
     private let mapStore: MapStore
     private let hudhudResolver = HudHudPOI()
 
-    // MARK: - Lifecycle
-
-    init(mapStore: MapStore) {
-        self.mapStore = mapStore
-    }
-
-    // MARK: - Internal
-
     func didTapOnMap(containing features: [any MLNFeature]) {
         if self.mapStore.displayableItems.count == 1 {
             self.mapStore.displayableItems = []
@@ -69,11 +61,11 @@ class MapViewStore {
                 await self.mapStore.resolve(item)
             }
         case let .streetViewScene(sceneID):
-            self.mapStore.loadStreetViewScene(id: sceneID)
+            Task {
+                await self.mapStore.loadStreetViewScene(id: sceneID)
+            }
         }
     }
-
-    // MARK: - Private
 
     private func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
         for feature in features {
@@ -150,4 +142,11 @@ class MapViewStore {
             nil
         }
     }
+
+    // MARK: - Lifecycle
+
+    init(mapStore: MapStore) {
+        self.mapStore = mapStore
+    }
+
 }

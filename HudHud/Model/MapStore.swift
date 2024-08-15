@@ -64,7 +64,10 @@ final class MapStore: ObservableObject {
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
     @Published var streetViewScene: StreetViewScene?
+    @Published var nearestStreetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
+    var cachedScenes = [Int: StreetViewScene]()
+    var mapView: NavigationMapView?
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -385,15 +388,51 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
-    func loadStreetViewScene(id: Int) {
-        Task {
-            do {
-                if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
-                    self.streetViewScene = streetViewScene
-                }
-            } catch {
-                Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+    func zoomToStreetViewLocation() {
+        guard let lat = streetViewScene?.lat else { return }
+        guard let lon = streetViewScene?.lon else { return }
+        self.camera = .center(CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                              zoom: 15, pitch: 0, pitchRange: .fixed(0))
+    }
+
+    func loadNearestStreetView(minLon: Double, minLat: Double,
+                               maxLon: Double, maxLat: Double) async {
+        do {
+            self.nearestStreetViewScene = try await self.hudhudStreetView.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
+        } catch {
+            self.nearestStreetViewScene = nil
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+        }
+    }
+
+    func loadStreetViewScene(id: Int) async {
+        if let item = self.cachedScenes[id] {
+            self.streetViewScene = item
+            return
+        }
+
+        do {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+                Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
+                self.streetViewScene = streetViewScene
+                self.cachedScenes[streetViewScene.id] = streetViewScene
             }
+        } catch {
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+        }
+    }
+
+    func preloadStreetViewScene(id: Int) async {
+        if self.cachedScenes[id] != nil {
+            return
+        }
+
+        do {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+                self.cachedScenes[streetViewScene.id] = streetViewScene
+            }
+        } catch {
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
         }
     }
 

@@ -75,32 +75,55 @@ struct ContentView: View {
             .safeAreaInset(edge: .bottom) {
                 if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
                     HStack(alignment: .bottom) {
-                        MapButtonsView(mapButtonsData: [
-                            MapButtonData(sfSymbol: .icon(.map)) {
-                                self.mapStore.path.append(SheetSubView.mapStyle)
-                            },
-                            MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-                                switch self.searchViewStore.mode {
-                                case let .live(provider):
-                                    self.searchViewStore.mode = .live(provider: provider.next())
-                                    Logger.searchView.info("Map Mode live")
-                                case .preview:
-                                    self.searchViewStore.mode = .live(provider: .hudhud)
-                                    Logger.searchView.info("Map Mode toursprung")
+                        HStack(alignment: .bottom) {
+                            MapButtonsView(mapButtonsData: [
+                                MapButtonData(sfSymbol: .icon(.map)) {
+                                    self.mapStore.path.append(SheetSubView.mapStyle)
+                                },
+                                MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+                                    switch self.searchViewStore.mode {
+                                    case let .live(provider):
+                                        self.searchViewStore.mode = .live(provider: provider.next())
+                                        Logger.searchView.info("Map Mode live")
+                                    case .preview:
+                                        self.searchViewStore.mode = .live(provider: .hudhud)
+                                        Logger.searchView.info("Map Mode toursprung")
+                                    }
+                                },
+                                MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
+                                    if self.mapStore.getCameraPitch() > 0 {
+                                        self.mapStore.camera.setPitch(0)
+                                    } else {
+                                        self.mapStore.camera.setZoom(17)
+                                        self.mapStore.camera.setPitch(60)
+                                    }
+                                },
+                                MapButtonData(sfSymbol: .icon(.terminal)) {
+                                    self.mapStore.path.append(SheetSubView.debugView)
                                 }
-                            },
-                            MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
-                                if self.mapStore.getCameraPitch() > 0 {
-                                    self.mapStore.camera.setPitch(0)
-                                } else {
-                                    self.mapStore.camera.setZoom(17)
-                                    self.mapStore.camera.setPitch(60)
+                            ])
+
+                            if let item = self.mapStore.nearestStreetViewScene {
+                                Button {
+                                    self.mapStore.streetViewScene = item
+
+                                    AppQueue.delay(0.2) {
+                                        self.mapStore.zoomToStreetViewLocation()
+                                    }
+
+                                } label: {
+                                    Image(systemSymbol: .binoculars)
+                                        .font(.title2)
+                                        .padding(10)
+                                        .foregroundColor(.gray)
+                                        .background(Color.white)
+                                        .cornerRadius(15)
+                                        .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
+                                        .fixedSize()
                                 }
-                            },
-                            MapButtonData(sfSymbol: .icon(.terminal)) {
-                                self.mapStore.path.append(SheetSubView.debugView)
                             }
-                        ])
+                        }
+
                         Spacer()
                         VStack(alignment: .trailing) {
                             CurrentLocationButton(mapStore: self.mapStore)
@@ -162,6 +185,19 @@ struct ContentView: View {
                     Task {
                         await self.reloadPOITrending()
                     }
+                }
+            }
+            .onChange(of: self.mapStore.camera) { _ in
+
+                let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
+                guard let minLongitude = boundingBox?.sw.longitude else { return }
+                guard let minLatitude = boundingBox?.sw.latitude else { return }
+
+                guard let maxLongitude = boundingBox?.ne.longitude else { return }
+                guard let maxLatitude = boundingBox?.ne.latitude else { return }
+
+                Task {
+                    await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
                 }
             }
         }
