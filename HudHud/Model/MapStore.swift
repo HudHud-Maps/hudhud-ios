@@ -172,8 +172,7 @@ final class MapStore: ObservableObject {
 
     var selectedPoint: ShapeSource {
         ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
-            if let selectedItem,
-               mapItems.count > 1 {
+            if let selectedItem {
                 let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
                 feature.attributes["poi_id"] = selectedItem.id
                 feature

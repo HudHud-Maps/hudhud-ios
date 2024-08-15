@@ -72,7 +72,7 @@ struct MapViewContainer: View {
             }
 
             if self.debugStore.customMapSymbols == true {
-                SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
+                SymbolStyleLayer(identifier: MapLayerIdentifier.customPOI, source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
                     .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                     .iconAllowsOverlap(false)
                     .text(featurePropertyNamed: "name_en")
@@ -125,7 +125,7 @@ struct MapViewContainer: View {
                 identifier: MapLayerIdentifier.selectedCircle,
                 source: self.mapStore.selectedPoint
             )
-            .radius(30)
+            .radius(24)
             .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
             .strokeWidth(2)
             .strokeColor(.white)

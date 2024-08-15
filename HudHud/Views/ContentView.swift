@@ -295,7 +295,8 @@ extension MapLayerIdentifier {
         Self.restaurants,
         Self.shops,
         Self.simpleCircles,
-        Self.streetView
+        Self.streetView,
+        customPOI
     ]
 }
 
