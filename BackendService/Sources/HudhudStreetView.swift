@@ -41,7 +41,7 @@ public struct StreetViewScene: Equatable {
 public struct HudhudStreetView {
 
     public func getStreetView(lat: Double, lon: Double, baseURL: String) async throws -> StreetViewItem? {
-        let response = try await ClientClass.makeClient(using: baseURL).getNearestStreetViewImage(query: .init(lat: lat, lon: lon)) // swiftlint:disable:this init_usage
+        let response = try await Client.makeClient(using: baseURL).getNearestStreetViewImage(query: .init(lat: lat, lon: lon)) // swiftlint:disable:this init_usage
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -65,7 +65,7 @@ public struct HudhudStreetView {
     }
 
     public func getStreetViewDetails(id: Int, baseURL: String) async throws -> StreetViewItem? {
-        let response = try await ClientClass.makeClient(using: baseURL).getStreetViewImage(path: .init(id: id))
+        let response = try await Client.makeClient(using: baseURL).getStreetViewImage(path: .init(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -91,7 +91,7 @@ public struct HudhudStreetView {
     }
 
     public func getStreetViewScene(id: Int, baseURL: String) async throws -> StreetViewScene? {
-        let response = try await ClientClass.makeClient(using: baseURL).getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
+        let response = try await Client.makeClient(using: baseURL).getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

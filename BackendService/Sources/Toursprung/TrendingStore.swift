@@ -27,7 +27,7 @@ public class TrendingStore: ObservableObject {
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
         let transport = URLSessionTransport(configuration: transportConfiguration)
 
-        let response = try await ClientClass.makeClient(using: baseURL, transport: transport).listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
+        let response = try await Client.makeClient(using: baseURL, transport: transport).listTrendingPois(query: .init(page: page, limit: limit, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

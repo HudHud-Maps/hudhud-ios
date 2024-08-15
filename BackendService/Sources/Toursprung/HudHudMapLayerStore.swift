@@ -30,7 +30,7 @@ public class HudHudMapLayerStore: ObservableObject {
 
         let transport = URLSessionTransport(configuration: transportConfiguration)
 
-        let response = try await ClientClass.makeClient(using: baseURL, transport: transport).listMapStyles()
+        let response = try await Client.makeClient(using: baseURL, transport: transport).listMapStyles()
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

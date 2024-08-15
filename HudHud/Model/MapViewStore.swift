@@ -29,7 +29,7 @@ enum SelectedPointOfInterest {
 class MapViewStore {
 
     private let mapStore: MapStore
-    private let hudhudResolver = HudHudPOI(baseURL: DebugStore().baseURL)
+    private let hudhudResolver = HudHudPOI()
 
     func didTapOnMap(containing features: [any MLNFeature]) {
         if self.mapStore.displayableItems.count == 1 {

@@ -80,17 +80,17 @@ public enum DisplayableRow: Hashable, Identifiable {
         }
     }
 
-    public func resolve(in provider: ApplePOI) async throws -> [DisplayableRow] {
+    public func resolve(in provider: ApplePOI, baseURL: String) async throws -> [DisplayableRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
-        let resolved = try await provider.lookup(id: self.id, prediction: completion)
+        let resolved = try await provider.lookup(id: self.id, prediction: completion, baseURL: baseURL)
         return resolved.map(DisplayableRow.resolvedItem)
     }
 
-    public func resolve(in provider: HudHudPOI) async throws -> [DisplayableRow] {
+    public func resolve(in provider: HudHudPOI, baseURL: String) async throws -> [DisplayableRow] {
         guard case .hudhud = self.type else { return [] }
 
-        let resolved = try await provider.lookup(id: self.id, prediction: self)
+        let resolved = try await provider.lookup(id: self.id, prediction: self, baseURL: baseURL)
         return resolved.map(DisplayableRow.resolvedItem)
     }
 
@@ -120,15 +120,14 @@ public struct Category: Hashable {
 
 public struct HudHudPOI: POIServiceProtocol {
 
-    private var client: Client
     public static var serviceName = "HudHud"
 
     private var currentLanguage: String {
         Locale.preferredLanguages.first ?? "en-US"
     }
 
-    public func lookup(id: String, prediction _: Any) async throws -> [ResolvedItem] {
-        let response = try await client.getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
+    public func lookup(id: String, prediction _: Any, baseURL: String) async throws -> [ResolvedItem] {
+        let response = try await Client.makeClient(using: baseURL).getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -153,11 +152,11 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
 
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> POIResponse {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
-        let response = try await client.getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: self.currentLanguage))
+        let response = try await Client.makeClient(using: baseURL).getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -207,11 +206,11 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
 
-    public func items(for category: String, location: CLLocationCoordinate2D?) async throws -> [ResolvedItem] {
+    public func items(for category: String, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
-        let response = try await client.listPois(
+        let response = try await Client.makeClient(using: baseURL).listPois(
             query: .init(category: category, lat: location?.latitude, lon: location?.longitude),
             headers: .init(Accept_hyphen_Language: self.currentLanguage)
         )
@@ -249,14 +248,12 @@ public struct HudHudPOI: POIServiceProtocol {
 
     // MARK: - Lifecycle
 
-    public init(baseURL: String) {
-        self.client = ClientClass.makeClient(using: baseURL)
-    }
+    public init() {}
 
     // MARK: - Public
 
-    public func lookup(id: String) async throws -> ResolvedItem? {
-        try await self.lookup(id: id, prediction: ()).first
+    public func lookup(id: String, baseURL: String) async throws -> ResolvedItem? {
+        try await self.lookup(id: id, prediction: (), baseURL: baseURL).first
     }
 
 }
