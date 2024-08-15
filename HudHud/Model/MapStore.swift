@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Combine
 import CoreLocation
 import Foundation
 import MapboxCoreNavigation
@@ -47,6 +48,8 @@ final class MapStore: ObservableObject {
     var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
+    var mapStyle: MLNStyle?
+
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
@@ -59,8 +62,12 @@ final class MapStore: ObservableObject {
 
     var hudhudStreetView = HudhudStreetView()
     private let hudhudResolver = HudHudPOI()
+    private var subscriptions: Set<AnyCancellable> = []
     @Published var streetViewScene: StreetViewScene?
+    @Published var nearestStreetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
+    var cachedScenes = [Int: StreetViewScene]()
+    var mapView: NavigationMapView?
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -143,6 +150,9 @@ final class MapStore: ObservableObject {
             self.mapItems.compactMap { item in
                 return MLNPointFeature(coordinate: item.coordinate) { feature in
                     feature.attributes["poi_id"] = item.id
+                    feature.attributes["ios_category_icon_name"] = item.symbol.rawValue
+                    feature.attributes["ios_category_icon_color"] = item.systemColor.rawValue
+                    feature.attributes["name"] = item.title
                 }
             }
         }
@@ -169,8 +179,7 @@ final class MapStore: ObservableObject {
 
     var selectedPoint: ShapeSource {
         ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
-            if let selectedItem,
-               mapItems.count > 1 {
+            if let selectedItem {
                 let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
                 feature.attributes["poi_id"] = selectedItem.id
                 feature
@@ -296,8 +305,38 @@ final class MapStore: ObservableObject {
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
-        self.displayableItems[index] = .resolvedItem(detailedItem)
-        self.selectedItem = detailedItem
+        var detailedItemUpdate = detailedItem
+        detailedItemUpdate.systemColor = item.systemColor
+        detailedItemUpdate.symbol = item.symbol
+        self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
+        self.selectedItem = detailedItemUpdate
+    }
+
+    // Unified route calculation function
+    func calculateRoute(
+        from location: CLLocation,
+        to destination: CLLocationCoordinate2D?,
+        additionalWaypoints: [Waypoint] = []
+    ) async throws -> RoutingService.RouteCalculationResult {
+        let startWaypoint = Waypoint(location: location)
+
+        var waypoints = [startWaypoint]
+        if let destinationCoordinate = destination {
+            let destinationWaypoint = Waypoint(coordinate: destinationCoordinate)
+            waypoints.append(destinationWaypoint)
+        }
+        waypoints.append(contentsOf: additionalWaypoints)
+
+        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
+        options.shapeFormat = .polyline6
+        options.distanceMeasurementSystem = .metric
+        options.attributeOptions = []
+
+        // Calculate the routes
+        let result = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
+
+        // Return the routes from the result
+        return result
     }
 
     // MARK: - Lifecycle
@@ -306,6 +345,7 @@ final class MapStore: ObservableObject {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
+        bindLayersVisability()
     }
 
 }
@@ -326,18 +366,12 @@ extension MapStore: NavigationViewControllerDelegate {
         Task {
             do {
                 guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
-                let options = NavigationRouteOptions(waypoints: [Waypoint(location: location), currentRoute])
-
-                options.shapeFormat = .polyline6
-                options.distanceMeasurementSystem = .metric
-                options.attributeOptions = []
-
-                let results = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
-                if let route = results.routes.first {
+                let routes = try await self.calculateRoute(from: location, to: nil, additionalWaypoints: [currentRoute])
+                if let route = routes.routes.first {
                     await self.reroute(with: route)
                 }
             } catch {
-                Logger.routing.error("Updating routes failed\(error.localizedDescription)")
+                Logger.routing.error("Updating routes failed: \(error.localizedDescription)")
             }
         }
     }
@@ -354,15 +388,51 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
-    func loadStreetViewScene(id: Int) {
-        Task {
-            do {
-                if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
-                    self.streetViewScene = streetViewScene
-                }
-            } catch {
-                Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+    func zoomToStreetViewLocation() {
+        guard let lat = streetViewScene?.lat else { return }
+        guard let lon = streetViewScene?.lon else { return }
+        self.camera = .center(CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                              zoom: 15, pitch: 0, pitchRange: .fixed(0))
+    }
+
+    func loadNearestStreetView(minLon: Double, minLat: Double,
+                               maxLon: Double, maxLat: Double) async {
+        do {
+            self.nearestStreetViewScene = try await self.hudhudStreetView.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
+        } catch {
+            self.nearestStreetViewScene = nil
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+        }
+    }
+
+    func loadStreetViewScene(id: Int) async {
+        if let item = self.cachedScenes[id] {
+            self.streetViewScene = item
+            return
+        }
+
+        do {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
+                Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
+                self.streetViewScene = streetViewScene
+                self.cachedScenes[streetViewScene.id] = streetViewScene
             }
+        } catch {
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+        }
+    }
+
+    func preloadStreetViewScene(id: Int) async {
+        if self.cachedScenes[id] != nil {
+            return
+        }
+
+        do {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
+                self.cachedScenes[streetViewScene.id] = streetViewScene
+            }
+        } catch {
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
         }
     }
 
@@ -378,6 +448,28 @@ extension MapStore: Previewable {
 // MARK: - Private
 
 private extension MapStore {
+
+    func bindLayersVisability() {
+        self.$displayableItems
+            .map(\.isEmpty)
+            .removeDuplicates()
+            .sink { [weak self] isEmpty in
+                if isEmpty {
+                    self?.mapStyle?.layers.forEach { layer in
+                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
+                            layer.isVisible = true
+                        }
+                    }
+                } else {
+                    self?.mapStyle?.layers.forEach { layer in
+                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
+                            layer.isVisible = false
+                        }
+                    }
+                }
+            }
+            .store(in: &self.subscriptions)
+    }
 
     func generateMLNCoordinateBounds(from coordinates: [CLLocationCoordinate2D]) -> MLNCoordinateBounds? {
         guard !coordinates.isEmpty else {

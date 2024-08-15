@@ -122,6 +122,7 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
         guard case .hudhud = self.type else { return [] }
 
         let resolved = try await provider.lookup(id: self.id, prediction: self, baseURL: baseURL)
+
         let mapped = resolved.map {
             AnyDisplayableAsRow($0)
         }
@@ -159,7 +160,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var title: String
     public var subtitle: String
     public var symbol: SFSymbol
-    public let systemColor: SystemColor
+    public var systemColor: SystemColor
     public var category: String?
     public let type: PredictionResult
     public var coordinate: CLLocationCoordinate2D

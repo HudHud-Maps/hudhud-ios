@@ -61,7 +61,9 @@ class MapViewStore {
                 await self.mapStore.resolve(item)
             }
         case let .streetViewScene(sceneID):
-            self.mapStore.loadStreetViewScene(id: sceneID)
+            Task {
+                await self.mapStore.loadStreetViewScene(id: sceneID)
+            }
         }
     }
 

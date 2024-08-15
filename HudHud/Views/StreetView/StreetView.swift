@@ -115,7 +115,7 @@ struct StreetView: View {
                 } label: {
                     Image(systemSymbol: .chevronUpCircleFill)
                         .resizable()
-                        .frame(width: 26, height: 26)
+                        .frame(width: 36, height: 36)
                         .accentColor(.white)
                         .shadow(radius: 26)
                         .opacity(self.streetViewScene?.previousId != nil ? 1.0 : 0.0)
@@ -127,7 +127,7 @@ struct StreetView: View {
                     } label: {
                         Image(systemSymbol: .chevronLeftCircleFill)
                             .resizable()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 36, height: 36)
                             .accentColor(.white)
                             .shadow(radius: 26)
                             .opacity(self.streetViewScene?.westId != nil ? 1.0 : 0.0)
@@ -141,7 +141,7 @@ struct StreetView: View {
                     } label: {
                         Image(systemSymbol: .chevronRightCircleFill)
                             .resizable()
-                            .frame(width: 26, height: 26)
+                            .frame(width: 36, height: 36)
                             .accentColor(.white)
                             .shadow(radius: 26)
                             .opacity(self.streetViewScene?.eastId != nil ? 1.0 : 0.0)
@@ -153,32 +153,16 @@ struct StreetView: View {
                 } label: {
                     Image(systemSymbol: .chevronDownCircleFill)
                         .resizable()
-                        .frame(width: 26, height: 26)
+                        .frame(width: 36, height: 36)
                         .accentColor(.white)
                         .shadow(radius: 26)
                         .opacity(self.streetViewScene?.nextId != nil ? 1.0 : 0.0)
                 }
             }
-//            .rotationEffect(Angle(degrees: Double(self.rotationIndicator)))
             .rotation3DEffect(.degrees(Double(self.rotationIndicator)), axis: (x: 0, y: 0, z: 1))
             .rotation3DEffect(.degrees(Double(self.rotationZIndicator)), axis: (x: 1, y: 0, z: 0))
             .padding()
             .padding(.bottom, 44)
-        }
-    }
-
-    // MARK: - Internal
-
-    func dismissView() {
-        self.streetViewScene = nil
-        self.fullScreenStreetView = false
-        // Do any cleanup...
-    }
-
-    func setMessage(_ msg: String) {
-        self.errorMsg = msg
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.dismissView()
         }
     }
 
@@ -188,10 +172,16 @@ struct StreetView: View {
     }
 
     func loadSVImage() {
+        // we will attempt to preload next and previous images if its not yet loaded
+        preLoadScenes()
+
+        Logger.streetView.log("SVD: streetViewScene3: \(self.streetViewScene.debugDescription)")
+
         guard let imageName = self.streetViewScene?.name else {
             self.isLoading = false
             return
         }
+        Logger.streetView.debug("loadSVImage Value: \(self.streetViewScene?.id ?? -1), \(imageName)")
 
         let link = self.getImageURL(imageName)
 
@@ -199,20 +189,18 @@ struct StreetView: View {
             self.progress = progress
         }
 
-        DownloadManager.downloadFile(link, downloadProgress: downloadProgress,
+        DownloadManager.downloadFile(link,
+                                     fileName: imageName,
+                                     downloadProgress: downloadProgress,
                                      block: { path, error in
                                          if let path {
-                                             if self.svimageId != path {
-                                                 AppQueue.main {
-                                                     PanoramaManager.shouldUpdateImage = true
-                                                     PanoramaManager.shouldResetCameraAngle = false
-                                                     let img = UIImage(contentsOfFile: path)
-                                                     self.svimage = img
-                                                     self.isLoading = false
-                                                     self.svimageId = path
-                                                 }
-                                             } else {
+                                             AppQueue.main {
+                                                 PanoramaManager.shouldUpdateImage = true
+                                                 PanoramaManager.shouldResetCameraAngle = false
+                                                 let img = UIImage(contentsOfFile: path)
+                                                 self.svimage = img
                                                  self.isLoading = false
+                                                 self.svimageId = path
                                              }
                                          } else {
                                              self.setMessage("Could not load the image - \(error ?? "N/A")")
@@ -221,17 +209,31 @@ struct StreetView: View {
                                      })
     }
 
+    // MARK: - Internal
+
+    func dismissView() {
+        self.streetViewScene = nil
+        self.fullScreenStreetView = false
+    }
+
+    func setMessage(_ msg: String) {
+        self.errorMsg = msg
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.dismissView()
+        }
+    }
+
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
             PanoramaViewer(image: img,
                            panoramaType: .spherical,
                            controlMethod: .touch) { _ in
-            } cameraMoved: { pitch, yaw, roll in
+            } cameraMoved: { pitch, yaw, _ in
                 DispatchQueue.main.async {
                     self.rotationIndicator = yaw
                     self.rotationZIndicator = pitch * 2 + 30
                 }
-                Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
+                // Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
             }
 
             VStack {
@@ -264,29 +266,18 @@ extension StreetView {
             guard let nextName = nextItem.name else {
                 return
             }
-            let link = self.getImageURL(nextName)
-            if let path = DownloadManager.getLocalFilePath(link),
-               let img = UIImage(contentsOfFile: path), svimageId != path {
-                AppQueue.main {
-                    self.svimageId = path
-                    PanoramaManager.shouldUpdateImage = true
-                    PanoramaManager.shouldResetCameraAngle = false
-                    self.svimage = img
-                }
-                return
-            } else {
-                self.errorMsg = nil
-                self.isLoading = true
-            }
-
+            Logger.streetView.debug("SVD: Direction: \(direction.rawValue), Value: \(nextId), \(nextName)")
+            self.errorMsg = nil
+            self.isLoading = true
             self.progress = 0.0
             await self.mapStore.loadStreetViewScene(id: nextId)
+            Logger.streetView.log("SVD: streetViewScene1: \(self.streetViewScene.debugDescription)")
             self.loadSVImage()
         }
     }
 
     func getNextID(_ direction: NavDirection) -> (id: Int?, name: String?) {
-        Logger.streetView.debug("Direction: \(direction.rawValue)")
+        Logger.streetView.debug("SVD: Direction: \(direction.rawValue)")
         switch direction {
         case .next:
             return (self.streetViewScene?.nextId, self.streetViewScene?.nextName)
@@ -297,6 +288,38 @@ extension StreetView {
         case .west:
             return (self.streetViewScene?.westId, self.streetViewScene?.westName)
         }
+    }
+
+    func preLoadScenes() {
+        let nextItem = self.getNextID(.next)
+        self.preLoadItem(nextItem.name)
+
+        let previousItem = self.getNextID(.previous)
+        self.preLoadItem(previousItem.name)
+
+        Task {
+            if let id = nextItem.id {
+                await self.mapStore.preloadStreetViewScene(id: id)
+            }
+            if let id = previousItem.id {
+                await self.mapStore.preloadStreetViewScene(id: id)
+            }
+        }
+    }
+
+    func preLoadItem(_ imgName: String?) {
+        guard let imgName else { return }
+
+        let link = self.getImageURL(imgName)
+
+        let fileExist = DownloadManager.fileExistOrLoading(link, fileName: imgName)
+        guard fileExist == false else { return }
+
+        DownloadManager.downloadFile(link,
+                                     fileName: imgName,
+                                     block: { _, error in
+                                         Logger.streetView.debug("Done preLoadItem: \(imgName) error: \(error ?? "N/A")")
+                                     })
     }
 
 }

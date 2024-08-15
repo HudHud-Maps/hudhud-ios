@@ -219,14 +219,16 @@ public struct HudHudPOI: POIServiceProtocol {
         case let .ok(success):
             let body = try success.body.json
             return body.data.map { item -> ResolvedItem in
-                ResolvedItem(
+                let caseInsensitiveCategory = item.category.lowercased()
+                return ResolvedItem(
                     id: item.id,
                     title: item.name,
                     subtitle: "",
                     category: item.category,
+                    symbol: categorySymbol[caseInsensitiveCategory] ?? .pin,
                     type: .hudhud,
                     coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
-                    color: .systemRed,
+                    color: categoryColor[caseInsensitiveCategory] ?? .systemRed,
                     phone: item.phone_number,
                     website: URL(string: item.website ?? ""),
                     rating: item.rating,
@@ -366,3 +368,40 @@ public enum SystemColor: String, Codable {
         }
     }
 }
+
+// swiftlint:disable sf_symbol_init
+let categorySymbol: [String: SFSymbol] = [
+    "clinic": SFSymbol(rawValue: "cross.case.fill"),
+    "bank": SFSymbol(rawValue: "banknote.fill"),
+    "atm": SFSymbol(rawValue: "creditcard.and.123"),
+    "building": SFSymbol(rawValue: "building.2.fill"),
+    "hospital": SFSymbol(rawValue: "cross.fill"),
+    "movie Theater": SFSymbol(rawValue: "film"),
+    "gym": SFSymbol(rawValue: "dumbbell.fill"),
+    "coffee Shop": SFSymbol(rawValue: "cup.and.saucer.fill"),
+    "restaurant": SFSymbol(rawValue: "fork.knife"),
+    "clothing Store": SFSymbol(rawValue: "tshirt.fill"),
+    "office": SFSymbol(rawValue: "building.columns.fill"),
+    "company": SFSymbol(rawValue: "building.fill"),
+    "book store": SFSymbol(rawValue: "books.vertical.fill"),
+    "hotel": SFSymbol(rawValue: "bed.double.fill"),
+    "shop": SFSymbol(rawValue: "cart.fill")
+]
+let categoryColor: [String: SystemColor] = [
+    "clinic": .systemPink,
+    "bank": .systemIndigo,
+    "atm": .systemIndigo,
+    "building": .systemIndigo,
+    "hospital": .systemPink,
+    "movie Theater": .systemTeal,
+    "gym": .systemPink,
+    "coffee Shop": .systemOrange,
+    "restaurant": .systemOrange,
+    "clothing Store": .systemBlue,
+    "office": .systemIndigo,
+    "company": .systemIndigo,
+    "book store": .systemGray,
+    "hotel": .systemIndigo,
+    "shop": .systemBlue
+]
+// swiftlint:enable sf_symbol_init

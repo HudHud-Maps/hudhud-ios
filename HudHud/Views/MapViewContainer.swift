@@ -31,6 +31,7 @@ struct MapViewContainer: View {
             let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
             viewController.mapView.compassViewMargins.y = 50
+            self.mapStore.mapView = viewController.mapView
             return viewController
         }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
@@ -71,11 +72,11 @@ struct MapViewContainer: View {
                     .iconColor(.white)
             }
 
-            if self.debugStore.customMapSymbols == true {
-                SymbolStyleLayer(identifier: "patPOI", source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
+            if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty {
+                SymbolStyleLayer(identifier: MapLayerIdentifier.customPOI, source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
                     .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                     .iconAllowsOverlap(false)
-                    .text(featurePropertyNamed: "name_en")
+                    .text(featurePropertyNamed: "name")
                     .textFontSize(11)
                     .maximumTextWidth(8.0)
                     .textHaloColor(UIColor.white)
@@ -86,6 +87,7 @@ struct MapViewContainer: View {
                     .textOffset(CGVector(dx: 0, dy: 1.2))
                     .minimumZoomLevel(13.0)
                     .maximumZoomLevel(22.0)
+                    .textFontNames(["IBMPlexSansArabic-Regular"])
             }
 
             let pointSource = self.mapStore.points
@@ -104,15 +106,20 @@ struct MapViewContainer: View {
 
             // shows the unclustered pins
             if self.mapStore.navigationProgress != .navigating {
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbols, source: pointSource)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
+                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource.makeMGLSource())
+                    .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
+                    .iconAllowsOverlap(false)
+                    .text(featurePropertyNamed: "name")
+                    .textFontSize(11)
+                    .maximumTextWidth(8.0)
+                    .textHaloColor(UIColor.white)
+                    .textHaloWidth(1.0)
+                    .textHaloBlur(0.5)
+                    .textAnchor("top")
+                    .textColor(expression: SFSymbolSpriteSheet.colorExpression)
+                    .textOffset(CGVector(dx: 0, dy: 1.2))
+                    .minimumZoomLevel(13.0)
+                    .maximumZoomLevel(22.0)
                     .predicate(NSPredicate(format: "cluster != YES"))
             }
             // shows the selected pin
@@ -121,7 +128,7 @@ struct MapViewContainer: View {
                 source: self.mapStore.selectedPoint
             )
             .radius(24)
-            .color(.systemRed)
+            .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
             .strokeWidth(2)
             .strokeColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
@@ -129,7 +136,7 @@ struct MapViewContainer: View {
                 identifier: MapLayerIdentifier.selectedCircleIcon,
                 source: self.mapStore.selectedPoint
             )
-            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+            .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
         }
@@ -171,6 +178,9 @@ struct MapViewContainer: View {
             }
         }
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
+        .onStyleLoaded { style in
+            self.mapStore.mapStyle = style
+        }
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
                 let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)

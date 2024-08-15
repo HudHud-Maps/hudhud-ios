@@ -97,11 +97,10 @@ struct MapLayersView: View {
                             AsyncImage(url: layer.thumbnailUrl) { image in
                                 image
                                     .resizable()
-                                    .scaledToFill()
+                                    .scaledToFit()
                             } placeholder: {
                                 ProgressView()
                             }
-                            .frame(width: (UIScreen.main.bounds.width / 2) - 20, height: 119)
                             .background(Color.Colors.General._03LightGrey)
                             .cornerRadius(12)
                             .overlay(

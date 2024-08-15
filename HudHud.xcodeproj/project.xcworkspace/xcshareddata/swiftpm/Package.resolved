@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
       "state" : {
-        "branch" : "mapstyle-pois",
-        "revision" : "05d6cf3e639bdf05f22f93df3a02c4e5c74005c2"
+        "branch" : "ability-to-change-font",
+        "revision" : "b53711017770dd2113584b7277f8755d1e54f789"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "ccec0efd3e4a48b85b5407f788916de265c986dc"
+        "revision" : "81ccaead99a3c038c09345caa2888ae74b644ee9",
+        "version" : "0.0.9"
       }
     },
     {
@@ -183,7 +183,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "location" : "https://github.com/apple/swift-syntax.git",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"

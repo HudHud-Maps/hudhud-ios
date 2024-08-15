@@ -6,6 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import CoreLocation
+import MapboxCoreNavigation
 import SwiftUI
 
 // MARK: - DebugMenuView
@@ -20,6 +22,11 @@ struct DebugMenuView: View {
             Section(header: Text("Routing Configuration")) {
                 TextField("Routing URL", text: self.$debugSettings.routingHost)
                     .autocapitalization(.none)
+                    .disableAutocorrection(true)
+            }
+            Section(header: Text("maximum distance before recalculating")) {
+                TextField("In meters", text: self.$debugSettings.maximumDistanceBeforeRecalculating.string)
+                    .keyboardType(.asciiCapableNumberPad)
                     .disableAutocorrection(true)
             }
 
@@ -68,6 +75,9 @@ struct DebugMenuView: View {
                 }
             }
         }
+        .onChange(of: self.debugSettings.maximumDistanceBeforeRecalculating) { newMaximumDistance in
+            RouteControllerMaximumDistanceBeforeRecalculating = newMaximumDistance
+        }
     }
 }
 
@@ -87,4 +97,17 @@ func optionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T>
 
 func ?? <T>(left: Binding<T?>, right: T) -> Binding<T> {
     return optionalBinding(left, right)
+}
+
+private extension CLLocationDistance {
+    var string: String {
+        get {
+            "\(self)"
+        }
+        set {
+            if let result = CLLocationDistance(newValue) {
+                self = result
+            }
+        }
+    }
 }

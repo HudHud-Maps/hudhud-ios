@@ -25,6 +25,9 @@ struct RateNavigationView: View {
 
     var selectedFace: ((Int) -> Void)?
     let onDismiss: () -> Void
+    var smallScreen: Bool {
+        UIScreen.main.bounds.height < 700
+    }
 
     var body: some View {
         NavigationStack {
@@ -65,8 +68,8 @@ struct RateNavigationView: View {
                 }
             }
             .padding(.top)
-            .onAppear {
-                self.mapStore.allowedDetents = [.small, .third]
+            .onAppear { // if smaller screen = bigger sheet to fit content
+                self.mapStore.allowedDetents = (self.smallScreen ? [.nearHalf] : [.small, .third])
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
