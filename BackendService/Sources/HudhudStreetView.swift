@@ -40,12 +40,10 @@ public struct StreetViewScene: Equatable {
 
 public struct HudhudStreetView {
 
-    public func getStreetView(lat: Double, lon: Double) async throws -> StreetViewItem? {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-
+    public func getStreetView(lat: Double, lon: Double, baseURL: String) async throws -> StreetViewItem? {
         let query = Operations.getNearestStreetViewImage.Input.Query(lat: lat, lon: lon)
         let input = Operations.getNearestStreetViewImage.Input(query: query)
-        let response = try await client.getNearestStreetViewImage(input)
+        let response = try await Client.makeClient(using: baseURL).getNearestStreetViewImage(input)
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -68,9 +66,8 @@ public struct HudhudStreetView {
         }
     }
 
-    public func getStreetViewDetails(id: Int) async throws -> StreetViewItem? {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-        let response = try await client.getStreetViewImage(path: .init(id: id)) // swiftlint:disable:this init_usage
+    public func getStreetViewDetails(id: Int, baseURL: String) async throws -> StreetViewItem? {
+        let response = try await Client.makeClient(using: baseURL).getStreetViewImage(path: .init(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -95,9 +92,8 @@ public struct HudhudStreetView {
         }
     }
 
-    public func getStreetViewScene(id: Int) async throws -> StreetViewScene? {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
-        let response = try await client.getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
+    public func getStreetViewScene(id: Int, baseURL: String) async throws -> StreetViewScene? {
+        let response = try await Client.makeClient(using: baseURL).getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

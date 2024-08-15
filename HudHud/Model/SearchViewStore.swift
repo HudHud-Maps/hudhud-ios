@@ -118,9 +118,9 @@ final class SearchViewStore: ObservableObject {
         do {
             let items = switch self.mode {
             case .live(provider: .apple):
-                try await item.resolve(in: self.apple)
+                try await item.resolve(in: self.apple, baseURL: "") // no need to sent url
             case .live(provider: .hudhud):
-                try await item.resolve(in: self.hudhud)
+                try await item.resolve(in: self.hudhud, baseURL: DebugStore().baseURL)
             case .preview:
                 [item]
             }
@@ -150,7 +150,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let items = try await hudhud.items(for: category, location: self.mapStore.currentLocation)
+            let items = try await hudhud.items(for: category, location: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
@@ -168,7 +168,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let results = try await self.hudhud.predict(term: self.searchText, coordinates: self.mapStore.currentLocation)
+            let results = try await self.hudhud.predict(term: self.searchText, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
                     return DisplayableRow.categoryItem(resolvedItem)
@@ -223,9 +223,9 @@ private extension SearchViewStore {
             do {
                 let result = switch provider {
                 case .apple:
-                    try await self.apple.predict(term: term, coordinates: self.mapStore.currentLocation)
+                    try await self.apple.predict(term: term, coordinates: self.mapStore.currentLocation, baseURL: "") // no need to send URL
                 case .hudhud:
-                    try await self.hudhud.predict(term: term, coordinates: self.mapStore.currentLocation)
+                    try await self.hudhud.predict(term: term, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
                 }
                 self.searchError = nil
                 self.mapStore.displayableItems = result.items

@@ -17,8 +17,8 @@ import SwiftUI
 public protocol POIServiceProtocol {
 
     static var serviceName: String { get }
-    func lookup(id: String, prediction: Any) async throws -> [ResolvedItem]
-    func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse
+    func lookup(id: String, prediction: Any, baseURL: String) async throws -> [ResolvedItem]
+    func predict(term: String, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> POIResponse
 }
 
 // MARK: - PredictionResult
@@ -42,8 +42,8 @@ public protocol DisplayableAsRow: Identifiable, Hashable {
     var subtitle: String { get }
     var symbol: SFSymbol { get }
 
-    func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow]
-    func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow]
+    func resolve(in provider: ApplePOI, baseURL: String) async throws -> [AnyDisplayableAsRow]
+    func resolve(in provider: HudHudPOI, baseURL: String) async throws -> [AnyDisplayableAsRow]
 }
 
 // MARK: - AnyDisplayableAsRow
@@ -78,12 +78,12 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
         return lhs.id == rhs.id
     }
 
-    public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
-        return try await self.innerModel.resolve(in: provider)
+    public func resolve(in provider: ApplePOI, baseURL: String) async throws -> [AnyDisplayableAsRow] {
+        return try await self.innerModel.resolve(in: provider, baseURL: baseURL)
     }
 
-    public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
-        return try await self.innerModel.resolve(in: provider)
+    public func resolve(in provider: HudHudPOI, baseURL: String) async throws -> [AnyDisplayableAsRow] {
+        return try await self.innerModel.resolve(in: provider, baseURL: baseURL)
     }
 
     public func hash(into hasher: inout Hasher) {
@@ -108,20 +108,21 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
     public var symbol: SFSymbol
     public var type: PredictionResult
 
-    public func resolve(in provider: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+    public func resolve(in provider: ApplePOI, baseURL: String) async throws -> [AnyDisplayableAsRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
-        let resolved = try await provider.lookup(id: self.id, prediction: completion)
+        let resolved = try await provider.lookup(id: self.id, prediction: completion, baseURL: baseURL)
         let mapped = resolved.map {
             AnyDisplayableAsRow($0)
         }
         return mapped
     }
 
-    public func resolve(in provider: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+    public func resolve(in provider: HudHudPOI, baseURL: String) async throws -> [AnyDisplayableAsRow] {
         guard case .hudhud = self.type else { return [] }
 
-        let resolved = try await provider.lookup(id: self.id, prediction: self)
+        let resolved = try await provider.lookup(id: self.id, prediction: self, baseURL: baseURL)
+
         let mapped = resolved.map {
             AnyDisplayableAsRow($0)
         }
@@ -203,11 +204,11 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: - Public
 
-    public func resolve(in _: ApplePOI) async throws -> [AnyDisplayableAsRow] {
+    public func resolve(in _: ApplePOI, baseURL _: String) async throws -> [AnyDisplayableAsRow] {
         return [AnyDisplayableAsRow(self)]
     }
 
-    public func resolve(in _: HudHudPOI) async throws -> [AnyDisplayableAsRow] {
+    public func resolve(in _: HudHudPOI, baseURL _: String) async throws -> [AnyDisplayableAsRow] {
         return [AnyDisplayableAsRow(self)]
     }
 

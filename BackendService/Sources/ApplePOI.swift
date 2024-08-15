@@ -25,20 +25,7 @@ public actor ApplePOI: POIServiceProtocol {
 
     public static var serviceName: String = "Apple"
 
-    // MARK: - Lifecycle
-
-    public init() {
-        self.completer = MKLocalSearchCompleter()
-        self.delegate = DelegateWrapper()
-        self.delegate.apple = self
-        Task {
-            await self.completer.delegate = self.delegate
-        }
-    }
-
-    // MARK: - Public
-
-    public func lookup(id: String, prediction: Any) async throws -> [ResolvedItem] {
+    public func lookup(id: String, prediction: Any, baseURL _: String) async throws -> [ResolvedItem] {
         guard let completion = prediction as? MKLocalSearchCompletion else {
             return []
         }
@@ -76,7 +63,7 @@ public actor ApplePOI: POIServiceProtocol {
         }
     }
 
-    public func predict(term: String, coordinates: CLLocationCoordinate2D?) async throws -> POIResponse {
+    public func predict(term: String, coordinates: CLLocationCoordinate2D?, baseURL _: String) async throws -> POIResponse {
         return try await withCheckedThrowingContinuation { continuation in
             if let continuation = self.continuation {
                 self.completer.cancel()
@@ -100,6 +87,17 @@ public actor ApplePOI: POIServiceProtocol {
         }
     }
 
+    // MARK: - Lifecycle
+
+    public init() {
+        self.completer = MKLocalSearchCompleter()
+        self.delegate = DelegateWrapper()
+        self.delegate.apple = self
+        Task {
+            await self.completer.delegate = self.delegate
+        }
+    }
+
     // MARK: - Internal
 
     func update(results: [DisplayableRow]) async {
@@ -119,8 +117,6 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
     weak var apple: ApplePOI?
 
-    // MARK: - Internal
-
     // MARK: - MKLocalSearchCompleterDelegate
 
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
@@ -136,6 +132,8 @@ private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
             await self.apple?.update(results: results)
         }
     }
+
+    // MARK: - Internal
 
     func completer(_: MKLocalSearchCompleter, didFailWithError error: Error) {
         Task {

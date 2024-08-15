@@ -301,7 +301,7 @@ final class MapStore: ObservableObject {
             self.displayableItems.append(.resolvedItem(item))
         }
         self.selectedItem = item
-        guard let detailedItem = try? await hudhudResolver.lookup(id: item.id),
+        guard let detailedItem = try? await hudhudResolver.lookup(id: item.id, baseURL: DebugStore().baseURL),
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
@@ -412,7 +412,7 @@ extension MapStore {
         }
 
         do {
-            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
                 Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
                 self.streetViewScene = streetViewScene
                 self.cachedScenes[streetViewScene.id] = streetViewScene
@@ -428,7 +428,7 @@ extension MapStore {
         }
 
         do {
-            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id) {
+            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
                 self.cachedScenes[streetViewScene.id] = streetViewScene
             }
         } catch {

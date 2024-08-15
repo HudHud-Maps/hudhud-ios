@@ -62,6 +62,9 @@
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
     },
+    "Base URL" : {
+
+    },
     "bicycle" : {
       "localizations" : {
         "ar" : {
@@ -288,6 +291,9 @@
     "No Results" : {
 
     },
+    "Note: Changing the URL requires restarting the app for the changes to take effect." : {
+
+    },
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
@@ -315,6 +321,9 @@
           }
         }
       }
+    },
+    "Reset" : {
+
     },
     "root view" : {
 
