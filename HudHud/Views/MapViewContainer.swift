@@ -71,7 +71,7 @@ struct MapViewContainer: View {
                     .iconColor(.white)
             }
 
-            if self.debugStore.customMapSymbols == true {
+            if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty {
                 SymbolStyleLayer(identifier: MapLayerIdentifier.customPOI, source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
                     .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                     .iconAllowsOverlap(false)
@@ -176,6 +176,9 @@ struct MapViewContainer: View {
             }
         }
         .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
+        .onStyleLoaded { style in
+            self.mapStore.mapStyle = style
+        }
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
                 let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
