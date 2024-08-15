@@ -75,7 +75,7 @@ struct MapViewContainer: View {
                 SymbolStyleLayer(identifier: MapLayerIdentifier.customPOI, source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
                     .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                     .iconAllowsOverlap(false)
-                    .text(featurePropertyNamed: "name_en")
+                    .text(featurePropertyNamed: "name")
                     .textFontSize(11)
                     .maximumTextWidth(8.0)
                     .textHaloColor(UIColor.white)
@@ -86,6 +86,7 @@ struct MapViewContainer: View {
                     .textOffset(CGVector(dx: 0, dy: 1.2))
                     .minimumZoomLevel(13.0)
                     .maximumZoomLevel(22.0)
+                    .textFontNames(["IBMPlexSansArabic-Regular"])
             }
 
             let pointSource = self.mapStore.points

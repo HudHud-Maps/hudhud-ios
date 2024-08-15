@@ -250,9 +250,9 @@ extension Binding where Value == Bool {
     }
 }
 
-// MARK: - NavigationViewController + WrappedViewController
+// MARK: - NavigationViewController + MapViewHostViewController
 
-extension NavigationViewController: WrappedViewController {
+extension NavigationViewController: MapViewHostViewController {
     public typealias MapType = NavigationMapView
 }
 

@@ -18,6 +18,7 @@
 		<string>PlusJakartaSans-ExtraBold.ttf</string>
 		<string>PlusJakartaSans-BoldItalic.ttf</string>
 		<string>PlusJakartaSans-Bold.ttf</string>
+        <string>IBMPlexSansArabic-Regular.ttf</string>
 	</array>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
