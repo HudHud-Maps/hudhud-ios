@@ -8,7 +8,7 @@
 import Foundation
 import OpenAPIURLSession
 
-public extension Client {
+extension Client {
     static func makeClient(using baseURLString: String, transport: URLSessionTransport = URLSessionTransport()) -> Client {
         if let baseURL = URL(string: baseURLString) {
             return Client(serverURL: baseURL, transport: transport)
