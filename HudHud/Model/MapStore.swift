@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Combine
 import CoreLocation
 import Foundation
 import MapboxCoreNavigation
@@ -47,6 +48,8 @@ final class MapStore: ObservableObject {
     var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
+    var mapStyle: MLNStyle?
+
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
 
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
@@ -59,6 +62,7 @@ final class MapStore: ObservableObject {
 
     var hudhudStreetView = HudhudStreetView()
     private let hudhudResolver = HudHudPOI()
+    private var subscriptions: Set<AnyCancellable> = []
     @Published var streetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
 
@@ -339,6 +343,7 @@ final class MapStore: ObservableObject {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
+        bindLayersVisability()
     }
 
 }
@@ -405,6 +410,28 @@ extension MapStore: Previewable {
 // MARK: - Private
 
 private extension MapStore {
+
+    func bindLayersVisability() {
+        self.$displayableItems
+            .map(\.isEmpty)
+            .removeDuplicates()
+            .sink { [weak self] isEmpty in
+                if isEmpty {
+                    self?.mapStyle?.layers.forEach { layer in
+                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
+                            layer.isVisible = true
+                        }
+                    }
+                } else {
+                    self?.mapStyle?.layers.forEach { layer in
+                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
+                            layer.isVisible = false
+                        }
+                    }
+                }
+            }
+            .store(in: &self.subscriptions)
+    }
 
     func generateMLNCoordinateBounds(from coordinates: [CLLocationCoordinate2D]) -> MLNCoordinateBounds? {
         guard !coordinates.isEmpty else {
