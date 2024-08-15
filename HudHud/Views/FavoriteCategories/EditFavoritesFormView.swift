@@ -51,7 +51,7 @@ struct EditFavoritesFormView: View {
                     }
                 }
                 Section {
-                    MapView<MapViewController>(styleURL: self.styleURL, camera: self.$camera)
+                    MapView<MLNMapViewController>(styleURL: self.styleURL, camera: self.$camera)
                         .frame(height: 140)
                         .disabled(true)
                 }
@@ -111,20 +111,6 @@ struct EditFavoritesFormView: View {
         }
     }
 
-    // MARK: - Lifecycle
-
-    init(item: ResolvedItem, favoritesItem: FavoritesItem?, camera: Binding<MapViewCamera>) {
-        self.item = item
-        self.favoritesItem = favoritesItem
-        _title = State(initialValue: favoritesItem?.title ?? "")
-        _description = State(initialValue: favoritesItem?.description ?? "")
-        _selectedType = State(initialValue: favoritesItem?.type ?? "")
-        _types = State(initialValue: ["Home", "School", "Work", "Restaurant"])
-        _camera = camera
-    }
-
-    // MARK: - Private
-
     private func saveChanges() {
         let newFavoritesItem = FavoritesItem(
             id: favoritesItem?.id ?? UUID(),
@@ -152,6 +138,20 @@ struct EditFavoritesFormView: View {
             self.favorites.favoritesItems.append(newFavoritesItem)
         }
     }
+
+    // MARK: - Lifecycle
+
+    init(item: ResolvedItem, favoritesItem: FavoritesItem?, camera: Binding<MapViewCamera>) {
+        self.item = item
+        self.favoritesItem = favoritesItem
+        _title = State(initialValue: favoritesItem?.title ?? "")
+        _description = State(initialValue: favoritesItem?.description ?? "")
+        _selectedType = State(initialValue: favoritesItem?.type ?? "")
+        _types = State(initialValue: ["Home", "School", "Work", "Restaurant"])
+        _camera = camera
+    }
+
+    // MARK: - Private
 
     private func addNewOption() {
         guard !self.newType.isEmpty, !self.types.contains(self.newType) else { return }
