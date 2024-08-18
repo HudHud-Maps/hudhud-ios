@@ -388,6 +388,10 @@ extension MapStore: NavigationViewControllerDelegate {
 
 extension MapStore {
 
+    func isSFSymbolLayerPresent() -> Bool {
+        return self.mapStyle?.layers.contains { $0.identifier == "hpoi_resturant" } ?? false
+    }
+
     func zoomToStreetViewLocation() {
         guard let lat = streetViewScene?.lat else { return }
         guard let lon = streetViewScene?.lon else { return }

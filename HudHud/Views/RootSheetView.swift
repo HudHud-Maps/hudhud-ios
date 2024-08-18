@@ -32,6 +32,9 @@ struct RootSheetView: View {
                         MapLayersView(mapStore: self.mapStore, hudhudMapLayerStore: self.mapLayerStore)
                             .navigationBarBackButtonHidden()
                             .presentationCornerRadius(21)
+                            .onAppear {
+                                self.debugStore.customMapSymbols = false
+                            }
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
                             .onDisappear(perform: {
