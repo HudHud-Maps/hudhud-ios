@@ -127,34 +127,42 @@ struct EditFavoritesFormView: View {
         // A set of types that should only have their "item" updated
         let updatableTypes: Set<String> = ["Home", "School", "Work"]
 
-        // Find the index of the item with the same type
-        if let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
-            // Move data from one type to another within the updatable types
-            if let sourceIndex = favorites.favoritesItems.firstIndex(where: { $0.item != nil && $0.type != newFavoritesItem.type && updatableTypes.contains($0.type) }) {
-                var sourceItem = self.favorites.favoritesItems[sourceIndex]
-                var targetItem = self.favorites.favoritesItems[existingIndex]
+        // Check if the item being updated already exists in the list
+        if let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.item == newFavoritesItem.item }) {
+            // Check if the type has changed and is one of the updatable types
+            let existingItem = self.favorites.favoritesItems[existingIndex]
 
-                // Transfer the data
-                targetItem.title = sourceItem.title
-                targetItem.item = sourceItem.item
-                targetItem.description = sourceItem.description
+            if existingItem.type != newFavoritesItem.type, updatableTypes.contains(existingItem.type) {
+                // Move data to the new type slot
+                if let targetIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
+                    self.favorites.favoritesItems[targetIndex].title = existingItem.title
+                    self.favorites.favoritesItems[targetIndex].item = existingItem.item
+                    self.favorites.favoritesItems[targetIndex].description = existingItem.description
 
-                // Clear the source item
-                sourceItem.title = ""
-                sourceItem.item = nil
-                sourceItem.description = nil
-
-                // Update the array
-                self.favorites.favoritesItems[sourceIndex] = sourceItem
-                self.favorites.favoritesItems[existingIndex] = targetItem
+                    // Clear the existing item
+                    self.favorites.favoritesItems[existingIndex].title = ""
+                    self.favorites.favoritesItems[existingIndex].item = nil
+                    self.favorites.favoritesItems[existingIndex].description = nil
+                }
             } else {
-                // If no existing item to transfer data from, just update the existing item
+                // Just update the existing item with new details
                 self.favorites.favoritesItems[existingIndex].title = newFavoritesItem.title
                 self.favorites.favoritesItems[existingIndex].item = newFavoritesItem.item
                 self.favorites.favoritesItems[existingIndex].description = newFavoritesItem.description
             }
+        } else if updatableTypes.contains(newFavoritesItem.type) {
+            // Handle the case where we're adding a new item of an updatable type
+            if let existingTypeIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
+                // Update the existing type item
+                self.favorites.favoritesItems[existingTypeIndex].title = newFavoritesItem.title
+                self.favorites.favoritesItems[existingTypeIndex].item = newFavoritesItem.item
+                self.favorites.favoritesItems[existingTypeIndex].description = newFavoritesItem.description
+            } else {
+                // If no item of the same type exists, add the new item
+                self.favorites.favoritesItems.append(newFavoritesItem)
+            }
         } else {
-            // Add a new item if it's not a static type
+            // Add the new item to the list if it’s not one of the updatable types
             self.favorites.favoritesItems.append(newFavoritesItem)
         }
     }

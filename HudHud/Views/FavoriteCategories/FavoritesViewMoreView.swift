@@ -18,6 +18,7 @@ struct FavoritesViewMoreView: View {
     @ObservedObject var mapStore: MapStore
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
+    @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
     @Environment(\.dismiss) var dismiss
 
@@ -46,28 +47,29 @@ struct FavoritesViewMoreView: View {
                             Spacer()
                             Button {
                                 self.actionSheetShown = true
+                                self.clickedFavorite = favorite
                             } label: {
                                 Text("...")
                                     .foregroundStyle(Color(UIColor.label))
                             }
-                            .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                                NavigationLink {
-                                    EditFavoritesFormView(item: favoriteItem, favoritesItem: favorite)
-                                } label: {
-                                    Text("Edit")
-                                }
-                                Button(role: .destructive) {
-                                    let updatableTypes: Set<String> = ["Home", "School", "Work"]
-                                    if let index = self.favorites.favoritesItems.firstIndex(where: { $0 == favorite }), updatableTypes.contains(favorite.type) {
-                                        self.favorites.favoritesItems[index].item = nil
-                                    } else {
-                                        self.favorites.favoritesItems.removeAll(where: { $0.id == favorite.id })
-                                    }
-                                } label: {
-                                    Text("Delete")
-                                }
-                            }
                         }
+                    }
+                }
+                .confirmationDialog("action", isPresented: self.$actionSheetShown) {
+                    NavigationLink {
+                        EditFavoritesFormView(item: self.clickedFavorite.item ?? .starbucks, favoritesItem: self.clickedFavorite)
+                    } label: {
+                        Text("Edit")
+                    }
+                    Button(role: .destructive) {
+                        let updatableTypes: Set<String> = ["Home", "School", "Work"]
+                        if let index = self.favorites.favoritesItems.firstIndex(where: { $0 == clickedFavorite }), updatableTypes.contains(clickedFavorite.type) {
+                            self.favorites.favoritesItems[index].item = nil
+                        } else {
+                            self.favorites.favoritesItems.removeAll(where: { $0.id == self.clickedFavorite.id })
+                        }
+                    } label: {
+                        Text("Delete")
                     }
                 }
             }
