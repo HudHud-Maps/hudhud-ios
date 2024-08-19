@@ -18,8 +18,6 @@ struct FavoriteCategoriesView: View {
 
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
-    @State var viewMoreShown: Bool = false
-
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
@@ -35,8 +33,8 @@ struct FavoriteCategoriesView: View {
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor))
                 }
-                Button {
-                    self.viewMoreShown = true
+                NavigationLink {
+                    FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
                 } label: {
                     Text("Add")
                         .hudhudFont(size: 12, fontWeight: .medium)

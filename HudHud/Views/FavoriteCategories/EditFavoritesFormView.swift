@@ -31,8 +31,8 @@ struct EditFavoritesFormView: View {
     @State var types: [String]
     @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.Types.home: .houseFill, FavoritesItem.Types.work: .bagFill, FavoritesItem.Types.school: .buildingFill]
 
-    @Binding var camera: MapViewCamera
-    private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @ScaledMetric var imageSize = 30
 
@@ -109,6 +109,9 @@ struct EditFavoritesFormView: View {
                 self.dismiss()
             })
         }
+        .onAppear {
+            self.camera = MapViewCamera.center(self.item.coordinate, zoom: 14)
+        }
     }
 
     private func saveChanges() {
@@ -121,34 +124,50 @@ struct EditFavoritesFormView: View {
             type: self.selectedType
         )
 
-        // a set of types that should only be updated
+        // A set of types that should only have their "item" updated
         let updatableTypes: Set<String> = ["Home", "School", "Work"]
 
-        if updatableTypes.contains(newFavoritesItem.type),
-           let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type || $0.id == newFavoritesItem.id }) {
-            // Update the existing item at the found index
-            var existingItem = self.favorites.favoritesItems[existingIndex]
-            existingItem.title = newFavoritesItem.title
-            existingItem.item = newFavoritesItem.item
-            existingItem.description = newFavoritesItem.description
-            existingItem.type = newFavoritesItem.type
+        // Find the index of the item with the same type
+        if let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
+            // Move data from one type to another within the updatable types
+            if let sourceIndex = favorites.favoritesItems.firstIndex(where: { $0.item != nil && $0.type != newFavoritesItem.type && updatableTypes.contains($0.type) }) {
+                var sourceItem = self.favorites.favoritesItems[sourceIndex]
+                var targetItem = self.favorites.favoritesItems[existingIndex]
 
-            self.favorites.favoritesItems[existingIndex] = existingItem
+                // Transfer the data
+                targetItem.title = sourceItem.title
+                targetItem.item = sourceItem.item
+                targetItem.description = sourceItem.description
+
+                // Clear the source item
+                sourceItem.title = ""
+                sourceItem.item = nil
+                sourceItem.description = nil
+
+                // Update the array
+                self.favorites.favoritesItems[sourceIndex] = sourceItem
+                self.favorites.favoritesItems[existingIndex] = targetItem
+            } else {
+                // If no existing item to transfer data from, just update the existing item
+                self.favorites.favoritesItems[existingIndex].title = newFavoritesItem.title
+                self.favorites.favoritesItems[existingIndex].item = newFavoritesItem.item
+                self.favorites.favoritesItems[existingIndex].description = newFavoritesItem.description
+            }
         } else {
+            // Add a new item if it's not a static type
             self.favorites.favoritesItems.append(newFavoritesItem)
         }
     }
 
     // MARK: - Lifecycle
 
-    init(item: ResolvedItem, favoritesItem: FavoritesItem?, camera: Binding<MapViewCamera>) {
+    init(item: ResolvedItem, favoritesItem: FavoritesItem? = nil) {
         self.item = item
         self.favoritesItem = favoritesItem
-        _title = State(initialValue: favoritesItem?.title ?? "")
+        _title = State(initialValue: favoritesItem?.title ?? item.title)
         _description = State(initialValue: favoritesItem?.description ?? "")
         _selectedType = State(initialValue: favoritesItem?.type ?? "")
-        _types = State(initialValue: ["Home", "School", "Work", "Restaurant"])
-        _camera = camera
+        _types = State(initialValue: ["Home", "School", "Work", "Restaurant", "Other"])
     }
 
     // MARK: - Private
@@ -166,7 +185,7 @@ struct EditFavoritesFormView: View {
     @State var favorite: FavoritesItem = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     return NavigationStack {
-        EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, camera: $camera)
+        EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite)
     }
 }
 
@@ -178,7 +197,7 @@ struct EditFavoritesFormView: View {
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {
-                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, camera: $camera)
+                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite)
             }
     }
 }

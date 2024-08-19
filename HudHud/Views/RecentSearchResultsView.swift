@@ -13,12 +13,9 @@ import SwiftUI
 
 struct RecentSearchResultsView: View {
     let mapStore: MapStore
-    @ObservedObject var searchStore: SearchViewStore
+    let searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
     let searchType: SearchViewStore.SearchType
-    @State var editFormViewIsShown: Bool = false
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @State var clickedFavorite = FavoritesItem.favoriteForPreview
     @Environment(\.dismiss) var dismiss
 
     var body: some View {
@@ -54,10 +51,7 @@ struct RecentSearchResultsView: View {
                 Spacer()
                 if self.searchType == .favorites {
                     NavigationLink {
-                        self.editFormViewIsShown = true
-                        self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
-                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
-                        return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
+                        EditFavoritesFormView(item: item)
                     } label: {
                         Text("+")
                             .foregroundStyle(Color(UIColor.label))
@@ -98,12 +92,12 @@ struct RecentSearchResultsView: View {
     let item: ResolvedItem = .artwork
     @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
-    @State var editFormViewIsShown: Bool = true
+    @State var editFormViewIsShown = true
     return NavigationStack {
         RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                                 searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, camera: $camera)
+                EditFavoritesFormView(item: item, favoritesItem: favoriteItem)
             }
     }
 }

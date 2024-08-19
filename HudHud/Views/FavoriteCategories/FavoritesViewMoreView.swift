@@ -18,9 +18,6 @@ struct FavoritesViewMoreView: View {
     @ObservedObject var mapStore: MapStore
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @State var clickedFavorite: FavoritesItem = .favoriteForPreview
-    @State var clickedItem: ResolvedItem = .artwork
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
     @Environment(\.dismiss) var dismiss
 
@@ -43,27 +40,30 @@ struct FavoritesViewMoreView: View {
 
             Section { // show my favorites
                 ForEach(self.favorites.favoritesItems) { favorite in
-                    if favorite.item != nil {
+                    if let favoriteItem = favorite.item {
                         HStack {
                             FavoriteItemView(favorite: favorite)
                             Spacer()
                             Button {
                                 self.actionSheetShown = true
-                                self.clickedFavorite = favorite
-                                if let item = favorite.item {
-                                    self.clickedItem = item
-
-                                    self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
-                                }
                             } label: {
                                 Text("...")
                                     .foregroundStyle(Color(UIColor.label))
                             }
                             .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                                Button {} label: {
+                                NavigationLink {
+                                    EditFavoritesFormView(item: favoriteItem, favoritesItem: favorite)
+                                } label: {
                                     Text("Edit")
                                 }
-                                Button(role: .destructive) {} label: {
+                                Button(role: .destructive) {
+                                    let updatableTypes: Set<String> = ["Home", "School", "Work"]
+                                    if let index = self.favorites.favoritesItems.firstIndex(where: { $0 == favorite }), updatableTypes.contains(favorite.type) {
+                                        self.favorites.favoritesItems[index].item = nil
+                                    } else {
+                                        self.favorites.favoritesItems.removeAll(where: { $0.id == favorite.id })
+                                    }
+                                } label: {
                                     Text("Delete")
                                 }
                             }
@@ -97,8 +97,6 @@ struct FavoritesViewMoreView: View {
             self.mapStore.path.append(SheetSubView.favorites)
         }
     }
-
-    // MARK: - Internal
 
     func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
