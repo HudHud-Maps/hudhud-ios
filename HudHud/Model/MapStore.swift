@@ -341,9 +341,8 @@ final class MapStore: ObservableObject {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
-        bindLayersVisability()
+        self.bindLayersVisability()
     }
-
 }
 
 // MARK: - NavigationViewControllerDelegate
@@ -450,17 +449,9 @@ private extension MapStore {
             .map(\.isEmpty)
             .removeDuplicates()
             .sink { [weak self] isEmpty in
-                if isEmpty {
-                    self?.mapStyle?.layers.forEach { layer in
-                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
-                            layer.isVisible = true
-                        }
-                    }
-                } else {
-                    self?.mapStyle?.layers.forEach { layer in
-                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
-                            layer.isVisible = false
-                        }
+                self?.mapStyle?.layers.forEach { layer in
+                    if layer.identifier.hasPrefix("hpoi_") {
+                        layer.isVisible = isEmpty
                     }
                 }
             }
