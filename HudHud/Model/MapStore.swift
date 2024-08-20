@@ -313,11 +313,7 @@ final class MapStore: ObservableObject {
     }
 
     // Unified route calculation function
-    func calculateRoute(
-        from location: CLLocation,
-        to destination: CLLocationCoordinate2D?,
-        additionalWaypoints: [Waypoint] = []
-    ) async throws -> RoutingService.RouteCalculationResult {
+    func calculateRoute(from location: CLLocation, to destination: CLLocationCoordinate2D?, additionalWaypoints: [Waypoint] = []) async throws -> RoutingService.RouteCalculationResult {
         let startWaypoint = Waypoint(location: location)
 
         var waypoints = [startWaypoint]
