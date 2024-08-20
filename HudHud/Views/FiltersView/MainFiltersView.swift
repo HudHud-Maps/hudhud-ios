@@ -10,13 +10,13 @@ import SwiftUI
 
 struct MainFiltersView: View {
 
-    enum filterType {
+    enum FilterType {
         case openNow
         case topRated
         case filter
     }
 
-    @State private var selectedFilter: filterType? = nil
+    @State private var selectedFilter: FilterType?
 
     var body: some View {
         HStack(spacing: 10) {
