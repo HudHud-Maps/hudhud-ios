@@ -371,20 +371,20 @@ public enum SystemColor: String, Codable {
 // swiftlint:disable sf_symbol_init
 let categorySymbol: [String: SFSymbol] = [
     "clinic": .crossCaseFill,
-    "bank": SFSymbol(rawValue: "banknote.fill"),
-    "atm": SFSymbol(rawValue: "creditcard.and.123"),
-    "building": SFSymbol(rawValue: "building.2.fill"),
-    "hospital": SFSymbol(rawValue: "cross.fill"),
-    "movie Theater": SFSymbol(rawValue: "film"),
-    "gym": SFSymbol(rawValue: "dumbbell.fill"),
-    "coffee Shop": SFSymbol(rawValue: "cup.and.saucer.fill"),
-    "restaurant": SFSymbol(rawValue: "fork.knife"),
-    "clothing Store": SFSymbol(rawValue: "tshirt.fill"),
-    "office": SFSymbol(rawValue: "building.columns.fill"),
-    "company": SFSymbol(rawValue: "building.fill"),
-    "book store": SFSymbol(rawValue: "books.vertical.fill"),
-    "hotel": SFSymbol(rawValue: "bed.double.fill"),
-    "shop": SFSymbol(rawValue: "cart.fill")
+    "bank": .banknoteFill,
+    "atm": .creditcardAnd123,
+    "building": .building2Fill,
+    "hospital": .crossFill,
+    "movie Theater": .film,
+    "gym": .dumbbellFill,
+    "coffee Shop": .cupAndSaucerFill,
+    "restaurant": .forkKnife,
+    "clothing Store": .tshirtFill,
+    "office": .buildingColumnsFill,
+    "company": .buildingFill,
+    "book store": .booksVerticalFill,
+    "hotel": .bedDoubleFill,
+    "shop": .cartFill
 ]
 let categoryColor: [String: SystemColor] = [
     "clinic": .systemPink,
