@@ -77,6 +77,13 @@ struct SearchSheet: View {
             .cornerRadius(12)
             .padding(.horizontal)
             .padding(.top)
+            // Show the filter UI if the search view is displaying an item that was fetched from a category.
+            if let firstItem = self.mapStore.displayableItems.first,
+               case .categoryItem = firstItem {
+                MainFiltersView()
+                    .padding(.horizontal)
+                    .padding(.top)
+            }
             List {
                 if !self.searchStore.searchText.isEmpty {
                     if self.searchStore.isSheetLoading {

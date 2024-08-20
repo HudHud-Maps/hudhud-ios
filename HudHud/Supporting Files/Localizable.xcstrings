@@ -300,6 +300,9 @@
     "Open" : {
 
     },
+    "Open Now" : {
+
+    },
     "Pitch: %@" : {
       "comment" : "street view"
     },
@@ -380,6 +383,9 @@
       }
     },
     "Suggestions" : {
+
+    },
+    "Top Rated" : {
 
     },
     "Touch Visualizer" : {
