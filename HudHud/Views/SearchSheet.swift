@@ -15,7 +15,6 @@ import MapKit
 import MapLibre
 import MapLibreSwiftUI
 import OSLog
-import SwiftLocation
 import SwiftUI
 
 // MARK: - SearchSheet

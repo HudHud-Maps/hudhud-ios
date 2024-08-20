@@ -148,7 +148,7 @@ private struct CategoryIconButton: View {
     }
 }
 
-private extension LengthFormatter {
+extension LengthFormatter {
     static let distance: LengthFormatter = {
         let formatter = LengthFormatter()
         formatter.unitStyle = .short

@@ -17,7 +17,6 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
-import SwiftLocation
 import SwiftUI
 
 // MARK: - MapStore
@@ -45,9 +44,7 @@ final class MapStore: ObservableObject {
         case defaultLocation
     }
 
-    var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
-    var moveToUserLocation = false
     var mapStyle: MLNStyle?
 
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
@@ -68,6 +65,7 @@ final class MapStore: ObservableObject {
     @Published var fullScreenStreetView: Bool = false
     var cachedScenes = [Int: StreetViewScene]()
     var mapView: NavigationMapView?
+    let userLocationStore: UserLocationStore
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -90,15 +88,6 @@ final class MapStore: ObservableObject {
                         updateCamera(state: .route(self.routes))
                     }
                 }
-            }
-        }
-    }
-
-    @Published var currentLocation: CLLocationCoordinate2D? {
-        didSet {
-            self.moveToUserLocation = true
-            if let currentLocation {
-                updateCamera(state: .userLocation(currentLocation))
             }
         }
     }
@@ -271,6 +260,13 @@ final class MapStore: ObservableObject {
         return styleUrl
     }
 
+    func focusOnUser() async {
+        let location = await userLocationStore.lastKnownLocationOrWaitUntilPermissionIsGranted().coordinate
+        withAnimation {
+            updateCamera(state: .userLocation(location))
+        }
+    }
+
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
         // On first launch we use the first one returned and set it as default.
         if let mapLayer = self.mapStyleLayer {
@@ -341,11 +337,30 @@ final class MapStore: ObservableObject {
 
     // MARK: - Lifecycle
 
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
+        self.userLocationStore = userLocationStore
         bindLayersVisability()
+        bindCameraToUserLocation()
+    }
+
+    // MARK: - Internal
+
+    func trackingAction() async {
+        switch self.trackingState {
+        case .none:
+            await self.focusOnUser()
+            self.trackingState = .locateOnce
+            Logger.mapInteraction.log("None action required")
+        case .locateOnce:
+            self.trackingState = .keepTracking
+            Logger.mapInteraction.log("locate me Once")
+        case .keepTracking:
+            self.trackingState = .none
+            Logger.mapInteraction.log("keep Tracking of user location")
+        }
     }
 
 }
@@ -442,7 +457,7 @@ extension MapStore {
 
 extension MapStore: Previewable {
 
-    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .preview)
 }
 
 // MARK: - Private
@@ -467,6 +482,15 @@ private extension MapStore {
                         }
                     }
                 }
+            }
+            .store(in: &self.subscriptions)
+    }
+
+    func bindCameraToUserLocation() {
+        self.userLocationStore.$currentUserLocation
+            .compactMap(\.?.coordinate)
+            .sink { [weak self] newUserLocation in
+                self?.updateCamera(state: .userLocation(newUserLocation))
             }
             .store(in: &self.subscriptions)
     }
@@ -538,7 +562,6 @@ private extension MapStore {
                 }
             }
         case let .userLocation(userLocation):
-            self.moveToUserLocation = false
             self.camera = MapViewCamera.center(userLocation, zoom: 14)
         case .mapItems:
             self.handleMapItems()

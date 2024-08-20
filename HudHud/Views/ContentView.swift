@@ -19,7 +19,6 @@ import NavigationTransitions
 import OSLog
 import SFSafeSymbols
 import SimpleToast
-import SwiftLocation
 import SwiftUI
 import TouchVisualizer
 
@@ -38,6 +37,7 @@ struct ContentView: View {
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @StateObject private var notificationQueue = NotificationQueue()
+    @ObservedObject private var userLocationStore: UserLocationStore
     @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
@@ -55,6 +55,7 @@ struct ContentView: View {
                 mapStore: self.mapStore,
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
+                userLocationStore: self.userLocationStore,
                 sheetSize: self.sheetSize
             )
             .task {
@@ -205,7 +206,7 @@ struct ContentView: View {
 
     func reloadPOITrending() async {
         do {
-            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
             self.trendingStore.trendingPOIs = nil
@@ -219,6 +220,7 @@ struct ContentView: View {
     init(searchStore: SearchViewStore) {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
+        self.userLocationStore = searchStore.mapStore.userLocationStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
@@ -339,5 +341,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, sheetSize: CGSize(size: 0))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .preview, sheetSize: CGSize(size: 0))
 }

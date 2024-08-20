@@ -12,7 +12,6 @@ import MapboxCoreNavigation
 import MapboxDirections
 import OSLog
 import SFSafeSymbols
-import SwiftLocation
 import SwiftUI
 
 struct ABCRouteConfigurationView: View {
@@ -119,9 +118,7 @@ struct ABCRouteConfigurationView: View {
     func updateRoutes(wayPoints: [Waypoint]) {
         Task {
             do {
-                guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
-                    return
-                }
+                let userLocation = try await self.mapStore.userLocationStore.lastKnownLocationOrWaitUntilPermissionIsGranted()
                 let routes = try await self.mapStore.calculateRoute(from: userLocation, to: nil, additionalWaypoints: wayPoints)
                 self.mapStore.routes = routes
             } catch {

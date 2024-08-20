@@ -11,7 +11,6 @@ import Combine
 import CoreLocation
 import Foundation
 import OSLog
-import SwiftLocation
 import SwiftUI
 
 // MARK: - SearchViewStore
@@ -59,7 +58,6 @@ final class SearchViewStore: ObservableObject {
     var apple = ApplePOI()
     private var hudhud = HudHudPOI()
     private var cancellables: Set<AnyCancellable> = []
-    var locationManager: Location = .forSingleRequestUsage
 
     // MARK: - Properties
 
@@ -88,13 +86,6 @@ final class SearchViewStore: ObservableObject {
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
-    }
-
-    func getCurrentLocation() async -> CLLocationCoordinate2D? {
-        guard let currentLocation = try? await self.locationManager.requestLocation().location?.coordinate else {
-            return nil
-        }
-        return currentLocation
     }
 
     func didSelect(_ item: DisplayableRow) async {
@@ -150,7 +141,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let items = try await hudhud.items(for: category, location: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
+            let items = try await hudhud.items(for: category, location: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
@@ -168,7 +159,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let results = try await self.hudhud.predict(term: self.searchText, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
+            let results = try await self.hudhud.predict(term: self.searchText, coordinates: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
                     return DisplayableRow.categoryItem(resolvedItem)
@@ -223,9 +214,9 @@ private extension SearchViewStore {
             do {
                 let result = switch provider {
                 case .apple:
-                    try await self.apple.predict(term: term, coordinates: self.mapStore.currentLocation, baseURL: "") // no need to send URL
+                    try await self.apple.predict(term: term, coordinates: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: "") // no need to send URL
                 case .hudhud:
-                    try await self.hudhud.predict(term: term, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
+                    try await self.hudhud.predict(term: term, coordinates: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
                 }
                 self.searchError = nil
                 self.mapStore.displayableItems = result.items

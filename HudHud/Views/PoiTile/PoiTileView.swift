@@ -10,14 +10,12 @@ import BackendService
 import CoreLocation
 import OSLog
 import SFSafeSymbols
-import SwiftLocation
 import SwiftUI
 
 // MARK: - PoiTileView
 
 struct PoiTileView: View {
     var poiTileData: ResolvedItem
-    @State var location: CLLocation?
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -79,7 +77,7 @@ struct PoiTileView: View {
                     .hudhudFont(.subheadline)
                     .lineLimit(1)
                 HStack {
-                    Text("\(self.poiTileData.category ?? "") \(self.poiTileData.distance(from: self.location))")
+                    Text("\(self.poiTileData.category ?? "") \(self.distance)")
                         .hudhudFont(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -88,13 +86,13 @@ struct PoiTileView: View {
             .frame(width: 130, alignment: .leading)
             .padding(.leading, 1)
         }
-        .task {
-            do {
-                self.location = try await Location.forSingleRequestUsage.requestLocation().location
-            } catch {
-                Logger.poiData.error("Error requesting location, could not calculate distance for trending")
-            }
+    }
+
+    private var distance: String {
+        guard let distance = self.poiTileData.distance else {
+            return ""
         }
+        return LengthFormatter.distance.string(fromMeters: distance)
     }
 }
 
