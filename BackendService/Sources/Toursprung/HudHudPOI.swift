@@ -257,7 +257,6 @@ public struct HudHudPOI: POIServiceProtocol {
     public func lookup(id: String, baseURL: String) async throws -> ResolvedItem? {
         try await self.lookup(id: id, prediction: (), baseURL: baseURL).first
     }
-
 }
 
 // MARK: - SystemColor
@@ -371,7 +370,7 @@ public enum SystemColor: String, Codable {
 
 // swiftlint:disable sf_symbol_init
 let categorySymbol: [String: SFSymbol] = [
-    "clinic": SFSymbol(rawValue: "cross.case.fill"),
+    "clinic": .crossCaseFill,
     "bank": SFSymbol(rawValue: "banknote.fill"),
     "atm": SFSymbol(rawValue: "creditcard.and.123"),
     "building": SFSymbol(rawValue: "building.2.fill"),
