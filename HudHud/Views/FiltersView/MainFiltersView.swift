@@ -23,7 +23,6 @@ struct MainFiltersView: View {
             Button {
                 Task {
                     self.selectedFilter = .openNow
-                    print("Open Now")
                 }
             } label: {
                 Text("Open Now")
