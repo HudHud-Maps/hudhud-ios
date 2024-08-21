@@ -389,7 +389,7 @@ extension MapStore: NavigationViewControllerDelegate {
 extension MapStore {
 
     func isSFSymbolLayerPresent() -> Bool {
-        return self.mapStyle?.layers.contains { $0.identifier == "hpoi_resturant" } ?? false
+        return self.mapStyle?.layers.contains(where: { $0.identifier == MapLayerIdentifier.restaurants || $0.identifier == MapLayerIdentifier.shops }) ?? false
     }
 
     func zoomToStreetViewLocation() {
