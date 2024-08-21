@@ -19,6 +19,12 @@ import SwiftUI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
+    enum FilterType {
+        case openNow
+        case topRated
+        case filter
+    }
+
     enum SearchType: Equatable {
 
         case selectPOI
@@ -64,6 +70,26 @@ final class SearchViewStore: ObservableObject {
     // MARK: - Properties
 
     @Published var searchText: String = ""
+    @Published var selectedFilter: FilterType? {
+        didSet {
+            switch self.selectedFilter {
+            case .openNow:
+                Logger().log("Open Now Button Pressed")
+                self.mapStore.displayableItems = self.mapStore.displayableItems.filter { $0.resolvedItem?.isOpen == true }
+            case .topRated:
+                Logger().log("Top Rated Button Pressed")
+                Task {
+                    await self.filter(topRated: true)
+                }
+            case .filter:
+                // Should open Filter sheet
+                Logger().log("Filter Button Pressed")
+            case nil:
+                Logger().log("No filter Required")
+            }
+        }
+    }
+
     @Published var searchError: Error?
     @Published var mode: Mode {
         didSet {
@@ -175,6 +201,23 @@ final class SearchViewStore: ObservableObject {
                 }
                 return nil
             }
+        } catch {
+            self.searchError = error
+            Logger.poiData.error("fetching category error: \(error)")
+        }
+    }
+
+    func filter(topRated: Bool) async {
+        self.searchType = .categories
+        defer { self.searchType = .selectPOI }
+
+        self.mapStore.selectedDetent = .third
+
+        self.isSheetLoading = true
+        defer { isSheetLoading = false }
+        do {
+            let items = try await hudhud.items(for: self.searchText, topRated: topRated, location: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
+            self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")

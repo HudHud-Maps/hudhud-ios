@@ -10,49 +10,43 @@ import SwiftUI
 
 struct MainFiltersView: View {
 
-    enum FilterType {
-        case openNow
-        case topRated
-        case filter
-    }
-
-    @State private var selectedFilter: FilterType?
+    @ObservedObject var searchStore: SearchViewStore
 
     var body: some View {
         HStack(spacing: 10) {
             Button {
                 Task {
-                    self.selectedFilter = .openNow
+                    self.searchStore.selectedFilter = .openNow
                 }
             } label: {
                 Text("Open Now")
                     .hudhudFont(size: 12, fontWeight: .semiBold)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 11)
-                    .foregroundStyle(self.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
+                    .foregroundStyle(self.searchStore.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(self.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
+                            .stroke(self.searchStore.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
                     )
             }
             Button {
                 Task {
-                    self.selectedFilter = .topRated
+                    self.searchStore.selectedFilter = .topRated
                 }
             } label: {
                 Text("Top Rated")
                     .hudhudFont(size: 12, fontWeight: .semiBold)
                     .padding(.horizontal, 12)
                     .padding(.vertical, 11)
-                    .foregroundStyle(self.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
+                    .foregroundStyle(self.searchStore.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
                     .overlay(
                         RoundedRectangle(cornerRadius: 10)
-                            .stroke(self.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
+                            .stroke(self.searchStore.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
                     )
             }
             Spacer()
             Button(action: {
-                self.selectedFilter = .filter
+                self.searchStore.selectedFilter = .filter
             }, label: {
                 Image(.filter)
                     .hudhudFont(.caption2)
@@ -63,5 +57,5 @@ struct MainFiltersView: View {
 }
 
 #Preview {
-    MainFiltersView()
+    MainFiltersView(searchStore: .storeSetUpForPreviewing)
 }

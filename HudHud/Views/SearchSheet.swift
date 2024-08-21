@@ -46,6 +46,7 @@ struct SearchSheet: View {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
                                     Button {
+                                        self.searchStore.selectedFilter = nil
                                         self.searchStore.searchText = ""
                                     } label: {
                                         Image(systemSymbol: .multiplyCircleFill)
@@ -80,7 +81,7 @@ struct SearchSheet: View {
             // Show the filter UI if the search view is displaying an item that was fetched from a category.
             if let firstItem = self.mapStore.displayableItems.first,
                case .categoryItem = firstItem {
-                MainFiltersView()
+                MainFiltersView(searchStore: self.searchStore)
                     .padding(.horizontal)
                     .padding(.top)
             }
