@@ -51,7 +51,7 @@ final class MapStore: ObservableObject {
     var mapStyle: MLNStyle?
 
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
-
+    @Published var shouldShowCustomSymbols = false
     @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0, pitchRange: .fixed(0))
     @Published var searchShown: Bool = true
     @Published var selectedDetent: PresentationDetent = .small
