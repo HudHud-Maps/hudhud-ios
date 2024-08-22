@@ -74,18 +74,16 @@ final class SearchViewStore: ObservableObject {
         didSet {
             switch self.selectedFilter {
             case .openNow:
-                Logger().log("Open Now Button Pressed")
                 self.mapStore.displayableItems = self.mapStore.displayableItems.filter { $0.resolvedItem?.isOpen == true }
             case .topRated:
-                Logger().log("Top Rated Button Pressed")
                 Task {
-                    await self.filter(topRated: true)
+                    await self.fetch(category: self.searchText, topRated: true)
                 }
             case .filter:
                 // Should open Filter sheet
-                Logger().log("Filter Button Pressed")
+                Logger.searchView.debug("Filter Button Pressed")
             case nil:
-                Logger().log("No filter Required")
+                Logger.searchView.debug("No filter Required")
             }
         }
     }
@@ -166,17 +164,16 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String) async {
+    func fetch(category: String, topRated: Bool? = nil) async {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
         self.searchText = category
-        self.mapStore.selectedDetent = .third
 
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let items = try await hudhud.items(for: category, location: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
+            let items = try await hudhud.items(for: category, topRated: topRated, location: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
@@ -201,23 +198,6 @@ final class SearchViewStore: ObservableObject {
                 }
                 return nil
             }
-        } catch {
-            self.searchError = error
-            Logger.poiData.error("fetching category error: \(error)")
-        }
-    }
-
-    func filter(topRated: Bool) async {
-        self.searchType = .categories
-        defer { self.searchType = .selectPOI }
-
-        self.mapStore.selectedDetent = .third
-
-        self.isSheetLoading = true
-        defer { isSheetLoading = false }
-        do {
-            let items = try await hudhud.items(for: self.searchText, topRated: topRated, location: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")

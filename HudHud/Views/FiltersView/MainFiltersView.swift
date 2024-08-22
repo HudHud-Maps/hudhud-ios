@@ -15,9 +15,7 @@ struct MainFiltersView: View {
     var body: some View {
         HStack(spacing: 10) {
             Button {
-                Task {
-                    self.searchStore.selectedFilter = .openNow
-                }
+                self.searchStore.selectedFilter = .openNow
             } label: {
                 Text("Open Now")
                     .hudhudFont(size: 12, fontWeight: .semiBold)
@@ -30,9 +28,7 @@ struct MainFiltersView: View {
                     )
             }
             Button {
-                Task {
-                    self.searchStore.selectedFilter = .topRated
-                }
+                self.searchStore.selectedFilter = .topRated
             } label: {
                 Text("Top Rated")
                     .hudhudFont(size: 12, fontWeight: .semiBold)
