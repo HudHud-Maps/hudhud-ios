@@ -28,8 +28,20 @@ enum SelectedPointOfInterest {
 @MainActor
 class MapViewStore {
 
+    // MARK: Properties
+
     private let mapStore: MapStore
     private let hudhudResolver = HudHudPOI()
+
+    // MARK: Lifecycle
+
+    init(mapStore: MapStore) {
+        self.mapStore = mapStore
+    }
+
+    // MARK: Functions
+
+    // MARK: - Internal
 
     func didTapOnMap(containing features: [any MLNFeature]) {
         if self.mapStore.displayableItems.count == 1 {
@@ -66,8 +78,13 @@ class MapViewStore {
             }
         }
     }
+}
 
-    private func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
+// MARK: - Private
+
+private extension MapViewStore {
+
+    func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
         for feature in features {
             if let poi = feature.attribute(forKey: "poi_id") as? String {
                 return .searchSuggestion(id: poi)
@@ -80,7 +97,7 @@ class MapViewStore {
         return nil
     }
 
-    private func extractItem(from feature: any MLNFeature) -> ResolvedItem? {
+    func extractItem(from feature: any MLNFeature) -> ResolvedItem? {
         guard let feature = feature as? MLNPointFeature,
               let id = feature.attribute(forKey: "id") as? Int,
               (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String != nil,
@@ -113,7 +130,7 @@ class MapViewStore {
         )
     }
 
-    private func extractStreetViewSceneItem(from feature: any MLNFeature) -> Int? {
+    func extractStreetViewSceneItem(from feature: any MLNFeature) -> Int? {
         guard let feature = feature as? MLNPointFeature else { return nil }
 
         if feature.attribute(forKey: "source") as? String == "mosaic" {
@@ -126,7 +143,7 @@ class MapViewStore {
         return nil
     }
 
-    private func website(from feature: MLNPointFeature) -> URL? {
+    func website(from feature: MLNPointFeature) -> URL? {
         if let stringURL = feature.attribute(forKey: "website") as? String {
             URL(string: stringURL)
         } else {
@@ -134,7 +151,7 @@ class MapViewStore {
         }
     }
 
-    private func symbol(from feature: MLNPointFeature) -> SFSymbol? {
+    func symbol(from feature: MLNPointFeature) -> SFSymbol? {
         if let symbolString = feature.attribute(forKey: "ios_category_icon_name") as? String {
             // we cannot create sf symbol in a type safe way here as we are parsing the symbol name from an outside source (the map)
             SFSymbol(rawValue: symbolString) // swiftlint:disable:this sf_symbol_init
@@ -142,11 +159,4 @@ class MapViewStore {
             nil
         }
     }
-
-    // MARK: - Lifecycle
-
-    init(mapStore: MapStore) {
-        self.mapStore = mapStore
-    }
-
 }

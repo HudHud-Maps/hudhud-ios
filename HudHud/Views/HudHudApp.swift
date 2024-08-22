@@ -16,12 +16,17 @@ import SwiftUI
 @main
 struct HudHudApp: App {
 
+    // MARK: Properties
+
+    @ObservedObject var touchVisualizerManager = TouchManager.shared
+
     private let locationManager = Location() // swiftlint:disable:this location_usage
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
-    @ObservedObject var touchVisualizerManager = TouchManager.shared
+
+    // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
@@ -32,7 +37,7 @@ struct HudHudApp: App {
         }
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init() {
         RouteControllerMaximumDistanceBeforeRecalculating = DebugStore().maximumDistanceBeforeRecalculating

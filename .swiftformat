@@ -3,10 +3,10 @@
 --anonymousforeach convert
 --assetliterals visual-width
 --asynccapturing 
---beforemarks 
+--beforemarks typealias
 --binarygrouping 4,8
 --callsiteparen default
---categorymark "MARK: - %c"
+--categorymark "MARK: %c"
 --classthreshold 0
 --closingparen balanced
 --closurevoid remove
@@ -42,12 +42,12 @@
 --indentcase false
 --indentstrings false
 --initcodernil false
---lifecycle 
+--lifecycle deinit,init
 --lineaftermarks true
 --linebreaks lf
 --markcategories true
---markextensions if-not-empty
---marktypes if-not-empty
+--markextensions always
+--marktypes always
 --maxwidth none
 --modifierorder 
 --nevertrailing 
@@ -59,7 +59,7 @@
 --onelineforeach ignore
 --operatorfunc spaced
 --organizationmode type
---organizetypes 
+--organizetypes actor,class,enum,struct
 --patternlet hoist
 --ranges spaced
 --redundanttype explicit

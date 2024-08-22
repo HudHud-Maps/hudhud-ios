@@ -14,6 +14,8 @@ public extension CLLocationCoordinate2D {
         case invalidCoordinates
         case invalidType
 
+        // MARK: Computed Properties
+
         public var errorDescription: String? {
             switch self {
             case .invalidCoordinates:

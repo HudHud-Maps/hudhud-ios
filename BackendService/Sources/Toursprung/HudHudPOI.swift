@@ -45,6 +45,8 @@ public enum DisplayableRow: Hashable, Identifiable {
     case categoryItem(ResolvedItem)
     case predictionItem(PredictionItem)
 
+    // MARK: Computed Properties
+
     public var resolvedItem: ResolvedItem? {
         switch self {
         case .category, .predictionItem:
@@ -80,6 +82,8 @@ public enum DisplayableRow: Hashable, Identifiable {
         }
     }
 
+    // MARK: Functions
+
     public func resolve(in provider: ApplePOI, baseURL: String) async throws -> [DisplayableRow] {
         guard case let .apple(completion) = self.type else { return [] }
 
@@ -99,15 +103,20 @@ public enum DisplayableRow: Hashable, Identifiable {
 // MARK: - Category
 
 public struct Category: Hashable {
+
+    // MARK: Properties
+
     public let name: String
     public let icon: SFSymbol
     public let systemColor: SystemColor
+
+    // MARK: Computed Properties
 
     public var color: Color {
         self.systemColor.swiftUIColor
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init(name: String, icon: SFSymbol, color: SystemColor) {
         self.name = name
@@ -120,11 +129,21 @@ public struct Category: Hashable {
 
 public struct HudHudPOI: POIServiceProtocol {
 
+    // MARK: Static Properties
+
     public static var serviceName = "HudHud"
+
+    // MARK: Computed Properties
 
     private var currentLanguage: String {
         Locale.preferredLanguages.first ?? "en-US"
     }
+
+    // MARK: Lifecycle
+
+    public init() {}
+
+    // MARK: Functions
 
     public func lookup(id: String, prediction _: Any, baseURL: String) async throws -> [ResolvedItem] {
         let response = try await Client.makeClient(using: baseURL).getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
@@ -248,10 +267,6 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
 
-    // MARK: - Lifecycle
-
-    public init() {}
-
     // MARK: - Public
 
     public func lookup(id: String, baseURL: String) async throws -> ResolvedItem? {
@@ -282,6 +297,8 @@ public enum SystemColor: String, Codable {
     case systemBrown
     case systemMint
     case systemCyan
+
+    // MARK: Computed Properties
 
     public var swiftUIColor: Color {
         switch self {
@@ -324,7 +341,7 @@ public enum SystemColor: String, Codable {
         }
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init(color: Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload) {
         switch color {

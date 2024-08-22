@@ -9,9 +9,14 @@
 import SwiftUI
 
 struct DirectionModePickerView: View {
+
+    // MARK: Properties
+
     @State var directionModePickerData: [DirectionModePickerData]
     @State var selectedRoute = DirectionModePickerData(mode: .car, duration: 1200)
     var formatter = Formatters()
+
+    // MARK: Content
 
     var body: some View {
         HStack {
@@ -31,6 +36,8 @@ struct DirectionModePickerView: View {
             }
         }
     }
+
+    // MARK: Functions
 
     // MARK: - Private
 

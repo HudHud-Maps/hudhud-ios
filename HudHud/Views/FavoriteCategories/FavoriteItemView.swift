@@ -9,8 +9,13 @@
 import SwiftUI
 
 struct FavoriteItemView: View {
+
+    // MARK: Properties
+
     let favorite: FavoritesItem
     @ScaledMetric var imageSize = 24
+
+    // MARK: Content
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {

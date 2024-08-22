@@ -13,12 +13,17 @@ import SFSafeSymbols
 import SwiftUI
 
 struct FavoriteCategoriesView: View {
+
+    // MARK: Properties
+
     let mapStore: MapStore
     let searchStore: SearchViewStore
 
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
     @State var viewMoreShown: Bool = false
+
+    // MARK: Content
 
     var body: some View {
         ScrollView(.horizontal) {

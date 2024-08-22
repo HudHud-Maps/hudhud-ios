@@ -16,8 +16,16 @@ import OSLog
 
 public class HudHudMapLayerStore: ObservableObject {
 
+    // MARK: Properties
+
     @Published public var hudhudMapLayers: [HudHudMapLayer]?
     @Published public var lastError: Error?
+
+    // MARK: Lifecycle
+
+    public init() {}
+
+    // MARK: Functions
 
     public func getMaplayers(baseURL: String) async throws -> [HudHudMapLayer] {
         let urlSessionConfiguration = URLSessionConfiguration.default
@@ -56,30 +64,19 @@ public class HudHudMapLayerStore: ObservableObject {
         }
     }
 
-    // MARK: - Lifecycle
-
-    public init() {}
-
 }
 
 // MARK: - HudHudMapLayer
 
 public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
-    public var name: String
-    public var styleUrl: URL
-    public var thumbnailUrl: URL
-    public var type: MapType
 
-    public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self) else {
-            return "[]"
-        }
-        return String(decoding: data, as: UTF8.self)
-    }
+    // MARK: Nested Types
 
     public enum MapType: String, Codable, CustomStringConvertible {
         case mapType = "map_type"
         case mapDetails = "map_details"
+
+        // MARK: Computed Properties
 
         public var description: String {
             switch self {
@@ -90,7 +87,7 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
             }
         }
 
-        // MARK: - Lifecycle
+        // MARK: Lifecycle
 
         public init(BackendValue value: String) {
             switch value {
@@ -111,6 +108,24 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
         case thumbnailUrl
         case type
     }
+
+    // MARK: Properties
+
+    public var name: String
+    public var styleUrl: URL
+    public var thumbnailUrl: URL
+    public var type: MapType
+
+    // MARK: Computed Properties
+
+    public var rawValue: String {
+        guard let data = try? JSONEncoder().encode(self) else {
+            return "[]"
+        }
+        return String(decoding: data, as: UTF8.self)
+    }
+
+    // MARK: Lifecycle
 
     public init?(rawValue: RawValue) {
         let decoder = JSONDecoder()
@@ -134,22 +149,14 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
         self.type = try container.decode(MapType.self, forKey: .type)
     }
 
-    public func encode(to encoder: Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.name, forKey: .name)
-        try container.encode(self.styleUrl, forKey: .styleUrl)
-        try container.encode(self.thumbnailUrl, forKey: .thumbnailUrl)
-        try container.encode(self.type, forKey: .type)
-    }
-
-    // MARK: - Lifecycle
-
     public init(name: String, styleUrl: URL, thumbnailUrl: URL, type: MapType) {
         self.name = name
         self.styleUrl = styleUrl
         self.thumbnailUrl = thumbnailUrl
         self.type = type
     }
+
+    // MARK: Static Functions
 
     // MARK: - Public
 
@@ -158,6 +165,16 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
             lhs.styleUrl == rhs.styleUrl &&
             lhs.thumbnailUrl == rhs.thumbnailUrl &&
             lhs.type == rhs.type
+    }
+
+    // MARK: Functions
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(self.name, forKey: .name)
+        try container.encode(self.styleUrl, forKey: .styleUrl)
+        try container.encode(self.thumbnailUrl, forKey: .thumbnailUrl)
+        try container.encode(self.type, forKey: .type)
     }
 
     public func hash(into hasher: inout Hasher) {

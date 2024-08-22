@@ -15,6 +15,12 @@ import SwiftUIPanoramaViewer
 
 struct StreetView: View {
 
+    // MARK: Nested Types
+
+    enum NavDirection: Int { case next; case previous; case east; case west }
+
+    // MARK: Properties
+
     @Binding var streetViewScene: StreetViewScene?
     @State var mapStore: MapStore
     @Binding var fullScreenStreetView: Bool
@@ -29,7 +35,7 @@ struct StreetView: View {
     @State var isLoading: Bool = false
     @State var progress: Float = 0
 
-    enum NavDirection: Int { case next; case previous; case east; case west }
+    // MARK: Computed Properties
 
     var showLoading: Bool {
         (self.svimage == nil && self.errorMsg == nil) || self.isLoading
@@ -38,6 +44,8 @@ struct StreetView: View {
     var loadingProgress: String {
         return self.progress > 0 ? "\n\(String(format: "%.2f", self.progress * 100.0))%" : ""
     }
+
+    // MARK: Content
 
     var body: some View {
         ZStack {
@@ -166,6 +174,38 @@ struct StreetView: View {
         }
     }
 
+    func panoramaView(_ img: Binding<UIImage?>) -> some View {
+        ZStack {
+            PanoramaViewer(image: img,
+                           panoramaType: .spherical,
+                           controlMethod: .touch) { _ in
+            } cameraMoved: { pitch, yaw, _ in
+                DispatchQueue.main.async {
+                    self.rotationIndicator = yaw
+                    self.rotationZIndicator = pitch * 2 + 30
+                }
+                // Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
+            }
+
+            VStack {
+                Spacer()
+                HStack {
+                    CompassView()
+                        .frame(width: 50.0, height: 50.0)
+                        .rotationEffect(Angle(degrees: Double(self.rotationIndicator * -1)))
+                    Spacer()
+                }
+                .padding()
+            }
+
+            if self.fullScreenStreetView, self.showLoading == false {
+                self.streetNavigationButtons
+            }
+        }
+    }
+
+    // MARK: Functions
+
     func getImageURL(_ name: String) -> String {
         let link = "https://streetview.khaled-7ed.workers.dev/\(name)?api_key=34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh"
         return link
@@ -220,36 +260,6 @@ struct StreetView: View {
         self.errorMsg = msg
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             self.dismissView()
-        }
-    }
-
-    func panoramaView(_ img: Binding<UIImage?>) -> some View {
-        ZStack {
-            PanoramaViewer(image: img,
-                           panoramaType: .spherical,
-                           controlMethod: .touch) { _ in
-            } cameraMoved: { pitch, yaw, _ in
-                DispatchQueue.main.async {
-                    self.rotationIndicator = yaw
-                    self.rotationZIndicator = pitch * 2 + 30
-                }
-                // Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
-            }
-
-            VStack {
-                Spacer()
-                HStack {
-                    CompassView()
-                        .frame(width: 50.0, height: 50.0)
-                        .rotationEffect(Angle(degrees: Double(self.rotationIndicator * -1)))
-                    Spacer()
-                }
-                .padding()
-            }
-
-            if self.fullScreenStreetView, self.showLoading == false {
-                self.streetNavigationButtons
-            }
         }
     }
 

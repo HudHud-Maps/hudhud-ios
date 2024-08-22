@@ -14,6 +14,9 @@ import SwiftUI
 // MARK: - FavoritesViewMoreView
 
 struct FavoritesViewMoreView: View {
+
+    // MARK: Properties
+
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
     @State var actionSheetShown: Bool = false
@@ -23,6 +26,8 @@ struct FavoritesViewMoreView: View {
     @State var clickedItem: ResolvedItem = .artwork
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
     @Environment(\.dismiss) var dismiss
+
+    // MARK: Content
 
     var body: some View {
         VStack(alignment: .leading) {

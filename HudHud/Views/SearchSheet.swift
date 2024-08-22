@@ -22,11 +22,25 @@ import SwiftUI
 
 struct SearchSheet: View {
 
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
-    @FocusState private var searchIsFocused: Bool
     @Environment(\.dismiss) var dismiss
+
+    @FocusState private var searchIsFocused: Bool
+
+    // MARK: Lifecycle
+
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore) {
+        self.mapStore = mapStore
+        self.searchStore = searchStore
+        self.trendingStore = trendingStore
+        self.searchIsFocused = false
+    }
+
+    // MARK: Content
 
     var body: some View {
         VStack {
@@ -165,14 +179,7 @@ struct SearchSheet: View {
         }
     }
 
-    // MARK: - Lifecycle
-
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore) {
-        self.mapStore = mapStore
-        self.searchStore = searchStore
-        self.trendingStore = trendingStore
-        self.searchIsFocused = false
-    }
+    // MARK: Functions
 
     // MARK: - Internal
 
@@ -186,6 +193,8 @@ struct SearchSheet: View {
         self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
     }
 }
+
+// MARK: - Route + Identifiable
 
 extension Route: Identifiable {}
 

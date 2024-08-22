@@ -9,8 +9,19 @@
 import SwiftUI
 
 struct PadSheetView<Content: View>: View {
+
+    // MARK: Properties
+
     let screenHeight = UIScreen.main.bounds.height
     let subview: Content
+
+    // MARK: Lifecycle
+
+    init(@ViewBuilder subview: () -> Content) {
+        self.subview = subview()
+    }
+
+    // MARK: Content
 
     var body: some View {
         VStack {
@@ -28,11 +39,6 @@ struct PadSheetView<Content: View>: View {
         }
     }
 
-    // MARK: - Lifecycle
-
-    init(@ViewBuilder subview: () -> Content) {
-        self.subview = subview()
-    }
 }
 
 #Preview {

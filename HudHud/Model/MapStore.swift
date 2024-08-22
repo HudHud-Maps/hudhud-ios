@@ -25,6 +25,8 @@ import SwiftUI
 @MainActor
 final class MapStore: ObservableObject {
 
+    // MARK: Nested Types
+
     enum TrackingState {
         case none
         case locateOnce
@@ -45,6 +47,8 @@ final class MapStore: ObservableObject {
         case defaultLocation
     }
 
+    // MARK: Properties
+
     var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
     var moveToUserLocation = false
@@ -61,13 +65,18 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
-    private let hudhudResolver = HudHudPOI()
-    private var subscriptions: Set<AnyCancellable> = []
     @Published var streetViewScene: StreetViewScene?
     @Published var nearestStreetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
     var cachedScenes = [Int: StreetViewScene]()
     var mapView: NavigationMapView?
+
+    var cameraTask: Task<Void, Error>?
+
+    private let hudhudResolver = HudHudPOI()
+    private var subscriptions: Set<AnyCancellable> = []
+
+    // MARK: Computed Properties
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -187,7 +196,16 @@ final class MapStore: ObservableObject {
         }
     }
 
-    var cameraTask: Task<Void, Error>?
+    // MARK: Lifecycle
+
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
+        self.camera = camera
+        self.searchShown = searchShown
+        self.motionViewModel = motionViewModel
+        self.bindLayersVisability()
+    }
+
+    // MARK: Functions
 
     /**
      This function determines the appropriate sheet detent based on the current state of the map store and search text.
@@ -335,14 +353,6 @@ final class MapStore: ObservableObject {
         return result
     }
 
-    // MARK: - Lifecycle
-
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
-        self.camera = camera
-        self.searchShown = searchShown
-        self.motionViewModel = motionViewModel
-        self.bindLayersVisability()
-    }
 }
 
 // MARK: - NavigationViewControllerDelegate

@@ -34,6 +34,11 @@ enum SheetSubView: Hashable, Codable {
 @MainActor
 struct ContentView: View {
 
+    // MARK: Properties
+
+    @StateObject var debugStore = DebugStore()
+    @State var safariURL: URL?
+
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
@@ -46,8 +51,19 @@ struct ContentView: View {
 
     @State private var sheetSize: CGSize = .zero
 
-    @StateObject var debugStore = DebugStore()
-    @State var safariURL: URL?
+    // MARK: Lifecycle
+
+    @MainActor
+    init(searchStore: SearchViewStore) {
+        self.searchViewStore = searchStore
+        self.mapStore = searchStore.mapStore
+        self.motionViewModel = searchStore.mapStore.motionViewModel
+        self.trendingStore = TrendingStore()
+        self.mapLayerStore = HudHudMapLayerStore()
+        self.mapStore.routes = searchStore.mapStore.routes
+    }
+
+    // MARK: Content
 
     var body: some View {
         ZStack {
@@ -203,6 +219,8 @@ struct ContentView: View {
         }
     }
 
+    // MARK: Functions
+
     func reloadPOITrending() async {
         do {
             let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.currentLocation, baseURL: DebugStore().baseURL)
@@ -211,18 +229,6 @@ struct ContentView: View {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
         }
-    }
-
-    // MARK: - Lifecycle
-
-    @MainActor
-    init(searchStore: SearchViewStore) {
-        self.searchViewStore = searchStore
-        self.mapStore = searchStore.mapStore
-        self.motionViewModel = searchStore.mapStore.motionViewModel
-        self.trendingStore = TrendingStore()
-        self.mapLayerStore = HudHudMapLayerStore()
-        self.mapStore.routes = searchStore.mapStore.routes
     }
 
 }
@@ -236,7 +242,12 @@ extension SimpleToastOptions {
 // MARK: - SizePreferenceKey
 
 struct SizePreferenceKey: PreferenceKey {
+
+    // MARK: Static Properties
+
     static var defaultValue: CGSize = .zero
+
+    // MARK: Static Functions
 
     // MARK: - Internal
 

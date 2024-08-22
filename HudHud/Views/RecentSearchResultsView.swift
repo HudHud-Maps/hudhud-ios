@@ -12,6 +12,9 @@ import MapLibreSwiftUI
 import SwiftUI
 
 struct RecentSearchResultsView: View {
+
+    // MARK: Properties
+
     let mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
@@ -20,6 +23,8 @@ struct RecentSearchResultsView: View {
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     @State var clickedFavorite = FavoritesItem.favoriteForPreview
     @Environment(\.dismiss) var dismiss
+
+    // MARK: Content
 
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in

@@ -11,9 +11,14 @@ import CoreLocation
 import SwiftUI
 
 struct AdditionalPOIDetailsView: View {
+
+    // MARK: Properties
+
     let item: ResolvedItem
     let routes: RoutingService.RouteCalculationResult?
     var formatter = Formatters()
+
+    // MARK: Content
 
     var body: some View {
         HStack(alignment: .top) {

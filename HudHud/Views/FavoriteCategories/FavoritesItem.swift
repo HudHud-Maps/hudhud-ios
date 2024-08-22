@@ -14,6 +14,15 @@ import SwiftUI
 // MARK: - FavoritesItem
 
 struct FavoritesItem: Identifiable, Codable, Equatable {
+
+    // MARK: Nested Types
+
+    enum CodingKeys: String, CodingKey {
+        case id, title, tintColor, item, description, type
+    }
+
+    // MARK: Properties
+
     let id: UUID
     var title: String // change later to localized if you can
     let tintColor: Color
@@ -21,11 +30,7 @@ struct FavoritesItem: Identifiable, Codable, Equatable {
     var description: String?
     var type: String
 
-    enum CodingKeys: String, CodingKey {
-        case id, title, tintColor, item, description, type
-    }
-
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init(id: UUID, title: String, tintColor: Color, item: ResolvedItem? = nil, description: String? = nil, type: String) {
         self.id = id
@@ -47,6 +52,8 @@ struct FavoritesItem: Identifiable, Codable, Equatable {
         self.type = try container.decode(String.self, forKey: .type)
     }
 
+    // MARK: Functions
+
     // MARK: - Internal
 
     func encode(to encoder: Encoder) throws {
@@ -63,7 +70,12 @@ struct FavoritesItem: Identifiable, Codable, Equatable {
 // MARK: - FavoritesResolvedItems
 
 struct FavoritesResolvedItems: RawRepresentable {
+
+    // MARK: Properties
+
     var favoritesItems: [FavoritesItem]
+
+    // MARK: Computed Properties
 
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(favoritesItems) else {
@@ -72,11 +84,7 @@ struct FavoritesResolvedItems: RawRepresentable {
         return String(decoding: data, as: UTF8.self)
     }
 
-    // MARK: - Lifecycle
-
-    init(items: [FavoritesItem]) {
-        self.favoritesItems = items
-    }
+    // MARK: Lifecycle
 
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
@@ -84,6 +92,10 @@ struct FavoritesResolvedItems: RawRepresentable {
             return nil
         }
         self.favoritesItems = result
+    }
+
+    init(items: [FavoritesItem]) {
+        self.favoritesItems = items
     }
 
 }

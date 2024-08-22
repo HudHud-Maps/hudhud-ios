@@ -18,23 +18,40 @@ import SwiftUI
 // MARK: - EditFavoritesFormView
 
 struct EditFavoritesFormView: View {
+
+    // MARK: Properties
+
     let item: ResolvedItem
     let favoritesItem: FavoritesItem?
     @Environment(\.dismiss) var dismiss
 
     @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
 
+    @State var newType: String = ""
+    @State var types: [String]
+    @Binding var camera: MapViewCamera
+    @ScaledMetric var imageSize = 30
+
     @State private var title: String = ""
     @State private var description: String = ""
-    @State var newType: String = ""
     @State private var selectedType: String
-    @State var types: [String]
     @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.Types.home: .houseFill, FavoritesItem.Types.work: .bagFill, FavoritesItem.Types.school: .buildingFill]
 
-    @Binding var camera: MapViewCamera
     private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
 
-    @ScaledMetric var imageSize = 30
+    // MARK: Lifecycle
+
+    init(item: ResolvedItem, favoritesItem: FavoritesItem?, camera: Binding<MapViewCamera>) {
+        self.item = item
+        self.favoritesItem = favoritesItem
+        _title = State(initialValue: favoritesItem?.title ?? "")
+        _description = State(initialValue: favoritesItem?.description ?? "")
+        _selectedType = State(initialValue: favoritesItem?.type ?? "")
+        _types = State(initialValue: ["Home", "School", "Work", "Restaurant"])
+        _camera = camera
+    }
+
+    // MARK: Content
 
     var body: some View {
         VStack {
@@ -111,6 +128,8 @@ struct EditFavoritesFormView: View {
         }
     }
 
+    // MARK: Functions
+
     private func saveChanges() {
         let newFavoritesItem = FavoritesItem(
             id: favoritesItem?.id ?? UUID(),
@@ -137,18 +156,6 @@ struct EditFavoritesFormView: View {
         } else {
             self.favorites.favoritesItems.append(newFavoritesItem)
         }
-    }
-
-    // MARK: - Lifecycle
-
-    init(item: ResolvedItem, favoritesItem: FavoritesItem?, camera: Binding<MapViewCamera>) {
-        self.item = item
-        self.favoritesItem = favoritesItem
-        _title = State(initialValue: favoritesItem?.title ?? "")
-        _description = State(initialValue: favoritesItem?.description ?? "")
-        _selectedType = State(initialValue: favoritesItem?.type ?? "")
-        _types = State(initialValue: ["Home", "School", "Work", "Restaurant"])
-        _camera = camera
     }
 
     // MARK: - Private

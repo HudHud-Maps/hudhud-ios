@@ -14,11 +14,17 @@ import UIKit
 
 class DownloadManager {
 
-    static let shared = DownloadManager()
-
     typealias CallBackBlock = (_ path: String?, _ error: String?) -> Void
 
+    // MARK: Static Properties
+
+    static let shared = DownloadManager()
+
+    // MARK: Properties
+
     var inDownload = [String: [CallBackBlock]]()
+
+    // MARK: Class Functions
 
     class func getLocalFilePath(_ link: String) -> String? {
         let ext = (link as NSString).pathExtension

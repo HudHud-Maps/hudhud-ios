@@ -15,8 +15,16 @@ import SwiftUI
 
 public class TrendingStore: ObservableObject {
 
+    // MARK: Properties
+
     @Published public var trendingPOIs: [ResolvedItem]?
     @Published public var lastError: Error?
+
+    // MARK: Lifecycle
+
+    public init() {}
+
+    // MARK: Functions
 
     public func getTrendingPOIs(page: Int, limit: Int, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
         let urlSessionConfiguration = URLSessionConfiguration.default
@@ -49,10 +57,6 @@ public class TrendingStore: ObservableObject {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         }
     }
-
-    // MARK: - Lifecycle
-
-    public init() {}
 
 }
 
