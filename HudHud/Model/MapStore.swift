@@ -460,7 +460,7 @@ private extension MapStore {
             .removeDuplicates()
             .sink { [weak self] isEmpty in
                 self?.mapStyle?.layers.forEach { layer in
-                    if layer.identifier.hasPrefix("hpoi_") {
+                    if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
                         layer.isVisible = isEmpty
                     }
                 }
