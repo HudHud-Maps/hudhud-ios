@@ -225,12 +225,12 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
 
-    public func items(for category: String, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
+    public func items(for category: String, topRated: Bool? = nil, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
         let response = try await Client.makeClient(using: baseURL).listPois(
-            query: .init(category: category, lat: location?.latitude, lon: location?.longitude),
+            query: .init(category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated),
             headers: .init(Accept_hyphen_Language: self.currentLanguage)
         )
 
@@ -252,7 +252,7 @@ public struct HudHudPOI: POIServiceProtocol {
                     website: URL(string: item.website ?? ""),
                     rating: item.rating,
                     ratingsCount: item.ratings_count,
-                    mediaURLs: item.media_urls?
+                    isOpen: item.is_open, mediaURLs: item.media_urls?
                         .compactMap { URL(string: $0.url) } ?? [],
                     distance: item.distance
                 )

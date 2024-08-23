@@ -25,7 +25,7 @@ struct CategoryItemView: View {
         VStack(spacing: .zero) {
             POIMediaView(mediaURLs: self.item.mediaURLs)
                 .padding(.bottom, 20)
-            VStack {
+            VStack(alignment: .leading, spacing: 7) {
                 Text(self.item.title)
                     .hudhudFont(.headline)
                     .foregroundStyle(Color.Colors.General._01Black)
