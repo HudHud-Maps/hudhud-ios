@@ -17,7 +17,7 @@ struct RecentSearchResultsView: View {
     @ScaledMetric var imageSize = 24
     let searchType: SearchViewStore.SearchType
     @Environment(\.dismiss) var dismiss
-
+    @StateObject var favoritesStore = FavoritesStore()
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in
             HStack(alignment: .center, spacing: 12) {
@@ -51,11 +51,12 @@ struct RecentSearchResultsView: View {
                 Spacer()
                 if self.searchType == .favorites {
                     NavigationLink {
-                        EditFavoritesFormView(item: item)
+                        EditFavoritesFormView(item: item, favoritesStore: self.favoritesStore)
                     } label: {
                         Text("+")
                             .foregroundStyle(Color(UIColor.label))
                     }
+//                        .navigationTransition(.slide)
                 }
             }
             .onTapGesture {
@@ -90,14 +91,15 @@ struct RecentSearchResultsView: View {
 
 #Preview("EditFavoritesFormView") {
     let item: ResolvedItem = .artwork
-    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
+    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
     @State var editFormViewIsShown = true
+    @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
         RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                                 searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem)
+                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
             }
     }
 }

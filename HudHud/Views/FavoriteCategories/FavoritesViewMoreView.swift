@@ -19,9 +19,8 @@ struct FavoritesViewMoreView: View {
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
     @Environment(\.dismiss) var dismiss
-
+    @ObservedObject var favoritesStore = FavoritesStore()
     var body: some View {
         VStack(alignment: .leading) {
             VStack {
@@ -40,8 +39,8 @@ struct FavoritesViewMoreView: View {
             .cornerRadius(12)
 
             Section { // show my favorites
-                ForEach(self.favorites.favoritesItems) { favorite in
-                    if let favoriteItem = favorite.item {
+                ForEach(self.favoritesStore.favoritesItems) { favorite in
+                    if let favoriteHasItem = favorite.item {
                         HStack {
                             FavoriteItemView(favorite: favorite)
                             Spacer()
@@ -57,17 +56,12 @@ struct FavoritesViewMoreView: View {
                 }
                 .confirmationDialog("action", isPresented: self.$actionSheetShown) {
                     NavigationLink {
-                        EditFavoritesFormView(item: self.clickedFavorite.item ?? .starbucks, favoritesItem: self.clickedFavorite)
+                        EditFavoritesFormView(item: self.clickedFavorite.item ?? .starbucks, favoritesItem: self.clickedFavorite, favoritesStore: self.favoritesStore)
                     } label: {
                         Text("Edit")
                     }
                     Button(role: .destructive) {
-                        let updatableTypes: Set<String> = ["Home", "School", "Work"]
-                        if let index = self.favorites.favoritesItems.firstIndex(where: { $0 == clickedFavorite }), updatableTypes.contains(clickedFavorite.type) {
-                            self.favorites.favoritesItems[index].item = nil
-                        } else {
-                            self.favorites.favoritesItems.removeAll(where: { $0.id == self.clickedFavorite.id })
-                        }
+                        self.favoritesStore.deleteFavorite(self.clickedFavorite)
                     } label: {
                         Text("Delete")
                     }

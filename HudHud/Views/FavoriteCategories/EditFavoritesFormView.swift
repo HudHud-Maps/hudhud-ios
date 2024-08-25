@@ -5,7 +5,6 @@
 //  Created by Alaa . on 29/05/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
-
 import BackendService
 import Foundation
 import MapKit
@@ -21,8 +20,7 @@ struct EditFavoritesFormView: View {
     let item: ResolvedItem
     let favoritesItem: FavoritesItem?
     @Environment(\.dismiss) var dismiss
-
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
+    @ObservedObject var favoritesStore = FavoritesStore()
 
     @State private var title: String = ""
     @State private var description: String = ""
@@ -114,86 +112,44 @@ struct EditFavoritesFormView: View {
         }
     }
 
-    private func saveChanges() {
-        let newFavoritesItem = FavoritesItem(
-            id: favoritesItem?.id ?? UUID(),
-            title: self.title,
-            tintColor: self.favoritesItem?.tintColor ?? Color.gray,
-            item: self.item,
-            description: self.description.isEmpty ? nil : self.description,
-            type: self.selectedType
-        )
-
-        // A set of types that should only have their "item" updated
-        let updatableTypes: Set<String> = ["Home", "School", "Work"]
-
-        // Check if the item being updated already exists in the list
-        if let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.item == newFavoritesItem.item }) {
-            // Check if the type has changed and is one of the updatable types
-            let existingItem = self.favorites.favoritesItems[existingIndex]
-
-            if existingItem.type != newFavoritesItem.type, updatableTypes.contains(existingItem.type) {
-                // Move data to the new type slot
-                if let targetIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
-                    self.favorites.favoritesItems[targetIndex].title = existingItem.title
-                    self.favorites.favoritesItems[targetIndex].item = existingItem.item
-                    self.favorites.favoritesItems[targetIndex].description = existingItem.description
-
-                    // Clear the existing item
-                    self.favorites.favoritesItems[existingIndex].title = ""
-                    self.favorites.favoritesItems[existingIndex].item = nil
-                    self.favorites.favoritesItems[existingIndex].description = nil
-                }
-            } else {
-                // Just update the existing item with new details
-                self.favorites.favoritesItems[existingIndex].title = newFavoritesItem.title
-                self.favorites.favoritesItems[existingIndex].item = newFavoritesItem.item
-                self.favorites.favoritesItems[existingIndex].description = newFavoritesItem.description
-            }
-        } else if updatableTypes.contains(newFavoritesItem.type) {
-            // Handle the case where we're adding a new item of an updatable type
-            if let existingTypeIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type }) {
-                // Update the existing type item
-                self.favorites.favoritesItems[existingTypeIndex].title = newFavoritesItem.title
-                self.favorites.favoritesItems[existingTypeIndex].item = newFavoritesItem.item
-                self.favorites.favoritesItems[existingTypeIndex].description = newFavoritesItem.description
-            } else {
-                // If no item of the same type exists, add the new item
-                self.favorites.favoritesItems.append(newFavoritesItem)
-            }
-        } else {
-            // Add the new item to the list if it’s not one of the updatable types
-            self.favorites.favoritesItems.append(newFavoritesItem)
-        }
-    }
-
     // MARK: - Lifecycle
 
-    init(item: ResolvedItem, favoritesItem: FavoritesItem? = nil) {
+    init(item: ResolvedItem, favoritesItem: FavoritesItem? = nil, favoritesStore: FavoritesStore) {
         self.item = item
         self.favoritesItem = favoritesItem
         _title = State(initialValue: favoritesItem?.title ?? item.title)
         _description = State(initialValue: favoritesItem?.description ?? "")
-        _selectedType = State(initialValue: favoritesItem?.type ?? "")
+        _selectedType = State(initialValue: favoritesItem?.type ?? "Other")
         _types = State(initialValue: ["Home", "School", "Work", "Restaurant", "Other"])
+        self.favoritesStore = favoritesStore
     }
 
     // MARK: - Private
+
+    private func saveChanges() {
+        self.favoritesStore.saveChanges(
+            title: self.title,
+            tintColor: self.favoritesItem?.tintColor ?? .entertainmentLeisure,
+            item: self.item,
+            description: self.description,
+            selectedType: self.selectedType
+        )
+    }
 
     private func addNewOption() {
         guard !self.newType.isEmpty, !self.types.contains(self.newType) else { return }
         self.types.append(self.newType)
         self.newType = ""
     }
-
 }
 
 #Preview {
     @State var resolvedItem: ResolvedItem = .artwork
     @State var favorite: FavoritesItem = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
-        EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite)
+        EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, favoritesStore: favoritesStore)
     }
 }
 
@@ -202,10 +158,11 @@ struct EditFavoritesFormView: View {
     @State var favorite: FavoritesItem = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     @State var isLinkActive = true
+    @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {
-                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite)
+                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, favoritesStore: favoritesStore)
             }
     }
 }

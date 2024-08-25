@@ -16,12 +16,12 @@ struct FavoriteCategoriesView: View {
     let mapStore: MapStore
     let searchStore: SearchViewStore
 
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
+    @ObservedObject var favoritesStore = FavoritesStore()
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
-                ForEach(self.favorites.favoritesItems.prefix(4)) { favorite in
+                ForEach(self.favoritesStore.favoritesItems.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
                             self.mapStore.selectedItem = selectedItem
@@ -31,7 +31,7 @@ struct FavoriteCategoriesView: View {
                         Text(favorite.type)
                             .hudhudFont(size: 12, fontWeight: .medium)
                     }
-                    .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor))
+                    .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
                 NavigationLink {
                     FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
