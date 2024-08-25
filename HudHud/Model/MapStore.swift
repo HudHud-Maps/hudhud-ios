@@ -461,7 +461,7 @@ extension MapStore {
 
 extension MapStore: Previewable {
 
-    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .preview)
+    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Private

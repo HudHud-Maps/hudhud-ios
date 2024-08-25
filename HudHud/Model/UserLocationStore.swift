@@ -16,7 +16,7 @@ import SwiftUI
 // MARK: - UserLocationStore
 
 @MainActor
-class UserLocationStore: ObservableObject {
+final class UserLocationStore: ObservableObject {
 
     @Published private(set) var isLocationPermissionEnabled: Bool = false
     @Published private(set) var currentUserLocation: CLLocation?
@@ -75,21 +75,14 @@ private extension UserLocationStore {
     }
 }
 
-extension UserLocationStore {
-    static let preview = UserLocationStore(location: .preview)
-}
+// MARK: - Previewable
 
-extension Location {
-    static func make() -> Location {
-        let location = Location() // swiftlint:disable:this location_usage
-        location.accuracy = .bestForNavigation
-        return location
-    }
+extension UserLocationStore: Previewable {
+    static let storeSetUpForPreviewing = UserLocationStore(location: .storeSetUpForPreviewing)
 }
 
 // MARK: - Location + Previewable
 
-extension Location {
-
-    static let preview = Location() // swiftlint:disable:this location_usage
+extension Location: Previewable {
+    static let storeSetUpForPreviewing = Location() // swiftlint:disable:this location_usage
 }

@@ -341,5 +341,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .preview, sheetSize: CGSize(size: 0))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 0))
 }

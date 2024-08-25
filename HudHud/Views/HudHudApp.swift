@@ -8,6 +8,7 @@
 
 import MapboxCoreNavigation
 import OSLog
+import SwiftLocation
 import SwiftUI
 
 // MARK: - HudHudApp
@@ -30,12 +31,12 @@ struct HudHudApp: App {
         }
     }
 
-    // MARK: - Lifecycle
-
     init() {
         RouteControllerMaximumDistanceBeforeRecalculating = DebugStore().maximumDistanceBeforeRecalculating
         self.motionViewModel = .shared
-        self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: .make()))
+        let location = Location() // swiftlint:disable:this location_usage
+        location.accuracy = .bestForNavigation
+        self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .hudhud))
     }
 }
