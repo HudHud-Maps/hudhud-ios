@@ -15,6 +15,10 @@ import SwiftUI
 
 // MARK: - UserLocationStore
 
+let myLogger = OSLog(subsystem: "My App", category: .pointsOfInterest)
+
+// MARK: - UserLocationStore
+
 @MainActor
 final class UserLocationStore: ObservableObject {
 
@@ -42,6 +46,7 @@ final class UserLocationStore: ObservableObject {
     // this can be called multiple times, we need to make sure that tasks are only created when needed
     func start() {
         if self.monitorLocationTask == nil {
+            os_signpost(.begin, log: myLogger, name: "time to receive the first location")
             self.monitorLocationTask = Task {
                 // this function should never throw
                 try await self.startMonitoringUserLocation()
@@ -69,6 +74,9 @@ private extension UserLocationStore {
         guard isAllowed else { return }
         for await event in try await self.location.startMonitoringLocations() {
             if let location = event.location {
+                if self.currentUserLocation == nil {
+                    os_signpost(.end, log: myLogger, name: "time to receive the first location")
+                }
                 self.currentUserLocation = location
             }
         }
