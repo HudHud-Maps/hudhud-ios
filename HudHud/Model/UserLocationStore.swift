@@ -26,33 +26,6 @@ class UserLocationStore: ObservableObject {
     private var monitorLocationTask: Task<Void, Error>?
     private var monitorPermissionsTask: Task<Void, Never>?
 
-    func lastKnownLocationOrWaitUntilPermissionIsGranted() async -> CLLocation {
-        if let currentUserLocation {
-            return currentUserLocation
-        }
-        // if we do not have the current location, we wait for it here
-        return await withCheckedContinuation { promise in
-            var subscription: AnyCancellable?
-            subscription = self.$currentUserLocation
-                .compactMap { $0 } // remove the nil
-                .first() // only allow one value and end the subscription after that
-                .sink { newestLocation in
-                    promise.resume(returning: newestLocation)
-                    subscription?.cancel()
-                }
-        }
-    }
-
-    private func startMonitoringUserLocation() async throws {
-        let isAllowed = await (try? self.location.requestPermission(.whenInUse).allowed) ?? false
-        guard isAllowed else { return }
-        for await event in try await self.location.startMonitoringLocations() {
-            if let location = event.location {
-                self.currentUserLocation = location
-            }
-        }
-    }
-
     // MARK: - Lifecycle
 
     init(location: Location) {
@@ -80,13 +53,24 @@ class UserLocationStore: ObservableObject {
             }
         }
     }
+}
 
-    // MARK: - Private
+private extension UserLocationStore {
 
     private func startMonitoringUserPermission() async {
         self.isLocationPermissionEnabled = self.location.authorizationStatus.allowed
         for await event in await self.location.startMonitoringAuthorization() {
             self.isLocationPermissionEnabled = event.authorizationStatus.allowed
+        }
+    }
+
+    private func startMonitoringUserLocation() async throws {
+        let isAllowed = await (try? self.location.requestPermission(.whenInUse).allowed) ?? false
+        guard isAllowed else { return }
+        for await event in try await self.location.startMonitoringLocations() {
+            if let location = event.location {
+                self.currentUserLocation = location
+            }
         }
     }
 }

@@ -261,7 +261,7 @@ final class MapStore: ObservableObject {
     }
 
     func focusOnUser() async {
-        let location = await userLocationStore.lastKnownLocationOrWaitUntilPermissionIsGranted().coordinate
+        guard let location = self.userLocationStore.currentUserLocation?.coordinate else { return }
         withAnimation {
             updateCamera(state: .userLocation(location))
         }

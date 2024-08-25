@@ -164,9 +164,11 @@ struct POIDetailSheet: View {
     }
 
     private func calculateRoute(for item: ResolvedItem) {
+        guard let userLocation = self.mapStore.userLocationStore.currentUserLocation else {
+            return
+        }
         Task {
             do {
-                let userLocation = await self.mapStore.userLocationStore.lastKnownLocationOrWaitUntilPermissionIsGranted()
                 let routes = try await self.mapStore.calculateRoute(from: userLocation, to: item.coordinate)
                 self.routes = routes
             } catch {
