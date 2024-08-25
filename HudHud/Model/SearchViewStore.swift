@@ -18,6 +18,12 @@ import SwiftUI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
+    enum FilterType {
+        case openNow
+        case topRated
+        case filter
+    }
+
     enum SearchType: Equatable {
 
         case selectPOI
@@ -62,6 +68,24 @@ final class SearchViewStore: ObservableObject {
     // MARK: - Properties
 
     @Published var searchText: String = ""
+    @Published var selectedFilter: FilterType? {
+        didSet {
+            switch self.selectedFilter {
+            case .openNow:
+                self.mapStore.displayableItems = self.mapStore.displayableItems.filter { $0.resolvedItem?.isOpen == true }
+            case .topRated:
+                Task {
+                    await self.fetch(category: self.searchText, topRated: true)
+                }
+            case .filter:
+                // Should open Filter sheet
+                Logger.searchView.debug("Filter Button Pressed")
+            case nil:
+                Logger.searchView.debug("No filter Required")
+            }
+        }
+    }
+
     @Published var searchError: Error?
     @Published var mode: Mode {
         didSet {
@@ -131,17 +155,16 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String) async {
+    func fetch(category: String, topRated: Bool? = nil) async {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
         self.searchText = category
-        self.mapStore.selectedDetent = .third
 
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let items = try await hudhud.items(for: category, location: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
+            let items = try await hudhud.items(for: category, topRated: topRated, location: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error

@@ -75,6 +75,7 @@
 		CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970372B85E87300CF9D59 /* PoiTileView.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
 		CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */; };
+		CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */; };
 		CBBF2857017E4782EF92382B /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2856856A5D5158A8D6A42F /* PlusJakartaSans-Regular.ttf */; };
 		CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */; };
 		CC774EDB8B36844F285C147B /* PlusJakartaSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */; };
@@ -229,6 +230,7 @@
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSheetView.swift; sourceTree = "<group>"; };
+		CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFiltersView.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
@@ -438,6 +440,14 @@
 			path = UIStyle;
 			sourceTree = "<group>";
 		};
+		CB5F74C72C74A6B900E6FAC0 /* FiltersView */ = {
+			isa = PBXGroup;
+			children = (
+				CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */,
+			);
+			path = FiltersView;
+			sourceTree = "<group>";
+		};
 		CD85CB2C2BB4650C00C99774 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -548,6 +558,7 @@
 				EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */,
 				597326CCB1F4D6DDF9D8945A /* PadSheet */,
 				DA8EC799C3F464B0FE3385BF /* POISheet */,
+				CB5F74C72C74A6B900E6FAC0 /* FiltersView */,
 				F2AF14EE2C50F6F4003E4F54 /* StreetView */,
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
 			);
@@ -679,7 +690,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CBA198862C6A0CD500FCE10C /* PBXTargetDependency */,
+				CB5F74CB2C774F4500E6FAC0 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -943,6 +954,7 @@
 				0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */,
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
 				594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */,
+				CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */,
 				F20D974A2C46B9E300457928 /* DownloadManager.swift in Sources */,
 				10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */,
 				CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */,
@@ -980,9 +992,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CBA198862C6A0CD500FCE10C /* PBXTargetDependency */ = {
+		CB5F74CB2C774F4500E6FAC0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = CBA198852C6A0CD500FCE10C /* SwiftLint */;
+			productRef = CB5F74CA2C774F4500E6FAC0 /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1434,7 +1446,7 @@
 			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
 		};
-		CBA198852C6A0CD500FCE10C /* SwiftLint */ = {
+		CB5F74CA2C774F4500E6FAC0 /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";
