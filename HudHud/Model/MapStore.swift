@@ -348,7 +348,7 @@ final class MapStore: ObservableObject {
 
     // MARK: - Internal
 
-    func trackingAction() async {
+    func switchToNextTrackingAction() async {
         switch self.trackingState {
         case .none:
             await self.focusOnUser()

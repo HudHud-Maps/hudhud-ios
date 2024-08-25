@@ -40,7 +40,7 @@ struct CurrentLocationButton: View {
     var body: some View {
         Button {
             Task {
-                await self.mapStore.trackingAction()
+                await self.mapStore.switchToNextTrackingAction()
             }
         } label: {
             self.trackingUI
