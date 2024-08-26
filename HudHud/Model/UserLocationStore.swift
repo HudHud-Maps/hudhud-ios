@@ -60,16 +60,18 @@ final class UserLocationStore: ObservableObject {
     }
 }
 
+// MARK: - Private
+
 private extension UserLocationStore {
 
-    private func startMonitoringUserPermission() async {
+    func startMonitoringUserPermission() async {
         self.isLocationPermissionEnabled = self.location.authorizationStatus.allowed
         for await event in await self.location.startMonitoringAuthorization() {
             self.isLocationPermissionEnabled = event.authorizationStatus.allowed
         }
     }
 
-    private func startMonitoringUserLocation() async throws {
+    func startMonitoringUserLocation() async throws {
         let isAllowed = await (try? self.location.requestPermission(.whenInUse).allowed) ?? false
         guard isAllowed else { return }
         for await event in try await self.location.startMonitoringLocations() {
