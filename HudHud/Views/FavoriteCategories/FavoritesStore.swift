@@ -20,7 +20,6 @@ class FavoritesStore: ObservableObject {
         if let favorites = FavoritesResolvedItems(rawValue: storedFavorites) {
             self.favoritesItems = favorites.favoritesItems
         } else {
-            // Fallback to initial favorites if decoding fails
             self.favoritesItems = FavoritesItem.favoritesInit
         }
     }
@@ -31,14 +30,7 @@ class FavoritesStore: ObservableObject {
     }
 
     func saveChanges(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem, description: String, selectedType: String) {
-        let newFavoritesItem = FavoritesItem(
-            id: UUID(),
-            title: title,
-            tintColor: tintColor,
-            item: item,
-            description: description.isEmpty ? nil : description,
-            type: selectedType
-        )
+        let newFavoritesItem = self.createFavoritesItem(title: title, tintColor: tintColor, item: item, description: description, type: selectedType)
 
         if let existingIndex = favoritesItems.firstIndex(where: { $0.item == newFavoritesItem.item }) {
             self.updateExistingItem(at: existingIndex, with: newFavoritesItem)
@@ -48,12 +40,14 @@ class FavoritesStore: ObservableObject {
         self.saveFavorites()
     }
 
-    private func updateExistingItem(at index: Int, with newItem: FavoritesItem) {
-        let existingItem = self.favoritesItems[index]
-        if existingItem.type != newItem.type, self.isUpdatableType(existingItem.type) {
-            self.moveData(from: index, toType: newItem.type)
-        } else {
-            self.updateItem(at: index, with: newItem)
+    func deleteFavorite(_ favorite: FavoritesItem) {
+        if let index = favoritesItems.firstIndex(where: { $0 == favorite }) {
+            if self.isUpdatableType(favorite.type) {
+                self.clearItem(at: index)
+            } else {
+                self.favoritesItems.remove(at: index)
+            }
+            self.saveFavorites()
         }
     }
 
@@ -72,20 +66,6 @@ class FavoritesStore: ObservableObject {
         }
     }
 
-    func deleteFavorite(_ favorite: FavoritesItem) {
-        let updatableTypes: Set<String> = ["Home", "School", "Work"]
-        if let index = favoritesItems.firstIndex(where: { $0 == favorite }) {
-            if updatableTypes.contains(favorite.type) {
-                self.favoritesItems[index].title = ""
-                self.favoritesItems[index].item = nil
-                self.favoritesItems[index].description = nil
-            } else {
-                self.favoritesItems.remove(at: index)
-            }
-            self.saveFavorites()
-        }
-    }
-
     // MARK: - Lifecycle
 
     init() {
@@ -93,6 +73,25 @@ class FavoritesStore: ObservableObject {
     }
 
     // MARK: - Private
+
+    private func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?, type: String) -> FavoritesItem {
+        return FavoritesItem(
+            id: UUID(),
+            title: title,
+            tintColor: tintColor,
+            item: item,
+            description: description,
+            type: type
+        )
+    }
+
+    private func updateExistingItem(at index: Int, with newItem: FavoritesItem) {
+        if self.favoritesItems[index].type != newItem.type, self.isUpdatableType(self.favoritesItems[index].type) {
+            self.moveData(from: index, toType: newItem.type)
+        } else {
+            self.updateItem(at: index, with: newItem)
+        }
+    }
 
     private func updateItem(at index: Int, with newItem: FavoritesItem) {
         self.favoritesItems[index].title = newItem.title
