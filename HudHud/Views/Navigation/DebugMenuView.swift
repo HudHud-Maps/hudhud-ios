@@ -24,8 +24,8 @@ struct DebugMenuView: View {
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
             }
-            Section(header: Text("maximum distance before recalculating")) {
-                TextField("In meters", text: self.$debugSettings.maximumDistanceBeforeRecalculating.string)
+            Section(header: Text("User is on Route")) {
+                TextField("In meters", text: self.$debugSettings.userLocationSnappingDistance.string)
                     .keyboardType(.asciiCapableNumberPad)
                     .disableAutocorrection(true)
             }
@@ -75,8 +75,8 @@ struct DebugMenuView: View {
                 }
             }
         }
-        .onChange(of: self.debugSettings.maximumDistanceBeforeRecalculating) { newMaximumDistance in
-            RouteControllerMaximumDistanceBeforeRecalculating = newMaximumDistance
+        .onChange(of: self.debugSettings.userLocationSnappingDistance) { newMaximumDistance in
+            RouteControllerUserLocationSnappingDistance = newMaximumDistance
         }
     }
 }

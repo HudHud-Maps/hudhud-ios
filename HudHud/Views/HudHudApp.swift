@@ -35,7 +35,7 @@ struct HudHudApp: App {
     // MARK: - Lifecycle
 
     init() {
-        RouteControllerMaximumDistanceBeforeRecalculating = DebugStore().maximumDistanceBeforeRecalculating
+        RouteControllerUserLocationSnappingDistance = DebugStore().userLocationSnappingDistance
         self.motionViewModel = .shared
         self.mapStore = MapStore(motionViewModel: self.motionViewModel)
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .hudhud))
