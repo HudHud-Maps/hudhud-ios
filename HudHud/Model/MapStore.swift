@@ -261,7 +261,7 @@ final class MapStore: ObservableObject {
     }
 
     func focusOnUser() async {
-        guard let location = self.userLocationStore.currentUserLocation?.coordinate else { return }
+        guard let location = await self.userLocationStore.location()?.coordinate else { return }
         withAnimation {
             updateCamera(state: .userLocation(location))
         }
@@ -343,7 +343,7 @@ final class MapStore: ObservableObject {
         self.motionViewModel = motionViewModel
         self.userLocationStore = userLocationStore
         bindLayersVisability()
-        bindCameraToUserLocation()
+        bindCameraToUserLocationForFirstTime()
     }
 
     // MARK: - Internal
@@ -490,11 +490,14 @@ private extension MapStore {
             .store(in: &self.subscriptions)
     }
 
-    func bindCameraToUserLocation() {
-        self.userLocationStore.$currentUserLocation
-            .compactMap(\.?.coordinate)
-            .sink { [weak self] newUserLocation in
-                self?.updateCamera(state: .userLocation(newUserLocation))
+    func bindCameraToUserLocationForFirstTime() {
+        self.userLocationStore.$isLocationPermissionEnabled
+            .filter { $0 } // only go through if the location permission is enabled
+            .first() // only call the closure once
+            .sink { [weak self] _ in
+                Task {
+                    await self?.focusOnUser()
+                }
             }
             .store(in: &self.subscriptions)
     }

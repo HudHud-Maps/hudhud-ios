@@ -206,7 +206,8 @@ struct ContentView: View {
 
     func reloadPOITrending() async {
         do {
-            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: self.mapStore.userLocationStore.currentUserLocation?.coordinate, baseURL: DebugStore().baseURL)
+            let currentUserLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: currentUserLocation, baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
             self.trendingStore.trendingPOIs = nil

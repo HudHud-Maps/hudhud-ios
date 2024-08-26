@@ -164,10 +164,10 @@ struct POIDetailSheet: View {
     }
 
     private func calculateRoute(for item: ResolvedItem) {
-        guard let userLocation = self.mapStore.userLocationStore.currentUserLocation else {
-            return
-        }
         Task {
+            guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+                return
+            }
             do {
                 let routes = try await self.mapStore.calculateRoute(from: userLocation, to: item.coordinate)
                 self.routes = routes

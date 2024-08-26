@@ -116,10 +116,10 @@ struct ABCRouteConfigurationView: View {
 
     // Update routes by making a network request
     func updateRoutes(wayPoints: [Waypoint]) {
-        guard let userLocation = self.mapStore.userLocationStore.currentUserLocation else {
-            return
-        }
         Task {
+            guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+                return
+            }
             do {
                 let routes = try await self.mapStore.calculateRoute(from: userLocation, to: nil, additionalWaypoints: wayPoints)
                 self.mapStore.routes = routes

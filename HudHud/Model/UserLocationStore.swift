@@ -15,20 +15,38 @@ import SwiftUI
 
 // MARK: - UserLocationStore
 
-let myLogger = OSLog(subsystem: "My App", category: .pointsOfInterest)
-
-// MARK: - UserLocationStore
-
 @MainActor
 final class UserLocationStore: ObservableObject {
 
     @Published private(set) var isLocationPermissionEnabled: Bool = false
-    @Published private(set) var currentUserLocation: CLLocation?
+    private var currentUserLocation: CLLocation?
 
     private let location: Location
 
-    private var monitorLocationTask: Task<Void, Error>?
     private var monitorPermissionsTask: Task<Void, Never>?
+
+    func location(allowCached: Bool = true) async -> CLLocation? {
+        if let currentUserLocation,
+           allowCached,
+           currentUserLocation.timestamp.advanced(by: .minutes(2)) > Date.now {
+            return currentUserLocation
+        }
+        if self.location.authorizationStatus == .notDetermined {
+            let status = try? await location.requestPermission(.whenInUse)
+            if status == nil {
+                return nil
+            }
+        }
+        if !self.location.authorizationStatus.allowed {
+            return nil
+        }
+        let newLocation = try? await location.requestLocation().location
+        if let newLocation {
+            self.currentUserLocation = newLocation
+            return newLocation
+        }
+        return nil
+    }
 
     // MARK: - Lifecycle
 
@@ -37,7 +55,6 @@ final class UserLocationStore: ObservableObject {
     }
 
     deinit {
-        self.monitorLocationTask?.cancel()
         self.monitorPermissionsTask?.cancel()
     }
 
@@ -45,14 +62,10 @@ final class UserLocationStore: ObservableObject {
 
     // this can be called multiple times, we need to make sure that tasks are only created when needed
     func start() {
-        if self.monitorLocationTask == nil {
-            os_signpost(.begin, log: myLogger, name: "time to receive the first location")
-            self.monitorLocationTask = Task {
-                // this function should never throw
-                try await self.startMonitoringUserLocation()
-            }
-        }
         if self.monitorPermissionsTask == nil {
+            Task {
+                try? await self.location.requestPermission(.whenInUse).allowed
+            }
             self.monitorPermissionsTask = Task {
                 await self.startMonitoringUserPermission()
             }
@@ -70,19 +83,6 @@ private extension UserLocationStore {
             self.isLocationPermissionEnabled = event.authorizationStatus.allowed
         }
     }
-
-    func startMonitoringUserLocation() async throws {
-        let isAllowed = await (try? self.location.requestPermission(.whenInUse).allowed) ?? false
-        guard isAllowed else { return }
-        for await event in try await self.location.startMonitoringLocations() {
-            if let location = event.location {
-                if self.currentUserLocation == nil {
-                    os_signpost(.end, log: myLogger, name: "time to receive the first location")
-                }
-                self.currentUserLocation = location
-            }
-        }
-    }
 }
 
 // MARK: - Previewable
@@ -95,4 +95,10 @@ extension UserLocationStore: Previewable {
 
 extension Location: Previewable {
     static let storeSetUpForPreviewing = Location() // swiftlint:disable:this location_usage
+}
+
+private extension TimeInterval {
+    static func minutes(_ minutes: UInt) -> Self {
+        TimeInterval(60 * minutes)
+    }
 }
