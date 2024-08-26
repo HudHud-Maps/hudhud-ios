@@ -40,7 +40,7 @@ struct FavoritesViewMoreView: View {
 
             Section { // show my favorites
                 ForEach(self.favoritesStore.favoritesItems) { favorite in
-                    if let favoriteHasItem = favorite.item {
+                    if favorite.item != nil {
                         HStack {
                             FavoriteItemView(favorite: favorite)
                             Spacer()

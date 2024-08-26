@@ -56,7 +56,6 @@ struct RecentSearchResultsView: View {
                         Text("+")
                             .foregroundStyle(Color(UIColor.label))
                     }
-//                        .navigationTransition(.slide)
                 }
             }
             .onTapGesture {
