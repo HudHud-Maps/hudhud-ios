@@ -13,14 +13,11 @@ import SwiftUI
 
 struct RecentSearchResultsView: View {
     let mapStore: MapStore
-    @ObservedObject var searchStore: SearchViewStore
+    let searchStore: SearchViewStore
     @ScaledMetric var imageSize = 24
     let searchType: SearchViewStore.SearchType
-    @State var editFormViewIsShown: Bool = false
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @State var clickedFavorite = FavoritesItem.favoriteForPreview
     @Environment(\.dismiss) var dismiss
-
+    @StateObject var favoritesStore = FavoritesStore()
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in
             HStack(alignment: .center, spacing: 12) {
@@ -54,10 +51,7 @@ struct RecentSearchResultsView: View {
                 Spacer()
                 if self.searchType == .favorites {
                     NavigationLink {
-                        self.editFormViewIsShown = true
-                        self.camera = MapViewCamera.center(item.coordinate, zoom: 14)
-                        self.clickedFavorite = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
-                        return EditFavoritesFormView(item: item, favoritesItem: self.clickedFavorite, camera: self.$camera)
+                        EditFavoritesFormView(item: item, favoritesStore: self.favoritesStore)
                     } label: {
                         Text("+")
                             .foregroundStyle(Color(UIColor.label))
@@ -96,14 +90,15 @@ struct RecentSearchResultsView: View {
 
 #Preview("EditFavoritesFormView") {
     let item: ResolvedItem = .artwork
-    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: item.color, item: item, type: item.category ?? "")
+    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
     @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
-    @State var editFormViewIsShown: Bool = true
+    @State var editFormViewIsShown = true
+    @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
         RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
                                 searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, camera: $camera)
+                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
             }
     }
 }
