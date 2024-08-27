@@ -49,7 +49,7 @@ struct RootSheetView: View {
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:
                         // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
                             let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
@@ -61,7 +61,7 @@ struct RootSheetView: View {
                                     searchStore: freshSearchViewStore, trendingStore: self.trendingStore).navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .favorites
                             return tempStore

@@ -10,7 +10,6 @@ import BackendService
 import CoreLocation
 import MapboxCoreNavigation
 import MapboxDirections
-import SwiftLocation
 import SwiftUI
 
 struct NavigationSheetView: View {

@@ -20,7 +20,6 @@ struct HudHudApp: App {
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
 
-    private let locationManager = Location() // swiftlint:disable:this location_usage
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
@@ -42,31 +41,9 @@ struct HudHudApp: App {
     init() {
         RouteControllerUserLocationSnappingDistance = DebugStore().userLocationSnappingDistance
         self.motionViewModel = .shared
-        self.mapStore = MapStore(motionViewModel: self.motionViewModel)
+        let location = Location() // swiftlint:disable:this location_usage
+        location.accuracy = .bestForNavigation
+        self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .hudhud))
     }
-}
-
-extension Location {
-
-    static let forSingleRequestUsage = {
-        assert(Thread.isMainThread)
-        let location = Location() // swiftlint:disable:this location_usage
-        location.accuracy = .threeKilometers // Location is extremely slow, unless set to this - returns better accuracy none the less.
-        return location
-    }()
-
-    // Currently not needed, reserved for future use
-    static let forContinuesUsage = {
-        let location = Location() // swiftlint:disable:this location_usage
-        location.accuracy = .threeKilometers
-        return location
-    }()
-}
-
-// MARK: - Location + Previewable
-
-extension Location: Previewable {
-
-    static let storeSetUpForPreviewing = Location() // swiftlint:disable:this location_usage
 }

@@ -17,7 +17,6 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
-import SwiftLocation
 import SwiftUI
 
 // MARK: - MapStore
@@ -49,9 +48,7 @@ final class MapStore: ObservableObject {
 
     // MARK: Properties
 
-    var locationManager: Location = .forSingleRequestUsage
     let motionViewModel: MotionViewModel
-    var moveToUserLocation = false
     var mapStyle: MLNStyle?
 
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
@@ -70,6 +67,7 @@ final class MapStore: ObservableObject {
     @Published var fullScreenStreetView: Bool = false
     var cachedScenes = [Int: StreetViewScene]()
     var mapView: NavigationMapView?
+    let userLocationStore: UserLocationStore
 
     var cameraTask: Task<Void, Error>?
 
@@ -99,15 +97,6 @@ final class MapStore: ObservableObject {
                         updateCamera(state: .route(self.routes))
                     }
                 }
-            }
-        }
-    }
-
-    @Published var currentLocation: CLLocationCoordinate2D? {
-        didSet {
-            self.moveToUserLocation = true
-            if let currentLocation {
-                updateCamera(state: .userLocation(currentLocation))
             }
         }
     }
@@ -198,11 +187,13 @@ final class MapStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel) {
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
         self.camera = camera
         self.searchShown = searchShown
         self.motionViewModel = motionViewModel
-        self.bindLayersVisability()
+        self.userLocationStore = userLocationStore
+        bindLayersVisability()
+        bindCameraToUserLocationForFirstTime()
     }
 
     // MARK: Functions
@@ -289,6 +280,13 @@ final class MapStore: ObservableObject {
         return styleUrl
     }
 
+    func focusOnUser() async {
+        guard let location = await self.userLocationStore.location()?.coordinate else { return }
+        withAnimation {
+            updateCamera(state: .userLocation(location))
+        }
+    }
+
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
         // On first launch we use the first one returned and set it as default.
         if let mapLayer = self.mapStyleLayer {
@@ -351,6 +349,23 @@ final class MapStore: ObservableObject {
 
         // Return the routes from the result
         return result
+    }
+
+    // MARK: - Internal
+
+    func switchToNextTrackingAction() async {
+        switch self.trackingState {
+        case .none:
+            await self.focusOnUser()
+            self.trackingState = .locateOnce
+            Logger.mapInteraction.log("None action required")
+        case .locateOnce:
+            self.trackingState = .keepTracking
+            Logger.mapInteraction.log("locate me Once")
+        case .keepTracking:
+            self.trackingState = .none
+            Logger.mapInteraction.log("keep Tracking of user location")
+        }
     }
 
 }
@@ -451,7 +466,7 @@ extension MapStore {
 
 extension MapStore: Previewable {
 
-    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Private
@@ -467,6 +482,18 @@ private extension MapStore {
                     if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
                         layer.isVisible = isEmpty
                     }
+                }
+            }
+            .store(in: &self.subscriptions)
+    }
+
+    func bindCameraToUserLocationForFirstTime() {
+        self.userLocationStore.$isLocationPermissionEnabled
+            .filter { $0 } // only go through if the location permission is enabled
+            .first() // only call the closure once
+            .sink { [weak self] _ in
+                Task {
+                    await self?.focusOnUser()
                 }
             }
             .store(in: &self.subscriptions)
@@ -539,7 +566,6 @@ private extension MapStore {
                 }
             }
         case let .userLocation(userLocation):
-            self.moveToUserLocation = false
             self.camera = MapViewCamera.center(userLocation, zoom: 14)
         case .mapItems:
             self.handleMapItems()
