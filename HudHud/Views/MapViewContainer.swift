@@ -230,7 +230,7 @@ struct MapViewContainer: View {
                 }
         )
         .onAppear {
-            self.userLocationStore.start()
+            self.userLocationStore.startMonitoringPermissions()
         }
         .task {
             guard self.didFocusOnUser else { return }
