@@ -23,5 +23,5 @@ class DebugStore: ObservableObject {
     }
 
     @AppStorage("SFSymbolsMap") var customMapSymbols: Bool?
-    @AppStorage("RouteControllerMaximumDistanceBeforeRecalculating") var maximumDistanceBeforeRecalculating: CLLocationDistance = RouteControllerMaximumDistanceBeforeRecalculating
+    @AppStorage("RouteControllerUserLocationSnappingDistance") var userLocationSnappingDistance: CLLocationDistance = RouteControllerUserLocationSnappingDistance
 }
