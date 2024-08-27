@@ -64,6 +64,15 @@
       }
     },
     {
+      "identity" : "nuke?tab=readme-ov-file",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kean/Nuke?tab=readme-ov-file",
+      "state" : {
+        "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
+        "version" : "12.8.0"
+      }
+    },
+    {
       "identity" : "openapikit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattpolzin/OpenAPIKit",
