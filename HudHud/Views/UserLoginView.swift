@@ -38,10 +38,20 @@ struct UserLoginView: View {
                 Button {} label: {
                     Text(self.title)
                 }
-                .buttonStyle(LargeButtonStyle(backgroundColor: Color.Colors.General._07BlueMain, foregroundColor: .white))
+                .buttonStyle(LargeButtonStyle(backgroundColor: Color.Colors.General._07BlueMain.opacity(self.isInputEmpty ? 0.5 : 1), foregroundColor: .white))
+                .disabled(self.isInputEmpty)
                 Spacer()
             }
             .padding(.horizontal)
+        }
+    }
+
+    private var isInputEmpty: Bool {
+        switch self.userInput {
+        case .phone:
+            return self.phone.isEmpty
+        case .email:
+            return self.email.isEmpty
         }
     }
 }
