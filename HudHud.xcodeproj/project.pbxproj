@@ -65,6 +65,7 @@
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
 		AF5D361C2C57A93800B11ABF /* CategoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D361B2C57A93800B11ABF /* CategoryItemView.swift */; };
+		AFF87B692C773F91007EE60E /* RoutingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF87B682C773F91007EE60E /* RoutingStore.swift */; };
 		AFF939BD2C7498C4008121C7 /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF939BC2C7498C4008121C7 /* UserLocationStore.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
@@ -214,6 +215,7 @@
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
 		AF5D361B2C57A93800B11ABF /* CategoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItemView.swift; sourceTree = "<group>"; };
+		AFF87B682C773F91007EE60E /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
 		AFF939BC2C7498C4008121C7 /* UserLocationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStore.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 			children = (
 				4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */,
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
+				AFF87B682C773F91007EE60E /* RoutingStore.swift */,
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
 				CD2219572BBFDBEE00042564 /* MotionViewModel.swift */,
 				BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */,
@@ -950,6 +953,7 @@
 				4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */,
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
 				655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */,
+				AFF87B692C773F91007EE60E /* RoutingStore.swift in Sources */,
 				EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */,
 				1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */,
 				DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */,

@@ -85,7 +85,7 @@ final class MapStore: ObservableObject {
                     try await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
                     try Task.checkCancellation()
                     await MainActor.run {
-                        updateCamera(state: .route(self.routes))
+                        self.updateCamera(state: .route(self.routes))
                     }
                 }
             }
@@ -263,7 +263,7 @@ final class MapStore: ObservableObject {
     func focusOnUser() async {
         guard let location = await self.userLocationStore.location()?.coordinate else { return }
         withAnimation {
-            updateCamera(state: .userLocation(location))
+            self.updateCamera(state: .userLocation(location))
         }
     }
 
@@ -333,6 +333,50 @@ final class MapStore: ObservableObject {
 
         // Return the routes from the result
         return result
+    }
+
+    func updateCamera(state: CameraUpdateState) {
+        switch state {
+        // show the whole route on the map
+        case let .route(result):
+            if let routes = result?.routes {
+                if let route = routes.first,
+                   let coordinates = route.coordinates,
+                   coordinates.hasElements,
+                   let boundingBox = self.generateMLNCoordinateBounds(from: coordinates) {
+                    self.camera = MapViewCamera.boundingBox(boundingBox,
+                                                            edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
+                }
+                return
+            }
+        case let .selectedItem(selectedItem):
+            // if the item selected from multi-map items(nearby poi), the camera will not move
+            // Hint: the pin should animate or change the color of it. no camera move need it
+            if let bounds = mapItems.map(\.coordinate).boundingBox(),
+               bounds.contains(coordinate: selectedItem.coordinate),
+               mapItems.count > 1, !isAnyItemVisible() {
+                let coordinates = self.mapItems.map(\.coordinate)
+                if let camera = CameraState.boundingBox(from: coordinates) {
+                    self.camera = camera
+                }
+            } else {
+                if self.mapItems.count > 1 {
+                    // do not show any move
+                    if let zoom = self.camera.zoom {
+                        self.camera.setZoom(zoom)
+                    }
+                } else {
+                    // if poi choosing from Resents or directly from the search it will zoom and center around it
+                    self.camera = .center(selectedItem.coordinate, zoom: 15)
+                }
+            }
+        case let .userLocation(userLocation):
+            self.camera = MapViewCamera.center(userLocation, zoom: 14)
+        case .mapItems:
+            self.handleMapItems()
+        default:
+            self.camera = MapViewCamera.center(.riyadh, zoom: 16)
+        }
     }
 
     // MARK: - Lifecycle
@@ -531,50 +575,6 @@ private extension MapStore {
         let northEast = CLLocationCoordinate2D(latitude: maxLat, longitude: maxLon)
 
         return MLNCoordinateBounds(sw: southWest, ne: northEast)
-    }
-
-    func updateCamera(state: CameraUpdateState) {
-        switch state {
-        // show the whole route on the map
-        case let .route(result):
-            if let routes = result?.routes {
-                if let route = routes.first,
-                   let coordinates = route.coordinates,
-                   coordinates.hasElements,
-                   let boundingBox = self.generateMLNCoordinateBounds(from: coordinates) {
-                    self.camera = MapViewCamera.boundingBox(boundingBox,
-                                                            edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
-                }
-                return
-            }
-        case let .selectedItem(selectedItem):
-            // if the item selected from multi-map items(nearby poi), the camera will not move
-            // Hint: the pin should animate or change the color of it. no camera move need it
-            if let bounds = mapItems.map(\.coordinate).boundingBox(),
-               bounds.contains(coordinate: selectedItem.coordinate),
-               mapItems.count > 1, !isAnyItemVisible() {
-                let coordinates = self.mapItems.map(\.coordinate)
-                if let camera = CameraState.boundingBox(from: coordinates) {
-                    self.camera = camera
-                }
-            } else {
-                if self.mapItems.count > 1 {
-                    // do not show any move
-                    if let zoom = self.camera.zoom {
-                        self.camera.setZoom(zoom)
-                    }
-                } else {
-                    // if poi choosing from Resents or directly from the search it will zoom and center around it
-                    self.camera = .center(selectedItem.coordinate, zoom: 15)
-                }
-            }
-        case let .userLocation(userLocation):
-            self.camera = MapViewCamera.center(userLocation, zoom: 14)
-        case .mapItems:
-            self.handleMapItems()
-        default:
-            self.camera = MapViewCamera.center(.riyadh, zoom: 16)
-        }
     }
 
     func updateDetent() {
