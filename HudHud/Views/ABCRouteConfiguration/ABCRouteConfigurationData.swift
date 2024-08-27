@@ -21,6 +21,8 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
     case myLocation(Waypoint)
     case waypoint(ResolvedItem)
 
+    // MARK: Computed Properties
+
     var id: Self {
         return self
     }
@@ -47,8 +49,13 @@ enum ABCRouteConfigurationItem: Hashable, Identifiable {
 // MARK: - Line
 
 struct Line: Shape {
+
+    // MARK: Properties
+
     var from: CGPoint
     var to: CGPoint
+
+    // MARK: Functions
 
     // MARK: - Internal
 
@@ -63,7 +70,12 @@ struct Line: Shape {
 // MARK: - ItemBoundsKey
 
 struct ItemBoundsKey: PreferenceKey {
+
+    // MARK: Static Properties
+
     static let defaultValue: [ABCRouteConfigurationItem.ID: Anchor<CGRect>] = [:]
+
+    // MARK: Static Functions
 
     // MARK: - Internal
 

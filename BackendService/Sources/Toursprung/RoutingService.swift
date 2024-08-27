@@ -19,6 +19,46 @@ public typealias JSONDictionary = [String: Any]
 
 public class RoutingService {
 
+    public typealias RouteCompletionHandler = (_ waypoints: [Waypoint]?, _ routes: [Route]?, _ error: Error?) -> Void
+
+    // MARK: Nested Types
+
+    // MARK: - Public
+
+    public struct RouteCalculationResult: Equatable, Hashable, Encodable, Decodable {
+
+        // MARK: Properties
+
+        public let waypoints: [Waypoint]
+        public let routes: [Route]
+
+        // MARK: Lifecycle
+
+        public init(from _: any Decoder) throws {
+            // this is an empty implementation to support the NavPath workaround, as we never actually use
+            // whats inside in RouteCalculationResult, we only want to know if its in the path.
+            self.waypoints = []
+            self.routes = []
+        }
+
+        public init(waypoints: [Waypoint], routes: [Route]) {
+            self.waypoints = waypoints
+            self.routes = routes
+        }
+
+        // MARK: Functions
+
+        // MARK: - Public
+
+        public func encode(to encoder: any Encoder) throws {
+            // this is an empty implementation to support the NavPath workaround, as we never actually use
+            // whats inside in RouteCalculationResult, we only want to know if its in the path.
+
+            var container = encoder.unkeyedContainer()
+            try container.encode(true) // we need to encode something, else the encoder throws an error that it didnt do anything
+        }
+    }
+
     public enum ToursprungError: LocalizedError, Equatable {
         case invalidUrl(message: String?)
         case invalidResponse(message: String?)
@@ -28,6 +68,8 @@ public class RoutingService {
         case invalidInput(message: String?)
         case profileNotFound(message: String?)
         case notAuthorized(message: String?)
+
+        // MARK: Computed Properties
 
         public var errorDescription: String? {
             switch self {
@@ -113,6 +155,8 @@ public class RoutingService {
             }
         }
 
+        // MARK: Functions
+
         // MARK: - Private
 
         private func errorDescription(message: String?, defaultMessage: String) -> String {
@@ -124,45 +168,15 @@ public class RoutingService {
         }
     }
 
-    public typealias RouteCompletionHandler = (_ waypoints: [Waypoint]?, _ routes: [Route]?, _ error: Error?) -> Void
+    // MARK: Static Properties
 
     public static let shared = RoutingService()
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     public init() {}
 
-    // MARK: - Public
-
-    public struct RouteCalculationResult: Equatable, Hashable, Encodable, Decodable {
-
-        public let waypoints: [Waypoint]
-        public let routes: [Route]
-
-        // MARK: - Lifecycle
-
-        public init(from _: any Decoder) throws {
-            // this is an empty implementation to support the NavPath workaround, as we never actually use
-            // whats inside in RouteCalculationResult, we only want to know if its in the path.
-            self.waypoints = []
-            self.routes = []
-        }
-
-        public init(waypoints: [Waypoint], routes: [Route]) {
-            self.waypoints = waypoints
-            self.routes = routes
-        }
-
-        // MARK: - Public
-
-        public func encode(to encoder: any Encoder) throws {
-            // this is an empty implementation to support the NavPath workaround, as we never actually use
-            // whats inside in RouteCalculationResult, we only want to know if its in the path.
-
-            var container = encoder.unkeyedContainer()
-            try container.encode(true) // we need to encode something, else the encoder throws an error that it didnt do anything
-        }
-    }
+    // MARK: Functions
 
     @discardableResult
     public func calculate(host: String, options: RouteOptions) async throws -> RouteCalculationResult {

@@ -24,6 +24,8 @@ import SwiftUI
 @MainActor
 final class MapStore: ObservableObject {
 
+    // MARK: Nested Types
+
     enum TrackingState {
         case none
         case locateOnce
@@ -44,6 +46,8 @@ final class MapStore: ObservableObject {
         case defaultLocation
     }
 
+    // MARK: Properties
+
     let motionViewModel: MotionViewModel
     var mapStyle: MLNStyle?
 
@@ -58,14 +62,19 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
-    private let hudhudResolver = HudHudPOI()
-    private var subscriptions: Set<AnyCancellable> = []
     @Published var streetViewScene: StreetViewScene?
     @Published var nearestStreetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
     var cachedScenes = [Int: StreetViewScene]()
     var mapView: NavigationMapView?
     let userLocationStore: UserLocationStore
+
+    var cameraTask: Task<Void, Error>?
+
+    private let hudhudResolver = HudHudPOI()
+    private var subscriptions: Set<AnyCancellable> = []
+
+    // MARK: Computed Properties
 
     @Published var navigatingRoute: Route? {
         didSet {
@@ -176,7 +185,18 @@ final class MapStore: ObservableObject {
         }
     }
 
-    var cameraTask: Task<Void, Error>?
+    // MARK: Lifecycle
+
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
+        self.camera = camera
+        self.searchShown = searchShown
+        self.motionViewModel = motionViewModel
+        self.userLocationStore = userLocationStore
+        bindLayersVisability()
+        bindCameraToUserLocationForFirstTime()
+    }
+
+    // MARK: Functions
 
     /**
      This function determines the appropriate sheet detent based on the current state of the map store and search text.
@@ -309,11 +329,7 @@ final class MapStore: ObservableObject {
     }
 
     // Unified route calculation function
-    func calculateRoute(
-        from location: CLLocation,
-        to destination: CLLocationCoordinate2D?,
-        additionalWaypoints: [Waypoint] = []
-    ) async throws -> RoutingService.RouteCalculationResult {
+    func calculateRoute(from location: CLLocation, to destination: CLLocationCoordinate2D?, additionalWaypoints: [Waypoint] = []) async throws -> RoutingService.RouteCalculationResult {
         let startWaypoint = Waypoint(location: location)
 
         var waypoints = [startWaypoint]
@@ -333,17 +349,6 @@ final class MapStore: ObservableObject {
 
         // Return the routes from the result
         return result
-    }
-
-    // MARK: - Lifecycle
-
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
-        self.camera = camera
-        self.searchShown = searchShown
-        self.motionViewModel = motionViewModel
-        self.userLocationStore = userLocationStore
-        bindLayersVisability()
-        bindCameraToUserLocationForFirstTime()
     }
 
     // MARK: - Internal
@@ -473,17 +478,9 @@ private extension MapStore {
             .map(\.isEmpty)
             .removeDuplicates()
             .sink { [weak self] isEmpty in
-                if isEmpty {
-                    self?.mapStyle?.layers.forEach { layer in
-                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
-                            layer.isVisible = true
-                        }
-                    }
-                } else {
-                    self?.mapStyle?.layers.forEach { layer in
-                        if layer.identifier == MapLayerIdentifier.restaurants || layer.identifier == MapLayerIdentifier.shops {
-                            layer.isVisible = false
-                        }
+                self?.mapStyle?.layers.forEach { layer in
+                    if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
+                        layer.isVisible = isEmpty
                     }
                 }
             }

@@ -12,45 +12,30 @@ import Foundation
 // MARK: - MotionViewModel
 
 final class MotionViewModel: ObservableObject {
-    enum Size: CaseIterable {
-        case compact
-        case fullscreen
-    }
 
-    private var positionOffet: Position?
-
-    // MARK: - Properties
-
-    @Published var coordinate: CLLocationCoordinate2D?
-    @Published var position: Position = .initial
-    @Published var size: Size = .compact
-    @Published var pageLoaded = false
-
-    static let shared = MotionViewModel()
-
-    // MARK: - Lifecycle
-
-    private init(coordinate: CLLocationCoordinate2D? = nil, position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
-        self.coordinate = coordinate
-        self.position = position
-        self.positionOffet = positionOffet
-        self.size = size
-    }
+    // MARK: Nested Types
 
     // MARK: - Internal
 
     struct Position: Equatable {
-        var heading: Double
-        var pitch: Double
+
+        // MARK: Static Properties
 
         static var initial = MotionViewModel.Position(heading: 0, pitch: 90)
 
-        // MARK: - Lifecycle
+        // MARK: Properties
+
+        var heading: Double
+        var pitch: Double
+
+        // MARK: Lifecycle
 
         init(heading: Double, pitch: Double) {
             self.heading = heading
             self.pitch = Double.minimum(pitch, 180)
         }
+
+        // MARK: Static Functions
 
         // MARK: - Internal
 
@@ -66,6 +51,35 @@ final class MotionViewModel: ObservableObject {
                             pitch: left.pitch * right)
         }
     }
+
+    enum Size: CaseIterable {
+        case compact
+        case fullscreen
+    }
+
+    // MARK: Static Properties
+
+    static let shared = MotionViewModel()
+
+    // MARK: Properties
+
+    @Published var coordinate: CLLocationCoordinate2D?
+    @Published var position: Position = .initial
+    @Published var size: Size = .compact
+    @Published var pageLoaded = false
+
+    private var positionOffet: Position?
+
+    // MARK: Lifecycle
+
+    private init(coordinate: CLLocationCoordinate2D? = nil, position: Position = .initial, positionOffet: Position? = nil, size: Size = .compact) {
+        self.coordinate = coordinate
+        self.position = position
+        self.positionOffet = positionOffet
+        self.size = size
+    }
+
+    // MARK: Functions
 
     func adding(translation: CGSize) {
         if let dragStartOffset = self.positionOffet {

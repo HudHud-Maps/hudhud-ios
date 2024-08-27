@@ -12,9 +12,20 @@ import Foundation
 import SwiftUI
 
 class FavoritesStore: ObservableObject {
-    @AppStorage("favorites") private var storedFavorites: String = ""
+
+    // MARK: Properties
 
     @Published var favoritesItems: [FavoritesItem] = []
+
+    @AppStorage("favorites") private var storedFavorites: String = ""
+
+    // MARK: Lifecycle
+
+    init() {
+        self.loadFavorites()
+    }
+
+    // MARK: Functions
 
     func loadFavorites() {
         if let favorites = FavoritesResolvedItems(rawValue: storedFavorites) {
@@ -64,12 +75,6 @@ class FavoritesStore: ObservableObject {
             self.updateItem(at: targetIndex, with: self.favoritesItems[index])
             self.clearItem(at: index)
         }
-    }
-
-    // MARK: - Lifecycle
-
-    init() {
-        self.loadFavorites()
     }
 
     // MARK: - Private

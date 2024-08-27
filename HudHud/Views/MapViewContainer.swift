@@ -16,15 +16,37 @@ import OSLog
 import SwiftUI
 
 struct MapViewContainer: View {
+
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
-    @State private var didFocusOnUser = false
-
     var sheetSize: CGSize
 
     var mapViewStore: MapViewStore
+
+    @State private var didFocusOnUser = false
+
+    // MARK: Lifecycle
+
+    init(
+        mapStore: MapStore,
+        debugStore: DebugStore,
+        searchViewStore: SearchViewStore,
+        userLocationStore: UserLocationStore,
+        sheetSize: CGSize
+    ) {
+        self.mapStore = mapStore
+        self.debugStore = debugStore
+        self.searchViewStore = searchViewStore
+        self.sheetSize = sheetSize
+        self.userLocationStore = userLocationStore
+        self.mapViewStore = MapViewStore(mapStore: mapStore)
+    }
+
+    // MARK: Content
 
     var body: some View {
         MapView<NavigationViewController>(makeViewController: {
@@ -217,22 +239,7 @@ struct MapViewContainer: View {
         }
     }
 
-    // MARK: - Lifecycle
-
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        userLocationStore: UserLocationStore,
-        sheetSize: CGSize
-    ) {
-        self.mapStore = mapStore
-        self.debugStore = debugStore
-        self.searchViewStore = searchViewStore
-        self.sheetSize = sheetSize
-        self.userLocationStore = userLocationStore
-        self.mapViewStore = MapViewStore(mapStore: mapStore)
-    }
+    // MARK: Functions
 
     // MARK: - Internal
 

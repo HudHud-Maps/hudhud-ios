@@ -11,8 +11,13 @@ import CoreLocation
 import SwiftUI
 
 struct PoiTileGridView: View {
+
+    // MARK: Properties
+
     let rows: [GridItem] = [GridItem(.adaptive(minimum: 170))]
     var trendingPOIs: TrendingStore
+
+    // MARK: Content
 
     var body: some View {
         if let trendingPOI = self.trendingPOIs.trendingPOIs, !trendingPOI.isEmpty {

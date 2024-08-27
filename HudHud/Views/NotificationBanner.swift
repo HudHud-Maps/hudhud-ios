@@ -14,6 +14,12 @@ import SwiftUI
 @MainActor
 class NotificationQueue: ObservableObject {
 
+    // MARK: Properties
+
+    @Published var currentNotification: Notification?
+
+    // MARK: Computed Properties
+
     private var queue: [Notification] = [] {
         didSet {
             if self.currentNotification != self.queue.first {
@@ -22,7 +28,7 @@ class NotificationQueue: ObservableObject {
         }
     }
 
-    @Published var currentNotification: Notification?
+    // MARK: Functions
 
     // MARK: - Internal
 
@@ -38,8 +44,13 @@ class NotificationQueue: ObservableObject {
 // MARK: - Notification
 
 struct Notification: Identifiable, Equatable {
+
+    // MARK: Properties
+
     var id: String
     let error: Error
+
+    // MARK: Computed Properties
 
     var title: String {
         self.error.localizedDescription
@@ -57,12 +68,14 @@ struct Notification: Identifiable, Equatable {
         return error.helpAnchor
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init(error: Error) {
         self.error = error
         self.id = String(describing: error)
     }
+
+    // MARK: Static Functions
 
     // MARK: - Internal
 
@@ -75,7 +88,11 @@ struct Notification: Identifiable, Equatable {
 
 struct NotificationBanner: View {
 
+    // MARK: Properties
+
     let notification: Notification
+
+    // MARK: Content
 
     var body: some View {
         VStack {

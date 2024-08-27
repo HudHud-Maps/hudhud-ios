@@ -11,6 +11,9 @@ import CoreLocation
 import SwiftUI
 
 struct POISheetButtonStyle: ButtonStyle {
+
+    // MARK: Properties
+
     let title: String
     let icon: UIImage
     var backgroundColor: Color? = .Colors.General._20ActionButtons
@@ -18,6 +21,8 @@ struct POISheetButtonStyle: ButtonStyle {
     @ScaledMetric var imageSize = 24
     @ScaledMetric var buttonHeight = 48
     @ScaledMetric var buttonWidth = 66
+
+    // MARK: Content
 
     // MARK: - Internal
 

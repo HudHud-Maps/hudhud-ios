@@ -12,6 +12,9 @@ import OSLog
 import SwiftUI
 
 struct RootSheetView: View {
+
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
@@ -20,6 +23,8 @@ struct RootSheetView: View {
     @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
+
+    // MARK: Content
 
     var body: some View {
         NavigationStack(path: self.$mapStore.path) {

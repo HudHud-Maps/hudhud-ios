@@ -10,7 +10,12 @@ import SFSafeSymbols
 import SwiftUI
 
 struct DirectionModeButton: ButtonStyle {
+
+    // MARK: Properties
+
     @State var sfSymol: SFSymbol = .car
+
+    // MARK: Content
 
     // MARK: - Internal
 

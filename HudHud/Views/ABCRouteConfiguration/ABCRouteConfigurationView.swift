@@ -15,9 +15,14 @@ import SFSafeSymbols
 import SwiftUI
 
 struct ABCRouteConfigurationView: View {
+
+    // MARK: Properties
+
     @State var routeConfigurations: [ABCRouteConfigurationItem]
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
+
+    // MARK: Content
 
     var body: some View {
         VStack {
@@ -113,6 +118,8 @@ struct ABCRouteConfigurationView: View {
             self.routeConfigurations = waypoints
         }
     }
+
+    // MARK: Functions
 
     // Update routes by making a network request
     func updateRoutes(wayPoints: [Waypoint]) {
