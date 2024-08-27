@@ -32,7 +32,7 @@ struct HudHudApp: App {
     }
 
     init() {
-        RouteControllerMaximumDistanceBeforeRecalculating = DebugStore().maximumDistanceBeforeRecalculating
+        RouteControllerUserLocationSnappingDistance = DebugStore().userLocationSnappingDistance
         self.motionViewModel = .shared
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .bestForNavigation

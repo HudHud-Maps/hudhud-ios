@@ -251,9 +251,6 @@
         }
       }
     },
-    "maximum distance before recalculating" : {
-
-    },
     "metro" : {
       "localizations" : {
         "ar" : {
@@ -398,6 +395,9 @@
 
     },
     "Use SF Symbols for POIs on map" : {
+
+    },
+    "User is on Route" : {
 
     },
     "View More" : {
