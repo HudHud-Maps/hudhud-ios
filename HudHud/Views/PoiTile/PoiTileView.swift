@@ -15,7 +15,21 @@ import SwiftUI
 // MARK: - PoiTileView
 
 struct PoiTileView: View {
+
+    // MARK: Properties
+
     var poiTileData: ResolvedItem
+
+    // MARK: Computed Properties
+
+    private var distance: String {
+        guard let distance = self.poiTileData.distance else {
+            return ""
+        }
+        return LengthFormatter.distance.string(fromMeters: distance)
+    }
+
+    // MARK: Content
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -88,12 +102,6 @@ struct PoiTileView: View {
         }
     }
 
-    private var distance: String {
-        guard let distance = self.poiTileData.distance else {
-            return ""
-        }
-        return LengthFormatter.distance.string(fromMeters: distance)
-    }
 }
 
 private extension ResolvedItem {

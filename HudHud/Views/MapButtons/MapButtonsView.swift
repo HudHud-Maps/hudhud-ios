@@ -10,7 +10,12 @@ import OSLog
 import SwiftUI
 
 struct MapButtonsView: View {
+
+    // MARK: Properties
+
     let mapButtonsData: [MapButtonData]
+
+    // MARK: Content
 
     var body: some View {
         VStack(spacing: 0) {

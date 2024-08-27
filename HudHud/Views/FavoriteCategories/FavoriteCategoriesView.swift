@@ -13,10 +13,15 @@ import SFSafeSymbols
 import SwiftUI
 
 struct FavoriteCategoriesView: View {
+
+    // MARK: Properties
+
     let mapStore: MapStore
     let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
+
+    // MARK: Content
 
     var body: some View {
         ScrollView(.horizontal) {

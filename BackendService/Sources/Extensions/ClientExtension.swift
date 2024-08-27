@@ -1,8 +1,9 @@
 //
 //  ClientExtension.swift
-//
+//  Hudhud
 //
 //  Created by Fatima Aljaber on 11/08/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import Foundation

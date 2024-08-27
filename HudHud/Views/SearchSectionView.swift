@@ -9,8 +9,20 @@
 import SwiftUI
 
 struct SearchSectionView<Content: View>: View {
+
+    // MARK: Properties
+
     let title: LocalizedStringResource
     let subview: Content
+
+    // MARK: Lifecycle
+
+    init(title: LocalizedStringResource, @ViewBuilder subview: () -> Content) {
+        self.title = title
+        self.subview = subview()
+    }
+
+    // MARK: Content
 
     var body: some View {
         Section(header: Text("\(self.title)").hudhudFont(size: 18, fontWeight: .semiBold)
@@ -21,12 +33,6 @@ struct SearchSectionView<Content: View>: View {
             }
     }
 
-    // MARK: - Lifecycle
-
-    init(title: LocalizedStringResource, @ViewBuilder subview: () -> Content) {
-        self.title = title
-        self.subview = subview()
-    }
 }
 
 #Preview {

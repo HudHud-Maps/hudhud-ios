@@ -11,6 +11,8 @@ import XCTest
 
 final class HudHudUITests: XCTestCase {
 
+    // MARK: Overridden Functions
+
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
@@ -23,6 +25,8 @@ final class HudHudUITests: XCTestCase {
     override func tearDownWithError() throws {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
+
+    // MARK: Functions
 
     func testForSearchField() throws {
         // UI tests must launch the application that they test.

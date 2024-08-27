@@ -11,7 +11,12 @@ import OSLog
 import UserNotifications
 
 class NotificationManager: ObservableObject {
+
+    // MARK: Properties
+
     let center = UNUserNotificationCenter.current()
+
+    // MARK: Functions
 
     // MARK: - Internal
 

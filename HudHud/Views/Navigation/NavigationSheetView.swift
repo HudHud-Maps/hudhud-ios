@@ -14,10 +14,15 @@ import SwiftUI
 
 struct NavigationSheetView: View {
 
+    // MARK: Properties
+
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
+
     @Environment(\.dismiss) private var dismiss
+
+    // MARK: Content
 
     var body: some View {
         VStack(alignment: .leading) {

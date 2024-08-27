@@ -14,8 +14,12 @@ import SwiftUI
 
 struct TrafficChartData {
 
+    // MARK: Properties
+
     let date: Date
     let traffic: [Double] // 24 items, 0:00 - 1:00 at index 0
+
+    // MARK: Computed Properties
 
     var getSpecificTrafficRange: [HourTrafficData]? {
         guard self.traffic.count == 24 else {
@@ -32,6 +36,8 @@ struct TrafficChartData {
         }
         return tempData
     }
+
+    // MARK: Functions
 
     // MARK: - Internal
 
@@ -68,8 +74,13 @@ struct TrafficChartData {
 // MARK: - HourTrafficData
 
 struct HourTrafficData: Identifiable {
+
+    // MARK: Properties
+
     let hour: Range<Date>
     let traffic: Double
+
+    // MARK: Computed Properties
 
     var id: Range<Date> {
         return self.hour

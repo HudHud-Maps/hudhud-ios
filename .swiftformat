@@ -3,15 +3,21 @@
 --anonymousforeach convert
 --assetliterals visual-width
 --asynccapturing 
---beforemarks enum,let,typealias,var
+--beforemarks typealias
 --binarygrouping 4,8
---categorymark "MARK: - %c"
+--callsiteparen default
+--categorymark "MARK: %c"
 --classthreshold 0
 --closingparen balanced
 --closurevoid remove
 --commas inline
+--complexattrs preserve
+--computedvarattrs preserve
+--condassignment after-property
 --conflictmarkers reject
+--dateformat system
 --decimalgrouping 3,6
+--doccomments before-declarations
 --elseposition same-line
 --emptybraces no-space
 --enumnamespaces always
@@ -32,44 +38,50 @@
 --hexliteralcase uppercase
 --ifdef indent
 --importgrouping alpha
---indent 4 
+--indent 4
 --indentcase false
 --indentstrings false
+--initcodernil false
 --lifecycle deinit,init
 --lineaftermarks true
 --linebreaks lf
 --markcategories true
---markextensions if-not-empty
---marktypes if-not-empty
+--markextensions always
+--marktypes always
 --maxwidth none
 --modifierorder 
 --nevertrailing 
+--nilinit remove
+--noncomplexattrs 
 --nospaceoperators 
 --nowrapoperators 
 --octalgrouping 4,8
 --onelineforeach ignore
 --operatorfunc spaced
+--organizationmode type
 --organizetypes actor,class,enum,struct
 --patternlet hoist
 --ranges spaced
---redundanttype infer-locals-only
+--redundanttype explicit
 --self insert
 --selfrequired 
 --semicolons inline
 --shortoptionals except-properties
 --smarttabs disabled
 --someany true
+--storedvarattrs preserve
 --stripunusedargs always
 --structthreshold 0
 --swiftversion 5.9
 --tabwidth 4
 --throwcapturing 
+--timezone system
 --trailingclosures 
 --trimwhitespace always
 --typeattributes preserve
 --typeblanklines preserve
+--typedelimiter space-after
 --typemark "MARK: - %t"
---varattributes preserve
 --voidtype void
 --wraparguments preserve
 --wrapcollections preserve
@@ -83,4 +95,4 @@
 --xcodeindentation enabled
 --yodaswap always
 --disable redundantReturn,wrapMultilineStatementBraces
---enable blankLinesBetweenImports,markTypes,organizeDeclarations
+--enable blankLinesBetweenImports,isEmpty,markTypes,organizeDeclarations

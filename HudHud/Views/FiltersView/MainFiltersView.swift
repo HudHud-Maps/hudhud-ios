@@ -10,7 +10,11 @@ import SwiftUI
 
 struct MainFiltersView: View {
 
+    // MARK: Properties
+
     @ObservedObject var searchStore: SearchViewStore
+
+    // MARK: Content
 
     var body: some View {
         HStack(spacing: 10) {

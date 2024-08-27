@@ -13,9 +13,12 @@ import SwiftUI
 // MARK: - Backport
 
 public struct Backport<Content> {
+
+    // MARK: Properties
+
     public let content: Content
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     public init(_ content: Content) {
         self.content = content
