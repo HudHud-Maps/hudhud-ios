@@ -15,9 +15,20 @@ import SwiftUI
 
 struct SearchResultItemView: View {
 
+    // MARK: Properties
+
     let item: SearchResultItem
     @Binding var searchText: String
     @ScaledMetric var imageSize = 24
+
+    // MARK: Lifecycle
+
+    init(item: SearchResultItem, searchText: Binding<String>?) {
+        self.item = item
+        self._searchText = searchText ?? .constant("")
+    }
+
+    // MARK: Content
 
     var body: some View {
         HStack(alignment: .center, spacing: 12) {
@@ -57,18 +68,30 @@ struct SearchResultItemView: View {
         .padding(8)
     }
 
-    // MARK: - Lifecycle
-
-    init(item: SearchResultItem, searchText: Binding<String>?) {
-        self.item = item
-        self._searchText = searchText ?? .constant("")
-    }
 }
 
 // MARK: - SearchResultItem
 
 struct SearchResultItem {
+
+    // MARK: Properties
+
     private let displayableRow: DisplayableRow
+
+    // MARK: Computed Properties
+
+    public var color: Color {
+        switch self.displayableRow {
+        case let .category(category):
+            category.color
+        case let .resolvedItem(resolvedItem):
+            resolvedItem.color
+        case .predictionItem:
+            Color(.systemRed)
+        case let .categoryItem(resolvedItem):
+            resolvedItem.color
+        }
+    }
 
     var symbol: SFSymbol {
         switch self.displayableRow {
@@ -109,20 +132,7 @@ struct SearchResultItem {
         }
     }
 
-    public var color: Color {
-        switch self.displayableRow {
-        case let .category(category):
-            category.color
-        case let .resolvedItem(resolvedItem):
-            resolvedItem.color
-        case .predictionItem:
-            Color(.systemRed)
-        case let .categoryItem(resolvedItem):
-            resolvedItem.color
-        }
-    }
-
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init(_ displayableRow: DisplayableRow) {
         self.displayableRow = displayableRow

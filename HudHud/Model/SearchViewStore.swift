@@ -19,6 +19,8 @@ import SwiftUI
 @MainActor
 final class SearchViewStore: ObservableObject {
 
+    // MARK: Nested Types
+
     enum FilterType {
         case openNow
         case topRated
@@ -31,6 +33,8 @@ final class SearchViewStore: ObservableObject {
         case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
         case categories
         case favorites
+
+        // MARK: Static Functions
 
         static func == (lhs: SearchType, rhs: SearchType) -> Bool {
             switch (lhs, rhs) {
@@ -50,26 +54,38 @@ final class SearchViewStore: ObservableObject {
     }
 
     enum Mode {
+        case live(provider: Provider)
+        case preview
+
+        // MARK: Nested Types
+
         enum Provider: CaseIterable {
             case apple
             case hudhud
         }
 
-        case live(provider: Provider)
-        case preview
     }
+
+    // MARK: Properties
 
     let mapStore: MapStore
 
-    private var task: Task<Void, Error>?
     var apple = ApplePOI()
-    private var hudhud = HudHudPOI()
-    private var cancellables: Set<AnyCancellable> = []
     var locationManager: Location = .forSingleRequestUsage
 
-    // MARK: - Properties
-
     @Published var searchText: String = ""
+    @Published var searchError: Error?
+    @Published var isSheetLoading = false
+    @Published var searchType: SearchType = .selectPOI
+
+    @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
+
+    private var task: Task<Void, Error>?
+    private var hudhud = HudHudPOI()
+    private var cancellables: Set<AnyCancellable> = []
+
+    // MARK: Computed Properties
+
     @Published var selectedFilter: FilterType? {
         didSet {
             switch self.selectedFilter {
@@ -88,7 +104,6 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    @Published var searchError: Error?
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
@@ -97,10 +112,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    @Published var isSheetLoading = false
-    @Published var searchType: SearchType = .selectPOI
-
-    @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
+    // MARK: Lifecycle
 
     init(mapStore: MapStore, mode: Mode) {
         self.mapStore = mapStore
@@ -113,6 +125,8 @@ final class SearchViewStore: ObservableObject {
             self.recentViewedItem = [itemOne, itemTwo]
         }
     }
+
+    // MARK: Functions
 
     func getCurrentLocation() async -> CLLocationCoordinate2D? {
         guard let currentLocation = try? await self.locationManager.requestLocation().location?.coordinate else {

@@ -10,10 +10,22 @@ import Foundation
 import SwiftUI
 
 struct PadSheetGesture<Content: View>: View {
+
+    // MARK: Properties
+
     let subview: Content
     let screenHeight = UIScreen.main.bounds.height
-    @State private var sheetSize: CGSize = .zero
     @State var offsetY: CGFloat = 0
+
+    @State private var sheetSize: CGSize = .zero
+
+    // MARK: Lifecycle
+
+    init(@ViewBuilder subview: () -> Content) {
+        self.subview = subview()
+    }
+
+    // MARK: Content
 
     var body: some View {
         self.subview
@@ -35,12 +47,6 @@ struct PadSheetGesture<Content: View>: View {
                             self.sheetSize = .zero
                         }
                     })
-    }
-
-    // MARK: - Lifecycle
-
-    init(@ViewBuilder subview: () -> Content) {
-        self.subview = subview()
     }
 
 }

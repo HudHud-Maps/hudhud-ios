@@ -12,8 +12,13 @@ import SFSafeSymbols
 // MARK: - DirectionModePickerData
 
 struct DirectionModePickerData: Identifiable, Equatable {
+
+    // MARK: Properties
+
     let mode: DirectionMode
     let duration: TimeInterval
+
+    // MARK: Computed Properties
 
     var id: DirectionMode { self.mode }
 }
@@ -23,6 +28,8 @@ struct DirectionModePickerData: Identifiable, Equatable {
 enum DirectionMode: Identifiable {
 
     case car, walk, bus, metro, bicycle
+
+    // MARK: Computed Properties
 
     var id: Self {
         return self

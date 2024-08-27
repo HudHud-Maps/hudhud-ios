@@ -16,14 +16,31 @@ import SwiftUI
 
 public actor ApplePOI: POIServiceProtocol {
 
+    // MARK: Static Properties
+
+    // MARK: - POIServiceProtocol
+
+    public static var serviceName: String = "Apple"
+
+    // MARK: Properties
+
     private var localSearch: MKLocalSearch?
     private var completer: MKLocalSearchCompleter
     private var continuation: CheckedContinuation<POIResponse, Error>?
     private let delegate: DelegateWrapper
 
-    // MARK: - POIServiceProtocol
+    // MARK: Lifecycle
 
-    public static var serviceName: String = "Apple"
+    public init() {
+        self.completer = MKLocalSearchCompleter()
+        self.delegate = DelegateWrapper()
+        self.delegate.apple = self
+        Task {
+            await self.completer.delegate = self.delegate
+        }
+    }
+
+    // MARK: Functions
 
     public func lookup(id: String, prediction: Any, baseURL _: String) async throws -> [ResolvedItem] {
         guard let completion = prediction as? MKLocalSearchCompletion else {
@@ -87,17 +104,6 @@ public actor ApplePOI: POIServiceProtocol {
         }
     }
 
-    // MARK: - Lifecycle
-
-    public init() {
-        self.completer = MKLocalSearchCompleter()
-        self.delegate = DelegateWrapper()
-        self.delegate.apple = self
-        Task {
-            await self.completer.delegate = self.delegate
-        }
-    }
-
     // MARK: - Internal
 
     func update(results: [DisplayableRow]) async {
@@ -115,7 +121,11 @@ public actor ApplePOI: POIServiceProtocol {
 
 private class DelegateWrapper: NSObject, MKLocalSearchCompleterDelegate {
 
+    // MARK: Properties
+
     weak var apple: ApplePOI?
+
+    // MARK: Functions
 
     // MARK: - MKLocalSearchCompleterDelegate
 

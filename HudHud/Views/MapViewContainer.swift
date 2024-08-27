@@ -17,14 +17,35 @@ import SwiftLocation
 import SwiftUI
 
 struct MapViewContainer: View {
+
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
-    @State private var showUserLocation: Bool = false
-    @State private var didTryToZoomOnUsersLocation = false
     var sheetSize: CGSize
 
     var mapViewStore: MapViewStore
+
+    @State private var showUserLocation: Bool = false
+    @State private var didTryToZoomOnUsersLocation = false
+
+    // MARK: Lifecycle
+
+    init(
+        mapStore: MapStore,
+        debugStore: DebugStore,
+        searchViewStore: SearchViewStore,
+        sheetSize: CGSize
+    ) {
+        self.mapStore = mapStore
+        self.debugStore = debugStore
+        self.searchViewStore = searchViewStore
+        self.sheetSize = sheetSize
+        self.mapViewStore = MapViewStore(mapStore: mapStore)
+    }
+
+    // MARK: Content
 
     var body: some View {
         MapView<NavigationViewController>(makeViewController: {
@@ -246,20 +267,7 @@ struct MapViewContainer: View {
         }
     }
 
-    // MARK: - Lifecycle
-
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        sheetSize: CGSize
-    ) {
-        self.mapStore = mapStore
-        self.debugStore = debugStore
-        self.searchViewStore = searchViewStore
-        self.sheetSize = sheetSize
-        self.mapViewStore = MapViewStore(mapStore: mapStore)
-    }
+    // MARK: Functions
 
     // MARK: - Internal
 

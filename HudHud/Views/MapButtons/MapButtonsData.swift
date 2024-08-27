@@ -10,14 +10,21 @@ import Foundation
 import SFSafeSymbols
 
 struct MapButtonData: Identifiable, Equatable {
-    let id = UUID()
-    var sfSymbol: IconStyle
-    let action: () -> Void
+
+    // MARK: Nested Types
 
     enum IconStyle {
         case icon(SFSymbol)
         case text(String)
     }
+
+    // MARK: Properties
+
+    let id = UUID()
+    var sfSymbol: IconStyle
+    let action: () -> Void
+
+    // MARK: Static Functions
 
     // MARK: - Internal
 

@@ -16,6 +16,20 @@ import UIKit
 // MARK: - HudHudRouteVoiceController
 
 class HudHudRouteVoiceController: RouteVoiceController {
+
+    // MARK: Nested Types
+
+    struct LanguageString {
+        let language: LanguageScript
+        let string: String
+    }
+
+    enum LanguageScript {
+        case arabic, other
+    }
+
+    // MARK: Properties
+
     lazy var speechSynth = AVSpeechSynthesizer()
 
     var lastSpokenInstruction: SpokenInstruction?
@@ -27,11 +41,7 @@ class HudHudRouteVoiceController: RouteVoiceController {
     let arabicVoice = AVSpeechSynthesisVoice(language: "ar-SA")
     let allOtherLanguagesVoice = AVSpeechSynthesisVoice(identifier: "com.apple.ttsbundle.Samantha-compact")
 
-    enum LanguageScript {
-        case arabic, other
-    }
-
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     /**
      Default initializer for `RouteVoiceController`.
@@ -45,34 +55,7 @@ class HudHudRouteVoiceController: RouteVoiceController {
         speechSynth.stopSpeaking(at: .immediate)
     }
 
-    // MARK: - Internal
-
-    struct LanguageString {
-        let language: LanguageScript
-        let string: String
-    }
-
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
-        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
-    }
-
-    func duckAudio() throws {
-        let categoryOptions: AVAudioSession.CategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
-        try AVAudioSession.sharedInstance().setMode(AVAudioSession.Mode.spokenAudio)
-        try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, options: categoryOptions)
-        try AVAudioSession.sharedInstance().setActive(true)
-    }
-
-    func mixAudio() throws {
-        try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.ambient)
-        try AVAudioSession.sharedInstance().setActive(true)
-    }
-
-    func unDuckAudio() throws {
-        try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
-    }
+    // MARK: Overridden Functions
 
     /**
      Reads aloud the given instruction.
@@ -114,6 +97,31 @@ class HudHudRouteVoiceController: RouteVoiceController {
                 self.speechSynth.speak(utterance)
             }
         }
+    }
+}
+
+private extension HudHudRouteVoiceController {
+
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassSpokenInstructionPoint, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerWillReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+    }
+
+    func duckAudio() throws {
+        let categoryOptions: AVAudioSession.CategoryOptions = [.duckOthers, .interruptSpokenAudioAndMixWithOthers]
+        try AVAudioSession.sharedInstance().setMode(AVAudioSession.Mode.spokenAudio)
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, options: categoryOptions)
+        try AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    func mixAudio() throws {
+        try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.ambient)
+        try AVAudioSession.sharedInstance().setActive(true)
+    }
+
+    func unDuckAudio() throws {
+        try AVAudioSession.sharedInstance().setActive(false, options: [.notifyOthersOnDeactivation])
     }
 
     func scriptOf(character: Character) -> LanguageScript {
@@ -161,9 +169,7 @@ class HudHudRouteVoiceController: RouteVoiceController {
         return result
     }
 
-    // MARK: - Private
-
-    private func verifyBackgroundAudio() {
+    func verifyBackgroundAudio() {
         guard UIApplication.shared.isKind(of: UIApplication.self) else {
             return
         }
@@ -175,6 +181,7 @@ class HudHudRouteVoiceController: RouteVoiceController {
 }
 
 extension SpokenInstruction {
+
     @available(iOS 10.0, *)
     func attributedText(for legProgress: RouteLegProgress) -> NSAttributedString {
         let attributedText = NSMutableAttributedString(string: text)

@@ -16,11 +16,18 @@ import TouchVisualizer
 
 class TouchManager: ObservableObject {
 
+    // MARK: Static Properties
+
     static let shared = TouchManager()
+
+    // MARK: Properties
+
+    @AppStorage("isTouchVisualizerEnabled") var isTouchVisualizerEnabled: Bool?
 
     private var window: UIWindow?
     private var cancellable: AnyCancellable?
-    @AppStorage("isTouchVisualizerEnabled") var isTouchVisualizerEnabled: Bool?
+
+    // MARK: Computed Properties
 
     var defaultTouchVisualizerSetting: Bool {
         switch UIApplication.environment {
@@ -31,7 +38,7 @@ class TouchManager: ObservableObject {
         }
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     init() {
         self.cancellable = NotificationCenter.default.publisher(for: UIScreen.capturedDidChangeNotification)
@@ -42,6 +49,8 @@ class TouchManager: ObservableObject {
                 }
             }
     }
+
+    // MARK: Functions
 
     // MARK: - Internal
 

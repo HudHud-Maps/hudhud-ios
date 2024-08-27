@@ -13,7 +13,11 @@ import SwiftUI
 
 struct DebugStreetView: View {
 
+    // MARK: Properties
+
     @ObservedObject var viewModel: MotionViewModel
+
+    // MARK: Content
 
     var body: some View {
         ViewThatFits {

@@ -16,8 +16,13 @@ import SwiftUI
 // MARK: - PoiTileView
 
 struct PoiTileView: View {
+
+    // MARK: Properties
+
     var poiTileData: ResolvedItem
     @State var location: CLLocation?
+
+    // MARK: Content
 
     var body: some View {
         VStack(alignment: .leading) {

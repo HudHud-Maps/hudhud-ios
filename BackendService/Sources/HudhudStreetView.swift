@@ -40,6 +40,12 @@ public struct StreetViewScene: Equatable {
 
 public struct HudhudStreetView {
 
+    // MARK: Lifecycle
+
+    public init() {}
+
+    // MARK: Functions
+
     public func getStreetView(lat: Double, lon: Double, baseURL: String) async throws -> StreetViewItem? {
         let query = Operations.getNearestStreetViewImage.Input.Query(lat: lat, lon: lon)
         let input = Operations.getNearestStreetViewImage.Input(query: query)
@@ -167,9 +173,5 @@ public struct HudhudStreetView {
             throw HudHudClientError.poiIDNotFound
         }
     }
-
-    // MARK: - Lifecycle
-
-    public init() {}
 
 }

@@ -25,7 +25,12 @@ struct FavoritesItem: Identifiable, Codable, Equatable {
 // MARK: - FavoritesResolvedItems
 
 struct FavoritesResolvedItems: RawRepresentable {
+
+    // MARK: Properties
+
     var favoritesItems: [FavoritesItem]
+
+    // MARK: Computed Properties
 
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(favoritesItems) else {
@@ -34,6 +39,8 @@ struct FavoritesResolvedItems: RawRepresentable {
         return String(decoding: data, as: UTF8.self)
     }
 
+    // MARK: Lifecycle
+
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
               let result = try? JSONDecoder().decode([FavoritesItem].self, from: data) else {
@@ -41,8 +48,6 @@ struct FavoritesResolvedItems: RawRepresentable {
         }
         self.favoritesItems = result
     }
-
-    // MARK: - Lifecycle
 
     init(items: [FavoritesItem]) {
         self.favoritesItems = items
@@ -86,6 +91,8 @@ extension FavoritesItem {
     enum TintColor: Codable {
         case personalShopping
         case entertainmentLeisure
+
+        // MARK: Computed Properties
 
         public var POI: Color {
             switch self {

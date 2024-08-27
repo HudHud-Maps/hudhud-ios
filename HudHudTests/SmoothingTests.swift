@@ -11,30 +11,41 @@ import XCTest
 
 final class SmoothingTests: XCTestCase {
 
+    // MARK: Nested Types
+
     struct SingleContainer<T> {
         let value: T
     }
 
     @objcMembers
     class MultiContainer: NSObject, Averageable {
-        var first: Double
-        var second: Double
+
+        // MARK: Static Computed Properties
 
         static var zero: Self {
             MultiContainer(first: 0, second: 0) as! Self // swiftlint:disable:this force_cast
         }
 
+        // MARK: Overridden Properties
+
         override var description: String {
             return String(format: "first: %.1f, second: %.1f", self.first, self.second)
         }
 
-        // MARK: - Lifecycle
+        // MARK: Properties
+
+        var first: Double
+        var second: Double
+
+        // MARK: Lifecycle
 
         init(first: Double, second: Double) {
             self.first = first
             self.second = second
         }
     }
+
+    // MARK: Functions
 
     // MARK: - SmoothingTests
 

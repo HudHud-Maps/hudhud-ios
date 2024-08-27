@@ -11,10 +11,9 @@ import UIKit
 
 enum SFSymbolSpriteSheet {
 
-    static var spriteMapping: [String: UIImage] = Self.generate()
+    // MARK: Static Properties
 
-    private static let size = CGSize(width: 30, height: 30)
-    private static let internalSize = CGSize(width: 24, height: 24)
+    static var spriteMapping: [String: UIImage] = Self.generate()
 
     static var defaultMapPin: UIImage = {
         let renderer = UIGraphicsImageRenderer(size: size)
@@ -53,6 +52,11 @@ enum SFSymbolSpriteSheet {
 
         return colorMatchExpression
     }()
+
+    private static let size = CGSize(width: 30, height: 30)
+    private static let internalSize = CGSize(width: 24, height: 24)
+
+    // MARK: Static Functions
 
     // MARK: - Private
 
