@@ -8,12 +8,50 @@
 
 import SwiftUI
 
+// MARK: - UserLoginView
+
 struct UserLoginView: View {
+    @State var userInput: UserInput = .phone
+    @State var email: String = ""
+    @State var phone: String = ""
+    @State var title: String = "Sign In"
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Image(.loginBackground)
+                .resizable()
+                .scaledToFill()
+                .edgesIgnoringSafeArea(.all)
+
+            VStack(alignment: .leading) {
+                Spacer()
+                Text(self.title)
+                    .hudhudFont(.title)
+                switch self.userInput {
+                case .phone:
+                    FloatingLabelTextField(text: self.$phone, placeholder: "Phone Number")
+                        .padding(.top)
+                case .email:
+                    FloatingLabelTextField(text: self.$email, placeholder: "Email Address")
+                        .padding(.top)
+                }
+                Spacer()
+                Button {} label: {
+                    Text(self.title)
+                }
+                .buttonStyle(LargeButtonStyle(backgroundColor: Color.Colors.General._07BlueMain, foregroundColor: .white))
+                Spacer()
+            }
+            .padding(.horizontal)
+        }
     }
 }
 
 #Preview {
     UserLoginView()
+}
+
+// MARK: - UserInput
+
+enum UserInput {
+    case phone, email
 }
