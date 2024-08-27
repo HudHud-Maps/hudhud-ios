@@ -91,6 +91,7 @@ struct MapLayersView: View {
                     }
                     VStack(alignment: .center, spacing: 10) {
                         Button {
+                            self.mapStore.shouldShowCustomSymbols = false
                             self.mapStore.mapStyleLayer = layer
                             Logger().info("\(layer.name) selected as map Style | url:\(layer.styleUrl)")
                         } label: {

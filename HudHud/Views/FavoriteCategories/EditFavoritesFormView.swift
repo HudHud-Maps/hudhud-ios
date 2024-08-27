@@ -5,7 +5,6 @@
 //  Created by Alaa . on 29/05/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
-
 import BackendService
 import Foundation
 import MapKit
@@ -24,31 +23,29 @@ struct EditFavoritesFormView: View {
     let item: ResolvedItem
     let favoritesItem: FavoritesItem?
     @Environment(\.dismiss) var dismiss
-
-    @AppStorage("favorites") var favorites = FavoritesResolvedItems(items: FavoritesItem.favoritesInit)
+    @ObservedObject var favoritesStore = FavoritesStore()
 
     @State var newType: String = ""
     @State var types: [String]
-    @Binding var camera: MapViewCamera
     @ScaledMetric var imageSize = 30
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
 
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var selectedType: String
     @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.Types.home: .houseFill, FavoritesItem.Types.work: .bagFill, FavoritesItem.Types.school: .buildingFill]
-
-    private let styleURL = Bundle.main.url(forResource: "Terrain", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     // MARK: Lifecycle
 
-    init(item: ResolvedItem, favoritesItem: FavoritesItem?, camera: Binding<MapViewCamera>) {
+    init(item: ResolvedItem, favoritesItem: FavoritesItem? = nil, favoritesStore: FavoritesStore) {
         self.item = item
         self.favoritesItem = favoritesItem
-        _title = State(initialValue: favoritesItem?.title ?? "")
+        _title = State(initialValue: favoritesItem?.title ?? item.title)
         _description = State(initialValue: favoritesItem?.description ?? "")
-        _selectedType = State(initialValue: favoritesItem?.type ?? "")
-        _types = State(initialValue: ["Home", "School", "Work", "Restaurant"])
-        _camera = camera
+        _selectedType = State(initialValue: favoritesItem?.type ?? "Other")
+        _types = State(initialValue: ["Home", "School", "Work", "Restaurant", "Other"])
+        self.favoritesStore = favoritesStore
     }
 
     // MARK: Content
@@ -126,54 +123,41 @@ struct EditFavoritesFormView: View {
                 self.dismiss()
             })
         }
-    }
-
-    // MARK: Functions
-
-    private func saveChanges() {
-        let newFavoritesItem = FavoritesItem(
-            id: favoritesItem?.id ?? UUID(),
-            title: self.title,
-            tintColor: self.favoritesItem?.tintColor ?? Color.gray,
-            item: self.item,
-            description: self.description.isEmpty ? nil : self.description,
-            type: self.selectedType
-        )
-
-        // a set of types that should only be updated
-        let updatableTypes: Set<String> = ["Home", "School", "Work"]
-
-        if updatableTypes.contains(newFavoritesItem.type),
-           let existingIndex = favorites.favoritesItems.firstIndex(where: { $0.type == newFavoritesItem.type || $0.id == newFavoritesItem.id }) {
-            // Update the existing item at the found index
-            var existingItem = self.favorites.favoritesItems[existingIndex]
-            existingItem.title = newFavoritesItem.title
-            existingItem.item = newFavoritesItem.item
-            existingItem.description = newFavoritesItem.description
-            existingItem.type = newFavoritesItem.type
-
-            self.favorites.favoritesItems[existingIndex] = existingItem
-        } else {
-            self.favorites.favoritesItems.append(newFavoritesItem)
+        .onAppear {
+            self.camera = MapViewCamera.center(self.item.coordinate, zoom: 14)
         }
     }
 
-    // MARK: - Private
+}
 
-    private func addNewOption() {
+// MARK: - Private
+
+private extension EditFavoritesFormView {
+
+    func saveChanges() {
+        self.favoritesStore.saveChanges(
+            title: self.title,
+            tintColor: self.favoritesItem?.tintColor ?? .entertainmentLeisure,
+            item: self.item,
+            description: self.description,
+            selectedType: self.selectedType
+        )
+    }
+
+    func addNewOption() {
         guard !self.newType.isEmpty, !self.types.contains(self.newType) else { return }
         self.types.append(self.newType)
         self.newType = ""
     }
-
 }
 
 #Preview {
     @State var resolvedItem: ResolvedItem = .artwork
     @State var favorite: FavoritesItem = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
-        EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, camera: $camera)
+        EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, favoritesStore: favoritesStore)
     }
 }
 
@@ -182,10 +166,11 @@ struct EditFavoritesFormView: View {
     @State var favorite: FavoritesItem = .favoriteForPreview
     @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     @State var isLinkActive = true
+    @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {
-                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, camera: $camera)
+                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, favoritesStore: favoritesStore)
             }
     }
 }

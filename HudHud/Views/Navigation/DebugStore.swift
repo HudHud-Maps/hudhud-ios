@@ -19,7 +19,7 @@ class DebugStore: ObservableObject {
     @AppStorage("routingHost") var routingHost: String = "gh.map.dev.hudhud.sa"
     @AppStorage("baseurl") var baseURL: String = "https://api.dev.hudhud.sa"
     @AppStorage("SFSymbolsMap") var customMapSymbols: Bool?
-    @AppStorage("RouteControllerMaximumDistanceBeforeRecalculating") var maximumDistanceBeforeRecalculating: CLLocationDistance = RouteControllerMaximumDistanceBeforeRecalculating
+    @AppStorage("RouteControllerUserLocationSnappingDistance") var userLocationSnappingDistance: CLLocationDistance = RouteControllerUserLocationSnappingDistance
 
     // MARK: Computed Properties
 

@@ -35,6 +35,7 @@
 		59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */; };
 		59A290082C43CA0000780307 /* POIMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A290072C43CA0000780307 /* POIMediaView.swift */; };
 		59B8A1DE2C60C38400A12F5E /* MapViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */; };
+		59EFD4E32C7604A100BA8B41 /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */; };
 		5B11693ACCDF9D47295E69D5 /* PlusJakartaSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
 		5E4B24E475601905AB732509 /* MapViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */; };
@@ -186,6 +187,7 @@
 		594C487A2C0E5F9400756633 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
 		59A290072C43CA0000780307 /* POIMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIMediaView.swift; sourceTree = "<group>"; };
 		59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewContainer.swift; sourceTree = "<group>"; };
+		59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoritesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesItem.swift; sourceTree = "<group>"; };
 		6D2856856A5D5158A8D6A42F /* PlusJakartaSans-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Regular.ttf"; sourceTree = "<group>"; };
 		6D6E65B0640253C2CCD4EA84 /* Locale+isArabic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Locale+isArabic.swift"; sourceTree = "<group>"; };
@@ -668,6 +670,7 @@
 				594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */,
 				594C48782C0DBBA900756633 /* EditFavoritesFormView.swift */,
 				594C487A2C0E5F9400756633 /* FavoriteItemView.swift */,
+				59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */,
 			);
 			path = FavoriteCategories;
 			sourceTree = "<group>";
@@ -955,6 +958,7 @@
 				10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */,
 				CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */,
 				44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */,
+				59EFD4E32C7604A100BA8B41 /* FavoritesStore.swift in Sources */,
 				48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */,
 				59A290082C43CA0000780307 /* POIMediaView.swift in Sources */,
 				A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */,
