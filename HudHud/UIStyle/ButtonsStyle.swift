@@ -42,6 +42,7 @@ struct LargeButtonStyle: ButtonStyle {
             .padding(.horizontal, 15)
             .padding(.vertical, 15)
             .foregroundStyle(self.foregroundColor)
+            .hudhudFont()
             .bold()
             .frame(maxWidth: .infinity)
             .background(self.backgroundColor)
