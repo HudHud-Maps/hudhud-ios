@@ -18,12 +18,27 @@ import SwiftUI
 @MainActor
 final class UserLocationStore: ObservableObject {
 
+    // MARK: Properties
+
     @Published private(set) var isLocationPermissionEnabled: Bool = false
+
     private var currentUserLocation: CLLocation?
 
     private let location: Location
 
     private var monitorPermissionsTask: Task<Void, Never>?
+
+    // MARK: Lifecycle
+
+    init(location: Location) {
+        self.location = location
+    }
+
+    deinit {
+        self.monitorPermissionsTask?.cancel()
+    }
+
+    // MARK: Functions
 
     func location(allowCached: Bool = true) async -> CLLocation? {
         if let currentUserLocation,
@@ -46,16 +61,6 @@ final class UserLocationStore: ObservableObject {
             return newLocation
         }
         return nil
-    }
-
-    // MARK: - Lifecycle
-
-    init(location: Location) {
-        self.location = location
-    }
-
-    deinit {
-        self.monitorPermissionsTask?.cancel()
     }
 
     // MARK: - Internal

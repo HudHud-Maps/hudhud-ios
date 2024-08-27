@@ -20,14 +20,28 @@ import OSLog
 @MainActor
 final class RoutingStore: ObservableObject {
 
+    // MARK: Nested Types
+
     enum NavigationProgress {
         case none
         case navigating
         case feedback
     }
 
+    // MARK: - Internal
+
+    struct LocationNotEnabledError: Hashable, Error {}
+
+    // MARK: Properties
+
     @Published private(set) var waypoints: [ABCRouteConfigurationItem]?
     @Published private(set) var navigationProgress: NavigationProgress = .none
+    let mapStore: MapStore
+
+    private var cameraTask: Task<Void, Error>?
+
+    // MARK: Computed Properties
+
     @Published private(set) var routes: RoutingService.RouteCalculationResult? {
         didSet {
             if let routes, self.mapStore.path.contains(RoutingService.RouteCalculationResult.self) == false {
@@ -51,10 +65,6 @@ final class RoutingStore: ObservableObject {
         }
     }
 
-    private var cameraTask: Task<Void, Error>?
-
-    let mapStore: MapStore
-
     var routePoints: ShapeSource {
         var features: [MLNPointFeature] = []
         if let waypoints = self.waypoints {
@@ -73,6 +83,14 @@ final class RoutingStore: ObservableObject {
             features
         }
     }
+
+    // MARK: Lifecycle
+
+    init(mapStore: MapStore) {
+        self.mapStore = mapStore
+    }
+
+    // MARK: Functions
 
     // Unified route calculation function
     func calculateRoute(
@@ -164,16 +182,6 @@ final class RoutingStore: ObservableObject {
             break
         }
     }
-
-    // MARK: - Lifecycle
-
-    init(mapStore: MapStore) {
-        self.mapStore = mapStore
-    }
-
-    // MARK: - Internal
-
-    struct LocationNotEnabledError: Hashable, Error {}
 
     func add(_ item: ABCRouteConfigurationItem) {
         self.waypoints?.append(item)

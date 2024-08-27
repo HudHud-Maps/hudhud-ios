@@ -14,7 +14,25 @@ import SwiftUI
 
 struct CurrentLocationButton: View {
 
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
+
+    // MARK: Content
+
+    var body: some View {
+        Button {
+            Task {
+                await self.mapStore.switchToNextTrackingAction()
+            }
+        } label: {
+            self.trackingUI
+        }
+        .background(Color.white)
+        .cornerRadius(15)
+        .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
+        .fixedSize()
+    }
 
     @ViewBuilder
     private var trackingUI: some View {
@@ -37,19 +55,6 @@ struct CurrentLocationButton: View {
         }
     }
 
-    var body: some View {
-        Button {
-            Task {
-                await self.mapStore.switchToNextTrackingAction()
-            }
-        } label: {
-            self.trackingUI
-        }
-        .background(Color.white)
-        .cornerRadius(15)
-        .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
-        .fixedSize()
-    }
 }
 
 @available(iOS 17, *)
