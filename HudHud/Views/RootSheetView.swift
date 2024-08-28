@@ -51,7 +51,7 @@ struct RootSheetView: View {
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
-                            let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
+                            let tempStore = SearchViewStore(mapStore: freshMapStore, routingStore: RoutingStore(mapStore: freshMapStore), mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
                                 self.searchViewStore.mapStore.waypoints?.append(item)
                             })
@@ -62,7 +62,7 @@ struct RootSheetView: View {
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
-                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
+                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, routingStore: RoutingStore(mapStore: freshMapStore), mode: self.searchViewStore.mode)
                             tempStore.searchType = .favorites
                             return tempStore
                         }()
@@ -71,7 +71,7 @@ struct RootSheetView: View {
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item, mapStore: self.mapStore, onStart: { calculation in
+                    POIDetailSheet(item: item, routingStore: self.searchViewStore.routingStore, onStart: { calculation in
                         Logger.searchView.info("Start item \(item)")
                         self.mapStore.routes = calculation
                         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]

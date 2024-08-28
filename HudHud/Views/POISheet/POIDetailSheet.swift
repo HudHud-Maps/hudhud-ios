@@ -21,7 +21,7 @@ import SwiftUI
 struct POIDetailSheet: View {
 
     let item: ResolvedItem
-    @ObservedObject var mapStore: MapStore
+    @ObservedObject var routingStore: RoutingStore
     let onStart: (RoutingService.RouteCalculationResult) -> Void
 
     @State var routes: RoutingService.RouteCalculationResult?
@@ -155,21 +155,20 @@ struct POIDetailSheet: View {
                 }
             }
         }
-        .onAppear {
-            self.calculateRoute(for: self.item)
+        .task {
+            await self.calculateRoute(for: self.item)
         }
         .onChange(of: self.item) { newItem in
-            self.calculateRoute(for: newItem)
+            Task {
+                await self.calculateRoute(for: newItem)
+            }
         }
     }
 
-    private func calculateRoute(for item: ResolvedItem) {
+    private func calculateRoute(for item: ResolvedItem) async {
         Task {
-            guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
-                return
-            }
             do {
-                let routes = try await self.mapStore.calculateRoute(from: userLocation, to: item.coordinate)
+                let routes = try await self.routingStore.calculateRoute(for: item)
                 self.routes = routes
             } catch {
                 let nsError = error as NSError

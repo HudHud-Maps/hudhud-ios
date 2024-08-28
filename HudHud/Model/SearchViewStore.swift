@@ -68,6 +68,7 @@ final class SearchViewStore: ObservableObject {
     // MARK: Properties
 
     let mapStore: MapStore
+    let routingStore: RoutingStore
 
     var apple = ApplePOI()
 
@@ -112,8 +113,9 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, mode: Mode) {
+    init(mapStore: MapStore, routingStore: RoutingStore, mode: Mode) {
         self.mapStore = mapStore
+        self.routingStore = routingStore
         self.mode = mode
 
         self.bindSearchAutoComplete()
@@ -306,5 +308,5 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, mode: .preview)
 }

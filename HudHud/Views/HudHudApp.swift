@@ -44,6 +44,6 @@ struct HudHudApp: App {
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .bestForNavigation
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, mode: .live(provider: .hudhud))
+        self.searchStore = SearchViewStore(mapStore: self.mapStore, routingStore: RoutingStore(mapStore: self.mapStore), mode: .live(provider: .hudhud))
     }
 }
