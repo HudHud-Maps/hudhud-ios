@@ -66,10 +66,10 @@ final class UserLocationStore: ObservableObject {
     // MARK: - Internal
 
     // this can be called multiple times, we need to make sure that tasks are only created when needed
-    func start() {
+    func startMonitoringPermissions() {
         if self.monitorPermissionsTask == nil {
             Task {
-                try? await self.location.requestPermission(.whenInUse).allowed
+                try? await self.location.requestPermission(.whenInUse)
             }
             self.monitorPermissionsTask = Task {
                 await self.startMonitoringUserPermission()
