@@ -698,6 +698,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CB5F74DA2C7F1EEA00E6FAC0 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -1004,6 +1005,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		CB5F74DA2C7F1EEA00E6FAC0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CB5F74D92C7F1EEA00E6FAC0 /* SwiftLint */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -1481,6 +1486,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CB5F74D02C7E0C4300E6FAC0 /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeVideo;
+		};
+		CB5F74D92C7F1EEA00E6FAC0 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CD1882FB2BF63E8200C8AD49 /* MapLibreSwiftDSL */ = {
 			isa = XCSwiftPackageProductDependency;
