@@ -19,7 +19,6 @@ struct FloatingLabelTextField: View {
                 .foregroundColor(.secondary)
                 .offset(y: self.text.isEmpty ? 0 : -25)
                 .scaleEffect(self.text.isEmpty ? 1 : 0.8, anchor: .leading)
-                .animation(.default, value: self.text.isEmpty)
 
             TextField("", text: self.$text)
                 .hudhudFont()
