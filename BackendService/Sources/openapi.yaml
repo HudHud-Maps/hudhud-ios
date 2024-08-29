@@ -1,7 +1,7 @@
 openapi: 3.0.1
 info:
   title: sinbad
-  description: ''
+  description: "This API documentation is for the sinbad project..."
   version: 1.0.0
 tags: []
 paths:
@@ -9,26 +9,26 @@ paths:
     get:
       summary: Map styles
       deprecated: false
-      description: 'Contains map style urls '
+      description: "Contains map style urls "
       operationId: listMapStyles
       tags: []
       parameters:
         - name: Accept-Language
           in: header
-          description: ''
+          description: ""
           required: false
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/MapStylesResponse'
+                $ref: "#/components/schemas/MapStylesResponse"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     ok: true
@@ -41,7 +41,7 @@ paths:
     post:
       summary: Rate trip
       deprecated: false
-      description: ''
+      description: ""
       operationId: rateTrip
       tags: []
       parameters: []
@@ -49,50 +49,50 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TripRateInput'
+              $ref: "#/components/schemas/TripRateInput"
       responses:
-        '201':
+        "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse'
-        '422':
+                $ref: "#/components/schemas/SuccessResponse"
+        "422":
           description: Parameter Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationError'
+                $ref: "#/components/schemas/ValidationError"
       security: []
   /sv/nearby:
     get:
       summary: Get nearest Streetview image
       deprecated: false
-      description: ''
+      description: ""
       operationId: getNearestStreetViewImage
       tags: []
       parameters:
         - name: lat
           in: query
-          description: ''
+          description: ""
           required: true
           schema:
             type: number
             format: float64
         - name: lon
           in: query
-          description: ''
+          description: ""
           required: true
           schema:
             type: number
             format: float64
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/NearestStreetViewImageResponse'
+                $ref: "#/components/schemas/NearestStreetViewImageResponse"
       security: []
   /p/typeahead:
     get:
@@ -112,34 +112,34 @@ paths:
             type: string
         - name: lat
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: double
         - name: lon
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: double
         - name: Accept-Language
           in: header
-          description: ''
+          description: ""
           required: false
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoisTypeaheadResponse'
+                $ref: "#/components/schemas/PoisTypeaheadResponse"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     ok: true
@@ -165,30 +165,30 @@ paths:
     get:
       summary: Get streetview image by id
       deprecated: false
-      description: ''
+      description: ""
       operationId: getStreetViewImage
       tags: []
       parameters:
         - name: id
           in: path
-          description: ''
+          description: ""
           required: true
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/StreetViewDetailResponse'
-        '400':
+                $ref: "#/components/schemas/StreetViewDetailResponse"
+        "400":
           description: Bad Request
           content:
             application/json:
               schema: &ref_0
-                $ref: '#/components/schemas/ErrorResponse'
-        '404':
+                $ref: "#/components/schemas/ErrorResponse"
+        "404":
           description: Record Not Found
           content:
             application/json:
@@ -198,46 +198,46 @@ paths:
     get:
       summary: POI details
       deprecated: false
-      description: ''
+      description: ""
       operationId: getPoi
       tags: []
       parameters:
         - name: id
           in: path
-          description: ''
+          description: ""
           required: true
           schema:
             type: string
         - name: lat
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: float64
         - name: lon
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: float64
         - name: Accept-Language
           in: header
-          description: ''
+          description: ""
           required: false
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoiDetailsResponse'
+                $ref: "#/components/schemas/PoiDetailsResponse"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     ok: true
@@ -252,7 +252,7 @@ paths:
                       coordinates:
                         lat: 39.891111
                         lon: 21.3625
-                      phone_number: '0533132053'
+                      phone_number: "0533132053"
                       website: www.darna.com.sa
                       rating: 4.5
                       ratings_count: 706
@@ -319,13 +319,13 @@ paths:
                       media_urls:
                         - type: image
                           url: https://media.hudhud.sa/4578.webp
-        '404':
+        "404":
           description: Record Not Found
           content:
             application/json:
               schema: *ref_0
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     ok: false
@@ -336,25 +336,25 @@ paths:
     get:
       summary: List pois (pois search)
       deprecated: false
-      description: ''
+      description: ""
       operationId: listPois
       tags: []
       parameters:
         - name: page
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: integer
         - name: limit
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: integer
         - name: sort_by
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: string
@@ -363,11 +363,11 @@ paths:
               - distance
             x-apidog:
               enumDescriptions:
-                relevance: ''
-                distance: ''
+                relevance: ""
+                distance: ""
         - name: price_range
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: integer
@@ -378,13 +378,13 @@ paths:
               - 4
             x-apidog:
               enumDescriptions:
-                '1': ''
-                '2': ''
-                '3': ''
-                '4': ''
+                "1": ""
+                "2": ""
+                "3": ""
+                "4": ""
         - name: rating
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
@@ -400,7 +400,7 @@ paths:
             format: date-time
         - name: category
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: string
@@ -418,40 +418,40 @@ paths:
             type: string
         - name: lat
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: double
         - name: lon
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: double
         - name: top_rated
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: boolean
         - name: Accept-Language
           in: header
-          description: ''
+          description: ""
           required: false
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoisListResponse'
+                $ref: "#/components/schemas/PoisListResponse"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     ok: true
@@ -497,12 +497,12 @@ paths:
                               closes_at: 720
                             - opens_at: 1000
                               closes_at: 1600
-                        phone_number: '+9664512'
+                        phone_number: "+9664512"
                         coordinates:
                           lat: 39.891111
                           lon: 21.3625
                         website: https://hudhud.sa
-                        instagram: ''
+                        instagram: ""
                         media_urls:
                           - type: picture
                             url: https://media.hudhud.sa/dsqdqs.jpeg
@@ -511,13 +511,13 @@ paths:
     get:
       summary: Get streetview scene by id
       deprecated: false
-      description: ''
+      description: ""
       operationId: getStreetViewScene
       tags: []
       parameters:
         - name: id
           in: path
-          description: ''
+          description: ""
           required: true
           schema:
             type: integer
@@ -575,58 +575,58 @@ paths:
     get:
       summary: Trending POIs
       deprecated: false
-      description: ''
+      description: ""
       operationId: listTrendingPois
       tags: []
       parameters:
         - name: page
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: integer
         - name: limit
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: integer
         - name: next_page_token
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: string
         - name: lat
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: double
         - name: lon
           in: query
-          description: ''
+          description: ""
           required: false
           schema:
             type: number
             format: double
         - name: Accept-Language
           in: header
-          description: ''
+          description: ""
           required: false
-          example: ''
+          example: ""
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PoisTrendingResponse'
+                $ref: "#/components/schemas/PoisTrendingResponse"
               examples:
-                '1':
+                "1":
                   summary: Success
                   value:
                     ok: true
@@ -644,12 +644,54 @@ paths:
       security: []
 components:
   schemas:
+    IosCategoryIcon:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name
+        color:
+          type: string
+          enum:
+            - systemGray
+            - systemGray2
+            - systemGray3
+            - systemGray4
+            - systemGray5
+            - systemGray6
+            - systemRed
+            - systemGreen
+            - systemBlue
+            - systemOrange
+            - systemYellow
+            - systemPink
+            - systemPurple
+            - systemTeal
+            - systemIndigo
+            - systemBrown
+            - systemMint
+            - systemCyan
+      required:
+        - name
+        - color
+    AndroidCategoryIcon:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+      required:
+        - name
+        - color
     StreetViewScene:
       type: object
       properties:
         id:
           type: integer
         name:
+          type: string
+        base_url:
           type: string
         next_id:
           type: integer
@@ -703,7 +745,7 @@ components:
       type: object
       properties:
         data:
-          $ref: '#/components/schemas/StreetViewScene'
+          $ref: "#/components/schemas/StreetViewScene"
         ok:
           type: boolean
       required:
@@ -734,7 +776,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/MapStyleItem'
+            $ref: "#/components/schemas/MapStyleItem"
         ok:
           type: boolean
       required:
@@ -784,7 +826,7 @@ components:
         ok:
           type: boolean
         data:
-          $ref: '#/components/schemas/StreetViewImageDetails'
+          $ref: "#/components/schemas/StreetViewImageDetails"
       required:
         - ok
         - data
@@ -794,7 +836,7 @@ components:
         ok:
           type: boolean
         data:
-          $ref: '#/components/schemas/StreetViewImageItem'
+          $ref: "#/components/schemas/StreetViewImageItem"
       required:
         - ok
     StreetViewImageItem:
@@ -822,8 +864,10 @@ components:
             - lon
         created_at:
           type: string
+          format: date-time
         updated_at:
           type: string
+          format: date-time
         distance:
           type: number
           format: float64
@@ -988,7 +1032,7 @@ components:
             saturday:
               type: array
               items: &ref_1
-                $ref: '#/components/schemas/OpeningHoursItem'
+                $ref: "#/components/schemas/OpeningHoursItem"
               nullable: true
             sunday:
               type: array
@@ -1157,12 +1201,18 @@ components:
           format: double
           description: duration in seconds
           nullable: true
+        android_category_icon: &ref_3
+          $ref: "#/components/schemas/AndroidCategoryIcon"
+        ios_category_icon: &ref_2
+          $ref: "#/components/schemas/IosCategoryIcon"
       required:
         - id
         - address
         - name
         - category
         - coordinates
+        - android_category_icon
+        - ios_category_icon
     TypeaheadItem:
       type: object
       properties:
@@ -1191,47 +1241,8 @@ components:
           required:
             - lat
             - lon
-        ios_category_icon:
-          type: object
-          properties:
-            name:
-              type: string
-            color:
-              type: string
-              description: This should be an Apple color name
-              enum:
-                - systemGray
-                - systemGray2
-                - systemGray3
-                - systemGray4
-                - systemGray5
-                - systemGray6
-                - systemRed
-                - systemGreen
-                - systemBlue
-                - systemOrange
-                - systemYellow
-                - systemPink
-                - systemPurple
-                - systemTeal
-                - systemIndigo
-                - systemBrown
-                - systemMint
-                - systemCyan
-          required:
-            - name
-            - color
-        android_category_icon:
-          type: object
-          properties:
-            name:
-              type: string
-            color:
-              type: string
-              description: This should be a hex color
-          required:
-            - name
-            - color
+        ios_category_icon: *ref_2
+        android_category_icon: *ref_3
       required:
         - ios_category_icon
         - android_category_icon
@@ -1248,7 +1259,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/TrendingItem'
+            $ref: "#/components/schemas/TrendingItem"
       required:
         - ok
         - data
@@ -1267,7 +1278,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/PoisListItem'
+            $ref: "#/components/schemas/PoisListItem"
       required:
         - ok
         - total
@@ -1281,7 +1292,7 @@ components:
             Can be ignored by clients, errors should be checked using the status
             code following the http standard
         data:
-          $ref: '#/components/schemas/PoiDetails'
+          $ref: "#/components/schemas/PoiDetails"
       required:
         - ok
         - data
@@ -1293,7 +1304,7 @@ components:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/TypeaheadItem'
+            $ref: "#/components/schemas/TypeaheadItem"
       required:
         - ok
         - data
