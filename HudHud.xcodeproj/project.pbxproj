@@ -25,6 +25,9 @@
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734FB0DF376C6B77950814C5 /* Fonts.swift */; };
 		48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */; };
+		591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */; };
+		591002252C7DCB6600CF4707 /* UserLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002242C7DCB6600CF4707 /* UserLoginView.swift */; };
+		591002292C7F260A00CF4707 /* LoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002282C7F260A00CF4707 /* LoginStore.swift */; };
 		5936D87F2BF09A2600A258BE /* DebugStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D87E2BF09A2600A258BE /* DebugStore.swift */; };
 		5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D8802BF09A4D00A258BE /* DebugMenuView.swift */; };
 		594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */; };
@@ -56,6 +59,7 @@
 		90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */; };
 		90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */; };
 		90CBC72B2BD79D4C00F98199 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 90CBC72A2BD79D4C00F98199 /* InfoPlist.xcstrings */; };
+		980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */; };
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
 		A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49E3EE7EB638EED6A6D564 /* View.swift */; };
 		A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6E65B0640253C2CCD4EA84 /* Locale+isArabic.swift */; };
@@ -65,7 +69,6 @@
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
 		AF5D361C2C57A93800B11ABF /* CategoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D361B2C57A93800B11ABF /* CategoryItemView.swift */; };
-		AFF939BD2C7498C4008121C7 /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF939BC2C7498C4008121C7 /* UserLocationStore.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
@@ -181,6 +184,10 @@
 		5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-ExtraBoldItalic.ttf"; sourceTree = "<group>"; };
 		557A9FF81C4443860134AE6F /* TrafficChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartView.swift; sourceTree = "<group>"; };
 		56265CBDEA22D04649BE38DE /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
+		5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStore.swift; sourceTree = "<group>"; };
+		591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingLabelTextField.swift; sourceTree = "<group>"; };
+		591002242C7DCB6600CF4707 /* UserLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginView.swift; sourceTree = "<group>"; };
+		591002282C7F260A00CF4707 /* LoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginStore.swift; sourceTree = "<group>"; };
 		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
 		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
 		594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewMoreView.swift; sourceTree = "<group>"; };
@@ -214,7 +221,6 @@
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
 		AF5D361B2C57A93800B11ABF /* CategoryItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryItemView.swift; sourceTree = "<group>"; };
-		AFF939BC2C7498C4008121C7 /* UserLocationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStore.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetButtonStyle.swift; sourceTree = "<group>"; };
@@ -427,8 +433,8 @@
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
 				CD2219572BBFDBEE00042564 /* MotionViewModel.swift */,
 				BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */,
-				AFF939BC2C7498C4008121C7 /* UserLocationStore.swift */,
 				B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */,
+				5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -438,6 +444,7 @@
 			children = (
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
 				417081C775FE86E29A6F3437 /* SafariWebView.swift */,
+				591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */,
 			);
 			path = UIStyle;
 			sourceTree = "<group>";
@@ -563,6 +570,8 @@
 				CB5F74C72C74A6B900E6FAC0 /* FiltersView */,
 				F2AF14EE2C50F6F4003E4F54 /* StreetView */,
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
+				591002242C7DCB6600CF4707 /* UserLoginView.swift */,
+				591002282C7F260A00CF4707 /* LoginStore.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -890,7 +899,6 @@
 			files = (
 				CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */,
 				90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */,
-				AFF939BD2C7498C4008121C7 /* UserLocationStore.swift in Sources */,
 				CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */,
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
@@ -908,6 +916,7 @@
 				CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */,
 				CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */,
 				CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */,
+				591002252C7DCB6600CF4707 /* UserLoginView.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
 				CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */,
 				CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */,
@@ -962,7 +971,9 @@
 				10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */,
 				CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */,
 				44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */,
+				591002292C7F260A00CF4707 /* LoginStore.swift in Sources */,
 				59EFD4E32C7604A100BA8B41 /* FavoritesStore.swift in Sources */,
+				591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */,
 				48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */,
 				59A290082C43CA0000780307 /* POIMediaView.swift in Sources */,
 				A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */,
@@ -973,6 +984,7 @@
 				151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */,
 				2670A068B017EEE420D01F3B /* UIColor.swift in Sources */,
 				E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */,
+				980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -9,6 +9,8 @@
 import Foundation
 import SwiftUI
 
+// MARK: - IconButton
+
 struct IconButton: ButtonStyle {
 
     // MARK: Properties
@@ -29,5 +31,31 @@ struct IconButton: ButtonStyle {
             .background(self.backgroundColor)
             .clipShape(Capsule())
             .background(.thickMaterial, in: Capsule())
+    }
+}
+
+// MARK: - LargeButtonStyle
+
+struct LargeButtonStyle: ButtonStyle {
+
+    // MARK: Properties
+
+    let backgroundColor: Color
+    let foregroundColor: Color
+
+    // MARK: Content
+
+    // MARK: - Internal
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .padding(.horizontal, 15)
+            .padding(.vertical, 15)
+            .foregroundStyle(self.foregroundColor)
+            .hudhudFont()
+            .bold()
+            .frame(maxWidth: .infinity)
+            .background(self.backgroundColor)
+            .clipShape(.rect(cornerRadius: 10))
     }
 }
