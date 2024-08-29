@@ -11,9 +11,20 @@ import Foundation
 // MARK: - LoginStore
 
 class LoginStore: ObservableObject {
+
+    // MARK: Nested Types
+
+    enum UserInput {
+        case phone, email
+    }
+
+    // MARK: Properties
+
     @Published var userInput: UserInput = .phone
     @Published var email: String = ""
     @Published var phone: String = ""
+
+    // MARK: Computed Properties
 
     var isInputEmpty: Bool {
         switch self.userInput {
@@ -22,10 +33,6 @@ class LoginStore: ObservableObject {
         case .email:
             return self.email.isEmpty
         }
-    }
-
-    enum UserInput {
-        case phone, email
     }
 
 }

@@ -37,8 +37,13 @@ struct IconButton: ButtonStyle {
 // MARK: - LargeButtonStyle
 
 struct LargeButtonStyle: ButtonStyle {
+
+    // MARK: Properties
+
     let backgroundColor: Color
     let foregroundColor: Color
+
+    // MARK: Content
 
     // MARK: - Internal
 

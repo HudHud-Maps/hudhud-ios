@@ -9,8 +9,13 @@
 import SwiftUI
 
 struct FloatingLabelTextField: View {
+
+    // MARK: Properties
+
     @Binding var text: String
     var placeholder: String
+
+    // MARK: Content
 
     var body: some View {
         ZStack(alignment: .leading) {
