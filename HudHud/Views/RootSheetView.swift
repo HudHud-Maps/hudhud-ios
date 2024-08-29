@@ -12,6 +12,9 @@ import OSLog
 import SwiftUI
 
 struct RootSheetView: View {
+
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
@@ -20,6 +23,8 @@ struct RootSheetView: View {
     @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
+
+    // MARK: Content
 
     var body: some View {
         NavigationStack(path: self.$mapStore.path) {
@@ -44,7 +49,7 @@ struct RootSheetView: View {
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:
                         // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
                             let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { item in
@@ -56,7 +61,7 @@ struct RootSheetView: View {
                                     searchStore: freshSearchViewStore, trendingStore: self.trendingStore).navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .favorites
                             return tempStore

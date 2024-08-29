@@ -9,8 +9,13 @@
 import UIKit
 
 class FileDownloader: NSObject, URLSessionDownloadDelegate {
+
+    // MARK: Properties
+
     var progressHandler: ((Float) -> Void)?
     var completionHandler: ((URL?, Error?) -> Void)?
+
+    // MARK: Functions
 
     // MARK: - Internal
 

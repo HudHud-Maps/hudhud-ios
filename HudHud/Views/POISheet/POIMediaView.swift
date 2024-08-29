@@ -13,8 +13,14 @@ import SwiftUI
 // MARK: - POIMediaView
 
 struct POIMediaView: View {
+
+    // MARK: Properties
+
     var mediaURLs: [URL]
+
     @State private var selectedMedia: URL?
+
+    // MARK: Content
 
     var body: some View {
         ScrollView(.horizontal) {
@@ -55,9 +61,14 @@ struct POIMediaView: View {
 // MARK: - FullPageImage
 
 struct FullPageImage: View {
+
+    // MARK: Properties
+
     @State var mediaURL: URL
     let mediaURLs: [URL]
     @Environment(\.dismiss) var dismiss
+
+    // MARK: Content
 
     var body: some View {
         NavigationStack {

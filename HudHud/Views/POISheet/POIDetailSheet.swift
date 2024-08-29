@@ -14,7 +14,6 @@ import MapboxDirections
 import OSLog
 import SFSafeSymbols
 import SimpleToast
-import SwiftLocation
 import SwiftUI
 
 // MARK: - POIDetailSheet
@@ -166,11 +165,10 @@ struct POIDetailSheet: View {
 
     private func calculateRoute(for item: ResolvedItem) {
         Task {
+            guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+                return
+            }
             do {
-                _ = try await Location.forSingleRequestUsage.requestPermission(.whenInUse)
-                guard let userLocation = try await Location.forSingleRequestUsage.requestLocation().location else {
-                    return
-                }
                 let routes = try await self.mapStore.calculateRoute(from: userLocation, to: item.coordinate)
                 self.routes = routes
             } catch {

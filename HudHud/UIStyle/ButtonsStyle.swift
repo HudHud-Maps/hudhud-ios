@@ -12,8 +12,13 @@ import SwiftUI
 // MARK: - IconButton
 
 struct IconButton: ButtonStyle {
+
+    // MARK: Properties
+
     let backgroundColor: Color
     let foregroundColor: Color
+
+    // MARK: Content
 
     // MARK: - Internal
 

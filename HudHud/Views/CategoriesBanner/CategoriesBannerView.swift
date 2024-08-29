@@ -9,8 +9,13 @@
 import SwiftUI
 
 struct CategoriesBannerView: View {
+
+    // MARK: Properties
+
     var catagoryBannerData: [CatagoryBannerData]
     @ObservedObject var searchStore: SearchViewStore
+
+    // MARK: Content
 
     var body: some View {
         ScrollView(.horizontal) {

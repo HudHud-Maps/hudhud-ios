@@ -17,22 +17,38 @@ import SwiftUI
 // MARK: - EditFavoritesFormView
 
 struct EditFavoritesFormView: View {
+
+    // MARK: Properties
+
     let item: ResolvedItem
     let favoritesItem: FavoritesItem?
     @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore = FavoritesStore()
 
+    @State var newType: String = ""
+    @State var types: [String]
+    @ScaledMetric var imageSize = 30
+    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+
     @State private var title: String = ""
     @State private var description: String = ""
-    @State var newType: String = ""
     @State private var selectedType: String
-    @State var types: [String]
     @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.Types.home: .houseFill, FavoritesItem.Types.work: .bagFill, FavoritesItem.Types.school: .buildingFill]
-
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
-    @ScaledMetric var imageSize = 30
+    // MARK: Lifecycle
+
+    init(item: ResolvedItem, favoritesItem: FavoritesItem? = nil, favoritesStore: FavoritesStore) {
+        self.item = item
+        self.favoritesItem = favoritesItem
+        _title = State(initialValue: favoritesItem?.title ?? item.title)
+        _description = State(initialValue: favoritesItem?.description ?? "")
+        _selectedType = State(initialValue: favoritesItem?.type ?? "Other")
+        _types = State(initialValue: ["Home", "School", "Work", "Restaurant", "Other"])
+        self.favoritesStore = favoritesStore
+    }
+
+    // MARK: Content
 
     var body: some View {
         VStack {
@@ -112,21 +128,13 @@ struct EditFavoritesFormView: View {
         }
     }
 
-    // MARK: - Lifecycle
+}
 
-    init(item: ResolvedItem, favoritesItem: FavoritesItem? = nil, favoritesStore: FavoritesStore) {
-        self.item = item
-        self.favoritesItem = favoritesItem
-        _title = State(initialValue: favoritesItem?.title ?? item.title)
-        _description = State(initialValue: favoritesItem?.description ?? "")
-        _selectedType = State(initialValue: favoritesItem?.type ?? "Other")
-        _types = State(initialValue: ["Home", "School", "Work", "Restaurant", "Other"])
-        self.favoritesStore = favoritesStore
-    }
+// MARK: - Private
 
-    // MARK: - Private
+private extension EditFavoritesFormView {
 
-    private func saveChanges() {
+    func saveChanges() {
         self.favoritesStore.saveChanges(
             title: self.title,
             tintColor: self.favoritesItem?.tintColor ?? .entertainmentLeisure,
@@ -136,7 +144,7 @@ struct EditFavoritesFormView: View {
         )
     }
 
-    private func addNewOption() {
+    func addNewOption() {
         guard !self.newType.isEmpty, !self.types.contains(self.newType) else { return }
         self.types.append(self.newType)
         self.newType = ""

@@ -14,6 +14,9 @@ import SwiftUI
 // MARK: - FavoritesViewMoreView
 
 struct FavoritesViewMoreView: View {
+
+    // MARK: Properties
+
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var mapStore: MapStore
     @State var actionSheetShown: Bool = false
@@ -21,6 +24,9 @@ struct FavoritesViewMoreView: View {
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore = FavoritesStore()
+
+    // MARK: Content
+
     var body: some View {
         VStack(alignment: .leading) {
             VStack {
@@ -95,7 +101,7 @@ struct FavoritesViewMoreView: View {
     }
 
     func searchSheetView() -> some View {
-        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing)
+        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
         let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites
         return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore())

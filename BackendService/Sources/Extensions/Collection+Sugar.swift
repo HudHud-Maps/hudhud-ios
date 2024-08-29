@@ -9,8 +9,8 @@
 import Foundation
 
 public extension Collection {
-	
-	var hasElements: Bool {
-		return self.isEmpty == false
-	}
+
+    var hasElements: Bool {
+        return self.isEmpty == false
+    }
 }

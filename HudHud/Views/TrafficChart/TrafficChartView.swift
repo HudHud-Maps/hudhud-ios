@@ -11,7 +11,12 @@ import SFSafeSymbols
 import SwiftUI
 
 struct TrafficChartView: View {
+
+    // MARK: Properties
+
     let chartData: TrafficChartData
+
+    // MARK: Content
 
     var body: some View {
         if let trafficRange = chartData.getSpecificTrafficRange {

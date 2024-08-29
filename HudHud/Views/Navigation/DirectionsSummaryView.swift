@@ -12,9 +12,14 @@ import MapboxDirections
 import SwiftUI
 
 struct DirectionsSummaryView: View {
+
+    // MARK: Properties
+
     var directionPreviewData: DirectionPreviewData
     var go: () -> Void
     var formatter = Formatters()
+
+    // MARK: Content
 
     var body: some View {
         HStack {

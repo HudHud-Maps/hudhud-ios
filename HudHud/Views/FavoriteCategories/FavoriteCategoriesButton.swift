@@ -10,9 +10,14 @@ import SFSafeSymbols
 import SwiftUI
 
 struct FavoriteCategoriesButton: ButtonStyle {
+
+    // MARK: Properties
+
     let sfSymbol: SFSymbol?
     let tintColor: Color?
     @ScaledMetric var imageSize = 24
+
+    // MARK: Content
 
     // MARK: - Internal
 

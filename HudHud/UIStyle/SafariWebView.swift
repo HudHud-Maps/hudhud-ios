@@ -11,7 +11,12 @@ import SafariServices
 import SwiftUI
 
 struct SafariWebView: UIViewControllerRepresentable {
+
+    // MARK: Properties
+
     let url: URL
+
+    // MARK: Functions
 
     // MARK: - Internal
 

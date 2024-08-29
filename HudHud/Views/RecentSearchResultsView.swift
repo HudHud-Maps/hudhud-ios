@@ -12,12 +12,19 @@ import MapLibreSwiftUI
 import SwiftUI
 
 struct RecentSearchResultsView: View {
+
+    // MARK: Properties
+
     let mapStore: MapStore
     let searchStore: SearchViewStore
-    @ScaledMetric var imageSize = 24
     let searchType: SearchViewStore.SearchType
+
+    @ScaledMetric var imageSize = 24
     @Environment(\.dismiss) var dismiss
     @StateObject var favoritesStore = FavoritesStore()
+
+    // MARK: Content
+
     var body: some View {
         ForEach(self.searchStore.recentViewedItem) { item in
             HStack(alignment: .center, spacing: 12) {

@@ -22,9 +22,10 @@ enum MapLayerIdentifier {
 
     // layers that our backend put on our map
     // we use them to query metadata related to points from our map
-    static let restaurants = "hpoi_resturant"
-    static let shops = "hpoi_shop"
-    static let streetView = "hpoi_sv"
+    static let hudhudPOIPrefix = "hpoi_"
+    static let restaurants = "\(Self.hudhudPOIPrefix)resturant"
+    static let shops = "\(Self.hudhudPOIPrefix)shop"
+    static let streetView = "\(Self.hudhudPOIPrefix)sv"
 
     static let customPOI = "patPOI"
 }

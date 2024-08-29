@@ -13,9 +13,13 @@ import SwiftUI
 
 struct CategoryItemView: View {
 
+    // MARK: Properties
+
     let item: ResolvedItem
     let directions: () -> Void
     @Environment(\.openURL) var openURL
+
+    // MARK: Content
 
     var body: some View {
         VStack(spacing: .zero) {
@@ -103,7 +107,11 @@ struct Rating: Hashable {
 
 struct RatingView: View {
 
+    // MARK: Properties
+
     let ratingModel: Rating
+
+    // MARK: Content
 
     var body: some View {
         HStack {
@@ -129,11 +137,15 @@ struct RatingView: View {
 
 private struct CategoryIconButton: View {
 
+    // MARK: Properties
+
     let icon: String
     let title: LocalizedStringKey
     let foregroundColor: Color
     let backgroundColor: Color
     let onClick: () -> Void
+
+    // MARK: Content
 
     var body: some View {
         Button(action: self.onClick) {
@@ -148,7 +160,7 @@ private struct CategoryIconButton: View {
     }
 }
 
-private extension LengthFormatter {
+extension LengthFormatter {
     static let distance: LengthFormatter = {
         let formatter = LengthFormatter()
         formatter.unitStyle = .short

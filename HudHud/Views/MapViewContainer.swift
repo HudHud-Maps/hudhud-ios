@@ -13,18 +13,40 @@ import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
-import SwiftLocation
 import SwiftUI
 
 struct MapViewContainer: View {
+
+    // MARK: Properties
+
     @ObservedObject var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
-    @State private var showUserLocation: Bool = false
-    @State private var didTryToZoomOnUsersLocation = false
+    @ObservedObject var userLocationStore: UserLocationStore
     var sheetSize: CGSize
 
     var mapViewStore: MapViewStore
+
+    @State private var didFocusOnUser = false
+
+    // MARK: Lifecycle
+
+    init(
+        mapStore: MapStore,
+        debugStore: DebugStore,
+        searchViewStore: SearchViewStore,
+        userLocationStore: UserLocationStore,
+        sheetSize: CGSize
+    ) {
+        self.mapStore = mapStore
+        self.debugStore = debugStore
+        self.searchViewStore = searchViewStore
+        self.sheetSize = sheetSize
+        self.userLocationStore = userLocationStore
+        self.mapViewStore = MapViewStore(mapStore: mapStore)
+    }
+
+    // MARK: Content
 
     var body: some View {
         MapView<NavigationViewController>(makeViewController: {
@@ -164,7 +186,7 @@ struct MapViewContainer: View {
                     self.mapStore.navigationProgress = .navigating
                 } else {
                     controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                    controller.mapView.showsUserLocation = self.showUserLocation && self.mapStore.streetViewScene == nil
+                    controller.mapView.showsUserLocation = self.userLocationStore.isLocationPermissionEnabled && self.mapStore.streetViewScene == nil
                 }
             case .navigating:
                 if let route = self.mapStore.navigatingRoute {
@@ -190,16 +212,13 @@ struct MapViewContainer: View {
             }
         })
         .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
-        .onAppear {
-            self.showUserLocation = true
-        }
         .onChange(of: self.mapStore.routes) { newRoute in
-            if let routeUnwrapped = newRoute {
-                if let route = routeUnwrapped.routes.first, let coordinates = route.coordinates, !coordinates.isEmpty {
-                    if let camera = CameraState.boundingBox(from: coordinates) {
-                        self.mapStore.camera = camera
-                    }
-                }
+            if let routeUnwrapped = newRoute,
+               let route = routeUnwrapped.routes.first,
+               let coordinates = route.coordinates,
+               !coordinates.isEmpty,
+               let camera = CameraState.boundingBox(from: coordinates) {
+                self.mapStore.camera = camera
             }
         }
         .gesture(
@@ -210,56 +229,17 @@ struct MapViewContainer: View {
                     }
                 }
         )
-        .task {
-            for await event in await Location.forSingleRequestUsage.startMonitoringAuthorization() {
-                Logger.searchView.debug("Authorization status did change: \(event.authorizationStatus, align: .left(columns: 10))")
-                self.showUserLocation = event.authorizationStatus.allowed
-            }
+        .onAppear {
+            self.userLocationStore.startMonitoringPermissions()
         }
         .task {
-            self.showUserLocation = Location.forSingleRequestUsage.authorizationStatus.allowed
-            Logger.searchView.debug("Authorization status authorizedAllowed")
-        }
-        .task {
-            do {
-                guard self.didTryToZoomOnUsersLocation == false else {
-                    return
-                }
-                self.didTryToZoomOnUsersLocation = true
-                let userLocation = try await Location.forSingleRequestUsage.requestLocation()
-                var coordinates: CLLocationCoordinate2D? = userLocation.location?.coordinate
-                if coordinates == nil {
-                    // fall back to any location that was found, even if bad
-                    // accuracy
-                    coordinates = Location.forSingleRequestUsage.lastLocation?.coordinate
-                }
-                guard let coordinates else {
-                    Logger.currentLocation.debug("Could not determine user location, will not zoom...")
-                    return
-                }
-                if self.mapStore.currentLocation != coordinates {
-                    self.mapStore.currentLocation = coordinates
-                }
-            } catch {
-                Logger.currentLocation.error("location error: \(error)")
-            }
+            guard self.didFocusOnUser else { return }
+            self.didFocusOnUser = true
+            await self.mapStore.focusOnUser()
         }
     }
 
-    // MARK: - Lifecycle
-
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        sheetSize: CGSize
-    ) {
-        self.mapStore = mapStore
-        self.debugStore = debugStore
-        self.searchViewStore = searchViewStore
-        self.sheetSize = sheetSize
-        self.mapViewStore = MapViewStore(mapStore: mapStore)
-    }
+    // MARK: Functions
 
     // MARK: - Internal
 
@@ -276,5 +256,5 @@ struct MapViewContainer: View {
 #Preview {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, sheetSize: CGSize(size: 80))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 80))
 }

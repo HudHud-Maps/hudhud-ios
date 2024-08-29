@@ -28,6 +28,8 @@ public enum PredictionResult: Hashable, Codable {
     case appleResolved
     case hudhud
 
+    // MARK: Nested Types
+
     enum CodingKeys: CodingKey {
         case appleResolved
         case hudhud
@@ -50,6 +52,12 @@ public protocol DisplayableAsRow: Identifiable, Hashable {
 
 public struct AnyDisplayableAsRow: DisplayableAsRow {
 
+    // MARK: Properties
+
+    public var innerModel: any DisplayableAsRow
+
+    // MARK: Computed Properties
+
     public var title: String {
         self.innerModel.title
     }
@@ -62,21 +70,23 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
         self.innerModel.symbol
     }
 
-    public var innerModel: any DisplayableAsRow
-
     public var id: String { self.innerModel.id }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     public init(_ model: some DisplayableAsRow) {
         self.innerModel = model // Automatically casts to “any” type
     }
+
+    // MARK: Static Functions
 
     // MARK: - Public
 
     public static func == (lhs: AnyDisplayableAsRow, rhs: AnyDisplayableAsRow) -> Bool {
         return lhs.id == rhs.id
     }
+
+    // MARK: Functions
 
     public func resolve(in provider: ApplePOI, baseURL: String) async throws -> [AnyDisplayableAsRow] {
         return try await self.innerModel.resolve(in: provider, baseURL: baseURL)
@@ -98,15 +108,39 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
 
 public struct PredictionItem: DisplayableAsRow, Hashable {
 
+    // MARK: Properties
+
     public var id: String
     public var title: String
     public var subtitle: String
+    public var symbol: SFSymbol
+    public var type: PredictionResult
+
+    // MARK: Computed Properties
+
     public var tintColor: Color {
         .red
     }
 
-    public var symbol: SFSymbol
-    public var type: PredictionResult
+    // MARK: Lifecycle
+
+    public init(id: String, title: String, subtitle: String, symbol: SFSymbol = .pin, type: PredictionResult) {
+        self.id = id
+        self.title = title
+        self.subtitle = subtitle
+        self.symbol = symbol
+        self.type = type
+    }
+
+    // MARK: Static Functions
+
+    // MARK: - Public
+
+    public static func == (lhs: PredictionItem, rhs: PredictionItem) -> Bool {
+        return lhs.id == rhs.id
+    }
+
+    // MARK: Functions
 
     public func resolve(in provider: ApplePOI, baseURL: String) async throws -> [AnyDisplayableAsRow] {
         guard case let .apple(completion) = self.type else { return [] }
@@ -129,22 +163,6 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
         return mapped
     }
 
-    // MARK: - Lifecycle
-
-    public init(id: String, title: String, subtitle: String, symbol: SFSymbol = .pin, type: PredictionResult) {
-        self.id = id
-        self.title = title
-        self.subtitle = subtitle
-        self.symbol = symbol
-        self.type = type
-    }
-
-    // MARK: - Public
-
-    public static func == (lhs: PredictionItem, rhs: PredictionItem) -> Bool {
-        return lhs.id == rhs.id
-    }
-
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.id)
         hasher.combine(self.title)
@@ -156,6 +174,9 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
 // MARK: - ResolvedItem
 
 public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringConvertible {
+
+    // MARK: Properties
+
     public var id: String
     public var title: String
     public var subtitle: String
@@ -173,6 +194,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var mediaURLs: [URL]
     public let distance: Double?
 
+    // MARK: Computed Properties
+
     public var description: String {
         return "\(self.title), \(self.subtitle), coordinate: \(self.coordinate)"
     }
@@ -181,7 +204,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.systemColor.swiftUIColor
     }
 
-    // MARK: - Lifecycle
+    // MARK: Lifecycle
 
     public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
         self.id = id
@@ -202,6 +225,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.distance = distance
     }
 
+    // MARK: Functions
+
     // MARK: - Public
 
     public func resolve(in _: ApplePOI, baseURL _: String) async throws -> [AnyDisplayableAsRow] {
@@ -218,6 +243,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         hasher.combine(self.subtitle)
     }
 }
+
+// MARK: - SFSymbol + Codable
 
 extension SFSymbol: Codable {}
 
