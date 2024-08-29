@@ -72,6 +72,10 @@
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
+		CB04071F2C7F6D0C0090075B /* Nuke in Frameworks */ = {isa = PBXBuildFile; productRef = CB04071E2C7F6D0C0090075B /* Nuke */; };
+		CB0407212C7F6D0C0090075B /* NukeExtensions in Frameworks */ = {isa = PBXBuildFile; productRef = CB0407202C7F6D0C0090075B /* NukeExtensions */; };
+		CB0407232C7F6D0C0090075B /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CB0407222C7F6D0C0090075B /* NukeUI */; };
+		CB0407252C7F6D0C0090075B /* NukeVideo in Frameworks */ = {isa = PBXBuildFile; productRef = CB0407242C7F6D0C0090075B /* NukeVideo */; };
 		CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */; };
 		CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */; };
 		CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */; };
@@ -296,12 +300,16 @@
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
+				CB04071F2C7F6D0C0090075B /* Nuke in Frameworks */,
+				CB0407252C7F6D0C0090075B /* NukeVideo in Frameworks */,
+				CB0407212C7F6D0C0090075B /* NukeExtensions in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
 				CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
+				CB0407232C7F6D0C0090075B /* NukeUI in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD1882FC2BF63E8200C8AD49 /* MapLibreSwiftDSL in Frameworks */,
 			);
@@ -702,7 +710,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CB5F74CB2C774F4500E6FAC0 /* PBXTargetDependency */,
+				CB0407272C7F6DD00090075B /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -721,6 +729,10 @@
 				C71C7BD81C2B56D70AB2E23A /* BetterSafariView */,
 				2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */,
 				F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */,
+				CB04071E2C7F6D0C0090075B /* Nuke */,
+				CB0407202C7F6D0C0090075B /* NukeExtensions */,
+				CB0407222C7F6D0C0090075B /* NukeUI */,
+				CB0407242C7F6D0C0090075B /* NukeVideo */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -806,6 +818,7 @@
 				CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
 				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
+				CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1008,9 +1021,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB5F74CB2C774F4500E6FAC0 /* PBXTargetDependency */ = {
+		CB0407272C7F6DD00090075B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = CB5F74CA2C774F4500E6FAC0 /* SwiftLint */;
+			productRef = CB0407262C7F6DD00090075B /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1367,6 +1380,14 @@
 				kind = branch;
 			};
 		};
+		CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Nuke?tab=readme-ov-file";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.8.0;
+			};
+		};
 		CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground";
@@ -1462,7 +1483,27 @@
 			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
 		};
-		CB5F74CA2C774F4500E6FAC0 /* SwiftLint */ = {
+		CB04071E2C7F6D0C0090075B /* Nuke */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = Nuke;
+		};
+		CB0407202C7F6D0C0090075B /* NukeExtensions */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeExtensions;
+		};
+		CB0407222C7F6D0C0090075B /* NukeUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeUI;
+		};
+		CB0407242C7F6D0C0090075B /* NukeVideo */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			productName = NukeVideo;
+		};
+		CB0407262C7F6DD00090075B /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";
