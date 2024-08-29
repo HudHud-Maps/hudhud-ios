@@ -49,7 +49,7 @@ struct UserLoginView: View {
     }
 }
 
-extension UserLoginView {
+private extension UserLoginView {
     var bindingForInput: Binding<String> {
         switch self.loginStore.userInput {
         case .phone:
