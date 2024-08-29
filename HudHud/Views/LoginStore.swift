@@ -23,10 +23,9 @@ class LoginStore: ObservableObject {
             return self.email.isEmpty
         }
     }
-}
 
-// MARK: - UserInput
+    enum UserInput {
+        case phone, email
+    }
 
-enum UserInput {
-    case phone, email
 }

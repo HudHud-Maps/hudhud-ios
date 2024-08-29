@@ -47,8 +47,10 @@ struct UserLoginView: View {
             .padding(.horizontal)
         }
     }
+}
 
-    private var bindingForInput: Binding<String> {
+extension UserLoginView {
+    var bindingForInput: Binding<String> {
         switch self.loginStore.userInput {
         case .phone:
             return self.$loginStore.phone
@@ -57,7 +59,7 @@ struct UserLoginView: View {
         }
     }
 
-    private var placeholderForInput: String {
+    var placeholderForInput: String {
         switch self.loginStore.userInput {
         case .phone:
             return "Phone Number"
@@ -66,7 +68,7 @@ struct UserLoginView: View {
         }
     }
 
-    private var keyboardTypeForInput: UIKeyboardType {
+    var keyboardTypeForInput: UIKeyboardType {
         switch self.loginStore.userInput {
         case .phone:
             return .asciiCapableNumberPad
