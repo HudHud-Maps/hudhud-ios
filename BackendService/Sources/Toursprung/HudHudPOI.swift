@@ -343,7 +343,7 @@ public enum SystemColor: String, Codable {
 
     // MARK: Lifecycle
 
-    init(color: Components.Schemas.TypeaheadItem.ios_category_iconPayload.colorPayload) {
+    init(color: Components.Schemas.IosCategoryIcon.colorPayload) {
         switch color {
         case .systemGray:
             self = .systemGray
