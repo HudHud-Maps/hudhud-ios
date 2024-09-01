@@ -32,12 +32,6 @@ final class MapStore: ObservableObject {
         case keepTracking
     }
 
-    enum NavigationProgress {
-        case none
-        case navigating
-        case feedback
-    }
-
     enum CameraUpdateState {
         case route(RoutingService.RouteCalculationResult?)
         case selectedItem(ResolvedItem)
