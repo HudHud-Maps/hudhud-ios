@@ -38,32 +38,15 @@ final class RoutingStore: ObservableObject {
     @Published private(set) var navigationProgress: NavigationProgress = .none
     let mapStore: MapStore
 
+    // route that the user might choose, but still didn't choose yet
+    @Published private(set) var potentialRoute: RoutingService.RouteCalculationResult?
+
+    // if this is set, that means that the user is currently navigating using this route
+    @Published private(set) var navigatingRoute: Route?
+
     private var cameraTask: Task<Void, Error>?
 
     // MARK: Computed Properties
-
-    @Published private(set) var routes: RoutingService.RouteCalculationResult? {
-        didSet {
-            if let routes, self.mapStore.path.contains(RoutingService.RouteCalculationResult.self) == false {
-                self.mapStore.path.append(routes)
-                self.cameraTask?.cancel()
-                self.cameraTask = Task {
-                    try await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-                    try Task.checkCancellation()
-                    self.mapStore.updateCamera(state: .route(self.routes))
-                }
-            }
-        }
-    }
-
-    @Published private(set) var navigatingRoute: Route? {
-        didSet {
-            if let elements = try? self.mapStore.path.elements() {
-                Logger.navigationPath.log("path now: \(elements)")
-                self.mapStore.updateSelectedSheetDetent(to: elements.last)
-            }
-        }
-    }
 
     var routePoints: ShapeSource {
         var features: [MLNPointFeature] = []
@@ -132,7 +115,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func navigate(to item: ResolvedItem, with route: RoutingService.RouteCalculationResult) {
-        self.routes = route
+        self.potentialRoute = route
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
         if let location = route.waypoints.first {
             self.waypoints = [.myLocation(location), .waypoint(item)]
@@ -150,7 +133,7 @@ final class RoutingStore: ObservableObject {
         }
         let routes = try await self.calculateRoute(for: waypoints)
         self.waypoints = destinations
-        self.routes = routes
+        self.potentialRoute = routes
     }
 
     func assign(to navigationController: NavigationViewController, shouldSimulateRoute: Bool) {
@@ -197,7 +180,7 @@ final class RoutingStore: ObservableObject {
 
     func endTrip() {
         self.waypoints = nil
-        self.routes = nil
+        self.potentialRoute = nil
         self.navigationProgress = .none
     }
 }

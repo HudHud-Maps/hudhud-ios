@@ -46,18 +46,12 @@ struct MapActionHandler {
 
     // MARK: - Internal
 
-    func didTapOnMap(containing features: [any MLNFeature]) {
+    func didTapOnMap(containing features: [any MLNFeature]) -> Bool {
         if self.mapStore.displayableItems.count == 1 {
             self.mapStore.displayableItems = []
         }
         guard let item = extractItemTapped(from: features) else {
-            // user tapped nothing - deselect
-            Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-            if !self.mapStore.path.isEmpty {
-                self.mapStore.path.removeLast()
-            }
-            self.mapStore.selectedItem = nil
-            return
+            return false
         }
         switch item {
         case let .searchSuggestion(placeID):
@@ -80,6 +74,7 @@ struct MapActionHandler {
                 await self.mapStore.loadStreetViewScene(id: sceneID)
             }
         }
+        return true
     }
 }
 
