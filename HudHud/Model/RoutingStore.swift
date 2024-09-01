@@ -44,8 +44,6 @@ final class RoutingStore: ObservableObject {
     // if this is set, that means that the user is currently navigating using this route
     @Published private(set) var navigatingRoute: Route?
 
-    private var cameraTask: Task<Void, Error>?
-
     // MARK: Computed Properties
 
     var routePoints: ShapeSource {
@@ -74,24 +72,6 @@ final class RoutingStore: ObservableObject {
     }
 
     // MARK: Functions
-
-    // Unified route calculation function
-    func calculateRoute(
-        from location: CLLocation,
-        to destination: CLLocationCoordinate2D?,
-        additionalWaypoints: [Waypoint] = []
-    ) async throws -> RoutingService.RouteCalculationResult {
-        let startWaypoint = Waypoint(location: location)
-
-        var waypoints = [startWaypoint]
-        if let destinationCoordinate = destination {
-            let destinationWaypoint = Waypoint(coordinate: destinationCoordinate)
-            waypoints.append(destinationWaypoint)
-        }
-        waypoints.append(contentsOf: additionalWaypoints)
-
-        return try await self.calculateRoute(for: waypoints)
-    }
 
     func calculateRoute(for waypoints: [Waypoint]) async throws -> RoutingService.RouteCalculationResult {
         let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
@@ -207,7 +187,8 @@ extension RoutingStore: NavigationViewControllerDelegate {
         Task {
             do {
                 guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
-                let routes = try await self.calculateRoute(from: location, to: nil, additionalWaypoints: [currentRoute])
+
+                let routes = try await self.calculateRoute(for: [Waypoint(location: location), currentRoute])
                 if let route = routes.routes.first {
                     await self.reroute(with: route)
                 }
