@@ -27,7 +27,7 @@ struct UserLoginView: View {
                 Text(self.title)
                     .hudhudFont(.title)
 
-                FloatingLabelTextField(text: self.bindingForInput, placeholder: self.placeholderForInput)
+                FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
                     .padding(.top)
                     .keyboardType(self.keyboardTypeForInput)
 

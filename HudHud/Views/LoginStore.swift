@@ -23,6 +23,11 @@ class LoginStore: ObservableObject {
     @Published var userInput: UserInput = .phone
     @Published var email: String = ""
     @Published var phone: String = ""
+    @Published var firstName: String = ""
+    @Published var lastName: String = ""
+    @Published var nick: String = "@"
+    @Published var gender: String = ""
+    @Published var birthday: Date = .init()
 
     // MARK: Computed Properties
 

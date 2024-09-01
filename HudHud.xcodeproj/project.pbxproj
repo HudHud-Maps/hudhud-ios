@@ -28,6 +28,7 @@
 		591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */; };
 		591002252C7DCB6600CF4707 /* UserLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002242C7DCB6600CF4707 /* UserLoginView.swift */; };
 		591002292C7F260A00CF4707 /* LoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002282C7F260A00CF4707 /* LoginStore.swift */; };
+		5910022F2C84787A00CF4707 /* PersonalInformationScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5910022E2C84787A00CF4707 /* PersonalInformationScreenView.swift */; };
 		5936D87F2BF09A2600A258BE /* DebugStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D87E2BF09A2600A258BE /* DebugStore.swift */; };
 		5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5936D8802BF09A4D00A258BE /* DebugMenuView.swift */; };
 		594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */; };
@@ -192,6 +193,7 @@
 		591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingLabelTextField.swift; sourceTree = "<group>"; };
 		591002242C7DCB6600CF4707 /* UserLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginView.swift; sourceTree = "<group>"; };
 		591002282C7F260A00CF4707 /* LoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginStore.swift; sourceTree = "<group>"; };
+		5910022E2C84787A00CF4707 /* PersonalInformationScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformationScreenView.swift; sourceTree = "<group>"; };
 		5936D87E2BF09A2600A258BE /* DebugStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugStore.swift; sourceTree = "<group>"; };
 		5936D8802BF09A4D00A258BE /* DebugMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugMenuView.swift; sourceTree = "<group>"; };
 		594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewMoreView.swift; sourceTree = "<group>"; };
@@ -580,6 +582,7 @@
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
 				591002242C7DCB6600CF4707 /* UserLoginView.swift */,
 				591002282C7F260A00CF4707 /* LoginStore.swift */,
+				5910022E2C84787A00CF4707 /* PersonalInformationScreenView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -936,6 +939,7 @@
 				CB396FFD2B7C1C6D00CF9D59 /* ButtonsStyle.swift in Sources */,
 				A5AF982C0CAE3C5501EF2358 /* LocationStatus.swift in Sources */,
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
+				5910022F2C84787A00CF4707 /* PersonalInformationScreenView.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
 				D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */,
 				CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */,
