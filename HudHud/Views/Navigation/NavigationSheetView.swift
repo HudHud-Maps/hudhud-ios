@@ -16,9 +16,8 @@ struct NavigationSheetView: View {
 
     // MARK: Properties
 
-    @ObservedObject var searchViewStore: SearchViewStore
-    @ObservedObject var mapStore: MapStore
-    @ObservedObject var debugStore: DebugStore
+    @ObservedObject var routingStore: RoutingStore
+    @ObservedObject var mapViewStore: MapViewStore
 
     @Environment(\.dismiss) private var dismiss
 
@@ -32,9 +31,7 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
-                    self.mapStore.routes = nil
-                    self.mapStore.waypoints = nil
-                    self.mapStore.navigationProgress = .none
+                    self.routingStore.endTrip()
                     self.dismiss()
                 }, label: {
                     ZStack {
@@ -55,19 +52,15 @@ struct NavigationSheetView: View {
             .frame(height: 20)
             .padding(.horizontal)
             .padding(.top, 30)
-            if let route = self.mapStore.routes?.routes.first, let waypoints = self.mapStore.waypoints {
-                ABCRouteConfigurationView(routeConfigurations: waypoints, mapStore: self.mapStore, searchViewStore: self.searchViewStore)
+            if let route = self.routingStore.potentialRoute?.routes.first, let waypoints = self.routingStore.waypoints {
+                ABCRouteConfigurationView(routeConfigurations: waypoints, mapViewStore: self.mapViewStore, routingStore: self.routingStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
                         duration: route.expectedTravelTime,
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
-                        if self.mapStore.navigatingRoute == nil {
-                            self.mapStore.navigatingRoute = route
-                        } else {
-                            self.mapStore.navigatingRoute = nil
-                        }
+                        self.routingStore.navigate(to: route)
                     }
                 )
                 .padding([.horizontal, .bottom])
@@ -77,9 +70,5 @@ struct NavigationSheetView: View {
 }
 
 #Preview {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-
-    @StateObject var debugStore = DebugStore()
-
-    return NavigationSheetView(searchViewStore: searchViewStore, mapStore: searchViewStore.mapStore, debugStore: debugStore)
+    NavigationSheetView(routingStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
 }

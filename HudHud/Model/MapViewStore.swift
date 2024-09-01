@@ -21,6 +21,9 @@ final class MapViewStore: ObservableObject {
 
     @Published var path = NavigationPath()
 
+    @Published var selectedDetent: PresentationDetent = .small
+    @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore
     private let mapStore: MapStore
@@ -34,7 +37,7 @@ final class MapViewStore: ObservableObject {
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.showPotentialRouteWhenAvailable()
-        self.updateDetentWhenStartingNavigation()
+        self.updateDetentWhenAppropriate()
         self.showSelectedDetentWhenSelectingAnItem()
     }
 
@@ -53,6 +56,18 @@ final class MapViewStore: ObservableObject {
             self.mapStore.selectedItem = nil
         }
     }
+
+    func resetFromDebugger() {
+        self.resetAllowedDetents()
+        self.selectedDetent = .small
+        if !self.path.isEmpty {
+            self.path.removeLast()
+        }
+    }
+
+    func resetAllowedDetents() {
+        self.allowedDetents = [.small, .medium, .large]
+    }
 }
 
 private extension MapViewStore {
@@ -69,12 +84,28 @@ private extension MapViewStore {
             .store(in: &self.subscriptions)
     }
 
-    func updateDetentWhenStartingNavigation() {
-        self.routingStore.$navigatingRoute.sink { [weak self] _ in
-            guard let self, let elements = try? self.path.elements() else { return }
-            self.mapStore.updateSelectedSheetDetent(to: elements.last)
-        }
-        .store(in: &self.subscriptions)
+    func updateDetentWhenAppropriate() {
+        Publishers.CombineLatest3(
+            self.routingStore.$navigatingRoute,
+            self.$path,
+            self.mapStore.$displayableItems
+        )
+//        .debounce(for: 0.1, scheduler: DispatchQueue.main) // needed because combine publishes values before they are set to the actual variables.
+        .sink { [weak self] navigatingRoute, path, items in
+                guard let self else { return }
+                let elements = try? path.elements()
+                let itemsCount = if let selectedItem = self.mapStore.selectedItem {
+                    items.count + 1
+                } else {
+                    items.count
+                }
+                self.updateSelectedSheetDetent(
+                    isCurrentlyNavigating: navigatingRoute != nil,
+                    navigationPathItem: elements?.last,
+                    mapItemsCount: items.count
+                )
+            }
+            .store(in: &self.subscriptions)
     }
 
     func showSelectedDetentWhenSelectingAnItem() {
@@ -90,6 +121,68 @@ private extension MapViewStore {
                 self.path.append(selectedItem)
             }
             .store(in: &self.subscriptions)
+    }
+
+    /**
+     This function determines the appropriate sheet detent based on the current state of the map store and search text.
+
+     Current Criteria:
+     - If there are routes available or a selected item, the sheet detent is set to `.medium`.
+     - If the search text is not empty, the sheet detent is set to `.medium`.
+     - Otherwise, the sheet detent is set to `.small`.
+
+     Important Note:
+     This function relies on changes to the `mapStore.routes`, `mapStore.selectedItem`, and `searchText`. If additional criteria are added in the future (e.g., `mapItems`), ensure to:
+     1. Update this function to include the new criteria.
+     2. Set up the appropriate observers for the new criteria to call `updateSheetDetent`.
+
+     Failure to do so can result in the function not updating the detent properly when the new criteria change.
+     **/
+
+    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, mapItemsCount: Int) {
+        if isCurrentlyNavigating {
+            let closed: PresentationDetent = .height(0)
+            self.allowedDetents = [closed]
+            self.selectedDetent = closed
+            return
+        }
+
+        // If routes exist or an item is selected, use the medium detent
+
+        guard let navigationPathItem else {
+            self.allowedDetents = [.small, .third, .large]
+            if mapItemsCount == .zero {
+                self.selectedDetent = .small
+            } else {
+                self.selectedDetent = .third
+            }
+            return
+        }
+
+        if let sheetSubview = navigationPathItem as? SheetSubView {
+            switch sheetSubview {
+            case .mapStyle:
+                self.allowedDetents = [.medium]
+                self.selectedDetent = .medium
+            case .debugView:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
+            case .navigationAddSearchView:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
+            case .favorites:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
+            }
+        }
+        if navigationPathItem is ResolvedItem {
+            self.allowedDetents = [.small, .third, .nearHalf, .large]
+            self.selectedDetent = .nearHalf
+        }
+        if navigationPathItem is RoutingService.RouteCalculationResult {
+            self.allowedDetents = [.height(150), .nearHalf]
+            self.selectedDetent = .nearHalf
+        }
     }
 }
 

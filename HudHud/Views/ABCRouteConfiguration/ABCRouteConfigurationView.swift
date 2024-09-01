@@ -19,8 +19,8 @@ struct ABCRouteConfigurationView: View {
     // MARK: Properties
 
     @State var routeConfigurations: [ABCRouteConfigurationItem]
-    @ObservedObject var mapStore: MapStore
-    @ObservedObject var searchViewStore: SearchViewStore
+    @ObservedObject var mapViewStore: MapViewStore
+    @ObservedObject var routingStore: RoutingStore
 
     // MARK: Content
 
@@ -61,7 +61,7 @@ struct ABCRouteConfigurationView: View {
 
                 footer: {
                     Button {
-                        self.mapStore.path.append(SheetSubView.navigationAddSearchView)
+                        self.mapViewStore.path.append(SheetSubView.navigationAddSearchView)
                     } label: {
                         HStack {
                             Image(systemSymbol: .plus)
@@ -99,42 +99,22 @@ struct ABCRouteConfigurationView: View {
                 }
             }
             .onChange(of: self.routeConfigurations) { newRoute in
-                var waypoints: [Waypoint] = []
-                for item in newRoute {
-                    switch item {
-                    case let .myLocation(waypoint):
-                        waypoints.append(waypoint)
-                    case let .waypoint(point):
-                        let waypoint = Waypoint(coordinate: point.coordinate)
-                        waypoints.append(waypoint)
+                Task {
+                    do {
+                        try await self.routingStore.navigate(to: newRoute)
+                    } catch {
+                        Logger.routing.error("Updating routes: \(error)")
                     }
                 }
-                self.mapStore.waypoints = newRoute
-                self.updateRoutes(wayPoints: waypoints)
             }
         }
         // This line will update the routeConfigurations with latest waypoints after added stop point
-        .onChange(of: self.mapStore.waypoints ?? []) { waypoints in
+        .onChange(of: self.routingStore.waypoints ?? []) { waypoints in
             self.routeConfigurations = waypoints
         }
     }
 
     // MARK: Functions
-
-    // Update routes by making a network request
-    func updateRoutes(wayPoints: [Waypoint]) {
-        Task {
-            guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
-                return
-            }
-            do {
-                let routes = try await self.mapStore.calculateRoute(from: userLocation, to: nil, additionalWaypoints: wayPoints)
-                self.mapStore.routes = routes
-            } catch {
-                Logger.routing.error("Updating routes: \(error)")
-            }
-        }
-    }
 
     // MARK: - Internal
 
@@ -144,10 +124,9 @@ struct ABCRouteConfigurationView: View {
 }
 
 #Preview {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return ABCRouteConfigurationView(routeConfigurations: [
+    ABCRouteConfigurationView(routeConfigurations: [
         .myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
         .waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), color: .systemRed)),
         .waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), color: .systemRed))
-    ], mapStore: searchViewStore.mapStore, searchViewStore: searchViewStore)
+    ], mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)
 }

@@ -131,8 +131,8 @@ final class RoutingStore: ObservableObject {
                 Waypoint(coordinate: point.coordinate)
             }
         }
-        let routes = try await self.calculateRoute(for: waypoints)
         self.waypoints = destinations
+        let routes = try await self.calculateRoute(for: waypoints)
         self.potentialRoute = routes
     }
 

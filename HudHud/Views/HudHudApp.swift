@@ -23,13 +23,14 @@ struct HudHudApp: App {
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
+    private let mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
     // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
-            ContentView(searchStore: self.searchStore)
+            ContentView(searchStore: self.searchStore, mapViewStore: self.mapViewStore)
                 .onAppear {
                     self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
                 }
@@ -44,6 +45,8 @@ struct HudHudApp: App {
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .bestForNavigation
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, routingStore: RoutingStore(mapStore: self.mapStore), mode: .live(provider: .hudhud))
+        let routingStore = RoutingStore(mapStore: self.mapStore)
+        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
+        self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, mode: .live(provider: .hudhud))
     }
 }

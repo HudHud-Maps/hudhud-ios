@@ -23,9 +23,8 @@ struct MapViewContainer: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
+    @ObservedObject var mapViewStore: MapViewStore
     var sheetSize: CGSize
-
-    var mapViewStore: MapViewStore
 
     @State private var didFocusOnUser = false
 
@@ -36,6 +35,7 @@ struct MapViewContainer: View {
         debugStore: DebugStore,
         searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
+        mapViewStore: MapViewStore,
         sheetSize: CGSize
     ) {
         self.mapStore = mapStore
@@ -43,7 +43,7 @@ struct MapViewContainer: View {
         self.searchViewStore = searchViewStore
         self.sheetSize = sheetSize
         self.userLocationStore = userLocationStore
-        self.mapViewStore = MapViewStore(mapStore: mapStore)
+        self.mapViewStore = mapViewStore
     }
 
     // MARK: Content
@@ -57,7 +57,7 @@ struct MapViewContainer: View {
             return viewController
         }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.mapStore.routes?.routes.first, self.mapStore.navigationProgress == .none {
+            if let route = self.searchViewStore.routingStore.potentialRoute?.routes.first, self.searchViewStore.routingStore.navigationProgress == .none {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
                     MLNPolylineFeature(coordinates: route.coordinates ?? [])
                 }
@@ -82,7 +82,7 @@ struct MapViewContainer: View {
                                parameters: NSExpression(forConstantValue: 1.5),
                                stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
 
-                let routePoints = self.mapStore.routePoints
+                let routePoints = self.searchViewStore.routingStore.routePoints
 
                 CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
                     .radius(16)
@@ -127,7 +127,7 @@ struct MapViewContainer: View {
                 .predicate(NSPredicate(format: "cluster == YES"))
 
             // shows the unclustered pins
-            if self.mapStore.navigationProgress != .navigating {
+            if self.searchViewStore.routingStore.navigationProgress != .navigating {
                 SymbolStyleLayer(identifier: MapLayerIdentifier.simpleCircles, source: pointSource.makeMGLSource())
                     .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
                     .iconAllowsOverlap(false)
@@ -163,7 +163,7 @@ struct MapViewContainer: View {
             .predicate(NSPredicate(format: "cluster != YES"))
         }
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-            if self.mapStore.navigationProgress == .feedback {
+            if self.searchViewStore.routingStore.navigationProgress == .feedback {
                 self.searchViewStore.endTrip()
                 return
             }
@@ -171,35 +171,9 @@ struct MapViewContainer: View {
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
-            controller.delegate = self.mapStore
-
-            switch self.mapStore.navigationProgress {
-            case .none:
-                if let route = self.mapStore.navigatingRoute {
-                    if self.debugStore.simulateRide {
-                        let locationManager = SimulatedLocationManager(route: route)
-                        locationManager.speedMultiplier = 2
-                        controller.startNavigation(with: route, animated: true, locationManager: locationManager)
-                    } else {
-                        controller.startNavigation(with: route, animated: true)
-                    }
-                    self.mapStore.navigationProgress = .navigating
-                } else {
-                    controller.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                    controller.mapView.showsUserLocation = self.userLocationStore.isLocationPermissionEnabled && self.mapStore.streetViewScene == nil
-                }
-            case .navigating:
-                if let route = self.mapStore.navigatingRoute {
-                    controller.route = route
-                } else {
-                    controller.endNavigation()
-                    self.mapStore.navigationProgress = .feedback
-                }
-            case .feedback:
-                break
-            }
+            self.searchViewStore.routingStore.assign(to: controller, shouldSimulateRoute: self.debugStore.simulateRide)
         }
-        .cameraModifierDisabled(self.mapStore.navigatingRoute != nil)
+        .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
         .onStyleLoaded { style in
             self.mapStore.mapStyle = style
             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
@@ -208,11 +182,11 @@ struct MapViewContainer: View {
             if self.searchViewStore.mapStore.selectedItem == nil {
                 let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                 self.searchViewStore.mapStore.selectedItem = selectedItem
-                self.mapStore.selectedDetent = .third
+                self.mapViewStore.selectedDetent = .third
             }
         })
         .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
-        .onChange(of: self.mapStore.routes) { newRoute in
+        .onChange(of: self.searchViewStore.routingStore.potentialRoute) { newRoute in
             if let routeUnwrapped = newRoute,
                let route = routeUnwrapped.routes.first,
                let coordinates = route.coordinates,
@@ -256,5 +230,5 @@ struct MapViewContainer: View {
 #Preview {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 80))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 80))
 }
