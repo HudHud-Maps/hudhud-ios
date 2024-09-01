@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import NukeUI
 import OSLog
 import SwiftUI
 
@@ -79,6 +80,7 @@ struct MapLayersView: View {
                     .padding(.horizontal)
             } else {
                 self.layersView(mapLayers: mapLayers)
+                    .padding(.horizontal)
             }
         }
     }
@@ -96,12 +98,22 @@ struct MapLayersView: View {
                             self.mapStore.mapStyleLayer = layer
                             Logger().info("\(layer.name) selected as map Style | url:\(layer.styleUrl)")
                         } label: {
-                            AsyncImage(url: layer.thumbnailUrl) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                            } placeholder: {
-                                ProgressView()
+                            LazyImage(url: layer.thumbnailUrl) { state in
+                                if let image = state.image {
+                                    image.resizable().aspectRatio(contentMode: .fit)
+                                } else if state.error != nil {
+                                    Image("DefaultLayerImage")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .grayscale(1.0)
+                                        .saturation(0.5)
+                                } else {
+                                    Image("DefaultLayerImage")
+                                        .resizable()
+                                        .scaledToFit()
+                                        .grayscale(1.0)
+                                        .saturation(0.5)
+                                }
                             }
                             .background(Color.Colors.General._03LightGrey)
                             .cornerRadius(12)
