@@ -14,29 +14,15 @@ struct OTPVerificationView: View {
 
     // MARK: Properties
 
-    private var phoneNumber: String
-    @State private var timeRemaining: Int = 60
-    @State private var resendEnabled: Bool = false
-    @State private var timer: Timer?
-    @State private var code: [String] = Array(repeating: "", count: 6)
+    @StateObject private var store: OTPVerificationStore
     @FocusState private var focusedIndex: Int?
-
-    // MARK: Computed Properties
-
-    private var isCodeComplete: Bool {
-        return self.code.allSatisfy { $0.count == 1 }
-    }
-
-    private var formattedTime: String {
-        let minutes = self.timeRemaining / 60
-        let seconds = self.timeRemaining % 60
-        return String(format: "%02d:%02d", minutes, seconds)
-    }
 
     // MARK: Lifecycle
 
+    // MARK: Initialization
+
     init(phoneNumber: String) {
-        self.phoneNumber = phoneNumber
+        _store = StateObject(wrappedValue: OTPVerificationStore(phoneNumber: phoneNumber))
     }
 
     // MARK: Content
@@ -50,7 +36,7 @@ struct OTPVerificationView: View {
                         .foregroundColor(Color.Colors.General._01Black)
                     HStack {
                         Text("We sent verification code on")
-                        Text("\(self.phoneNumber)")
+                        Text("\(self.store.phoneNumber)")
                     }
                     .foregroundColor(Color.Colors.General._02Grey)
                 }
@@ -62,7 +48,7 @@ struct OTPVerificationView: View {
             VStack {
                 HStack(spacing: 10) {
                     ForEach(0 ..< 6, id: \.self) { index in
-                        TextField("", text: self.$code[index])
+                        TextField("", text: self.$store.code[index])
                             .focused(self.$focusedIndex, equals: index)
                             .keyboardType(.numberPad)
                             .textContentType(.oneTimeCode)
@@ -71,7 +57,7 @@ struct OTPVerificationView: View {
                             .frame(width: 40, height: 50)
                             .hudhudFont(.title3)
                             .background(self.bottomBorder(for: index), alignment: .bottom)
-                            .onChange(of: self.code[index]) { newCode in
+                            .onChange(of: self.store.code[index]) { newCode in
                                 self.handleCode(newCode, at: index)
                             }
                     }
@@ -87,35 +73,35 @@ struct OTPVerificationView: View {
                 Text("Didn't Get the Code?")
                 Button(action: {
                     // Currently only reset the timer but it should also send new code to the user
-                    self.resetTimer()
+                    self.store.resetTimer()
                 }) {
-                    Text("Resend Code \(!self.resendEnabled ? "(\(self.formattedTime))" : "")")
-                        .foregroundColor(self.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
+                    Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
+                        .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
                         .cornerRadius(8)
                 }
-                .disabled(!self.resendEnabled)
+                .disabled(!self.store.resendEnabled)
                 .padding(.bottom)
                 Button(action: {
                     // The fullCode will be send to the backend
-                    if self.isCodeComplete {
-                        let fullCode = self.code.joined()
+                    if self.store.isCodeComplete {
+                        let fullCode = self.store.code.joined()
                         Logger.userRegistration.info("Code is valid: \(fullCode)")
                     }
                 }, label: {
                     Text("Verify")
                 })
                 .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._07BlueMain.opacity(!self.isCodeComplete ? 0.5 : 1),
+                    backgroundColor: Color.Colors.General._07BlueMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
                     foregroundColor: .white
                 ))
-                .disabled(!self.isCodeComplete)
+                .disabled(!self.store.isCodeComplete)
             }
             .padding()
             .onAppear {
-                self.startTimer()
+                self.store.startTimer()
             }
             .onDisappear {
-                self.timer?.invalidate()
+                self.store.timer?.invalidate()
             }
         }
     }
@@ -134,7 +120,7 @@ struct OTPVerificationView: View {
         if newCode.count == 6 {
             // Assign each digit to the code array
             for (i, digit) in newCode.enumerated() {
-                self.code[i] = String(digit)
+                self.store.code[i] = String(digit)
             }
             // Clear focus from all text fields and the keyboard will be dismissed
             self.focusedIndex = nil
@@ -146,10 +132,10 @@ struct OTPVerificationView: View {
                 }
             } else {
                 // Update the code with the digits entered
-                self.code[index] = newCode
+                self.store.code[index] = newCode
                 // If the user entered more than 1 digit..remove the first one
                 if newCode.count > 1 {
-                    self.code[index].removeFirst()
+                    self.store.code[index].removeFirst()
                 } else {
                     if newCode.isEmpty {
                         // If empty and not the first index.. move focus back to the previous field
@@ -164,29 +150,9 @@ struct OTPVerificationView: View {
                 }
                 // If the code is complete.. clear focus from all fields and the keyboard will be dismissed
                 // Otherwise, focus on the current index
-                self.focusedIndex = self.isCodeComplete ? nil : index
+                self.focusedIndex = self.store.isCodeComplete ? nil : index
             }
         }
-    }
-
-    // set a timer for resend code at one minutes
-    private func startTimer() {
-        self.resendEnabled = false
-        self.timeRemaining = 60
-
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            if self.timeRemaining > 0 {
-                self.timeRemaining -= 1
-            } else {
-                self.timer?.invalidate()
-                self.resendEnabled = true
-            }
-        }
-    }
-
-    private func resetTimer() {
-        self.timer?.invalidate()
-        self.startTimer()
     }
 }
 
