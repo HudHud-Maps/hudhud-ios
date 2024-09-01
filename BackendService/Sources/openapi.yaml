@@ -1,34 +1,35 @@
 openapi: 3.0.1
 info:
   title: sinbad
-  description: "This API documentation is for the sinbad project..."
+  description: "This API documentation is for the sinbad project...."
   version: 1.0.0
-tags: []
+tags:
+  - name: mtk
 paths:
   /m/styles:
     get:
       summary: Map styles
       deprecated: false
-      description: "Contains map style urls "
+      description: 'Contains map style urls '
       operationId: listMapStyles
       tags: []
       parameters:
         - name: Accept-Language
           in: header
-          description: ""
+          description: ''
           required: false
-          example: ""
+          example: ''
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MapStylesResponse"
+                $ref: '#/components/schemas/MapStylesResponse'
               examples:
-                "1":
+                '1':
                   summary: Success
                   value:
                     ok: true
@@ -36,12 +37,13 @@ paths:
                       - name: default
                         style_url: https://styles.hudhud.sa/default.json
                         thumbnail_url: https://static.hudhud.sa/default_thumb.webp
+          headers: {}
       security: []
   /t/rate:
     post:
       summary: Rate trip
       deprecated: false
-      description: ""
+      description: ''
       operationId: rateTrip
       tags: []
       parameters: []
@@ -49,50 +51,53 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/TripRateInput"
+              $ref: '#/components/schemas/TripRateInput'
       responses:
-        "201":
+        '201':
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SuccessResponse"
-        "422":
+                $ref: '#/components/schemas/SuccessResponse'
+          headers: {}
+        '422':
           description: Parameter Error
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ValidationError"
+                $ref: '#/components/schemas/ValidationError'
+          headers: {}
       security: []
   /sv/nearby:
     get:
       summary: Get nearest Streetview image
       deprecated: false
-      description: ""
+      description: ''
       operationId: getNearestStreetViewImage
       tags: []
       parameters:
         - name: lat
           in: query
-          description: ""
+          description: ''
           required: true
           schema:
             type: number
             format: float64
         - name: lon
           in: query
-          description: ""
+          description: ''
           required: true
           schema:
             type: number
             format: float64
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/NearestStreetViewImageResponse"
+                $ref: '#/components/schemas/NearestStreetViewImageResponse'
+          headers: {}
       security: []
   /p/typeahead:
     get:
@@ -112,34 +117,34 @@ paths:
             type: string
         - name: lat
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: double
         - name: lon
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: double
         - name: Accept-Language
           in: header
-          description: ""
+          description: ''
           required: false
-          example: ""
+          example: ''
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PoisTypeaheadResponse"
+                $ref: '#/components/schemas/PoisTypeaheadResponse'
               examples:
-                "1":
+                '1':
                   summary: Success
                   value:
                     ok: true
@@ -160,84 +165,88 @@ paths:
                         android_category_icon:
                           name: restaurant
                           color: blue
+          headers: {}
       security: []
   /sv/{id}:
     get:
       summary: Get streetview image by id
       deprecated: false
-      description: ""
+      description: ''
       operationId: getStreetViewImage
       tags: []
       parameters:
         - name: id
           in: path
-          description: ""
+          description: ''
           required: true
           schema:
             type: integer
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StreetViewDetailResponse"
-        "400":
+                $ref: '#/components/schemas/StreetViewDetailResponse'
+          headers: {}
+        '400':
           description: Bad Request
           content:
             application/json:
               schema: &ref_0
-                $ref: "#/components/schemas/ErrorResponse"
-        "404":
+                $ref: '#/components/schemas/ErrorResponse'
+          headers: {}
+        '404':
           description: Record Not Found
           content:
             application/json:
               schema: *ref_0
+          headers: {}
       security: []
   /p/{id}:
     get:
       summary: POI details
       deprecated: false
-      description: ""
+      description: ''
       operationId: getPoi
       tags: []
       parameters:
         - name: id
           in: path
-          description: ""
+          description: ''
           required: true
           schema:
             type: string
         - name: lat
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: float64
         - name: lon
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: float64
         - name: Accept-Language
           in: header
-          description: ""
+          description: ''
           required: false
-          example: ""
+          example: ''
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PoiDetailsResponse"
+                $ref: '#/components/schemas/PoiDetailsResponse'
               examples:
-                "1":
+                '1':
                   summary: Success
                   value:
                     ok: true
@@ -252,7 +261,7 @@ paths:
                       coordinates:
                         lat: 39.891111
                         lon: 21.3625
-                      phone_number: "0533132053"
+                      phone_number: '0533132053'
                       website: www.darna.com.sa
                       rating: 4.5
                       ratings_count: 706
@@ -319,42 +328,106 @@ paths:
                       media_urls:
                         - type: image
                           url: https://media.hudhud.sa/4578.webp
-        "404":
+          headers: {}
+        '404':
           description: Record Not Found
           content:
             application/json:
               schema: *ref_0
               examples:
-                "1":
+                '1':
                   summary: Success
                   value:
                     ok: false
                     message: the requested poi was not found
                     code: H04
+          headers: {}
       security: []
-  /p:
+  /sv/nearby-bbox:
     get:
-      summary: List pois (pois search)
+      summary: Nearby street images bbox
       deprecated: false
-      description: ""
-      operationId: listPois
-      tags: []
+      description: ''
+      tags:
+        - mtk
       parameters:
+        - name: bbox
+          in: query
+          description: ''
+          required: true
+          schema:
+            type: string
         - name: page
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: integer
         - name: limit
           in: query
-          description: ""
+          description: ''
+          required: false
+          schema:
+            type: integer
+        - name: next_page_token
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: &ref_5
+                      $ref: '#/components/schemas/StreetViewImageDetails'
+                  ok:
+                    type: boolean
+                  total:
+                    type: integer
+                  next_page_token:
+                    type: string
+                required:
+                  - ok
+              examples:
+                '1':
+                  summary: Success
+                  value:
+                    data: []
+                    ok: true
+                    total: 100
+                    next_page_token: dqdqsd==
+          headers: {}
+      security: []
+  /p:
+    get:
+      summary: List pois (pois search)
+      deprecated: false
+      description: ''
+      operationId: listPois
+      tags: []
+      parameters:
+        - name: page
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: ''
           required: false
           schema:
             type: integer
         - name: sort_by
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: string
@@ -363,11 +436,11 @@ paths:
               - distance
             x-apidog:
               enumDescriptions:
-                relevance: ""
-                distance: ""
+                relevance: ''
+                distance: ''
         - name: price_range
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: integer
@@ -378,13 +451,13 @@ paths:
               - 4
             x-apidog:
               enumDescriptions:
-                "1": ""
-                "2": ""
-                "3": ""
-                "4": ""
+                '1': ''
+                '2': ''
+                '3': ''
+                '4': ''
         - name: rating
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
@@ -400,7 +473,7 @@ paths:
             format: date-time
         - name: category
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: string
@@ -418,40 +491,40 @@ paths:
             type: string
         - name: lat
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: double
         - name: lon
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: double
         - name: top_rated
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: boolean
         - name: Accept-Language
           in: header
-          description: ""
+          description: ''
           required: false
-          example: ""
+          example: ''
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PoisListResponse"
+                $ref: '#/components/schemas/PoisListResponse'
               examples:
-                "1":
+                '1':
                   summary: Success
                   value:
                     ok: true
@@ -497,136 +570,108 @@ paths:
                               closes_at: 720
                             - opens_at: 1000
                               closes_at: 1600
-                        phone_number: "+9664512"
+                        phone_number: '+9664512'
                         coordinates:
                           lat: 39.891111
                           lon: 21.3625
                         website: https://hudhud.sa
-                        instagram: ""
+                        instagram: ''
                         media_urls:
                           - type: picture
                             url: https://media.hudhud.sa/dsqdqs.jpeg
+          headers: {}
       security: []
   /sv/scene/{id}:
     get:
       summary: Get streetview scene by id
       deprecated: false
-      description: ""
+      description: ''
       operationId: getStreetViewScene
       tags: []
       parameters:
         - name: id
           in: path
-          description: ""
+          description: ''
           required: true
           schema:
             type: integer
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/StreetViewSceneResponse"
-        "400":
+                $ref: '#/components/schemas/StreetViewSceneResponse'
+          headers: {}
+        '400':
           description: Bad Request
           content:
             application/json:
               schema: *ref_0
-        "404":
+          headers: {}
+        '404':
           description: Record Not Found
           content:
             application/json:
               schema: *ref_0
-      security: []
-  /sv/scene/bbox:
-    get:
-      summary: Get streetview scene by bounding box
-      deprecated: false
-      description: ""
-      operationId: getStreetViewSceneBBox
-      tags: []
-      parameters:
-        - name: bbox
-          in: query
-          description: "the format is <min_lon>,<min_lat>,<max_lon>,<max_lat> for example 46.5424,24.5708,46.8534,24.8595"
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/StreetViewSceneResponse"
-        "400":
-          description: Bad Request
-          content:
-            application/json:
-              schema: *ref_0
-        "404":
-          description: Record Not Found
-          content:
-            application/json:
-              schema: *ref_0
+          headers: {}
       security: []
   /p/trending:
     get:
       summary: Trending POIs
       deprecated: false
-      description: ""
+      description: ''
       operationId: listTrendingPois
       tags: []
       parameters:
         - name: page
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: integer
         - name: limit
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: integer
         - name: next_page_token
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: string
         - name: lat
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: double
         - name: lon
           in: query
-          description: ""
+          description: ''
           required: false
           schema:
             type: number
             format: double
         - name: Accept-Language
           in: header
-          description: ""
+          description: ''
           required: false
-          example: ""
+          example: ''
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: Success
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PoisTrendingResponse"
+                $ref: '#/components/schemas/PoisTrendingResponse'
               examples:
-                "1":
+                '1':
                   summary: Success
                   value:
                     ok: true
@@ -641,57 +686,56 @@ paths:
                         name: َAlBaik
                         category: restaurant
                         trending_image_url: https://media.hudhud.sa/dqdv.webp
+          headers: {}
       security: []
 components:
   schemas:
-    IosCategoryIcon:
+    TrendingItem:
       type: object
       properties:
+        id:
+          type: string
+        coordinates: &ref_2
+          $ref: '#/components/schemas/Coordinates'
+        rating:
+          type: number
+          format: double
+        ratings_count:
+          type: integer
         name:
           type: string
-          description: name
-        color:
+        category:
           type: string
-          enum:
-            - systemGray
-            - systemGray2
-            - systemGray3
-            - systemGray4
-            - systemGray5
-            - systemGray6
-            - systemRed
-            - systemGreen
-            - systemBlue
-            - systemOrange
-            - systemYellow
-            - systemPink
-            - systemPurple
-            - systemTeal
-            - systemIndigo
-            - systemBrown
-            - systemMint
-            - systemCyan
+        trending_image_url:
+          type: string
+        distance:
+          type: number
+          format: double
+          description: in meters
       required:
+        - id
+        - coordinates
         - name
-        - color
-    AndroidCategoryIcon:
+        - category
+        - trending_image_url
+    Coordinates:
       type: object
       properties:
-        name:
-          type: string
-        color:
-          type: string
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
       required:
-        - name
-        - color
+        - lat
+        - lon
     StreetViewScene:
       type: object
       properties:
         id:
           type: integer
         name:
-          type: string
-        base_url:
           type: string
         next_id:
           type: integer
@@ -741,257 +785,6 @@ components:
         - updated_at
         - id
         - name
-    StreetViewSceneResponse:
-      type: object
-      properties:
-        data:
-          $ref: "#/components/schemas/StreetViewScene"
-        ok:
-          type: boolean
-      required:
-        - ok
-        - data
-    MapStyleItem:
-      type: object
-      properties:
-        name:
-          type: string
-        style_url:
-          type: string
-        thumbnail_url:
-          type: string
-        type:
-          type: string
-          enum:
-            - map_type
-            - map_details
-      required:
-        - name
-        - style_url
-        - thumbnail_url
-        - type
-    MapStylesResponse:
-      type: object
-      properties:
-        data:
-          type: array
-          items:
-            $ref: "#/components/schemas/MapStyleItem"
-        ok:
-          type: boolean
-      required:
-        - data
-        - ok
-    StreetViewImageDetails:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        metadata:
-          type: string
-        geom:
-          type: string
-        point:
-          type: object
-          properties:
-            lat:
-              type: number
-              format: float64
-            lon:
-              type: number
-              format: float64
-          required:
-            - lat
-            - lon
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        url:
-          type: string
-      required:
-        - id
-        - name
-        - point
-        - created_at
-        - updated_at
-        - url
-    StreetViewDetailResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        data:
-          $ref: "#/components/schemas/StreetViewImageDetails"
-      required:
-        - ok
-        - data
-    NearestStreetViewImageResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        data:
-          $ref: "#/components/schemas/StreetViewImageItem"
-      required:
-        - ok
-    StreetViewImageItem:
-      type: object
-      properties:
-        id:
-          type: integer
-        name:
-          type: string
-        metadata:
-          type: string
-        geom:
-          type: string
-        point:
-          type: object
-          properties:
-            lat:
-              type: number
-              format: float64
-            lon:
-              type: number
-              format: float64
-          required:
-            - lat
-            - lon
-        created_at:
-          type: string
-          format: date-time
-        updated_at:
-          type: string
-          format: date-time
-        distance:
-          type: number
-          format: float64
-        url:
-          type: string
-      required:
-        - id
-        - name
-        - point
-        - created_at
-        - updated_at
-        - distance
-        - url
-    SuccessResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        data:
-          type: object
-          properties: {}
-          nullable: true
-      required:
-        - ok
-    ValidationError:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        message:
-          type: object
-          properties: {}
-        code:
-          type: string
-      required:
-        - ok
-        - message
-        - code
-    TripRateInput:
-      type: object
-      properties:
-        id:
-          type: integer
-          description: ID
-        rating:
-          type: integer
-          enum:
-            - 0
-            - 1
-            - 2
-            - 3
-            - 4
-        trip_info:
-          type: object
-          properties: {}
-        timestamp:
-          type: integer
-          format: uint64
-      required:
-        - id
-        - rating
-        - trip_info
-        - timestamp
-    OpeningHoursItem:
-      type: object
-      properties:
-        start:
-          type: integer
-        end:
-          type: integer
-      required:
-        - start
-        - end
-    ErrorResponse:
-      type: object
-      properties:
-        ok:
-          type: boolean
-        message:
-          type: string
-        code:
-          type: string
-      required:
-        - ok
-        - message
-        - code
-    TrendingItem:
-      type: object
-      properties:
-        id:
-          type: string
-        coordinates:
-          type: object
-          properties:
-            lat:
-              type: number
-              format: double
-            lon:
-              type: number
-              format: double
-          required:
-            - lat
-            - lon
-        rating:
-          type: number
-          format: double
-        ratings_count:
-          type: integer
-        name:
-          type: string
-        category:
-          type: string
-        trending_image_url:
-          type: string
-        distance:
-          type: number
-          format: double
-          description: in meters
-      required:
-        - id
-        - coordinates
-        - name
-        - category
-        - trending_image_url
     PoisListItem:
       type: object
       properties:
@@ -1032,7 +825,7 @@ components:
             saturday:
               type: array
               items: &ref_1
-                $ref: "#/components/schemas/OpeningHoursItem"
+                $ref: '#/components/schemas/OpeningHoursItem'
               nullable: true
             sunday:
               type: array
@@ -1062,18 +855,7 @@ components:
         phone_number:
           type: string
           nullable: true
-        coordinates:
-          type: object
-          properties:
-            lat:
-              type: number
-              format: double
-            lon:
-              type: number
-              format: double
-          required:
-            - lat
-            - lon
+        coordinates: *ref_2
         website:
           type: string
           nullable: true
@@ -1098,6 +880,16 @@ components:
         - name
         - category
         - coordinates
+    OpeningHoursItem:
+      type: object
+      properties:
+        start:
+          type: integer
+        end:
+          type: integer
+      required:
+        - start
+        - end
     PoiDetails:
       type: object
       properties:
@@ -1109,18 +901,7 @@ components:
           type: string
         category:
           type: string
-        coordinates:
-          type: object
-          properties:
-            lat:
-              type: number
-              format: double
-            lon:
-              type: number
-              format: double
-          required:
-            - lat
-            - lon
+        coordinates: *ref_2
         phone_number:
           type: string
           nullable: true
@@ -1201,10 +982,10 @@ components:
           format: double
           description: duration in seconds
           nullable: true
-        android_category_icon: &ref_3
-          $ref: "#/components/schemas/AndroidCategoryIcon"
-        ios_category_icon: &ref_2
-          $ref: "#/components/schemas/IosCategoryIcon"
+        android_category_icon: &ref_4
+          $ref: '#/components/schemas/AndroidCategoryIcon'
+        ios_category_icon: &ref_3
+          $ref: '#/components/schemas/IosCategoryIcon'
       required:
         - id
         - address
@@ -1213,6 +994,113 @@ components:
         - coordinates
         - android_category_icon
         - ios_category_icon
+    IosCategoryIcon:
+      type: object
+      properties:
+        name:
+          type: string
+          description: name
+        color:
+          type: string
+          enum:
+            - systemGray
+            - systemGray2
+            - systemGray3
+            - systemGray4
+            - systemGray5
+            - systemGray6
+            - systemRed
+            - systemGreen
+            - systemBlue
+            - systemOrange
+            - systemYellow
+            - systemPink
+            - systemPurple
+            - systemTeal
+            - systemIndigo
+            - systemBrown
+            - systemMint
+            - systemCyan
+      required:
+        - name
+        - color
+    AndroidCategoryIcon:
+      type: object
+      properties:
+        name:
+          type: string
+        color:
+          type: string
+      required:
+        - name
+        - color
+    MapStylesResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/MapStyleItem'
+        ok:
+          type: boolean
+      required:
+        - data
+        - ok
+    MapStyleItem:
+      type: object
+      properties:
+        name:
+          type: string
+        style_url:
+          type: string
+        thumbnail_url:
+          type: string
+        type:
+          type: string
+          enum:
+            - map_type
+            - map_details
+      required:
+        - name
+        - style_url
+        - thumbnail_url
+        - type
+    TripRateInput:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID
+        rating:
+          type: integer
+          enum:
+            - 0
+            - 1
+            - 2
+            - 3
+            - 4
+        trip_info:
+          type: object
+          properties: {}
+        timestamp:
+          type: integer
+          format: uint64
+      required:
+        - id
+        - rating
+        - trip_info
+        - timestamp
+    SuccessResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          type: object
+          properties: {}
+          nullable: true
+      required:
+        - ok
     TypeaheadItem:
       type: object
       properties:
@@ -1229,25 +1117,70 @@ components:
           type: string
         category:
           type: string
-        coordinates:
-          type: object
-          properties:
-            lat:
-              type: number
-              format: double
-            lon:
-              type: number
-              format: double
-          required:
-            - lat
-            - lon
-        ios_category_icon: *ref_2
-        android_category_icon: *ref_3
+        coordinates: *ref_2
+        ios_category_icon: *ref_3
+        android_category_icon: *ref_4
       required:
         - ios_category_icon
         - android_category_icon
         - name
         - type
+    StreetViewImageItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        metadata:
+          type: string
+        geom:
+          type: string
+        point:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float64
+            lon:
+              type: number
+              format: float64
+          required:
+            - lat
+            - lon
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        distance:
+          type: number
+          format: float64
+        url:
+          type: string
+      required:
+        - id
+        - name
+        - point
+        - created_at
+        - updated_at
+        - distance
+        - url
+    ValidationError:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: object
+          properties: {}
+        code:
+          type: string
+      required:
+        - ok
+        - message
+        - code
     PoisTrendingResponse:
       type: object
       properties:
@@ -1259,7 +1192,17 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/TrendingItem"
+            $ref: '#/components/schemas/TrendingItem'
+      required:
+        - ok
+        - data
+    StreetViewSceneResponse:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/StreetViewScene'
+        ok:
+          type: boolean
       required:
         - ok
         - data
@@ -1278,11 +1221,58 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/PoisListItem"
+            $ref: '#/components/schemas/PoisListItem'
       required:
         - ok
         - total
         - data
+    NearestStreetViewImageResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data:
+          $ref: '#/components/schemas/StreetViewImageItem'
+      required:
+        - ok
+    StreetViewImageDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        metadata:
+          type: string
+        geom:
+          type: string
+        point:
+          type: object
+          properties:
+            lat:
+              type: number
+              format: float64
+            lon:
+              type: number
+              format: float64
+          required:
+            - lat
+            - lon
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        url:
+          type: string
+      required:
+        - id
+        - name
+        - point
+        - created_at
+        - updated_at
+        - url
     PoiDetailsResponse:
       type: object
       properties:
@@ -1292,7 +1282,29 @@ components:
             Can be ignored by clients, errors should be checked using the status
             code following the http standard
         data:
-          $ref: "#/components/schemas/PoiDetails"
+          $ref: '#/components/schemas/PoiDetails'
+      required:
+        - ok
+        - data
+    ErrorResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        message:
+          type: string
+        code:
+          type: string
+      required:
+        - ok
+        - message
+        - code
+    StreetViewDetailResponse:
+      type: object
+      properties:
+        ok:
+          type: boolean
+        data: *ref_5
       required:
         - ok
         - data
@@ -1304,7 +1316,7 @@ components:
         data:
           type: array
           items:
-            $ref: "#/components/schemas/TypeaheadItem"
+            $ref: '#/components/schemas/TypeaheadItem'
       required:
         - ok
         - data
