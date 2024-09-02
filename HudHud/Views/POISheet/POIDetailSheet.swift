@@ -20,24 +20,41 @@ import SwiftUI
 
 struct POIDetailSheet: View {
 
+    // MARK: Properties
+
     let item: ResolvedItem
-    @ObservedObject var routingStore: RoutingStore
     let onStart: (RoutingService.RouteCalculationResult) -> Void
-
-    @State var routes: RoutingService.RouteCalculationResult?
-
-    @Environment(\.dismiss) private var dismiss
     let onDismiss: () -> Void
 
+    @State var routes: RoutingService.RouteCalculationResult?
+    @State var viewMore: Bool = false
+
+    @ObservedObject var routingStore: RoutingStore
+
     @EnvironmentObject var notificationQueue: NotificationQueue
+
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
-    @State var viewMore: Bool = false
+    // MARK: Computed Properties
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
         return self.item.subtitle.count > maxCharacters
     }
+
+    // MARK: Lifecycle
+
+    init(item: ResolvedItem, routingStore: RoutingStore, onStart: @escaping (RoutingService.RouteCalculationResult) -> Void, onDismiss: @escaping () -> Void) {
+        self.item = item
+        self.onStart = onStart
+        self.onDismiss = onDismiss
+        self.routingStore = routingStore
+    }
+
+    // MARK: Content
+
+    // MARK: - View
 
     var body: some View {
         ScrollView {
@@ -164,8 +181,13 @@ struct POIDetailSheet: View {
             }
         }
     }
+}
 
-    private func calculateRoute(for item: ResolvedItem) async {
+// MARK: - Private
+
+private extension POIDetailSheet {
+
+    func calculateRoute(for item: ResolvedItem) async {
         Task {
             do {
                 let routes = try await self.routingStore.calculateRoute(for: item)
@@ -182,6 +204,8 @@ struct POIDetailSheet: View {
         }
     }
 }
+
+// MARK: - Preview
 
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {

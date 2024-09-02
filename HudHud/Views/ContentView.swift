@@ -278,7 +278,6 @@ struct SizePreferenceKey: PreferenceKey {
                            subtitle: "Al-Olya - Riyadh",
                            type: .hudhud,
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi
@@ -316,7 +315,6 @@ extension NavigationViewController: MapViewHostViewController {
                            subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
                            type: .appleResolved,
                            coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
-                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     let artwork = ResolvedItem(id: UUID().uuidString,
@@ -324,7 +322,6 @@ extension NavigationViewController: MapViewHostViewController {
                                subtitle: "artwork - Al-Olya - Riyadh",
                                type: .hudhud,
                                coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                               color: .systemRed,
                                phone: "0503539560",
                                website: URL(string: "https://hudhud.sa"))
 
@@ -333,7 +330,6 @@ extension NavigationViewController: MapViewHostViewController {
                                 subtitle: "Al-Olya - Riyadh",
                                 type: .hudhud,
                                 coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                                color: .systemRed,
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]

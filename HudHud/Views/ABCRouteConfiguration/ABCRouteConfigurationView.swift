@@ -126,7 +126,7 @@ struct ABCRouteConfigurationView: View {
 #Preview {
     ABCRouteConfigurationView(routeConfigurations: [
         .myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
-        .waypoint(ResolvedItem(id: UUID().uuidString, title: "Coffee Address, Riyadh", subtitle: "Coffee Shop", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354), color: .systemRed)),
-        .waypoint(ResolvedItem(id: UUID().uuidString, title: "The Garage, Riyadh", subtitle: "Work", type: .hudhud, coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331), color: .systemRed))
+        .waypoint(.coffeeAddressRiyadh),
+        .waypoint(.theGarageRiyadh)
     ], mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)
 }

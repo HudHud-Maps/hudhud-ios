@@ -130,6 +130,8 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Functions
 
+    // MARK: - Internal
+
     func didSelect(_ item: DisplayableRow) async {
         switch item {
         case let .resolvedItem(item):
@@ -215,8 +217,6 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    // MARK: - Internal
-
     func endTrip() {
         self.routingStore.endTrip()
         self.mapStore.selectedItem = nil
@@ -235,7 +235,6 @@ final class SearchViewStore: ObservableObject {
         }
         self.recentViewedItem.insert(item, at: 0)
     }
-
 }
 
 // MARK: - Private
@@ -302,7 +301,6 @@ private extension SearchViewStore {
             }
             .store(in: &self.cancellables)
     }
-
 }
 
 // MARK: - Previewable

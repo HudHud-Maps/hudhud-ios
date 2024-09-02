@@ -121,6 +121,8 @@ final class MapStore: ObservableObject {
 
     // MARK: Functions
 
+    // MARK: - Internal
+
     func getCameraPitch() -> Double {
         if case let .centered(
             onCoordinate: _,
@@ -233,8 +235,6 @@ final class MapStore: ObservableObject {
         }
     }
 
-    // MARK: - Internal
-
     func switchToNextTrackingAction() async {
         switch self.trackingState {
         case .none:
@@ -250,10 +250,6 @@ final class MapStore: ObservableObject {
         }
     }
 
-}
-
-extension MapStore {
-
     func isSFSymbolLayerPresent() -> Bool {
         return self.mapStyle?.layers.contains(where: { $0.identifier == MapLayerIdentifier.restaurants || $0.identifier == MapLayerIdentifier.shops }) ?? false
     }
@@ -265,8 +261,7 @@ extension MapStore {
                               zoom: 15, pitch: 0, pitchRange: .fixed(0))
     }
 
-    func loadNearestStreetView(minLon: Double, minLat: Double,
-                               maxLon: Double, maxLat: Double) async {
+    func loadNearestStreetView(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async {
         do {
             self.nearestStreetViewScene = try await self.hudhudStreetView.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
         } catch {

@@ -165,12 +165,6 @@ final class RoutingStore: ObservableObject {
     }
 }
 
-// MARK: - Previewable
-
-extension RoutingStore: Previewable {
-    static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing)
-}
-
 // MARK: - NavigationViewControllerDelegate
 
 extension RoutingStore: NavigationViewControllerDelegate {
@@ -208,8 +202,16 @@ extension RoutingStore: NavigationViewControllerDelegate {
     }
 }
 
+// MARK: - Private
+
 private extension RoutingStore {
     func reroute(with route: Route) async {
         self.navigatingRoute = route
     }
+}
+
+// MARK: - Previewable
+
+extension RoutingStore: Previewable {
+    static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing)
 }
