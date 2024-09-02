@@ -50,7 +50,7 @@ struct OTPVerificationView: View {
                     ForEach(0 ..< 6, id: \.self) { index in
                         TextField("", text: self.$store.code[index])
                             .focused(self.$focusedIndex, equals: index)
-                            .keyboardType(.numberPad)
+                            .keyboardType(.asciiCapableNumberPad)
                             .textContentType(.oneTimeCode)
                             .scrollDismissesKeyboard(.interactively)
                             .multilineTextAlignment(.center)

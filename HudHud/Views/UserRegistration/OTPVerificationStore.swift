@@ -26,9 +26,12 @@ class OTPVerificationStore: ObservableObject {
     }
 
     var formattedTime: String {
-        let minutes = self.timeRemaining / 60
-        let seconds = self.timeRemaining % 60
-        return String(format: "%02d:%02d", minutes, seconds)
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.minute, .second]
+        formatter.zeroFormattingBehavior = .pad // 00:00
+        formatter.unitsStyle = .positional
+        let formattedString = formatter.string(from: TimeInterval(self.timeRemaining))
+        return formattedString ?? "00:00"
     }
 
     // MARK: Lifecycle
