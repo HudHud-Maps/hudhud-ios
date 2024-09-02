@@ -16,7 +16,7 @@ struct FavoriteCategoriesView: View {
 
     // MARK: Properties
 
-    let mapStore: MapStore
+    @ObservedObject var mapViewStore: MapViewStore
     let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
@@ -29,8 +29,8 @@ struct FavoriteCategoriesView: View {
                 ForEach(self.favoritesStore.favoritesItems.prefix(4)) { favorite in
                     Button {
                         if let selectedItem = favorite.item {
-                            self.mapStore.selectedItem = selectedItem
-                            self.mapStore.displayableItems = [DisplayableRow.resolvedItem(selectedItem)]
+                            self.searchStore.mapStore.selectedItem = selectedItem
+                            self.searchStore.mapStore.displayableItems = [DisplayableRow.resolvedItem(selectedItem)]
                         }
                     } label: {
                         Text(favorite.type)
@@ -39,7 +39,7 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
                 NavigationLink {
-                    FavoritesViewMoreView(searchStore: self.searchStore, mapStore: self.mapStore)
+                    FavoritesViewMoreView(searchStore: self.searchStore, mapViewStore: self.mapViewStore)
                 } label: {
                     Text("Add")
                         .hudhudFont(size: 12, fontWeight: .medium)
@@ -60,7 +60,7 @@ struct FavoriteCategoriesView: View {
                     .minimumScaleFactor(0.5)
                 Spacer()
                 NavigationLink {
-                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
+                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
                 } label: {
                     HStack {
                         Text("View More")
@@ -75,7 +75,7 @@ struct FavoriteCategoriesView: View {
                     }
                 }
             }
-            FavoriteCategoriesView(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+            FavoriteCategoriesView(mapViewStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
         }
         .padding()
     }

@@ -206,7 +206,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
+    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -290,7 +290,6 @@ public extension ResolvedItem {
                                       category: "Restaurant",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
-                                      color: .systemRed,
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"),
                                       rating: 4,
@@ -302,7 +301,6 @@ public extension ResolvedItem {
                                         subtitle: "The Beach",
                                         type: .hudhud,
                                         coordinate: CLLocationCoordinate2D(latitude: 24.732211928084162, longitude: 46.87863163915118),
-                                        color: .systemRed,
                                         phone: "0503539560",
                                         website: URL(string: "https://hudhud.sa"),
                                         mediaURLs: .previewMediaURLs)
@@ -312,7 +310,6 @@ public extension ResolvedItem {
                                           subtitle: "Garden - Alyasmen - Riyadh",
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.595375923107532, longitude: 46.598253176098346),
-                                          color: .systemRed,
                                           mediaURLs: .previewMediaURLs)
 
     static let artwork = ResolvedItem(id: UUID().uuidString,
@@ -320,7 +317,6 @@ public extension ResolvedItem {
                                       subtitle: "artwork - Al-Olya - Riyadh",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                                      color: .systemRed,
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"),
                                       mediaURLs: .previewMediaURLs)
@@ -330,7 +326,6 @@ public extension ResolvedItem {
                                        subtitle: "Al-Olya - Riyadh",
                                        type: .hudhud,
                                        coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                                       color: .systemRed,
                                        phone: "0503539560",
                                        website: URL(string: "https://hudhud.sa"),
                                        mediaURLs: .previewMediaURLs)
@@ -340,10 +335,21 @@ public extension ResolvedItem {
                                           subtitle: "Al-Narjs - Riyadh",
                                           type: .hudhud,
                                           coordinate: CLLocationCoordinate2D(latitude: 24.79671388339593, longitude: 46.70810150540095),
-                                          color: .systemRed,
                                           phone: "0503539560",
                                           website: URL(string: "https://hudhud.sa"),
                                           mediaURLs: .previewMediaURLs)
+
+    static let coffeeAddressRiyadh = ResolvedItem(id: UUID().uuidString,
+                                                  title: "Coffee Address, Riyadh",
+                                                  subtitle: "Coffee Shop",
+                                                  type: .hudhud,
+                                                  coordinate: CLLocationCoordinate2D(latitude: 24.7076060, longitude: 46.6273354))
+
+    static let theGarageRiyadh = ResolvedItem(id: UUID().uuidString,
+                                              title: "The Garage, Riyadh",
+                                              subtitle: "Work",
+                                              type: .hudhud,
+                                              coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))
 }
 
 public extension DisplayableRow {
