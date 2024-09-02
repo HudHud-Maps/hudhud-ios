@@ -25,7 +25,7 @@ struct FloatingLabelInputField: View {
     var placeholder: String
     var inputType: FloatingLabelInputType
 
-    @State private var isFocused: Bool = false
+    @FocusState private var isFocused: Bool
 
     // MARK: Content
 
@@ -40,13 +40,12 @@ struct FloatingLabelInputField: View {
             VStack(alignment: .leading) {
                 switch self.inputType {
                 case let .text(binding):
-                    TextField("", text: binding, onEditingChanged: { editing in
-                        self.isFocused = editing
-                    })
-                    .hudhudFont()
-                    .foregroundColor(Color.Colors.General._01Black)
-                    .bold()
-                    .padding(.bottom, 5)
+                    TextField("", text: binding)
+                        .focused(self.$isFocused)
+                        .hudhudFont()
+                        .foregroundColor(Color.Colors.General._01Black)
+                        .bold()
+                        .padding(.bottom, 5)
 
                 case let .dropdown(binding, options):
                     Menu {
@@ -72,10 +71,11 @@ struct FloatingLabelInputField: View {
 
                 case let .datePicker(binding, _):
                     DatePicker("", selection: binding, displayedComponents: .date)
-                        .foregroundColor(.red)
                         .hudhudFont()
                         .foregroundColor(Color.Colors.General._01Black)
                         .padding(.bottom, 5)
+                        .focused(self.$isFocused)
+                        .background(Color.clear)
                 }
             }
             .background(Color.clear)
@@ -84,7 +84,6 @@ struct FloatingLabelInputField: View {
             Rectangle()
                 .frame(height: 1)
                 .foregroundColor(Color.Colors.General._02Grey)
-                .alignmentGuide(.bottom) { $0[.bottom] }
                 .padding(.top, 35)
         }
         .padding(.top, 8)
@@ -93,7 +92,6 @@ struct FloatingLabelInputField: View {
 
     // MARK: Functions
 
-    // Helper to get the appropriate text based on the input type
     private func getTextField() -> String {
         switch self.inputType {
         case let .text(binding):
