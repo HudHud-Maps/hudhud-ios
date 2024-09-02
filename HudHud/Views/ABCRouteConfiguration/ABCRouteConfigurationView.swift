@@ -98,14 +98,8 @@ struct ABCRouteConfigurationView: View {
                     }
                 }
             }
-            .onChange(of: self.routeConfigurations) { newRoute in
-                Task {
-                    do {
-                        try await self.routingStore.navigate(to: newRoute)
-                    } catch {
-                        Logger.routing.error("Updating routes: \(error)")
-                    }
-                }
+            .task(id: self.routeConfigurations) {
+                await self.routingStore.navigate(to: self.routeConfigurations)
             }
         }
         // This line will update the routeConfigurations with latest waypoints after added stop point

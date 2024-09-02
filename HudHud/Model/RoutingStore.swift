@@ -102,18 +102,22 @@ final class RoutingStore: ObservableObject {
         }
     }
 
-    func navigate(to destinations: [ABCRouteConfigurationItem]) async throws {
-        let waypoints: [Waypoint] = destinations.map { destination in
-            switch destination {
-            case let .myLocation(waypoint):
-                waypoint
-            case let .waypoint(point):
-                Waypoint(coordinate: point.coordinate)
+    func navigate(to destinations: [ABCRouteConfigurationItem]) async {
+        do {
+            let waypoints: [Waypoint] = destinations.map { destination in
+                switch destination {
+                case let .myLocation(waypoint):
+                    waypoint
+                case let .waypoint(point):
+                    Waypoint(coordinate: point.coordinate)
+                }
             }
+            self.waypoints = destinations
+            let routes = try await self.calculateRoute(for: waypoints)
+            self.potentialRoute = routes
+        } catch {
+            Logger.routing.error("Updating routes: \(error)")
         }
-        self.waypoints = destinations
-        let routes = try await self.calculateRoute(for: waypoints)
-        self.potentialRoute = routes
     }
 
     func assign(to navigationController: NavigationViewController, shouldSimulateRoute: Bool) {
@@ -151,11 +155,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func navigate(to route: Route) {
-        if self.navigatingRoute == nil {
-            self.navigatingRoute = route
-        } else {
-            self.navigatingRoute = nil
-        }
+        self.navigatingRoute = route
     }
 
     func endTrip() {

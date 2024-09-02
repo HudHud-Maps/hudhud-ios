@@ -57,7 +57,7 @@ final class MapViewStore: ObservableObject {
         }
     }
 
-    func resetFromDebugger() {
+    func reset() {
         self.resetAllowedDetents()
         self.selectedDetent = .small
         if !self.path.isEmpty {
@@ -90,22 +90,27 @@ private extension MapViewStore {
             self.$path,
             self.mapStore.$displayableItems
         )
-//        .debounce(for: 0.1, scheduler: DispatchQueue.main) // needed because combine publishes values before they are set to the actual variables.
         .sink { [weak self] navigatingRoute, path, items in
-                guard let self else { return }
-                let elements = try? path.elements()
-                let itemsCount = if let selectedItem = self.mapStore.selectedItem {
-                    items.count + 1
-                } else {
-                    items.count
-                }
-                self.updateSelectedSheetDetent(
-                    isCurrentlyNavigating: navigatingRoute != nil,
-                    navigationPathItem: elements?.last,
-                    mapItemsCount: items.count
-                )
+            guard let self else { return }
+            let elements = try? path.elements()
+            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil {
+                true
+            } else {
+                !items.isEmpty
             }
-            .store(in: &self.subscriptions)
+            let isCurrentSheetListOfCategories = if case .categoryItem = items.first {
+                true
+            } else {
+                false
+            }
+            self.updateSelectedSheetDetent(
+                isCurrentlyNavigating: navigatingRoute != nil,
+                navigationPathItem: elements?.last,
+                isThereAnyPOIsOnTheMap: isThereAnyPOIsOnTheMap,
+                isCurrentSheetListOfCategories: isCurrentSheetListOfCategories
+            )
+        }
+        .store(in: &self.subscriptions)
     }
 
     func showSelectedDetentWhenSelectingAnItem() {
@@ -139,7 +144,7 @@ private extension MapViewStore {
      Failure to do so can result in the function not updating the detent properly when the new criteria change.
      **/
 
-    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, mapItemsCount: Int) {
+    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, isThereAnyPOIsOnTheMap: Bool, isCurrentSheetListOfCategories: Bool) {
         if isCurrentlyNavigating {
             let closed: PresentationDetent = .height(0)
             self.allowedDetents = [closed]
@@ -151,7 +156,7 @@ private extension MapViewStore {
 
         guard let navigationPathItem else {
             self.allowedDetents = [.small, .third, .large]
-            if mapItemsCount == .zero {
+            if isThereAnyPOIsOnTheMap, !isCurrentSheetListOfCategories {
                 self.selectedDetent = .small
             } else {
                 self.selectedDetent = .third

@@ -134,8 +134,6 @@ private extension MapActionHandler {
         if feature.attribute(forKey: "source") as? String == "mosaic" {
             guard let id = feature.attribute(forKey: "id") as? Int else { return nil }
             return id
-//            guard let fileName = feature.attribute(forKey: "FileName") as? String else { return nil }
-//            return StreetViewScene(id: id, name: fileName, nextId: nil, nextName: nil, previousId: nil, previousName: nil, westId: nil, westName: nil, eastId: nil, eastName: nil, lat: 0.0, lon: 0.0)
         }
 
         return nil

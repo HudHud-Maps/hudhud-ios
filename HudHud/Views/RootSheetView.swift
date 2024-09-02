@@ -41,7 +41,7 @@ struct RootSheetView: View {
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
                             .onDisappear(perform: {
-                                self.mapViewStore.resetFromDebugger()
+                                self.mapViewStore.reset()
                             })
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:

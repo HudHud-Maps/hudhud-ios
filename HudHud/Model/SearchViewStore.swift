@@ -222,8 +222,7 @@ final class SearchViewStore: ObservableObject {
         self.mapStore.selectedItem = nil
         self.mapStore.displayableItems = []
         self.searchText = ""
-        self.mapViewStore.resetFromDebugger()
-        self.mapViewStore.resetAllowedDetents()
+        self.mapViewStore.reset()
     }
 
     func storeInRecent(_ item: ResolvedItem) {

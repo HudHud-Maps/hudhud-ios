@@ -188,19 +188,17 @@ struct POIDetailSheet: View {
 private extension POIDetailSheet {
 
     func calculateRoute(for item: ResolvedItem) async {
-        Task {
-            do {
-                let routes = try await self.routingStore.calculateRoute(for: item)
-                self.routes = routes
-            } catch {
-                let nsError = error as NSError
-                if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
-                    return
-                }
-
-                let notification = Notification(error: error)
-                self.notificationQueue.add(notification: notification)
+        do {
+            let routes = try await self.routingStore.calculateRoute(for: item)
+            self.routes = routes
+        } catch {
+            let nsError = error as NSError
+            if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
+                return
             }
+
+            let notification = Notification(error: error)
+            self.notificationQueue.add(notification: notification)
         }
     }
 }
