@@ -35,8 +35,6 @@ class LoginStore: ObservableObject {
     @Published var gender: String = ""
     @Published var birthday = Date()
 
-    @Published var genders = Gender.allCases.map(\.rawValue)
-
     // MARK: Computed Properties
 
     var isInputEmpty: Bool {
