@@ -205,7 +205,6 @@ private extension POIDetailSheet {
 
 // MARK: - Preview
 
-@available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     searchViewStore.mapStore.selectedItem = .artwork

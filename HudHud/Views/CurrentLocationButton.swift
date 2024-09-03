@@ -57,7 +57,6 @@ struct CurrentLocationButton: View {
 
 }
 
-@available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     @State var mapStore: MapStore = .storeSetUpForPreviewing
     return CurrentLocationButton(mapStore: mapStore)

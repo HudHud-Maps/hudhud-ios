@@ -185,7 +185,7 @@ struct MapViewContainer: View {
                 self.mapViewStore.selectedDetent = .third
             }
         })
-        .backport.safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
+        .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
         .onChange(of: self.searchViewStore.routingStore.potentialRoute) { newRoute in
             if let routeUnwrapped = newRoute,
                let route = routeUnwrapped.routes.first,
