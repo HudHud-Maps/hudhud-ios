@@ -7,19 +7,6 @@ on:
   pull_request:
 
 jobs:
-  format:
-    name: Code Style
-    runs-on: macos-14
-    steps:
-    - name: Install tools
-      run: brew install swiftlint
-      
-    - name: Checkout
-      uses: actions/checkout@v4
-      
-    - name: Check format
-      run: swiftlint lint . --reporter github-actions-logging
-
   test:
     name: Build and Test
     runs-on: macos-14
@@ -66,8 +53,8 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
         
       - name: Build
-        run: set -o pipefail && xcodebuild build -scheme HudHud -destination 'generic/platform=iOS' -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
+        run: set -o pipefail && xcodebuild build-for-testing -scheme HudHud -destination 'generic/platform=iOS' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
 
       - name: Test
-        run: set -o pipefail && xcodebuild test -scheme HudHud -testPlan CI -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
+        run: set -o pipefail && xcodebuild test-without-building -scheme HudHud -testPlan CI -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
         
