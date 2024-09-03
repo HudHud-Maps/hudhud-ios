@@ -149,7 +149,6 @@ struct ContentView: View {
                     }
                     .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
                     .padding(.horizontal)
-                    .backport.padding(.bottom, self.sheetSize.height)
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)

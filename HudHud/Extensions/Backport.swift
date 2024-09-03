@@ -43,14 +43,6 @@ extension Backport where Content: View {
         }
     }
 
-    @ViewBuilder func padding(_ edges: Edge.Set = .all, _ length: CGFloat) -> some View {
-        if #available(iOS 17, *) {
-            content
-        } else {
-            self.content.padding(edges, length - 8)
-        }
-    }
-
     @ViewBuilder func buttonSafeArea(length: CGSize) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
             self.safeAreaPadding(.leading, length.width)
