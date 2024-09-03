@@ -15,7 +15,6 @@ struct RecentSearchResultsView: View {
 
     // MARK: Properties
 
-    let mapStore: MapStore
     let searchStore: SearchViewStore
     let searchType: SearchViewStore.SearchType
 
@@ -68,11 +67,11 @@ struct RecentSearchResultsView: View {
             .onTapGesture {
                 let selectedItem = item
                 let mapItems = [DisplayableRow.resolvedItem(item)]
-                self.mapStore.selectedItem = selectedItem
-                self.mapStore.displayableItems = mapItems
+                self.searchStore.mapStore.selectedItem = selectedItem
+                self.searchStore.mapStore.displayableItems = mapItems
                 switch self.searchType {
                 case let .returnPOILocation(completion):
-                    if let selectedItem = self.mapStore.selectedItem {
+                    if let selectedItem = self.searchStore.mapStore.selectedItem {
                         completion?(.waypoint(selectedItem))
                         self.dismiss()
                     }
@@ -90,8 +89,7 @@ struct RecentSearchResultsView: View {
 
 #Preview {
     NavigationStack {
-        RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
-                                searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
     }
 }
 
@@ -102,8 +100,7 @@ struct RecentSearchResultsView: View {
     @State var editFormViewIsShown = true
     @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
-        RecentSearchResultsView(mapStore: .storeSetUpForPreviewing,
-                                searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $editFormViewIsShown) {
                 EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
             }

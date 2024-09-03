@@ -20,24 +20,41 @@ import SwiftUI
 
 struct POIDetailSheet: View {
 
+    // MARK: Properties
+
     let item: ResolvedItem
-    @ObservedObject var mapStore: MapStore
     let onStart: (RoutingService.RouteCalculationResult) -> Void
-
-    @State var routes: RoutingService.RouteCalculationResult?
-
-    @Environment(\.dismiss) private var dismiss
     let onDismiss: () -> Void
 
+    @State var routes: RoutingService.RouteCalculationResult?
+    @State var viewMore: Bool = false
+
+    @ObservedObject var routingStore: RoutingStore
+
     @EnvironmentObject var notificationQueue: NotificationQueue
+
+    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
-    @State var viewMore: Bool = false
+    // MARK: Computed Properties
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
         return self.item.subtitle.count > maxCharacters
     }
+
+    // MARK: Lifecycle
+
+    init(item: ResolvedItem, routingStore: RoutingStore, onStart: @escaping (RoutingService.RouteCalculationResult) -> Void, onDismiss: @escaping () -> Void) {
+        self.item = item
+        self.onStart = onStart
+        self.onDismiss = onDismiss
+        self.routingStore = routingStore
+    }
+
+    // MARK: Content
+
+    // MARK: - View
 
     var body: some View {
         ScrollView {
@@ -155,38 +172,42 @@ struct POIDetailSheet: View {
                 }
             }
         }
-        .onAppear {
-            self.calculateRoute(for: self.item)
+        .task {
+            await self.calculateRoute(for: self.item)
         }
         .onChange(of: self.item) { newItem in
-            self.calculateRoute(for: newItem)
-        }
-    }
-
-    private func calculateRoute(for item: ResolvedItem) {
-        Task {
-            guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
-                return
-            }
-            do {
-                let routes = try await self.mapStore.calculateRoute(from: userLocation, to: item.coordinate)
-                self.routes = routes
-            } catch {
-                let nsError = error as NSError
-                if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
-                    return
-                }
-
-                let notification = Notification(error: error)
-                self.notificationQueue.add(notification: notification)
+            Task {
+                await self.calculateRoute(for: newItem)
             }
         }
     }
 }
 
+// MARK: - Private
+
+private extension POIDetailSheet {
+
+    func calculateRoute(for item: ResolvedItem) async {
+        do {
+            let routes = try await self.routingStore.calculateRoute(for: item)
+            self.routes = routes
+        } catch {
+            let nsError = error as NSError
+            if nsError.domain == NSURLErrorDomain, nsError.code == NSURLErrorCancelled {
+                return
+            }
+
+            let notification = Notification(error: error)
+            self.notificationQueue.add(notification: notification)
+        }
+    }
+}
+
+// MARK: - Preview
+
 @available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     searchViewStore.mapStore.selectedItem = .artwork
-    return ContentView(searchStore: searchViewStore)
+    return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
 }

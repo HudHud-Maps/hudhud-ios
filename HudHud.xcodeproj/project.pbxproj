@@ -50,11 +50,13 @@
 		793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E69A6191475F5E54A62147D /* DirectionModeButton.swift */; };
 		79F27CAE0D2E895B98F74A3C /* PlusJakartaSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB904EE6E9CC9D7EF909FD1 /* PlusJakartaSans-MediumItalic.ttf */; };
 		7BA9280A0CF3479C97AE76AA /* RateNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1DAD5D70546BFCA560FDF9 /* RateNavigationView.swift */; };
+		7E0FCBD36F248D3870E23EA9 /* RoutingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */; };
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
 		825C6676E341DD543C305950 /* MapStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E21300E9BF61F5A403DE2CE /* MapStore.swift */; };
 		82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32589FE734D110C815A6168A /* LoggerSettings.swift */; };
 		854A602E692EA22AC381F9CA /* FavoritesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B93F731419F3A3A1A2869D /* FavoritesItem.swift */; };
 		8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */; };
+		8C2807D362FD49761D07A6DA /* OTPVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */; };
 		907F1F7E2BD4F95100B4993E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 907F1F7D2BD4F95100B4993E /* Localizable.xcstrings */; };
 		90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */; };
 		90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */; };
@@ -127,6 +129,7 @@
 		D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */; };
 		D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */; };
 		DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417081C775FE86E29A6F3437 /* SafariWebView.swift */; };
+		E2BC555E2CF27A641539C37F /* MapActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFEF94659C8BB3E872162A58 /* MapActionHandler.swift */; };
 		E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */; };
 		E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */; };
 		EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */; };
@@ -139,6 +142,7 @@
 		F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */; };
 		F4A353E85F0E0AF34C4240CE /* PlusJakartaSans-ExtraLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D96678092BFF998BE9F3D925 /* PlusJakartaSans-ExtraLight.ttf */; };
 		F7056410CE68B8E8068BD2F2 /* PlusJakartaSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = BBD57BB347BF0665C6B93EF9 /* PlusJakartaSans-Bold.ttf */; };
+		F9EB502B38BDE095F842C7D8 /* OTPVerificationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0345701786FBBD3E4678869 /* OTPVerificationStore.swift */; };
 		FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */; };
 		FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */; };
 		FD11999EDD04F4DA94768261 /* PlusJakartaSans-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */; };
@@ -176,6 +180,7 @@
 		1E69A6191475F5E54A62147D /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
 		23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
+		3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		417081C775FE86E29A6F3437 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
@@ -236,6 +241,7 @@
 		BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewStore.swift; sourceTree = "<group>"; };
 		C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationStatus.swift; sourceTree = "<group>"; };
 		C2F990BDBBAB0AC344EDE41E /* pannellum.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; path = pannellum.css; sourceTree = "<group>"; };
+		C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationView.swift; sourceTree = "<group>"; };
 		C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ABCRouteConfigurationData.swift; sourceTree = "<group>"; };
 		CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoriesBannerView.swift; sourceTree = "<group>"; };
 		CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatagoryBannerData.swift; sourceTree = "<group>"; };
@@ -279,10 +285,12 @@
 		DD1DAD5D70546BFCA560FDF9 /* RateNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateNavigationView.swift; sourceTree = "<group>"; };
 		DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolStyleLayer.swift; sourceTree = "<group>"; };
 		DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
+		DFEF94659C8BB3E872162A58 /* MapActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapActionHandler.swift; path = HudHud/Model/MapActionHandler.swift; sourceTree = "<group>"; };
 		E046BE7B50B5A99CC510EF49 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
 		E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
 		E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Italic.ttf"; sourceTree = "<group>"; };
 		EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchResultsView.swift; sourceTree = "<group>"; };
+		F0345701786FBBD3E4678869 /* OTPVerificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationStore.swift; sourceTree = "<group>"; };
 		F20D97482C46B9E300457928 /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
 		F20D97492C46B9E300457928 /* DownloadFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadFile.swift; sourceTree = "<group>"; };
 		F20D974D2C46C65600457928 /* SearchResultItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItemView.swift; sourceTree = "<group>"; };
@@ -445,6 +453,7 @@
 				BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */,
 				B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */,
 				5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */,
+				3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -476,6 +485,17 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		CD8F7CA8F3403D938AC063FD /* UserRegistration */ = {
+			isa = PBXGroup;
+			children = (
+				591002242C7DCB6600CF4707 /* UserLoginView.swift */,
+				591002282C7F260A00CF4707 /* LoginStore.swift */,
+				C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */,
+				F0345701786FBBD3E4678869 /* OTPVerificationStore.swift */,
+			);
+			path = UserRegistration;
+			sourceTree = "<group>";
+		};
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
@@ -487,6 +507,7 @@
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
 				E046BE7B50B5A99CC510EF49 /* CI.xctestplan */,
+				DFEF94659C8BB3E872162A58 /* MapActionHandler.swift */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -580,9 +601,8 @@
 				CB5F74C72C74A6B900E6FAC0 /* FiltersView */,
 				F2AF14EE2C50F6F4003E4F54 /* StreetView */,
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
-				591002242C7DCB6600CF4707 /* UserLoginView.swift */,
-				591002282C7F260A00CF4707 /* LoginStore.swift */,
 				5910022E2C84787A00CF4707 /* PersonalInformationScreenView.swift */,
+				CD8F7CA8F3403D938AC063FD /* UserRegistration */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -821,7 +841,7 @@
 				CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
 				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
-				CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */,
+				CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1002,6 +1022,10 @@
 				2670A068B017EEE420D01F3B /* UIColor.swift in Sources */,
 				E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */,
 				980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */,
+				8C2807D362FD49761D07A6DA /* OTPVerificationView.swift in Sources */,
+				F9EB502B38BDE095F842C7D8 /* OTPVerificationStore.swift in Sources */,
+				E2BC555E2CF27A641539C37F /* MapActionHandler.swift in Sources */,
+				7E0FCBD36F248D3870E23EA9 /* RoutingStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1384,7 +1408,7 @@
 				kind = branch;
 			};
 		};
-		CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */ = {
+		CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke?tab=readme-ov-file";
 			requirement = {
@@ -1489,22 +1513,22 @@
 		};
 		CB04071E2C7F6D0C0090075B /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
 			productName = Nuke;
 		};
 		CB0407202C7F6D0C0090075B /* NukeExtensions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
 			productName = NukeExtensions;
 		};
 		CB0407222C7F6D0C0090075B /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
 			productName = NukeUI;
 		};
 		CB0407242C7F6D0C0090075B /* NukeVideo */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
 			productName = NukeVideo;
 		};
 		CB0407262C7F6DD00090075B /* SwiftLint */ = {

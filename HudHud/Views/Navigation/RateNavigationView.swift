@@ -18,7 +18,7 @@ struct RateNavigationView: View {
         .MOOD_SMILE_2,
         .MOOD_SMILE_1
     ]
-    @ObservedObject var mapStore: MapStore
+    @ObservedObject var mapViewStore: MapViewStore
     @State private var selecteFace: Int?
     @State private var currentTask: Task<Void, Never>?
     @State private var animate = false
@@ -61,15 +61,15 @@ struct RateNavigationView: View {
                     }
                 }
                 .padding(.top)
-                .onChange(of: self.mapStore.selectedDetent) { _ in
-                    if self.mapStore.selectedDetent == .small {
+                .onChange(of: self.mapViewStore.selectedDetent) { _ in
+                    if self.mapViewStore.selectedDetent == .small {
                         self.onDismiss()
                     }
                 }
             }
             .padding(.top)
             .onAppear { // if smaller screen = bigger sheet to fit content
-                self.mapStore.allowedDetents = (self.smallScreen ? [.nearHalf] : [.small, .third])
+                self.mapViewStore.allowedDetents = (self.smallScreen ? [.nearHalf] : [.small, .third])
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -118,9 +118,7 @@ struct RateNavigationView: View {
 }
 
 #Preview {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-
-    return RateNavigationView(mapStore: searchViewStore.mapStore, selectedFace: { face in
+    RateNavigationView(mapViewStore: .storeSetUpForPreviewing, selectedFace: { face in
         Logger.navigationViewRating.log("\(face)")
     }, onDismiss: {})
 }
