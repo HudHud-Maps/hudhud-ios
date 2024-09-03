@@ -76,7 +76,7 @@ final class SearchViewStore: ObservableObject {
     @Published var isSheetLoading = false
     @Published var searchType: SearchType = .selectPOI
 
-    @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
+    /*@AppStorage("RecentViewedItem")*/ var recentViewedItem: [ResolvedItem] = .init()
 
     private let mapViewStore: MapViewStore
 

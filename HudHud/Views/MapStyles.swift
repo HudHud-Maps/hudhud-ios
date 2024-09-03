@@ -61,11 +61,11 @@ class CustomDayStyle: DayStyle {
         ManeuverView.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
 
         CancelButton.appearance().textColor = .white
-        CancelButton.appearance().text = "Cancel"
-        CancelButton.appearance().icon = nil
+//        CancelButton.appearance().text = "Cancel"
+//        CancelButton.appearance().icon = nil
         CancelButton.appearance().backgroundColor = .systemRed
         CancelButton.appearance().cornerRadius = 12
-        CancelButton.appearance().overrideIntrinsicContentSize = CGSize(width: 100, height: 56)
+//        CancelButton.appearance().overrideIntrinsicContentSize = CGSize(width: 100, height: 56)
 
         SeparatorView.appearance().isHidden = true
     }

@@ -219,24 +219,26 @@ extension SearchSheet {
 
 // MARK: - RawRepresentable + RawRepresentable
 
-extension [ResolvedItem]: RawRepresentable {
-    public init?(rawValue: String) {
-        guard let data = rawValue.data(using: .utf8),
-              let result = try? JSONDecoder()
-                  .decode([ResolvedItem].self, from: data) else {
-            return nil
-        }
-        self = result
-    }
+/*
+ extension [ResolvedItem]: RawRepresentable {
+     public init?(rawValue: String) {
+         guard let data = rawValue.data(using: .utf8),
+               let result = try? JSONDecoder()
+                   .decode([ResolvedItem].self, from: data) else {
+             return nil
+         }
+         self = result
+     }
 
-    public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self) else {
-            return "[]"
-        }
-        let result = String(decoding: data, as: UTF8.self)
-        return result
-    }
-}
+     public var rawValue: String {
+         guard let data = try? JSONEncoder().encode(self) else {
+             return "[]"
+         }
+         let result = String(decoding: data, as: UTF8.self)
+         return result
+     }
+ }
+ */
 
 #Preview {
     let trendingStroe = TrendingStore()

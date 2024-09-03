@@ -175,6 +175,13 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
 
 public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringConvertible {
 
+    // MARK: Nested Types
+
+    public struct Coordinates: Codable, Equatable {
+        var latitude: CLLocationDegrees
+        var longitude: CLLocationDegrees
+    }
+
     // MARK: Properties
 
     public var id: String
@@ -184,7 +191,6 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var systemColor: SystemColor
     public var category: String?
     public let type: PredictionResult
-    public var coordinate: CLLocationCoordinate2D
     public var phone: String?
     public var website: URL?
     public var rating: Double?
@@ -193,6 +199,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var trendingImage: String?
     public var mediaURLs: [URL]
     public let distance: Double?
+
+    private var _coordinate: Coordinates
 
     // MARK: Computed Properties
 
@@ -204,6 +212,10 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.systemColor.swiftUIColor
     }
 
+    public var coordinate: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: self._coordinate.latitude, longitude: self._coordinate.longitude)
+    }
+
     // MARK: Lifecycle
 
     public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
@@ -213,7 +225,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.category = category
         self.symbol = symbol
         self.type = type
-        self.coordinate = coordinate
+        self._coordinate = Coordinates(latitude: coordinate.latitude, longitude: coordinate.longitude)
         self.phone = phone
         self.website = website
         self.rating = rating

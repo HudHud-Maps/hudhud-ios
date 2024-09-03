@@ -30,10 +30,10 @@
     {
       "identity" : "maplibre-navigation-ios",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
+      "location" : "https://github.com/maplibre/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "show-current-speed",
-        "revision" : "29032b83c8fbb503e9e7e926df7ed8cc43d3ea5f"
+        "branch" : "main",
+        "revision" : "96689dbbb92311b5c4f867d000534184a2fa90c9"
       }
     },
     {
@@ -255,10 +255,10 @@
     {
       "identity" : "turf-swift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flitsmeister/turf-swift",
+      "location" : "https://github.com/mapbox/turf-swift.git",
       "state" : {
-        "revision" : "b05b4658d1b48eac4127a0d9ebbb5a6f965a8251",
-        "version" : "0.2.2"
+        "revision" : "213050191cfcb3d5aa76e1fa90c6ff1e182a42ca",
+        "version" : "2.8.0"
       }
     },
     {
