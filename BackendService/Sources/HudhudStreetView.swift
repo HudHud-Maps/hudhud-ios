@@ -73,7 +73,9 @@ public struct HudhudStreetView {
     }
 
     public func getStreetViewDetails(id: Int, baseURL: String) async throws -> StreetViewItem? {
-        let response = try await Client.makeClient(using: baseURL).getStreetViewImage(path: .init(id: id))
+        let response = try await Client.makeClient(using: baseURL).getStreetViewImage(
+            path: Operations.getStreetViewImage.Input.Path(id: id)
+        )
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

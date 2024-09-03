@@ -26,16 +26,18 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
+    @ObservedObject var mapViewStore: MapViewStore
     @Environment(\.dismiss) var dismiss
 
     @FocusState private var searchIsFocused: Bool
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
+        self.mapViewStore = mapViewStore
         self.searchIsFocused = false
     }
 
@@ -117,7 +119,6 @@ struct SearchSheet: View {
                             switch item {
                             case let .categoryItem(categoryItem):
                                 CategoryItemView(item: categoryItem) {
-                                    self.mapStore.selectedDetent = .third
                                     self.mapStore.selectedItem = categoryItem
                                 }
                                 .listRowSeparator(.hidden)
@@ -161,7 +162,7 @@ struct SearchSheet: View {
                 } else {
                     if self.searchStore.searchType != .favorites {
                         SearchSectionView(title: "Favorites") {
-                            FavoriteCategoriesView(mapStore: self.mapStore, searchStore: self.searchStore)
+                            FavoriteCategoriesView(mapViewStore: self.mapViewStore, searchStore: self.searchStore)
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                         .listRowSeparator(.hidden)
@@ -175,7 +176,7 @@ struct SearchSheet: View {
                         .listRowSeparator(.hidden)
                     }
                     SearchSectionView(title: "Recents") {
-                        RecentSearchResultsView(mapStore: self.mapStore, searchStore: self.searchStore, searchType: self.searchStore.searchType)
+                        RecentSearchResultsView(searchStore: self.searchStore, searchType: self.searchStore.searchType)
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)
@@ -238,7 +239,6 @@ extension [ResolvedItem]: RawRepresentable {
 }
 
 #Preview {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: searchViewStore.mapStore, searchStore: searchViewStore, trendingStore: trendingStroe)
+    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing)
 }

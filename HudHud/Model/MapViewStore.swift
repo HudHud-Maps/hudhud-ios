@@ -7,36 +7,38 @@
 //
 
 import BackendService
-import Foundation
+import Combine
 import MapLibre
 import OSLog
-import SFSafeSymbols
-
-// MARK: - SelectedPointOfInterest
-
-enum SelectedPointOfInterest {
-    // selected item from the search results
-    case searchSuggestion(id: String)
-    // selected item from the map itself
-    case mapElement(ResolvedItem)
-    // selected item from street view
-    case streetViewScene(id: Int)
-}
+import SwiftUI
 
 // MARK: - MapViewStore
 
 @MainActor
-class MapViewStore {
+final class MapViewStore: ObservableObject {
 
     // MARK: Properties
 
+    @Published var path = NavigationPath()
+
+    @Published var selectedDetent: PresentationDetent = .small
+    @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+
+    private let mapActionHandler: MapActionHandler
+    private let routingStore: RoutingStore
     private let mapStore: MapStore
-    private let hudhudResolver = HudHudPOI()
+
+    private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore) {
+    init(mapStore: MapStore, routingStore: RoutingStore) {
+        self.mapActionHandler = MapActionHandler(mapStore: mapStore)
         self.mapStore = mapStore
+        self.routingStore = routingStore
+        self.showPotentialRouteWhenAvailable()
+        self.updateDetentWhenAppropriate()
+        self.showSelectedDetentWhenSelectingAnItem()
     }
 
     // MARK: Functions
@@ -44,119 +46,156 @@ class MapViewStore {
     // MARK: - Internal
 
     func didTapOnMap(containing features: [any MLNFeature]) {
-        if self.mapStore.displayableItems.count == 1 {
-            self.mapStore.displayableItems = []
-        }
-        guard let item = extractItemTapped(from: features) else {
+        let didHaveAnAction = self.mapActionHandler.didTapOnMap(containing: features)
+        if !didHaveAnAction {
             // user tapped nothing - deselect
             Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-            if !self.mapStore.path.isEmpty {
-                self.mapStore.path.removeLast()
+            if !self.path.isEmpty {
+                self.path.removeLast()
             }
             self.mapStore.selectedItem = nil
+        }
+    }
+
+    func reset() {
+        self.resetAllowedDetents()
+        self.selectedDetent = .small
+        if !self.path.isEmpty {
+            self.path.removeLast()
+        }
+    }
+
+    func resetAllowedDetents() {
+        self.allowedDetents = [.small, .medium, .large]
+    }
+}
+
+private extension MapViewStore {
+    func showPotentialRouteWhenAvailable() {
+        self.routingStore.$potentialRoute
+            .compactMap { $0 }
+            .debounce(for: 0.3, scheduler: DispatchQueue.main)
+            .sink { [weak self] newPotentialRoute in
+                guard let self,
+                      self.path.contains(RoutingService.RouteCalculationResult.self) == false else { return }
+                self.path.append(newPotentialRoute)
+                self.mapStore.updateCamera(state: .route(newPotentialRoute))
+            }
+            .store(in: &self.subscriptions)
+    }
+
+    func updateDetentWhenAppropriate() {
+        Publishers.CombineLatest3(
+            self.routingStore.$navigatingRoute,
+            self.$path,
+            self.mapStore.$displayableItems
+        )
+        .sink { [weak self] navigatingRoute, path, items in
+            guard let self else { return }
+            let elements = try? path.elements()
+            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil {
+                true
+            } else {
+                !items.isEmpty
+            }
+            let isCurrentSheetListOfCategories = if case .categoryItem = items.first {
+                true
+            } else {
+                false
+            }
+            self.updateSelectedSheetDetent(
+                isCurrentlyNavigating: navigatingRoute != nil,
+                navigationPathItem: elements?.last,
+                isThereAnyPOIsOnTheMap: isThereAnyPOIsOnTheMap,
+                isCurrentSheetListOfCategories: isCurrentSheetListOfCategories
+            )
+        }
+        .store(in: &self.subscriptions)
+    }
+
+    func showSelectedDetentWhenSelectingAnItem() {
+        self.mapStore.$selectedItem
+            .compactMap { $0 }
+            .sink { [weak self] selectedItem in
+                guard let self, self.routingStore.potentialRoute == nil else {
+                    return
+                }
+                if !self.path.isEmpty {
+                    self.path.removeLast()
+                }
+                self.path.append(selectedItem)
+            }
+            .store(in: &self.subscriptions)
+    }
+
+    /**
+     This function determines the appropriate sheet detent based on the current state of the map store and search text.
+
+     Current Criteria:
+     - If there are routes available or a selected item, the sheet detent is set to `.medium`.
+     - If the search text is not empty, the sheet detent is set to `.medium`.
+     - Otherwise, the sheet detent is set to `.small`.
+
+     Important Note:
+     This function relies on changes to the `mapStore.routes`, `mapStore.selectedItem`, and `searchText`. If additional criteria are added in the future (e.g., `mapItems`), ensure to:
+     1. Update this function to include the new criteria.
+     2. Set up the appropriate observers for the new criteria to call `updateSheetDetent`.
+
+     Failure to do so can result in the function not updating the detent properly when the new criteria change.
+     **/
+
+    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, isThereAnyPOIsOnTheMap: Bool, isCurrentSheetListOfCategories: Bool) {
+        if isCurrentlyNavigating {
+            let closed: PresentationDetent = .height(0)
+            self.allowedDetents = [closed]
+            self.selectedDetent = closed
             return
         }
-        switch item {
-        case let .searchSuggestion(placeID):
-            let poi = self.mapStore.mapItems.first { poi in
-                poi.id == placeID
-            }
 
-            if let poi {
-                Logger.mapInteraction.debug("setting poi")
-                self.mapStore.selectedItem = poi
+        // If routes exist or an item is selected, use the medium detent
+
+        guard let navigationPathItem else {
+            self.allowedDetents = [.small, .third, .large]
+            if isThereAnyPOIsOnTheMap, !isCurrentSheetListOfCategories {
+                self.selectedDetent = .small
             } else {
-                Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
+                self.selectedDetent = .third
             }
-        case let .mapElement(item):
-            Task {
-                await self.mapStore.resolve(item)
+            return
+        }
+
+        if let sheetSubview = navigationPathItem as? SheetSubView {
+            switch sheetSubview {
+            case .mapStyle:
+                self.allowedDetents = [.medium]
+                self.selectedDetent = .medium
+            case .debugView:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
+            case .navigationAddSearchView:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
+            case .favorites:
+                self.allowedDetents = [.large]
+                self.selectedDetent = .large
             }
-        case let .streetViewScene(sceneID):
-            Task {
-                await self.mapStore.loadStreetViewScene(id: sceneID)
-            }
+        }
+        if navigationPathItem is ResolvedItem {
+            self.allowedDetents = [.small, .third, .nearHalf, .large]
+            self.selectedDetent = .nearHalf
+        }
+        if navigationPathItem is RoutingService.RouteCalculationResult {
+            self.allowedDetents = [.height(150), .nearHalf]
+            self.selectedDetent = .nearHalf
         }
     }
 }
 
-// MARK: - Private
+// MARK: - Previewable
 
-private extension MapViewStore {
-
-    func extractItemTapped(from features: [any MLNFeature]) -> SelectedPointOfInterest? {
-        for feature in features {
-            if let poi = feature.attribute(forKey: "poi_id") as? String {
-                return .searchSuggestion(id: poi)
-            } else if let item = extractItem(from: feature) {
-                return .mapElement(item)
-            } else if let item = extractStreetViewSceneItem(from: feature) {
-                return .streetViewScene(id: item)
-            }
-        }
-        return nil
-    }
-
-    func extractItem(from feature: any MLNFeature) -> ResolvedItem? {
-        guard let feature = feature as? MLNPointFeature,
-              let id = feature.attribute(forKey: "id") as? Int,
-              (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String != nil,
-              (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) as? String != nil else { return nil }
-
-        let colorString = feature.attribute(forKey: "ios_category_icon_color") as? String
-
-        return ResolvedItem(
-            id: String(id),
-            title: localized(
-                english: feature.attribute(forKey: "name_en") as? String,
-                arabic: feature.attribute(forKey: "name_ar") as? String
-            ),
-            subtitle: localized(
-                english: feature.attribute(forKey: "description_en") as? String,
-                arabic: feature.attribute(forKey: "description_ar") as? String
-            ),
-            category: localized(
-                english: feature.attribute(forKey: "category_en") as? String,
-                arabic: feature.attribute(forKey: "category_ar") as? String
-            ),
-            symbol: self.symbol(from: feature) ?? .pin,
-            type: .hudhud,
-            coordinate: feature.coordinate,
-            color: SystemColor(rawValue: colorString ?? "") ?? .systemRed,
-            phone: feature.attribute(forKey: "phone_number") as? String,
-            website: self.website(from: feature),
-            rating: feature.attribute(forKey: "rating") as? Double,
-            ratingsCount: feature.attribute(forKey: "ratings_count") as? Int
-        )
-    }
-
-    func extractStreetViewSceneItem(from feature: any MLNFeature) -> Int? {
-        guard let feature = feature as? MLNPointFeature else { return nil }
-
-        if feature.attribute(forKey: "source") as? String == "mosaic" {
-            guard let id = feature.attribute(forKey: "id") as? Int else { return nil }
-            return id
-//            guard let fileName = feature.attribute(forKey: "FileName") as? String else { return nil }
-//            return StreetViewScene(id: id, name: fileName, nextId: nil, nextName: nil, previousId: nil, previousName: nil, westId: nil, westName: nil, eastId: nil, eastName: nil, lat: 0.0, lon: 0.0)
-        }
-
-        return nil
-    }
-
-    func website(from feature: MLNPointFeature) -> URL? {
-        if let stringURL = feature.attribute(forKey: "website") as? String {
-            URL(string: stringURL)
-        } else {
-            nil
-        }
-    }
-
-    func symbol(from feature: MLNPointFeature) -> SFSymbol? {
-        if let symbolString = feature.attribute(forKey: "ios_category_icon_name") as? String {
-            // we cannot create sf symbol in a type safe way here as we are parsing the symbol name from an outside source (the map)
-            SFSymbol(rawValue: symbolString) // swiftlint:disable:this sf_symbol_init
-        } else {
-            nil
-        }
-    }
+extension MapViewStore: Previewable {
+    static let storeSetUpForPreviewing = MapViewStore(
+        mapStore: .storeSetUpForPreviewing,
+        routingStore: .storeSetUpForPreviewing
+    )
 }

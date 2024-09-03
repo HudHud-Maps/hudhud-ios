@@ -48,20 +48,21 @@ struct ContentView: View {
     @ObservedObject private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
+    @ObservedObject private var mapViewStore: MapViewStore
 
     @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore) {
+    init(searchStore: SearchViewStore, mapViewStore: MapViewStore) {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.userLocationStore = searchStore.mapStore.userLocationStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
-        self.mapStore.routes = searchStore.mapStore.routes
+        self.mapViewStore = mapViewStore
     }
 
     // MARK: Content
@@ -73,6 +74,7 @@ struct ContentView: View {
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
+                mapViewStore: self.mapViewStore,
                 sheetSize: self.sheetSize
             )
             .task {
@@ -91,12 +93,12 @@ struct ContentView: View {
             .ignoresSafeArea()
             .edgesIgnoringSafeArea(.all)
             .safeAreaInset(edge: .bottom) {
-                if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
+                if self.searchViewStore.routingStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
                             MapButtonsView(mapButtonsData: [
                                 MapButtonData(sfSymbol: .icon(.map)) {
-                                    self.mapStore.path.append(SheetSubView.mapStyle)
+                                    self.mapViewStore.path.append(SheetSubView.mapStyle)
                                 },
                                 MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
                                     switch self.searchViewStore.mode {
@@ -117,7 +119,7 @@ struct ContentView: View {
                                     }
                                 },
                                 MapButtonData(sfSymbol: .icon(.terminal)) {
-                                    self.mapStore.path.append(SheetSubView.debugView)
+                                    self.mapViewStore.path.append(SheetSubView.debugView)
                                 }
                             ])
 
@@ -147,16 +149,16 @@ struct ContentView: View {
                             CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
-                    .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
+                    .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
                     .padding(.horizontal)
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
-                get: { self.mapStore.navigationProgress == .none || self.mapStore.navigationProgress == .feedback },
+                get: { self.searchViewStore.routingStore.navigationProgress == .none || self.searchViewStore.routingStore.navigationProgress == .feedback },
                 set: { _ in }
             )) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -178,10 +180,10 @@ struct ContentView: View {
                 }
             })
             VStack {
-                if self.mapStore.navigationProgress == .none, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
+                if self.searchViewStore.routingStore.navigationProgress == .none, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
-                        .opacity(self.mapStore.selectedDetent == .nearHalf ? 0 : 1)
+                        .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
             }
@@ -198,8 +200,8 @@ struct ContentView: View {
                     self.mapStore.searchShown = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
-            .onChange(of: self.mapStore.selectedDetent) { _ in
-                if self.mapStore.selectedDetent == .small {
+            .onChange(of: self.mapViewStore.selectedDetent) { _ in
+                if self.mapViewStore.selectedDetent == .small {
                     Task {
                         await self.reloadPOITrending()
                     }
@@ -233,7 +235,6 @@ struct ContentView: View {
             Logger.searchView.error("\(error.localizedDescription)")
         }
     }
-
 }
 
 // MARK: - SimpleToastOptions
@@ -260,14 +261,13 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview("Main Map") {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return ContentView(searchStore: searchViewStore)
+    return ContentView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
 }
 
 #Preview("Touch Testing") {
     let store: SearchViewStore = .storeSetUpForPreviewing
     store.searchText = "shops"
-    return ContentView(searchStore: store)
+    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
 }
 
 #Preview("NavigationPreview") {
@@ -278,11 +278,10 @@ struct SizePreferenceKey: PreferenceKey {
                            subtitle: "Al-Olya - Riyadh",
                            type: .hudhud,
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi
-    return ContentView(searchStore: store)
+    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
 }
 
 extension Binding where Value == Bool {
@@ -316,7 +315,6 @@ extension NavigationViewController: MapViewHostViewController {
                            subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
                            type: .appleResolved,
                            coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
-                           color: .systemRed,
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     let artwork = ResolvedItem(id: UUID().uuidString,
@@ -324,7 +322,6 @@ extension NavigationViewController: MapViewHostViewController {
                                subtitle: "artwork - Al-Olya - Riyadh",
                                type: .hudhud,
                                coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-                               color: .systemRed,
                                phone: "0503539560",
                                website: URL(string: "https://hudhud.sa"))
 
@@ -333,11 +330,10 @@ extension NavigationViewController: MapViewHostViewController {
                                 subtitle: "Al-Olya - Riyadh",
                                 type: .hudhud,
                                 coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                                color: .systemRed,
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(searchStore: store)
+    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
 }
 
 extension MapLayerIdentifier {
@@ -353,5 +349,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 0))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 0))
 }

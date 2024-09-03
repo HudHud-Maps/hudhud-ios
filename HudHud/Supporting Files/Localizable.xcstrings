@@ -129,6 +129,9 @@
     "description" : {
 
     },
+    "Didn't Get the Code?" : {
+
+    },
     "Direction" : {
       "comment" : "navigation sheet header",
       "extractionState" : "stale",
@@ -157,6 +160,9 @@
 
     },
     "Enable Touch Visualizer" : {
+
+    },
+    "Enter your Verification Code" : {
 
     },
     "Fastest" : {
@@ -322,6 +328,9 @@
         }
       }
     },
+    "Resend Code %@" : {
+
+    },
     "Reset" : {
 
     },
@@ -400,6 +409,9 @@
     "User is on Route" : {
 
     },
+    "Verify" : {
+
+    },
     "View More" : {
 
     },
@@ -412,6 +424,9 @@
           }
         }
       }
+    },
+    "We sent verification code on" : {
+
     },
     "Web" : {
       "extractionState" : "stale",
