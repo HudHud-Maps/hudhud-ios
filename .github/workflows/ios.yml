@@ -61,7 +61,7 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Test
-        run: set -o pipefail && xcodebuild test -scheme HudHud -testPlan CI -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
+        run: set -o pipefail && xcodebuild test -scheme HudHud -testPlan HudHud -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
         
       - name: Cache Dependencies
         uses: actions/cache@v3
