@@ -186,7 +186,7 @@ struct MapViewContainer: View {
             }
         })
         .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
-        .onChange(of: self.searchViewStore.routingStore.potentialRoute) { newRoute in
+        .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
             if let routeUnwrapped = newRoute,
                let route = routeUnwrapped.routes.first,
                let coordinates = route.coordinates,

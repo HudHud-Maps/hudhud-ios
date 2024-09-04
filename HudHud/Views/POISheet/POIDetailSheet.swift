@@ -175,7 +175,7 @@ struct POIDetailSheet: View {
         .task {
             await self.calculateRoute(for: self.item)
         }
-        .onChange(of: self.item) { newItem in
+        .onChange(of: self.item) { _, newItem in
             Task {
                 await self.calculateRoute(for: newItem)
             }

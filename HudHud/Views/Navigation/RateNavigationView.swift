@@ -61,7 +61,7 @@ struct RateNavigationView: View {
                     }
                 }
                 .padding(.top)
-                .onChange(of: self.mapViewStore.selectedDetent) { _ in
+                .onChange(of: self.mapViewStore.selectedDetent) {
                     if self.mapViewStore.selectedDetent == .small {
                         self.onDismiss()
                     }
