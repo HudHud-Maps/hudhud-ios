@@ -181,7 +181,7 @@
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
-		3E43F0BA4C0B6387C63C0144 /* MapActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MapActionHandler.swift; path = HudHud/Model/MapActionHandler.swift; sourceTree = "<group>"; };
+		3E43F0BA4C0B6387C63C0144 /* MapActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapActionHandler.swift; sourceTree = "<group>"; };
 		417081C775FE86E29A6F3437 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceIdentifier.swift; sourceTree = "<group>"; };
 		471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -444,6 +444,7 @@
 		AC313C27FE655AA88C1E9F69 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				3E43F0BA4C0B6387C63C0144 /* MapActionHandler.swift */,
 				4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */,
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
@@ -505,7 +506,6 @@
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
 				E046BE7B50B5A99CC510EF49 /* CI.xctestplan */,
-				3E43F0BA4C0B6387C63C0144 /* MapActionHandler.swift */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
