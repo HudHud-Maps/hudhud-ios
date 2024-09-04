@@ -37,7 +37,7 @@ struct RateNavigationView: View {
                     .foregroundColor(.green)
                     .scaledToFit()
                     .frame(width: 75, height: 75)
-                    .backport.symbolEffect(animate: self.animate)
+                    .symbolEffect(.bounce.down, value: self.animate)
                 VStack(alignment: .center, spacing: 5) {
                     Text("You Have Arrived")
                         .hudhudFont(.title)
@@ -61,7 +61,7 @@ struct RateNavigationView: View {
                     }
                 }
                 .padding(.top)
-                .onChange(of: self.mapViewStore.selectedDetent) { _ in
+                .onChange(of: self.mapViewStore.selectedDetent) {
                     if self.mapViewStore.selectedDetent == .small {
                         self.onDismiss()
                     }
