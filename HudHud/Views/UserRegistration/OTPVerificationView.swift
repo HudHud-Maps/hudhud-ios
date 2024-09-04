@@ -74,11 +74,11 @@ struct OTPVerificationView: View {
                 Button(action: {
                     // Currently only reset the timer but it should also send new code to the user
                     self.store.resetTimer()
-                }) {
+                }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
                         .cornerRadius(8)
-                }
+                })
                 .disabled(!self.store.resendEnabled)
                 .padding(.bottom)
                 Button(action: {
