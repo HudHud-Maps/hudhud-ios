@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "show-current-speed",
-        "revision" : "29032b83c8fbb503e9e7e926df7ed8cc43d3ea5f"
+        "branch" : "fix/lanes-view-not-hidden-when-it-should-be-hidden",
+        "revision" : "923bd487e1f89d795984c0dfff42efa400b141c1"
       }
     },
     {
