@@ -25,7 +25,7 @@ struct RecentSearchResultsView: View {
     // MARK: Content
 
     var body: some View {
-        ForEach(self.searchStore.recentViewedItem) { item in
+        ForEach(self.searchStore.recentViewedItems.items) { item in
             HStack(alignment: .center, spacing: 12) {
                 Image(systemSymbol: item.symbol)
                     .resizable()
@@ -81,7 +81,7 @@ struct RecentSearchResultsView: View {
             }
         }
         .onDelete { indexSet in
-            self.searchStore.recentViewedItem.remove(atOffsets: indexSet)
+            self.searchStore.recentViewedItems.items.remove(atOffsets: indexSet)
         }
         .listRowSeparator(.hidden)
     }

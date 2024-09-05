@@ -1,6 +1,6 @@
 //
 //  DictionaryConvertable.swift
-//  POIService
+//  BackendService
 //
 //  Created by Patrick Kladek on 12.02.24.
 //  Copyright © 2024 HudHud. All rights reserved.

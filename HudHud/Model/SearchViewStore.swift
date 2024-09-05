@@ -76,7 +76,7 @@ final class SearchViewStore: ObservableObject {
     @Published var isSheetLoading = false
     @Published var searchType: SearchType = .selectPOI
 
-    /*@AppStorage("RecentViewedItem")*/ var recentViewedItem: [ResolvedItem] = .init()
+    @AppStorage("RecentViewedItem") var recentViewedItems: ResolvedItems = .init()
 
     private let mapViewStore: MapViewStore
 
@@ -124,7 +124,7 @@ final class SearchViewStore: ObservableObject {
         if case .preview = mode {
             let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
-            self.recentViewedItem = [itemOne, itemTwo]
+            self.recentViewedItems = ResolvedItems(items: [itemOne, itemTwo])
         }
     }
 
@@ -226,13 +226,13 @@ final class SearchViewStore: ObservableObject {
     }
 
     func storeInRecent(_ item: ResolvedItem) {
-        if self.recentViewedItem.count > 9 {
-            self.recentViewedItem.removeLast()
+        if self.recentViewedItems.items.count > 9 {
+            self.recentViewedItems.items.removeLast()
         }
-        if self.recentViewedItem.contains(item) {
-            self.recentViewedItem.removeAll(where: { $0 == item })
+        if self.recentViewedItems.items.contains(item) {
+            self.recentViewedItems.items.removeAll(where: { $0 == item })
         }
-        self.recentViewedItem.insert(item, at: 0)
+        self.recentViewedItems.items.insert(item, at: 0)
     }
 }
 
@@ -307,4 +307,40 @@ private extension SearchViewStore {
 extension SearchViewStore: Previewable {
 
     static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, mode: .preview)
+}
+
+// MARK: - ResolvedItems
+
+struct ResolvedItems {
+
+    // MARK: Properties
+
+    var items: [ResolvedItem]
+
+    // MARK: Lifecycle
+
+    init(items: [ResolvedItem] = []) {
+        self.items = items
+    }
+}
+
+// MARK: - RawRepresentable
+
+extension ResolvedItems: RawRepresentable {
+    public init?(rawValue: String) {
+        guard let data = rawValue.data(using: .utf8),
+              let result = try? JSONDecoder()
+                  .decode([ResolvedItem].self, from: data) else {
+            return nil
+        }
+        self = ResolvedItems(items: result)
+    }
+
+    public var rawValue: String {
+        guard let data = try? JSONEncoder().encode(self.items) else {
+            return "[]"
+        }
+        let result = String(decoding: data, as: UTF8.self)
+        return result
+    }
 }

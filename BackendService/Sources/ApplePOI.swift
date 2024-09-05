@@ -1,6 +1,6 @@
 //
 //  ApplePOI.swift
-//  ApplePOI
+//  BackendService
 //
 //  Created by Patrick Kladek on 01.02.24.
 //  Copyright © 2024 HudHud. All rights reserved.

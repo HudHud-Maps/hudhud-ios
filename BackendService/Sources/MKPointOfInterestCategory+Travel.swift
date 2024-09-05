@@ -1,6 +1,6 @@
 //
 //  MKPointOfInterestCategory+Travel.swift
-//  ApplePOI
+//  BackendService
 //
 //  Created by Patrick Kladek on 14.02.24.
 //  Copyright © 2024 HudHud. All rights reserved.
