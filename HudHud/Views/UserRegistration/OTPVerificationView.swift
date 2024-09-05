@@ -57,7 +57,7 @@ struct OTPVerificationView: View {
                             .frame(width: 40, height: 50)
                             .hudhudFont(.title3)
                             .background(self.bottomBorder(for: index), alignment: .bottom)
-                            .onChange(of: self.store.code[index]) { newCode in
+                            .onChange(of: self.store.code[index]) { _, newCode in
                                 self.handleCode(newCode, at: index)
                             }
                     }
@@ -74,11 +74,11 @@ struct OTPVerificationView: View {
                 Button(action: {
                     // Currently only reset the timer but it should also send new code to the user
                     self.store.resetTimer()
-                }) {
+                }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
                         .cornerRadius(8)
-                }
+                })
                 .disabled(!self.store.resendEnabled)
                 .padding(.bottom)
                 Button(action: {

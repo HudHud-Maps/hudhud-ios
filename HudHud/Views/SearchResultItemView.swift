@@ -139,7 +139,6 @@ struct SearchResultItem {
     }
 }
 
-@available(iOS 17, *)
 #Preview(traits: .sizeThatFitsLayout) {
     @State var searchText: String = ""
     return SearchResultItemView(

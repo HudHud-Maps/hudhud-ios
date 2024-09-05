@@ -95,7 +95,7 @@ struct FavoritesViewMoreView: View {
         .sheet(isPresented: self.$searchSheetShown) {
             self.searchSheetView()
         }
-        .onChange(of: self.searchSheetShown) { _ in
+        .onChange(of: self.searchSheetShown) {
             self.mapViewStore.path.append(SheetSubView.favorites)
         }
     }
