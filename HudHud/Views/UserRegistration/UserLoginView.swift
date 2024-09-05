@@ -55,7 +55,7 @@ struct UserLoginView: View {
                     OTPVerificationView(phoneNumber: self.bindingForInput.wrappedValue, path: self.$path)
                         .toolbarRole(.editor)
                 case .personalInfoView:
-                    PersonalInformationScreenView(path: self.$path)
+                    PersonalInformationScreenView()
                         .toolbarRole(.editor)
                 }
             }
