@@ -489,6 +489,7 @@
 		CD8F7CA8F3403D938AC063FD /* UserRegistration */ = {
 			isa = PBXGroup;
 			children = (
+				5910022E2C84787A00CF4707 /* PersonalInformationScreenView.swift */,
 				591002242C7DCB6600CF4707 /* UserLoginView.swift */,
 				591002282C7F260A00CF4707 /* LoginStore.swift */,
 				C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */,
@@ -601,7 +602,6 @@
 				CB5F74C72C74A6B900E6FAC0 /* FiltersView */,
 				F2AF14EE2C50F6F4003E4F54 /* StreetView */,
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
-				5910022E2C84787A00CF4707 /* PersonalInformationScreenView.swift */,
 				CD8F7CA8F3403D938AC063FD /* UserRegistration */,
 			);
 			path = Views;
@@ -733,7 +733,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CB0407272C7F6DD00090075B /* PBXTargetDependency */,
+				CB7033B12C89DE0F0006681E /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -841,7 +841,7 @@
 				CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
 				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
-				CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */,
+				CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1049,9 +1049,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB0407272C7F6DD00090075B /* PBXTargetDependency */ = {
+		CB7033B12C89DE0F0006681E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = CB0407262C7F6DD00090075B /* SwiftLint */;
+			productRef = CB7033B02C89DE0F0006681E /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1408,7 +1408,7 @@
 				kind = branch;
 			};
 		};
-		CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */ = {
+		CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke?tab=readme-ov-file";
 			requirement = {
@@ -1513,25 +1513,25 @@
 		};
 		CB04071E2C7F6D0C0090075B /* Nuke */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = Nuke;
 		};
 		CB0407202C7F6D0C0090075B /* NukeExtensions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeExtensions;
 		};
 		CB0407222C7F6D0C0090075B /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeUI;
 		};
 		CB0407242C7F6D0C0090075B /* NukeVideo */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke?tab=readme-ov-file" */;
+			package = CB04071D2C7F6D0C0090075B /* XCRemoteSwiftPackageReference "Nuke" */;
 			productName = NukeVideo;
 		};
-		CB0407262C7F6DD00090075B /* SwiftLint */ = {
+		CB7033B02C89DE0F0006681E /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";

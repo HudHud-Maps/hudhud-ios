@@ -13,38 +13,52 @@ import SwiftUI
 struct UserLoginView: View {
     @StateObject private var loginStore = LoginStore()
     @State var title: String = "Sign In"
-
+    @State private var path = NavigationPath()
     var body: some View {
-        ZStack {
-            Image(.loginBackground)
-                .resizable()
-                .scaledToFill()
-                .edgesIgnoringSafeArea(.all)
+        NavigationStack(path: self.$path) {
+            ZStack {
+                Image(.loginBackground)
+                    .resizable()
+                    .scaledToFill()
+                    .edgesIgnoringSafeArea(.all)
 
-            VStack(alignment: .leading) {
-                Spacer()
+                VStack(alignment: .leading) {
+                    Spacer()
 
-                Text(self.title)
-                    .hudhudFont(.title)
-
-                FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
-                    .padding(.top)
-                    .keyboardType(self.keyboardTypeForInput)
-
-                Spacer()
-
-                Button {} label: {
                     Text(self.title)
-                }
-                .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._07BlueMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
-                    foregroundColor: .white
-                ))
-                .disabled(self.loginStore.isInputEmpty)
+                        .hudhudFont(.title)
 
-                Spacer()
+                    FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
+                        .padding(.top)
+                        .keyboardType(self.keyboardTypeForInput)
+
+                    Spacer()
+
+                    Button {
+                        self.path.append(LoginStore.UserRegistrationPath.OTPView)
+                    } label: {
+                        Text(self.title)
+                    }
+                    .buttonStyle(LargeButtonStyle(
+                        backgroundColor: Color.Colors.General._07BlueMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
+                        foregroundColor: .white
+                    ))
+                    .disabled(self.loginStore.isInputEmpty)
+
+                    Spacer()
+                }
+                .padding(.horizontal)
             }
-            .padding(.horizontal)
+            .navigationDestination(for: LoginStore.UserRegistrationPath.self) { route in
+                switch route {
+                case .OTPView:
+                    OTPVerificationView(phoneNumber: self.bindingForInput.wrappedValue, path: self.$path)
+                        .toolbarRole(.editor)
+                case .personalInfoView:
+                    PersonalInformationScreenView(path: self.$path)
+                        .toolbarRole(.editor)
+                }
+            }
         }
     }
 }
