@@ -43,6 +43,7 @@ final class RoutingStore: ObservableObject {
 
     // if this is set, that means that the user is currently navigating using this route
     @Published private(set) var navigatingRoute: Route?
+    @Published var navigatingRouteFerrostar: Route?
 
     // MARK: Computed Properties
 
@@ -155,7 +156,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func navigate(to route: Route) {
-        self.navigatingRoute = route
+        self.navigatingRouteFerrostar = route
     }
 
     func endTrip() {

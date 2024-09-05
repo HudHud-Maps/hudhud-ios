@@ -121,3 +121,20 @@ extension Backport where Content: View {
         }
     }
 }
+
+public extension Backport where Content == ButtonBorderShape {
+
+    /// A shape that defers to the environment to determine the resolved button border shape.
+    ///
+    /// You can override the resolved shape in a given view hierarchy by using
+    /// the ``View/buttonBorderShape(_:)`` modifier. If no button border shape
+    /// is specified, it is resolved automatically for the given context and platform.
+    static var buttonBorder: ButtonBorderShape = {
+        if #available(iOS 17.0, *) {
+            return .buttonBorder
+        } else {
+            // Fallback on earlier versions
+            return .automatic
+        }
+    }()
+}

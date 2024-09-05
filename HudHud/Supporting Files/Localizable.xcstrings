@@ -14,7 +14,7 @@
 
     },
     "%@" : {
-      "comment" : "duration"
+      "comment" : "distance • type of route\nduration"
     },
     "%@ %@" : {
       "localizations" : {
@@ -162,6 +162,9 @@
     "Enable Touch Visualizer" : {
 
     },
+    "End" : {
+
+    },
     "Enter your Verification Code" : {
 
     },
@@ -235,6 +238,9 @@
         }
       }
     },
+    "Loading route..." : {
+
+    },
     "Map Details" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -294,6 +300,9 @@
     "No Results" : {
 
     },
+    "No route is available for the destination." : {
+
+    },
     "Note: Changing the URL requires restarting the app for the changes to take effect." : {
 
     },
@@ -308,6 +317,9 @@
     },
     "Pitch: %@" : {
       "comment" : "street view"
+    },
+    "Please ensure location services are enabled and try again." : {
+
     },
     "Ratings" : {
 
@@ -332,9 +344,6 @@
 
     },
     "Reset" : {
-
-    },
-    "root view" : {
 
     },
     "Routing Configuration" : {
@@ -397,7 +406,7 @@
     "Touch Visualizer" : {
 
     },
-    "Traffic" : {
+    "Try a different destination or check for connectivity issues." : {
 
     },
     "Unknown" : {
@@ -409,10 +418,10 @@
     "User is on Route" : {
 
     },
-    "Verify" : {
+    "User location could not be found." : {
 
     },
-    "View More" : {
+    "Verify" : {
 
     },
     "walk" : {
