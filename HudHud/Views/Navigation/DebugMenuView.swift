@@ -34,7 +34,7 @@ struct DebugMenuView: View {
                 TextField("Base URL", text: self.$debugSettings.baseURL)
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
-                    .onChange(of: self.debugSettings.baseURL) { newValue in
+                    .onChange(of: self.debugSettings.baseURL) { _, newValue in
                         if newValue.isEmpty {
                             self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
                         } else {
@@ -75,7 +75,7 @@ struct DebugMenuView: View {
                 }
             }
         }
-        .onChange(of: self.debugSettings.userLocationSnappingDistance) { newMaximumDistance in
+        .onChange(of: self.debugSettings.userLocationSnappingDistance) { _, newMaximumDistance in
             RouteControllerUserLocationSnappingDistance = newMaximumDistance
         }
     }

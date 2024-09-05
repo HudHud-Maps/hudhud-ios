@@ -103,7 +103,7 @@ struct ABCRouteConfigurationView: View {
             }
         }
         // This line will update the routeConfigurations with latest waypoints after added stop point
-        .onChange(of: self.routingStore.waypoints ?? []) { waypoints in
+        .onChange(of: self.routingStore.waypoints ?? []) { _, waypoints in
             self.routeConfigurations = waypoints
         }
     }

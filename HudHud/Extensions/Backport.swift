@@ -27,35 +27,11 @@ public struct Backport<Content> {
 
 extension Backport where Content: View {
 
-    @ViewBuilder func symbolEffect(animate: Bool) -> some View {
-        if #available(iOS 17, *) {
-            content.symbolEffect(.bounce.down, value: animate)
-        } else {
-            self.content
-        }
-    }
-
-    @ViewBuilder func safeAreaPadding(_ edges: Edge.Set = .all, _ length: CGFloat? = nil) -> some View {
-        if #available(iOS 17, *) {
-            content.safeAreaPadding(edges, length)
-        } else {
-            self.content.padding(edges, 100)
-        }
-    }
-
     @ViewBuilder func buttonSafeArea(length: CGSize) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
-            self.safeAreaPadding(.leading, length.width)
+            self.content.safeAreaPadding(.leading, length.width)
         } else {
-            self.safeAreaPadding(.bottom, length.height + 8)
-        }
-    }
-
-    @ViewBuilder func scrollClipDisabled() -> some View {
-        if #available(iOS 17, *) {
-            content.scrollClipDisabled()
-        } else {
-            self.content
+            self.content.safeAreaPadding(.bottom, length.height + 8)
         }
     }
 
@@ -99,25 +75,6 @@ extension Backport where Content: View {
             }
         } else {
             self.content.sheet(item: item, onDismiss: onDismiss, content: content)
-        }
-    }
-
-    @ViewBuilder func contentUnavailable(label: String? = nil, SFSymbol: SFSymbol? = nil, description: String? = nil) -> some View {
-        if #available(iOS 17, *) {
-            ContentUnavailableView {
-                Label("\(label ?? "Content Unavailable")", systemSymbol: SFSymbol ?? .docRichtextFill)
-            } description: {
-                Text("\(description ?? "No Content To be Shown Here.")")
-            }
-        } else {
-            VStack {
-                Image(systemSymbol: SFSymbol ?? .docRichtextFill)
-                    .font(.title2)
-                Text("\(label ?? "Content Unavailable")")
-                    .hudhudFont(.title)
-                Text("\(description ?? "No Content To be Shown Here.")")
-                    .hudhudFont(.body)
-            }
         }
     }
 }
