@@ -22,7 +22,7 @@ struct PersonalInformationScreenView: View {
                 .hudhudFont(.title)
                 .foregroundStyle(Color.Colors.General._01Black)
 
-            FloatingLabelInputField(placeholder: "Fisrt Name", inputType: .text(text: self.$loginStore.firstName))
+            FloatingLabelInputField(placeholder: "First Name", inputType: .text(text: self.$loginStore.firstName))
             FloatingLabelInputField(placeholder: "Last Name", inputType: .text(text: self.$loginStore.lastName))
             FloatingLabelInputField(placeholder: "Nick", inputType: .text(text: self.$loginStore.nick))
             FloatingLabelInputField(placeholder: "Gender", inputType: .dropdown(choice: self.$loginStore.gender, options: LoginStore.Gender.allCases.map(\.rawValue)))
