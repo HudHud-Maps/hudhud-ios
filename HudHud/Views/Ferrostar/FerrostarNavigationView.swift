@@ -169,7 +169,7 @@ struct FerrostarNavigationView: View {
                             .foregroundColor(.white)
                             .background(
                                 Color.black.opacity(0.7).clipShape(
-                                    Backport.buttonBorder, style: FillStyle()
+                                    .buttonBorder, style: FillStyle()
                                 ))
 
                         if case .navigating = self.ferrostarCore.state?.tripState {

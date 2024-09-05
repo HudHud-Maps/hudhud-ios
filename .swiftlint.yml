@@ -17,6 +17,7 @@ opt_in_rules:
 excluded: 
   - Carthage
   - BackendService/Package.swift
+  - build
 
 # Customised rules
 force_try:

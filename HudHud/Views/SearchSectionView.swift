@@ -28,7 +28,7 @@ struct SearchSectionView<Content: View>: View {
         Section(header: Text("\(self.title)").hudhudFont(size: 18, fontWeight: .semiBold)
             .foregroundStyle(Color.Colors.General._01Black)) {
                 self.subview
-                    .backport.scrollClipDisabled()
+                    .scrollClipDisabled()
                     .padding(.top)
             }
     }

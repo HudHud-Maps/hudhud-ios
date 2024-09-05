@@ -191,24 +191,23 @@ struct ContentView: View {
                 VStack {
                     if self.mapStore.streetViewScene != nil {
                         StreetView(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
-                            .onChange(of: self.mapStore.fullScreenStreetView) { newValue in
+                            .onChange(of: self.mapStore.fullScreenStreetView) { _, newValue in
                                 self.mapStore.searchShown = !newValue
                             }
                     }
                 }
-                .onChange(of: self.mapStore.streetViewScene) { newValue in
+                .onChange(of: self.mapStore.streetViewScene) { _, newValue in
                     self.mapStore.searchShown = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
-            .onChange(of: self.mapViewStore.selectedDetent) { _ in
+            .onChange(of: self.mapViewStore.selectedDetent) {
                 if self.mapViewStore.selectedDetent == .small {
                     Task {
                         await self.reloadPOITrending()
                     }
                 }
             }
-            .onChange(of: self.mapStore.camera) { _ in
-
+            .onChange(of: self.mapStore.camera) {
                 let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
                 guard let minLongitude = boundingBox?.sw.longitude else { return }
                 guard let minLatitude = boundingBox?.sw.latitude else { return }
