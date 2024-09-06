@@ -155,8 +155,13 @@ struct SearchSheet: View {
                         .listStyle(.plain)
                         if self.mapStore.displayableItems.isEmpty {
                             let label = self.searchStore.searchError?.localizedDescription != nil ? "Search Error" : "No results"
-                            backport.contentUnavailable(label: label, SFSymbol: .magnifyingglass, description: self.searchStore.searchError?.localizedDescription ?? "No results for \(self.searchStore.searchText) were found.").padding(.vertical, 50)
-                                .listRowSeparator(.hidden)
+                            ContentUnavailableView {
+                                Label(label, systemSymbol: .magnifyingglass)
+                            } description: {
+                                Text("\(self.searchStore.searchError?.localizedDescription ?? "No results for \(self.searchStore.searchText) were found.")")
+                            }
+                            .padding(.vertical, 50)
+                            .listRowSeparator(.hidden)
                         }
                     }
                 } else {

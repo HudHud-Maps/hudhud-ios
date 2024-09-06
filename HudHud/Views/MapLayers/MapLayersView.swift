@@ -57,8 +57,11 @@ struct MapLayersView: View {
                             }
                         }
                     } else {
-                        Text("")
-                            .backport.contentUnavailable(label: "No Map Layers Available", SFSymbol: .globeCentralSouthAsiaFill)
+                        ContentUnavailableView {
+                            Label("No Map Layers Available", systemSymbol: .globeCentralSouthAsiaFill)
+                        } description: {
+                            Text("No Content To be Shown Here.")
+                        }
                     }
                 }
             }
