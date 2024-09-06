@@ -32,6 +32,7 @@ class LoginStore: ObservableObject {
 
     // MARK: Properties
 
+    @Published var loginShown: Bool = false
     @Published var userInput: UserInput = .phone
     @Published var email: String = ""
     @Published var phone: String = ""

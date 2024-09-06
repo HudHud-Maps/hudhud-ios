@@ -49,6 +49,7 @@ struct ContentView: View {
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     @ObservedObject private var mapViewStore: MapViewStore
+    @ObservedObject private var loginStore = LoginStore()
 
     @State private var sheetSize: CGSize = .zero
 
@@ -97,6 +98,10 @@ struct ContentView: View {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
                             MapButtonsView(mapButtonsData: [
+                                MapButtonData(sfSymbol: .icon(.person)) {
+                                    self.mapStore.searchShown.toggle()
+                                    self.loginStore.loginShown.toggle()
+                                },
                                 MapButtonData(sfSymbol: .icon(.map)) {
                                     self.mapViewStore.path.append(SheetSubView.mapStyle)
                                 },
@@ -186,6 +191,14 @@ struct ContentView: View {
                         .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
+            }
+            .overlay(alignment: .top) {
+                if self.loginStore.loginShown {
+                    UserLoginView(loginStore: self.loginStore)
+                        .onDisappear {
+                            self.mapStore.searchShown = !self.loginStore.loginShown
+                        }
+                }
             }
             .overlay(alignment: .top) {
                 VStack {

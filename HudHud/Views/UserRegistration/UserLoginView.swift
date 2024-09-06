@@ -11,9 +11,16 @@ import SwiftUI
 // MARK: - UserLoginView
 
 struct UserLoginView: View {
-    @StateObject private var loginStore = LoginStore()
+
+    // MARK: Properties
+
+    @StateObject var loginStore: LoginStore
     @State var title: String = "Sign In"
+
     @State private var path = NavigationPath()
+
+    // MARK: Content
+
     var body: some View {
         NavigationStack(path: self.$path) {
             ZStack {
@@ -23,6 +30,17 @@ struct UserLoginView: View {
                     .edgesIgnoringSafeArea(.all)
 
                 VStack(alignment: .leading) {
+                    Button {
+                        self.loginStore.loginShown = false
+                    } label: {
+                        Image(systemSymbol: .xCircleFill)
+                            .resizable()
+                            .frame(width: 26, height: 26)
+                            .accentColor(Color.Colors.General._10GreenMain)
+                            .shadow(radius: 26)
+                    }
+                    .padding(.top, 40)
+
                     Spacer()
 
                     Text(self.title)
@@ -55,7 +73,7 @@ struct UserLoginView: View {
                     OTPVerificationView(phoneNumber: self.bindingForInput.wrappedValue, path: self.$path)
                         .toolbarRole(.editor)
                 case .personalInfoView:
-                    PersonalInformationScreenView()
+                    PersonalInformationScreenView(loginStore: self.loginStore)
                         .toolbarRole(.editor)
                 }
             }
@@ -93,5 +111,5 @@ private extension UserLoginView {
 }
 
 #Preview {
-    UserLoginView()
+    UserLoginView(loginStore: LoginStore())
 }

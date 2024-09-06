@@ -12,7 +12,7 @@ struct PersonalInformationScreenView: View {
 
     // MARK: Properties
 
-    @StateObject private var loginStore = LoginStore()
+    @StateObject var loginStore: LoginStore
 
     // MARK: Content
 
@@ -30,6 +30,7 @@ struct PersonalInformationScreenView: View {
             Spacer()
             Button {
                 // here the session should change and open the app
+                self.loginStore.loginShown = false
             } label: {
                 Text("Create Account")
             }
@@ -41,5 +42,5 @@ struct PersonalInformationScreenView: View {
 }
 
 #Preview {
-    PersonalInformationScreenView()
+    PersonalInformationScreenView(loginStore: LoginStore())
 }
