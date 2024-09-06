@@ -64,7 +64,7 @@
       }
     },
     {
-      "identity" : "nuke",
+      "identity" : "nuke?tab=readme-ov-file",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Nuke",
       "state" : {
