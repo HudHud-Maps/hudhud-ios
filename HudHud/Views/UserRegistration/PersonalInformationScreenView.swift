@@ -13,6 +13,7 @@ struct PersonalInformationScreenView: View {
     // MARK: Properties
 
     @StateObject var loginStore: LoginStore
+    @Binding var loginShown: Bool
 
     // MARK: Content
 
@@ -30,7 +31,8 @@ struct PersonalInformationScreenView: View {
             Spacer()
             Button {
                 // here the session should change and open the app
-                self.loginStore.loginShown = false
+                // should also sent the data to the backend
+                self.loginShown = false
             } label: {
                 Text("Create Account")
             }
@@ -42,5 +44,6 @@ struct PersonalInformationScreenView: View {
 }
 
 #Preview {
-    PersonalInformationScreenView(loginStore: LoginStore())
+    @State var showLogin = true
+    return PersonalInformationScreenView(loginStore: LoginStore(), loginShown: $showLogin)
 }

@@ -94,6 +94,7 @@ struct SearchSheet: View {
                 .cornerRadius(12)
                 Button {
                     // dismiss the search and show login view
+                    self.mapStore.searchShown = false
                 } label: {
                     Image(systemSymbol: .person)
                         .resizable()

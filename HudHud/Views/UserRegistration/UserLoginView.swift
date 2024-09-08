@@ -16,8 +16,9 @@ struct UserLoginView: View {
 
     @StateObject var loginStore: LoginStore
     @State var title: String = "Sign In"
-
     @State private var path = NavigationPath()
+    @Environment(\.dismiss) var dismiss
+    @Binding var loginShown: Bool
 
     // MARK: Content
 
@@ -31,7 +32,7 @@ struct UserLoginView: View {
 
                 VStack(alignment: .leading) {
                     Button {
-                        self.loginStore.loginShown = false
+                        self.dismiss()
                     } label: {
                         Image(systemSymbol: .xCircleFill)
                             .resizable()
@@ -73,7 +74,7 @@ struct UserLoginView: View {
                     OTPVerificationView(phoneNumber: self.bindingForInput.wrappedValue, path: self.$path)
                         .toolbarRole(.editor)
                 case .personalInfoView:
-                    PersonalInformationScreenView(loginStore: self.loginStore)
+                    PersonalInformationScreenView(loginStore: self.loginStore, loginShown: self.$loginShown)
                         .toolbarRole(.editor)
                 }
             }
@@ -111,5 +112,6 @@ private extension UserLoginView {
 }
 
 #Preview {
-    UserLoginView(loginStore: LoginStore())
+    @State var showLogin = true
+    return UserLoginView(loginStore: LoginStore(), loginShown: $showLogin)
 }
