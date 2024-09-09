@@ -105,7 +105,7 @@ struct FavoritesViewMoreView: View {
         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
         let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites
-        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore(), mapViewStore: self.mapViewStore, loginShown: .constant(false))
+        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore(), mapViewStore: self.mapViewStore)
     }
 }
 

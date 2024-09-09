@@ -22,7 +22,6 @@ struct RootSheetView: View {
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @ObservedObject var mapViewStore: MapViewStore
     @Binding var sheetSize: CGSize
-    @State var loginShown: Bool = false
 
     @StateObject var notificationManager = NotificationManager()
 
@@ -31,7 +30,7 @@ struct RootSheetView: View {
     var body: some View {
         NavigationStack(path: self.$mapViewStore.path) {
             SearchSheet(mapStore: self.mapStore,
-                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, loginShown: self.$loginShown)
+                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
                 .background(Color(.Colors.General._05WhiteBackground))
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
@@ -57,7 +56,7 @@ struct RootSheetView: View {
                             return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, loginShown: self.$loginShown).navigationBarBackButtonHidden()
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore).navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
@@ -67,7 +66,7 @@ struct RootSheetView: View {
                             return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, loginShown: self.$loginShown)
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
@@ -114,9 +113,6 @@ struct RootSheetView: View {
                         .navigationBarBackButtonHidden()
                         .presentationCornerRadius(21)
                 }
-        }
-        .fullScreenCover(isPresented: self.$loginShown) {
-            UserLoginView(loginStore: LoginStore(), loginShown: self.$loginShown)
         }
         .navigationTransition(.fade(.cross).animation(nil))
         .frame(minWidth: 320)

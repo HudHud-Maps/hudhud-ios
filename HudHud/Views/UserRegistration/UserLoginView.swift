@@ -18,7 +18,6 @@ struct UserLoginView: View {
     @State var title: String = "Sign In"
     @State private var path = NavigationPath()
     @Environment(\.dismiss) var dismiss
-    @Binding var loginShown: Bool
 
     // MARK: Content
 
@@ -74,7 +73,7 @@ struct UserLoginView: View {
                     OTPVerificationView(phoneNumber: self.bindingForInput.wrappedValue, path: self.$path)
                         .toolbarRole(.editor)
                 case .personalInfoView:
-                    PersonalInformationScreenView(loginStore: self.loginStore, loginShown: self.$loginShown)
+                    PersonalInformationScreenView(loginStore: self.loginStore, onDismiss: { self.dismiss() })
                         .toolbarRole(.editor)
                 }
             }
@@ -113,5 +112,5 @@ private extension UserLoginView {
 
 #Preview {
     @State var showLogin = true
-    return UserLoginView(loginStore: LoginStore(), loginShown: $showLogin)
+    return UserLoginView(loginStore: LoginStore())
 }

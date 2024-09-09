@@ -28,18 +28,17 @@ struct SearchSheet: View {
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapViewStore: MapViewStore
     @Environment(\.dismiss) var dismiss
-    @Binding var loginShown: Bool
+    @State var loginShown: Bool = false
 
     @FocusState private var searchIsFocused: Bool
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore, loginShown: Binding<Bool>) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
         self.mapViewStore = mapViewStore
-        self._loginShown = loginShown
         self.searchIsFocused = false
     }
 
@@ -210,6 +209,9 @@ struct SearchSheet: View {
             .scrollIndicators(.hidden)
             .listStyle(.plain)
         }
+        .fullScreenCover(isPresented: self.$loginShown) {
+            UserLoginView(loginStore: LoginStore())
+        }
     }
 
     // MARK: Functions
@@ -265,5 +267,5 @@ extension [ResolvedItem]: RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing, loginShown: .constant(false))
+    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing)
 }

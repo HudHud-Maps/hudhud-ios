@@ -13,7 +13,7 @@ struct PersonalInformationScreenView: View {
     // MARK: Properties
 
     @StateObject var loginStore: LoginStore
-    @Binding var loginShown: Bool
+    var onDismiss: () -> Void
 
     // MARK: Content
 
@@ -32,7 +32,7 @@ struct PersonalInformationScreenView: View {
             Button {
                 // here the session should change and open the app
                 // should also sent the data to the backend
-                self.loginShown = false
+                self.onDismiss()
             } label: {
                 Text("Create Account")
             }
@@ -45,5 +45,5 @@ struct PersonalInformationScreenView: View {
 
 #Preview {
     @State var showLogin = true
-    return PersonalInformationScreenView(loginStore: LoginStore(), loginShown: $showLogin)
+    return PersonalInformationScreenView(loginStore: LoginStore(), onDismiss: {})
 }
