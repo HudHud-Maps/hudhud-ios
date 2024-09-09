@@ -136,7 +136,7 @@ final class RoutingStore: ObservableObject {
                 self.navigationProgress = .navigating
             } else {
                 navigationController.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.isLocationPermissionEnabled && self.mapStore.streetViewScene == nil
+                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.permissionStatus.isEnabled && self.mapStore.streetViewScene == nil
             }
         case .navigating:
             if let route = self.navigatingRoute {

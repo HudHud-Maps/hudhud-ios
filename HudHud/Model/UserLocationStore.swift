@@ -18,9 +18,32 @@ import SwiftUI
 @MainActor
 final class UserLocationStore: ObservableObject {
 
+    // MARK: Nested Types
+
+    enum PermissionStatus: Hashable {
+        case enabled
+        case notDetermined
+        case denied
+
+        // MARK: Computed Properties
+
+        var isEnabled: Bool {
+            self == .enabled
+        }
+
+        var didDenyLocationPermission: Bool {
+            switch self {
+            case .enabled, .notDetermined:
+                false
+            case .denied:
+                true
+            }
+        }
+    }
+
     // MARK: Properties
 
-    @Published private(set) var isLocationPermissionEnabled: Bool = false
+    @Published private(set) var permissionStatus: PermissionStatus = .denied
 
     private var currentUserLocation: CLLocation?
 
@@ -83,9 +106,9 @@ final class UserLocationStore: ObservableObject {
 private extension UserLocationStore {
 
     func startMonitoringUserPermission() async {
-        self.isLocationPermissionEnabled = self.location.authorizationStatus.allowed
+        self.permissionStatus = self.location.authorizationStatus.permissionStatus
         for await event in await self.location.startMonitoringAuthorization() {
-            self.isLocationPermissionEnabled = event.authorizationStatus.allowed
+            self.permissionStatus = event.authorizationStatus.permissionStatus
         }
     }
 }

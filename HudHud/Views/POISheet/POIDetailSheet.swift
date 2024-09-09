@@ -23,7 +23,7 @@ struct POIDetailSheet: View {
     // MARK: Properties
 
     let item: ResolvedItem
-    let isLocationPermissionEnabled: Bool
+    let didDenyLocationPermission: Bool
     let onStart: (RoutingService.RouteCalculationResult) -> Void
     let onDismiss: () -> Void
 
@@ -50,7 +50,7 @@ struct POIDetailSheet: View {
     init(
         item: ResolvedItem,
         routingStore: RoutingStore,
-        isLocationPermissionEnabled: Bool,
+        didDenyLocationPermission: Bool,
         onStart: @escaping (RoutingService.RouteCalculationResult) -> Void,
         onDismiss: @escaping () -> Void
     ) {
@@ -58,7 +58,7 @@ struct POIDetailSheet: View {
         self.onStart = onStart
         self.onDismiss = onDismiss
         self.routingStore = routingStore
-        self.isLocationPermissionEnabled = isLocationPermissionEnabled
+        self.didDenyLocationPermission = didDenyLocationPermission
     }
 
     // MARK: Content
@@ -126,7 +126,7 @@ struct POIDetailSheet: View {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 4.0) {
                         Button(action: {
-                            if !self.isLocationPermissionEnabled {
+                            if self.didDenyLocationPermission {
                                 self.askToEnableLocation = true
                             } else if let routes {
                                 self.onStart(routes)

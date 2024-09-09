@@ -73,7 +73,7 @@ struct RootSheetView: View {
                     POIDetailSheet(
                         item: item,
                         routingStore: self.searchViewStore.routingStore,
-                        isLocationPermissionEnabled: self.mapStore.userLocationStore.isLocationPermissionEnabled
+                        didDenyLocationPermission: self.mapStore.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { route in
                         Logger.searchView.info("Start item \(item)")
                         self.searchViewStore.routingStore.navigate(to: item, with: route)
