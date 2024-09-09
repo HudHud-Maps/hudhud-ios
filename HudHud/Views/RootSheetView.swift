@@ -70,21 +70,23 @@ struct RootSheetView: View {
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item, routingStore: self.searchViewStore.routingStore, onStart: { route in
+                    POIDetailSheet(
+                        item: item,
+                        routingStore: self.searchViewStore.routingStore,
+                        isLocationPermissionEnabled: self.mapStore.userLocationStore.isLocationPermissionEnabled
+                    ) { route in
                         Logger.searchView.info("Start item \(item)")
                         self.searchViewStore.routingStore.navigate(to: item, with: route)
                         Task {
-                            do {
-                                try? await self.notificationManager.requestAuthorization()
-                            }
+                            try? await self.notificationManager.requestAuthorization()
                         }
-                    }, onDismiss: {
+                    } onDismiss: {
                         self.searchViewStore.mapStore.selectedItem = nil
                         self.searchViewStore.mapStore.displayableItems = []
                         if !self.mapViewStore.path.isEmpty {
                             self.mapViewStore.path.removeLast()
                         }
-                    })
+                    }
                     .navigationBarBackButtonHidden()
                 }
                 .navigationDestination(for: RoutingService.RouteCalculationResult.self) { _ in
