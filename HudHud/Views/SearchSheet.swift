@@ -28,16 +28,18 @@ struct SearchSheet: View {
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapViewStore: MapViewStore
     @Environment(\.dismiss) var dismiss
+    @Binding var loginShown: Bool
 
     @FocusState private var searchIsFocused: Bool
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore, loginShown: Binding<Bool>) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
         self.mapViewStore = mapViewStore
+        self._loginShown = loginShown
         self.searchIsFocused = false
     }
 
@@ -94,7 +96,7 @@ struct SearchSheet: View {
                 .cornerRadius(12)
                 Button {
                     // dismiss the search and show login view
-                    self.mapStore.searchShown = false
+                    self.loginShown = true
                 } label: {
                     Image(systemSymbol: .person)
                         .resizable()
@@ -263,5 +265,5 @@ extension [ResolvedItem]: RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing)
+    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing, loginShown: .constant(false))
 }

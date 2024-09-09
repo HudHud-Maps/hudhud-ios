@@ -38,8 +38,6 @@ struct ContentView: View {
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
 
-    @State var loginShown: Bool = false
-
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
@@ -94,7 +92,7 @@ struct ContentView: View {
             .ignoresSafeArea()
             .edgesIgnoringSafeArea(.all)
             .safeAreaInset(edge: .bottom) {
-                if self.searchViewStore.routingStore.navigationProgress == .none, self.mapStore.streetViewScene == nil, self.mapStore.searchShown {
+                if self.searchViewStore.routingStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
                             MapButtonsView(mapButtonsData: [
@@ -160,17 +158,6 @@ struct ContentView: View {
                 set: { _ in }
             )) {
                 RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, sheetSize: self.$sheetSize)
-                    .onDisappear {
-                        self.loginShown = true
-                    }
-            }
-            .fullScreenCover(isPresented: self.$loginShown) {
-                UserLoginView(loginStore: LoginStore(), loginShown: self.$loginShown)
-                    .presentationDetents([.large])
-                    .ignoresSafeArea()
-                    .onDisappear {
-                        self.mapStore.searchShown = true
-                    }
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
