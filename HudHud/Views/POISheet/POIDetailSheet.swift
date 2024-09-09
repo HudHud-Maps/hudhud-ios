@@ -24,7 +24,7 @@ struct POIDetailSheet: View {
 
     let item: ResolvedItem
     let didDenyLocationPermission: Bool
-    let onStart: (RoutingService.RouteCalculationResult) -> Void
+    let onStart: (RoutingService.RouteCalculationResult?) -> Void
     let onDismiss: () -> Void
 
     @State var routes: RoutingService.RouteCalculationResult?
@@ -51,7 +51,7 @@ struct POIDetailSheet: View {
         item: ResolvedItem,
         routingStore: RoutingStore,
         didDenyLocationPermission: Bool,
-        onStart: @escaping (RoutingService.RouteCalculationResult) -> Void,
+        onStart: @escaping (RoutingService.RouteCalculationResult?) -> Void,
         onDismiss: @escaping () -> Void
     ) {
         self.item = item
@@ -128,8 +128,8 @@ struct POIDetailSheet: View {
                         Button(action: {
                             if self.didDenyLocationPermission {
                                 self.askToEnableLocation = true
-                            } else if let routes {
-                                self.onStart(routes)
+                            } else {
+                                self.onStart(self.routes)
                             }
                         }, label: {})
                             .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))

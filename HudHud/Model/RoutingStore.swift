@@ -94,7 +94,12 @@ final class RoutingStore: ObservableObject {
         return try await self.calculateRoute(for: waypoints)
     }
 
-    func navigate(to item: ResolvedItem, with route: RoutingService.RouteCalculationResult) {
+    func navigate(to item: ResolvedItem, with calculatedRouteIfAvailable: RoutingService.RouteCalculationResult?) async throws {
+        let route = if let calculatedRouteIfAvailable {
+            calculatedRouteIfAvailable
+        } else {
+            try await self.calculateRoute(for: item)
+        }
         self.potentialRoute = route
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
         if let location = route.waypoints.first {

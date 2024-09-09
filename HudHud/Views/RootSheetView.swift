@@ -74,10 +74,10 @@ struct RootSheetView: View {
                         item: item,
                         routingStore: self.searchViewStore.routingStore,
                         didDenyLocationPermission: self.mapStore.userLocationStore.permissionStatus.didDenyLocationPermission
-                    ) { route in
+                    ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
-                        self.searchViewStore.routingStore.navigate(to: item, with: route)
                         Task {
+                            try? await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
                             try? await self.notificationManager.requestAuthorization()
                         }
                     } onDismiss: {
