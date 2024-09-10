@@ -57,41 +57,43 @@ struct MapViewContainer: View {
             return viewController
         }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.searchViewStore.routingStore.potentialRoute?.routes.first, self.searchViewStore.routingStore.navigationProgress == .none {
-                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
+            if self.searchViewStore.routingStore.navigationProgress == .none {
+                for route in self.searchViewStore.routingStore.potentialRoute?.routes ?? [] {
+                    let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline + "\(route.id)") {
+                        MLNPolylineFeature(coordinates: route.coordinates ?? [])
+                    }
+
+                    // Add a polyline casing for a stroke effect
+                    LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing + "\(route.id)", source: polylineSource)
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.white)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+                    // Add an inner (blue) polyline
+                    LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner + "\(route.id)", source: polylineSource)
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.systemBlue)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+
+                    let routePoints = self.searchViewStore.routingStore.routePoints
+
+                    CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute + "\(route.id)", source: routePoints)
+                        .radius(16)
+                        .color(.systemRed)
+                        .strokeWidth(2)
+                        .strokeColor(.white)
+                    SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(route.id)", source: routePoints)
+                        .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                        .iconColor(.white)
                 }
-
-                // Add a polyline casing for a stroke effect
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.white)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
-
-                // Add an inner (blue) polyline
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.systemBlue)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
-
-                let routePoints = self.searchViewStore.routingStore.routePoints
-
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
             }
 
             if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty, self.mapStore.isSFSymbolLayerPresent(), self.mapStore.shouldShowCustomSymbols {
