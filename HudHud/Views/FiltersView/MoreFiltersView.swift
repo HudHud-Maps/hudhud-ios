@@ -18,10 +18,11 @@ struct MoreFiltersView: View {
     @ObservedObject var searchStore: SearchViewStore
     @Environment(\.dismiss) private var dismiss
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
+        VStack(alignment: .leading) {
             // Sort By Filter
             Text("Sort By")
             HudhudSegmentedPicker(selected: self.$sortSelection, options: [SegmentOption(value: "Relevance", label: .text("Relevance")), SegmentOption(value: "Distance", label: .text("Distance"))])
+                .padding(.bottom)
             // Price Filter
             Text("Price")
             HudhudSegmentedPicker(
@@ -33,14 +34,28 @@ struct MoreFiltersView: View {
                     SegmentOption(value: "four", label: .images(self.generateImages(for: "four", selection: self.priceSelection)))
                 ]
             )
+            .padding(.bottom)
             // Rating Filter
             Text("Rating")
             HudhudSegmentedPicker(selected: self.$ratingSelection, options: [SegmentOption(value: "Any", label: .text("Any")), SegmentOption(value: "3.5", label: .textWithSymbol("3.5", .starFill)), SegmentOption(value: "4.0", label: .textWithSymbol("4.0", .starFill)), SegmentOption(value: "4.5", label: .textWithSymbol("4.5", .starFill))])
+                .padding(.bottom)
             // Work Schedule Filter
             Text("Work Schedule")
             HudhudSegmentedPicker(selected: self.$scheduleSelection, options: [SegmentOption(value: "Any", label: .text("Any")), SegmentOption(value: "Open", label: .text("Open")), SegmentOption(value: "Custom", label: .text("Custom"))])
-
+                .padding(.bottom)
             Spacer()
+            Divider().padding(-20)
+            Button {
+                self.sortSelection = "Relevance"
+                self.priceSelection = "one"
+                self.ratingSelection = "Any"
+                self.scheduleSelection = "Any"
+            } label: {
+                Text("Reset")
+                    .hudhudFont(.headline)
+                    .foregroundStyle(Color.Colors.General._12Red)
+            }
+            .frame(maxWidth: .infinity)
         }
         .padding()
         .padding(.horizontal, 5)
