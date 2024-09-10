@@ -18,41 +18,45 @@ struct MainFiltersView: View {
 
     var body: some View {
         HStack(spacing: 10) {
-            Button {
-                self.searchStore.selectedFilter = .openNow
-            } label: {
-                Text("Open Now")
-                    .hudhudFont(size: 12, fontWeight: .semiBold)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 11)
-                    .foregroundStyle(self.searchStore.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(self.searchStore.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
-                    )
-            }
-            Button {
-                self.searchStore.selectedFilter = .topRated
-            } label: {
-                Text("Top Rated")
-                    .hudhudFont(size: 12, fontWeight: .semiBold)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 11)
-                    .foregroundStyle(self.searchStore.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(self.searchStore.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
-                    )
-            }
+            self.filterButton(title: "Open Now", filter: .openNow)
+            self.filterButton(title: "Top Rated", filter: .topRated)
             Spacer()
-            Button(action: {
-                self.searchStore.selectedFilter = .filter
-            }, label: {
+            NavigationLink {
+                MoreFiltersView(searchStore: self.searchStore)
+            } label: {
                 Image(.filter)
                     .hudhudFont(.caption2)
                     .scaledToFit()
-            })
+            }
         }
+    }
+
+    private func filterButton(title: String, filter: SearchViewStore.FilterType) -> some View {
+        Button {
+            self.toggleFilter(filter)
+        } label: {
+            Text(title)
+                .hudhudFont(size: 12, fontWeight: .semiBold)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 11)
+                .foregroundStyle(self.searchStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(self.searchStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
+                )
+        }
+    }
+
+    // MARK: Functions
+
+    private func toggleFilter(_ filter: SearchViewStore.FilterType) {
+        if let index = self.searchStore.selectedFilters.firstIndex(of: filter) {
+            self.searchStore.selectedFilters.remove(at: index)
+        } else {
+            self.searchStore.selectedFilters.append(filter)
+        }
+
+        self.searchStore.updateDisplayedItems()
     }
 }
 

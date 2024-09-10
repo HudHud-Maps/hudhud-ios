@@ -61,7 +61,6 @@ struct SearchSheet: View {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
                                     Button {
-                                        self.searchStore.selectedFilter = nil
                                         self.searchStore.searchText = ""
                                     } label: {
                                         Image(systemSymbol: .multiplyCircleFill)

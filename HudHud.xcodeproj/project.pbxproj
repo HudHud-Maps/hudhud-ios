@@ -33,6 +33,8 @@
 		594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */; };
 		594C48792C0DBBA900756633 /* EditFavoritesFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C48782C0DBBA900756633 /* EditFavoritesFormView.swift */; };
 		594C487B2C0E5F9400756633 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C487A2C0E5F9400756633 /* FavoriteItemView.swift */; };
+		5970ED2F2C8A2E7900AF7D2C /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5970ED2E2C8A2E7900AF7D2C /* MoreFiltersView.swift */; };
+		5970ED312C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5970ED302C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift */; };
 		59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = E25BA789B8A5B417D47CA3C3 /* NavigationTransitions */; };
 		59A28FFE2C3EC9B800780307 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = C71C7BD81C2B56D70AB2E23A /* BetterSafariView */; };
 		59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */; };
@@ -198,6 +200,8 @@
 		594C48762C0DBB8A00756633 /* FavoritesViewMoreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewMoreView.swift; sourceTree = "<group>"; };
 		594C48782C0DBBA900756633 /* EditFavoritesFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditFavoritesFormView.swift; sourceTree = "<group>"; };
 		594C487A2C0E5F9400756633 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
+		5970ED2E2C8A2E7900AF7D2C /* MoreFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreFiltersView.swift; sourceTree = "<group>"; };
+		5970ED302C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudSegmentedPicker.swift; sourceTree = "<group>"; };
 		59A290072C43CA0000780307 /* POIMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIMediaView.swift; sourceTree = "<group>"; };
 		59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewContainer.swift; sourceTree = "<group>"; };
 		59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
@@ -467,6 +471,7 @@
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
 				417081C775FE86E29A6F3437 /* SafariWebView.swift */,
 				591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */,
+				5970ED302C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift */,
 			);
 			path = UIStyle;
 			sourceTree = "<group>";
@@ -475,6 +480,7 @@
 			isa = PBXGroup;
 			children = (
 				CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */,
+				5970ED2E2C8A2E7900AF7D2C /* MoreFiltersView.swift */,
 			);
 			path = FiltersView;
 			sourceTree = "<group>";
@@ -953,6 +959,7 @@
 				D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */,
 				CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */,
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,
+				5970ED312C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift in Sources */,
 				01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */,
 				5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */,
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
@@ -1002,6 +1009,7 @@
 				591002292C7F260A00CF4707 /* LoginStore.swift in Sources */,
 				59EFD4E32C7604A100BA8B41 /* FavoritesStore.swift in Sources */,
 				591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */,
+				5970ED2F2C8A2E7900AF7D2C /* MoreFiltersView.swift in Sources */,
 				48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */,
 				59A290082C43CA0000780307 /* POIMediaView.swift in Sources */,
 				A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */,

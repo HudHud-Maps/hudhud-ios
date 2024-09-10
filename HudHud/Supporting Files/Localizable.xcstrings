@@ -59,6 +59,9 @@
     "Add Type" : {
 
     },
+    "Apply Filters" : {
+
+    },
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
     },
@@ -279,6 +282,9 @@
         }
       }
     },
+    "More Filters" : {
+
+    },
     "N / A" : {
 
     },
@@ -309,11 +315,14 @@
     "Open" : {
 
     },
-    "Open Now" : {
-
-    },
     "Pitch: %@" : {
       "comment" : "street view"
+    },
+    "Price" : {
+
+    },
+    "Rating" : {
+
     },
     "Ratings" : {
 
@@ -382,6 +391,9 @@
     "Simulation" : {
 
     },
+    "Sort By" : {
+
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -395,9 +407,6 @@
       }
     },
     "Suggestions" : {
-
-    },
-    "Top Rated" : {
 
     },
     "Touch Visualizer" : {
@@ -458,6 +467,9 @@
           }
         }
       }
+    },
+    "Work Schedule" : {
+
     },
     "You Have Arrived" : {
 

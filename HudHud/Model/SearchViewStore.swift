@@ -20,10 +20,34 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Nested Types
 
-    enum FilterType {
+    enum FilterType: Equatable {
         case openNow
         case topRated
-        case filter
+        case sort(SortOption)
+        case priceRange(PriceRange)
+        case rating(RatingOption)
+
+        // MARK: Nested Types
+
+        enum SortOption {
+            case relevance
+            case distance
+        }
+
+        enum PriceRange {
+            case cheap
+            case medium
+            case pricy
+            case expensive
+        }
+
+        enum RatingOption {
+            case anyRating
+            case rating3andHalf
+            case rating4
+            case rating4andHalf
+        }
+
     }
 
     enum SearchType: Equatable {
@@ -86,21 +110,9 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Computed Properties
 
-    @Published var selectedFilter: FilterType? {
+    @Published var selectedFilters: [FilterType] = [] {
         didSet {
-            switch self.selectedFilter {
-            case .openNow:
-                self.mapStore.displayableItems = self.mapStore.displayableItems.filter { $0.resolvedItem?.isOpen == true }
-            case .topRated:
-                Task {
-                    await self.fetch(category: self.searchText, topRated: true)
-                }
-            case .filter:
-                // Should open Filter sheet
-                Logger.searchView.debug("Filter Button Pressed")
-            case nil:
-                Logger.searchView.debug("No filter Required")
-            }
+            self.updateDisplayedItems()
         }
     }
 
@@ -129,6 +141,46 @@ final class SearchViewStore: ObservableObject {
     }
 
     // MARK: Functions
+
+    func updateDisplayedItems() {
+        var filteredItems = self.mapStore.displayableItems
+
+        var topRated: Bool = false
+        var sortBy: HudHudPOI.SortBy?
+        var priceRange: HudHudPOI.PriceRange?
+        var rating: Double?
+
+        for filter in self.selectedFilters {
+            switch filter {
+            case .openNow:
+                filteredItems = filteredItems.filter { $0.resolvedItem?.isOpen == true }
+
+            case .topRated:
+                topRated = true
+
+            case let .sort(sortOption):
+                sortBy = self.mapSortOption(sortOption)
+
+            case let .priceRange(priceRangeOption):
+                priceRange = self.mapPriceRange(priceRangeOption)
+
+            case let .rating(ratingOption):
+                rating = self.mapRating(ratingOption)
+            }
+        }
+
+        Task {
+            await self.fetch(
+                category: self.searchText,
+                topRated: topRated,
+                priceRange: priceRange,
+                sortBy: sortBy,
+                rating: rating
+            )
+        }
+
+        self.mapStore.displayableItems = filteredItems
+    }
 
     // MARK: - Internal
 
@@ -175,7 +227,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String, topRated: Bool? = nil) async {
+    func fetch(category: String, topRated: Bool? = nil, priceRange: HudHudPOI.PriceRange? = nil, sortBy: HudHudPOI.SortBy? = nil, rating: Double? = nil) async {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -185,7 +237,7 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
-            let items = try await hudhud.items(for: category, topRated: topRated, location: userLocation, baseURL: DebugStore().baseURL)
+            let items = try await hudhud.items(for: category, topRated: topRated, priceRange: priceRange, sortBy: sortBy, rating: rating, location: userLocation, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
@@ -234,6 +286,42 @@ final class SearchViewStore: ObservableObject {
         }
         self.recentViewedItem.insert(item, at: 0)
     }
+
+    private func mapSortOption(_ sortOption: SearchViewStore.FilterType.SortOption) -> HudHudPOI.SortBy {
+        switch sortOption {
+        case .distance:
+            return .distance
+        case .relevance:
+            return .relevance
+        }
+    }
+
+    private func mapPriceRange(_ priceRange: SearchViewStore.FilterType.PriceRange) -> HudHudPOI.PriceRange {
+        switch priceRange {
+        case .cheap:
+            return .cheap
+        case .medium:
+            return .medium
+        case .pricy:
+            return .pricy
+        case .expensive:
+            return .expensive
+        }
+    }
+
+    private func mapRating(_ rating: SearchViewStore.FilterType.RatingOption) -> Double {
+        switch rating {
+        case .anyRating:
+            return 0.0
+        case .rating3andHalf:
+            return 3.5
+        case .rating4:
+            return 4.0
+        case .rating4andHalf:
+            return 4.5
+        }
+    }
+
 }
 
 // MARK: - Private
