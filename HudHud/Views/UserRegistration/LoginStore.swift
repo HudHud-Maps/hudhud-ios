@@ -7,12 +7,18 @@
 //
 
 import Foundation
+import SwiftUI
 
 // MARK: - LoginStore
 
 class LoginStore: ObservableObject {
 
     // MARK: Nested Types
+
+    enum UserRegistrationPath: Hashable {
+        case OTPView
+        case personalInfoView
+    }
 
     enum UserInput {
         case phone, email

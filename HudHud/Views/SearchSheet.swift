@@ -28,6 +28,7 @@ struct SearchSheet: View {
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapViewStore: MapViewStore
     @Environment(\.dismiss) var dismiss
+    @State var loginShown: Bool = false
 
     @FocusState private var searchIsFocused: Bool
 
@@ -46,50 +47,67 @@ struct SearchSheet: View {
     var body: some View {
         VStack {
             HStack(spacing: 0) {
-                HStack {
-                    Image(systemSymbol: .magnifyingglass)
-                        .foregroundStyle(.tertiary)
-                        .padding(.leading, 8)
-                    TextField("Search", text: self.$searchStore.searchText)
-                        .submitLabel(.search)
-                        .focused(self.$searchIsFocused)
-                        .padding(.vertical, 10)
-                        .padding(.horizontal, 0)
-                        .autocorrectionDisabled()
-                        .overlay(
-                            HStack {
-                                Spacer()
-                                if !self.searchStore.searchText.isEmpty {
-                                    Button {
-                                        self.searchStore.searchText = ""
-                                    } label: {
-                                        Image(systemSymbol: .multiplyCircleFill)
-                                            .foregroundColor(.gray)
-                                            .frame(minWidth: 44, minHeight: 44)
+                    HStack {
+                        Image(systemSymbol: .magnifyingglass)
+                            .foregroundStyle(.tertiary)
+                            .padding(.leading, 8)
+                        TextField("Search", text: self.$searchStore.searchText)
+                            .submitLabel(.search)
+                            .focused(self.$searchIsFocused)
+                            .padding(.vertical, 10)
+                            .padding(.horizontal, 0)
+                            .autocorrectionDisabled()
+                            .overlay(
+                                HStack {
+                                    Spacer()
+                                    if !self.searchStore.searchText.isEmpty {
+                                        Button {
+                                            self.searchStore.searchText = ""
+                                        } label: {
+                                            Image(systemSymbol: .multiplyCircleFill)
+                                                .foregroundColor(.gray)
+                                                .frame(minWidth: 44, minHeight: 44)
+                                        }
                                     }
                                 }
+                            )
+                            .onSubmit {
+                                Task {
+                                    await self.searchStore.fetchEnterResults()
+                                }
                             }
-                        )
-                        .onSubmit {
-                            Task {
-                                await self.searchStore.fetchEnterResults()
-                            }
-                        }
-                        .padding(.horizontal, 10)
-                }
-                switch self.searchStore.searchType {
-                case .returnPOILocation, .favorites:
-                    Button("Cancel") {
-                        self.dismiss()
+                            .padding(.horizontal, 10)
                     }
-                    .foregroundColor(.gray)
-                    .padding(.trailing)
-                case .selectPOI, .categories:
-                    EmptyView()
+                    switch self.searchStore.searchType {
+                    case .returnPOILocation, .favorites:
+                        Button("Cancel") {
+                            self.dismiss()
+                        }
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
+                    case .selectPOI, .categories:
+                        EmptyView()
+                    }
+                }
+                .background(.quinary)
+                .cornerRadius(12)
+                Button {
+                    // dismiss the search and show login view
+                    self.loginShown = true
+                } label: {
+                    Image(systemSymbol: .person)
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundColor(.gray)
+                        .frame(width: 22, height: 22)
+                        .padding(17)
+                        .background {
+                            Circle()
+                                .foregroundColor(Color.Colors.General._03LightGrey)
+                                .frame(width: 44, height: 44)
+                        }
                 }
             }
-            .background(.quinary)
-            .cornerRadius(12)
             .padding(.horizontal)
             .padding(.top)
             // Show the filter UI if the search view is displaying an item that was fetched from a category.
@@ -188,6 +206,9 @@ struct SearchSheet: View {
             }
             .scrollIndicators(.hidden)
             .listStyle(.plain)
+        }
+        .fullScreenCover(isPresented: self.$loginShown) {
+            UserLoginView(loginStore: LoginStore())
         }
     }
 

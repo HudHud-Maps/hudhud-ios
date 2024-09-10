@@ -123,6 +123,9 @@
         }
       }
     },
+    "Create Account" : {
+
+    },
     "Debug Menu" : {
 
     },
@@ -313,6 +316,12 @@
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
     "Open" : {
+
+    },
+    "Open Now" : {
+
+    },
+    "Personal Information" : {
 
     },
     "Pitch: %@" : {
