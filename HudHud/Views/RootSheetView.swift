@@ -21,6 +21,7 @@ struct RootSheetView: View {
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @ObservedObject var mapViewStore: MapViewStore
+    @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
@@ -73,7 +74,7 @@ struct RootSheetView: View {
                     POIDetailSheet(
                         item: item,
                         routingStore: self.searchViewStore.routingStore,
-                        didDenyLocationPermission: self.mapStore.userLocationStore.permissionStatus.didDenyLocationPermission
+                        didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
                         Task {
