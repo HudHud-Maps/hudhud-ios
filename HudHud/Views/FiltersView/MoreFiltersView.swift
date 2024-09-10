@@ -59,14 +59,14 @@ struct MoreFiltersView: View {
         }
         .padding()
         .padding(.horizontal, 5)
-        .navigationTitle("More Filters")
+        .navigationTitle("Filters")
         .navigationBarItems(
             trailing:
             Button {
                 self.applyFilters()
                 self.dismiss()
             } label: {
-                Text("Apply Filters")
+                Text("Apply")
                     .bold()
             }
         )
