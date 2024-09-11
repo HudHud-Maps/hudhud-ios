@@ -14,6 +14,8 @@ struct OTPVerificationView: View {
 
     // MARK: Properties
 
+    @Binding var path: NavigationPath
+
     @StateObject private var store: OTPVerificationStore
     @FocusState private var focusedIndex: Int?
 
@@ -21,8 +23,9 @@ struct OTPVerificationView: View {
 
     // MARK: Initialization
 
-    init(phoneNumber: String) {
+    init(phoneNumber: String, path: Binding<NavigationPath>) {
         _store = StateObject(wrappedValue: OTPVerificationStore(phoneNumber: phoneNumber))
+        _path = path
     }
 
     // MARK: Content
@@ -85,6 +88,7 @@ struct OTPVerificationView: View {
                     // The fullCode will be send to the backend
                     if self.store.isCodeComplete {
                         let fullCode = self.store.code.joined()
+                        self.path.append(LoginStore.UserRegistrationPath.personalInfoView)
                         Logger.userRegistration.info("Code is valid: \(fullCode)")
                     }
                 }, label: {
@@ -157,5 +161,6 @@ struct OTPVerificationView: View {
 }
 
 #Preview {
-    return OTPVerificationView(phoneNumber: "0504325432")
+    @State var path = NavigationPath()
+    return OTPVerificationView(phoneNumber: "0504325432", path: $path)
 }

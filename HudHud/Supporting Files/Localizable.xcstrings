@@ -120,6 +120,9 @@
         }
       }
     },
+    "Create Account" : {
+
+    },
     "Debug Menu" : {
 
     },
@@ -316,6 +319,9 @@
 
     },
     "Open Now" : {
+
+    },
+    "Personal Information" : {
 
     },
     "Pitch: %@" : {

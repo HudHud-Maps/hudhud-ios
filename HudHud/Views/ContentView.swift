@@ -49,7 +49,6 @@ struct ContentView: View {
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     @ObservedObject private var mapViewStore: MapViewStore
-
     @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle

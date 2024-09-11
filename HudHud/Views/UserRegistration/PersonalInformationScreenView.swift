@@ -12,7 +12,8 @@ struct PersonalInformationScreenView: View {
 
     // MARK: Properties
 
-    @StateObject private var loginStore = LoginStore()
+    @StateObject var loginStore: LoginStore
+    var onDismiss: () -> Void
 
     // MARK: Content
 
@@ -28,7 +29,11 @@ struct PersonalInformationScreenView: View {
             FloatingLabelInputField(placeholder: "Gender", inputType: .dropdown(choice: self.$loginStore.gender, options: LoginStore.Gender.allCases.map(\.rawValue)))
             FloatingLabelInputField(placeholder: "Birthday", inputType: .datePicker(date: self.$loginStore.birthday, dateFormatter: DateFormatter()))
             Spacer()
-            Button {} label: {
+            Button {
+                // here the session should change and open the app
+                // should also sent the data to the backend
+                self.onDismiss()
+            } label: {
                 Text("Create Account")
             }
             .buttonStyle(LargeButtonStyle(backgroundColor: Color.Colors.General._07BlueMain.opacity(self.loginStore.canCreateAccount ? 1 : 0.5), foregroundColor: .white))
@@ -39,5 +44,6 @@ struct PersonalInformationScreenView: View {
 }
 
 #Preview {
-    PersonalInformationScreenView()
+    @State var showLogin = true
+    return PersonalInformationScreenView(loginStore: LoginStore(), onDismiss: {})
 }

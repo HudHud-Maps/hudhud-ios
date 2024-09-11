@@ -50,6 +50,8 @@ final class UserLocationStore: ObservableObject {
     private let location: Location
 
     private var monitorPermissionsTask: Task<Void, Never>?
+    private var updateLocationSubscription: AnyCancellable?
+    private var didBecomeActiveSubscription: AnyCancellable?
 
     // MARK: Lifecycle
 
@@ -92,11 +94,17 @@ final class UserLocationStore: ObservableObject {
     func startMonitoringPermissions() {
         if self.monitorPermissionsTask == nil {
             Task {
-                try? await self.location.requestPermission(.whenInUse)
+                let isAllowed = await (try? self.location.requestPermission(.whenInUse).allowed) ?? false
+                if isAllowed {
+                    await self.updateToLatestLocation()
+                }
             }
+
             self.monitorPermissionsTask = Task {
                 await self.startMonitoringUserPermission()
             }
+            self.updateUserLocationEvery90Seconds()
+            self.updateUserLocationAfterBecomingActive()
         }
     }
 }
@@ -109,6 +117,34 @@ private extension UserLocationStore {
         self.permissionStatus = self.location.authorizationStatus.permissionStatus
         for await event in await self.location.startMonitoringAuthorization() {
             self.permissionStatus = event.authorizationStatus.permissionStatus
+        }
+    }
+
+    func updateUserLocationEvery90Seconds() {
+        self.updateLocationSubscription = Timer.publish(every: 90, on: .main, in: .default)
+            .autoconnect()
+            .sink { [weak self] _ in
+                guard let self, self.isLocationPermissionEnabled else { return }
+                Task {
+                    await self.updateToLatestLocation()
+                }
+            }
+    }
+
+    func updateUserLocationAfterBecomingActive() {
+        self.didBecomeActiveSubscription = NotificationCenter.default
+            .publisher(for: UIApplication.didBecomeActiveNotification)
+            .sink { [weak self] _ in
+                guard let self, self.isLocationPermissionEnabled else { return }
+                Task {
+                    await self.updateToLatestLocation()
+                }
+            }
+    }
+
+    func updateToLatestLocation() async {
+        if let newLocation = try? await self.location.requestLocation().location {
+            self.currentUserLocation = newLocation
         }
     }
 }
