@@ -165,6 +165,9 @@
     "Enable Touch Visualizer" : {
 
     },
+    "Enter your phone number or email" : {
+
+    },
     "Enter your Verification Code" : {
 
     },
@@ -198,6 +201,9 @@
           }
         }
       }
+    },
+    "Go Back" : {
+
     },
     "Heading: %@" : {
       "comment" : "street view"
@@ -289,6 +295,9 @@
 
     },
     "Nearby Trending" : {
+
+    },
+    "Next" : {
 
     },
     "No Content To be Shown Here." : {

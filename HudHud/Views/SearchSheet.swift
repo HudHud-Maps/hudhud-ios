@@ -211,6 +211,7 @@ struct SearchSheet: View {
         }
         .fullScreenCover(isPresented: self.$loginShown) {
             UserLoginView(loginStore: LoginStore())
+                .toolbarRole(.editor)
         }
     }
 
