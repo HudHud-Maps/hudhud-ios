@@ -10,6 +10,7 @@ import MapboxCoreNavigation
 import OSLog
 import SwiftLocation
 import SwiftUI
+import TypographyKit
 
 // MARK: - HudHudApp
 
@@ -48,5 +49,11 @@ struct HudHudApp: App {
         let routingStore = RoutingStore(mapStore: self.mapStore)
         self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, mode: .live(provider: .hudhud))
+        // Load custom typography configuration
+        if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
+            TypographyKit.configure(with:
+                TypographyKitConfiguration.default.setConfigurationURL(url)
+            )
+        }
     }
 }

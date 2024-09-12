@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import TypographyKit
 
 // MARK: - UserLoginView
 
@@ -44,8 +45,7 @@ struct UserLoginView: View {
                     Spacer()
 
                     Text(self.title)
-                        .hudhudFont(.title)
-
+                        .typography(style: UIFont.TextStyle(rawValue: "heading.xxLarge"))
                     FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
                         .padding(.top)
                         .keyboardType(self.keyboardTypeForInput)
@@ -56,6 +56,7 @@ struct UserLoginView: View {
                         self.path.append(LoginStore.UserRegistrationPath.OTPView)
                     } label: {
                         Text(self.title)
+                            .typography(style: UIFont.TextStyle(rawValue: "heading.medium"))
                     }
                     .buttonStyle(LargeButtonStyle(
                         backgroundColor: Color.Colors.General._07BlueMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),

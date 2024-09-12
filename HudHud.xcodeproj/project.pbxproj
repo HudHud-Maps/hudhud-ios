@@ -84,6 +84,8 @@
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
 		CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */; };
 		CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */; };
+		CB7033BB2C9300610006681E /* TypographyKit in Frameworks */ = {isa = PBXBuildFile; productRef = CB7033BA2C9300610006681E /* TypographyKit */; };
+		CB7033BD2C9300810006681E /* typography-design-tokens.json in Resources */ = {isa = PBXBuildFile; fileRef = CB7033BC2C9300810006681E /* typography-design-tokens.json */; };
 		CBBF2857017E4782EF92382B /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2856856A5D5158A8D6A42F /* PlusJakartaSans-Regular.ttf */; };
 		CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */; };
 		CC774EDB8B36844F285C147B /* PlusJakartaSans-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */; };
@@ -249,6 +251,7 @@
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
 		CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSheetView.swift; sourceTree = "<group>"; };
 		CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFiltersView.swift; sourceTree = "<group>"; };
+		CB7033BC2C9300810006681E /* typography-design-tokens.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "typography-design-tokens.json"; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
@@ -314,6 +317,7 @@
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
 				CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
+				CB7033BB2C9300610006681E /* TypographyKit in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
 				CD1882FC2BF63E8200C8AD49 /* MapLibreSwiftDSL in Frameworks */,
 			);
@@ -687,6 +691,7 @@
 			isa = PBXGroup;
 			children = (
 				CDAE054B2B681263003E5196 /* Assets.xcassets */,
+				CB7033BC2C9300810006681E /* typography-design-tokens.json */,
 				CDAE05A72B69358E003E5196 /* Terrain.json */,
 				912B1ACD8511E9B4FB445AD7 /* Info.plist */,
 				90CBC72A2BD79D4C00F98199 /* InfoPlist.xcstrings */,
@@ -727,7 +732,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CB7033B82C8DCA100006681E /* PBXTargetDependency */,
+				CB7033BF2C9332450006681E /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -747,6 +752,7 @@
 				2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */,
 				F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */,
 				CDCF58422C8EEA6300906959 /* NukeUI */,
+				CB7033BA2C9300610006681E /* TypographyKit */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -833,6 +839,7 @@
 				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
 				CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke" */,
+				CB7033B92C9300610006681E /* XCRemoteSwiftPackageReference "TypographyKit" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -860,6 +867,7 @@
 				F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */,
 				D811C7BCC8E737CD5281D017 /* pannellum.css in Resources */,
 				C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */,
+				CB7033BD2C9300810006681E /* typography-design-tokens.json in Resources */,
 				253BCFDA8087C938D044B441 /* streetview.html in Resources */,
 				F4A353E85F0E0AF34C4240CE /* PlusJakartaSans-ExtraLight.ttf in Resources */,
 				73F84F1D2466A9DB8AF62C57 /* PlusJakartaSans-ExtraLightItalic.ttf in Resources */,
@@ -1040,9 +1048,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB7033B82C8DCA100006681E /* PBXTargetDependency */ = {
+		CB7033BF2C9332450006681E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = CB7033B72C8DCA100006681E /* SwiftLint */;
+			productRef = CB7033BE2C9332450006681E /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1399,6 +1407,14 @@
 				kind = branch;
 			};
 		};
+		CB7033B92C9300610006681E /* XCRemoteSwiftPackageReference "TypographyKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/rwbutler/TypographyKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
 		CD1882FA2BF63E8200C8AD49 /* XCRemoteSwiftPackageReference "maplibre-swiftui-dsl-playground" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground";
@@ -1502,7 +1518,12 @@
 			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
 		};
-		CB7033B72C8DCA100006681E /* SwiftLint */ = {
+		CB7033BA2C9300610006681E /* TypographyKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CB7033B92C9300610006681E /* XCRemoteSwiftPackageReference "TypographyKit" */;
+			productName = TypographyKit;
+		};
+		CB7033BE2C9332450006681E /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";
