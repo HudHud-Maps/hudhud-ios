@@ -107,8 +107,7 @@ final class SearchViewStore: ObservableObject {
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
-            self.mapStore.displayableItems = []
-            self.mapStore.selectedItem = nil
+            self.mapStore.clearItems()
         }
     }
 
@@ -138,7 +137,7 @@ final class SearchViewStore: ObservableObject {
             await self.mapStore.resolve(item)
         case let .categoryItem(resolvedItem):
             self.mapViewStore.selectedDetent = .third
-            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.select(resolvedItem)
         case let .category(category):
             await self.fetch(category: category.name)
         case .predictionItem:
@@ -168,7 +167,7 @@ final class SearchViewStore: ObservableObject {
                 return
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
-            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.select(resolvedItem)
             self.mapViewStore.selectedDetent = .third
         } catch {
             self.searchError = error
@@ -219,8 +218,7 @@ final class SearchViewStore: ObservableObject {
 
     func endTrip() {
         self.routingStore.endTrip()
-        self.mapStore.selectedItem = nil
-        self.mapStore.displayableItems = []
+        self.mapStore.clearItems()
         self.searchText = ""
         self.mapViewStore.reset()
     }

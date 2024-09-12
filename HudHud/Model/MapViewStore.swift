@@ -53,7 +53,7 @@ final class MapViewStore: ObservableObject {
             if !self.path.isEmpty {
                 self.path.removeLast()
             }
-            self.mapStore.selectedItem = nil
+            self.mapStore.unselectItem()
         }
     }
 

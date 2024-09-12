@@ -59,7 +59,7 @@ final class MapStore: ObservableObject {
     var mapView: NavigationMapView?
     let userLocationStore: UserLocationStore
 
-    @Published var selectedItem: ResolvedItem?
+    @Published private(set) var selectedItem: ResolvedItem?
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
@@ -122,6 +122,24 @@ final class MapStore: ObservableObject {
     // MARK: Functions
 
     // MARK: - Internal
+
+    func clearListAndSelect(_ item: ResolvedItem) {
+        self.selectedItem = item
+        self.displayableItems = [DisplayableRow.resolvedItem(item)]
+    }
+
+    func unselectItem() {
+        self.selectedItem = nil
+    }
+
+    func select(_ item: ResolvedItem) {
+        self.selectedItem = item
+    }
+
+    func clearItems() {
+        self.selectedItem = nil
+        self.displayableItems = []
+    }
 
     func getCameraPitch() -> Double {
         if case let .centered(
@@ -223,7 +241,7 @@ final class MapStore: ObservableObject {
                     }
                 } else {
                     // if poi choosing from Resents or directly from the search it will zoom and center around it
-                    self.camera = .center(selectedItem.coordinate, zoom: 15)
+                    self.camera = .center(selectedItem.coordinate, zoom: self.camera.zoom ?? 15)
                 }
             }
         case let .userLocation(userLocation):

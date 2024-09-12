@@ -180,8 +180,8 @@ struct MapViewContainer: View {
         }
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                self.searchViewStore.mapStore.selectedItem = selectedItem
+                let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
+                self.searchViewStore.mapStore.select(generatedPOI)
                 self.mapViewStore.selectedDetent = .third
             }
         })
