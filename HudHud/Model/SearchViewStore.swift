@@ -167,7 +167,7 @@ final class SearchViewStore: ObservableObject {
                 return
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
-            self.mapStore.select(resolvedItem)
+            self.mapStore.select(resolvedItem, shouldFocusCamera: true)
             self.mapViewStore.selectedDetent = .third
         } catch {
             self.searchError = error
@@ -184,8 +184,10 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
-            let items = try await hudhud.items(for: category, topRated: topRated, location: userLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
+            let categoryItems = try await hudhud
+                .items(for: category, topRated: topRated, location: userLocation, baseURL: DebugStore().baseURL)
+                .map(DisplayableRow.categoryItem)
+            self.mapStore.replaceItemsAndFocusCamera(on: categoryItems)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -204,12 +206,13 @@ final class SearchViewStore: ObservableObject {
         do {
             let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
             let results = try await self.hudhud.predict(term: self.searchText, coordinates: userLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = results.items.compactMap { item in
+            let items = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
                     return DisplayableRow.categoryItem(resolvedItem)
                 }
                 return nil
             }
+            self.mapStore.replaceItemsAndFocusCamera(on: items)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -258,7 +261,7 @@ private extension SearchViewStore {
                     try await self.hudhud.predict(term: term, coordinates: userLocation, baseURL: DebugStore().baseURL)
                 }
                 self.searchError = nil
-                self.mapStore.displayableItems = result.items
+                self.mapStore.replaceItemsAndFocusCamera(on: result.items)
                 self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {
                     .small // hudhud provider has coordinates in the response, so we can show the results in the map
                 } else {

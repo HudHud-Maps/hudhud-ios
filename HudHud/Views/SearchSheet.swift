@@ -138,7 +138,7 @@ struct SearchSheet: View {
                             switch item {
                             case let .categoryItem(item):
                                 CategoryItemView(item: item) {
-                                    self.mapStore.select(item)
+                                    self.mapStore.select(item, shouldFocusCamera: true)
                                 }
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

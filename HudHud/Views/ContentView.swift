@@ -278,7 +278,7 @@ struct SizePreferenceKey: PreferenceKey {
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
-    store.mapStore.select(poi)
+    store.mapStore.select(poi, shouldFocusCamera: true)
     return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
 }
 
