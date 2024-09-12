@@ -14,4 +14,14 @@ extension CLAuthorizationStatus {
     var allowed: Bool {
         return self == .authorizedAlways || self == .authorizedWhenInUse
     }
+
+    var permissionStatus: UserLocationStore.PermissionStatus {
+        if self.allowed {
+            .enabled
+        } else if self == .notDetermined {
+            .notDetermined
+        } else {
+            .denied
+        }
+    }
 }

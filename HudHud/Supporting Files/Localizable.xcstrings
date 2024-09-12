@@ -162,6 +162,9 @@
     "Edit" : {
 
     },
+    "Enable location in permissions" : {
+
+    },
     "Enable Touch Visualizer" : {
 
     },
@@ -237,6 +240,9 @@
           }
         }
       }
+    },
+    "Location Needed" : {
+
     },
     "Map Details" : {
       "extractionState" : "stale",
@@ -320,6 +326,9 @@
     },
     "Pitch: %@" : {
       "comment" : "street view"
+    },
+    "Please enable your location to get directions" : {
+
     },
     "Ratings" : {
 
