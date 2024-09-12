@@ -84,6 +84,7 @@ struct RootSheetView: View {
                     } onDismiss: {
                         self.searchViewStore.mapStore.selectedItem = nil
                         self.searchViewStore.mapStore.displayableItems = []
+                        self.searchViewStore.searchText = ""
                         if !self.mapViewStore.path.isEmpty {
                             self.mapViewStore.path.removeLast()
                         }
