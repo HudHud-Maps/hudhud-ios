@@ -701,6 +701,8 @@ paths:
 components:
   schemas:
     AndroidCategoryIcon:
+      required:
+        - name
       type: object
       properties:
         color:
@@ -732,8 +734,10 @@ components:
       properties:
         lat:
           type: number
+          format: double
         lon:
           type: number
+          format: double
     IOSCategoryIcon:
       required:
         - color
@@ -919,8 +923,10 @@ components:
         distance:
           type: number
           description: Should this be here or in a DTO struct ? for now it's easier to put it here
+          format: double
         duration:
           type: number
+          format: double
         id:
           type: string
         instagram:
@@ -945,6 +951,7 @@ components:
           type: integer
         rating:
           type: number
+          format: double
         ratings_count:
           type: integer
         trending_image_url:
@@ -974,6 +981,7 @@ components:
           type: string
         distance:
           type: number
+          format: double
         geom:
           type: string
         id:
