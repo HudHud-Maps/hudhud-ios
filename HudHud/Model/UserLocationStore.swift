@@ -124,7 +124,7 @@ private extension UserLocationStore {
         self.updateLocationSubscription = Timer.publish(every: 90, on: .main, in: .default)
             .autoconnect()
             .sink { [weak self] _ in
-                guard let self, self.isLocationPermissionEnabled else { return }
+                guard let self, self.permissionStatus.isEnabled else { return }
                 Task {
                     await self.updateToLatestLocation()
                 }
@@ -135,7 +135,7 @@ private extension UserLocationStore {
         self.didBecomeActiveSubscription = NotificationCenter.default
             .publisher(for: UIApplication.didBecomeActiveNotification)
             .sink { [weak self] _ in
-                guard let self, self.isLocationPermissionEnabled else { return }
+                guard let self, self.permissionStatus.isEnabled else { return }
                 Task {
                     await self.updateToLatestLocation()
                 }
