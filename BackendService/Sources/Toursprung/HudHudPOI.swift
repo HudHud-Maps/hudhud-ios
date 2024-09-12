@@ -27,6 +27,8 @@ enum OpenAPIClientError: Error {
 // errors specific to our backend
 enum HudHudClientError: Error {
     case poiIDNotFound
+    case internalServerError(String)
+    case badRequest(String)
 
 }
 
@@ -151,13 +153,26 @@ public struct HudHudPOI: POIServiceProtocol {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let url: URL? = if let websiteString = jsonResponse.data.website {
+                let url: URL? = if let websiteString = jsonResponse.data.value1.website {
                     URL(string: websiteString)
                 } else {
                     nil
                 }
-                let mediaURLsList = jsonResponse.data.media_urls?.compactMap { URL(string: $0.url) } ?? []
-                return [ResolvedItem(id: jsonResponse.data.id, title: jsonResponse.data.name, subtitle: jsonResponse.data.address, category: jsonResponse.data.category, symbol: .pin, type: .appleResolved, coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.coordinates.lat, longitude: jsonResponse.data.coordinates.lon), phone: jsonResponse.data.phone_number, website: url, rating: jsonResponse.data.rating, ratingsCount: jsonResponse.data.ratings_count, isOpen: jsonResponse.data.is_open, mediaURLs: mediaURLsList)]
+                let mediaURLsList = jsonResponse.data.value1.media_urls.compactMap { URL(string: $0.url) }
+                return [ResolvedItem(id: jsonResponse.data.value1.id,
+                                     title: jsonResponse.data.value1.name,
+                                     subtitle: jsonResponse.data.value1.address,
+                                     category: jsonResponse.data.value1.category,
+                                     symbol: .pin,
+                                     type: .appleResolved,
+                                     coordinate: CLLocationCoordinate2D(latitude: jsonResponse.data.value1.coordinates.lat,
+                                                                        longitude: jsonResponse.data.value1.coordinates.lon),
+                                     phone: jsonResponse.data.value1.phone_number,
+                                     website: url,
+                                     rating: jsonResponse.data.value1.rating,
+                                     ratingsCount: jsonResponse.data.value1.ratings_count,
+                                     isOpen: jsonResponse.data.value1.is_open,
+                                     mediaURLs: mediaURLsList)]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -168,6 +183,8 @@ public struct HudHudPOI: POIServiceProtocol {
                 nil
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
         }
     }
 
@@ -222,6 +239,8 @@ public struct HudHudPOI: POIServiceProtocol {
                 nil
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
         }
     }
 
@@ -252,8 +271,7 @@ public struct HudHudPOI: POIServiceProtocol {
                     website: URL(string: item.website ?? ""),
                     rating: item.rating,
                     ratingsCount: item.ratings_count,
-                    isOpen: item.is_open, mediaURLs: item.media_urls?
-                        .compactMap { URL(string: $0.url) } ?? [],
+                    isOpen: item.is_open, mediaURLs: item.media_urls.compactMap { URL(string: $0.url) },
                     distance: item.distance
                 )
             }
@@ -264,6 +282,10 @@ public struct HudHudPOI: POIServiceProtocol {
                 nil
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+        case let .badRequest(error):
+            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
         }
     }
 
@@ -343,7 +365,7 @@ public enum SystemColor: String, Codable {
 
     // MARK: Lifecycle
 
-    init(color: Components.Schemas.IosCategoryIcon.colorPayload) {
+    init(color: Components.Schemas.IOSCategoryIcon.colorPayload) {
         switch color {
         case .systemGray:
             self = .systemGray
