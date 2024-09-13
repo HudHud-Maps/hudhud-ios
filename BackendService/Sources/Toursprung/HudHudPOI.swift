@@ -158,7 +158,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 } else {
                     nil
                 }
-                let mediaURLsList = jsonResponse.data.value1.media_urls.compactMap { URL(string: $0.url) }
+                let mediaURLsList = jsonResponse.data.value1.media_urls?.compactMap { URL(string: $0.url) }
                 return [ResolvedItem(id: jsonResponse.data.value1.id,
                                      title: jsonResponse.data.value1.name,
                                      subtitle: jsonResponse.data.value1.address,
@@ -172,7 +172,7 @@ public struct HudHudPOI: POIServiceProtocol {
                                      rating: jsonResponse.data.value1.rating,
                                      ratingsCount: jsonResponse.data.value1.ratings_count,
                                      isOpen: jsonResponse.data.value1.is_open,
-                                     mediaURLs: mediaURLsList)]
+                                     mediaURLs: mediaURLsList ?? [])]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -271,7 +271,8 @@ public struct HudHudPOI: POIServiceProtocol {
                     website: URL(string: item.website ?? ""),
                     rating: item.rating,
                     ratingsCount: item.ratings_count,
-                    isOpen: item.is_open, mediaURLs: item.media_urls.compactMap { URL(string: $0.url) },
+                    isOpen: item.is_open,
+                    mediaURLs: item.media_urls?.compactMap { URL(string: $0.url) } ?? [],
                     distance: item.distance
                 )
             }

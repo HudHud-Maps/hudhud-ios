@@ -902,7 +902,6 @@ components:
         - category
         - coordinates
         - id
-        - media_urls
         - name
       type: object
       properties:
