@@ -16,6 +16,7 @@ struct MoreFiltersView: View {
     @State private var ratingSelection = "Any"
     @State private var scheduleSelection = "Any"
     @ObservedObject var searchStore: SearchViewStore
+    @ObservedObject var filterStore: FilterStore
     @Environment(\.dismiss) private var dismiss
     var body: some View {
         VStack(alignment: .leading) {
@@ -63,7 +64,11 @@ struct MoreFiltersView: View {
         .navigationBarItems(
             trailing:
             Button {
-                self.applyFilters()
+                self.filterStore.sortSelection = self.sortSelection
+                self.filterStore.priceSelection = self.priceSelection
+                self.filterStore.ratingSelection = self.ratingSelection
+                self.filterStore.scheduleSelection = self.scheduleSelection
+                self.filterStore.applyFilters()
                 self.dismiss()
             } label: {
                 Text("Apply")
@@ -90,49 +95,9 @@ struct MoreFiltersView: View {
         return Array(repeating: image, count: imageCount)
     }
 
-    private func applyFilters() {
-        self.searchStore.selectedFilters.removeAll()
-
-        if self.sortSelection == "Distance" {
-            self.searchStore.selectedFilters.append(.sort(.distance))
-        } else {
-            self.searchStore.selectedFilters.append(.sort(.relevance))
-        }
-
-        switch self.priceSelection {
-        case "one":
-            self.searchStore.selectedFilters.append(.priceRange(.cheap))
-        case "two":
-            self.searchStore.selectedFilters.append(.priceRange(.medium))
-        case "three":
-            self.searchStore.selectedFilters.append(.priceRange(.pricy))
-        case "four":
-            self.searchStore.selectedFilters.append(.priceRange(.expensive))
-        default:
-            break
-        }
-
-        switch self.ratingSelection {
-        case "Any":
-            self.searchStore.selectedFilters.append(.rating(.anyRating))
-        case "3.5":
-            self.searchStore.selectedFilters.append(.rating(.rating4))
-        case "4.0":
-            self.searchStore.selectedFilters.append(.rating(.rating4))
-        case "4.5":
-            self.searchStore.selectedFilters.append(.rating(.rating4andHalf))
-        default:
-            break
-        }
-
-        if self.scheduleSelection == "Open" {
-            self.searchStore.selectedFilters.append(.openNow)
-        }
-
-        self.searchStore.updateDisplayedItems()
-    }
 }
 
 #Preview {
-    MoreFiltersView(searchStore: .storeSetUpForPreviewing)
+    let filterStore = FilterStore()
+    return MoreFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: filterStore)
 }

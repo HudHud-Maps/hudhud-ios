@@ -13,6 +13,7 @@ struct MainFiltersView: View {
     // MARK: Properties
 
     @ObservedObject var searchStore: SearchViewStore
+    @ObservedObject var filterStore: FilterStore
 
     // MARK: Content
 
@@ -22,7 +23,7 @@ struct MainFiltersView: View {
             self.filterButton(title: "Top Rated", filter: .topRated)
             Spacer()
             NavigationLink {
-                MoreFiltersView(searchStore: self.searchStore)
+                MoreFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
             } label: {
                 Image(.filter)
                     .hudhudFont(.caption2)
@@ -31,35 +32,24 @@ struct MainFiltersView: View {
         }
     }
 
-    private func filterButton(title: String, filter: SearchViewStore.FilterType) -> some View {
+    private func filterButton(title: String, filter: FilterStore.FilterType) -> some View {
         Button {
-            self.toggleFilter(filter)
+            self.filterStore.toggleFilter(filter)
         } label: {
             Text(title)
                 .hudhudFont(size: 12, fontWeight: .semiBold)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 11)
-                .foregroundStyle(self.searchStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
+                .foregroundStyle(self.filterStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
                 .overlay(
                     RoundedRectangle(cornerRadius: 10)
-                        .stroke(self.searchStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
+                        .stroke(self.filterStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
                 )
         }
-    }
-
-    // MARK: Functions
-
-    private func toggleFilter(_ filter: SearchViewStore.FilterType) {
-        if let index = self.searchStore.selectedFilters.firstIndex(of: filter) {
-            self.searchStore.selectedFilters.remove(at: index)
-        } else {
-            self.searchStore.selectedFilters.append(filter)
-        }
-
-        self.searchStore.updateDisplayedItems()
     }
 }
 
 #Preview {
-    MainFiltersView(searchStore: .storeSetUpForPreviewing)
+    let filterStore = FilterStore()
+    return MainFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: filterStore)
 }

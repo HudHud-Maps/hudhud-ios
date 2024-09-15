@@ -37,6 +37,7 @@
 		594C487B2C0E5F9400756633 /* FavoriteItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 594C487A2C0E5F9400756633 /* FavoriteItemView.swift */; };
 		5970ED2F2C8A2E7900AF7D2C /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5970ED2E2C8A2E7900AF7D2C /* MoreFiltersView.swift */; };
 		5970ED312C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5970ED302C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift */; };
+		5970ED332C91B16200AF7D2C /* FilterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5970ED322C91B16200AF7D2C /* FilterStore.swift */; };
 		59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = E25BA789B8A5B417D47CA3C3 /* NavigationTransitions */; };
 		59A28FFE2C3EC9B800780307 /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = C71C7BD81C2B56D70AB2E23A /* BetterSafariView */; };
 		59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */; };
@@ -206,6 +207,7 @@
 		594C487A2C0E5F9400756633 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
 		5970ED2E2C8A2E7900AF7D2C /* MoreFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreFiltersView.swift; sourceTree = "<group>"; };
 		5970ED302C8D9CC500AF7D2C /* HudhudSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudSegmentedPicker.swift; sourceTree = "<group>"; };
+		5970ED322C91B16200AF7D2C /* FilterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStore.swift; sourceTree = "<group>"; };
 		59A290072C43CA0000780307 /* POIMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIMediaView.swift; sourceTree = "<group>"; };
 		59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewContainer.swift; sourceTree = "<group>"; };
 		59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
@@ -473,6 +475,7 @@
 			children = (
 				CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */,
 				5970ED2E2C8A2E7900AF7D2C /* MoreFiltersView.swift */,
+				5970ED322C91B16200AF7D2C /* FilterStore.swift */,
 			);
 			path = FiltersView;
 			sourceTree = "<group>";
@@ -993,6 +996,7 @@
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
 				4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */,
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
+				5970ED332C91B16200AF7D2C /* FilterStore.swift in Sources */,
 				655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */,
 				EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */,
 				1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */,

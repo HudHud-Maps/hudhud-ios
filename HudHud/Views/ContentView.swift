@@ -157,7 +157,7 @@ struct ContentView: View {
                 get: { self.searchViewStore.routingStore.navigationProgress == .none || self.searchViewStore.routingStore.navigationProgress == .feedback },
                 set: { _ in }
             )) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, sheetSize: self.$sheetSize, filterStore: self.searchViewStore.filterStore)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)

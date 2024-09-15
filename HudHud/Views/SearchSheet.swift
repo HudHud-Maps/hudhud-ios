@@ -27,6 +27,7 @@ struct SearchSheet: View {
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapViewStore: MapViewStore
+    @ObservedObject var filterStore: FilterStore
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
 
@@ -34,11 +35,12 @@ struct SearchSheet: View {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore, filterStore: FilterStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
         self.mapViewStore = mapViewStore
+        self.filterStore = filterStore
         self.searchIsFocused = false
     }
 
@@ -113,7 +115,7 @@ struct SearchSheet: View {
             // Show the filter UI if the search view is displaying an item that was fetched from a category.
             if let firstItem = self.mapStore.displayableItems.first,
                case .categoryItem = firstItem {
-                MainFiltersView(searchStore: self.searchStore)
+                MainFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
                     .padding(.horizontal)
                     .padding(.top)
             }
@@ -265,5 +267,6 @@ extension [ResolvedItem]: RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing)
+    let filterStore = FilterStore()
+    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing, filterStore: filterStore)
 }

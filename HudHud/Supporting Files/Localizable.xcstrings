@@ -59,7 +59,7 @@
     "Add Type" : {
 
     },
-    "Apply Filters" : {
+    "Apply" : {
 
     },
     "Bad Traffic Data" : {
@@ -191,6 +191,9 @@
         }
       }
     },
+    "Filters" : {
+
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -285,9 +288,6 @@
         }
       }
     },
-    "More Filters" : {
-
-    },
     "N / A" : {
 
     },
@@ -316,9 +316,6 @@
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
     "Open" : {
-
-    },
-    "Open Now" : {
 
     },
     "Personal Information" : {

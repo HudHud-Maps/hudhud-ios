@@ -76,8 +76,8 @@ struct HudhudSegmentedPickerButton: View {
     // MARK: Properties
 
     let option: SegmentOption
-    var isSelected: Bool
-    var action: () -> Void
+    let isSelected: Bool
+    let action: () -> Void
 
     // MARK: Content
 
@@ -113,7 +113,7 @@ struct HudhudSegmentedPickerButton: View {
                 }
             }
             .foregroundColor(self.isSelected ? .white : Color.Colors.General._02Grey)
-            .padding(8)
+            .padding()
             .frame(maxWidth: .infinity)
             .background(self.isSelected ? Color.Colors.General._10GreenMain : Color.Colors.General._03LightGrey)
         }
