@@ -173,8 +173,25 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
-            let items = try await hudhud.items(for: category, topRated: self.filterStore.topRated, priceRange: self.filterStore.priceRange, sortBy: self.filterStore.sortBy, rating: self.filterStore.rating, location: userLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
+            let items = try await hudhud.items(
+                for: category,
+                topRated: self.filterStore.topRated,
+                priceRange: self.filterStore.priceRange,
+                sortBy: self.filterStore.sortBy,
+                rating: self.filterStore.rating,
+                location: userLocation,
+                baseURL: DebugStore().baseURL
+            )
+
+            var filteredItems = items
+
+            // Apply 'open now' filter locally
+            if self.filterStore.selectedFilters.contains(.openNow) {
+                filteredItems = filteredItems.filter { $0.isOpen == true }
+            }
+
+            self.mapStore.displayableItems = filteredItems.map(DisplayableRow.categoryItem)
+
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")

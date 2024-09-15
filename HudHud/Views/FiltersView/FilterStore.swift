@@ -56,6 +56,7 @@ class FilterStore: ObservableObject {
     @Published var ratingSelection = "Any"
     @Published var scheduleSelection = "Any"
     @Published var topRated = false
+    @Published var openNow = false
 
     private var cancellables = Set<AnyCancellable>()
 
@@ -126,10 +127,12 @@ class FilterStore: ObservableObject {
     // MARK: Functions
 
     func toggleFilter(_ filter: FilterType) {
-        if let index = selectedFilters.firstIndex(of: filter) {
-            self.selectedFilters.remove(at: index)
-        } else {
-            self.selectedFilters.append(filter)
+        if filter == .topRated {
+            self.topRated.toggle()
+            self.selectedFilters.append(.topRated)
+        } else if filter == .openNow {
+            self.openNow.toggle()
+            self.selectedFilters.append(.openNow)
         }
     }
 
