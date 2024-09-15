@@ -64,7 +64,7 @@ struct ContentView: View {
     }
 
     private var mapLeadingPadding: CGFloat {
-        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) {
+        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
             0
         } else {
             60
@@ -72,7 +72,7 @@ struct ContentView: View {
     }
 
     private var mapTopPadding: CGFloat {
-        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) {
+        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
             0
         } else {
             40
@@ -80,7 +80,7 @@ struct ContentView: View {
     }
 
     private var mapBottomPadding: CGFloat {
-        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) {
+        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
             self.sheetSize.height
         } else {
             self.sheetSize.height + 48
