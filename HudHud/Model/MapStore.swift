@@ -317,12 +317,12 @@ private extension MapStore {
 
     func bindLayersVisability() {
         self.$displayableItems
-            .map(\.isEmpty)
+            .map { $0.count <= 1 }
             .removeDuplicates()
-            .sink { [weak self] isEmpty in
+            .sink { [weak self] isVisible in
                 self?.mapStyle?.layers.forEach { layer in
                     if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
-                        layer.isVisible = isEmpty
+                        layer.isVisible = isVisible
                     }
                 }
             }
