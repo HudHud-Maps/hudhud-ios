@@ -6,6 +6,9 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
+import Foundation
+import OSLog
 import SwiftUI
 
 // MARK: - UserLoginView
@@ -19,6 +22,7 @@ struct UserLoginView: View {
     @State private var path = NavigationPath()
     @Environment(\.dismiss) var dismiss
     @FocusState private var isFocused: Bool
+    var registrationService: RegistrationService
 
     // MARK: Content
 
@@ -92,7 +96,16 @@ struct UserLoginView: View {
                 ))
                 // Button to proceed to the next view (OTP view)
                 Button {
-                    self.path.append(LoginStore.UserRegistrationPath.OTPView)
+                    Task {
+                        do {
+                            let registrationData = try await registrationService.login(loginInput: self.bindingForInput.wrappedValue, baseURL: DebugStore().baseURL)
+                            self.registrationService.registrationData = registrationData
+                            self.path.append(LoginStore.UserRegistrationPath.OTPView)
+                        } catch {
+                            self.registrationService.registrationData = nil
+                            Logger.userRegistration.error("\(error.localizedDescription)")
+                        }
+                    }
                 } label: {
                     Text("Next")
                 }
@@ -166,5 +179,5 @@ private extension UserLoginView {
 }
 
 #Preview {
-    return UserLoginView(loginStore: LoginStore())
+    return UserLoginView(loginStore: LoginStore(), registrationService: RegistrationService())
 }
