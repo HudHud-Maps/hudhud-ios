@@ -184,7 +184,6 @@ final class SearchViewStore: ObservableObject {
             )
 
             var filteredItems = items
-
             // Apply 'open now' filter locally
             if self.filterStore.selectedFilters.contains(.openNow) {
                 filteredItems = filteredItems.filter { $0.isOpen == true }

@@ -58,21 +58,13 @@ class FilterStore: ObservableObject {
     @Published var topRated = false
     @Published var openNow = false
 
+    @Published var selectedFilters: [FilterType] = []
+
     private var cancellables = Set<AnyCancellable>()
 
     private var isUpdating = false
 
     // MARK: Computed Properties
-
-    @Published var selectedFilters: [FilterType] = [] {
-        didSet {
-            if !self.isUpdating {
-                self.isUpdating = true
-                self.applyFilters()
-                self.isUpdating = false
-            }
-        }
-    }
 
     var sortBy: HudHudPOI.SortBy? {
         for filter in self.selectedFilters {
@@ -126,17 +118,7 @@ class FilterStore: ObservableObject {
 
     // MARK: Functions
 
-    func toggleFilter(_ filter: FilterType) {
-        if filter == .topRated {
-            self.topRated.toggle()
-            self.selectedFilters.append(.topRated)
-        } else if filter == .openNow {
-            self.openNow.toggle()
-            self.selectedFilters.append(.openNow)
-        }
-    }
-
-    func applyFilters() {
+    func applyFilters(_ filter: FilterType? = nil) {
         var newFilters: [FilterType] = []
 
         let sortFilter: FilterType? = {
@@ -187,10 +169,16 @@ class FilterStore: ObservableObject {
             newFilters.append(ratingFilter)
         }
 
-        if self.scheduleSelection == "Open" {
+        if filter == .openNow {
+            self.openNow.toggle()
+        }
+        if self.scheduleSelection == "Open" || self.openNow {
             newFilters.append(.openNow)
         }
 
+        if filter == .topRated {
+            self.topRated.toggle()
+        }
         if self.topRated {
             newFilters.append(.topRated)
         }

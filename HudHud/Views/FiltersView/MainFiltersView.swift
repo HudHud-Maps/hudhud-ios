@@ -34,7 +34,7 @@ struct MainFiltersView: View {
 
     private func filterButton(title: String, filter: FilterStore.FilterType) -> some View {
         Button {
-            self.filterStore.toggleFilter(filter)
+            self.filterStore.applyFilters(filter)
         } label: {
             Text(title)
                 .hudhudFont(size: 12, fontWeight: .semiBold)
