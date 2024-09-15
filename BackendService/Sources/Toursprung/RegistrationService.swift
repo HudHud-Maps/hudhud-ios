@@ -66,7 +66,7 @@ public class RegistrationService: ObservableObject {
 
 // MARK: - RegistrationResponse
 
-public struct RegistrationResponse: Codable, Hashable {
+public struct RegistrationResponse: Codable {
 
     // MARK: Nested Types
 
@@ -86,21 +86,6 @@ public struct RegistrationResponse: Codable, Hashable {
     public var otpResendDate: Date? {
         let dateFormatter = ISO8601DateFormatter()
         return dateFormatter.date(from: self.canRequestOtpResendAt)
-    }
-
-    // MARK: Functions
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.id)
-        hasher.combine(self.loginIdentity)
-        hasher.combine(self.canRequestOtpResendAt)
-    }
-
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(self.id, forKey: .id)
-        try container.encode(self.loginIdentity, forKey: .loginIdentity)
-        try container.encode(self.canRequestOtpResendAt, forKey: .canRequestOtpResendAt)
     }
 
 }
