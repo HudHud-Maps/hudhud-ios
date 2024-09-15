@@ -167,9 +167,7 @@ final class MapStore: ObservableObject {
 
     func focusOnUser() async {
         guard let location = await self.userLocationStore.location()?.coordinate else { return }
-        withAnimation {
-            self.updateCamera(state: .userLocation(location))
-        }
+        self.updateCamera(state: .userLocation(location))
     }
 
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
