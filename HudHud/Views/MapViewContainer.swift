@@ -201,6 +201,13 @@ struct MapViewContainer: View {
             }
         })
         .mapViewContentInset(self.insets)
+        .mapControls {
+            CompassView()
+            LogoView()
+                .hidden(true)
+            AttributionButton()
+                .hidden(true)
+        }
         .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
             if let routeUnwrapped = newRoute,
                let route = routeUnwrapped.routes.first,
