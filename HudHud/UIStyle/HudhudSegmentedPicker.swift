@@ -17,6 +17,7 @@ struct HudhudSegmentedPicker: View {
 
     @Binding var selected: String
     let options: [SegmentOption]
+    @ScaledMetric var frameHeight = 35
 
     // MARK: Content
 
@@ -37,16 +38,10 @@ struct HudhudSegmentedPicker: View {
                 }
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: 35)
+        .frame(maxWidth: .infinity, maxHeight: self.frameHeight)
         .background(Color.Colors.General._03LightGrey)
         .cornerRadius(8)
     }
-}
-
-#Preview {
-    @State var selection = "1"
-    @State var options = ["1", "2", "3"]
-    return HudhudSegmentedPicker(selected: $selection, options: [SegmentOption(value: "1", label: .text("1")), SegmentOption(value: "2", label: .text("2")), SegmentOption(value: "3", label: .text("3"))])
 }
 
 // MARK: - SegmentOption
@@ -118,4 +113,10 @@ struct HudhudSegmentedPickerButton: View {
             .background(self.isSelected ? Color.Colors.General._10GreenMain : Color.Colors.General._03LightGrey)
         }
     }
+}
+
+#Preview {
+    @State var selection = "1"
+    @State var options = ["1", "2", "3"]
+    return HudhudSegmentedPicker(selected: $selection, options: [SegmentOption(value: "1", label: .text("1")), SegmentOption(value: "2", label: .text("2")), SegmentOption(value: "3", label: .text("3"))])
 }

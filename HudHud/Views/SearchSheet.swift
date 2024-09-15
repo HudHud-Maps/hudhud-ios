@@ -57,7 +57,6 @@ struct SearchSheet: View {
                         .submitLabel(.search)
                         .focused(self.$searchIsFocused)
                         .padding(.vertical, 10)
-                        .padding(.horizontal, 0)
                         .autocorrectionDisabled()
                         .overlay(
                             HStack {

@@ -139,9 +139,9 @@ public struct HudHudPOI: POIServiceProtocol {
         case pricy = 3
         case expensive = 4
 
-        // MARK: Functions
+        // MARK: Computed Properties
 
-        func toBackend() -> Operations.listPois.Input.Query.price_rangePayload {
+        var backendValue: Operations.listPois.Input.Query.price_rangePayload {
             switch self {
             case .cheap:
                 return ._1
@@ -159,9 +159,9 @@ public struct HudHudPOI: POIServiceProtocol {
         case relevance = "Relevance"
         case distance = "Distance"
 
-        // MARK: Functions
+        // MARK: Computed Properties
 
-        func toBackend() -> Operations.listPois.Input.Query.sort_byPayload {
+        var backendValue: Operations.listPois.Input.Query.sort_byPayload {
             switch self {
             case .relevance:
                 return .relevance
@@ -289,8 +289,8 @@ public struct HudHudPOI: POIServiceProtocol {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
-        let priceRange = priceRange?.toBackend()
-        let sortBy = sortBy?.toBackend()
+        let priceRange = priceRange?.backendValue
+        let sortBy = sortBy?.backendValue
         let response = try await Client.makeClient(using: baseURL).listPois(
             query: .init(sort_by: sortBy, price_range: priceRange, rating: rating, category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated),
             headers: .init(Accept_hyphen_Language: self.currentLanguage)
