@@ -455,7 +455,7 @@
         }
       }
     },
-    "We sent verification code on" : {
+    "We sent verification code on %@" : {
 
     },
     "Web" : {

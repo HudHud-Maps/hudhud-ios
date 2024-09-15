@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Combine
 import OSLog
 import SwiftUI
@@ -15,17 +16,18 @@ struct OTPVerificationView: View {
     // MARK: Properties
 
     @Binding var path: NavigationPath
+    var registrationService: RegistrationService
 
-    @StateObject private var store: OTPVerificationStore
+    @StateObject private var store = OTPVerificationStore()
     @FocusState private var focusedIndex: Int?
 
     // MARK: Lifecycle
 
     // MARK: Initialization
 
-    init(phoneNumber: String, path: Binding<NavigationPath>) {
-        _store = StateObject(wrappedValue: OTPVerificationStore(phoneNumber: phoneNumber))
+    init(path: Binding<NavigationPath>, registrationService: RegistrationService) {
         _path = path
+        self.registrationService = registrationService
     }
 
     // MARK: Content
@@ -37,11 +39,10 @@ struct OTPVerificationView: View {
                     Text("Enter your Verification Code")
                         .hudhudFont(.title2)
                         .foregroundColor(Color.Colors.General._01Black)
-                    HStack {
-                        Text("We sent verification code on")
-                        Text("\(self.store.phoneNumber)")
+                    if let loginIdentity = self.registrationService.registrationData?.loginIdentity {
+                        Text("We sent verification code on \(loginIdentity)")
+                            .foregroundColor(Color.Colors.General._02Grey)
                     }
-                    .foregroundColor(Color.Colors.General._02Grey)
                 }
                 Spacer()
             }
@@ -76,6 +77,7 @@ struct OTPVerificationView: View {
                 Text("Didn't Get the Code?")
                 Button(action: {
                     // Currently only reset the timer but it should also send new code to the user
+                    // here the next task will be to call resendOTP
                     self.store.resetTimer()
                 }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
@@ -102,7 +104,7 @@ struct OTPVerificationView: View {
             }
             .padding()
             .onAppear {
-                self.store.startTimer()
+                self.store.startTimer(otpResendAt: self.registrationService.registrationData?.otpResendDate)
             }
             .onDisappear {
                 self.store.timer?.invalidate()
@@ -162,5 +164,5 @@ struct OTPVerificationView: View {
 
 #Preview {
     @State var path = NavigationPath()
-    return OTPVerificationView(phoneNumber: "0504325432", path: $path)
+    return OTPVerificationView(path: $path, registrationService: RegistrationService())
 }

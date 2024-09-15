@@ -78,8 +78,15 @@ public struct RegistrationResponse: Codable, Hashable {
 
     // MARK: Properties
 
-    let id, loginIdentity: String
-    let canRequestOtpResendAt: String
+    public let id, loginIdentity: String
+    public let canRequestOtpResendAt: String
+
+    // MARK: Computed Properties
+
+    public var otpResendDate: Date? {
+        let dateFormatter = ISO8601DateFormatter()
+        return dateFormatter.date(from: self.canRequestOtpResendAt)
+    }
 
     // MARK: Functions
 

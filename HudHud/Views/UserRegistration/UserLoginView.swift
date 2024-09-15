@@ -22,7 +22,7 @@ struct UserLoginView: View {
     @State private var path = NavigationPath()
     @Environment(\.dismiss) var dismiss
     @FocusState private var isFocused: Bool
-    var registrationService: RegistrationService
+    @ObservedObject var registrationService: RegistrationService
 
     // MARK: Content
 
@@ -98,7 +98,8 @@ struct UserLoginView: View {
                 Button {
                     Task {
                         do {
-                            let registrationData = try await registrationService.login(loginInput: self.bindingForInput.wrappedValue, baseURL: DebugStore().baseURL)
+                            let loginInput = self.loginStore.userInput == .phone ? self.countryCode + self.bindingForInput.wrappedValue : self.bindingForInput.wrappedValue
+                            let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
                             self.registrationService.registrationData = registrationData
                             self.path.append(LoginStore.UserRegistrationPath.OTPView)
                         } catch {
@@ -120,7 +121,7 @@ struct UserLoginView: View {
             .navigationDestination(for: LoginStore.UserRegistrationPath.self) { route in
                 switch route {
                 case .OTPView:
-                    OTPVerificationView(phoneNumber: self.bindingForInput.wrappedValue, path: self.$path)
+                    OTPVerificationView(path: self.$path, registrationService: self.registrationService)
                         .toolbarRole(.editor)
                 case .personalInfoView:
                     PersonalInformationScreenView(loginStore: self.loginStore, onDismiss: { self.dismiss() })
