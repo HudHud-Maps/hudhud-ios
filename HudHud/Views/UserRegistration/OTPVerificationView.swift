@@ -15,19 +15,17 @@ struct OTPVerificationView: View {
 
     // MARK: Properties
 
-    @Binding var path: NavigationPath
-    var registrationService: RegistrationService
+    @State var loginStore: LoginStore
 
-    @StateObject private var store = OTPVerificationStore()
+    @State private var store = OTPVerificationStore()
     @FocusState private var focusedIndex: Int?
 
     // MARK: Lifecycle
 
     // MARK: Initialization
 
-    init(path: Binding<NavigationPath>, registrationService: RegistrationService) {
-        _path = path
-        self.registrationService = registrationService
+    init(loginStore: LoginStore) {
+        self.loginStore = loginStore
     }
 
     // MARK: Content
@@ -39,7 +37,7 @@ struct OTPVerificationView: View {
                     Text("Enter your Verification Code")
                         .hudhudFont(.title2)
                         .foregroundColor(Color.Colors.General._01Black)
-                    if let loginIdentity = self.registrationService.registrationData?.loginIdentity {
+                    if let loginIdentity = self.loginStore.registrationData?.loginIdentity {
                         Text("We sent verification code on \(loginIdentity)")
                             .foregroundColor(Color.Colors.General._02Grey)
                     }
@@ -90,7 +88,7 @@ struct OTPVerificationView: View {
                     // The fullCode will be send to the backend
                     if self.store.isCodeComplete {
                         let fullCode = self.store.code.joined()
-                        self.path.append(LoginStore.UserRegistrationPath.personalInfoView)
+                        self.loginStore.path.append(LoginStore.UserRegistrationPath.personalInfoView)
                         Logger.userRegistration.info("Code is valid: \(fullCode)")
                     }
                 }, label: {
@@ -104,7 +102,7 @@ struct OTPVerificationView: View {
             }
             .padding()
             .onAppear {
-                self.store.startTimer(otpResendAt: self.registrationService.registrationData?.otpResendDate)
+                self.store.startTimer(otpResendAt: self.loginStore.registrationData?.canRequestOtpResendAt ?? Date().addingTimeInterval(30))
             }
             .onDisappear {
                 self.store.timer?.invalidate()
@@ -163,6 +161,5 @@ struct OTPVerificationView: View {
 }
 
 #Preview {
-    @State var path = NavigationPath()
-    return OTPVerificationView(path: $path, registrationService: RegistrationService())
+    return OTPVerificationView(loginStore: LoginStore())
 }

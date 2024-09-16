@@ -13,12 +13,11 @@ import SwiftUI
 
 // MARK: - RegistrationService
 
-public class RegistrationService: ObservableObject {
+public struct RegistrationService {
 
     // MARK: Properties
 
-    @Published public var registrationData: RegistrationResponse?
-    @Published public var lastError: Error?
+    public var lastError: Error?
 
     // MARK: Lifecycle
 
@@ -26,7 +25,7 @@ public class RegistrationService: ObservableObject {
 
     // MARK: Functions
 
-    public func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
+    public mutating func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
         let urlSessionConfiguration = URLSessionConfiguration.default
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
@@ -46,8 +45,7 @@ public class RegistrationService: ObservableObject {
                     let canRequestOtpResendAt = jsonResponse.data.value1.can_request_otp_resend_at else {
                     throw HudHudClientError.internalServerError("login failed")
                 }
-
-                return RegistrationResponse(id: id, loginIdentity: loginIdentity, canRequestOtpResendAt: canRequestOtpResendAt)
+                return RegistrationResponse(id: id, loginIdentity: loginIdentity, canRequestOtpResendAt: self.date(from: canRequestOtpResendAt))
             }
         case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {
@@ -62,11 +60,16 @@ public class RegistrationService: ObservableObject {
         }
     }
 
+    func date(from canRequestOtpResendAt: String) -> Date {
+        let dateFormatter = ISO8601DateFormatter()
+        // If parsing fails, return a date that is 30 seconds from now
+        return dateFormatter.date(from: canRequestOtpResendAt) ?? Date().addingTimeInterval(30)
+    }
 }
 
 // MARK: - RegistrationResponse
 
-public struct RegistrationResponse: Codable {
+public struct RegistrationResponse {
 
     // MARK: Nested Types
 
@@ -79,13 +82,6 @@ public struct RegistrationResponse: Codable {
     // MARK: Properties
 
     public let id, loginIdentity: String
-    public let canRequestOtpResendAt: String
-
-    // MARK: Computed Properties
-
-    public var otpResendDate: Date? {
-        let dateFormatter = ISO8601DateFormatter()
-        return dateFormatter.date(from: self.canRequestOtpResendAt)
-    }
+    public let canRequestOtpResendAt: Date
 
 }

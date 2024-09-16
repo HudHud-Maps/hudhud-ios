@@ -9,14 +9,15 @@
 import Combine
 import Foundation
 
-class OTPVerificationStore: ObservableObject {
+@Observable
+class OTPVerificationStore {
 
     // MARK: Properties
 
     var timer: Timer?
-    @Published var timeRemaining: Int = 60
-    @Published var resendEnabled: Bool = false
-    @Published var code: [String] = Array(repeating: "", count: 6)
+    var timeRemaining: Int = 60
+    var resendEnabled: Bool = false
+    var code: [String] = Array(repeating: "", count: 6)
 
     // MARK: Computed Properties
 
@@ -36,17 +37,13 @@ class OTPVerificationStore: ObservableObject {
     // MARK: Functions
 
     // set a timer for resend the code after one minutes
-    func startTimer(otpResendAt: Date? = nil) {
+    func startTimer(otpResendAt: Date) {
         // Disable resend initially
         self.resendEnabled = false
 
-        // Set the timeRemaining based on otpResendAt or default to 60 seconds
-        if let otpResendAtDate = otpResendAt {
-            let currentDate = Date()
-            self.timeRemaining = Int(otpResendAtDate.timeIntervalSince(currentDate))
-        } else {
-            self.timeRemaining = 30
-        }
+        // Set the timeRemaining based on otpResendAt
+        let currentDate = Date()
+        self.timeRemaining = Int(otpResendAt.timeIntervalSince(currentDate))
 
         // Schedule the timer to tick every second
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
@@ -65,6 +62,7 @@ class OTPVerificationStore: ObservableObject {
 
     func resetTimer() {
         self.timer?.invalidate()
-        self.startTimer()
+        // here we will receive a new Date from the backend and send it here
+        // self.startTimer(otpResendAt: <#Date#>)
     }
 }

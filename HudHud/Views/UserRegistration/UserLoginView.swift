@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import BackendService
 import Foundation
 import OSLog
 import SwiftUI
@@ -17,17 +16,15 @@ struct UserLoginView: View {
 
     // MARK: Properties
 
-    @StateObject var loginStore: LoginStore
-    @State var countryCode: String = "+966"
-    @State private var path = NavigationPath()
+    @State var loginStore: LoginStore
     @Environment(\.dismiss) var dismiss
+
     @FocusState private var isFocused: Bool
-    @ObservedObject var registrationService: RegistrationService
 
     // MARK: Content
 
     var body: some View {
-        NavigationStack(path: self.$path) {
+        NavigationStack(path: self.$loginStore.path) {
             VStack(alignment: .leading, spacing: 25) {
                 // Back button to dismiss the current view
                 Button {
@@ -49,15 +46,10 @@ struct UserLoginView: View {
                     if self.loginStore.userInput == .phone {
                         FloatingLabelInputField(placeholder: "", inputType: .text(text: Binding(
                             get: {
-                                return self.countryCode
+                                return self.loginStore.countryCode
                             },
                             set: { newValue in
-                                // Always ensure "+" is at the start
-                                if !newValue.hasPrefix("+") {
-                                    self.countryCode = "+" + newValue.trimmingCharacters(in: .punctuationCharacters)
-                                } else {
-                                    self.countryCode = newValue
-                                }
+                                self.loginStore.countryCode = newValue
                             }
                         )))
                         .keyboardType(self.keyboardTypeForInput)
@@ -65,6 +57,7 @@ struct UserLoginView: View {
                     }
                     // Text field for email or phone number based on user choose
                     FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
+                        .textContentType(self.loginStore.userInput == .phone ? .telephoneNumber : .emailAddress)
                         .focused(self.$isFocused)
                         .keyboardType(self.keyboardTypeForInput)
                         .toolbar {
@@ -86,7 +79,7 @@ struct UserLoginView: View {
                     // Dismiss the keyboard (cause we have 2 type of keyboard)
                     self.isFocused = false
                     // Toggle between phone and email
-                    toggleInputType()
+                    self.loginStore.toggleInputType()
                 } label: {
                     Text(self.buttonTitle)
                 }
@@ -97,15 +90,7 @@ struct UserLoginView: View {
                 // Button to proceed to the next view (OTP view)
                 Button {
                     Task {
-                        do {
-                            let loginInput = self.loginStore.userInput == .phone ? self.countryCode + self.bindingForInput.wrappedValue : self.bindingForInput.wrappedValue
-                            let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
-                            self.registrationService.registrationData = registrationData
-                            self.path.append(LoginStore.UserRegistrationPath.OTPView)
-                        } catch {
-                            self.registrationService.registrationData = nil
-                            Logger.userRegistration.error("\(error.localizedDescription)")
-                        }
+                        await self.loginStore.login(inputText: self.bindingForInput.wrappedValue)
                     }
                 } label: {
                     Text("Next")
@@ -121,7 +106,7 @@ struct UserLoginView: View {
             .navigationDestination(for: LoginStore.UserRegistrationPath.self) { route in
                 switch route {
                 case .OTPView:
-                    OTPVerificationView(path: self.$path, registrationService: self.registrationService)
+                    OTPVerificationView(loginStore: self.loginStore)
                         .toolbarRole(.editor)
                 case .personalInfoView:
                     PersonalInformationScreenView(loginStore: self.loginStore, onDismiss: { self.dismiss() })
@@ -133,10 +118,6 @@ struct UserLoginView: View {
 }
 
 private extension UserLoginView {
-    // Method to toggle between phone and email input types
-    func toggleInputType() {
-        self.loginStore.userInput = (self.loginStore.userInput == .email) ? .phone : .email
-    }
 
     // Binding for input text based on user input type
     var bindingForInput: Binding<String> {
@@ -180,5 +161,5 @@ private extension UserLoginView {
 }
 
 #Preview {
-    return UserLoginView(loginStore: LoginStore(), registrationService: RegistrationService())
+    return UserLoginView(loginStore: LoginStore())
 }

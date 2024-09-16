@@ -210,7 +210,7 @@ struct SearchSheet: View {
             .listStyle(.plain)
         }
         .fullScreenCover(isPresented: self.$loginShown) {
-            UserLoginView(loginStore: LoginStore(), registrationService: RegistrationService())
+            UserLoginView(loginStore: LoginStore())
                 .toolbarRole(.editor)
         }
     }
