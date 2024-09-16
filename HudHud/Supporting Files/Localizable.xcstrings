@@ -120,6 +120,9 @@
         }
       }
     },
+    "Create Account" : {
+
+    },
     "Debug Menu" : {
 
     },
@@ -157,6 +160,9 @@
 
     },
     "Edit" : {
+
+    },
+    "Enable location in permissions" : {
 
     },
     "Enable Touch Visualizer" : {
@@ -238,7 +244,7 @@
         }
       }
     },
-    "Loading route..." : {
+    "Location Needed" : {
 
     },
     "Map Details" : {
@@ -321,10 +327,13 @@
     "Open Now" : {
 
     },
+    "Personal Information" : {
+
+    },
     "Pitch: %@" : {
       "comment" : "street view"
     },
-    "Please ensure location services are enabled and try again." : {
+    "Please enable your location to get directions" : {
 
     },
     "Ratings" : {
