@@ -1,8 +1,9 @@
 //
 //  RegistrationService.swift
 //  BackendService
-//
+
 //  Created by Fatima Aljaber on 13/09/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 
 import CoreLocation
 import Foundation
@@ -33,8 +34,14 @@ public struct RegistrationService {
         let urlSession = URLSession(configuration: urlSessionConfiguration)
         let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
         let transport = URLSessionTransport(configuration: transportConfiguration)
+        let body = Operations.login.Input.Body.json(
+            Components.Schemas.LoginRequest(login_identity: loginInput)
+        )
+        let headers = Operations.login.Input.Headers(
+            Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"
+        )
+        let response = try await Client.makeClient(using: baseURL, transport: transport).login(headers: headers, body: body)
 
-        let response = try await Client.makeClient(using: baseURL, transport: transport).login(headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"), body: .json(.init(login_identity: loginInput)))
         switch response {
         case let .created(okResponse):
             switch okResponse.body {
