@@ -14,7 +14,7 @@
 
     },
     "%@" : {
-      "comment" : "duration"
+      "comment" : "distance • type of route\nduration"
     },
     "%@ %@" : {
       "localizations" : {
@@ -244,6 +244,9 @@
         }
       }
     },
+    "Loading route..." : {
+
+    },
     "Location Needed" : {
 
     },
@@ -336,6 +339,9 @@
     "Please enable your location to get directions" : {
 
     },
+    "Please ensure location services are enabled and try again." : {
+
+    },
     "Ratings" : {
 
     },
@@ -359,9 +365,6 @@
 
     },
     "Reset" : {
-
-    },
-    "root view" : {
 
     },
     "Routing Configuration" : {
@@ -424,9 +427,6 @@
     "Touch Visualizer" : {
 
     },
-    "Traffic" : {
-
-    },
     "Try a different destination or check for connectivity issues." : {
 
     },
@@ -443,9 +443,6 @@
 
     },
     "Verify" : {
-
-    },
-    "View More" : {
 
     },
     "walk" : {
