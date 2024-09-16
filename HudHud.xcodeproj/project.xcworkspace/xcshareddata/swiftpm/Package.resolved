@@ -66,7 +66,7 @@
     {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke.git",
+      "location" : "https://github.com/kean/Nuke",
       "state" : {
         "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
         "version" : "12.8.0"
@@ -204,7 +204,7 @@
       "location" : "https://github.com/lukepistrol/SwiftLintPlugin.git",
       "state" : {
         "branch" : "main",
-        "revision" : "960dafd7d693f258a91cc40bf148266242050af6"
+        "revision" : "bea71d23db993c58934ee704f798a66d7b8cb626"
       }
     },
     {

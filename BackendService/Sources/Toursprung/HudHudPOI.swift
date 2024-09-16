@@ -408,7 +408,6 @@ public enum SystemColor: String, Codable {
     }
 }
 
-// swiftlint:disable sf_symbol_init
 let categorySymbol: [String: SFSymbol] = [
     "clinic": .crossCaseFill,
     "bank": .banknoteFill,
@@ -443,4 +442,3 @@ let categoryColor: [String: SystemColor] = [
     "hotel": .systemIndigo,
     "shop": .systemBlue
 ]
-// swiftlint:enable sf_symbol_init

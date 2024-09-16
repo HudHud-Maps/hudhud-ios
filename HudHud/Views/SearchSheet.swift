@@ -260,8 +260,7 @@ extension [ResolvedItem]: RawRepresentable {
         guard let data = try? JSONEncoder().encode(self) else {
             return "[]"
         }
-        let result = String(decoding: data, as: UTF8.self)
-        return result
+        return String(data: data, encoding: .utf8) ?? "[]"
     }
 }
 

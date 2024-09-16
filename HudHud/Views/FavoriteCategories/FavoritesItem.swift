@@ -36,7 +36,7 @@ struct FavoritesResolvedItems: RawRepresentable {
         guard let data = try? JSONEncoder().encode(favoritesItems) else {
             return "[]"
         }
-        return String(decoding: data, as: UTF8.self)
+        return String(data: data, encoding: .utf8) ?? "[]"
     }
 
     // MARK: Lifecycle

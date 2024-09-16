@@ -50,7 +50,7 @@ public class HudHudMapLayerStore: ObservableObject {
                         return nil
                     }
 
-                    return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL, type: .init(BackendValue: mapStyle._type))
+                    return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL, type: .init(backendValue: mapStyle._type))
                 }
                 return mapLayer
             }
@@ -92,7 +92,7 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
 
         // MARK: Lifecycle
 
-        init(BackendValue value: Components.Schemas.MapStyle._typePayload) {
+        init(backendValue value: Components.Schemas.MapStyle._typePayload) {
             switch value {
             case .map_type:
                 self = .mapType
@@ -121,9 +121,10 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
 
     public var rawValue: String {
         guard let data = try? JSONEncoder().encode(self) else {
-            return "[]"
+            return "{}"
         }
-        return String(decoding: data, as: UTF8.self)
+
+        return String(data: data, encoding: .utf8) ?? "{}"
     }
 
     // MARK: Lifecycle
