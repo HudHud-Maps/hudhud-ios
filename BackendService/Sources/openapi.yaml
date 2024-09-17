@@ -702,6 +702,7 @@ components:
   schemas:
     AndroidCategoryIcon:
       required:
+        - color
         - name
       type: object
       properties:
@@ -786,6 +787,11 @@ components:
         login_identity:
           type: string
           description: LoginIdentity the user unique login identity email or mobile
+        otp_verified:
+          type: boolean
+          description: |-
+            OTPVerified if the OTP was verified successfully
+            when it's true check AccessToken field if the value is present then the login is completed
     LoginRequest:
       type: object
       properties:
@@ -821,44 +827,6 @@ components:
           type: string
         url:
           type: string
-    OpeningHours:
-      type: object
-      properties:
-        friday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        monday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        saturday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        sunday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        thursday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        tuesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        wednesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-    OpeningRange:
-      type: object
-      properties:
-        end:
-          type: integer
-        start:
-          type: integer
     PanoramicImageScene:
       required:
         - id
@@ -898,7 +866,6 @@ components:
           type: string
     Poi:
       required:
-        - address
         - category
         - coordinates
         - id
@@ -943,7 +910,7 @@ components:
         name:
           type: string
         opening_hours:
-          $ref: '#/components/schemas/OpeningHours'
+          $ref: '#/components/schemas/types.OpeningHours'
         phone_number:
           type: string
         price_range:
@@ -1242,4 +1209,42 @@ components:
         otp:
           type: string
           description: OTP 6 digit OTP code
+    types.OpeningHours:
+      type: object
+      properties:
+        friday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        monday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        saturday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        sunday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        thursday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        tuesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        wednesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+    types.OpeningRange:
+      type: object
+      properties:
+        end:
+          type: integer
+        start:
+          type: integer
 x-original-swagger-version: "2.0"
