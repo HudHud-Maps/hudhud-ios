@@ -167,8 +167,6 @@ final class RoutingStore: ObservableObject {
         self.waypoints = nil
         self.potentialRoute = nil
         self.navigationProgress = .none
-        self.mapStore.selectedItem = nil
-        self.mapStore.displayableItems = []
     }
 }
 
