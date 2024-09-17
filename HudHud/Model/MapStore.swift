@@ -28,6 +28,7 @@ final class MapStore: ObservableObject {
 
     enum TrackingState {
         case none
+        case waitingForLocation
         case locateOnce
         case keepTracking
     }
@@ -238,9 +239,12 @@ final class MapStore: ObservableObject {
     func switchToNextTrackingAction() async {
         switch self.trackingState {
         case .none:
+            self.trackingState = .waitingForLocation
             await self.focusOnUser()
             self.trackingState = .locateOnce
             Logger.mapInteraction.log("None action required")
+        case .waitingForLocation:
+            Logger.mapInteraction.log("waiting for location")
         case .locateOnce:
             self.trackingState = .keepTracking
             Logger.mapInteraction.log("locate me Once")
