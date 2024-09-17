@@ -57,42 +57,11 @@ struct MapViewContainer: View {
             return viewController
         }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if self.searchViewStore.routingStore.navigationProgress == .none {
-                for route in self.searchViewStore.routingStore.potentialRoute?.routes ?? [] {
-                    let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline + "\(route.id)") {
-                        MLNPolylineFeature(coordinates: route.coordinates ?? [])
-                    }
-
-                    // Add a polyline casing for a stroke effect
-                    LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing + "\(route.id)", source: polylineSource)
-                        .lineCap(.round)
-                        .lineJoin(.round)
-                        .lineColor(.white)
-                        .lineWidth(interpolatedBy: .zoomLevel,
-                                   curveType: .linear,
-                                   parameters: NSExpression(forConstantValue: 1.5),
-                                   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
-
-                    // Add an inner (blue) polyline
-                    LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner + "\(route.id)", source: polylineSource)
-                        .lineCap(.round)
-                        .lineJoin(.round)
-                        .lineColor(.systemBlue)
-                        .lineWidth(interpolatedBy: .zoomLevel,
-                                   curveType: .linear,
-                                   parameters: NSExpression(forConstantValue: 1.5),
-                                   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
-
-                    let routePoints = self.searchViewStore.routingStore.routePoints
-
-                    CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute + "\(route.id)", source: routePoints)
-                        .radius(16)
-                        .color(.systemRed)
-                        .strokeWidth(2)
-                        .strokeColor(.white)
-                    SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(route.id)", source: routePoints)
-                        .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                        .iconColor(.white)
+            if let mapView = self.mapStore.mapView {
+                if let potentialRoutes = self.searchViewStore.routingStore.potentialRoute?.routes {
+                    mapView.showRoutes(potentialRoutes)
+                } else {
+                    mapView.removeRoutes()
                 }
             }
 
@@ -164,13 +133,6 @@ struct MapViewContainer: View {
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
         }
-        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-            if self.searchViewStore.routingStore.navigationProgress == .feedback {
-                self.searchViewStore.endTrip()
-                return
-            }
-            self.mapViewStore.didTapOnMap(containing: features)
-        }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
             self.searchViewStore.routingStore.assign(to: controller, shouldSimulateRoute: self.debugStore.simulateRide)
@@ -204,6 +166,25 @@ struct MapViewContainer: View {
                         self.mapStore.trackingState = .none
                     }
                 }
+        )
+        .simultaneousGesture(
+            self.searchViewStore.routingStore.navigationProgress == .none ?
+                TapGesture().onEnded {
+                    // Check if there's no potential route and not in navigation progress
+                    guard self.searchViewStore.routingStore.potentialRoute?.routes == nil,
+                          self.searchViewStore.routingStore.navigationProgress != .navigating,
+                          let mapView = self.mapStore.mapView,
+                          let gestureRecognizers = mapView.gestureRecognizers else { return }
+
+                    // Loop through the gesture recognizers to find tap location
+                    for recognizer in gestureRecognizers {
+                        let locationInView = recognizer.location(in: mapView)
+                        let features = mapView.visibleFeatures(at: locationInView, styleLayerIdentifiers: MapLayerIdentifier.tapLayers)
+
+                        // Handle map tap if not in feedback mode
+                        self.mapViewStore.didTapOnMap(containing: features)
+                    }
+                } : nil
         )
         .onAppear {
             self.userLocationStore.startMonitoringPermissions()
