@@ -702,6 +702,7 @@ components:
   schemas:
     AndroidCategoryIcon:
       required:
+        - color
         - name
       type: object
       properties:
@@ -772,17 +773,18 @@ components:
       properties:
         access_token:
           type: string
-          description: |-
-            AccessToken JWT access token if the login is successful and waitlist is disabled
-            This will be empty and the user will be in the waitlist if the waitlist is enabled.
-            But if the waitlist was not enabled and the login was successful the user will have
-            an access token.
+          description: AccessToken JWT access token will be issued only if the otp verification was successful.
         can_request_otp_resend_at:
           type: string
           description: CanRequestOTPResendAt the time when the user can request for a resend of the OTP
         id:
           type: string
           description: ID the unique identifier for the login every attempt would have a different record with a unique identifier.
+        is_user_active:
+          type: boolean
+          description: |-
+            IsUserActive In case it's first login and the OTP was verified successfully
+            the user will be created and will be automatically active only if the waitlist is disabled
         login_identity:
           type: string
           description: LoginIdentity the user unique login identity email or mobile
@@ -821,44 +823,6 @@ components:
           type: string
         url:
           type: string
-    OpeningHours:
-      type: object
-      properties:
-        friday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        monday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        saturday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        sunday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        thursday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        tuesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-        wednesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/OpeningRange'
-    OpeningRange:
-      type: object
-      properties:
-        end:
-          type: integer
-        start:
-          type: integer
     PanoramicImageScene:
       required:
         - id
@@ -898,7 +862,6 @@ components:
           type: string
     Poi:
       required:
-        - address
         - category
         - coordinates
         - id
@@ -943,7 +906,7 @@ components:
         name:
           type: string
         opening_hours:
-          $ref: '#/components/schemas/OpeningHours'
+          $ref: '#/components/schemas/types.OpeningHours'
         phone_number:
           type: string
         price_range:
@@ -1242,4 +1205,42 @@ components:
         otp:
           type: string
           description: OTP 6 digit OTP code
+    types.OpeningHours:
+      type: object
+      properties:
+        friday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        monday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        saturday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        sunday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        thursday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        tuesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+        wednesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/types.OpeningRange'
+    types.OpeningRange:
+      type: object
+      properties:
+        end:
+          type: integer
+        start:
+          type: integer
 x-original-swagger-version: "2.0"
