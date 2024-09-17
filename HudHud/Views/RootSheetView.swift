@@ -82,7 +82,7 @@ struct RootSheetView: View {
                         self.searchViewStore.mapStore.selectedItem = nil
                         self.searchViewStore.mapStore.displayableItems = []
                         if !self.mapViewStore.path.isEmpty {
-                            self.mapViewStore.path.removeLast()
+                            self.mapViewStore.path = NavigationPath()
                         }
                     })
                     .navigationBarBackButtonHidden()
