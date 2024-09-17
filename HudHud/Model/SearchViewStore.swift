@@ -184,8 +184,8 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
-            let items = try await hudhud.items(for: category, topRated: topRated, location: userLocation, baseURL: DebugStore().baseURL)
+            let location = self.mapStore.mapView?.centerCoordinate
+            let items = try await hudhud.items(for: category, topRated: topRated, location: location, baseURL: DebugStore().baseURL)
             self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
         } catch {
             self.searchError = error
