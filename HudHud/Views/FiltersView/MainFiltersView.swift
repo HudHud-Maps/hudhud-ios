@@ -15,6 +15,8 @@ struct MainFiltersView: View {
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var filterStore: FilterStore
 
+    @State var showMoreFilterView: Bool = false
+
     // MARK: Content
 
     var body: some View {
@@ -22,13 +24,17 @@ struct MainFiltersView: View {
             self.filterButton(title: "Open Now", filter: .openNow)
             self.filterButton(title: "Top Rated", filter: .topRated)
             Spacer()
-            NavigationLink {
-                MoreFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
+            Button {
+                self.showMoreFilterView = true
             } label: {
                 Image(.filter)
                     .hudhudFont(.caption2)
                     .scaledToFit()
             }
+        }
+        .sheet(isPresented: self.$showMoreFilterView) {
+            MoreFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
+                .presentationDragIndicator(.visible)
         }
     }
 

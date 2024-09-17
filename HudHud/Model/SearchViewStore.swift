@@ -105,15 +105,7 @@ final class SearchViewStore: ObservableObject {
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
-
-        filterStore.$selectedFilters
-            .sink { [weak self] filters in
-                guard let self else { return }
-                Task {
-                    await self.fetch(category: self.searchText, filters: filters)
-                }
-            }
-            .store(in: &self.cancellables)
+        self.bindFilterSearch()
     }
 
     // MARK: Functions
@@ -161,9 +153,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String, filters _: [FilterStore.FilterType] = []) async {
-        guard !category.isEmpty else { return }
-
+    func fetch(category: String) async {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -305,9 +295,17 @@ private extension SearchViewStore {
             .store(in: &self.cancellables)
     }
 
-//    func bindFilterSearch() {
-//
-//    }
+    func bindFilterSearch() {
+        self.filterStore.$selectedFilters
+            .sink { [weak self] _ in
+                guard let self else { return }
+                guard !self.searchText.isEmpty else { return }
+                Task {
+                    await self.fetch(category: self.searchText)
+                }
+            }
+            .store(in: &self.cancellables)
+    }
 }
 
 // MARK: - Previewable

@@ -22,6 +22,29 @@ struct MoreFiltersView: View {
 
     var body: some View {
         VStack(alignment: .leading) {
+            HStack {
+                Button {
+                    self.dismiss()
+                } label: {
+                    Text("Cancel")
+                        .hudhudFont(size: 16, fontWeight: .medium)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                }
+                Spacer()
+                Text("Filters")
+                    .hudhudFont(.headline)
+                    .foregroundStyle(Color.Colors.General._01Black)
+                Spacer()
+                Button {
+                    self.filterStore.applyFilters()
+                    self.dismiss()
+                } label: {
+                    Text("Apply")
+                        .hudhudFont().bold()
+                        .foregroundStyle(Color.Colors.General._07BlueMain)
+                }
+            }
+            .padding(.vertical)
             // Sort By Filter
             Text("Sort By")
             HudhudSegmentedPicker(selected: self.$filterStore.sortSelection, options: [SegmentOption(value: "Relevance", label: .text("Relevance")), SegmentOption(value: "Distance", label: .text("Distance"))])
@@ -62,17 +85,6 @@ struct MoreFiltersView: View {
         }
         .padding()
         .padding(.horizontal, 5)
-        .navigationTitle("Filters")
-        .navigationBarItems(
-            trailing:
-            Button {
-                self.filterStore.applyFilters()
-                self.dismiss()
-            } label: {
-                Text("Apply")
-                    .bold()
-            }
-        )
     }
 
     // MARK: Functions

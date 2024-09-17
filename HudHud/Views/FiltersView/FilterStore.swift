@@ -168,7 +168,7 @@ class FilterStore: ObservableObject {
         if let ratingFilter {
             newFilters.append(ratingFilter)
         }
-
+        // toggleable Buttons coming from MainFiltersView
         if filter == .openNow {
             self.openNow.toggle()
         }
