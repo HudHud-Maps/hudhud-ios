@@ -110,6 +110,5 @@ struct MoreFiltersView: View {
 }
 
 #Preview {
-    let filterStore = FilterStore()
-    return MoreFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: filterStore)
+    return MoreFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

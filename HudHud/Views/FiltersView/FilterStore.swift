@@ -11,8 +11,10 @@ import Combine
 import Foundation
 import SwiftUI
 
+// MARK: - FilterStore
+
 @MainActor
-class FilterStore: ObservableObject {
+final class FilterStore: ObservableObject {
 
     // MARK: Nested Types
 
@@ -188,4 +190,10 @@ class FilterStore: ObservableObject {
         }
     }
 
+}
+
+// MARK: - Previewable
+
+extension FilterStore: Previewable {
+    static var storeSetUpForPreviewing = FilterStore()
 }

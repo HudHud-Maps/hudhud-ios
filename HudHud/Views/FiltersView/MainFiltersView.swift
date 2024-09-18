@@ -56,6 +56,5 @@ struct MainFiltersView: View {
 }
 
 #Preview {
-    let filterStore = FilterStore()
-    return MainFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: filterStore)
+    return MainFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }
