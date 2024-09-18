@@ -145,9 +145,11 @@ final class MapStore: ObservableObject {
     }
 
     func focusOnUser() async {
-        guard let location = await self.userLocationStore.location()?.coordinate else { return }
+        guard let location = self.mapView?.userLocation?.location else { return }
+        guard location.isValid else { return }
+
         withAnimation {
-            self.updateCamera(state: .userLocation(location))
+            self.updateCamera(state: .userLocation(location.coordinate))
         }
     }
 

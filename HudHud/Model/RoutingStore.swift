@@ -87,7 +87,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func calculateRoute(for item: ResolvedItem) async throws -> RoutingService.RouteCalculationResult {
-        guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+        guard let userLocation = self.mapStore.mapView?.userLocation?.location else {
             throw LocationNotEnabledError()
         }
         let waypoints = [Waypoint(location: userLocation), Waypoint(coordinate: item.coordinate)]
