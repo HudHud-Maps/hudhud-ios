@@ -43,10 +43,11 @@ class LoginStore {
     var nick: String = "@"
     var gender: String = ""
     var birthday = Date()
-    var registrationService = RegistrationService()
-    var registrationData: RegistrationResponse?
-
+    var loginIdentity: String?
+    var duration: Date?
     var path = NavigationPath()
+
+    private var registrationService = RegistrationService()
 
     // MARK: Computed Properties
 
@@ -94,10 +95,10 @@ class LoginStore {
         do {
             let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
             let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
-            self.registrationData = registrationData
+            self.loginIdentity = registrationData.loginIdentity
+            self.duration = registrationData.canRequestOtpResendAt
             self.path.append(LoginStore.UserRegistrationPath.OTPView)
         } catch {
-            self.registrationData = nil
             Logger.userRegistration.error("\(error.localizedDescription)")
         }
     }

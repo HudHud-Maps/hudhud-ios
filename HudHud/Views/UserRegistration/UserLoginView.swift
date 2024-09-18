@@ -106,8 +106,10 @@ struct UserLoginView: View {
             .navigationDestination(for: LoginStore.UserRegistrationPath.self) { route in
                 switch route {
                 case .OTPView:
-                    OTPVerificationView(loginStore: self.loginStore)
-                        .toolbarRole(.editor)
+                    if let loginIdentity = loginStore.loginIdentity, let duration = loginStore.duration {
+                        OTPVerificationView(loginIdentity: loginIdentity, duration: duration, path: self.$loginStore.path)
+                            .toolbarRole(.editor)
+                    }
                 case .personalInfoView:
                     PersonalInformationScreenView(loginStore: self.loginStore, onDismiss: { self.dismiss() })
                         .toolbarRole(.editor)

@@ -79,17 +79,6 @@ public struct RegistrationService {
 
 public struct RegistrationResponse {
 
-    // MARK: Nested Types
-
-    enum CodingKeys: String, CodingKey {
-        case id
-        case loginIdentity = "login_identity"
-        case canRequestOtpResendAt = "can_request_otp_resend_at"
-    }
-
-    // MARK: Properties
-
     public let id, loginIdentity: String
     public let canRequestOtpResendAt: Date
-
 }

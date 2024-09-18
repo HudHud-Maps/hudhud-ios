@@ -59,10 +59,4 @@ class OTPVerificationStore {
             }
         }
     }
-
-    func resetTimer() {
-        self.timer?.invalidate()
-        // here we will receive a new Date from the backend and send it here
-        // self.startTimer(otpResendAt: <#Date#>)
-    }
 }

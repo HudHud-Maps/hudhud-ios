@@ -15,7 +15,9 @@ struct OTPVerificationView: View {
 
     // MARK: Properties
 
-    @State var loginStore: LoginStore
+    @Binding var path: NavigationPath
+    let duration: Date
+    let loginIdentity: String
 
     @State private var store = OTPVerificationStore()
     @FocusState private var focusedIndex: Int?
@@ -24,8 +26,10 @@ struct OTPVerificationView: View {
 
     // MARK: Initialization
 
-    init(loginStore: LoginStore) {
-        self.loginStore = loginStore
+    init(loginIdentity: String, duration: Date, path: Binding<NavigationPath>) {
+        self.loginIdentity = loginIdentity
+        self.duration = duration
+        self._path = path
     }
 
     // MARK: Content
@@ -37,10 +41,8 @@ struct OTPVerificationView: View {
                     Text("Enter your Verification Code")
                         .hudhudFont(.title2)
                         .foregroundColor(Color.Colors.General._01Black)
-                    if let loginIdentity = self.loginStore.registrationData?.loginIdentity {
-                        Text("We sent verification code on \(loginIdentity)")
-                            .foregroundColor(Color.Colors.General._02Grey)
-                    }
+                    Text("We sent verification code on \(self.loginIdentity)")
+                        .foregroundColor(Color.Colors.General._02Grey)
                 }
                 Spacer()
             }
@@ -76,7 +78,6 @@ struct OTPVerificationView: View {
                 Button(action: {
                     // Currently only reset the timer but it should also send new code to the user
                     // here the next task will be to call resendOTP
-                    self.store.resetTimer()
                 }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
@@ -88,7 +89,7 @@ struct OTPVerificationView: View {
                     // The fullCode will be send to the backend
                     if self.store.isCodeComplete {
                         let fullCode = self.store.code.joined()
-                        self.loginStore.path.append(LoginStore.UserRegistrationPath.personalInfoView)
+                        self.path.append(LoginStore.UserRegistrationPath.personalInfoView)
                         Logger.userRegistration.info("Code is valid: \(fullCode)")
                     }
                 }, label: {
@@ -102,7 +103,7 @@ struct OTPVerificationView: View {
             }
             .padding()
             .onAppear {
-                self.store.startTimer(otpResendAt: self.loginStore.registrationData?.canRequestOtpResendAt ?? Date().addingTimeInterval(30))
+                self.store.startTimer(otpResendAt: self.duration)
             }
             .onDisappear {
                 self.store.timer?.invalidate()
@@ -161,5 +162,6 @@ struct OTPVerificationView: View {
 }
 
 #Preview {
-    return OTPVerificationView(loginStore: LoginStore())
+    @State var path = NavigationPath()
+    return OTPVerificationView(loginIdentity: "+966503539560", duration: .now, path: $path)
 }
