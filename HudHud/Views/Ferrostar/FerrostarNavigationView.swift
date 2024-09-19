@@ -133,17 +133,6 @@ struct FerrostarNavigationView: View {
                 onTapExit: {
                     self.stopNavigation()
                     self.dismiss()
-                },
-                makeMapContent: {
-                    let source = ShapeSource(identifier: "userLocation") {
-                        // Demonstrate how to add a dynamic overlay;
-                        // also incidentally shows the extent of puck lag
-                        if let userLocation = locationProvider.lastLocation {
-                            MLNPointFeature(
-                                coordinate: userLocation.clLocation.coordinate)
-                        }
-                    }
-                    CircleStyleLayer(identifier: "foo", source: source)
                 }
             )
             .innerGrid(

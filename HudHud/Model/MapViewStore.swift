@@ -186,16 +186,12 @@ private extension MapViewStore {
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
             case .navigationPreview:
-                self.allowedDetents = [.small, .medium]
-                self.selectedDetent = .small
+                self.allowedDetents = [.height(150), .nearHalf]
+                self.selectedDetent = .nearHalf
             }
         }
         if navigationPathItem is ResolvedItem {
             self.allowedDetents = [.small, .third, .nearHalf, .large]
-            self.selectedDetent = .nearHalf
-        }
-        if navigationPathItem is Route {
-            self.allowedDetents = [.height(150), .nearHalf]
             self.selectedDetent = .nearHalf
         }
     }
