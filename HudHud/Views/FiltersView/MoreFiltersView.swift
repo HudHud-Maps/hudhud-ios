@@ -24,6 +24,7 @@ struct MoreFiltersView: View {
         VStack(alignment: .leading) {
             HStack {
                 Button {
+                    self.filterStore.resetFilters()
                     self.dismiss()
                 } label: {
                     Text("Cancel")
@@ -47,35 +48,58 @@ struct MoreFiltersView: View {
             .padding(.vertical)
             // Sort By Filter
             Text("Sort By")
-            HudhudSegmentedPicker(selected: self.$filterStore.sortSelection, options: [SegmentOption(value: "Relevance", label: .text("Relevance")), SegmentOption(value: "Distance", label: .text("Distance"))])
-                .padding(.bottom)
+            HudhudSegmentedPicker(
+                selected: self.$filterStore.sortSelection,
+                options: [
+                    SegmentOption(value: FilterStore.FilterType.SortOption.relevance, label: .text(FilterStore.FilterType.SortOption.relevance.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.SortOption.distance, label: .text(FilterStore.FilterType.SortOption.distance.stringValue))
+                ]
+            )
+            .padding(.bottom)
+
             // Price Filter
             Text("Price")
             HudhudSegmentedPicker(
                 selected: self.$filterStore.priceSelection,
                 options: [
-                    SegmentOption(value: "one", label: .images(self.generateImages(for: "one", selection: self.filterStore.priceSelection))),
-                    SegmentOption(value: "two", label: .images(self.generateImages(for: "two", selection: self.filterStore.priceSelection))),
-                    SegmentOption(value: "three", label: .images(self.generateImages(for: "three", selection: self.filterStore.priceSelection))),
-                    SegmentOption(value: "four", label: .images(self.generateImages(for: "four", selection: self.filterStore.priceSelection)))
+                    SegmentOption(value: FilterStore.FilterType.PriceRange.cheap, label: .text(FilterStore.FilterType.PriceRange.cheap.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.PriceRange.medium, label: .text(FilterStore.FilterType.PriceRange.medium.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.PriceRange.pricy, label: .text(FilterStore.FilterType.PriceRange.pricy.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.PriceRange.expensive, label: .text(FilterStore.FilterType.PriceRange.expensive.stringValue))
                 ]
             )
             .padding(.bottom)
+
             // Rating Filter
             Text("Rating")
-            HudhudSegmentedPicker(selected: self.$filterStore.ratingSelection, options: [SegmentOption(value: "Any", label: .text("Any")), SegmentOption(value: "3.5", label: .textWithSymbol("3.5", .starFill)), SegmentOption(value: "4.0", label: .textWithSymbol("4.0", .starFill)), SegmentOption(value: "4.5", label: .textWithSymbol("4.5", .starFill))])
-                .padding(.bottom)
-            // Work Schedule Filter
+            HudhudSegmentedPicker(
+                selected: self.$filterStore.ratingSelection,
+                options: [
+                    SegmentOption(value: FilterStore.FilterType.RatingOption.anyRating, label: .text(FilterStore.FilterType.RatingOption.anyRating.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.RatingOption.rating3andHalf, label: .textWithSymbol(FilterStore.FilterType.RatingOption.rating3andHalf.stringValue, .starFill)),
+                    SegmentOption(value: FilterStore.FilterType.RatingOption.rating4, label: .textWithSymbol(FilterStore.FilterType.RatingOption.rating4.stringValue, .starFill)),
+                    SegmentOption(value: FilterStore.FilterType.RatingOption.rating4andHalf, label: .textWithSymbol(FilterStore.FilterType.RatingOption.rating4andHalf.stringValue, .starFill))
+                ]
+            )
+            .padding(.bottom)
+
+            // Schedule Filter
             Text("Work Schedule")
-            HudhudSegmentedPicker(selected: self.$filterStore.scheduleSelection, options: [SegmentOption(value: "Any", label: .text("Any")), SegmentOption(value: "Open", label: .text("Open")), SegmentOption(value: "Custom", label: .text("Custom"))])
-                .padding(.bottom)
+            HudhudSegmentedPicker(
+                selected: self.$filterStore.scheduleSelection,
+                options: [
+                    SegmentOption(value: FilterStore.FilterType.ScheduleOption.any, label: .text(FilterStore.FilterType.ScheduleOption.any.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.ScheduleOption.open, label: .text(FilterStore.FilterType.ScheduleOption.open.stringValue)),
+                    SegmentOption(value: FilterStore.FilterType.ScheduleOption.custom, label: .text(FilterStore.FilterType.ScheduleOption.custom.stringValue))
+                ]
+            )
             Spacer()
             Divider().padding(-20)
             Button {
-                self.filterStore.sortSelection = "Relevance"
-                self.filterStore.priceSelection = "one"
-                self.filterStore.ratingSelection = "Any"
-                self.filterStore.scheduleSelection = "Any"
+                self.filterStore.sortSelection = .relevance
+                self.filterStore.priceSelection = .cheap
+                self.filterStore.ratingSelection = .anyRating
+                self.filterStore.scheduleSelection = .any
             } label: {
                 Text("Reset")
                     .hudhudFont(.headline)
@@ -85,28 +109,10 @@ struct MoreFiltersView: View {
         }
         .padding()
         .padding(.horizontal, 5)
-    }
-
-    // MARK: Functions
-
-    func generateImages(for value: String, selection: String) -> [Image] {
-        let isSelected = value == selection
-        let image: Image = isSelected ? Image(.whiteDiamondStar) : Image(.diamondStar)
-        let imageCount: Int = switch value {
-        case "one":
-            1
-        case "two":
-            2
-        case "three":
-            3
-        case "four":
-            4
-        default:
-            0
+        .onAppear {
+            self.filterStore.saveCurrentFilters()
         }
-        return Array(repeating: image, count: imageCount)
     }
-
 }
 
 #Preview {

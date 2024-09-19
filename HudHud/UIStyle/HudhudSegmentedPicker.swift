@@ -11,29 +11,27 @@ import SwiftUI
 
 // MARK: - HudhudSegmentedPicker
 
-struct HudhudSegmentedPicker: View {
+struct HudhudSegmentedPicker<ValueType: Hashable>: View {
 
     // MARK: Properties
 
-    @Binding var selected: String
-    let options: [SegmentOption]
+    @Binding var selected: ValueType
+    let options: [SegmentOption<ValueType>]
     @ScaledMetric var frameHeight = 35
 
     // MARK: Content
 
     var body: some View {
         HStack(spacing: 0) {
-            ForEach(Array(self.options.enumerated()), id: \.offset) { index, option in
+            ForEach(self.options, id: \.value) { option in
                 HudhudSegmentedPickerButton(
                     option: option,
                     isSelected: self.selected == option.value,
                     action: { withAnimation { self.selected = option.value } }
                 )
-
-                // Only add the divider if it's not the last option
-                if index < self.options.count - 1 {
+                if self.options.last?.value != option.value {
                     Divider()
-                        .frame(maxWidth: 1, maxHeight: 16)
+                        .frame(maxWidth: 1, maxHeight: self.frameHeight / 2.0)
                         .foregroundStyle(Color.Colors.General._02Grey)
                 }
             }
@@ -46,7 +44,7 @@ struct HudhudSegmentedPicker: View {
 
 // MARK: - SegmentOption
 
-struct SegmentOption {
+struct SegmentOption<ValueType: Hashable> {
 
     // MARK: Nested Types
 
@@ -60,17 +58,17 @@ struct SegmentOption {
 
     // MARK: Properties
 
-    let value: String
+    let value: ValueType
     let label: SegmentLabel
 }
 
 // MARK: - HudhudSegmentedPickerButton
 
-struct HudhudSegmentedPickerButton: View {
+struct HudhudSegmentedPickerButton<ValueType: Hashable>: View {
 
     // MARK: Properties
 
-    let option: SegmentOption
+    let option: SegmentOption<ValueType>
     let isSelected: Bool
     let action: () -> Void
 
@@ -83,21 +81,17 @@ struct HudhudSegmentedPickerButton: View {
                 case let .text(text):
                     Text(text)
                         .hudhudFont(.subheadline)
-
                 case let .symbol(symbol):
                     Image(systemSymbol: symbol)
-
                 case let .textWithSymbol(text, symbol):
                     Image(systemSymbol: symbol)
                         .font(.caption)
                         .foregroundStyle(Color.Colors.General._13Orange)
                     Text(text)
                         .hudhudFont(.subheadline)
-
                 case let .image(image):
                     image
                         .font(.callout)
-
                 case let .images(images):
                     HStack {
                         ForEach(images.indices, id: \.self) { index in

@@ -19,31 +19,63 @@ final class FilterStore: ObservableObject {
     // MARK: Nested Types
 
     enum FilterType: Equatable {
+
         case openNow
         case topRated
         case sort(SortOption)
         case priceRange(PriceRange)
         case rating(RatingOption)
+        case schedule(ScheduleOption)
 
         // MARK: Nested Types
 
-        enum SortOption {
-            case relevance
-            case distance
+        enum SortOption: String, CaseIterable, Hashable {
+            case relevance = "Relevance"
+            case distance = "Distance"
+
+            // MARK: Computed Properties
+
+            var stringValue: String {
+                return self.rawValue
+            }
         }
 
-        enum PriceRange {
-            case cheap
-            case medium
-            case pricy
-            case expensive
+        enum PriceRange: String, CaseIterable, Hashable {
+            case cheap = "$"
+            case medium = "$$"
+            case pricy = "$$$"
+            case expensive = "$$$$"
+
+            // MARK: Computed Properties
+
+            var stringValue: String {
+                return self.rawValue
+            }
         }
 
-        enum RatingOption {
-            case anyRating
-            case rating3andHalf
-            case rating4
-            case rating4andHalf
+        enum RatingOption: String, CaseIterable, Hashable {
+            case anyRating = "Any"
+            case rating3andHalf = "3.5"
+            case rating4 = "4.0"
+            case rating4andHalf = "4.5"
+
+            // MARK: Computed Properties
+
+            var stringValue: String {
+                return self.rawValue
+            }
+        }
+
+        enum ScheduleOption: String, CaseIterable, Hashable {
+            case any = "Any"
+            case open = "Open"
+            case custom = "Custom"
+
+            // MARK: Computed Properties
+
+            var stringValue: String {
+                return self.rawValue
+            }
         }
     }
 
@@ -53,10 +85,10 @@ final class FilterStore: ObservableObject {
 
     // MARK: Properties
 
-    @Published var sortSelection = "Relevance"
-    @Published var priceSelection = "one"
-    @Published var ratingSelection = "Any"
-    @Published var scheduleSelection = "Any"
+    @Published var sortSelection: FilterType.SortOption = .relevance
+    @Published var priceSelection: FilterType.PriceRange = .cheap
+    @Published var ratingSelection: FilterType.RatingOption = .anyRating
+    @Published var scheduleSelection: FilterType.ScheduleOption = .any
     @Published var topRated = false
     @Published var openNow = false
 
@@ -65,6 +97,8 @@ final class FilterStore: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
 
     private var isUpdating = false
+
+    private var originalFilters: [FilterType] = []
 
     // MARK: Computed Properties
 
@@ -123,50 +157,17 @@ final class FilterStore: ObservableObject {
     func applyFilters(_ filter: FilterType? = nil) {
         var newFilters: [FilterType] = []
 
-        let sortFilter: FilterType? = {
-            switch self.sortSelection {
-            case "Distance":
-                return .sort(.distance)
-            default:
-                return .sort(.relevance)
-            }
-        }()
+        let sortFilter: FilterType? = .sort(self.sortSelection)
         if let sortFilter {
             newFilters.append(sortFilter)
         }
 
-        let priceFilter: FilterType? = {
-            switch self.priceSelection {
-            case "one":
-                return .priceRange(.cheap)
-            case "two":
-                return .priceRange(.medium)
-            case "three":
-                return .priceRange(.pricy)
-            case "four":
-                return .priceRange(.expensive)
-            default:
-                return nil
-            }
-        }()
+        let priceFilter: FilterType? = .priceRange(self.priceSelection)
         if let priceFilter {
             newFilters.append(priceFilter)
         }
 
-        let ratingFilter: FilterType? = {
-            switch self.ratingSelection {
-            case "Any":
-                return .rating(.anyRating)
-            case "3.5":
-                return .rating(.rating3andHalf)
-            case "4.0":
-                return .rating(.rating4)
-            case "4.5":
-                return .rating(.rating4andHalf)
-            default:
-                return nil
-            }
-        }()
+        let ratingFilter: FilterType? = .rating(self.ratingSelection)
         if let ratingFilter {
             newFilters.append(ratingFilter)
         }
@@ -174,7 +175,7 @@ final class FilterStore: ObservableObject {
         if filter == .openNow {
             self.openNow.toggle()
         }
-        if self.scheduleSelection == "Open" || self.openNow {
+        if self.scheduleSelection == .open || self.openNow {
             newFilters.append(.openNow)
         }
 
@@ -188,6 +189,21 @@ final class FilterStore: ObservableObject {
         if self.selectedFilters != newFilters {
             self.selectedFilters = newFilters
         }
+    }
+
+    func saveCurrentFilters() {
+        self.originalFilters = self.selectedFilters
+    }
+
+    func resetFilters() {
+        self.selectedFilters = self.originalFilters
+        // Reset individual properties if needed
+        self.sortSelection = self.selectedFilters.compactMap { if case let .sort(value) = $0 { return value } else { return nil } }.first ?? .relevance
+        self.priceSelection = self.selectedFilters.compactMap { if case let .priceRange(value) = $0 { return value } else { return nil } }.first ?? .cheap
+        self.ratingSelection = self.selectedFilters.compactMap { if case let .rating(value) = $0 { return value } else { return nil } }.first ?? .anyRating
+        self.scheduleSelection = FilterType.ScheduleOption.allCases.first { $0.stringValue == "Any" } ?? .any
+        self.openNow = self.selectedFilters.contains(.openNow)
+        self.topRated = self.selectedFilters.contains(.topRated)
     }
 
 }
