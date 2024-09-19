@@ -163,12 +163,13 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let topRated = self.filterStore.topRated
             let items = try await hudhud.items(
                 for: category,
                 topRated: self.filterStore.topRated,
-                priceRange: self.filterStore.priceRange,
-                sortBy: self.filterStore.sortBy,
-                rating: self.filterStore.rating,
+                priceRange: self.filterStore.priceSelection.hudHudPriceRange,
+                sortBy: self.filterStore.sortSelection.hudHudSortBy,
+                rating: Double(self.filterStore.ratingSelection.rawValue),
                 location: userLocation,
                 baseURL: DebugStore().baseURL
             )

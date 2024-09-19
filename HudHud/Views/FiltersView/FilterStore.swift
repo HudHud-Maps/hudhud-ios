@@ -102,54 +102,27 @@ final class FilterStore: ObservableObject {
 
     // MARK: Computed Properties
 
-    var sortBy: HudHudPOI.SortBy? {
-        for filter in self.selectedFilters {
-            if case let .sort(sortOption) = filter {
-                switch sortOption {
-                case .distance:
-                    return .distance
-                case .relevance:
-                    return .relevance
-                }
-            }
-        }
-        return nil
+    // Computed Properties for Enums - to make the view prettier
+    var sortOptions: [SegmentOption<FilterType.SortOption>] {
+        FilterType.SortOption.allCases.map { SegmentOption(value: $0, label: .text($0.stringValue)) }
     }
 
-    var priceRange: HudHudPOI.PriceRange? {
-        for filter in self.selectedFilters {
-            if case let .priceRange(priceRangeOption) = filter {
-                switch priceRangeOption {
-                case .cheap:
-                    return .cheap
-                case .medium:
-                    return .medium
-                case .pricy:
-                    return .pricy
-                case .expensive:
-                    return .expensive
-                }
-            }
-        }
-        return nil
+    var priceOptions: [SegmentOption<FilterType.PriceRange>] {
+        FilterType.PriceRange.allCases.map { SegmentOption(value: $0, label: .text($0.stringValue)) }
     }
 
-    var rating: Double? {
-        for filter in self.selectedFilters {
-            if case let .rating(ratingOption) = filter {
-                switch ratingOption {
-                case .anyRating:
-                    return 0.0
-                case .rating3andHalf:
-                    return 3.5
-                case .rating4:
-                    return 4.0
-                case .rating4andHalf:
-                    return 4.5
-                }
+    var ratingOptions: [SegmentOption<FilterType.RatingOption>] {
+        FilterType.RatingOption.allCases.map { option in
+            if option == .anyRating {
+                return SegmentOption(value: option, label: .text(option.stringValue))
+            } else {
+                return SegmentOption(value: option, label: .textWithSymbol(option.stringValue, .starFill))
             }
         }
-        return nil
+    }
+
+    var scheduleOptions: [SegmentOption<FilterType.ScheduleOption>] {
+        FilterType.ScheduleOption.allCases.map { SegmentOption(value: $0, label: .text($0.stringValue)) }
     }
 
     // MARK: Functions
@@ -212,4 +185,26 @@ final class FilterStore: ObservableObject {
 
 extension FilterStore: Previewable {
     static var storeSetUpForPreviewing = FilterStore()
+}
+
+extension FilterStore.FilterType.SortOption {
+    var hudHudSortBy: HudHudPOI.SortBy? {
+        let sortByMapping: [FilterStore.FilterType.SortOption: HudHudPOI.SortBy] = [
+            .distance: .distance,
+            .relevance: .relevance
+        ]
+        return sortByMapping[self]
+    }
+}
+
+extension FilterStore.FilterType.PriceRange {
+    var hudHudPriceRange: HudHudPOI.PriceRange? {
+        let priceRangeMapping: [FilterStore.FilterType.PriceRange: HudHudPOI.PriceRange] = [
+            .cheap: .cheap,
+            .medium: .medium,
+            .pricy: .pricy,
+            .expensive: .expensive
+        ]
+        return priceRangeMapping[self]
+    }
 }

@@ -50,23 +50,16 @@ struct MoreFiltersView: View {
             Text("Sort By")
             HudhudSegmentedPicker(
                 selected: self.$filterStore.sortSelection,
-                options: [
-                    SegmentOption(value: FilterStore.FilterType.SortOption.relevance, label: .text(FilterStore.FilterType.SortOption.relevance.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.SortOption.distance, label: .text(FilterStore.FilterType.SortOption.distance.stringValue))
-                ]
+                options: self.filterStore.sortOptions
             )
+
             .padding(.bottom)
 
             // Price Filter
             Text("Price")
             HudhudSegmentedPicker(
                 selected: self.$filterStore.priceSelection,
-                options: [
-                    SegmentOption(value: FilterStore.FilterType.PriceRange.cheap, label: .text(FilterStore.FilterType.PriceRange.cheap.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.PriceRange.medium, label: .text(FilterStore.FilterType.PriceRange.medium.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.PriceRange.pricy, label: .text(FilterStore.FilterType.PriceRange.pricy.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.PriceRange.expensive, label: .text(FilterStore.FilterType.PriceRange.expensive.stringValue))
-                ]
+                options: self.filterStore.priceOptions
             )
             .padding(.bottom)
 
@@ -74,12 +67,7 @@ struct MoreFiltersView: View {
             Text("Rating")
             HudhudSegmentedPicker(
                 selected: self.$filterStore.ratingSelection,
-                options: [
-                    SegmentOption(value: FilterStore.FilterType.RatingOption.anyRating, label: .text(FilterStore.FilterType.RatingOption.anyRating.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.RatingOption.rating3andHalf, label: .textWithSymbol(FilterStore.FilterType.RatingOption.rating3andHalf.stringValue, .starFill)),
-                    SegmentOption(value: FilterStore.FilterType.RatingOption.rating4, label: .textWithSymbol(FilterStore.FilterType.RatingOption.rating4.stringValue, .starFill)),
-                    SegmentOption(value: FilterStore.FilterType.RatingOption.rating4andHalf, label: .textWithSymbol(FilterStore.FilterType.RatingOption.rating4andHalf.stringValue, .starFill))
-                ]
+                options: self.filterStore.ratingOptions
             )
             .padding(.bottom)
 
@@ -87,11 +75,7 @@ struct MoreFiltersView: View {
             Text("Work Schedule")
             HudhudSegmentedPicker(
                 selected: self.$filterStore.scheduleSelection,
-                options: [
-                    SegmentOption(value: FilterStore.FilterType.ScheduleOption.any, label: .text(FilterStore.FilterType.ScheduleOption.any.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.ScheduleOption.open, label: .text(FilterStore.FilterType.ScheduleOption.open.stringValue)),
-                    SegmentOption(value: FilterStore.FilterType.ScheduleOption.custom, label: .text(FilterStore.FilterType.ScheduleOption.custom.stringValue))
-                ]
+                options: self.filterStore.scheduleOptions
             )
             Spacer()
             Divider().padding(-20)
