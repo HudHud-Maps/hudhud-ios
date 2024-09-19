@@ -166,10 +166,10 @@ final class MapStore: ObservableObject {
         return styleUrl
     }
 
-    func focusOnUser() async {
+    func focusOnUser() {
         guard let location = self.mapView?.userLocation?.location else { return }
 
-        self.updateCamera(state: .userLocation(location))
+        self.updateCamera(state: .userLocation(location.coordinate))
     }
 
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
@@ -206,6 +206,7 @@ final class MapStore: ObservableObject {
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
+
         var detailedItemUpdate = detailedItem
         detailedItemUpdate.systemColor = item.systemColor
         detailedItemUpdate.symbol = item.symbol
@@ -238,11 +239,11 @@ final class MapStore: ObservableObject {
         }
     }
 
-    func switchToNextTrackingAction() async {
+    func switchToNextTrackingAction() {
         switch self.trackingState {
         case .none:
             self.trackingState = .waitingForLocation
-            await self.focusOnUser()
+            self.focusOnUser()
             self.trackingState = .locateOnce
             Logger.mapInteraction.log("None action required")
         case .waitingForLocation:
@@ -339,9 +340,7 @@ private extension MapStore {
             .filter(\.isEnabled) // only go through if the location permission is enabled
             .first() // only call the closure once
             .sink { [weak self] _ in
-                Task {
-                    await self?.focusOnUser()
-                }
+                self?.focusOnUser()
             }
             .store(in: &self.subscriptions)
     }
