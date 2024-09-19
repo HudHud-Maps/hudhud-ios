@@ -12,7 +12,7 @@ struct PersonalInformationScreenView: View {
 
     // MARK: Properties
 
-    @StateObject var loginStore: LoginStore
+    @State var loginStore: LoginStore
     var onDismiss: () -> Void
 
     // MARK: Content

@@ -131,6 +131,46 @@ public struct Category: Hashable {
 
 public struct HudHudPOI: POIServiceProtocol {
 
+    // MARK: Nested Types
+
+    public enum PriceRange: Int {
+        case cheap = 1
+        case medium = 2
+        case pricy = 3
+        case expensive = 4
+
+        // MARK: Computed Properties
+
+        var backendValue: Operations.listPois.Input.Query.price_rangePayload {
+            switch self {
+            case .cheap:
+                return ._1
+            case .medium:
+                return ._2
+            case .pricy:
+                return ._3
+            case .expensive:
+                return ._4
+            }
+        }
+    }
+
+    public enum SortBy: String {
+        case relevance = "Relevance"
+        case distance = "Distance"
+
+        // MARK: Computed Properties
+
+        var backendValue: Operations.listPois.Input.Query.sort_byPayload {
+            switch self {
+            case .relevance:
+                return .relevance
+            case .distance:
+                return .distance
+            }
+        }
+    }
+
     // MARK: Static Properties
 
     public static var serviceName = "HudHud"
@@ -244,12 +284,15 @@ public struct HudHudPOI: POIServiceProtocol {
         }
     }
 
-    public func items(for category: String, topRated: Bool? = nil, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
+    // list pois /p
+    public func items(for category: String, topRated: Bool? = nil, priceRange: PriceRange? = nil, sortBy: SortBy? = nil, rating: Double? = nil, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
+        let priceRange = priceRange?.backendValue
+        let sortBy = sortBy?.backendValue
         let response = try await Client.makeClient(using: baseURL).listPois(
-            query: .init(category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated),
+            query: .init(sort_by: sortBy, price_range: priceRange, rating: rating, category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated),
             headers: .init(Accept_hyphen_Language: self.currentLanguage)
         )
 

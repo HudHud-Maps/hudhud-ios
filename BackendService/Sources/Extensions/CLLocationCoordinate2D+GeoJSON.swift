@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import LocationFormatter
 
 public extension CLLocationCoordinate2D {
 
@@ -59,6 +60,12 @@ public extension CLLocationCoordinate2D {
 
         let coordinates = lineString["coordinates"] as? [[Double]] ?? []
         return try coordinates.map { try self.init(geoJSON: $0) }
+    }
+
+    func formatted() -> String {
+        let formatter = LocationCoordinateFormatter()
+        formatter.format = .decimalDegrees
+        return formatter.string(from: self) ?? "Invalid Coordinates" // "48.11638° N, 122.74231° W"
     }
 }
 
