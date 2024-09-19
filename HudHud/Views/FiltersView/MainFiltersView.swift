@@ -13,49 +13,48 @@ struct MainFiltersView: View {
     // MARK: Properties
 
     @ObservedObject var searchStore: SearchViewStore
+    @ObservedObject var filterStore: FilterStore
+
+    @State var showMoreFilterView: Bool = false
 
     // MARK: Content
 
     var body: some View {
         HStack(spacing: 10) {
-            Button {
-                self.searchStore.selectedFilter = .openNow
-            } label: {
-                Text("Open Now")
-                    .hudhudFont(size: 12, fontWeight: .semiBold)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 11)
-                    .foregroundStyle(self.searchStore.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(self.searchStore.selectedFilter == .openNow ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
-                    )
-            }
-            Button {
-                self.searchStore.selectedFilter = .topRated
-            } label: {
-                Text("Top Rated")
-                    .hudhudFont(size: 12, fontWeight: .semiBold)
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 11)
-                    .foregroundStyle(self.searchStore.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(self.searchStore.selectedFilter == .topRated ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
-                    )
-            }
+            self.filterButton(title: "Open Now", filter: .openNow)
+            self.filterButton(title: "Top Rated", filter: .topRated)
             Spacer()
-            Button(action: {
-                self.searchStore.selectedFilter = .filter
-            }, label: {
+            Button {
+                self.showMoreFilterView = true
+            } label: {
                 Image(.filter)
                     .hudhudFont(.caption2)
                     .scaledToFit()
-            })
+            }
+        }
+        .sheet(isPresented: self.$showMoreFilterView) {
+            MoreFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
+                .presentationDragIndicator(.visible)
+        }
+    }
+
+    private func filterButton(title: String, filter: FilterStore.FilterType) -> some View {
+        Button {
+            self.filterStore.applyFilters(filter)
+        } label: {
+            Text(title)
+                .hudhudFont(size: 12, fontWeight: .semiBold)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 11)
+                .foregroundStyle(self.filterStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(self.filterStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
+                )
         }
     }
 }
 
 #Preview {
-    MainFiltersView(searchStore: .storeSetUpForPreviewing)
+    return MainFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

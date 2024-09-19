@@ -14,7 +14,7 @@
 
     },
     "%@" : {
-      "comment" : "distance • type of route\nduration"
+      "comment" : "duration"
     },
     "%@ %@" : {
       "localizations" : {
@@ -57,6 +57,9 @@
       }
     },
     "Add Type" : {
+
+    },
+    "Apply" : {
 
     },
     "Bad Traffic Data" : {
@@ -168,6 +171,9 @@
     "Enable Touch Visualizer" : {
 
     },
+    "Enter your phone number or email" : {
+
+    },
     "Enter your Verification Code" : {
 
     },
@@ -191,6 +197,9 @@
         }
       }
     },
+    "Filters" : {
+
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -201,6 +210,9 @@
           }
         }
       }
+    },
+    "Go Back" : {
+
     },
     "Heading: %@" : {
       "comment" : "street view"
@@ -297,6 +309,9 @@
     "Nearby Trending" : {
 
     },
+    "Next" : {
+
+    },
     "No Content To be Shown Here." : {
 
     },
@@ -318,9 +333,6 @@
     "Open" : {
 
     },
-    "Open Now" : {
-
-    },
     "Personal Information" : {
 
     },
@@ -328,6 +340,12 @@
       "comment" : "street view"
     },
     "Please enable your location to get directions" : {
+
+    },
+    "Price" : {
+
+    },
+    "Rating" : {
 
     },
     "Ratings" : {
@@ -353,6 +371,9 @@
 
     },
     "Reset" : {
+
+    },
+    "root view" : {
 
     },
     "Routing Configuration" : {
@@ -394,6 +415,9 @@
     "Simulation" : {
 
     },
+    "Sort By" : {
+
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -409,10 +433,10 @@
     "Suggestions" : {
 
     },
-    "Top Rated" : {
+    "Touch Visualizer" : {
 
     },
-    "Touch Visualizer" : {
+    "Traffic" : {
 
     },
     "Unknown" : {
@@ -427,6 +451,9 @@
     "Verify" : {
 
     },
+    "View More" : {
+
+    },
     "walk" : {
       "localizations" : {
         "ar" : {
@@ -437,7 +464,7 @@
         }
       }
     },
-    "We sent verification code on" : {
+    "We sent verification code on %@" : {
 
     },
     "Web" : {
@@ -464,6 +491,9 @@
           }
         }
       }
+    },
+    "Work Schedule" : {
+
     },
     "You Have Arrived" : {
 

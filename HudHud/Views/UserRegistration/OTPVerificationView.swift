@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Combine
 import OSLog
 import SwiftUI
@@ -16,16 +17,16 @@ struct OTPVerificationView: View {
 
     @Binding var path: NavigationPath
 
-    @StateObject private var store: OTPVerificationStore
+    @State private var store: OTPVerificationStore
     @FocusState private var focusedIndex: Int?
 
     // MARK: Lifecycle
 
     // MARK: Initialization
 
-    init(phoneNumber: String, path: Binding<NavigationPath>) {
-        _store = StateObject(wrappedValue: OTPVerificationStore(phoneNumber: phoneNumber))
-        _path = path
+    init(loginIdentity: String, duration: Date, path: Binding<NavigationPath>) {
+        self._store = State(initialValue: OTPVerificationStore(duration: duration, loginIdentity: loginIdentity))
+        self._path = path
     }
 
     // MARK: Content
@@ -37,11 +38,8 @@ struct OTPVerificationView: View {
                     Text("Enter your Verification Code")
                         .hudhudFont(.title2)
                         .foregroundColor(Color.Colors.General._01Black)
-                    HStack {
-                        Text("We sent verification code on")
-                        Text("\(self.store.phoneNumber)")
-                    }
-                    .foregroundColor(Color.Colors.General._02Grey)
+                    Text("We sent verification code on \(self.store.loginIdentity)")
+                        .foregroundColor(Color.Colors.General._02Grey)
                 }
                 Spacer()
             }
@@ -76,7 +74,7 @@ struct OTPVerificationView: View {
                 Text("Didn't Get the Code?")
                 Button(action: {
                     // Currently only reset the timer but it should also send new code to the user
-                    self.store.resetTimer()
+                    // here the next task will be to call resendOTP
                 }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
@@ -162,5 +160,5 @@ struct OTPVerificationView: View {
 
 #Preview {
     @State var path = NavigationPath()
-    return OTPVerificationView(phoneNumber: "0504325432", path: $path)
+    return OTPVerificationView(loginIdentity: "+966503539560", duration: .now, path: $path)
 }
