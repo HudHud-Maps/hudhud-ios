@@ -16,10 +16,8 @@ struct OTPVerificationView: View {
     // MARK: Properties
 
     @Binding var path: NavigationPath
-    let duration: Date
-    let loginIdentity: String
 
-    @State private var store = OTPVerificationStore()
+    @State private var store: OTPVerificationStore
     @FocusState private var focusedIndex: Int?
 
     // MARK: Lifecycle
@@ -27,8 +25,7 @@ struct OTPVerificationView: View {
     // MARK: Initialization
 
     init(loginIdentity: String, duration: Date, path: Binding<NavigationPath>) {
-        self.loginIdentity = loginIdentity
-        self.duration = duration
+        self._store = State(initialValue: OTPVerificationStore(duration: duration, loginIdentity: loginIdentity))
         self._path = path
     }
 
@@ -41,7 +38,7 @@ struct OTPVerificationView: View {
                     Text("Enter your Verification Code")
                         .hudhudFont(.title2)
                         .foregroundColor(Color.Colors.General._01Black)
-                    Text("We sent verification code on \(self.loginIdentity)")
+                    Text("We sent verification code on \(self.store.loginIdentity)")
                         .foregroundColor(Color.Colors.General._02Grey)
                 }
                 Spacer()
@@ -103,7 +100,7 @@ struct OTPVerificationView: View {
             }
             .padding()
             .onAppear {
-                self.store.startTimer(otpResendAt: self.duration)
+                self.store.startTimer()
             }
             .onDisappear {
                 self.store.timer?.invalidate()

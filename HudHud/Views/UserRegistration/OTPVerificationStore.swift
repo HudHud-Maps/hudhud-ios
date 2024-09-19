@@ -15,9 +15,12 @@ class OTPVerificationStore {
     // MARK: Properties
 
     var timer: Timer?
-    var timeRemaining: Int = 60
-    var resendEnabled: Bool = false
+    let loginIdentity: String
     var code: [String] = Array(repeating: "", count: 6)
+    var resendEnabled: Bool = false
+
+    private var timeRemaining: Int = 60
+    private let duration: Date
 
     // MARK: Computed Properties
 
@@ -34,16 +37,23 @@ class OTPVerificationStore {
         return formattedString ?? "00:00"
     }
 
+    // MARK: Lifecycle
+
+    init(duration: Date, loginIdentity: String) {
+        self.duration = duration
+        self.loginIdentity = loginIdentity
+    }
+
     // MARK: Functions
 
     // set a timer for resend the code after one minutes
-    func startTimer(otpResendAt: Date) {
+    func startTimer() {
         // Disable resend initially
         self.resendEnabled = false
 
         // Set the timeRemaining based on otpResendAt
         let currentDate = Date()
-        self.timeRemaining = Int(otpResendAt.timeIntervalSince(currentDate))
+        self.timeRemaining = Int(self.duration.timeIntervalSince(currentDate))
 
         // Schedule the timer to tick every second
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in

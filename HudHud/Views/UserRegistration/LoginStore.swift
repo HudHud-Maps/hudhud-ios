@@ -19,7 +19,7 @@ class LoginStore {
     // MARK: Nested Types
 
     enum UserRegistrationPath: Hashable {
-        case OTPView
+        case OTPView(loginIdentity: String, duration: Date)
         case personalInfoView
     }
 
@@ -43,8 +43,6 @@ class LoginStore {
     var nick: String = "@"
     var gender: String = ""
     var birthday = Date()
-    var loginIdentity: String?
-    var duration: Date?
     var path = NavigationPath()
 
     private var registrationService = RegistrationService()
@@ -95,9 +93,7 @@ class LoginStore {
         do {
             let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
             let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
-            self.loginIdentity = registrationData.loginIdentity
-            self.duration = registrationData.canRequestOtpResendAt
-            self.path.append(LoginStore.UserRegistrationPath.OTPView)
+            self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: registrationData.loginIdentity, duration: registrationData.canRequestOtpResendAt))
         } catch {
             Logger.userRegistration.error("\(error.localizedDescription)")
         }

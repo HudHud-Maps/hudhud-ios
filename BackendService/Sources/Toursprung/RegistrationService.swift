@@ -17,10 +17,6 @@ import SwiftUI
 
 public struct RegistrationService {
 
-    // MARK: Properties
-
-    public var lastError: Error?
-
     // MARK: Lifecycle
 
     public init() {}
@@ -61,7 +57,6 @@ public struct RegistrationService {
             } else {
                 nil
             }
-            self.lastError = OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .badRequest(error):
             throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
