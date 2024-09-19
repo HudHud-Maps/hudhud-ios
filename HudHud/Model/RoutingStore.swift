@@ -155,6 +155,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func navigate(to route: Route) {
+        self.potentialRoute?.routes = [route]
         self.navigatingRoute = route
     }
 
@@ -182,11 +183,6 @@ extension RoutingStore: NavigationMapViewDelegate {
         // Update the map with the reordered routes
         if let route = self.potentialRoute?.routes {
             self.mapStore.mapView?.showRoutes(route)
-        }
-
-        // Update the map with the selected route while the user on navigating mode
-        if self.navigationProgress == .navigating {
-            self.navigatingRoute = route
         }
     }
 }
