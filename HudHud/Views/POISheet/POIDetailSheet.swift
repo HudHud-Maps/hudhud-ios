@@ -214,6 +214,10 @@ private extension POIDetailSheet {
             let routes = try await self.routingStore.calculateRoute(for: item)
             self.routes = routes
         } catch let error as URLError {
+            if error.code == .cancelled {
+                // ignore cancelled errors
+                return
+            }
             // if the error is related to the user's internet connetion, display the error to the user
             let notification = Notification(error: error)
             self.notificationQueue.add(notification: notification)
@@ -227,6 +231,6 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.selectedItem = .artwork
+    searchViewStore.mapStore.select(.artwork)
     return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
 }

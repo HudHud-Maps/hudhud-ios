@@ -59,20 +59,14 @@ final class MapStore: ObservableObject {
     var mapView: NavigationMapView?
     let userLocationStore: UserLocationStore
 
-    @Published var selectedItem: ResolvedItem?
+    @Published private(set) var selectedItem: ResolvedItem?
+
+    @Published var displayableItems: [DisplayableRow] = []
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
-
-    @Published var displayableItems: [DisplayableRow] = [] {
-        didSet {
-            guard self.displayableItems != [] else { return }
-
-            self.updateCamera(state: .mapItems)
-        }
-    }
 
     var mapItems: [ResolvedItem] {
         let allItems = Set(self.displayableItems)
@@ -123,6 +117,34 @@ final class MapStore: ObservableObject {
 
     // MARK: - Internal
 
+    // MARK: poi items functions
+
+    func replaceItemsAndFocusCamera(on items: [DisplayableRow]) {
+        self.displayableItems = items
+        self.updateCamera(state: .mapItems)
+    }
+
+    func clearListAndSelect(_ item: ResolvedItem) {
+        self.selectedItem = item
+        self.displayableItems = [DisplayableRow.resolvedItem(item)]
+    }
+
+    func unselectItem() {
+        self.selectedItem = nil
+    }
+
+    func select(_ item: ResolvedItem, shouldFocusCamera: Bool = false) {
+        self.selectedItem = item
+        if shouldFocusCamera {
+            self.updateCamera(state: .selectedItem(item))
+        }
+    }
+
+    func clearItems() {
+        self.selectedItem = nil
+        self.displayableItems = []
+    }
+
     func getCameraPitch() -> Double {
         if case let .centered(
             onCoordinate: _,
@@ -145,9 +167,7 @@ final class MapStore: ObservableObject {
 
     func focusOnUser() async {
         guard let location = await self.userLocationStore.location()?.coordinate else { return }
-        withAnimation {
-            self.updateCamera(state: .userLocation(location))
-        }
+        self.updateCamera(state: .userLocation(location))
     }
 
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
@@ -179,7 +199,7 @@ final class MapStore: ObservableObject {
         if itemIfAvailable == nil {
             self.displayableItems.append(.resolvedItem(item))
         }
-        self.selectedItem = item
+        self.select(item, shouldFocusCamera: true)
         guard let detailedItem = try? await hudhudResolver.lookup(id: item.id, baseURL: DebugStore().baseURL),
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
@@ -206,26 +226,7 @@ final class MapStore: ObservableObject {
                 return
             }
         case let .selectedItem(selectedItem):
-            // if the item selected from multi-map items(nearby poi), the camera will not move
-            // Hint: the pin should animate or change the color of it. no camera move need it
-            if let bounds = mapItems.map(\.coordinate).boundingBox(),
-               bounds.contains(coordinate: selectedItem.coordinate),
-               mapItems.count > 1, !isAnyItemVisible() {
-                let coordinates = self.mapItems.map(\.coordinate)
-                if let camera = CameraState.boundingBox(from: coordinates) {
-                    self.camera = camera
-                }
-            } else {
-                if self.mapItems.count > 1 {
-                    // do not show any move
-                    if let zoom = self.camera.zoom {
-                        self.camera.setZoom(zoom)
-                    }
-                } else {
-                    // if poi choosing from Resents or directly from the search it will zoom and center around it
-                    self.camera = .center(selectedItem.coordinate, zoom: 15)
-                }
-            }
+            self.camera = .center(selectedItem.coordinate, zoom: self.camera.zoom ?? 15)
         case let .userLocation(userLocation):
             self.camera = MapViewCamera.center(userLocation, zoom: 14)
         case .mapItems:
@@ -316,12 +317,12 @@ private extension MapStore {
 
     func bindLayersVisability() {
         self.$displayableItems
-            .map(\.isEmpty)
+            .map { $0.count <= 1 }
             .removeDuplicates()
-            .sink { [weak self] isEmpty in
+            .sink { [weak self] isVisible in
                 self?.mapStyle?.layers.forEach { layer in
                     if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
-                        layer.isVisible = isEmpty
+                        layer.isVisible = isVisible
                     }
                 }
             }

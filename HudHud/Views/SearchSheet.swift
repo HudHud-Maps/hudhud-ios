@@ -135,9 +135,9 @@ struct SearchSheet: View {
                     } else {
                         ForEach(self.mapStore.displayableItems) { item in
                             switch item {
-                            case let .categoryItem(categoryItem):
-                                CategoryItemView(item: categoryItem) {
-                                    self.mapStore.selectedItem = categoryItem
+                            case let .categoryItem(item):
+                                CategoryItemView(item: item) {
+                                    self.mapStore.select(item, shouldFocusCamera: true)
                                 }
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -222,10 +222,6 @@ struct SearchSheet: View {
         withAnimation {
             self.searchStore.storeInRecent(item)
         }
-    }
-
-    func dismissSheet() {
-        self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
     }
 }
 
