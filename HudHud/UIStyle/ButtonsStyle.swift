@@ -56,6 +56,6 @@ struct LargeButtonStyle: ButtonStyle {
             .bold()
             .frame(maxWidth: .infinity)
             .background(self.backgroundColor)
-            .clipShape(.rect(cornerRadius: 10))
+            .clipShape(.rect(cornerRadius: 30))
     }
 }

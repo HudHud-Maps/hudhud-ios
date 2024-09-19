@@ -31,17 +31,10 @@ struct FloatingLabelInputField: View {
 
     var body: some View {
         ZStack(alignment: .leading) {
-            Text(self.placeholder)
-                .hudhudFont()
-                .foregroundColor(.secondary)
-                .offset(y: self.isFocused || !self.getTextField().isEmpty ? -35 : 0)
-                .scaleEffect(self.isFocused || !self.getTextField().isEmpty ? 0.8 : 1, anchor: .leading)
-
             VStack(alignment: .leading) {
                 switch self.inputType {
                 case let .text(binding):
-                    TextField("", text: binding)
-                        .focused(self.$isFocused)
+                    TextField(self.placeholder, text: binding)
                         .hudhudFont()
                         .foregroundColor(Color.Colors.General._01Black)
                         .bold()
@@ -83,7 +76,7 @@ struct FloatingLabelInputField: View {
             // Bottom line
             Rectangle()
                 .frame(height: 1)
-                .foregroundColor(Color.Colors.General._02Grey)
+                .foregroundColor(Color.Colors.General._04GreyForLines)
                 .padding(.top, 35)
         }
         .padding(.top, 8)
