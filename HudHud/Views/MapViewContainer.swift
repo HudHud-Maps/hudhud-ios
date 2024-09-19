@@ -154,6 +154,9 @@ struct MapViewContainer: View {
             .iconColor(.white)
             .predicate(NSPredicate(format: "cluster != YES"))
         }
+        .unsafeMapViewControllerModifier { controller in
+            controller.mapView.showsUserLocation = self.mapStore.userLocationStore.permissionStatus.isEnabled && self.mapStore.streetViewScene == nil
+        }
         .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
             if self.searchViewStore.routingStore.navigationProgress == .feedback {
                 self.searchViewStore.endTrip()

@@ -34,7 +34,8 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
             URLQueryItem(name: "roundabout_exits", value: "true"),
             URLQueryItem(name: "voice_instructions", value: "true"),
             URLQueryItem(name: "banner_instructions", value: "true"),
-            URLQueryItem(name: "voice_units", value: "metric")
+            URLQueryItem(name: "voice_units", value: "metric"),
+            URLQueryItem(name: "no_annotations", value: "true") // current annotation format provided by our servers isn't ExtendedOSRM compatible, so we disable them
         ]
         guard let url = components.url else {
             throw ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
@@ -42,7 +43,6 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
 
         let answer: (data: Data, response: URLResponse) = try await URLSession.shared.data(from: url)
 
-        print("URL is: \(url)")
         guard answer.response.mimeType == "application/json" else {
             throw ToursprungError.invalidResponse(message: "MIME Type not matching application/json")
         }
