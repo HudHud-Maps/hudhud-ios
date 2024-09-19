@@ -9,10 +9,8 @@
 import BackendService
 import Combine
 import CoreLocation
+import FerrostarCoreFFI
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -33,7 +31,7 @@ final class MapStore: ObservableObject {
     }
 
     enum CameraUpdateState {
-        case route(RoutingService.RouteCalculationResult?)
+        case route(Route?)
         case selectedItem(ResolvedItem)
         case userLocation(CLLocationCoordinate2D)
         case mapItems
@@ -56,7 +54,6 @@ final class MapStore: ObservableObject {
     @Published var nearestStreetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
     var cachedScenes = [Int: StreetViewScene]()
-    var mapView: NavigationMapView?
     let userLocationStore: UserLocationStore
 
     @Published var selectedItem: ResolvedItem?
@@ -195,15 +192,12 @@ final class MapStore: ObservableObject {
         switch state {
         // show the whole route on the map
         case let .route(result):
-            if let routes = result?.routes {
-                if let route = routes.first,
-                   let coordinates = route.coordinates,
-                   coordinates.hasElements,
-                   let boundingBox = self.generateMLNCoordinateBounds(from: coordinates) {
-                    self.camera = MapViewCamera.boundingBox(boundingBox,
-                                                            edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
-                }
-                return
+
+            if let route = result {
+                let boundingBox = route.bbox
+                let coordinateBounds = MLNCoordinateBounds(sw: boundingBox.sw.clLocationCoordinate2D, ne: boundingBox.ne.clLocationCoordinate2D)
+                self.camera = MapViewCamera.boundingBox(coordinateBounds,
+                                                        edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
             }
         case let .selectedItem(selectedItem):
             // if the item selected from multi-map items(nearby poi), the camera will not move

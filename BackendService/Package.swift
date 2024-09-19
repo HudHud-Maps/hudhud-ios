@@ -18,7 +18,6 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "4.1.1"),
-        .package(url: "https://github.com/HudHud-Maps/maplibre-navigation-ios.git", branch: "fix/lanes-view-not-hidden-when-it-should-be-hidden"),
         .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0")
@@ -30,7 +29,6 @@ let package = Package(
             name: "BackendService",
             dependencies: [
                 .product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
-                .product(name: "MapboxNavigation", package: "maplibre-navigation-ios"),
                 .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
                 .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession")
             ],

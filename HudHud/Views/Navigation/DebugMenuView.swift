@@ -7,7 +7,6 @@
 //
 
 import CoreLocation
-import MapboxCoreNavigation
 import SwiftUI
 
 // MARK: - DebugMenuView
@@ -22,11 +21,6 @@ struct DebugMenuView: View {
             Section(header: Text("Routing Configuration")) {
                 TextField("Routing URL", text: self.$debugSettings.routingHost)
                     .autocapitalization(.none)
-                    .disableAutocorrection(true)
-            }
-            Section(header: Text("User is on Route")) {
-                TextField("In meters", text: self.$debugSettings.userLocationSnappingDistance.string)
-                    .keyboardType(.asciiCapableNumberPad)
                     .disableAutocorrection(true)
             }
 
@@ -74,9 +68,6 @@ struct DebugMenuView: View {
                     self.dismiss()
                 }
             }
-        }
-        .onChange(of: self.debugSettings.userLocationSnappingDistance) { _, newMaximumDistance in
-            RouteControllerUserLocationSnappingDistance = newMaximumDistance
         }
     }
 }

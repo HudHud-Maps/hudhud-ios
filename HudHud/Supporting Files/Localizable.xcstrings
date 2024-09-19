@@ -231,9 +231,6 @@
     "How was the navigation on this trip?" : {
 
     },
-    "In meters" : {
-
-    },
     "Layers" : {
       "localizations" : {
         "ar" : {
@@ -434,9 +431,6 @@
 
     },
     "Use SF Symbols for POIs on map" : {
-
-    },
-    "User is on Route" : {
 
     },
     "User location could not be found." : {

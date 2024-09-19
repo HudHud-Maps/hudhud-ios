@@ -8,9 +8,6 @@
 
 import BackendService
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapKit
 import MapLibre
 import MapLibreSwiftUI
@@ -228,10 +225,6 @@ struct SearchSheet: View {
         self.mapStore.selectedItem = nil // Set selectedItem to nil to dismiss the sheet
     }
 }
-
-// MARK: - Route + Identifiable
-
-extension Route: Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [

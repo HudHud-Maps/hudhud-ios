@@ -9,9 +9,6 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -25,7 +22,7 @@ import TouchVisualizer
 // MARK: - SheetSubView
 
 enum SheetSubView: Hashable, Codable {
-    case mapStyle, debugView, navigationAddSearchView, favorites
+    case mapStyle, debugView, navigationAddSearchView, favorites, navigationPreview
 }
 
 // MARK: - ContentView
@@ -207,16 +204,20 @@ struct ContentView: View {
                 }
             }
             .onChange(of: self.mapStore.camera) {
-                let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
-                guard let minLongitude = boundingBox?.sw.longitude else { return }
-                guard let minLatitude = boundingBox?.sw.latitude else { return }
+                // we should not be storing a reference to the mapView in the map store...
 
-                guard let maxLongitude = boundingBox?.ne.longitude else { return }
-                guard let maxLatitude = boundingBox?.ne.latitude else { return }
+                /*
+                 let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
+                 guard let minLongitude = boundingBox?.sw.longitude else { return }
+                 guard let minLatitude = boundingBox?.sw.latitude else { return }
 
-                Task {
-                    await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
-                }
+                 guard let maxLongitude = boundingBox?.ne.longitude else { return }
+                 guard let maxLatitude = boundingBox?.ne.latitude else { return }
+
+                 Task {
+                     await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
+                 }
+                  */
             }
         }
     }
@@ -297,12 +298,6 @@ extension Binding where Value == Bool {
     }
 }
 
-// MARK: - NavigationViewController + MapViewHostViewController
-
-extension NavigationViewController: MapViewHostViewController {
-    public typealias MapType = NavigationMapView
-}
-
 // MARK: - Preview
 
 #Preview("Itmes") {
@@ -347,5 +342,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 0))
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize.zero)
 }

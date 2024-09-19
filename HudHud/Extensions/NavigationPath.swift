@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import FerrostarCoreFFI
 import Foundation
 import OSLog
 import SwiftUI
@@ -30,10 +31,6 @@ extension NavPath: Decodable {
             if type == nil, typeName == self.stringName(of: ResolvedItem.self) {
                 // _typeByName doesn't work for things in other packages yet
                 type = BackendService.ResolvedItem.self
-            }
-            if type == nil, typeName == self.stringName(of: BackendService.RoutingService.RouteCalculationResult.self) {
-                // _typeByName doesn't work for things in other packages yet
-                type = BackendService.RoutingService.RouteCalculationResult.self
             }
             if type == nil, typeName == self.stringName(of: SheetSubView.self) {
                 // _typeByName doesn't work for things in other packages yet

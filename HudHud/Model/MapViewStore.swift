@@ -8,6 +8,7 @@
 
 import BackendService
 import Combine
+import FerrostarCoreFFI
 import MapLibre
 import OSLog
 import SwiftUI
@@ -19,8 +20,6 @@ final class MapViewStore: ObservableObject {
 
     // MARK: Properties
 
-    @Published var path = NavigationPath()
-
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
 
@@ -29,6 +28,14 @@ final class MapViewStore: ObservableObject {
     private let mapStore: MapStore
 
     private var subscriptions: Set<AnyCancellable> = []
+
+    // MARK: Computed Properties
+
+    @Published var path = NavigationPath() {
+        didSet {
+            print("changed to: \(self.path)")
+        }
+    }
 
     // MARK: Lifecycle
 
@@ -77,8 +84,8 @@ private extension MapViewStore {
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] newPotentialRoute in
                 guard let self,
-                      self.path.contains(RoutingService.RouteCalculationResult.self) == false else { return }
-                self.path.append(newPotentialRoute)
+                      self.path.contains(SheetSubView.self) == false else { return }
+                self.path.append(SheetSubView.navigationPreview)
                 self.mapStore.updateCamera(state: .route(newPotentialRoute))
             }
             .store(in: &self.subscriptions)
@@ -178,13 +185,16 @@ private extension MapViewStore {
             case .favorites:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
+            case .navigationPreview:
+                self.allowedDetents = [.small, .medium]
+                self.selectedDetent = .small
             }
         }
         if navigationPathItem is ResolvedItem {
             self.allowedDetents = [.small, .third, .nearHalf, .large]
             self.selectedDetent = .nearHalf
         }
-        if navigationPathItem is RoutingService.RouteCalculationResult {
+        if navigationPathItem is Route {
             self.allowedDetents = [.height(150), .nearHalf]
             self.selectedDetent = .nearHalf
         }

@@ -23,7 +23,6 @@
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
 		341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */; };
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
-		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734FB0DF376C6B77950814C5 /* Fonts.swift */; };
 		48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */; };
 		591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */; };
@@ -95,6 +94,7 @@
 		CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */ = {isa = PBXBuildFile; fileRef = CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */; };
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
+		CD343C542C9AD6FE00E59E95 /* Ferrostar.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD343C532C9AD6FE00E59E95 /* Ferrostar.swift */; };
 		CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */; };
 		CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C55C2C03EF43006DCDBA /* NavigationTransitions */; };
 		CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */; };
@@ -125,7 +125,6 @@
 		CDCC2A352C89D690007D7940 /* Navigation Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDCC2A342C89D690007D7940 /* Navigation Delegate.swift */; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
-		CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = C7AFBB29CC507D42D1538B2C /* MapboxNavigation */; };
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CDF9F0F22C9829FE00F5D45E /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDF9F0F12C9829FE00F5D45E /* NukeUI */; };
@@ -174,7 +173,6 @@
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
 		032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalPOIDetailsView.swift; sourceTree = "<group>"; };
 		043900014DB7FBFB28D75FE7 /* pannellum.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pannellum.js; sourceTree = "<group>"; };
-		0501F8CA3F8917530B09D712 /* MapStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStyles.swift; sourceTree = "<group>"; };
 		0754448EC2EFE7B074F658AB /* PersonalInformationScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformationScreenView.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -260,6 +258,7 @@
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
+		CD343C532C9AD6FE00E59E95 /* Ferrostar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ferrostar.swift; sourceTree = "<group>"; };
 		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
@@ -318,7 +317,6 @@
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDCC2A262C885989007D7940 /* FerrostarSwiftUI in Frameworks */,
-				CDE538CA2BA7868200D7FFE7 /* MapboxNavigation in Frameworks */,
 				CB04071F2C7F6D0C0090075B /* (null) in Frameworks */,
 				CB0407252C7F6D0C0090075B /* (null) in Frameworks */,
 				CB0407212C7F6D0C0090075B /* (null) in Frameworks */,
@@ -614,7 +612,6 @@
 				D3D89A75A4AE49BA7CD24A41 /* TrafficChart */,
 				D3EA6EE6A85C9B04C2ADA124 /* DirectionsModePicker */,
 				DDB3524C35FA323F3BF513E1 /* ABCRouteConfiguration */,
-				0501F8CA3F8917530B09D712 /* MapStyles.swift */,
 				EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */,
 				597326CCB1F4D6DDF9D8945A /* PadSheet */,
 				DA8EC799C3F464B0FE3385BF /* POISheet */,
@@ -668,6 +665,7 @@
 		E7744EF283A09BCBB542C54E /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				CD343C532C9AD6FE00E59E95 /* Ferrostar.swift */,
 				399B3BCB097127A460F4081C /* CaseIterable.swift */,
 				C0A695DB7604A3A9FCAEA3C8 /* LocationStatus.swift */,
 				4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */,
@@ -760,7 +758,6 @@
 				CD1BD8AC2B9087C100A591BD /* MapLibre */,
 				CD8C5A1F2BA342A5002EBE8A /* SimpleToast */,
 				BC8E1D9CC7D3AAC1051857FA /* MapLibre */,
-				C7AFBB29CC507D42D1538B2C /* MapboxNavigation */,
 				DE3A66FF070A2B17657129E4 /* MapLibre */,
 				CD34C55C2C03EF43006DCDBA /* NavigationTransitions */,
 				CD34C5632C05EF07006DCDBA /* BetterSafariView */,
@@ -952,6 +949,7 @@
 			files = (
 				CB04072A2C808E660090075B /* OTPVerificationView.swift in Sources */,
 				CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */,
+				CD343C542C9AD6FE00E59E95 /* Ferrostar.swift in Sources */,
 				90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */,
 				CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */,
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
@@ -1014,7 +1012,6 @@
 				A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */,
 				3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */,
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
-				4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */,
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
 				655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */,
 				AFF87B692C773F91007EE60E /* RoutingStore.swift in Sources */,
@@ -1476,14 +1473,6 @@
 				minimumVersion = 12.8.0;
 			};
 		};
-		CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/MaartenZonneveld/maplibre-navigation-ios.git";
-			requirement = {
-				branch = "feature/swift-package-manager";
-				kind = branch;
-			};
-		};
 		E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
@@ -1525,11 +1514,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
 			productName = BetterSafariView;
-		};
-		C7AFBB29CC507D42D1538B2C /* MapboxNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
-			productName = MapboxNavigation;
 		};
 		CB7033A62C84E5230006681E /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -100,7 +100,7 @@ struct FerrostarNavigationView: View {
             ),
             routeDeviationTracking: .staticThreshold(
                 minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20
-            )
+            ), snappedLocationCourseFiltering: .snapToRoute
         )
 
         self.ferrostarCore = FerrostarCore(

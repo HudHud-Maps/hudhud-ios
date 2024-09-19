@@ -8,6 +8,7 @@
 
 import BackendService
 import CoreLocation
+import FerrostarCoreFFI
 import SwiftUI
 
 struct AdditionalPOIDetailsView: View {
@@ -15,7 +16,7 @@ struct AdditionalPOIDetailsView: View {
     // MARK: Properties
 
     let item: ResolvedItem
-    let routes: RoutingService.RouteCalculationResult?
+    let routes: [Route]?
     var formatter = Formatters()
 
     // MARK: Content
@@ -51,7 +52,7 @@ struct AdditionalPOIDetailsView: View {
                     .foregroundStyle(Color.Colors.General._02Grey)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                if let route = routes?.routes.first {
+                if let routes, let route = routes.first {
                     Text("\(self.formatter.formatDistance(distance: route.distance))")
                         .hudhudFont(.headline)
                         .foregroundStyle(Color.Colors.General._01Black)
@@ -74,8 +75,8 @@ struct AdditionalPOIDetailsView: View {
                     .foregroundStyle(Color.Colors.General._02Grey)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                if let route = routes?.routes.first {
-                    Text("\(self.formatter.formatDuration(duration: route.expectedTravelTime))")
+                if let routes, let route = routes.first {
+                    Text("\(self.formatter.formatDuration(duration: route.duration))")
                         .hudhudFont(.headline)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(1)
@@ -130,8 +131,8 @@ struct AdditionalPOIDetailsView: View {
 }
 
 #Preview {
-    return VStack {
-        AdditionalPOIDetailsView(item: .artwork, routes: .none)
+    VStack {
+        AdditionalPOIDetailsView(item: .artwork, routes: nil)
     }
 }
 

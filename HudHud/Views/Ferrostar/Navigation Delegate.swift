@@ -1,6 +1,7 @@
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
+import OSLog
 
 /// Not all navigation apps will require a navigation delegate. In fact, we hope that most don't!
 /// In case you do though, this sample implementation shows what you'll need to get started
@@ -8,7 +9,6 @@ import FerrostarCoreFFI
 class NavigationDelegate: FerrostarCoreDelegate {
     func core(_: FerrostarCore, correctiveActionForDeviation _: Double, remainingWaypoints waypoints: [Waypoint]) -> CorrectiveAction {
         // If the user is off course, we'll try to calculate a new route using the remaining waypoints.
-        print("getting new routes")
         return .getNewRoutes(waypoints: waypoints)
     }
 
@@ -29,7 +29,7 @@ class NavigationDelegate: FerrostarCoreDelegate {
                     routeDeviationTracking: .staticThreshold(
                         minimumHorizontalAccuracy: 25,
                         maxAcceptableDeviation: 20
-                    )
+                    ), snappedLocationCourseFiltering: .snapToRoute
                 )
                 try core.startNavigation(
                     route: route,
@@ -37,7 +37,7 @@ class NavigationDelegate: FerrostarCoreDelegate {
                 )
             } catch {
                 // Users of the framework my develop their own responses here, such as notifying the user if appropriate
-                print("alternate routes error: \(error.localizedDescription)")
+                Logger.routing.error("alternate routes error: \(error.localizedDescription)")
             }
         }
     }

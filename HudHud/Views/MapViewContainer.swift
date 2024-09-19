@@ -7,8 +7,6 @@
 //
 
 import BackendService
-import MapboxCoreNavigation
-import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -49,17 +47,11 @@ struct MapViewContainer: View {
     // MARK: Content
 
     var body: some View {
-        MapView<NavigationViewController>(makeViewController: {
-            let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
-            viewController.showsEndOfRouteFeedback = false // We show our own Feedback
-            viewController.mapView.compassViewMargins.y = 50
-            self.mapStore.mapView = viewController.mapView
-            return viewController
-        }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
+        MapView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.searchViewStore.routingStore.potentialRoute?.routes.first, self.searchViewStore.routingStore.navigationProgress == .none {
+            if let route = self.searchViewStore.routingStore.potentialRoute, self.searchViewStore.routingStore.navigationProgress == .none {
                 let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
+                    MLNPolylineFeature(coordinates: route.geometry.clLocationCoordinate2Ds ?? [])
                 }
 
                 // Add a polyline casing for a stroke effect
@@ -170,9 +162,6 @@ struct MapViewContainer: View {
             self.mapViewStore.didTapOnMap(containing: features)
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-        .unsafeMapViewControllerModifier { controller in
-            self.searchViewStore.routingStore.assign(to: controller, shouldSimulateRoute: self.debugStore.simulateRide)
-        }
         .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
         .onStyleLoaded { style in
             self.mapStore.mapStyle = style
@@ -187,11 +176,8 @@ struct MapViewContainer: View {
         })
         .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
         .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
-            if let routeUnwrapped = newRoute,
-               let route = routeUnwrapped.routes.first,
-               let coordinates = route.coordinates,
-               !coordinates.isEmpty,
-               let camera = CameraState.boundingBox(from: coordinates) {
+            if let route = newRoute {
+                let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
                 self.mapStore.camera = camera
             }
         }
@@ -228,7 +214,7 @@ struct MapViewContainer: View {
 }
 
 #Preview {
-    let mapStore: MapStore = .storeSetUpForPreviewing
-    let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 80))
+    @Previewable let mapStore: MapStore = .storeSetUpForPreviewing
+    @Previewable let searchStore: SearchViewStore = .storeSetUpForPreviewing
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(width: 80, height: 80))
 }
