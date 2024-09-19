@@ -93,12 +93,12 @@ private extension MapViewStore {
         .sink { [weak self] navigatingRoute, path, items in
             guard let self else { return }
             let elements = try? path.elements()
-            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil {
+            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil, self.mapStore.displayableItems.count > 1 {
                 true
             } else {
                 !items.isEmpty
             }
-            let isCurrentSheetListOfSearchResults: Bool = if case .resolvedItem = items.first {
+            let isCurrentSheetListOfSearchResults: Bool = if case .resolvedItem = items.first, self.mapStore.displayableItems.count > 1 {
                 true
             } else {
                 false
