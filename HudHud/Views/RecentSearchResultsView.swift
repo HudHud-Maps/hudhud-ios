@@ -65,10 +65,7 @@ struct RecentSearchResultsView: View {
                 }
             }
             .onTapGesture {
-                let selectedItem = item
-                let mapItems = [DisplayableRow.resolvedItem(item)]
-                self.searchStore.mapStore.selectedItem = selectedItem
-                self.searchStore.mapStore.displayableItems = mapItems
+                self.searchStore.mapStore.clearListAndSelect(item)
                 switch self.searchType {
                 case let .returnPOILocation(completion):
                     if let selectedItem = self.searchStore.mapStore.selectedItem {

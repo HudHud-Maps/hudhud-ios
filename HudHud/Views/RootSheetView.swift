@@ -82,7 +82,8 @@ struct RootSheetView: View {
                             try? await self.notificationManager.requestAuthorization()
                         }
                     } onDismiss: {
-                        self.searchViewStore.mapStore.selectedItem = nil
+                        self.searchViewStore.mapStore.clearItems()
+                        self.searchViewStore.searchText = ""
                         if !self.mapViewStore.path.isEmpty {
                             self.mapViewStore.path.removeLast()
                         }

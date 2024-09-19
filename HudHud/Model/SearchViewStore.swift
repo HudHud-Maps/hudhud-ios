@@ -85,8 +85,7 @@ final class SearchViewStore: ObservableObject {
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
-            self.mapStore.displayableItems = []
-            self.mapStore.selectedItem = nil
+            self.mapStore.clearItems()
         }
     }
 
@@ -116,7 +115,7 @@ final class SearchViewStore: ObservableObject {
             await self.mapStore.resolve(item)
         case let .categoryItem(resolvedItem):
             self.mapViewStore.selectedDetent = .third
-            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.select(resolvedItem)
         case let .category(category):
             await self.fetch(category: category.name)
         case .predictionItem:
@@ -146,7 +145,7 @@ final class SearchViewStore: ObservableObject {
                 return
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
-            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.select(resolvedItem, shouldFocusCamera: true)
             self.mapViewStore.selectedDetent = .third
         } catch {
             self.searchError = error
@@ -180,7 +179,8 @@ final class SearchViewStore: ObservableObject {
                 filteredItems = filteredItems.filter { $0.isOpen == true }
             }
 
-            self.mapStore.displayableItems = filteredItems.map(DisplayableRow.categoryItem)
+            let displayableItems = filteredItems.map(DisplayableRow.categoryItem)
+            self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -199,12 +199,13 @@ final class SearchViewStore: ObservableObject {
         do {
             let userLocation = self.mapStore.mapView?.userLocation?.coordinate
             let results = try await self.hudhud.predict(term: self.searchText, coordinates: userLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = results.items.compactMap { item in
+            let items = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
                     return DisplayableRow.categoryItem(resolvedItem)
                 }
                 return nil
             }
+            self.mapStore.replaceItemsAndFocusCamera(on: items)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -213,8 +214,7 @@ final class SearchViewStore: ObservableObject {
 
     func endTrip() {
         self.routingStore.endTrip()
-        self.mapStore.selectedItem = nil
-        self.mapStore.displayableItems = []
+        self.mapStore.clearItems()
         self.searchText = ""
         self.mapViewStore.reset()
     }
@@ -254,7 +254,7 @@ private extension SearchViewStore {
                     try await self.hudhud.predict(term: term, coordinates: userLocation, baseURL: DebugStore().baseURL)
                 }
                 self.searchError = nil
-                self.mapStore.displayableItems = result.items
+                self.mapStore.replaceItemsAndFocusCamera(on: result.items)
                 self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {
                     .small // hudhud provider has coordinates in the response, so we can show the results in the map
                 } else {
