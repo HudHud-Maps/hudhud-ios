@@ -48,7 +48,7 @@ struct RecentSearchResultsView: View {
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                         .foregroundColor(.primary)
-                    Text(item.subtitle)
+                    Text(item.subtitle ?? item.coordinate.formatted())
                         .hudhudFont(.body)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)

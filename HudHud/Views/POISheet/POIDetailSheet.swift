@@ -42,7 +42,7 @@ struct POIDetailSheet: View {
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
-        return self.item.subtitle.count > maxCharacters
+        return (self.item.subtitle ?? self.item.coordinate.formatted()).count > maxCharacters
     }
 
     // MARK: Lifecycle
@@ -87,7 +87,7 @@ struct POIDetailSheet: View {
                                 .padding(.vertical, 6)
                         }
                         HStack {
-                            Text(self.item.subtitle)
+                            Text(self.item.subtitle ?? self.item.coordinate.formatted())
                                 .hudhudFont(.footnote)
                                 .foregroundStyle(Color.Colors.General._01Black)
                                 .multilineTextAlignment(.leading)
