@@ -329,8 +329,8 @@ private extension MapStore {
     }
 
     func bindCameraToUserLocationForFirstTime() {
-        self.userLocationStore.$isLocationPermissionEnabled
-            .filter { $0 } // only go through if the location permission is enabled
+        self.userLocationStore.$permissionStatus
+            .filter(\.isEnabled) // only go through if the location permission is enabled
             .first() // only call the closure once
             .sink { [weak self] _ in
                 Task {

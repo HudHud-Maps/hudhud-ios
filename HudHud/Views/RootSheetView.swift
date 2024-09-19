@@ -21,6 +21,7 @@ struct RootSheetView: View {
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @ObservedObject var mapViewStore: MapViewStore
+    @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
@@ -70,21 +71,23 @@ struct RootSheetView: View {
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item, routingStore: self.searchViewStore.routingStore, onStart: { route in
+                    POIDetailSheet(
+                        item: item,
+                        routingStore: self.searchViewStore.routingStore,
+                        didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
+                    ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
-                        self.searchViewStore.routingStore.navigate(to: item, with: route)
                         Task {
-                            do {
-                                try? await self.notificationManager.requestAuthorization()
-                            }
+                            try? await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
+                            try? await self.notificationManager.requestAuthorization()
                         }
-                    }, onDismiss: {
+                    } onDismiss: {
                         self.searchViewStore.mapStore.selectedItem = nil
                         self.searchViewStore.mapStore.displayableItems = []
                         if !self.mapViewStore.path.isEmpty {
                             self.mapViewStore.path = NavigationPath()
                         }
-                    })
+                    }
                     .navigationBarBackButtonHidden()
                 }
                 .navigationDestination(for: RoutingService.RouteCalculationResult.self) { _ in

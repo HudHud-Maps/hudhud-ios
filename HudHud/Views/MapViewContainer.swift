@@ -114,24 +114,25 @@ struct MapViewContainer: View {
                     .minimumZoomLevel(13.0)
                     .maximumZoomLevel(22.0)
                     .predicate(NSPredicate(format: "cluster != YES"))
+
+                // shows the selected pin
+                CircleStyleLayer(
+                    identifier: MapLayerIdentifier.selectedCircle,
+                    source: self.mapStore.selectedPoint
+                )
+                .radius(24)
+                .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
+                .strokeWidth(2)
+                .strokeColor(.white)
+                .predicate(NSPredicate(format: "cluster != YES"))
+                SymbolStyleLayer(
+                    identifier: MapLayerIdentifier.selectedCircleIcon,
+                    source: self.mapStore.selectedPoint
+                )
+                .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
+                .iconColor(.white)
+                .predicate(NSPredicate(format: "cluster != YES"))
             }
-            // shows the selected pin
-            CircleStyleLayer(
-                identifier: MapLayerIdentifier.selectedCircle,
-                source: self.mapStore.selectedPoint
-            )
-            .radius(24)
-            .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
-            .strokeWidth(2)
-            .strokeColor(.white)
-            .predicate(NSPredicate(format: "cluster != YES"))
-            SymbolStyleLayer(
-                identifier: MapLayerIdentifier.selectedCircleIcon,
-                source: self.mapStore.selectedPoint
-            )
-            .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
-            .iconColor(.white)
-            .predicate(NSPredicate(format: "cluster != YES"))
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in

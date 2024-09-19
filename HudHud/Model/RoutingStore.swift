@@ -94,7 +94,12 @@ final class RoutingStore: ObservableObject {
         return try await self.calculateRoute(for: waypoints)
     }
 
-    func navigate(to item: ResolvedItem, with route: RoutingService.RouteCalculationResult) {
+    func navigate(to item: ResolvedItem, with calculatedRouteIfAvailable: RoutingService.RouteCalculationResult?) async throws {
+        let route = if let calculatedRouteIfAvailable {
+            calculatedRouteIfAvailable
+        } else {
+            try await self.calculateRoute(for: item)
+        }
         self.potentialRoute = route
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
         if let location = route.waypoints.first {
@@ -136,7 +141,7 @@ final class RoutingStore: ObservableObject {
                 self.navigationProgress = .navigating
             } else {
                 navigationController.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.isLocationPermissionEnabled && self.mapStore.streetViewScene == nil
+                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.permissionStatus.isEnabled && self.mapStore.streetViewScene == nil
             }
         case .navigating:
             if let route = self.navigatingRoute {
