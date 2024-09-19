@@ -21,7 +21,8 @@ let package = Package(
         .package(url: "https://github.com/HudHud-Maps/maplibre-navigation-ios.git", branch: "fix/lanes-view-not-hidden-when-it-should-be-hidden"),
         .package(url: "https://github.com/apple/swift-openapi-generator", from: "1.0.0"),
         .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0")
+        .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0"),
+        .package(url: "https://github.com/salishseasoftware/LocationFormatter.git", from: "1.1.0")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -32,7 +33,8 @@ let package = Package(
                 .product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
                 .product(name: "MapboxNavigation", package: "maplibre-navigation-ios"),
                 .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
-                .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession")
+                .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession"),
+                .product(name: "LocationFormatter", package: "locationformatter")
             ],
             plugins: [
                 .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")
