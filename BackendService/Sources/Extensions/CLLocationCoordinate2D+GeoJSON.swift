@@ -68,3 +68,30 @@ public extension CLLocationCoordinate2D {
         return formatter.string(from: self) ?? "Invalid Coordinates" // "48.11638° N, 122.74231° W"
     }
 }
+
+public extension CLLocation {
+
+    var coordinateString: String {
+        return "\(self.coordinate.latitude.format(f: ".3"))° N \(self.coordinate.longitude.format(f: ".3"))° W"
+    }
+
+    var isValid: Bool {
+        let coordinate = self.coordinate
+        guard coordinate.latitude >= -90, coordinate.latitude <= 90 else {
+            return false
+        }
+
+        if coordinate.latitude == 0,
+           coordinate.longitude == 0 {
+            return false
+        }
+
+        return true
+    }
+}
+
+private extension Double {
+    func format(f: String) -> String {
+        return String(format: "%\(f)f", self)
+    }
+}

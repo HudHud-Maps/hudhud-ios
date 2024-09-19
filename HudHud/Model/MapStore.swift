@@ -28,6 +28,7 @@ final class MapStore: ObservableObject {
 
     enum TrackingState {
         case none
+        case waitingForLocation
         case locateOnce
         case keepTracking
     }
@@ -165,9 +166,10 @@ final class MapStore: ObservableObject {
         return styleUrl
     }
 
-    func focusOnUser() async {
-        guard let location = await self.userLocationStore.location()?.coordinate else { return }
-        self.updateCamera(state: .userLocation(location))
+    func focusOnUser() {
+        guard let location = self.mapView?.userLocation?.location else { return }
+
+        self.updateCamera(state: .userLocation(location.coordinate))
     }
 
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
@@ -204,6 +206,7 @@ final class MapStore: ObservableObject {
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
+
         var detailedItemUpdate = detailedItem
         detailedItemUpdate.systemColor = item.systemColor
         detailedItemUpdate.symbol = item.symbol
@@ -236,12 +239,15 @@ final class MapStore: ObservableObject {
         }
     }
 
-    func switchToNextTrackingAction() async {
+    func switchToNextTrackingAction() {
         switch self.trackingState {
         case .none:
-            await self.focusOnUser()
+            self.trackingState = .waitingForLocation
+            self.focusOnUser()
             self.trackingState = .locateOnce
             Logger.mapInteraction.log("None action required")
+        case .waitingForLocation:
+            Logger.mapInteraction.log("waiting for location")
         case .locateOnce:
             self.trackingState = .keepTracking
             Logger.mapInteraction.log("locate me Once")
@@ -334,9 +340,7 @@ private extension MapStore {
             .filter(\.isEnabled) // only go through if the location permission is enabled
             .first() // only call the closure once
             .sink { [weak self] _ in
-                Task {
-                    await self?.focusOnUser()
-                }
+                self?.focusOnUser()
             }
             .store(in: &self.subscriptions)
     }

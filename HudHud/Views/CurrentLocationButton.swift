@@ -22,9 +22,7 @@ struct CurrentLocationButton: View {
 
     var body: some View {
         Button {
-            Task {
-                await self.mapStore.switchToNextTrackingAction()
-            }
+            self.mapStore.switchToNextTrackingAction()
         } label: {
             self.trackingUI
         }
@@ -42,6 +40,14 @@ struct CurrentLocationButton: View {
                 .font(.title2)
                 .padding(10)
                 .foregroundColor(.gray)
+        case .waitingForLocation:
+            ZStack {
+                Color.white
+                    .padding(18)
+                ProgressView()
+                    .progressViewStyle(CircularProgressViewStyle())
+                    .foregroundColor(.gray)
+            }
         case .locateOnce:
             Image(systemSymbol: .locationFill)
                 .font(.title2)
@@ -59,6 +65,13 @@ struct CurrentLocationButton: View {
 
 #Preview(traits: .sizeThatFitsLayout) {
     @State var mapStore: MapStore = .storeSetUpForPreviewing
+    return CurrentLocationButton(mapStore: mapStore)
+        .padding()
+}
+
+#Preview(traits: .sizeThatFitsLayout) {
+    @State var mapStore: MapStore = .storeSetUpForPreviewing
+    mapStore.trackingState = .waitingForLocation
     return CurrentLocationButton(mapStore: mapStore)
         .padding()
 }

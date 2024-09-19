@@ -161,7 +161,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let userLocation = self.mapStore.mapView?.centerCoordinate
             let topRated = self.filterStore.topRated
             let items = try await hudhud.items(
                 for: category,
@@ -197,7 +197,7 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let userLocation = self.mapStore.mapView?.userLocation?.coordinate
             let results = try await self.hudhud.predict(term: self.searchText, coordinates: userLocation, baseURL: DebugStore().baseURL)
             let items = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
@@ -245,7 +245,7 @@ private extension SearchViewStore {
             self.isSheetLoading = true
             self.mapViewStore.selectedDetent = .third
 
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let userLocation = self.mapStore.mapView?.userLocation?.coordinate
             do {
                 let result = switch provider {
                 case .apple:

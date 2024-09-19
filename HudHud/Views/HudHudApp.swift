@@ -43,7 +43,7 @@ struct HudHudApp: App {
         RouteControllerUserLocationSnappingDistance = DebugStore().userLocationSnappingDistance
         self.motionViewModel = .shared
         let location = Location() // swiftlint:disable:this location_usage
-        location.accuracy = .bestForNavigation
+        location.accuracy = .threeKilometers
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
         self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
