@@ -87,7 +87,7 @@ struct POIDetailSheet: View {
                                 .padding(.vertical, 6)
                         }
                         HStack {
-                            Text(self.item.subtitle ?? self.item.coordinate.formatted())
+                            Text((self.item.subtitle?.isEmpty == false ? self.item.subtitle : self.item.coordinate.formatted()) ?? self.item.coordinate.formatted())
                                 .hudhudFont(.footnote)
                                 .foregroundStyle(Color.Colors.General._01Black)
                                 .multilineTextAlignment(.leading)
@@ -102,7 +102,7 @@ struct POIDetailSheet: View {
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 4)
+                        .padding(self.item.category != nil ? .bottom : .vertical, 4)
                     }
                     Button(action: {
                         self.dismiss()
