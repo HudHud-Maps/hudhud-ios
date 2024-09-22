@@ -162,7 +162,6 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let userLocation = self.mapStore.mapView?.centerCoordinate
-            let topRated = self.filterStore.topRated
             let items = try await hudhud.items(
                 for: category,
                 topRated: self.filterStore.topRated,
