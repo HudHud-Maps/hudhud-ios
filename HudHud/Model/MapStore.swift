@@ -141,9 +141,11 @@ final class MapStore: ObservableObject {
         }
     }
 
-    func clearItems() {
+    func clearItems(clearResults: Bool? = true) {
         self.selectedItem = nil
-        self.displayableItems = []
+        if clearResults == true {
+            self.displayableItems = []
+        }
     }
 
     func getCameraPitch() -> Double {
