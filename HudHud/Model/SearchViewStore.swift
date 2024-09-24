@@ -64,7 +64,11 @@ final class SearchViewStore: ObservableObject {
     let mapStore: MapStore
     let routingStore: RoutingStore
     var apple = ApplePOI()
+    var progressViewTimer: Timer?
+    var noResultsTimer: Timer?
 
+    @Published var showNoResults: Bool = false
+    @Published var showProgressView: Bool = false
     @Published var searchText: String = ""
     @Published var searchError: Error?
     @Published var isSheetLoading = false
@@ -162,7 +166,6 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let userLocation = self.mapStore.mapView?.centerCoordinate
-            let topRated = self.filterStore.topRated
             let items = try await hudhud.items(
                 for: category,
                 topRated: self.filterStore.topRated,
@@ -228,6 +231,32 @@ final class SearchViewStore: ObservableObject {
         }
         self.recentViewedItem.insert(item, at: 0)
     }
+
+    func startFetchingResultsTimer() {
+        // Invalidate any previous timers
+        self.progressViewTimer?.invalidate()
+        self.noResultsTimer?.invalidate()
+
+        self.showNoResults = false
+        self.showProgressView = false
+
+        // Start the timer to show the Progress View after 0.5 seconds
+        self.progressViewTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+            guard let self else { return }
+
+            Task { @MainActor in
+                self.showProgressView = self.isSheetLoading
+
+                // After showing the Progress View, start the timer to show no results after 1 more seconds
+                self.noResultsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+                    guard let self else { return }
+                    Task { @MainActor in
+                        self.showNoResults = self.mapStore.displayableItems.isEmpty
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Private
@@ -241,8 +270,8 @@ private extension SearchViewStore {
             return
         }
         self.task = Task {
-            defer { self.isSheetLoading = false }
             self.isSheetLoading = true
+            defer { self.isSheetLoading = false }
             self.mapViewStore.selectedDetent = .third
 
             let userLocation = self.mapStore.mapView?.userLocation?.coordinate
