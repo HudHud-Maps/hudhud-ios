@@ -259,6 +259,7 @@
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
 		CD343C532C9AD6FE00E59E95 /* Ferrostar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ferrostar.swift; sourceTree = "<group>"; };
+		CD343C552C9D8A8E00E59E95 /* ferrostar */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = ferrostar; path = ../ferrostar; sourceTree = SOURCE_ROOT; };
 		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
@@ -507,6 +508,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
+				CD343C552C9D8A8E00E59E95 /* ferrostar */,
 				CD34C5962C0B3CEB006DCDBA /* BackendService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,

@@ -10,15 +10,6 @@
       }
     },
     {
-      "identity" : "ferrostar",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stadiamaps/ferrostar",
-      "state" : {
-        "revision" : "5a90b977cd572595f45ac8a1325f7579486aeca5",
-        "version" : "0.12.0"
-      }
-    },
-    {
       "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
@@ -34,15 +25,6 @@
       "state" : {
         "revision" : "236215c13bff962009e0f0257d6d8349be33442f",
         "version" : "0.0.4"
-      }
-    },
-    {
-      "identity" : "maplibre-swiftui-dsl-playground",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/stadiamaps/maplibre-swiftui-dsl-playground",
-      "state" : {
-        "revision" : "a789bbee505a1344a87d9a5f999455ed55acdcde",
-        "version" : "0.0.28"
       }
     },
     {
@@ -163,6 +145,15 @@
       }
     },
     {
+      "identity" : "swift-snapshot-testing",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
+      "state" : {
+        "revision" : "7b0bbbae90c41f848f90ac7b4df6c4f50068256d",
+        "version" : "1.17.5"
+      }
+    },
+    {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
@@ -187,6 +178,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
+      }
+    },
+    {
+      "identity" : "swiftui-dsl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maplibre/swiftui-dsl",
+      "state" : {
+        "revision" : "5ba75ef1e4382fcc7ee71e274eb9c2a50906b14e",
+        "version" : "0.1.0"
       }
     },
     {

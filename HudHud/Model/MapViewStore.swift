@@ -80,13 +80,20 @@ final class MapViewStore: ObservableObject {
 private extension MapViewStore {
     func showPotentialRouteWhenAvailable() {
         self.routingStore.$potentialRoute
-            .compactMap { $0 }
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] newPotentialRoute in
-                guard let self,
-                      self.path.contains(SheetSubView.self) == false else { return }
-                self.path.append(SheetSubView.navigationPreview)
-                self.mapStore.updateCamera(state: .route(newPotentialRoute))
+
+                if let newPotentialRoute {
+                    guard let self,
+                          self.path.contains(SheetSubView.self) == false else { return }
+                    self.path.append(SheetSubView.navigationPreview)
+
+                    self.mapStore.updateCamera(state: .route(newPotentialRoute))
+                } else {
+                    if let lastElement = self?.path.last(), let somethingElse = lastElement as? SheetSubView, somethingElse == .navigationPreview {
+                        self?.path.removeLast()
+                    }
+                }
             }
             .store(in: &self.subscriptions)
     }

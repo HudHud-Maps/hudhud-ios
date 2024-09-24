@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapLibreSwiftUI
 import SFSafeSymbols
 import SwiftUI
 
@@ -76,5 +77,11 @@ extension Backport where Content: View {
         } else {
             self.content.sheet(item: item, onDismiss: onDismiss, content: content)
         }
+    }
+}
+
+extension Backport where Content == MapView<MLNMapViewController> {
+    @ViewBuilder func applyAdditionalModifiers() -> some View {
+        self.content
     }
 }

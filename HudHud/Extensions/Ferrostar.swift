@@ -6,6 +6,7 @@
 //
 
 import CoreLocation
+import FerrostarCore
 import FerrostarCoreFFI
 import Foundation
 import MapLibre
@@ -45,5 +46,16 @@ extension BoundingBox {
 extension [GeographicCoordinate] {
     var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
         return self.map(\.clLocationCoordinate2D)
+    }
+}
+
+extension FerrostarCore {
+
+    var isNavigating: Bool {
+        if let tripState = self.state?.tripState, case .navigating = tripState {
+            return true
+        } else {
+            return false
+        }
     }
 }

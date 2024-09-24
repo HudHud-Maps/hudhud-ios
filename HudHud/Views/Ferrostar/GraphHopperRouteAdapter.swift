@@ -41,6 +41,7 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
             throw ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
         }
 
+        print(url)
         let answer: (data: Data, response: URLResponse) = try await URLSession.shared.data(from: url)
 
         guard answer.response.mimeType == "application/json" else {

@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import FerrostarCore
 import FerrostarCoreFFI
 import Foundation
 import MapLibre
@@ -20,11 +21,13 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Nested Types
 
-    enum NavigationProgress {
-        case none
-        case navigating
-        case feedback
-    }
+    /*
+     enum NavigationProgress {
+         case none
+         case navigating
+         case feedback
+     }
+     */
 
     // MARK: - Internal
 
@@ -33,16 +36,24 @@ final class RoutingStore: ObservableObject {
     // MARK: Properties
 
     @Published private(set) var waypoints: [ABCRouteConfigurationItem]?
-    @Published private(set) var navigationProgress: NavigationProgress = .none
+    // @Published private(set) var navigationProgress: NavigationProgress = .none
     let mapStore: MapStore
 
     // route that the user might choose, but still didn't choose yet
-    @Published private(set) var potentialRoute: Route?
+    @Published var potentialRoute: Route?
 
     // if this is set, that means that the user is currently navigating using this route
     @Published var navigatingRoute: Route?
 
     let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider()
+
+    let ferrostarCore: FerrostarCore
+
+    private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
+        isMuted: false)
+
+    // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
+    private let navigationDelegate = NavigationDelegate()
 
     // MARK: Computed Properties
 
@@ -69,6 +80,42 @@ final class RoutingStore: ObservableObject {
 
     init(mapStore: MapStore) {
         self.mapStore = mapStore
+
+        let provider: LocationProviding
+
+        provider = CoreLocationProvider(
+            activityType: .automotiveNavigation,
+            allowBackgroundLocationUpdates: true
+        )
+        provider.startUpdating()
+
+        // Configure the navigation session.
+        // You have a lot of flexibility here based on your use case.
+        let config = SwiftNavigationControllerConfig(
+            stepAdvance: .relativeLineStringDistance(
+                minimumHorizontalAccuracy: 32, automaticAdvanceDistance: 10
+            ),
+            routeDeviationTracking: .staticThreshold(
+                minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20
+            ), snappedLocationCourseFiltering: .snapToRoute
+        )
+        let something = FerrostarCore(
+            customRouteProvider: HudHudGraphHopperRouteProvider(),
+            locationProvider: provider,
+            navigationControllerConfig: config
+        )
+
+        self.ferrostarCore = something
+
+        something.delegate = self.navigationDelegate
+
+        // Initialize text-to-speech; note that this is NOT automatic.
+        // You must set a spokenInstructionObserver.
+        // Fortunately, this is pretty easy with the provided class
+        // backed by AVSpeechSynthesizer.
+        // You can customize the instance it further as needed,
+        // or replace with your own.
+        something.spokenInstructionObserver = self.spokenInstructionObserver
     }
 
     // MARK: Functions
@@ -123,7 +170,6 @@ final class RoutingStore: ObservableObject {
     func endTrip() {
         self.waypoints = nil
         self.potentialRoute = nil
-        self.navigationProgress = .none
     }
 }
 

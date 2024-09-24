@@ -104,6 +104,7 @@ struct RootSheetView: View {
                     }
                     .navigationBarBackButtonHidden()
                 }
+            /*
                 .navigationDestination(isPresented:
                     Binding<Bool>(
                         get: { self.searchViewStore.routingStore.navigationProgress == .feedback },
@@ -120,8 +121,9 @@ struct RootSheetView: View {
                         .navigationBarBackButtonHidden()
                         .presentationCornerRadius(21)
                 }
+             */
         }
-        .navigationTransition(.fade(.cross).animation(nil))
+        .navigationTransition(.fade(.cross))
         .frame(minWidth: 320)
         .presentationCornerRadius(21)
         .presentationDetents(self.mapViewStore.allowedDetents, selection: self.$mapViewStore.selectedDetent)

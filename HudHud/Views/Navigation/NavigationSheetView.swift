@@ -64,11 +64,6 @@ struct NavigationSheetView: View {
                 .padding([.horizontal, .bottom])
             }
         }
-        .fullScreenCover(item: self.$routingStore.navigatingRoute) { route in
-            FerrostarNavigationView(waypoints: route.waypoints.dropFirst().map { waypoint in
-                CLLocation(latitude: waypoint.coordinate.lat, longitude: waypoint.coordinate.lng)
-            })
-        }
     }
 }
 

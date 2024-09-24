@@ -82,4 +82,15 @@ extension NavigationPath {
             return false
         }
     }
+
+    // Returns the last element in the path
+    func last() -> Any? {
+        do {
+            let elements = try self.elements()
+            return elements.last
+        } catch {
+            Logger.sheet.error("Current NavigationPath cannot be decoded: \(error)")
+            return nil
+        }
+    }
 }
