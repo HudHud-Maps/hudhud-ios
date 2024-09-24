@@ -102,7 +102,7 @@ struct POIDetailSheet: View {
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 4)
+                        .padding(self.item.category != nil ? .bottom : .vertical, 4)
                     }
                     Button(action: {
                         self.dismiss()
