@@ -141,9 +141,9 @@ final class MapStore: ObservableObject {
         }
     }
 
-    func clearItems(clearResults: Bool? = nil) {
+    func clearItems(clearResults: Bool? = true) {
         self.selectedItem = nil
-        if clearResults == nil || clearResults == true {
+        if clearResults == true {
             self.displayableItems = []
         }
     }
