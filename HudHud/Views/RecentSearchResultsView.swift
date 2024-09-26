@@ -91,12 +91,14 @@ struct RecentSearchResultsView: View {
 }
 
 #Preview("EditFavoritesFormView") {
+    @Previewable @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
+    @Previewable @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
+    @Previewable @State var editFormViewIsShown = true
+    @Previewable @StateObject var favoritesStore = FavoritesStore()
+
     let item: ResolvedItem = .artwork
-    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
-    @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
-    @State var editFormViewIsShown = true
-    @StateObject var favoritesStore = FavoritesStore()
-    return NavigationStack {
+
+    NavigationStack {
         RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $editFormViewIsShown) {
                 EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)

@@ -82,7 +82,7 @@ struct DebugMenuView: View {
 }
 
 #Preview {
-    @StateObject var debugSettings = DebugStore()
+    @Previewable @StateObject var debugSettings = DebugStore()
 
     return DebugMenuView(debugSettings: debugSettings)
 }
