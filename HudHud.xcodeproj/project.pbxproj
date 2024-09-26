@@ -98,7 +98,6 @@
 		CD1882FE2BF63E8200C8AD49 /* MapLibreSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = CD1882FD2BF63E8200C8AD49 /* MapLibreSwiftUI */; };
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
-		CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */; };
 		CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C55C2C03EF43006DCDBA /* NavigationTransitions */; };
 		CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */; };
 		CD34C5612C05C7FA006DCDBA /* RootSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */; };
@@ -258,7 +257,6 @@
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
-		CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudRouteVoiceController.swift; sourceTree = "<group>"; };
 		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
 		CD34C5962C0B3CEB006DCDBA /* BackendService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BackendService; sourceTree = "<group>"; };
@@ -379,7 +377,6 @@
 			isa = PBXGroup;
 			children = (
 				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
-				CD34C52B2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift */,
 				174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */,
 				128EEC335247DA2600CF82C6 /* NotificationManager.swift */,
 			);
@@ -965,7 +962,6 @@
 				5910022F2C84787A00CF4707 /* PersonalInformationScreenView.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
 				D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */,
-				CD34C52C2BF7FF19006DCDBA /* HudHudRouteVoiceController.swift in Sources */,
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,
 				01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */,
 				5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */,

@@ -175,18 +175,20 @@ final class RoutingStore: ObservableObject {
 
 extension RoutingStore: NavigationViewControllerDelegate {
 
-    func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
-        self.navigatingRoute = nil
+    nonisolated func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
+        Task { @MainActor in
+            self.navigatingRoute = nil
+        }
     }
 
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+    nonisolated func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         return navigationViewController.routeController?.userIsOnRoute(location) == false
     }
 
-    func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
+    nonisolated func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
         Task {
             do {
-                guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
+                guard let currentRoute = await self.navigatingRoute?.routeOptions.waypoints.last else { return }
 
                 let routes = try await self.calculateRoute(for: [Waypoint(location: location), currentRoute])
                 if let route = routes.routes.first {
@@ -198,13 +200,17 @@ extension RoutingStore: NavigationViewControllerDelegate {
         }
     }
 
-    func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
-        Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
+    nonisolated func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
+        Task { @MainActor in
+            Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
+        }
     }
 
-    func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
-        self.navigatingRoute = route
-        Logger.routing.info("didRerouteAlong new route \(route)")
+    nonisolated func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
+        Task { @MainActor in
+            self.navigatingRoute = route
+            Logger.routing.info("didRerouteAlong new route \(route)")
+        }
     }
 }
 
