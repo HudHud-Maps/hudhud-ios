@@ -309,7 +309,7 @@ private extension SearchViewStore {
 
 // MARK: - Previewable
 
-extension SearchViewStore: Previewable {
+extension SearchViewStore: @preconcurrency Previewable {
 
     static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
 }

@@ -218,6 +218,6 @@ private extension RoutingStore {
 
 // MARK: - Previewable
 
-extension RoutingStore: Previewable {
+extension RoutingStore: @preconcurrency Previewable {
     static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing)
 }

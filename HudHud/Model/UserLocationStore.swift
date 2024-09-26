@@ -151,7 +151,7 @@ private extension UserLocationStore {
 
 // MARK: - Previewable
 
-extension UserLocationStore: Previewable {
+extension UserLocationStore: @preconcurrency Previewable {
     static let storeSetUpForPreviewing = UserLocationStore(location: .storeSetUpForPreviewing)
 }
 
