@@ -40,6 +40,11 @@ struct OTPVerificationView: View {
                         .foregroundColor(Color.Colors.General._01Black)
                     Text("We sent verification code on \(self.store.loginIdentity)")
                         .foregroundColor(Color.Colors.General._02Grey)
+                    Button {
+                        self.path.removeLast()
+                    } label: {
+                        Text("Edit")
+                    }
                 }
                 Spacer()
             }
