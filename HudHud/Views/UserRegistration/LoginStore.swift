@@ -35,6 +35,9 @@ class LoginStore {
 
     // MARK: Properties
 
+    var loginId: String = ""
+    var otpResendDuration = Date()
+
     var userInput: UserInput = .phone
     var email: String = ""
     var phone: String = ""
@@ -92,11 +95,16 @@ class LoginStore {
     func login(inputText: String) async {
         do {
             let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
-            let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
-            self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: registrationData.loginIdentity, duration: registrationData.canRequestOtpResendAt))
+            let response = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
+
+            // Extract loginIdentity and duration from response
+            self.loginId = response.id
+            self.otpResendDuration = response.canRequestOtpResendAt
+
+            // Navigate to OTP View
+            self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
         } catch {
             Logger.userRegistration.error("\(error.localizedDescription)")
         }
     }
-
 }

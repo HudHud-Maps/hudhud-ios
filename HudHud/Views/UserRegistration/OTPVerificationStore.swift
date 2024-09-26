@@ -6,18 +6,26 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Combine
 import Foundation
+import OSLog
 
 @Observable
 class OTPVerificationStore {
 
     // MARK: Properties
 
+    var loginId: String
     var timer: Timer?
     let loginIdentity: String
     var code: [String] = Array(repeating: "", count: 6)
     var resendEnabled: Bool = false
+    var errorMessage: String?
+    var verificationSuccessful: Bool = false
+    var isLoading: Bool = false
+
+    private var registrationService = RegistrationService()
 
     private var timeRemaining: Int = 60
     private let duration: Date
@@ -39,7 +47,8 @@ class OTPVerificationStore {
 
     // MARK: Lifecycle
 
-    init(duration: Date, loginIdentity: String) {
+    init(loginId: String, duration: Date, loginIdentity: String) {
+        self.loginId = loginId
         self.duration = duration
         self.loginIdentity = loginIdentity
     }
@@ -69,4 +78,40 @@ class OTPVerificationStore {
             }
         }
     }
+
+    func verifyOTP(otp: String) async {
+        guard self.isCodeComplete else {
+            self.errorMessage = "Please enter the complete verification code."
+            return
+        }
+
+        self.isLoading = true
+        self.errorMessage = nil
+
+        defer { isLoading = false }
+
+        do {
+            try await self.registrationService.verifyOTP(loginId: self.loginId, otp: otp, baseURL: DebugStore().baseURL)
+
+            self.verificationSuccessful = true
+            Logger.userRegistration.info("OTP verified successfully.")
+
+        } catch {
+            self.errorMessage = "An error occurred during verification. Please check your OTP code and try again."
+            Logger.userRegistration.error("OTP verification failed: \(error.localizedDescription)")
+        }
+    }
+
+    func verifyOTPIfComplete() async {
+        guard self.isCodeComplete else { return }
+
+        let fullCode = self.code.joined()
+        await self.verifyOTP(otp: fullCode)
+        if self.verificationSuccessful {
+            Logger.userRegistration.info("Code is valid: \(fullCode)")
+        } else {
+            Logger.userRegistration.info("Code is invalid: \(fullCode)")
+        }
+    }
+
 }

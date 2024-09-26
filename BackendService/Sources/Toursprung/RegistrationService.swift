@@ -63,6 +63,30 @@ public struct RegistrationService {
         }
     }
 
+    public func verifyOTP(loginId: String, otp: String, baseURL: String) async throws {
+        let header = Operations.verifyOTP.Input.Headers(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
+        let path = Operations.verifyOTP.Input.Path(id: loginId)
+        let verifyOTPRequest = Components.Schemas.VerifyOTPRequest(otp: otp)
+        let body = Operations.verifyOTP.Input.Body.json(verifyOTPRequest)
+
+        let response = try await Client.makeClient(using: baseURL).verifyOTP(path: path, headers: header, body: body)
+
+        switch response {
+        case .ok:
+            return
+        case let .badRequest(error):
+            let errorMessage = try error.body.json.message
+            throw HudHudClientError.internalServerError(errorMessage)
+        case let .undocumented(statusCode: statusCode, payload):
+            let bodyString: String? = if let body = payload.body {
+                try await String(collecting: body, upTo: 1024 * 1024)
+            } else {
+                nil
+            }
+            throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        }
+    }
+
     func date(from canRequestOtpResendAt: String) -> Date {
         let dateFormatter = ISO8601DateFormatter()
         // If parsing fails, return a date that is 30 seconds from now

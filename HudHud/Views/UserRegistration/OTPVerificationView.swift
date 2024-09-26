@@ -24,8 +24,8 @@ struct OTPVerificationView: View {
 
     // MARK: Initialization
 
-    init(loginIdentity: String, duration: Date, path: Binding<NavigationPath>) {
-        self._store = State(initialValue: OTPVerificationStore(duration: duration, loginIdentity: loginIdentity))
+    init(loginId: String, loginIdentity: String, duration: Date, path: Binding<NavigationPath>) {
+        self._store = State(initialValue: OTPVerificationStore(loginId: loginId, duration: duration, loginIdentity: loginIdentity))
         self._path = path
     }
 
@@ -55,26 +55,40 @@ struct OTPVerificationView: View {
                             .textContentType(.oneTimeCode)
                             .scrollDismissesKeyboard(.interactively)
                             .multilineTextAlignment(.center)
-                            .frame(width: 40, height: 50)
+                            .frame(height: 50)
                             .hudhudFont(.title3)
                             .background(self.bottomBorder(for: index), alignment: .bottom)
                             .onChange(of: self.store.code[index]) { _, newCode in
                                 self.handleCode(newCode, at: index)
                             }
+                            .onSubmit {
+                                if index == 5, self.store.isCodeComplete {
+                                    Task {
+                                        await self.store.verifyOTPIfComplete()
+                                    }
+                                }
+                            }
                     }
                 }
+                .padding()
                 .onAppear {
                     self.focusedIndex = 0
                 }
             }
             .padding(.top, 50)
 
+            if let errorMessage = store.errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .font(.body)
+                    .padding(10)
+            }
+
             Spacer()
             VStack(alignment: .center, spacing: 10) {
                 Text("Didn't Get the Code?")
                 Button(action: {
-                    // Currently only reset the timer but it should also send new code to the user
-                    // here the next task will be to call resendOTP
+                    // Logic to resend OTP
                 }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
@@ -82,21 +96,22 @@ struct OTPVerificationView: View {
                 })
                 .disabled(!self.store.resendEnabled)
                 .padding(.bottom)
-                Button(action: {
-                    // The fullCode will be send to the backend
-                    if self.store.isCodeComplete {
-                        let fullCode = self.store.code.joined()
-                        self.path.append(LoginStore.UserRegistrationPath.personalInfoView)
-                        Logger.userRegistration.info("Code is valid: \(fullCode)")
+                Button {
+                    Task {
+                        await self.store.verifyOTPIfComplete()
                     }
-                }, label: {
-                    Text("Verify")
-                })
+                } label: {
+                    if self.store.isLoading {
+                        ProgressView()
+                    } else {
+                        Text("Verify")
+                    }
+                }
                 .buttonStyle(LargeButtonStyle(
                     backgroundColor: Color.Colors.General._07BlueMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
                     foregroundColor: .white
                 ))
-                .disabled(!self.store.isCodeComplete)
+                .disabled(!self.store.isCodeComplete || self.store.isLoading)
             }
             .padding()
             .onAppear {
@@ -105,14 +120,22 @@ struct OTPVerificationView: View {
             .onDisappear {
                 self.store.timer?.invalidate()
             }
+            .onChange(of: self.store.isCodeComplete) { _, _ in
+                if self.store.isCodeComplete {
+                    Task {
+                        await self.store.verifyOTPIfComplete()
+                    }
+                }
+            }
         }
     }
 
     // One line under each TextField
-    private func bottomBorder(for index: Int) -> some View { Rectangle()
-        .frame(height: 2)
-        .foregroundColor(self.focusedIndex == index ? Color.Colors.General._07BlueMain : Color.Colors.General._04GreyForLines)
-        .padding(.top, 8)
+    private func bottomBorder(for index: Int) -> some View {
+        Rectangle()
+            .frame(height: 2)
+            .foregroundColor(self.focusedIndex == index ? Color.Colors.General._07BlueMain : Color.Colors.General._04GreyForLines)
+            .padding(.top, 8)
     }
 
     // MARK: Functions
@@ -126,7 +149,6 @@ struct OTPVerificationView: View {
             }
             // Clear focus from all text fields and the keyboard will be dismissed
             self.focusedIndex = nil
-
         } else {
             if newCode.isEmpty {
                 if index > 0 {
@@ -140,25 +162,22 @@ struct OTPVerificationView: View {
                     self.store.code[index].removeFirst()
                 } else {
                     if newCode.isEmpty {
-                        // If empty and not the first index.. move focus back to the previous field
-                        // when user press delete in the keyboard the focusedIndex will move back.
                         if index > 0 {
                             self.focusedIndex = index - 1
                         }
                     } else if index < 5 {
-                        // If the user entered number and not the last field.. move focusedIndex to the next field
                         self.focusedIndex = index + 1
                     }
                 }
                 // If the code is complete.. clear focus from all fields and the keyboard will be dismissed
-                // Otherwise, focus on the current index
                 self.focusedIndex = self.store.isCodeComplete ? nil : index
             }
         }
     }
+
 }
 
 #Preview {
     @State var path = NavigationPath()
-    return OTPVerificationView(loginIdentity: "+966503539560", duration: .now, path: $path)
+    return OTPVerificationView(loginId: UUID().uuidString, loginIdentity: "+966503539560", duration: .now, path: $path)
 }
