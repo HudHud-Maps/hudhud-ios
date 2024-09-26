@@ -92,23 +92,25 @@ struct RecentSearchResultsView: View {
     }
 }
 
-#Preview("EditFavoritesFormView") {
-    @Previewable @State var favoriteItem = FavoritesItem(resolvedItem: .artwork)
-    @Previewable @State var camera = MapViewCamera.center(ResolvedItem.artwork.coordinate, zoom: 14)
-    @Previewable @State var editFormViewIsShown = true
-    @Previewable @StateObject var favoritesStore = FavoritesStore()
+// MARK: - EditFavoritesFormViewPreview
 
-    NavigationStack {
-        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
-            .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
-            }
-    }
-}
+struct EditFavoritesFormViewPreview: PreviewProvider {
 
-private extension FavoritesItem {
+    static var previews: some View {
+        let item = ResolvedItem.artwork
+        let favoriteItem = FavoritesItem(id: UUID(),
+                                         title: item.title,
+                                         tintColor: .personalShopping,
+                                         item: item,
+                                         type: item.category ?? "")
+        let favoritesStore = FavoritesStore()
 
-    init(resolvedItem: ResolvedItem) {
-        self.init(id: UUID(), title: resolvedItem.title, tintColor: .personalShopping, item: resolvedItem, type: resolvedItem.category ?? "")
+        return NavigationStack {
+            RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+                .navigationDestination(isPresented: .constant(true)) {
+                    EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+                }
+        }
+        .previewDisplayName("EditFavoritesFormView")
     }
 }
