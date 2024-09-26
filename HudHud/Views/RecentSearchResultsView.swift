@@ -11,6 +11,8 @@ import MapKit
 import MapLibreSwiftUI
 import SwiftUI
 
+// MARK: - RecentSearchResultsView
+
 struct RecentSearchResultsView: View {
 
     // MARK: Properties
@@ -91,17 +93,22 @@ struct RecentSearchResultsView: View {
 }
 
 #Preview("EditFavoritesFormView") {
-    @Previewable @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
-    @Previewable @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
+    @Previewable @State var favoriteItem = FavoritesItem(resolvedItem: .artwork)
+    @Previewable @State var camera = MapViewCamera.center(ResolvedItem.artwork.coordinate, zoom: 14)
     @Previewable @State var editFormViewIsShown = true
     @Previewable @StateObject var favoritesStore = FavoritesStore()
-
-    let item: ResolvedItem = .artwork
 
     NavigationStack {
         RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
             .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
             }
+    }
+}
+
+private extension FavoritesItem {
+
+    init(resolvedItem: ResolvedItem) {
+        self.init(id: UUID(), title: resolvedItem.title, tintColor: .personalShopping, item: resolvedItem, type: resolvedItem.category ?? "")
     }
 }
