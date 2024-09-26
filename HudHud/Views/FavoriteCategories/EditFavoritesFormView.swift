@@ -56,7 +56,7 @@ struct EditFavoritesFormView: View {
                 Section {
                     TextField("Name", text: self.$title)
                     HStack {
-                        Text("\(self.item.subtitle)")
+                        Text("\(self.item.subtitle ?? self.item.coordinate.formatted())")
                         Spacer()
                         Button {} label: {
                             Image(systemSymbol: .pencil)

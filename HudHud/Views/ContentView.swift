@@ -37,6 +37,7 @@ struct ContentView: View {
 
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
+    @State var safeAreaInset = UIEdgeInsets()
 
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
@@ -50,6 +51,41 @@ struct ContentView: View {
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     @ObservedObject private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
+
+    // MARK: Computed Properties
+
+    private var mapControlInsets: UIEdgeInsets {
+        UIEdgeInsets(
+            top: self.mapTopPadding,
+            left: self.mapLeadingPadding,
+            bottom: self.mapBottomPadding,
+            right: 0
+        )
+    }
+
+    private var mapLeadingPadding: CGFloat {
+        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
+            0
+        } else {
+            60
+        }
+    }
+
+    private var mapTopPadding: CGFloat {
+        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
+            0
+        } else {
+            40
+        }
+    }
+
+    private var mapBottomPadding: CGFloat {
+        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
+            self.sheetSize.height
+        } else {
+            self.sheetSize.height + 48
+        }
+    }
 
     // MARK: Lifecycle
 
@@ -74,7 +110,7 @@ struct ContentView: View {
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
                 mapViewStore: self.mapViewStore,
-                sheetSize: self.sheetSize
+                mapControlInsets: self.mapControlInsets
             )
             .task {
                 do {
@@ -225,7 +261,7 @@ struct ContentView: View {
 
     func reloadPOITrending() async {
         do {
-            let currentUserLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let currentUserLocation = self.mapStore.mapView?.userLocation?.coordinate
             let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: currentUserLocation, baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
@@ -278,7 +314,7 @@ struct SizePreferenceKey: PreferenceKey {
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
-    store.mapStore.selectedItem = poi
+    store.mapStore.select(poi, shouldFocusCamera: true)
     return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
 }
 
@@ -347,5 +383,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 0))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, mapControlInsets: UIEdgeInsets(floatLiteral: 0))
 }

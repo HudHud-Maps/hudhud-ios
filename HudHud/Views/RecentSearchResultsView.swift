@@ -48,7 +48,7 @@ struct RecentSearchResultsView: View {
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                         .foregroundColor(.primary)
-                    Text(item.subtitle)
+                    Text(item.subtitle ?? item.coordinate.formatted())
                         .hudhudFont(.body)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -65,10 +65,7 @@ struct RecentSearchResultsView: View {
                 }
             }
             .onTapGesture {
-                let selectedItem = item
-                let mapItems = [DisplayableRow.resolvedItem(item)]
-                self.searchStore.mapStore.selectedItem = selectedItem
-                self.searchStore.mapStore.displayableItems = mapItems
+                self.searchStore.mapStore.clearListAndSelect(item)
                 switch self.searchType {
                 case let .returnPOILocation(completion):
                     if let selectedItem = self.searchStore.mapStore.selectedItem {

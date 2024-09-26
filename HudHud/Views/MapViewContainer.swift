@@ -24,9 +24,21 @@ struct MapViewContainer: View {
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @ObservedObject var mapViewStore: MapViewStore
-    var sheetSize: CGSize
+    @State var safeAreaInsets = UIEdgeInsets()
+    let mapControlInsets: UIEdgeInsets
 
     @State private var didFocusOnUser = false
+
+    // MARK: Computed Properties
+
+    private var insets: UIEdgeInsets {
+        UIEdgeInsets(
+            top: self.safeAreaInsets.top + self.mapControlInsets.top,
+            left: self.safeAreaInsets.left + self.mapControlInsets.left,
+            bottom: self.safeAreaInsets.bottom + self.mapControlInsets.bottom,
+            right: self.safeAreaInsets.right + self.mapControlInsets.right
+        )
+    }
 
     // MARK: Lifecycle
 
@@ -36,12 +48,12 @@ struct MapViewContainer: View {
         searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
         mapViewStore: MapViewStore,
-        sheetSize: CGSize
+        mapControlInsets: UIEdgeInsets
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
-        self.sheetSize = sheetSize
+        self.mapControlInsets = mapControlInsets
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
     }
@@ -49,10 +61,13 @@ struct MapViewContainer: View {
     // MARK: Content
 
     var body: some View {
-        MapView<NavigationViewController>(makeViewController: {
-            let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
+        MapView<MapNavigationViewController>(makeViewController: {
+            let viewController = MapNavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
             viewController.mapView.compassViewMargins.y = 50
+            viewController.onViewSafeAreaInsetsDidChange = { newSafeAreaInsets in
+                self.safeAreaInsets = newSafeAreaInsets
+            }
             self.mapStore.mapView = viewController.mapView
             return viewController
         }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
@@ -145,12 +160,19 @@ struct MapViewContainer: View {
         }
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                self.searchViewStore.mapStore.selectedItem = selectedItem
+                let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
+                self.searchViewStore.mapStore.select(generatedPOI)
                 self.mapViewStore.selectedDetent = .third
             }
         })
-        .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
+        .mapViewContentInset(self.insets)
+        .mapControls {
+            CompassView()
+            LogoView()
+                .hidden(true)
+            AttributionButton()
+                .hidden(true)
+        }
         .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
             if let routeUnwrapped = newRoute,
                let route = routeUnwrapped.routes.first,
@@ -189,30 +211,16 @@ struct MapViewContainer: View {
         )
         .onAppear {
             self.userLocationStore.startMonitoringPermissions()
-        }
-        .task {
             guard self.didFocusOnUser else { return }
+
             self.didFocusOnUser = true
-            await self.mapStore.focusOnUser()
+            self.mapStore.focusOnUser()
         }
     }
-
-    // MARK: Functions
-
-    // MARK: - Internal
-
-    func sheetPaddingSize() -> Double {
-        if self.sheetSize.height > 80 {
-            return 80
-        } else {
-            return self.sheetSize.height
-        }
-    }
-
 }
 
 #Preview {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 80))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, mapControlInsets: UIEdgeInsets(floatLiteral: 0))
 }

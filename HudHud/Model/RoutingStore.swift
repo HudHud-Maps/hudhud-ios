@@ -87,14 +87,14 @@ final class RoutingStore: ObservableObject {
     }
 
     func calculateRoute(for item: ResolvedItem) async throws -> RoutingService.RouteCalculationResult {
-        guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+        guard let userLocation = self.mapStore.mapView?.userLocation?.location else {
             throw LocationNotEnabledError()
         }
         let waypoints = [Waypoint(location: userLocation), Waypoint(coordinate: item.coordinate)]
         return try await self.calculateRoute(for: waypoints)
     }
 
-    func navigate(to item: ResolvedItem, with calculatedRouteIfAvailable: RoutingService.RouteCalculationResult?) async throws {
+    func navigate(to item: ResolvedItem, with calculatedRouteIfAvailable: RoutingService.RouteCalculationResult? = nil) async throws {
         let route = if let calculatedRouteIfAvailable {
             calculatedRouteIfAvailable
         } else {
@@ -169,8 +169,7 @@ final class RoutingStore: ObservableObject {
         self.potentialRoute = nil
         self.navigationProgress = .none
         self.potentialRoute?.routes.removeAll()
-        self.mapStore.selectedItem = nil
-        self.mapStore.displayableItems = []
+        self.mapStore.clearItems()
     }
 }
 

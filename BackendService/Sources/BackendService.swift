@@ -41,7 +41,7 @@ public enum PredictionResult: Hashable, Codable {
 public protocol DisplayableAsRow: Identifiable, Hashable {
     var id: String { get }
     var title: String { get }
-    var subtitle: String { get }
+    var subtitle: String? { get }
     var symbol: SFSymbol { get }
 
     func resolve(in provider: ApplePOI, baseURL: String) async throws -> [AnyDisplayableAsRow]
@@ -62,7 +62,7 @@ public struct AnyDisplayableAsRow: DisplayableAsRow {
         self.innerModel.title
     }
 
-    public var subtitle: String {
+    public var subtitle: String? {
         self.innerModel.subtitle
     }
 
@@ -112,7 +112,7 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
 
     public var id: String
     public var title: String
-    public var subtitle: String
+    public var subtitle: String?
     public var symbol: SFSymbol
     public var type: PredictionResult
 
@@ -124,7 +124,7 @@ public struct PredictionItem: DisplayableAsRow, Hashable {
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String, symbol: SFSymbol = .pin, type: PredictionResult) {
+    public init(id: String, title: String, subtitle: String?, symbol: SFSymbol = .pin, type: PredictionResult) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -179,7 +179,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     public var id: String
     public var title: String
-    public var subtitle: String
+    public var subtitle: String?
     public var symbol: SFSymbol
     public var systemColor: SystemColor
     public var category: String?
@@ -197,7 +197,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     // MARK: Computed Properties
 
     public var description: String {
-        return "\(self.title), \(self.subtitle), coordinate: \(self.coordinate)"
+        return "\(self.title), \(self.subtitle ?? ""), coordinate: \(self.coordinate)"
     }
 
     public var color: Color {
@@ -206,7 +206,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
