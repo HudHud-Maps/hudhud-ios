@@ -10,12 +10,21 @@
       }
     },
     {
+      "identity" : "ferrostar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hactar/ferrostar",
+      "state" : {
+        "branch" : "main",
+        "revision" : "8082fed044b6b1ceadee4a41c246cf1a29bf4daf"
+      }
+    },
+    {
       "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "def156895a9ce38ea9bf9632c1e2272280ce0ae3",
-        "version" : "6.6.0"
+        "revision" : "e409318144091c3ee9ad551b202e1c36695f8086",
+        "version" : "6.7.0"
       }
     },
     {
@@ -142,15 +151,6 @@
       "state" : {
         "revision" : "9bf4c712ad7989d6a91dbe68748b8829a50837e4",
         "version" : "1.0.2"
-      }
-    },
-    {
-      "identity" : "swift-snapshot-testing",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/pointfreeco/swift-snapshot-testing",
-      "state" : {
-        "revision" : "7b0bbbae90c41f848f90ac7b4df6c4f50068256d",
-        "version" : "1.17.5"
       }
     },
     {
