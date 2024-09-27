@@ -74,7 +74,7 @@ struct MapViewContainer: View {
 
     var body: some View {
         NavigationStack {
-            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera, navigationState: self.searchViewStore.routingStore.ferrostarCore.state, showZoom: self.searchViewStore.routingStore.ferrostarCore.isNavigating) {
+            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera, navigationState: self.searchViewStore.routingStore.ferrostarCore.state) {
                 // onTapExit
                 self.stopNavigation()
             } makeMapContent: {
@@ -188,7 +188,7 @@ struct MapViewContainer: View {
                     .predicate(NSPredicate(format: "cluster != YES"))
                 }
 
-            } mapViewModifier: { content in
+            } mapViewModifiersWhenNotNavigating: { content in
                 AnyView(
                     content
 
