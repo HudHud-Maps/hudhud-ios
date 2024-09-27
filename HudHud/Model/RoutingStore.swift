@@ -160,6 +160,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func navigate(to route: Route) {
+        self.potentialRoute?.routes = [route]
         self.navigatingRoute = route
     }
 
@@ -167,7 +168,26 @@ final class RoutingStore: ObservableObject {
         self.waypoints = nil
         self.potentialRoute = nil
         self.navigationProgress = .none
+        self.potentialRoute?.routes.removeAll()
         self.mapStore.clearItems()
+    }
+}
+
+// MARK: - NavigationMapViewDelegate
+
+extension RoutingStore: NavigationMapViewDelegate {
+
+    func navigationViewController(_: NavigationViewController, didSelect route: Route) {
+        // Remove the selected route if it exists in the array
+        self.potentialRoute?.routes.removeAll(where: { $0 == route })
+
+        // Insert the selected route at the beginning of the array
+        self.potentialRoute?.routes.insert(route, at: 0)
+
+        // Update the map with the reordered routes
+        if let route = self.potentialRoute?.routes {
+            self.mapStore.mapView?.showRoutes(route)
+        }
     }
 }
 
