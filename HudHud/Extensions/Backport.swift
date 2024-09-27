@@ -79,9 +79,3 @@ extension Backport where Content: View {
         }
     }
 }
-
-extension Backport where Content == MapView<MLNMapViewController> {
-    @ViewBuilder func applyAdditionalModifiers() -> some View {
-        self.content
-    }
-}

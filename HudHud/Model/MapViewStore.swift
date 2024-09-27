@@ -23,19 +23,13 @@ final class MapViewStore: ObservableObject {
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
 
+    @Published var path = NavigationPath()
+
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore
     private let mapStore: MapStore
 
     private var subscriptions: Set<AnyCancellable> = []
-
-    // MARK: Computed Properties
-
-    @Published var path = NavigationPath() {
-        didSet {
-            print("changed to: \(self.path)")
-        }
-    }
 
     // MARK: Lifecycle
 
