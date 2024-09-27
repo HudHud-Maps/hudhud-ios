@@ -253,24 +253,15 @@ struct MapViewContainer: View {
                 },
                 bottomTrailing: {
                     VStack {
-                        Text(self.locationLabel)
-                            .font(.caption)
-                            .padding(.all, 8)
-                            .foregroundColor(.white)
-                            .background(
-                                Color.black.opacity(0.7).clipShape(
-                                    .buttonBorder, style: FillStyle()
-                                ))
-
-                        if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false {
-                            NavigationUIButton {
-                                self.stopNavigation()
-                            } label: {
-                                Text("End")
-                                    .font(.body.bold())
-                            }
-                            .disabled(self.searchViewStore.routingStore.navigatingRoute == nil)
-                            .shadow(radius: 10)
+                        if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true {
+                            Text(self.locationLabel)
+                                .font(.caption)
+                                .padding(.all, 8)
+                                .foregroundColor(.white)
+                                .background(
+                                    Color.black.opacity(0.7).clipShape(
+                                        .buttonBorder, style: FillStyle()
+                                    ))
                         }
                     }
                 }
@@ -290,7 +281,7 @@ struct MapViewContainer: View {
                         // It's worth having a look through the parameters,
                         // as most of the configuration happens here.
 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                             print("Cam update...")
                             self.mapStore.camera = .trackUserLocationWithCourse(zoom: 15, pitch: 45, pitchRange: .fixed(45))
                         }

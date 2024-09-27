@@ -152,17 +152,16 @@ struct FerrostarNavigationView: View {
                 },
                 bottomTrailing: {
                     VStack {
-                        Text(self.locationLabel)
-                            .font(.caption)
-                            .padding(.all, 8)
-                            .foregroundColor(.white)
-                            .background(
-                                Color.black.opacity(0.7).clipShape(
-                                    .buttonBorder, style: FillStyle()
-                                ))
+                        if self.ferrostarCore.isNavigating == true {
+                            Text(self.locationLabel)
+                                .font(.caption)
+                                .padding(.all, 8)
+                                .foregroundColor(.white)
+                                .background(
+                                    Color.black.opacity(0.7).clipShape(
+                                        .buttonBorder, style: FillStyle()
+                                    ))
 
-                        if case .navigating = self.ferrostarCore.state?.tripState {
-                        } else {
                             NavigationUIButton {
                                 self.dismiss()
                             } label: {
