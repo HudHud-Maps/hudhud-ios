@@ -244,15 +244,6 @@
       }
     },
     {
-      "identity" : "swiftuipanoramaviewer",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/azizdev/SwiftUIPanoramaViewer.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "9efa5c7845d57ef36d24626c8e93d100a46a3ac3"
-      }
-    },
-    {
       "identity" : "touchvisualizer",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Patrick-Kladek/TouchVisualizer",

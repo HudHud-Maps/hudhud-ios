@@ -134,8 +134,6 @@
 		E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */; };
 		EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */; };
 		F0E22ED2CB7B3F4A38771265 /* POISheetButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */; };
-		F20D974A2C46B9E300457928 /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20D97482C46B9E300457928 /* DownloadManager.swift */; };
-		F20D974B2C46B9E300457928 /* DownloadFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20D97492C46B9E300457928 /* DownloadFile.swift */; };
 		F20D974E2C46C65600457928 /* SearchResultItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F20D974D2C46C65600457928 /* SearchResultItemView.swift */; };
 		F22401782C58D61B008865AE /* SwiftUIPanoramaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */; };
 		F2E81DD82C3EC45C00B1F3DD /* StreetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */; };
@@ -294,11 +292,10 @@
 		E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Italic.ttf"; sourceTree = "<group>"; };
 		EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchResultsView.swift; sourceTree = "<group>"; };
 		F0345701786FBBD3E4678869 /* OTPVerificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationStore.swift; sourceTree = "<group>"; };
-		F20D97482C46B9E300457928 /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
-		F20D97492C46B9E300457928 /* DownloadFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadFile.swift; sourceTree = "<group>"; };
 		F20D974D2C46C65600457928 /* SearchResultItemView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultItemView.swift; sourceTree = "<group>"; };
 		F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
 		F3BB5BFA8CB42C0446317C57 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
+		F78D5F41FB8B378176FFE2AE /* SwiftUIPanoramaViewer */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = SwiftUIPanoramaViewer; path = ../SwiftUIPanoramaViewer; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -511,6 +508,7 @@
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
 				E046BE7B50B5A99CC510EF49 /* CI.xctestplan */,
+				F78D5F41FB8B378176FFE2AE /* SwiftUIPanoramaViewer */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -686,8 +684,6 @@
 			isa = PBXGroup;
 			children = (
 				F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */,
-				F20D97492C46B9E300457928 /* DownloadFile.swift */,
-				F20D97482C46B9E300457928 /* DownloadManager.swift */,
 			);
 			path = StreetView;
 			sourceTree = "<group>";
@@ -842,6 +838,7 @@
 				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
 				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
 				CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke" */,
+				52F66A6DFF021D73665D4605 /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -986,7 +983,6 @@
 				F2E81DD82C3EC45C00B1F3DD /* StreetView.swift in Sources */,
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
-				F20D974B2C46B9E300457928 /* DownloadFile.swift in Sources */,
 				9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */,
 				CD85CB292BB343BA00C99774 /* DebugStreetView.swift in Sources */,
 				A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */,
@@ -1003,7 +999,6 @@
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
 				594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */,
 				CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */,
-				F20D974A2C46B9E300457928 /* DownloadManager.swift in Sources */,
 				10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */,
 				CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */,
 				44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */,
@@ -1381,6 +1376,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		52F66A6DFF021D73665D4605 /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Patrick-Kladek/TouchVisualizer";
@@ -1479,7 +1482,7 @@
 		};
 		F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/azizdev/SwiftUIPanoramaViewer.git";
+			repositoryURL = "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git";
 			requirement = {
 				branch = main;
 				kind = branch;

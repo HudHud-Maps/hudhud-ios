@@ -17,21 +17,24 @@ struct StreetView: View {
 
     // MARK: Nested Types
 
-    enum NavDirection: Int { case next; case previous; case east; case west }
+    enum NavDirection: Int {
+        case next
+        case previous
+        case east
+        case west
+    }
 
     // MARK: Properties
 
     @Binding var streetViewScene: StreetViewScene?
-    @State var mapStore: MapStore
     @Binding var fullScreenStreetView: Bool
 
+    @State var mapStore: MapStore
     @State var rotationIndicator: Float = 0.0
     @State var rotationZIndicator: Float = 0.0
-
     @State var svimage: UIImage?
     @State var svimageId: String = ""
     @State var errorMsg: String?
-
     @State var isLoading: Bool = false
     @State var progress: Float = 0
 
@@ -176,9 +179,8 @@ struct StreetView: View {
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: img,
-                           panoramaType: .spherical,
-                           controlMethod: .touch) { _ in
+            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch) { _ in
+
             } cameraMoved: { pitch, yaw, _ in
                 DispatchQueue.main.async {
                     self.rotationIndicator = yaw
@@ -207,13 +209,12 @@ struct StreetView: View {
     // MARK: Functions
 
     func getImageURL(_ name: String) -> String {
-        let link = "https://streetview.khaled-7ed.workers.dev/\(name)?api_key=34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh"
-        return link
+        return "https://streetview.khaled-7ed.workers.dev/\(name)?api_key=34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh"
     }
 
     func loadSVImage() {
         // we will attempt to preload next and previous images if its not yet loaded
-        preLoadScenes()
+        self.preLoadScenes()
 
         Logger.streetView.log("SVD: streetViewScene3: \(self.streetViewScene.debugDescription)")
 
@@ -229,24 +230,24 @@ struct StreetView: View {
             self.progress = progress
         }
 
-        DownloadManager.downloadFile(link,
-                                     fileName: imageName,
-                                     downloadProgress: downloadProgress,
-                                     block: { path, error in
-                                         if let path {
-                                             AppQueue.main {
-                                                 PanoramaManager.shouldUpdateImage = true
-                                                 PanoramaManager.shouldResetCameraAngle = false
-                                                 let img = UIImage(contentsOfFile: path)
-                                                 self.svimage = img
-                                                 self.isLoading = false
-                                                 self.svimageId = path
-                                             }
-                                         } else {
-                                             self.setMessage("Could not load the image - \(error ?? "N/A")")
-                                             self.isLoading = false
-                                         }
-                                     })
+//        DownloadManager.downloadFile(link,
+//                                     fileName: imageName,
+//                                     downloadProgress: downloadProgress,
+//                                     block: { path, error in
+//                                         if let path {
+//                                             AppQueue.main {
+//                                                 PanoramaManager.shouldUpdateImage = true
+//                                                 PanoramaManager.shouldResetCameraAngle = false
+//                                                 let img = UIImage(contentsOfFile: path)
+//                                                 self.svimage = img
+//                                                 self.isLoading = false
+//                                                 self.svimageId = path
+//                                             }
+//                                         } else {
+//                                             self.setMessage("Could not load the image - \(error ?? "N/A")")
+//                                             self.isLoading = false
+//                                         }
+//                                     })
     }
 
     // MARK: - Internal
@@ -270,10 +271,8 @@ extension StreetView {
     func loadImage(_ direction: NavDirection) {
         Task {
             let nextItem = self.getNextID(direction)
-            guard let nextId = nextItem.id else {
-                return
-            }
-            guard let nextName = nextItem.name else {
+            guard let nextId = nextItem.id,
+                  let nextName = nextItem.name else {
                 return
             }
             Logger.streetView.debug("SVD: Direction: \(direction.rawValue), Value: \(nextId), \(nextName)")
@@ -321,15 +320,16 @@ extension StreetView {
         guard let imgName else { return }
 
         let link = self.getImageURL(imgName)
+        print("preload: \(link)")
 
-        let fileExist = DownloadManager.fileExistOrLoading(link, fileName: imgName)
-        guard fileExist == false else { return }
-
-        DownloadManager.downloadFile(link,
-                                     fileName: imgName,
-                                     block: { _, error in
-                                         Logger.streetView.debug("Done preLoadItem: \(imgName) error: \(error ?? "N/A")")
-                                     })
+//        let fileExist = DownloadManager.fileExistOrLoading(link, fileName: imgName)
+//        guard fileExist == false else { return }
+//
+//        DownloadManager.downloadFile(link,
+//                                     fileName: imgName,
+//                                     block: { _, error in
+//                                         Logger.streetView.debug("Done preLoadItem: \(imgName) error: \(error ?? "N/A")")
+//                                     })
     }
 
 }

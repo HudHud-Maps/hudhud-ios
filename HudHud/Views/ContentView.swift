@@ -161,11 +161,7 @@ struct ContentView: View {
                             if let item = self.mapStore.nearestStreetViewScene {
                                 Button {
                                     self.mapStore.streetViewScene = item
-
-                                    AppQueue.delay(0.2) {
-                                        self.mapStore.zoomToStreetViewLocation()
-                                    }
-
+                                    self.mapStore.zoomToStreetViewLocation()
                                 } label: {
                                     Image(systemSymbol: .binoculars)
                                         .font(.title2)
@@ -225,7 +221,7 @@ struct ContentView: View {
             .overlay(alignment: .top) {
                 VStack {
                     if self.mapStore.streetViewScene != nil {
-                        StreetView(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
+                        StreetView(streetViewScene: self.$mapStore.streetViewScene, fullScreenStreetView: self.$mapStore.fullScreenStreetView, mapStore: self.mapStore)
                             .onChange(of: self.mapStore.fullScreenStreetView) { _, newValue in
                                 self.mapStore.searchShown = !newValue
                             }
