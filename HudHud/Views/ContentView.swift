@@ -30,8 +30,8 @@ struct SheetState: Hashable {
     // MARK: Properties
 
     var sheets: [SheetViewData] = []
-    var newSelectedSheet: PresentationDetent?
-    var previousSelectedSheet: PresentationDetent?
+    var newSheetSelectedDetent: PresentationDetent?
+    var previousSheetSelectedDetent: PresentationDetent?
 //    var newSheetSelectedDetentAsCurrentSheetAllowedDetent: PresentationDetent?
 
     private(set) var emptySheetSelectedDetent: PresentationDetent = .third
@@ -42,7 +42,7 @@ struct SheetState: Hashable {
 
     var selectedDetent: PresentationDetent {
         get {
-            self.newSelectedSheet ?? self.sheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
+            self.newSheetSelectedDetent ?? self.sheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
         }
 
         set {
@@ -61,11 +61,8 @@ struct SheetState: Hashable {
             } else {
                 self.sheets[self.sheets.count - 1].allowedDetents
             }
-            if let newSelectedSheet {
-                allowedDetents.insert(newSelectedSheet)
-            }
-            if let previousSelectedSheet {
-                allowedDetents.insert(previousSelectedSheet)
+            if let previousSheetSelectedDetent {
+                allowedDetents.insert(previousSheetSelectedDetent)
             }
             return allowedDetents
         }

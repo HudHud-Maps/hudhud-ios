@@ -27,8 +27,6 @@ final class MapViewStore {
 
     private var subscriptions: Set<AnyCancellable> = []
 
-    private var sheetState = SheetState()
-
     // MARK: Computed Properties
 
     var sheets: [SheetViewData] {
@@ -59,6 +57,16 @@ final class MapViewStore {
 
         set {
             self.sheetState.allowedDetents = newValue
+        }
+    }
+
+    private var sheetState = SheetState() {
+        didSet {
+            Task {
+                await self.temporarilyAddLastSelectedDetent(
+                    previousSheetState: oldValue
+                )
+            }
         }
     }
 
@@ -101,13 +109,10 @@ final class MapViewStore {
             self.sheetState.sheets = newSheets
             return
         }
-        self.sheetState.newSelectedSheet = newSheets.last?.selectedDetent ?? self.sheetState.emptySheetSelectedDetent
-        self.sheetState.previousSelectedSheet = self.selectedDetent
-        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
+        self.sheetState.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.sheetState.emptySheetSelectedDetent
+        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
         self.sheetState.sheets = newSheets
-        self.sheetState.newSelectedSheet = nil
-        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
-        self.sheetState.previousSelectedSheet = nil
+        self.sheetState.newSheetSelectedDetent = nil
     }
 }
 
@@ -141,6 +146,17 @@ private extension MapViewStore {
                 self.sheetState.sheets.append(SheetViewData(viewData: .pointOfInterest(selectedItem)))
             }
             .store(in: &self.subscriptions)
+    }
+
+    // needed to fix animation jumping sheet when transitioning
+    func temporarilyAddLastSelectedDetent(previousSheetState: SheetState) async {
+        guard self.sheetState.sheets.count != previousSheetState.sheets.count else {
+            return
+        }
+
+        self.sheetState.previousSheetSelectedDetent = previousSheetState.selectedDetent
+        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
+        self.sheetState.previousSheetSelectedDetent = nil
     }
 }
 
