@@ -106,6 +106,7 @@ struct OTPVerificationView: View {
                     Task {
                         await self.store.resendOTP(loginId: self.store.loginId)
                     }
+                    self.store.startTimer()
                 }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
