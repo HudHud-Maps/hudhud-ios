@@ -22,7 +22,7 @@ struct HudHudApp: App {
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
-    private let mapViewStore: MapViewStore
+    @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
     // MARK: Computed Properties
@@ -44,7 +44,13 @@ struct HudHudApp: App {
         location.accuracy = .bestForNavigation
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
-        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, mode: .live(provider: .hudhud))
+        let mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
+        self.mapViewStore = mapViewStore
+        self.searchStore = SearchViewStore(
+            mapStore: self.mapStore,
+            mapViewStore: mapViewStore,
+            routingStore: routingStore,
+            mode: .live(provider: .hudhud)
+        )
     }
 }

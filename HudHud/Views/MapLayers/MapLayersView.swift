@@ -14,7 +14,7 @@ import SwiftUI
 struct MapLayersView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var mapStore: MapStore
-    @ObservedObject var mapViewStore: MapViewStore
+    var mapViewStore: MapViewStore
     var hudhudMapLayerStore: HudHudMapLayerStore
 
     var body: some View {
@@ -31,8 +31,8 @@ struct MapLayersView: View {
                 }
                 Spacer()
                 Button {
-                    if !self.mapViewStore.sheetState.sheets.isEmpty {
-                        self.mapViewStore.sheetState.sheets.removeLast()
+                    if !self.mapViewStore.sheets.isEmpty {
+                        self.mapViewStore.sheets.removeLast()
                     }
                     self.dismiss()
                 } label: {

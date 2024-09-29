@@ -18,7 +18,7 @@ struct ABCRouteConfigurationView: View {
     // MARK: Properties
 
     @State var routeConfigurations: [ABCRouteConfigurationItem]
-    @ObservedObject var mapViewStore: MapViewStore
+    var mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
 
     // MARK: Content
@@ -60,7 +60,7 @@ struct ABCRouteConfigurationView: View {
 
                 footer: {
                     Button {
-                        self.mapViewStore.sheetState.sheets.append(SheetViewData(viewData: .navigationAddSearchView))
+                        self.mapViewStore.sheets.append(SheetViewData(viewData: .navigationAddSearchView))
                     } label: {
                         HStack {
                             Image(systemSymbol: .plus)

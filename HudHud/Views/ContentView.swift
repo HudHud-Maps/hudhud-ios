@@ -30,16 +30,19 @@ struct SheetState: Hashable {
     // MARK: Properties
 
     var sheets: [SheetViewData] = []
-    var previousSheetSelectedDetent: PresentationDetent?
+    var newSelectedSheet: PresentationDetent?
+    var previousSelectedSheet: PresentationDetent?
+//    var newSheetSelectedDetentAsCurrentSheetAllowedDetent: PresentationDetent?
 
-    private var emptySheetSelectedDetent: PresentationDetent = .third
+    private(set) var emptySheetSelectedDetent: PresentationDetent = .third
+
     private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
 
     // MARK: Computed Properties
 
     var selectedDetent: PresentationDetent {
         get {
-            self.sheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
+            self.newSelectedSheet ?? self.sheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
         }
 
         set {
@@ -58,12 +61,13 @@ struct SheetState: Hashable {
             } else {
                 self.sheets[self.sheets.count - 1].allowedDetents
             }
-            if let previousSheetSelectedDetent {
-                allowedDetents.insert(previousSheetSelectedDetent)
-                return allowedDetents
-            } else {
-                return allowedDetents
+            if let newSelectedSheet {
+                allowedDetents.insert(newSelectedSheet)
             }
+            if let previousSelectedSheet {
+                allowedDetents.insert(previousSelectedSheet)
+            }
+            return allowedDetents
         }
 
         set {
@@ -186,7 +190,7 @@ struct ContentView: View {
     @ObservedObject private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
-    @ObservedObject private var mapViewStore: MapViewStore
+    private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
@@ -236,35 +240,37 @@ struct ContentView: View {
                 } else {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
-                            MapButtonsView(mapButtonsData: [
-                                MapButtonData(sfSymbol: .icon(.map)) {
-                                    self.mapViewStore.sheetState.sheets.append(SheetViewData(viewData: .mapStyle))
-                                },
-                                MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-                                    switch self.searchViewStore.mode {
-                                    case let .live(provider):
-                                        self.searchViewStore.mode = .live(provider: provider.next())
-                                        Logger.searchView.info("Map Mode live")
-                                    case .preview:
-                                        self.searchViewStore.mode = .live(provider: .hudhud)
-                                        Logger.searchView.info("Map Mode toursprung")
+                            MapButtonsView(
+                                mapButtonsData: [
+                                    MapButtonData(sfSymbol: .icon(.map)) {
+                                        self.mapViewStore.sheets.append(SheetViewData(viewData: .mapStyle))
+                                    },
+                                    MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+                                        switch self.searchViewStore.mode {
+                                        case let .live(provider):
+                                            self.searchViewStore.mode = .live(provider: provider.next())
+                                            Logger.searchView.info("Map Mode live")
+                                        case .preview:
+                                            self.searchViewStore.mode = .live(provider: .hudhud)
+                                            Logger.searchView.info("Map Mode toursprung")
+                                        }
+                                    },
+                                    MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
+                                        if self.mapStore.getCameraPitch() > 0 {
+                                            self.mapStore.camera.setPitch(0)
+                                        } else {
+                                            self.mapStore.camera.setZoom(17)
+                                            self.mapStore.camera.setPitch(60)
+                                        }
+                                    },
+                                    MapButtonData(sfSymbol: .icon(.terminal)) {
+                                        self.mapViewStore.sheets
+                                            .append(
+                                                SheetViewData(viewData: .debugView)
+                                            )
                                     }
-                                },
-                                MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
-                                    if self.mapStore.getCameraPitch() > 0 {
-                                        self.mapStore.camera.setPitch(0)
-                                    } else {
-                                        self.mapStore.camera.setZoom(17)
-                                        self.mapStore.camera.setPitch(60)
-                                    }
-                                },
-                                MapButtonData(sfSymbol: .icon(.terminal)) {
-                                    Task {
-                                        await self.mapViewStore.show(fullSheet: SheetViewData(viewData: .debugView))
-                                    }
-//                                    self.mapViewStore.sheetState.sheets.append(SheetViewData(viewData: .debugView))
-                                }
-                            ])
+                                ]
+                            )
 
                             if let item = self.mapStore.nearestStreetViewScene {
                                 Button {
@@ -292,7 +298,7 @@ struct ContentView: View {
                             CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
-                    .opacity(self.mapViewStore.sheetState.selectedDetent == .nearHalf ? 0 : 1)
+                    .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
                     .padding(.horizontal)
                 }
             }
@@ -323,7 +329,7 @@ struct ContentView: View {
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
-                        .opacity(self.mapViewStore.sheetState.selectedDetent == .nearHalf ? 0 : 1)
+                        .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
             }
@@ -340,8 +346,8 @@ struct ContentView: View {
                     self.mapStore.searchShown = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
-            .onChange(of: self.mapViewStore.sheetState.selectedDetent) {
-                if self.mapViewStore.sheetState.selectedDetent == .small {
+            .onChange(of: self.mapViewStore.selectedDetent) {
+                if self.mapViewStore.selectedDetent == .small {
                     Task {
                         await self.reloadPOITrending()
                     }

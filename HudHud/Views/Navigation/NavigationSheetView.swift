@@ -15,7 +15,7 @@ struct NavigationSheetView: View {
     // MARK: Properties
 
     @ObservedObject var routingStore: RoutingStore
-    @ObservedObject var mapViewStore: MapViewStore
+    var mapViewStore: MapViewStore
 
     @Environment(\.dismiss) private var dismiss
 

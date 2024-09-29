@@ -25,7 +25,7 @@ struct MapViewContainer: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
-    @ObservedObject var mapViewStore: MapViewStore
+    var mapViewStore: MapViewStore
     var sheetSize: CGSize
 
     @State private var didFocusOnUser = false
@@ -321,7 +321,7 @@ struct MapViewContainer: View {
         self.searchViewStore.routingStore.potentialRoute = nil
         self.searchViewStore.routingStore.navigatingRoute = nil
 
-        self.mapViewStore.sheetState = SheetState()
+        self.mapViewStore.reset()
         self.mapStore.searchShown = true
 
         if let coordinates = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {

@@ -16,7 +16,8 @@ import SwiftUI
 // MARK: - MapViewStore
 
 @MainActor
-final class MapViewStore: ObservableObject {
+@Observable
+final class MapViewStore {
 
     // MARK: Properties
 
@@ -26,15 +27,38 @@ final class MapViewStore: ObservableObject {
 
     private var subscriptions: Set<AnyCancellable> = []
 
+    private var sheetState = SheetState()
+
     // MARK: Computed Properties
 
-    @Published var sheetState = SheetState() {
-        didSet {
+    var sheets: [SheetViewData] {
+        get {
+            self.sheetState.sheets
+        }
+        set {
             Task {
-                await temporarilyAddLastSelectedDetentIfPopNavigationHappened(
-                    previousSheetState: oldValue
-                )
+                await self.setNewSheetsInAnAnimationFriendlyWay(newSheets: newValue)
             }
+        }
+    }
+
+    var selectedDetent: PresentationDetent {
+        get {
+            self.sheetState.selectedDetent
+        }
+
+        set {
+            self.sheetState.selectedDetent = newValue
+        }
+    }
+
+    var allowedDetents: Set<PresentationDetent> {
+        get {
+            self.sheetState.allowedDetents
+        }
+
+        set {
+            self.sheetState.allowedDetents = newValue
         }
     }
 
@@ -65,24 +89,26 @@ final class MapViewStore: ObservableObject {
     }
 
     func reset() {
-        self.resetAllowedDetents()
-        self.sheetState.selectedDetent = .small
-        if !self.sheetState.sheets.isEmpty {
-            self.sheetState.sheets.removeLast()
+        self.sheetState = SheetState()
+    }
+
+    // we do this to fix UI transition glitches
+    // the way the fix happens is by adding the new sheet's selected detent to
+    // the current selected & allowed detents, then wait for 100 ms
+    // then apply the sheet transition
+    func setNewSheetsInAnAnimationFriendlyWay(newSheets: [SheetViewData]) async {
+        guard self.sheetState.sheets.count != newSheets.count else {
+            self.sheetState.sheets = newSheets
+            return
         }
+        self.sheetState.newSelectedSheet = newSheets.last?.selectedDetent ?? self.sheetState.emptySheetSelectedDetent
+        self.sheetState.previousSelectedSheet = self.selectedDetent
+        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
+        self.sheetState.sheets = newSheets
+        self.sheetState.newSelectedSheet = nil
+        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
+        self.sheetState.previousSelectedSheet = nil
     }
-
-    func resetAllowedDetents() {
-        self.sheetState.allowedDetents = [.small, .medium, .large]
-    }
-
-    func show(fullSheet: SheetViewData) async {
-        self.sheetState.previousSheetSelectedDetent = self.sheetState.selectedDetent
-        self.sheetState.sheets.append(fullSheet)
-        try? await Task.sleep(nanoseconds: 4000)
-        self.sheetState.previousSheetSelectedDetent = nil
-    }
-
 }
 
 private extension MapViewStore {
@@ -115,16 +141,6 @@ private extension MapViewStore {
                 self.sheetState.sheets.append(SheetViewData(viewData: .pointOfInterest(selectedItem)))
             }
             .store(in: &self.subscriptions)
-    }
-
-    // needed to fix animation glitch
-    func temporarilyAddLastSelectedDetentIfPopNavigationHappened(previousSheetState: SheetState) async {
-        guard self.sheetState.sheets.count != previousSheetState.sheets.count else {
-            return
-        }
-        self.sheetState.previousSheetSelectedDetent = previousSheetState.selectedDetent
-        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
-        self.sheetState.previousSheetSelectedDetent = nil
     }
 }
 

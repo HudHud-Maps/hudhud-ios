@@ -18,7 +18,7 @@ struct FavoritesViewMoreView: View {
     // MARK: Properties
 
     @ObservedObject var searchStore: SearchViewStore
-    @ObservedObject var mapViewStore: MapViewStore
+    var mapViewStore: MapViewStore
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
@@ -96,7 +96,7 @@ struct FavoritesViewMoreView: View {
             self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) {
-            self.mapViewStore.sheetState.sheets.append(SheetViewData(viewData: .favorites))
+            self.mapViewStore.sheets.append(SheetViewData(viewData: .favorites))
         }
     }
 

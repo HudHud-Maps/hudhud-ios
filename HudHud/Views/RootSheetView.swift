@@ -21,7 +21,7 @@ struct RootSheetView: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
-    @ObservedObject var mapViewStore: MapViewStore
+    @Bindable var mapViewStore: MapViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
 
@@ -30,7 +30,7 @@ struct RootSheetView: View {
     // MARK: Content
 
     var body: some View {
-        NavigationStack(path: self.$mapViewStore.sheetState.sheets) {
+        NavigationStack(path: self.$mapViewStore.sheets) {
             SearchSheet(mapStore: self.mapStore,
                         searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
                 .background(Color(.Colors.General._05WhiteBackground))
@@ -116,7 +116,10 @@ struct RootSheetView: View {
         .navigationTransition(.fade(.cross))
         .frame(minWidth: 320)
         .presentationCornerRadius(21)
-        .presentationDetents(self.mapViewStore.sheetState.allowedDetents, selection: self.$mapViewStore.sheetState.selectedDetent)
+        .presentationDetents(
+            self.mapViewStore.allowedDetents,
+            selection: self.$mapViewStore.selectedDetent
+        )
         .presentationBackgroundInteraction(.enabled)
         .interactiveDismissDisabled()
         .ignoresSafeArea()
