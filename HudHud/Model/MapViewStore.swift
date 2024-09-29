@@ -103,6 +103,7 @@ final class MapViewStore {
     // we do this to fix UI transition glitches
     // the way the fix happens is by adding the new sheet's selected detent to
     // the current selected & allowed detents, then wait for 100 ms
+    // the current selected & allowed detents, then wait for a little bit
     // then apply the sheet transition
     func setNewSheetsInAnAnimationFriendlyWay(newSheets: [SheetViewData]) async {
         guard self.sheetState.sheets.count != newSheets.count else {
