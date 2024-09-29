@@ -141,10 +141,10 @@ private extension MapViewStore {
                 guard let self, self.routingStore.potentialRoute == nil else {
                     return
                 }
-                if !self.sheetState.sheets.isEmpty {
-                    self.sheetState.sheets.removeLast()
+                if !self.sheets.isEmpty {
+                    self.sheets.removeLast()
                 }
-                self.sheetState.sheets.append(SheetViewData(viewData: .pointOfInterest(selectedItem)))
+                self.sheets.append(SheetViewData(viewData: .pointOfInterest(selectedItem)))
             }
             .store(in: &self.subscriptions)
     }

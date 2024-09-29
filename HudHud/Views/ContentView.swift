@@ -64,6 +64,9 @@ struct SheetState: Hashable {
             if let previousSheetSelectedDetent {
                 allowedDetents.insert(previousSheetSelectedDetent)
             }
+            if let newSheetSelectedDetent {
+                allowedDetents.insert(newSheetSelectedDetent)
+            }
             return allowedDetents
         }
 
