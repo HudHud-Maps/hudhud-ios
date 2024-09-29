@@ -87,6 +87,34 @@ public struct RegistrationService {
         }
     }
 
+    public func resendOTP(loginId: String, baseURL: String) async throws -> RegistrationResponse {
+        let path = Operations.resendOTP.Input.Path(id: loginId)
+        let response = try await Client.makeClient(using: baseURL).resendOTP(path: path)
+
+        switch response {
+        case let .ok(created):
+            switch created.body {
+            case let .json(jsonResponse):
+                guard
+                    let id = jsonResponse.data.value1.id,
+                    let loginIdentity = jsonResponse.data.value1.login_identity,
+                    let canRequestOtpResendAt = jsonResponse.data.value1.can_request_otp_resend_at else {
+                    throw HudHudClientError.internalServerError("login failed")
+                }
+                return RegistrationResponse(id: id, loginIdentity: loginIdentity, canRequestOtpResendAt: self.date(from: canRequestOtpResendAt))
+            }
+        case let .undocumented(statusCode: statusCode, payload):
+            let bodyString: String? = if let body = payload.body {
+                try await String(collecting: body, upTo: 1024 * 1024)
+            } else {
+                nil
+            }
+            throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .badRequest(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+        }
+    }
+
     func date(from canRequestOtpResendAt: String) -> Date {
         let dateFormatter = ISO8601DateFormatter()
         // If parsing fails, return a date that is 30 seconds from now

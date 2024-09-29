@@ -103,6 +103,9 @@ struct OTPVerificationView: View {
                 Text("Didn't Get the Code?")
                 Button(action: {
                     // Logic to resend OTP
+                    Task {
+                        await self.store.resendOTP(loginId: self.store.loginId)
+                    }
                 }, label: {
                     Text("Resend Code \(!self.store.resendEnabled ? "(\(self.store.formattedTime))" : "")")
                         .foregroundColor(self.store.resendEnabled ? Color.Colors.General._10GreenMain : Color.Colors.General._02Grey)
@@ -122,7 +125,7 @@ struct OTPVerificationView: View {
                     }
                 }
                 .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._11GreenLight.opacity(!self.store.isCodeComplete ? 0.5 : 1),
+                    backgroundColor: Color.Colors.General._10GreenMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
                     foregroundColor: .white
                 ))
                 .disabled(!self.store.isCodeComplete || self.store.isLoading)

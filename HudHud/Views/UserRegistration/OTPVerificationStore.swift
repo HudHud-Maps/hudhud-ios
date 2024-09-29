@@ -28,7 +28,7 @@ class OTPVerificationStore {
     private var registrationService = RegistrationService()
 
     private var timeRemaining: Int = 60
-    private let duration: Date
+    private var duration: Date
 
     // MARK: Computed Properties
 
@@ -114,4 +114,12 @@ class OTPVerificationStore {
         }
     }
 
+    func resendOTP(loginId: String) async {
+        do {
+            let response = try await registrationService.resendOTP(loginId: loginId, baseURL: DebugStore().baseURL)
+            self.duration = response.canRequestOtpResendAt
+        } catch {
+            Logger.userRegistration.info("error resending otp")
+        }
+    }
 }
