@@ -61,15 +61,15 @@ struct RateNavigationView: View {
                     }
                 }
                 .padding(.top)
-                .onChange(of: self.mapViewStore.selectedDetent) {
-                    if self.mapViewStore.selectedDetent == .small {
+                .onChange(of: self.mapViewStore.sheetState.selectedDetent) {
+                    if self.mapViewStore.sheetState.selectedDetent == .small {
                         self.onDismiss()
                     }
                 }
             }
             .padding(.top)
             .onAppear { // if smaller screen = bigger sheet to fit content
-                self.mapViewStore.allowedDetents = (self.smallScreen ? [.nearHalf] : [.small, .third])
+                self.mapViewStore.sheetState.allowedDetents = (self.smallScreen ? [.nearHalf] : [.small, .third])
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

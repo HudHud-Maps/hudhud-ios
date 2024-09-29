@@ -59,21 +59,21 @@ struct FavoriteCategoriesView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 Spacer()
-                NavigationLink {
-                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
-                } label: {
-                    HStack {
-                        Text("View More")
-                            .foregroundStyle(Color(UIColor.label))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                        Image(systemSymbol: .chevronRight)
-                            .font(.caption)
-                            .foregroundStyle(Color(UIColor.label))
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.5)
-                    }
-                }
+//                NavigationLink {
+//                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+//                } label: {
+//                    HStack {
+//                        Text("View More")
+//                            .foregroundStyle(Color(UIColor.label))
+//                            .lineLimit(1)
+//                            .minimumScaleFactor(0.5)
+//                        Image(systemSymbol: .chevronRight)
+//                            .font(.caption)
+//                            .foregroundStyle(Color(UIColor.label))
+//                            .lineLimit(1)
+//                            .minimumScaleFactor(0.5)
+//                    }
+//                }
             }
             FavoriteCategoriesView(mapViewStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
         }

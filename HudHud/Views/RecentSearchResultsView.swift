@@ -56,12 +56,12 @@ struct RecentSearchResultsView: View {
                 }
                 Spacer()
                 if self.searchType == .favorites {
-                    NavigationLink {
-                        EditFavoritesFormView(item: item, favoritesStore: self.favoritesStore)
-                    } label: {
-                        Text("+")
-                            .foregroundStyle(Color(UIColor.label))
-                    }
+//                    NavigationLink {
+//                        EditFavoritesFormView(item: item, favoritesStore: self.favoritesStore)
+//                    } label: {
+//                        Text("+")
+//                            .foregroundStyle(Color(UIColor.label))
+//                    }
                 }
             }
             .onTapGesture {

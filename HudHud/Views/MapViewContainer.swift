@@ -216,7 +216,6 @@ struct MapViewContainer: View {
                                 if self.searchViewStore.mapStore.selectedItem == nil {
                                     let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                                     self.searchViewStore.mapStore.selectedItem = selectedItem
-                                    self.mapViewStore.selectedDetent = .third
                                 }
                             })
                             .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
@@ -266,8 +265,8 @@ struct MapViewContainer: View {
                     }
                 }
             )
-            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { newValue in
-                if let route = newValue {
+            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) {
+                if let route = self.searchViewStore.routingStore.navigatingRoute {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
                             // This configures the simulator to the desired route.
@@ -322,6 +321,7 @@ struct MapViewContainer: View {
         self.searchViewStore.routingStore.potentialRoute = nil
         self.searchViewStore.routingStore.navigatingRoute = nil
 
+        self.mapViewStore.sheetState = SheetState()
         self.mapStore.searchShown = true
 
         if let coordinates = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {

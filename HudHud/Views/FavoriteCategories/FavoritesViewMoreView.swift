@@ -61,11 +61,11 @@ struct FavoritesViewMoreView: View {
                     }
                 }
                 .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                    NavigationLink {
-                        EditFavoritesFormView(item: self.clickedFavorite.item ?? .starbucks, favoritesItem: self.clickedFavorite, favoritesStore: self.favoritesStore)
-                    } label: {
-                        Text("Edit")
-                    }
+//                    NavigationLink {
+//                        EditFavoritesFormView(item: self.clickedFavorite.item ?? .starbucks, favoritesItem: self.clickedFavorite, favoritesStore: self.favoritesStore)
+//                    } label: {
+//                        Text("Edit")
+//                    }
                     Button(role: .destructive) {
                         self.favoritesStore.deleteFavorite(self.clickedFavorite)
                     } label: {
@@ -96,7 +96,7 @@ struct FavoritesViewMoreView: View {
             self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) {
-            self.mapViewStore.path.append(SheetSubView.favorites)
+            self.mapViewStore.sheetState.sheets.append(SheetViewData(viewData: .favorites))
         }
     }
 

@@ -20,16 +20,23 @@ final class MapViewStore: ObservableObject {
 
     // MARK: Properties
 
-    @Published var selectedDetent: PresentationDetent = .small
-    @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-
-    @Published var path = NavigationPath()
-
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore
     private let mapStore: MapStore
 
     private var subscriptions: Set<AnyCancellable> = []
+
+    // MARK: Computed Properties
+
+    @Published var sheetState = SheetState() {
+        didSet {
+            Task {
+                await temporarilyAddLastSelectedDetentIfPopNavigationHappened(
+                    previousSheetState: oldValue
+                )
+            }
+        }
+    }
 
     // MARK: Lifecycle
 
@@ -38,7 +45,6 @@ final class MapViewStore: ObservableObject {
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.showPotentialRouteWhenAvailable()
-        self.updateDetentWhenAppropriate()
         self.showSelectedDetentWhenSelectingAnItem()
     }
 
@@ -51,8 +57,8 @@ final class MapViewStore: ObservableObject {
         if !didHaveAnAction {
             // user tapped nothing - deselect
             Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-            if !self.path.isEmpty {
-                self.path.removeLast()
+            if !self.sheetState.sheets.isEmpty {
+                self.sheetState.sheets.removeLast()
             }
             self.mapStore.selectedItem = nil
         }
@@ -60,15 +66,23 @@ final class MapViewStore: ObservableObject {
 
     func reset() {
         self.resetAllowedDetents()
-        self.selectedDetent = .small
-        if !self.path.isEmpty {
-            self.path.removeLast()
+        self.sheetState.selectedDetent = .small
+        if !self.sheetState.sheets.isEmpty {
+            self.sheetState.sheets.removeLast()
         }
     }
 
     func resetAllowedDetents() {
-        self.allowedDetents = [.small, .medium, .large]
+        self.sheetState.allowedDetents = [.small, .medium, .large]
     }
+
+    func show(fullSheet: SheetViewData) async {
+        self.sheetState.previousSheetSelectedDetent = self.sheetState.selectedDetent
+        self.sheetState.sheets.append(fullSheet)
+        try? await Task.sleep(nanoseconds: 4000)
+        self.sheetState.previousSheetSelectedDetent = nil
+    }
+
 }
 
 private extension MapViewStore {
@@ -76,49 +90,16 @@ private extension MapViewStore {
         self.routingStore.$potentialRoute
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] newPotentialRoute in
+                guard let self else { return }
 
-                if let newPotentialRoute {
-                    guard let self,
-                          self.path.contains(SheetSubView.self) == false else { return }
-                    self.path.append(SheetSubView.navigationPreview)
-
+                if let newPotentialRoute, case .pointOfInterest = self.sheetState.sheets.last?.viewData {
+                    self.sheetState.sheets.append(SheetViewData(viewData: .navigationPreview))
                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
-                } else {
-                    if let lastElement = self?.path.last(), let somethingElse = lastElement as? SheetSubView, somethingElse == .navigationPreview {
-                        self?.path.removeLast()
-                    }
+                } else if self.sheetState.sheets.last?.viewData == .navigationPreview, newPotentialRoute == nil {
+                    self.sheetState.sheets.removeLast()
                 }
             }
             .store(in: &self.subscriptions)
-    }
-
-    func updateDetentWhenAppropriate() {
-        Publishers.CombineLatest3(
-            self.routingStore.$navigatingRoute,
-            self.$path,
-            self.mapStore.$displayableItems
-        )
-        .sink { [weak self] navigatingRoute, path, items in
-            guard let self else { return }
-            let elements = try? path.elements()
-            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil {
-                true
-            } else {
-                !items.isEmpty
-            }
-            let isCurrentSheetListOfCategories = if case .categoryItem = items.first {
-                true
-            } else {
-                false
-            }
-            self.updateSelectedSheetDetent(
-                isCurrentlyNavigating: navigatingRoute != nil,
-                navigationPathItem: elements?.last,
-                isThereAnyPOIsOnTheMap: isThereAnyPOIsOnTheMap,
-                isCurrentSheetListOfCategories: isCurrentSheetListOfCategories
-            )
-        }
-        .store(in: &self.subscriptions)
     }
 
     func showSelectedDetentWhenSelectingAnItem() {
@@ -128,73 +109,22 @@ private extension MapViewStore {
                 guard let self, self.routingStore.potentialRoute == nil else {
                     return
                 }
-                if !self.path.isEmpty {
-                    self.path.removeLast()
+                if !self.sheetState.sheets.isEmpty {
+                    self.sheetState.sheets.removeLast()
                 }
-                self.path.append(selectedItem)
+                self.sheetState.sheets.append(SheetViewData(viewData: .pointOfInterest(selectedItem)))
             }
             .store(in: &self.subscriptions)
     }
 
-    /**
-     This function determines the appropriate sheet detent based on the current state of the map store and search text.
-
-     Current Criteria:
-     - If there are routes available or a selected item, the sheet detent is set to `.medium`.
-     - If the search text is not empty, the sheet detent is set to `.medium`.
-     - Otherwise, the sheet detent is set to `.small`.
-
-     Important Note:
-     This function relies on changes to the `mapStore.routes`, `mapStore.selectedItem`, and `searchText`. If additional criteria are added in the future (e.g., `mapItems`), ensure to:
-     1. Update this function to include the new criteria.
-     2. Set up the appropriate observers for the new criteria to call `updateSheetDetent`.
-
-     Failure to do so can result in the function not updating the detent properly when the new criteria change.
-     **/
-
-    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, isThereAnyPOIsOnTheMap: Bool, isCurrentSheetListOfCategories: Bool) {
-        if isCurrentlyNavigating {
-            let closed: PresentationDetent = .height(0)
-            self.allowedDetents = [closed]
-            self.selectedDetent = closed
+    // needed to fix animation glitch
+    func temporarilyAddLastSelectedDetentIfPopNavigationHappened(previousSheetState: SheetState) async {
+        guard self.sheetState.sheets.count != previousSheetState.sheets.count else {
             return
         }
-
-        // If routes exist or an item is selected, use the medium detent
-
-        guard let navigationPathItem else {
-            self.allowedDetents = [.small, .third, .large]
-            if isThereAnyPOIsOnTheMap, !isCurrentSheetListOfCategories {
-                self.selectedDetent = .small
-            } else {
-                self.selectedDetent = .third
-            }
-            return
-        }
-
-        if let sheetSubview = navigationPathItem as? SheetSubView {
-            switch sheetSubview {
-            case .mapStyle:
-                self.allowedDetents = [.medium]
-                self.selectedDetent = .medium
-            case .debugView:
-                self.allowedDetents = [.large]
-                self.selectedDetent = .large
-            case .navigationAddSearchView:
-                self.allowedDetents = [.large]
-                self.selectedDetent = .large
-            case .favorites:
-                self.allowedDetents = [.large]
-                self.selectedDetent = .large
-            case .navigationPreview:
-                self.allowedDetents = [.height(150), .nearHalf]
-                self.selectedDetent = .nearHalf
-            }
-        }
-        if navigationPathItem is ResolvedItem {
-            self.allowedDetents = [.small, .third, .nearHalf, .large]
-            self.selectedDetent = .nearHalf
-        }
+        self.sheetState.previousSheetSelectedDetent = previousSheetState.selectedDetent
+        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
+        self.sheetState.previousSheetSelectedDetent = nil
     }
 }
 

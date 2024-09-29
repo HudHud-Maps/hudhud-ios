@@ -31,8 +31,8 @@ struct MapLayersView: View {
                 }
                 Spacer()
                 Button {
-                    if !self.mapViewStore.path.isEmpty {
-                        self.mapViewStore.path.removeLast()
+                    if !self.mapViewStore.sheetState.sheets.isEmpty {
+                        self.mapViewStore.sheetState.sheets.removeLast()
                     }
                     self.dismiss()
                 } label: {

@@ -30,12 +30,12 @@ struct RootSheetView: View {
     // MARK: Content
 
     var body: some View {
-        NavigationStack(path: self.$mapViewStore.path) {
+        NavigationStack(path: self.$mapViewStore.sheetState.sheets) {
             SearchSheet(mapStore: self.mapStore,
                         searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
                 .background(Color(.Colors.General._05WhiteBackground))
-                .navigationDestination(for: SheetSubView.self) { value in
-                    switch value {
+                .navigationDestination(for: SheetViewData.self) { value in
+                    switch value.viewData {
                     case .mapStyle:
                         MapLayersView(mapStore: self.mapStore, mapViewStore: self.mapViewStore, hudhudMapLayerStore: self.mapLayerStore)
                             .navigationBarBackButtonHidden()
@@ -72,37 +72,27 @@ struct RootSheetView: View {
                     case .navigationPreview:
                         NavigationSheetView(routingStore: self.searchViewStore.routingStore, mapViewStore: self.mapViewStore)
                             .navigationBarBackButtonHidden()
-                            .onDisappear(perform: {
-                                if self.mapViewStore.path.contains(Route.self) == false {
-                                    self.searchViewStore.routingStore.endTrip()
-                                }
-                            })
                             .presentationCornerRadius(21)
-                    }
-                }
-                .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(
-                        item: item,
-                        routingStore: self.searchViewStore.routingStore,
-                        didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
-                    ) { routeIfAvailable in
-                        Logger.searchView.info("Start item \(item)")
-                        Task {
-                            do {
-                                try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
-                                try await self.notificationManager.requestAuthorization()
-                            } catch {
-                                Logger.routing.error("Error navigating to \(item): \(error)")
+                    case let .pointOfInterest(item):
+                        POIDetailSheet(
+                            item: item,
+                            routingStore: self.searchViewStore.routingStore,
+                            didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
+                        ) { routeIfAvailable in
+                            Logger.searchView.info("Start item \(item)")
+                            Task {
+                                do {
+                                    try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
+                                    try await self.notificationManager.requestAuthorization()
+                                } catch {
+                                    Logger.routing.error("Error navigating to \(item): \(error)")
+                                }
                             }
+                        } onDismiss: {
+                            self.searchViewStore.mapStore.selectedItem = nil
                         }
-                    } onDismiss: {
-                        self.searchViewStore.mapStore.selectedItem = nil
-                        self.searchViewStore.mapStore.displayableItems = []
-                        if !self.mapViewStore.path.isEmpty {
-                            self.mapViewStore.path.removeLast()
-                        }
+                        .navigationBarBackButtonHidden()
                     }
-                    .navigationBarBackButtonHidden()
                 }
             /*
                 .navigationDestination(isPresented:
@@ -126,7 +116,7 @@ struct RootSheetView: View {
         .navigationTransition(.fade(.cross))
         .frame(minWidth: 320)
         .presentationCornerRadius(21)
-        .presentationDetents(self.mapViewStore.allowedDetents, selection: self.$mapViewStore.selectedDetent)
+        .presentationDetents(self.mapViewStore.sheetState.allowedDetents, selection: self.$mapViewStore.sheetState.selectedDetent)
         .presentationBackgroundInteraction(.enabled)
         .interactiveDismissDisabled()
         .ignoresSafeArea()
