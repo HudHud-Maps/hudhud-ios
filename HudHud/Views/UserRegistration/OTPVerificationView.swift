@@ -19,14 +19,16 @@ struct OTPVerificationView: View {
 
     @State private var store: OTPVerificationStore
     @FocusState private var focusedIndex: Int?
+    private let loginStore: LoginStore
 
     // MARK: Lifecycle
 
     // MARK: Initialization
 
-    init(loginId: String, loginIdentity: String, duration: Date, path: Binding<NavigationPath>) {
+    init(loginId: String, loginIdentity: String, duration: Date, path: Binding<NavigationPath>, loginStore: LoginStore) {
         self._store = State(initialValue: OTPVerificationStore(loginId: loginId, duration: duration, loginIdentity: loginIdentity))
         self._path = path
+        self.loginStore = loginStore
     }
 
     // MARK: Content
@@ -38,12 +40,19 @@ struct OTPVerificationView: View {
                     Text("Enter your Verification Code")
                         .hudhudFont(.title2)
                         .foregroundColor(Color.Colors.General._01Black)
-                    Text("We sent verification code on \(self.store.loginIdentity)")
-                        .foregroundColor(Color.Colors.General._02Grey)
-                    Button {
-                        self.path.removeLast()
-                    } label: {
-                        Text("Edit")
+                    Text("Verification code sent to the \(self.loginStore.userInput == .phone ? "phone" : "email") below:")
+                        .hudhudFont()
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                    HStack {
+                        Text(" \(self.store.loginIdentity)")
+                            .foregroundColor(Color.Colors.General._02Grey)
+                        Button {
+                            self.path.removeLast()
+                        } label: {
+                            Text("Edit")
+                                .hudhudFont()
+                                .foregroundStyle(Color.Colors.General._10GreenMain)
+                        }
                     }
                 }
                 Spacer()
@@ -113,7 +122,7 @@ struct OTPVerificationView: View {
                     }
                 }
                 .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._07BlueMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
+                    backgroundColor: Color.Colors.General._11GreenLight.opacity(!self.store.isCodeComplete ? 0.5 : 1),
                     foregroundColor: .white
                 ))
                 .disabled(!self.store.isCodeComplete || self.store.isLoading)
@@ -184,5 +193,6 @@ struct OTPVerificationView: View {
 
 #Preview {
     @State var path = NavigationPath()
-    return OTPVerificationView(loginId: UUID().uuidString, loginIdentity: "+966503539560", duration: .now, path: $path)
+    var loginStore = LoginStore()
+    return OTPVerificationView(loginId: UUID().uuidString, loginIdentity: "+966503539560", duration: .now, path: $path, loginStore: loginStore)
 }

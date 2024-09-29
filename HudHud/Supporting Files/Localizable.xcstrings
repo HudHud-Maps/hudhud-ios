@@ -4,6 +4,9 @@
     "" : {
 
     },
+    " %@" : {
+
+    },
     "..." : {
 
     },
@@ -448,6 +451,9 @@
     "User is on Route" : {
 
     },
+    "Verification code sent to the %@ below:" : {
+
+    },
     "Verify" : {
 
     },
@@ -463,9 +469,6 @@
           }
         }
       }
-    },
-    "We sent verification code on %@" : {
-
     },
     "Web" : {
       "extractionState" : "stale",
