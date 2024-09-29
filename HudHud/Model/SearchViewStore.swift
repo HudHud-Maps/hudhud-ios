@@ -65,10 +65,8 @@ final class SearchViewStore: ObservableObject {
     let routingStore: RoutingStore
     var apple = ApplePOI()
     var progressViewTimer: Timer?
-    var noResultsTimer: Timer?
+    var loadingInstance = Loading()
 
-    @Published var showNoResults: Bool = false
-    @Published var showProgressView: Bool = false
     @Published var searchText: String = ""
     @Published var searchError: Error?
     @Published var isSheetLoading = false
@@ -157,6 +155,8 @@ final class SearchViewStore: ObservableObject {
     }
 
     func fetch(category: String) async {
+        self.loadingInstance.state = .initialLoading
+        self.startFetchingResultsTimer()
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -184,6 +184,8 @@ final class SearchViewStore: ObservableObject {
 
             let displayableItems = filteredItems.map(DisplayableRow.categoryItem)
             self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
+            self.loadingInstance.resultIsEmpty = filteredItems.isEmpty
+            self.loadingInstance.state = .result
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -192,6 +194,9 @@ final class SearchViewStore: ObservableObject {
 
     // will called if the user pressed search in keyboard
     func fetchEnterResults() async {
+        self.loadingInstance.state = .initialLoading
+        self.startFetchingResultsTimer()
+
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -209,6 +214,8 @@ final class SearchViewStore: ObservableObject {
                 return nil
             }
             self.mapStore.replaceItemsAndFocusCamera(on: items)
+            self.loadingInstance.resultIsEmpty = results.items.isEmpty
+            self.loadingInstance.state = .result
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -235,24 +242,14 @@ final class SearchViewStore: ObservableObject {
     func startFetchingResultsTimer() {
         // Invalidate any previous timers
         self.progressViewTimer?.invalidate()
-        self.noResultsTimer?.invalidate()
-
-        self.showNoResults = false
-        self.showProgressView = false
 
         // Start the timer to show the Progress View after 0.5 seconds
         self.progressViewTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
             guard let self else { return }
 
             Task { @MainActor in
-                self.showProgressView = self.isSheetLoading
-
-                // After showing the Progress View, start the timer to show no results after 1 more seconds
-                self.noResultsTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
-                    guard let self else { return }
-                    Task { @MainActor in
-                        self.showNoResults = self.mapStore.displayableItems.isEmpty
-                    }
+                if self.loadingInstance.state == .initialLoading, self.isSheetLoading {
+                    self.loadingInstance.state = .loading
                 }
             }
         }
@@ -282,6 +279,8 @@ private extension SearchViewStore {
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: userLocation, baseURL: DebugStore().baseURL)
                 }
+                self.loadingInstance.resultIsEmpty = result.items.isEmpty
+                self.loadingInstance.state = .result
                 self.searchError = nil
                 self.mapStore.replaceItemsAndFocusCamera(on: result.items)
                 self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {

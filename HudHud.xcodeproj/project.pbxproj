@@ -86,6 +86,7 @@
 		CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970052B81F4C300CF9D59 /* MapLayersView.swift */; };
 		CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970372B85E87300CF9D59 /* PoiTileView.swift */; };
 		CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */; };
+		CB3E5AFA2CA9559300950BFC /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB3E5AF92CA9559300950BFC /* Loading.swift */; };
 		CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */; };
 		CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */; };
 		CBBF2857017E4782EF92382B /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2856856A5D5158A8D6A42F /* PlusJakartaSans-Regular.ttf */; };
@@ -253,6 +254,7 @@
 		CB3970052B81F4C300CF9D59 /* MapLayersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapLayersView.swift; sourceTree = "<group>"; };
 		CB3970372B85E87300CF9D59 /* PoiTileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileView.swift; sourceTree = "<group>"; };
 		CB3970402B85EE8300CF9D59 /* PoiTileGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoiTileGridView.swift; sourceTree = "<group>"; };
+		CB3E5AF92CA9559300950BFC /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSheetView.swift; sourceTree = "<group>"; };
 		CB5F74C52C74A6B300E6FAC0 /* MainFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFiltersView.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
@@ -465,6 +467,7 @@
 			isa = PBXGroup;
 			children = (
 				CB396FFC2B7C1C6D00CF9D59 /* ButtonsStyle.swift */,
+				CB3E5AF92CA9559300950BFC /* Loading.swift */,
 				417081C775FE86E29A6F3437 /* SafariWebView.swift */,
 				591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */,
 				CEDC06032B19C6430BD886AD /* HudhudSegmentedPicker.swift */,
@@ -739,7 +742,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CB7033B82C8DCA100006681E /* PBXTargetDependency */,
+				CB3E5AFC2CA975E200950BFC /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -988,6 +991,7 @@
 				793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */,
 				A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */,
 				F2E81DD82C3EC45C00B1F3DD /* StreetView.swift in Sources */,
+				CB3E5AFA2CA9559300950BFC /* Loading.swift in Sources */,
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
 				F20D974B2C46B9E300457928 /* DownloadFile.swift in Sources */,
@@ -1056,9 +1060,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CB7033B82C8DCA100006681E /* PBXTargetDependency */ = {
+		CB3E5AFC2CA975E200950BFC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			productRef = CB7033B72C8DCA100006681E /* SwiftLint */;
+			productRef = CB3E5AFB2CA975E200950BFC /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1518,7 +1522,7 @@
 			package = CE981EB00C5FEE38CD64F30C /* XCRemoteSwiftPackageReference "maplibre-navigation-ios" */;
 			productName = MapboxNavigation;
 		};
-		CB7033B72C8DCA100006681E /* SwiftLint */ = {
+		CB3E5AFB2CA975E200950BFC /* SwiftLint */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
 			productName = "plugin:SwiftLint";

@@ -118,7 +118,7 @@ struct SearchSheet: View {
                     .padding(.horizontal)
                     .padding(.top)
             }
-            if self.searchStore.showProgressView, self.searchStore.isSheetLoading {
+            if self.searchStore.loadingInstance.shouldShowLoadingCircle {
                 VStack {
                     ProgressView()
                         .progressViewStyle(.circular)
@@ -169,7 +169,7 @@ struct SearchSheet: View {
                             }
                         }
                         .listStyle(.plain)
-                        if self.searchStore.showNoResults {
+                        if self.searchStore.loadingInstance.shouldShowNoResult {
                             let label = self.searchStore.searchError?.localizedDescription != nil ? "Search Error" : "No results"
                             ContentUnavailableView {
                                 Label(label, systemSymbol: .magnifyingglass)
@@ -207,6 +207,7 @@ struct SearchSheet: View {
             }
         }
         .onChange(of: self.searchStore.searchText) { _, _ in
+            self.searchStore.loadingInstance.state = .initialLoading
             self.searchStore.startFetchingResultsTimer()
         }
         .fullScreenCover(isPresented: self.$loginShown) {
