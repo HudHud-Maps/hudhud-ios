@@ -15,51 +15,72 @@ struct CategoryItemView: View {
 
     // MARK: Properties
 
+    @ObservedObject var favoritesStore = FavoritesStore()
     let item: ResolvedItem
     let directions: () -> Void
+    var formatter = Formatters()
     @Environment(\.openURL) var openURL
 
     // MARK: Content
 
     var body: some View {
         VStack(spacing: .zero) {
-            POIMediaView(mediaURLs: self.item.mediaURLs)
-                .padding(.bottom, 20)
             VStack(alignment: .leading, spacing: 7) {
                 Text(self.item.title)
                     .hudhudFont(.headline)
                     .foregroundStyle(Color.Colors.General._01Black)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                if let rating = item.rating, let ratingsCount = item.ratingsCount {
-                    RatingView(ratingModel: Rating(
-                        rating: rating,
-                        ratingsCount: ratingsCount
-                    ))
-                }
                 HStack {
-                    Text(self.item.category ?? "")
-                    if let distance = item.distance {
+                    if let rating = item.rating, let ratingsCount = item.ratingsCount {
+                        RatingView(ratingModel: Rating(
+                            rating: rating,
+                            ratingsCount: ratingsCount
+                        ))
+                    }
+                    if let priceRange = item.priceRange, let priceIcon = HudHudPOI.PriceRange(rawValue: priceRange) {
                         Text("•")
-                        Text("\(LengthFormatter.distance.string(fromMeters: distance))")
+                        Text("\(priceIcon.displayValue)")
+                            .hudhudFont(.subheadline)
+                    }
+                    Spacer()
+                }
+                .foregroundStyle(Color.Colors.General._02Grey)
+                HStack {
+                    if self.item.isOpen ?? false {
+                        Text("Open")
+                            .hudhudFont(.caption)
+                            .foregroundStyle(Color.Colors.General._06DarkGreen)
+                        Text("•")
+                    }
+                    Text(self.item.category ?? "")
+                    if self.item.distance != nil || self.item.duration != nil {
+                        let durationText = self.item.duration.map { self.formatter.formatDuration(duration: $0) } ?? ""
+                        let distanceText = self.item.distance.map { "(\(self.formatter.formatDistance(distance: $0)))" } ?? ""
+                        HStack {
+                            Text("•")
+                            Image("car_fill")
+                            Text("\(durationText) \(distanceText)")
+                        }
                     }
                     Spacer()
                 }
                 .hudhudFont(.caption)
                 .foregroundStyle(Color.Colors.General._02Grey)
-                if self.item.isOpen ?? false {
-                    Text("Open")
-                        .hudhudFont(.caption)
-                        .foregroundStyle(Color.Colors.General._07BlueMain)
-                }
             }
+            .padding(.bottom)
             .padding(.horizontal)
+            if !self.item.mediaURLs.isEmpty {
+                POIMediaView(mediaURLs: self.item.mediaURLs)
+                    .padding(.top, 9)
+                    .padding(.bottom, 16)
+            }
             ScrollView(.horizontal) {
-                HStack {
+                HStack(spacing: 10) {
                     CategoryIconButton(
                         icon: "arrowright_circle_icon_fill",
                         title: "Directions",
                         foregroundColor: .white,
-                        backgroundColor: Color.Colors.General._07BlueMain,
+                        backgroundColor: Color.Colors.General._06DarkGreen,
                         onClick: self.directions
                     )
 
@@ -67,8 +88,8 @@ struct CategoryItemView: View {
                         CategoryIconButton(
                             icon: "phone_icon",
                             title: "Call",
-                            foregroundColor: Color.Colors.General._01Black,
-                            backgroundColor: Color.Colors.General._20ActionButtons
+                            foregroundColor: Color.Colors.General._06DarkGreen,
+                            backgroundColor: Color.Colors.General._03LightGrey
                         ) {
                             self.openURL(url)
                         }
@@ -77,16 +98,44 @@ struct CategoryItemView: View {
                     if let website = item.website {
                         CategoryIconButton(
                             icon: "website_icon_fill",
-                            title: "Website",
-                            foregroundColor: Color.Colors.General._01Black,
-                            backgroundColor: Color.Colors.General._20ActionButtons
+                            title: nil,
+                            foregroundColor: Color.Colors.General._06DarkGreen,
+                            backgroundColor: Color.Colors.General._03LightGrey
                         ) {
                             self.openURL(website)
                         }
                     }
+
+                    CategoryIconButton(
+                        icon: self.favoritesStore.isFavorites(item: self.item) ? "save_icon_fill" : "save_icon",
+                        title: nil,
+                        foregroundColor: Color.Colors.General._06DarkGreen,
+                        backgroundColor: Color.Colors.General._03LightGrey
+                    ) {
+                        self.favoritesStore.isFavorites(item: self.item) ? self.favoritesStore.deleteSavedFavorite(item: self.item)
+                            : self.favoritesStore.saveChanges(
+                                title: self.item.title,
+                                tintColor: .personalShopping,
+                                item: self.item,
+                                description: self.item.description,
+                                selectedType: self.item.category ?? "Other"
+                            )
+                    }
+
+                    CategoryIconButton(
+                        icon: "share_icon",
+                        title: nil,
+                        foregroundColor: Color.Colors.General._06DarkGreen,
+                        backgroundColor: Color.Colors.General._03LightGrey
+                    ) {
+                        // action
+                        //  self.openURL()
+                    }
+                    // currently hidden since no url return from the backend
+                    .hidden()
+
                     Spacer()
                 }
-                .padding(.top, 12)
                 .padding(.horizontal)
                 .padding(.bottom)
             }
@@ -114,7 +163,10 @@ struct RatingView: View {
     // MARK: Content
 
     var body: some View {
-        HStack {
+        HStack(spacing: 4) {
+            Text("\(self.ratingModel.rating, specifier: "%.1f")")
+                .hudhudFont(.subheadline)
+                .foregroundStyle(Color.Colors.General._01Black)
             HStack(spacing: 4) {
                 Image(self.ratingModel.rating < 1 ? .starOff : .starOn)
                 Image(self.ratingModel.rating < 2 ? .starOff : .starOn)
@@ -122,13 +174,11 @@ struct RatingView: View {
                 Image(self.ratingModel.rating < 4 ? .starOff : .starOn)
                 Image(self.ratingModel.rating < 5 ? .starOff : .starOn)
             }
-            Text("\(self.ratingModel.rating, specifier: "%.1f")")
-                .hudhudFont(.headline)
-                .foregroundStyle(Color.Colors.General._01Black)
-            Text("(\(self.ratingModel.ratingsCount))")
-                .hudhudFont(.headline)
-                .foregroundStyle(Color.Colors.General._02Grey)
-            Spacer()
+            HStack {
+                Text("•")
+                Text("(\(self.ratingModel.ratingsCount))")
+                    .hudhudFont(.subheadline)
+            }
         }
     }
 }
@@ -140,7 +190,7 @@ private struct CategoryIconButton: View {
     // MARK: Properties
 
     let icon: String
-    let title: LocalizedStringKey
+    let title: LocalizedStringKey?
     let foregroundColor: Color
     let backgroundColor: Color
     let onClick: () -> Void
@@ -149,14 +199,27 @@ private struct CategoryIconButton: View {
 
     var body: some View {
         Button(action: self.onClick) {
-            Label(self.title, image: self.icon)
-                .foregroundStyle(self.foregroundColor)
-                .padding(.vertical, 8)
-                .padding(.horizontal, 12)
+            if let title {
+                // Show both icon and title
+                Label(title, image: self.icon)
+                    .foregroundColor(self.foregroundColor)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .background(self.backgroundColor)
+                    .clipShape(RoundedRectangle(cornerRadius: 25))
+            } else {
+                // Show only icon
+                Image(self.icon)
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 20, height: 20)
+                    .foregroundColor(self.foregroundColor)
+                    .padding(.vertical, 8)
+                    .padding(.horizontal, 12)
+                    .background(self.backgroundColor)
+                    .clipShape(Circle())
+            }
         }
-        .background(self.backgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: Color(.sRGBLinear, white: 0, opacity: 0.1), radius: 5, y: 4)
     }
 }
 

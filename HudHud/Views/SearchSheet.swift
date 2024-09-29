@@ -74,7 +74,7 @@ struct SearchSheet: View {
                         )
                         .onSubmit {
                             Task {
-                                await self.searchStore.fetchEnterResults()
+                                await self.searchStore.fetch(category: self.searchStore.searchText, enterSearch: true)
                             }
                         }
                         .padding(.horizontal, 10)
@@ -139,7 +139,6 @@ struct SearchSheet: View {
                                 CategoryItemView(item: item) {
                                     self.mapStore.select(item, shouldFocusCamera: true)
                                 }
-                                .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
