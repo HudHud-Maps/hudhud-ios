@@ -26,6 +26,7 @@
 		4116CCE959A6D1222369C4FD /* MapStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0501F8CA3F8917530B09D712 /* MapStyles.swift */; };
 		44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734FB0DF376C6B77950814C5 /* Fonts.swift */; };
 		48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */; };
+		493199DBB2AC083B921CA077 /* XCTestCase+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E999BE1E171DD9BFDC14415A /* XCTestCase+Additions.swift */; };
 		591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */; };
 		591002252C7DCB6600CF4707 /* UserLoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002242C7DCB6600CF4707 /* UserLoginView.swift */; };
 		591002292C7F260A00CF4707 /* LoginStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002282C7F260A00CF4707 /* LoginStore.swift */; };
@@ -292,6 +293,7 @@
 		E1E4E4FF8F4AC807975607F0 /* MoreFiltersView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreFiltersView.swift; sourceTree = "<group>"; };
 		E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
 		E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Italic.ttf"; sourceTree = "<group>"; };
+		E999BE1E171DD9BFDC14415A /* XCTestCase+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Additions.swift"; sourceTree = "<group>"; };
 		EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchResultsView.swift; sourceTree = "<group>"; };
 		F0345701786FBBD3E4678869 /* OTPVerificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationStore.swift; sourceTree = "<group>"; };
 		F20D97482C46B9E300457928 /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 			isa = PBXGroup;
 			children = (
 				CDAE05622B681263003E5196 /* HudHudUITests.swift */,
+				E999BE1E171DD9BFDC14415A /* XCTestCase+Additions.swift */,
 			);
 			path = HudHudUITests;
 			sourceTree = "<group>";
@@ -1046,6 +1049,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */,
+				493199DBB2AC083B921CA077 /* XCTestCase+Additions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
