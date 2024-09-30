@@ -111,7 +111,7 @@ public struct RegistrationService {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .badRequest(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
         }
     }
 
