@@ -44,6 +44,6 @@ struct PersonalInformationScreenView: View {
 }
 
 #Preview {
-    @State var showLogin = true
+    @Previewable @State var showLogin = true
     return PersonalInformationScreenView(loginStore: LoginStore(), onDismiss: {})
 }

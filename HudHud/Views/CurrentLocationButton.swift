@@ -64,13 +64,13 @@ struct CurrentLocationButton: View {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    @State var mapStore: MapStore = .storeSetUpForPreviewing
+    @Previewable @State var mapStore: MapStore = .storeSetUpForPreviewing
     return CurrentLocationButton(mapStore: mapStore)
         .padding()
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    @State var mapStore: MapStore = .storeSetUpForPreviewing
+    @Previewable @State var mapStore: MapStore = .storeSetUpForPreviewing
     mapStore.trackingState = .waitingForLocation
     return CurrentLocationButton(mapStore: mapStore)
         .padding()

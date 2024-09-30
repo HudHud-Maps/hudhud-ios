@@ -110,7 +110,7 @@ struct HudhudSegmentedPickerButton<ValueType: Hashable>: View {
 }
 
 #Preview {
-    @State var selection = "1"
-    @State var options = ["1", "2", "3"]
+    @Previewable @State var selection = "1"
+    @Previewable @State var options = ["1", "2", "3"]
     return HudhudSegmentedPicker(selected: $selection, options: [SegmentOption(value: "1", label: .text("1")), SegmentOption(value: "2", label: .text("2")), SegmentOption(value: "3", label: .text("3"))])
 }
