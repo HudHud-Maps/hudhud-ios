@@ -183,7 +183,7 @@ final class FilterStore: ObservableObject {
 
 // MARK: - Previewable
 
-extension FilterStore: @preconcurrency Previewable {
+extension FilterStore: Previewable {
     static var storeSetUpForPreviewing = FilterStore()
 }
 

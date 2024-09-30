@@ -193,7 +193,7 @@ private extension MapViewStore {
 
 // MARK: - Previewable
 
-extension MapViewStore: @preconcurrency Previewable {
+extension MapViewStore: Previewable {
     static let storeSetUpForPreviewing = MapViewStore(
         mapStore: .storeSetUpForPreviewing,
         routingStore: .storeSetUpForPreviewing

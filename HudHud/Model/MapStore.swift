@@ -314,7 +314,7 @@ final class MapStore: ObservableObject {
 
 // MARK: - Previewable
 
-extension MapStore: @preconcurrency Previewable {
+extension MapStore: Previewable {
 
     static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
 }
