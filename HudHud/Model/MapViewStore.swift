@@ -10,6 +10,7 @@ import BackendService
 import Combine
 import FerrostarCoreFFI
 import MapLibre
+import NavigationTransition
 import OSLog
 import SwiftUI
 
@@ -58,6 +59,10 @@ final class MapViewStore {
         set {
             self.sheetState.allowedDetents = newValue
         }
+    }
+
+    var transition: AnyNavigationTransition {
+        self.sheetState.transition
     }
 
     private var sheetState = SheetState() {

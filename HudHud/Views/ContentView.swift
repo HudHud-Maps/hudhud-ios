@@ -78,6 +78,10 @@ struct SheetState: Hashable {
             }
         }
     }
+
+    var transition: AnyNavigationTransition {
+        self.sheets.last?.viewData.transition ?? .fade(.cross)
+    }
 }
 
 // MARK: - SheetViewData
@@ -139,6 +143,15 @@ struct SheetViewData: Hashable {
                 .large
             case .editFavoritesForm:
                 .large
+            }
+        }
+
+        var transition: AnyNavigationTransition {
+            switch self {
+            case .editFavoritesForm:
+                .default
+            default:
+                .fade(.cross)
             }
         }
     }

@@ -126,7 +126,7 @@ struct RootSheetView: View {
                 }
              */
         }
-        .navigationTransition(.fade(.cross))
+        .navigationTransition(self.mapViewStore.transition)
         .frame(minWidth: 320)
         .presentationCornerRadius(21)
         .presentationDetents(
