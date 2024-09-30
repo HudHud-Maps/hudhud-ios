@@ -1,5 +1,5 @@
 //
-//  CategoryItemView.swift
+//  SearchResultView.swift
 //  HudHud
 //
 //  Created by Naif Alrashed on 29/07/2024.
@@ -9,9 +9,9 @@
 import BackendService
 import SwiftUI
 
-// MARK: - CategoryItemView
+// MARK: - SearchResultView
 
-struct CategoryItemView: View {
+struct SearchResultView: View {
 
     // MARK: Properties
 
@@ -232,5 +232,5 @@ extension LengthFormatter {
 }
 
 #Preview {
-    CategoryItemView(item: .ketchup) {}
+    SearchResultView(item: .ketchup) {}
 }
