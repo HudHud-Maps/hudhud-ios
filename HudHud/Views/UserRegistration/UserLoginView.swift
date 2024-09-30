@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import iPhoneNumberField
 import OSLog
 import SwiftUI
 
@@ -41,25 +42,15 @@ struct UserLoginView: View {
                 Text("Enter your phone number or email")
                     .hudhudFont(.title)
 
-                HStack {
-                    // disply text field for country code only if phone number view selected
-                    if self.loginStore.userInput == .phone {
-                        FloatingLabelInputField(placeholder: "", inputType: .text(text: Binding(
-                            get: {
-                                return self.loginStore.countryCode
-                            },
-                            set: { newValue in
-                                self.loginStore.countryCode = newValue
-                            }
-                        )))
-                        .keyboardType(self.keyboardTypeForInput)
-                        .frame(width: 50)
-                    }
+                VStack(alignment: .leading) {
                     // Text field for email or phone number based on user choose
-                    FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
+                    FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: self.loginStore.userInput == .email ? .text(text: self.bindingForInput) : .phone(phone: self.bindingForInput))
                         .textContentType(self.loginStore.userInput == .phone ? .telephoneNumber : .emailAddress)
                         .focused(self.$isFocused)
                         .keyboardType(self.keyboardTypeForInput)
+                        .onChange(of: self.bindingForInput.wrappedValue) { _, _ in
+                            self.loginStore.errorMessage = ""
+                        }
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {
                                 Spacer()
@@ -68,6 +59,21 @@ struct UserLoginView: View {
                                 }
                             }
                         }
+                    // Error Message Display
+                    if !self.loginStore.errorMessage.isEmpty {
+                        Text(self.loginStore.errorMessage)
+                            .foregroundColor(Color.Colors.General._12Red)
+                            .hudhudFont(.caption)
+                            .padding(.bottom, 5)
+                    }
+                }
+                Spacer()
+                if !self.loginStore.isInputEmpty {
+                    Text("By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy.")
+                        .hudhudFont(.subheadline)
+                        .padding(.bottom, 5)
+                        .padding(.leading, 5)
+                        .foregroundColor(Color.Colors.General._02Grey)
                 }
             }
             .padding(.horizontal)
@@ -76,6 +82,8 @@ struct UserLoginView: View {
             HStack(spacing: 15) {
                 // Button to toggle between phone and email view
                 Button {
+                    // set the error message to nil
+                    self.loginStore.errorMessage = ""
                     // Dismiss the keyboard (cause we have 2 type of keyboard)
                     self.isFocused = false
                     // Toggle between phone and email

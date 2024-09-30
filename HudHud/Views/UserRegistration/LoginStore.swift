@@ -35,6 +35,7 @@ class LoginStore {
 
     // MARK: Properties
 
+    var errorMessage: String = ""
     var userInput: UserInput = .phone
     var email: String = ""
     var phone: String = ""
@@ -73,15 +74,6 @@ class LoginStore {
         return allFieldsFilled && isOldEnough
     }
 
-    var countryCode: String = "+966" {
-        didSet {
-            // Always ensure "+" is at the start
-            if !self.countryCode.hasPrefix("+") {
-                self.countryCode = "+" + self.countryCode.trimmingCharacters(in: .punctuationCharacters)
-            }
-        }
-    }
-
     // MARK: Functions
 
     // Method to toggle between phone and email input types
@@ -91,11 +83,12 @@ class LoginStore {
 
     func login(inputText: String) async {
         do {
-            let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
+            // remove white space before sending to backend
+            let loginInput = inputText.replacingOccurrences(of: " ", with: "")
             let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
             self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: registrationData.loginIdentity, duration: registrationData.canRequestOtpResendAt))
         } catch {
-            Logger.userRegistration.error("\(error.localizedDescription)")
+            self.errorMessage = error.localizedDescription.description
         }
     }
 
