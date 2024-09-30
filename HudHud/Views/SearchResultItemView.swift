@@ -142,7 +142,7 @@ struct SearchResultItem {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    @State var searchText: String = ""
+    @Previewable @State var searchText: String = ""
     return SearchResultItemView(
         item: SearchResultItem(.predictionItem(PredictionItem(
             id: UUID().uuidString,

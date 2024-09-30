@@ -117,7 +117,7 @@ struct FavoritesViewMoreView: View {
 }
 
 #Preview("testing title") {
-    @State var isLinkActive = true
+    @Previewable @State var isLinkActive = true
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {

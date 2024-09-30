@@ -9,6 +9,8 @@
 import CoreLocation
 import XCTest
 
+// MARK: - HudHudUITests
+
 final class HudHudUITests: XCTestCase {
 
     // MARK: Overridden Functions
@@ -17,9 +19,10 @@ final class HudHudUITests: XCTestCase {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
         // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
+        self.continueAfterFailure = false
 
         // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
+        XCUIDevice.shared.location = XCUILocation(location: CLLocation(latitude: 24.65333, longitude: 46.71526))
     }
 
     override func tearDownWithError() throws {
@@ -30,15 +33,22 @@ final class HudHudUITests: XCTestCase {
 
     func testForSearchField() throws {
         // UI tests must launch the application that they test.
-        XCUIDevice.shared.location = XCUILocation(location: CLLocation(latitude: 24.65333, longitude: 46.71526))
-
         let app = XCUIApplication()
-        app.launch()
+        app.start()
 
-        // Identify the TextField with placeholder "Search"
-        let searchTextField = app.textFields["Search"]
-        // Assert that the TextField exists
-        XCTAssertTrue(searchTextField.exists, "The TextField with placeholder 'Search' does not exist on screen.")
+        app.textFields["Search"].waitForExists()
     }
+}
 
+extension XCUIApplication {
+
+    static var springboard = XCUIApplication(bundleIdentifier: "com.apple.springboard")
+
+    func start() {
+        self.resetAuthorizationStatus(for: .location)
+        self.launch()
+
+        XCUIApplication.springboard.alerts[contains: "Hudhud"].waitForExists()
+        XCUIApplication.springboard.alerts[contains: "Hudhud"].buttons.element(boundBy: 1).tap()
+    }
 }

@@ -230,7 +230,7 @@ struct SearchSheet: View {
 
 // MARK: - Route + Identifiable
 
-extension Route: Identifiable {}
+extension Route: @retroactive Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [
@@ -245,7 +245,7 @@ extension SearchSheet {
 
 // MARK: - RawRepresentable + RawRepresentable
 
-extension [ResolvedItem]: RawRepresentable {
+extension [ResolvedItem]: @retroactive RawRepresentable {
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
               let result = try? JSONDecoder()
