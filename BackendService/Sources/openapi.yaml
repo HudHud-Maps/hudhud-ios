@@ -1,13 +1,13 @@
 openapi: 3.0.1
 info:
   title: Sinbad API
-  description: This API is a Backend for frontend (BFF) API created specially for HudHud iOS and Android apps. Named Sinbad API as a code name.
+  description: This API created specially for HudHud iOS and Android apps. Named Sinbad API as a code name.
   contact:
     name: Backend Team
     url: https://app.slack.com/huddle/T06C65MTNUF/C072Y7MDL9L
   version: "1.0"
 servers:
-  - url: //api.dev.hudhud.sa/
+  - url: /
 paths:
   /m/styles:
     get:
@@ -698,6 +698,125 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       x-codegen-request-body-name: request
+  /u/profile:
+    get:
+      tags:
+        - User Profiles
+      summary: GetUserProfile
+      description: This endpoint will allow the user to get their profile info and the user will be identified by their access token
+      operationId: getUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: UserProfile Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UserProfile'
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    patch:
+      tags:
+        - User Profiles
+      summary: EditUserProfile
+      description: This endpoint will allow the user to edit their profile and the user will be identified by their access token
+      operationId: editUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: edit profile request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserProfileRequest'
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-EditUserProfileResponse'
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /u/profile/{id}:
+    delete:
+      tags:
+        - User Profiles
+      summary: DeleteUserProfile
+      description: This endpoint will allow the user to delete their profile account and the user will be identified by their access token
+      operationId: deleteUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: No Data Returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-DeleteUserProfileResponse'
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /u/refresh-token:
+    post:
+      tags:
+        - Auth
+      summary: RefreshAccessToken
+      description: This endpoint will allow the user to refresh their access token by submitting the access token alon with the refresh token
+      operationId: refreshAccessToken
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: edit profile request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/routes.RefreshAccessTokenRequest'
+        required: true
+      responses:
+        "200":
+          description: refresh token response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-routes_RefreshAccessTokenRequest'
+        "400":
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
 components:
   schemas:
     AndroidCategoryIcon:
@@ -710,6 +829,22 @@ components:
           type: string
         name:
           type: string
+    DeleteUserProfileResponse:
+      type: object
+    EditUserProfileRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+        last_name:
+          type: string
+    EditUserProfileResponse:
+      type: object
     ErrorResponse:
       required:
         - message
@@ -773,7 +908,7 @@ components:
       properties:
         access_token:
           type: string
-          description: AccessToken JWT access token will be issued only if the otp verification was successful.
+          description: AccessToken JWT access token is short-lived token that will be issued only if the otp verification was successful.
         can_request_otp_resend_at:
           type: string
           description: CanRequestOTPResendAt the time when the user can request for a resend of the OTP
@@ -788,12 +923,20 @@ components:
         login_identity:
           type: string
           description: LoginIdentity the user unique login identity email or mobile
+        refresh_token:
+          type: string
+          description: |-
+            RefreshToken JWT refresh token is a long-lived token that will be issued only if the otp verification was successful.
+            This token will be used to refresh the access token and should be stored in a secure place.
     LoginRequest:
+      required:
+        - login_identity
       type: object
       properties:
         login_identity:
           type: string
           description: LoginIdentity the user unique login identity email or mobile
+          example: mashail@hudhud.sa or +966509988765
     MapStyle:
       required:
         - name
@@ -958,6 +1101,54 @@ components:
           type: string
         url:
           type: string
+    SuccessResponse-DeleteUserProfileResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/DeleteUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-EditUserProfileResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/EditUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-Login:
       required:
         - data
@@ -1043,6 +1234,30 @@ components:
             The Data could be an object or an array
           allOf:
             - $ref: '#/components/schemas/StreetViewImageDetails'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UserProfile:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UserProfile'
         next_page_token:
           type: string
           description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
@@ -1172,6 +1387,30 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-routes_RefreshAccessTokenRequest:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/routes.RefreshAccessTokenRequest'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     TypeaheadItem:
       required:
         - android_category_icon
@@ -1199,12 +1438,42 @@ components:
           enum:
             - poi
             - category
+    UserProfile:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email is the identity for the user during the login one of Email or MobileNumber has to be present
+        first_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - male
+            - female
+        last_name:
+          type: string
+        mobile:
+          type: string
+          description: MobileNumber is the identity for the user during the login one of Email or MobileNumber has to be present
+        user_id:
+          type: string
+          description: UserID the unique identifier for the user
     VerifyOTPRequest:
       type: object
       properties:
         otp:
           type: string
           description: OTP 6 digit OTP code
+    routes.RefreshAccessTokenRequest:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: AccessToken the old access token to refresh.
+        refresh_token:
+          type: string
+          description: RefreshToken the refresh token that was issued with the access token
     types.OpeningHours:
       type: object
       properties:
