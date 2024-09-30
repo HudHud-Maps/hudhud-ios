@@ -243,8 +243,8 @@ final class SearchViewStore: ObservableObject {
         // Invalidate any previous timers
         self.progressViewTimer?.invalidate()
 
-        // Start the timer to show the Progress View after 0.5 seconds
-        self.progressViewTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
+        // Start the timer to show the Progress View after 0.2 seconds
+        self.progressViewTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] _ in
             guard let self else { return }
 
             Task { @MainActor in
