@@ -76,7 +76,7 @@ public struct RegistrationService {
             return
         case let .badRequest(error):
             let errorMessage = try error.body.json.message
-            throw HudHudClientError.internalServerError(errorMessage)
+            throw HudHudClientError.badRequest(errorMessage)
         case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {
                 try await String(collecting: body, upTo: 1024 * 1024)
