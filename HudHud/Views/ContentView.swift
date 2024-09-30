@@ -335,7 +335,7 @@ extension Binding where Value == Bool {
 
 // MARK: - NavigationViewController + MapViewHostViewController
 
-extension NavigationViewController: MapViewHostViewController {
+extension NavigationViewController: @retroactive MapViewHostViewController {
     public typealias MapType = NavigationMapView
 }
 

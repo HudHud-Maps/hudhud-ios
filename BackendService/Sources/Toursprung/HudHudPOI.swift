@@ -29,6 +29,9 @@ enum HudHudClientError: Error {
     case poiIDNotFound
     case internalServerError(String)
     case badRequest(String)
+    case unauthorized(String)
+    case notFound(String)
+    case gone(String)
 
 }
 

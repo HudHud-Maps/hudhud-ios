@@ -17,7 +17,7 @@
 
     },
     "%@" : {
-      "comment" : "duration"
+      "comment" : "distance • type of route\nduration"
     },
     "%@ %@" : {
       "localizations" : {
@@ -376,9 +376,6 @@
     "Reset" : {
 
     },
-    "root view" : {
-
-    },
     "Routing Configuration" : {
 
     },
@@ -439,9 +436,6 @@
     "Touch Visualizer" : {
 
     },
-    "Traffic" : {
-
-    },
     "Unknown" : {
 
     },
@@ -455,9 +449,6 @@
 
     },
     "Verify" : {
-
-    },
-    "View More" : {
 
     },
     "walk" : {
