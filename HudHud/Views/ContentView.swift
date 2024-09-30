@@ -87,7 +87,14 @@ struct SheetViewData: Hashable {
     // MARK: Nested Types
 
     enum ViewData: Hashable {
-        case mapStyle, debugView, navigationAddSearchView, favorites, navigationPreview, pointOfInterest(ResolvedItem)
+        case mapStyle
+        case debugView
+        case navigationAddSearchView
+        case favorites
+        case navigationPreview
+        case pointOfInterest(ResolvedItem)
+        case favoritesViewMore
+        case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
 
         // MARK: Computed Properties
 
@@ -106,6 +113,10 @@ struct SheetViewData: Hashable {
                 [.height(150), .nearHalf]
             case .pointOfInterest:
                 [.height(340), .large]
+            case .favoritesViewMore:
+                [.large]
+            case .editFavoritesForm:
+                [.large]
             }
         }
 
@@ -124,6 +135,10 @@ struct SheetViewData: Hashable {
                 .nearHalf
             case .pointOfInterest:
                 .height(340)
+            case .favoritesViewMore:
+                .large
+            case .editFavoritesForm:
+                .large
             }
         }
     }

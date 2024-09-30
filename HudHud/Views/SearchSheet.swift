@@ -23,7 +23,7 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
-    var mapViewStore: MapViewStore
+    @Bindable var mapViewStore: MapViewStore
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
 
@@ -197,7 +197,11 @@ struct SearchSheet: View {
                         .listRowSeparator(.hidden)
                     }
                     SearchSectionView(title: "Recents") {
-                        RecentSearchResultsView(searchStore: self.searchStore, searchType: self.searchStore.searchType)
+                        RecentSearchResultsView(
+                            searchStore: self.searchStore,
+                            searchType: self.searchStore.searchType,
+                            sheets: self.$mapViewStore.sheets
+                        )
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                     .listRowSeparator(.hidden)

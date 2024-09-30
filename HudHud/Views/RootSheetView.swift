@@ -24,6 +24,7 @@ struct RootSheetView: View {
     @Bindable var mapViewStore: MapViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
+    @StateObject var favoritesStore = FavoritesStore()
 
     @StateObject var notificationManager = NotificationManager()
 
@@ -92,6 +93,18 @@ struct RootSheetView: View {
                             self.searchViewStore.mapStore.selectedItem = nil
                         }
                         .navigationBarBackButtonHidden()
+                    case .favoritesViewMore:
+                        FavoritesViewMoreView(
+                            searchStore: self.searchViewStore,
+                            mapViewStore: self.mapViewStore,
+                            favoritesStore: self.favoritesStore
+                        )
+                    case let .editFavoritesForm(item, favoritesItem):
+                        EditFavoritesFormView(
+                            item: item,
+                            favoritesItem: favoritesItem,
+                            favoritesStore: self.favoritesStore
+                        )
                     }
                 }
             /*

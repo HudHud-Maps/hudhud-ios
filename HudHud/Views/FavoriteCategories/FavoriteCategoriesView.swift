@@ -38,12 +38,12 @@ struct FavoriteCategoriesView: View {
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
-                NavigationLink {
-                    FavoritesViewMoreView(searchStore: self.searchStore, mapViewStore: self.mapViewStore)
-                } label: {
-                    Text("Add")
-                        .hudhudFont(size: 12, fontWeight: .medium)
-                }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
+                Button("Add") {
+                    self.mapViewStore.sheets
+                        .append(SheetViewData(viewData: .favoritesViewMore))
+                }
+                .hudhudFont(size: 12, fontWeight: .medium)
+                .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
             }
             Spacer()
         }
@@ -59,21 +59,25 @@ struct FavoriteCategoriesView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
                 Spacer()
-//                NavigationLink {
-//                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
-//                } label: {
-//                    HStack {
-//                        Text("View More")
-//                            .foregroundStyle(Color(UIColor.label))
-//                            .lineLimit(1)
-//                            .minimumScaleFactor(0.5)
-//                        Image(systemSymbol: .chevronRight)
-//                            .font(.caption)
-//                            .foregroundStyle(Color(UIColor.label))
-//                            .lineLimit(1)
-//                            .minimumScaleFactor(0.5)
-//                    }
-//                }
+                NavigationLink {
+                    FavoritesViewMoreView(
+                        searchStore: .storeSetUpForPreviewing,
+                        mapViewStore: .storeSetUpForPreviewing,
+                        favoritesStore: .storeSetUpForPreviewing
+                    )
+                } label: {
+                    HStack {
+                        Text("View More")
+                            .foregroundStyle(Color(UIColor.label))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                        Image(systemSymbol: .chevronRight)
+                            .font(.caption)
+                            .foregroundStyle(Color(UIColor.label))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.5)
+                    }
+                }
             }
             FavoriteCategoriesView(mapViewStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
         }

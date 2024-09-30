@@ -20,7 +20,7 @@ struct RecentSearchResultsView: View {
 
     @ScaledMetric var imageSize = 24
     @Environment(\.dismiss) var dismiss
-    @StateObject var favoritesStore = FavoritesStore()
+    @Binding var sheets: [SheetViewData]
 
     // MARK: Content
 
@@ -56,12 +56,13 @@ struct RecentSearchResultsView: View {
                 }
                 Spacer()
                 if self.searchType == .favorites {
-//                    NavigationLink {
-//                        EditFavoritesFormView(item: item, favoritesStore: self.favoritesStore)
-//                    } label: {
-//                        Text("+")
-//                            .foregroundStyle(Color(UIColor.label))
-//                    }
+                    Button("+") {
+                        self.sheets
+                            .append(
+                                SheetViewData(viewData: .editFavoritesForm(item: item))
+                            )
+                    }
+                    .foregroundStyle(Color(.label))
                 }
             }
             .onTapGesture {
@@ -89,7 +90,11 @@ struct RecentSearchResultsView: View {
 
 #Preview {
     NavigationStack {
-        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+        RecentSearchResultsView(
+            searchStore: .storeSetUpForPreviewing,
+            searchType: .favorites,
+            sheets: .constant([])
+        )
     }
 }
 
@@ -100,9 +105,13 @@ struct RecentSearchResultsView: View {
     @State var editFormViewIsShown = true
     @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
-        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
-            .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
-            }
+        RecentSearchResultsView(
+            searchStore: .storeSetUpForPreviewing,
+            searchType: .favorites,
+            sheets: .constant([])
+        )
+        .navigationDestination(isPresented: $editFormViewIsShown) {
+            EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+        }
     }
 }
