@@ -53,7 +53,7 @@ class LoginStore {
     var isInputEmpty: Bool {
         switch self.userInput {
         case .phone:
-            return self.phone.isEmpty
+            return self.phone.isEmpty || self.phone == "+"
         case .email:
             return self.email.isEmpty
         }
