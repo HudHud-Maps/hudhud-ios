@@ -159,6 +159,6 @@ struct OTPVerificationView: View {
 }
 
 #Preview {
-    @State var path = NavigationPath()
+    @Previewable @State var path = NavigationPath()
     return OTPVerificationView(loginIdentity: "+966503539560", duration: .now, path: $path)
 }

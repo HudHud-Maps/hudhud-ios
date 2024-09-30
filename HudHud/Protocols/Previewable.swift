@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol Previewable {
 
     static var storeSetUpForPreviewing: Self { get }
