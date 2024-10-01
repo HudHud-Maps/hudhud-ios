@@ -6,21 +6,30 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import Combine
 import Foundation
+import OSLog
 
 @Observable
 class OTPVerificationStore {
 
     // MARK: Properties
 
+    var loginId: String
     var timer: Timer?
     let loginIdentity: String
     var code: [String] = Array(repeating: "", count: 6)
     var resendEnabled: Bool = false
+    var errorMessage: String?
+    var verificationSuccessful: Bool = false
+    var isLoading: Bool = false
+    var userLoggedIn: Bool = false
+
+    private var registrationService = RegistrationService()
 
     private var timeRemaining: Int = 60
-    private let duration: Date
+    private var duration: Date
 
     // MARK: Computed Properties
 
@@ -39,7 +48,8 @@ class OTPVerificationStore {
 
     // MARK: Lifecycle
 
-    init(duration: Date, loginIdentity: String) {
+    init(loginId: String, duration: Date, loginIdentity: String) {
+        self.loginId = loginId
         self.duration = duration
         self.loginIdentity = loginIdentity
     }
@@ -67,6 +77,40 @@ class OTPVerificationStore {
                 self.timer?.invalidate()
                 self.resendEnabled = true
             }
+        }
+    }
+
+    func verifyOTP() async {
+        guard self.isCodeComplete else {
+            self.errorMessage = "Please enter the complete verification code."
+            return
+        }
+
+        self.isLoading = true
+        self.errorMessage = nil
+
+        defer { isLoading = false }
+
+        do {
+            let fullCode = self.code.joined()
+            try await self.registrationService.verifyOTP(loginId: self.loginId, otp: fullCode, baseURL: DebugStore().baseURL)
+
+            self.verificationSuccessful = true
+            self.userLoggedIn = true
+            Logger.userRegistration.info("OTP verified successfully.")
+
+        } catch {
+            self.errorMessage = "An error occurred during verification. Please check your OTP code and try again."
+            Logger.userRegistration.error("OTP verification failed: \(error.localizedDescription)")
+        }
+    }
+
+    func resendOTP(loginId: String) async {
+        do {
+            let response = try await registrationService.resendOTP(loginId: loginId, baseURL: DebugStore().baseURL)
+            self.duration = response.canRequestOtpResendAt
+        } catch {
+            Logger.userRegistration.info("error resending otp")
         }
     }
 }

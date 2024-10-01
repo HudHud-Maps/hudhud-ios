@@ -36,6 +36,8 @@ class LoginStore {
 
     // MARK: Properties
 
+    var loginId: String = ""
+    var otpResendDuration = Date()
     var errorMessage: String = ""
     var userInput: UserInput = .phone
     var email: String = ""
@@ -46,6 +48,7 @@ class LoginStore {
     var gender: String = ""
     var birthday = Date()
     var path = NavigationPath()
+    var userLoggedIn: Bool = false
 
     var isRunningRequest: Bool = false
 
@@ -101,6 +104,15 @@ class LoginStore {
         return allFieldsFilled && isOldEnough
     }
 
+    var countryCode: String = "+966" {
+        didSet {
+            // Always ensure "+" is at the start
+            if !self.countryCode.hasPrefix("+") {
+                self.countryCode = "+" + self.countryCode.trimmingCharacters(in: .punctuationCharacters)
+            }
+        }
+    }
+
     // MARK: Functions
 
     // Method to toggle between phone and email input types
@@ -115,13 +127,17 @@ class LoginStore {
         }
 
         do {
-            // remove white space before sending to backend
-            let loginInput = inputText.replacingOccurrences(of: " ", with: "")
-            let registrationData = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
-            self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: registrationData.loginIdentity, duration: registrationData.canRequestOtpResendAt))
+            let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
+            let response = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
+
+            // Extract loginIdentity and duration from response
+            self.loginId = response.id
+            self.otpResendDuration = response.canRequestOtpResendAt
+
+            // Navigate to OTP View
+            self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
         } catch {
             self.errorMessage = error.localizedDescription.description
         }
     }
-
 }
