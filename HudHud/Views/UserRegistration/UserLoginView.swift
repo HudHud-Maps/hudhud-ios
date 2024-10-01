@@ -48,6 +48,7 @@ struct UserLoginView: View {
                         .textContentType(self.loginStore.userInput == .phone ? .telephoneNumber : .emailAddress)
                         .focused(self.$isFocused)
                         .keyboardType(self.keyboardTypeForInput)
+                        .textInputAutocapitalization(.never)
                         .onChange(of: self.bindingForInput.wrappedValue) { _, _ in
                             switch self.loginStore.userInput {
                             case .phone:
@@ -96,10 +97,9 @@ struct UserLoginView: View {
                 } label: {
                     Text(self.buttonTitle)
                 }
-                .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._03LightGrey.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
-                    foregroundColor: .black
-                ))
+                .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                              backgroundColor: Color.Colors.General._03LightGrey.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
+                                              foregroundColor: .black))
                 // Button to proceed to the next view (OTP view)
                 Button {
                     Task {
@@ -108,11 +108,10 @@ struct UserLoginView: View {
                 } label: {
                     Text("Next")
                 }
-                .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._10GreenMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
-                    foregroundColor: .white
-                ))
-                .disabled(self.loginStore.isInputEmpty)
+                .buttonStyle(LargeButtonStyle(isLoading: self.$loginStore.isRunningRequest,
+                                              backgroundColor: Color.Colors.General._10GreenMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
+                                              foregroundColor: .white))
+                .disabled(self.loginStore.isInputEmpty || self.loginStore.isRunningRequest)
             }
             .padding(.bottom)
             .padding(.horizontal)

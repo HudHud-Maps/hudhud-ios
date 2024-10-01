@@ -47,6 +47,8 @@ class LoginStore {
     var birthday = Date()
     var path = NavigationPath()
 
+    var isRunningRequest: Bool = false
+
     private let phoneNumberKit = PhoneNumberKit()
     private var registrationService = RegistrationService()
 
@@ -107,6 +109,11 @@ class LoginStore {
     }
 
     func login(inputText: String) async {
+        self.isRunningRequest = true
+        defer {
+            self.isRunningRequest = false
+        }
+
         do {
             // remove white space before sending to backend
             let loginInput = inputText.replacingOccurrences(of: " ", with: "")
