@@ -53,13 +53,13 @@ struct SearchResultView: View {
                         Text("•")
                     }
                     Text(self.item.category ?? "")
-                    if self.item.distance != nil || self.item.duration != nil {
-                        let durationText = self.item.duration.map { self.formatter.formatDuration(duration: $0) } ?? ""
-                        let distanceText = self.item.distance.map { "(\(self.formatter.formatDistance(distance: $0)))" } ?? ""
+                    if self.item.distance != nil || self.item.driveDuration != nil {
+                        let durationText = self.item.driveDuration.map { self.formatter.formatDuration(duration: $0) }
+                        let distanceText = self.item.distance.map { "(\(self.formatter.formatDistance(distance: $0)))" }
                         HStack {
                             Text("•")
                             Image("car_fill")
-                            Text("\(durationText) \(distanceText)")
+                            Text("\([durationText, distanceText].compactMap(\.self).joined(separator: " "))")
                         }
                     }
                     Spacer()

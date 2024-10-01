@@ -338,7 +338,7 @@ public struct HudHudPOI: POIServiceProtocol {
                     isOpen: item.is_open,
                     mediaURLs: item.media_urls?.compactMap { URL(string: $0.url) } ?? [],
                     distance: item.distance,
-                    duration: item.duration,
+                    driveDuration: item.duration,
                     priceRange: resolvedPriceRange?.rawValue
                 )
             }

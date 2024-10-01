@@ -193,7 +193,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var trendingImage: String?
     public var mediaURLs: [URL]
     public let distance: Double?
-    public let duration: Double?
+    public let driveDuration: Double?
     public let priceRange: Int?
 
     // MARK: Computed Properties
@@ -208,7 +208,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, duration: Double? = nil, priceRange: Int? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -225,7 +225,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.mediaURLs = mediaURLs
         self.systemColor = color
         self.distance = distance
-        self.duration = duration
+        self.driveDuration = driveDuration
         self.priceRange = priceRange
     }
 
