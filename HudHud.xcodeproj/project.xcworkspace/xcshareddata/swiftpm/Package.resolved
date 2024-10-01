@@ -42,7 +42,7 @@
       "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
         "branch" : "fix/add-congestion-colors-to-polylines",
-        "revision" : "672bb6c7b25a1dc91a0e6091666b790839731b9e"
+        "revision" : "1a779f53c0a96e9cebe6e510e812d78cea705cc1"
       }
     },
     {
