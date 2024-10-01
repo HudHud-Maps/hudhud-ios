@@ -92,10 +92,9 @@ struct OTPVerificationView: View {
                 }, label: {
                     Text("Verify")
                 })
-                .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._07BlueMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
-                    foregroundColor: .white
-                ))
+                .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                              backgroundColor: Color.Colors.General._07BlueMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
+                                              foregroundColor: .white))
                 .disabled(!self.store.isCodeComplete)
             }
             .padding()
