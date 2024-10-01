@@ -77,7 +77,7 @@ struct SearchResultView: View {
             ScrollView(.horizontal) {
                 HStack(spacing: 10) {
                     CategoryIconButton(
-                        icon: "arrowright_circle_icon_fill",
+                        icon: .arrowrightCircleIconFill,
                         title: "Directions",
                         foregroundColor: .white,
                         backgroundColor: Color.Colors.General._06DarkGreen,
@@ -86,7 +86,7 @@ struct SearchResultView: View {
 
                     if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
                         CategoryIconButton(
-                            icon: "phone_icon",
+                            icon: .phoneIcon,
                             title: "Call",
                             foregroundColor: Color.Colors.General._06DarkGreen,
                             backgroundColor: Color.Colors.General._03LightGrey
@@ -97,7 +97,7 @@ struct SearchResultView: View {
 
                     if let website = item.website {
                         CategoryIconButton(
-                            icon: "website_icon_fill",
+                            icon: .websiteIconFill,
                             title: nil,
                             foregroundColor: Color.Colors.General._06DarkGreen,
                             backgroundColor: Color.Colors.General._03LightGrey
@@ -107,7 +107,7 @@ struct SearchResultView: View {
                     }
 
                     CategoryIconButton(
-                        icon: self.favoritesStore.isFavorites(item: self.item) ? "save_icon_fill" : "save_icon",
+                        icon: self.favoritesStore.isFavorites(item: self.item) ? .saveIconFill : .saveIcon,
                         title: nil,
                         foregroundColor: Color.Colors.General._06DarkGreen,
                         backgroundColor: Color.Colors.General._03LightGrey
@@ -123,7 +123,7 @@ struct SearchResultView: View {
                     }
 
                     CategoryIconButton(
-                        icon: "share_icon",
+                        icon: .shareIcon,
                         title: nil,
                         foregroundColor: Color.Colors.General._06DarkGreen,
                         backgroundColor: Color.Colors.General._03LightGrey
@@ -189,7 +189,7 @@ private struct CategoryIconButton: View {
 
     // MARK: Properties
 
-    let icon: String
+    let icon: ImageResource
     let title: LocalizedStringKey?
     let foregroundColor: Color
     let backgroundColor: Color
