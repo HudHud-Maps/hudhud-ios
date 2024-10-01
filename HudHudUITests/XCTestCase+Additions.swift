@@ -72,14 +72,14 @@ extension String {
 
     func removing(pattern: String) -> String {
         // Use regular expression to remove the dynamic "Clone X of" part
-        let regex = try! NSRegularExpression(pattern: pattern)
+        let regex = try! NSRegularExpression(pattern: pattern) // swiftlint:diable:this force_try
         let range = NSRange(self.startIndex ..< self.endIndex, in: self)
         let updatedString = regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: "")
         return updatedString
     }
 
     func firstMatch(pattern: String) -> String? {
-        let regex = try! NSRegularExpression(pattern: pattern, options: [])
+        let regex = try! NSRegularExpression(pattern: pattern, options: []) // swiftlint:diable:this force_try
         let range = NSRange(location: 0, length: self.utf16.count)
         if let match = regex.firstMatch(in: self, options: [], range: range) {
             if let numberRange = Range(match.range, in: self) {
