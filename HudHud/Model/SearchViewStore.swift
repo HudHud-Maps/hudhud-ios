@@ -152,7 +152,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String) async {
+    func fetch(category: String, enterSearch: Bool? = false) async {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -164,6 +164,7 @@ final class SearchViewStore: ObservableObject {
             let userLocation = self.mapStore.mapView?.centerCoordinate
             let items = try await hudhud.items(
                 for: category,
+                enterSearch: enterSearch ?? false,
                 topRated: self.filterStore.topRated,
                 priceRange: self.filterStore.priceSelection.hudHudPriceRange,
                 sortBy: self.filterStore.sortSelection.hudHudSortBy,
@@ -180,31 +181,6 @@ final class SearchViewStore: ObservableObject {
 
             let displayableItems = filteredItems.map(DisplayableRow.categoryItem)
             self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
-        } catch {
-            self.searchError = error
-            Logger.poiData.error("fetching category error: \(error)")
-        }
-    }
-
-    // will called if the user pressed search in keyboard
-    func fetchEnterResults() async {
-        self.searchType = .categories
-        defer { self.searchType = .selectPOI }
-
-        self.mapViewStore.selectedDetent = .third
-
-        self.isSheetLoading = true
-        defer { isSheetLoading = false }
-        do {
-            let userLocation = self.mapStore.mapView?.userLocation?.coordinate
-            let results = try await self.hudhud.predict(term: self.searchText, coordinates: userLocation, baseURL: DebugStore().baseURL)
-            let items = results.items.compactMap { item in
-                if let resolvedItem = item.resolvedItem {
-                    return DisplayableRow.categoryItem(resolvedItem)
-                }
-                return nil
-            }
-            self.mapStore.replaceItemsAndFocusCamera(on: items)
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")

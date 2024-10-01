@@ -77,7 +77,7 @@ final class RoutingStore: ObservableObject {
         let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
         options.shapeFormat = .polyline6
         options.distanceMeasurementSystem = .metric
-        options.attributeOptions = []
+        options.attributeOptions = [.congestionLevel]
 
         // Calculate the routes
         let result = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)

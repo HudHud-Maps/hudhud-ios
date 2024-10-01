@@ -144,6 +144,19 @@ public struct HudHudPOI: POIServiceProtocol {
 
         // MARK: Computed Properties
 
+        public var displayValue: String {
+            switch self {
+            case .cheap:
+                return "$"
+            case .medium:
+                return "$$"
+            case .pricy:
+                return "$$$"
+            case .expensive:
+                return "$$$$"
+            }
+        }
+
         var backendValue: Operations.listPois.Input.Query.price_rangePayload {
             switch self {
             case .cheap:
@@ -156,6 +169,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 return ._4
             }
         }
+
     }
 
     public enum SortBy: String {
@@ -288,14 +302,19 @@ public struct HudHudPOI: POIServiceProtocol {
     }
 
     // list pois /p
-    public func items(for category: String, topRated: Bool? = nil, priceRange: PriceRange? = nil, sortBy: SortBy? = nil, rating: Double? = nil, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
+    public func items(for category: String, enterSearch: Bool, topRated: Bool? = nil, priceRange: PriceRange? = nil, sortBy: SortBy? = nil, rating: Double? = nil, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
-
-        let priceRange = priceRange?.backendValue
+        var query: Operations.listPois.Input.Query
         let sortBy = sortBy?.backendValue
+        if enterSearch {
+            query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, text: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
+        } else {
+            query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
+        }
+
         let response = try await Client.makeClient(using: baseURL).listPois(
-            query: .init(sort_by: sortBy, price_range: priceRange, rating: rating, category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated),
+            query: query,
             headers: .init(Accept_hyphen_Language: self.currentLanguage)
         )
 
@@ -304,6 +323,8 @@ public struct HudHudPOI: POIServiceProtocol {
             let body = try success.body.json
             return body.data.map { item -> ResolvedItem in
                 let caseInsensitiveCategory = item.category.lowercased()
+                let resolvedPriceRange = PriceRange(rawValue: item.price_range ?? 0)
+
                 return ResolvedItem(
                     id: item.id,
                     title: item.name,
@@ -319,7 +340,9 @@ public struct HudHudPOI: POIServiceProtocol {
                     ratingsCount: item.ratings_count,
                     isOpen: item.is_open,
                     mediaURLs: item.media_urls?.compactMap { URL(string: $0.url) } ?? [],
-                    distance: item.distance
+                    distance: item.distance,
+                    driveDuration: item.duration,
+                    priceRange: resolvedPriceRange?.rawValue
                 )
             }
         case let .undocumented(statusCode: statusCode, payload):

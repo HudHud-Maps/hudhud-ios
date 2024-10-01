@@ -10,6 +10,15 @@
       }
     },
     {
+      "identity" : "iphonenumberfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MojtabaHs/iPhoneNumberField",
+      "state" : {
+        "revision" : "cd961621559393c5220c6c955690ecc52318e753",
+        "version" : "0.10.4"
+      }
+    },
+    {
       "identity" : "locationformatter",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/salishseasoftware/LocationFormatter.git",
@@ -41,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
       "state" : {
-        "branch" : "fix/lanes-view-not-hidden-when-it-should-be-hidden",
-        "revision" : "d3934e14ea4d4352eb544a0a7ae917a23254e809"
+        "branch" : "fix/add-congestion-colors-to-polylines",
+        "revision" : "1a779f53c0a96e9cebe6e510e812d78cea705cc1"
       }
     },
     {
@@ -75,7 +84,7 @@
     {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke",
+      "location" : "https://github.com/kean/Nuke.git",
       "state" : {
         "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
         "version" : "12.8.0"
@@ -88,6 +97,15 @@
       "state" : {
         "revision" : "4991b7e39a19cd1d0d11fe24fc64a601b4820144",
         "version" : "3.2.0"
+      }
+    },
+    {
+      "identity" : "phonenumberkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/marmelroy/PhoneNumberKit",
+      "state" : {
+        "revision" : "c107075aa8d394be7aced273a46e944afe8b321b",
+        "version" : "3.8.0"
       }
     },
     {

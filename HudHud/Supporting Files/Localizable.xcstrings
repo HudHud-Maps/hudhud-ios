@@ -91,6 +91,9 @@
         }
       }
     },
+    "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
+
+    },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
       "localizations" : {
@@ -471,9 +474,6 @@
           }
         }
       }
-    },
-    "Website" : {
-
     },
     "Work" : {
       "extractionState" : "stale",

@@ -31,11 +31,11 @@ struct POIMediaView: View {
                             .resizable()
                             .scaledToFit()
                             .scaledToFill()
-                            .frame(width: 160, height: 140)
+                            .frame(width: 96, height: 96)
                     } placeholder: {
                         ProgressView()
                             .progressViewStyle(.automatic)
-                            .frame(width: 160, height: 140)
+                            .frame(width: 96, height: 96)
                             .background(.secondary)
                             .cornerRadius(10)
                     }

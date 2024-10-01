@@ -9,6 +9,7 @@
 import BackendService
 import Foundation
 import OSLog
+import PhoneNumberKit
 import SwiftUI
 
 // MARK: - LoginStore
@@ -37,7 +38,7 @@ class LoginStore {
 
     var loginId: String = ""
     var otpResendDuration = Date()
-
+    var errorMessage: String = ""
     var userInput: UserInput = .phone
     var email: String = ""
     var phone: String = ""
@@ -49,6 +50,9 @@ class LoginStore {
     var path = NavigationPath()
     var userLoggedIn: Bool = false
 
+    var isRunningRequest: Bool = false
+
+    private let phoneNumberKit = PhoneNumberKit()
     private var registrationService = RegistrationService()
 
     // MARK: Computed Properties
@@ -59,6 +63,29 @@ class LoginStore {
             return self.phone.isEmpty
         case .email:
             return self.email.isEmpty
+        }
+    }
+
+    var isPhoneNumberValid: Bool {
+        do {
+            _ = try self.phoneNumberKit.parse(self.phone)
+            self.errorMessage = ""
+            return true
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    var isEmailValid: Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        if emailPredicate.evaluate(with: self.email) {
+            self.errorMessage = ""
+            return true
+        } else {
+            self.errorMessage = "Invalid Email"
+            return false
         }
     }
 
@@ -94,6 +121,11 @@ class LoginStore {
     }
 
     func login(inputText: String) async {
+        self.isRunningRequest = true
+        defer {
+            self.isRunningRequest = false
+        }
+
         do {
             let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
             let response = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
@@ -105,7 +137,7 @@ class LoginStore {
             // Navigate to OTP View
             self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
         } catch {
-            Logger.userRegistration.error("\(error.localizedDescription)")
+            self.errorMessage = error.localizedDescription.description
         }
     }
 }
