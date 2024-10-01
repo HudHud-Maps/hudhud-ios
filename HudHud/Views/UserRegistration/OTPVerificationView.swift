@@ -74,6 +74,7 @@ struct OTPVerificationView: View {
                             .frame(height: 50)
                             .hudhudFont(.title3)
                             .background(self.bottomBorder(for: index), alignment: .bottom)
+                            .disabled(index > 0 && self.store.code[index - 1].isEmpty)
                             .onChange(of: self.store.code[index]) { oldCode, newCode in
                                 self.handleCode(oldCode, newCode, at: index)
                             }
