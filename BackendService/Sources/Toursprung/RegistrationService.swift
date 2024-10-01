@@ -45,11 +45,11 @@ public struct RegistrationService {
             case let .json(jsonResponse):
                 guard
                     let id = jsonResponse.data.value1.id,
-                    let loginIdentity = jsonResponse.data.value1.login_identity,
+                    let loginIdentity = jsonResponse.data.value1.id,
                     let canRequestOtpResendAt = jsonResponse.data.value1.can_request_otp_resend_at else {
                     throw HudHudClientError.internalServerError("login failed")
                 }
-                return RegistrationResponse(id: id, loginIdentity: loginIdentity, canRequestOtpResendAt: self.date(from: canRequestOtpResendAt))
+                return RegistrationResponse(id: id, loginIdentity: loginIdentity, canRequestOtpResendAt: canRequestOtpResendAt)
             }
         case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {
@@ -61,12 +61,6 @@ public struct RegistrationService {
         case let .badRequest(error):
             throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
         }
-    }
-
-    func date(from canRequestOtpResendAt: String) -> Date {
-        let dateFormatter = ISO8601DateFormatter()
-        // If parsing fails, return a date that is 30 seconds from now
-        return dateFormatter.date(from: canRequestOtpResendAt) ?? Date().addingTimeInterval(30)
     }
 }
 
