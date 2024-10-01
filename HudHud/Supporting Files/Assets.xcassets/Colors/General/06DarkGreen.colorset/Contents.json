@@ -1,56 +1,56 @@
 {
-  "colors": [
+  "colors" : [
     {
-      "color": {
-        "color-space": "srgb",
-        "components": {
-          "alpha": "1.000",
-          "blue": "0.255",
-          "green": "0.247",
-          "red": "0.098"
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.314",
+          "green" : "0.510",
+          "red" : "0.071"
         }
       },
-      "idiom": "universal"
+      "idiom" : "universal"
     },
     {
-      "appearances": [
+      "appearances" : [
         {
-          "appearance": "luminosity",
-          "value": "light"
+          "appearance" : "luminosity",
+          "value" : "light"
         }
       ],
-      "color": {
-        "color-space": "srgb",
-        "components": {
-          "alpha": "1.000",
-          "blue": "0.255",
-          "green": "0.247",
-          "red": "0.098"
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.314",
+          "green" : "0.510",
+          "red" : "0.071"
         }
       },
-      "idiom": "universal"
+      "idiom" : "universal"
     },
     {
-      "appearances": [
+      "appearances" : [
         {
-          "appearance": "luminosity",
-          "value": "dark"
+          "appearance" : "luminosity",
+          "value" : "dark"
         }
       ],
-      "color": {
-        "color-space": "srgb",
-        "components": {
-          "alpha": "1.000",
-          "blue": "0.255",
-          "green": "0.247",
-          "red": "0.098"
+      "color" : {
+        "color-space" : "srgb",
+        "components" : {
+          "alpha" : "1.000",
+          "blue" : "0.314",
+          "green" : "0.510",
+          "red" : "0.071"
         }
       },
-      "idiom": "universal"
+      "idiom" : "universal"
     }
   ],
-  "info": {
-    "author": "color2code-xcode-exporter",
-    "version": 1
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
   }
 }
