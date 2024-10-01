@@ -82,10 +82,9 @@ struct RootSheetView: View {
                             try? await self.notificationManager.requestAuthorization()
                         }
                     } onDismiss: {
-                        self.searchViewStore.mapStore.clearItems()
-                        self.searchViewStore.searchText = ""
+                        self.searchViewStore.mapStore.clearItems(clearResults: false)
                         if !self.mapViewStore.path.isEmpty {
-                            self.mapViewStore.path.removeLast()
+                            self.mapViewStore.path = NavigationPath()
                         }
                     }
                     .navigationBarBackButtonHidden()

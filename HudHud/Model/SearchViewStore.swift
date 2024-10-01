@@ -154,7 +154,8 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String) async {
+
+    func fetch(category: String, enterSearch: Bool? = false) async {
         self.loadingInstance.state = .initialLoading
         self.startFetchingResultsTimer()
         self.searchType = .categories
@@ -168,6 +169,7 @@ final class SearchViewStore: ObservableObject {
             let userLocation = self.mapStore.mapView?.centerCoordinate
             let items = try await hudhud.items(
                 for: category,
+                enterSearch: enterSearch ?? false,
                 topRated: self.filterStore.topRated,
                 priceRange: self.filterStore.priceSelection.hudHudPriceRange,
                 sortBy: self.filterStore.sortSelection.hudHudSortBy,

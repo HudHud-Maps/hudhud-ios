@@ -11,6 +11,8 @@ import MapKit
 import MapLibreSwiftUI
 import SwiftUI
 
+// MARK: - RecentSearchResultsView
+
 struct RecentSearchResultsView: View {
 
     // MARK: Properties
@@ -90,16 +92,25 @@ struct RecentSearchResultsView: View {
     }
 }
 
-#Preview("EditFavoritesFormView") {
-    let item: ResolvedItem = .artwork
-    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
-    @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
-    @State var editFormViewIsShown = true
-    @StateObject var favoritesStore = FavoritesStore()
-    return NavigationStack {
-        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
-            .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
-            }
+// MARK: - EditFavoritesFormViewPreview
+
+struct EditFavoritesFormViewPreview: PreviewProvider {
+
+    static var previews: some View {
+        let item = ResolvedItem.artwork
+        let favoriteItem = FavoritesItem(id: UUID(),
+                                         title: item.title,
+                                         tintColor: .personalShopping,
+                                         item: item,
+                                         type: item.category ?? "")
+        let favoritesStore = FavoritesStore()
+
+        return NavigationStack {
+            RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+                .navigationDestination(isPresented: .constant(true)) {
+                    EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+                }
+        }
+        .previewDisplayName("EditFavoritesFormView")
     }
 }

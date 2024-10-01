@@ -74,7 +74,7 @@ struct SearchSheet: View {
                         )
                         .onSubmit {
                             Task {
-                                await self.searchStore.fetchEnterResults()
+                                await self.searchStore.fetch(category: self.searchStore.searchText, enterSearch: true)
                             }
                         }
                         .padding(.horizontal, 10)
@@ -136,10 +136,13 @@ struct SearchSheet: View {
                         ForEach(self.mapStore.displayableItems) { item in
                             switch item {
                             case let .categoryItem(item):
-                                CategoryItemView(item: item) {
+                                Button(action: {
                                     self.mapStore.select(item, shouldFocusCamera: true)
-                                }
-                                .listRowSeparator(.hidden)
+                                }, label: {
+                                    SearchResultView(item: item) {
+                                        self.mapStore.select(item, shouldFocusCamera: true)
+                                    }
+                                })
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
@@ -229,7 +232,7 @@ struct SearchSheet: View {
 
 // MARK: - Route + Identifiable
 
-extension Route: Identifiable {}
+extension Route: @retroactive Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [
@@ -244,7 +247,7 @@ extension SearchSheet {
 
 // MARK: - RawRepresentable + RawRepresentable
 
-extension [ResolvedItem]: RawRepresentable {
+extension [ResolvedItem]: @retroactive RawRepresentable {
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
               let result = try? JSONDecoder()
