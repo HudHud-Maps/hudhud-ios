@@ -49,7 +49,11 @@ struct UserLoginView: View {
                         .focused(self.$isFocused)
                         .keyboardType(self.keyboardTypeForInput)
                         .onChange(of: self.bindingForInput.wrappedValue) { _, _ in
-                            self.loginStore.errorMessage = ""
+                            if self.loginStore.userInput == .phone {
+                                _ = self.loginStore.isPhoneNumberValid
+                            } else {
+                                self.loginStore.errorMessage = ""
+                            }
                         }
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {

@@ -9,6 +9,7 @@
 import BackendService
 import Foundation
 import OSLog
+import PhoneNumberKit
 import SwiftUI
 
 // MARK: - LoginStore
@@ -46,6 +47,7 @@ class LoginStore {
     var birthday = Date()
     var path = NavigationPath()
 
+    private let phoneNumberKit = PhoneNumberKit()
     private var registrationService = RegistrationService()
 
     // MARK: Computed Properties
@@ -53,9 +55,20 @@ class LoginStore {
     var isInputEmpty: Bool {
         switch self.userInput {
         case .phone:
-            return self.phone.isEmpty || self.phone == "+"
+            return self.phone.isEmpty || !self.isPhoneNumberValid
         case .email:
             return self.email.isEmpty
+        }
+    }
+
+    var isPhoneNumberValid: Bool {
+        do {
+            let _ = try phoneNumberKit.parse(self.phone)
+            self.errorMessage = ""
+            return true
+        } catch {
+            self.errorMessage = error.localizedDescription
+            return false
         }
     }
 
