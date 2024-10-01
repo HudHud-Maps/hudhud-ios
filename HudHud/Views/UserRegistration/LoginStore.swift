@@ -63,11 +63,23 @@ class LoginStore {
 
     var isPhoneNumberValid: Bool {
         do {
-            let _ = try phoneNumberKit.parse(self.phone)
+            _ = try self.phoneNumberKit.parse(self.phone)
             self.errorMessage = ""
             return true
         } catch {
             self.errorMessage = error.localizedDescription
+            return false
+        }
+    }
+
+    var isEmailValid: Bool {
+        let emailRegex = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailPredicate = NSPredicate(format: "SELF MATCHES %@", emailRegex)
+        if emailPredicate.evaluate(with: self.email) {
+            self.errorMessage = ""
+            return true
+        } else {
+            self.errorMessage = "Invalid Email"
             return false
         }
     }
