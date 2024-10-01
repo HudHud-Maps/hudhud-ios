@@ -168,14 +168,21 @@ struct OTPVerificationView: View {
 
     private func handleCode(_ oldCode: String, _ newCode: String, at index: Int) {
         var cleanedCode = newCode
-
-        if newCode.count > oldCode.count {
-            let newCharacter = newCode.filter { !oldCode.contains($0) }
-            cleanedCode = String(newCharacter)
+        // code from SMS
+        if newCode.count == 6 {
+            // Assign each digit to the code array
+            for (i, digit) in newCode.enumerated() {
+                self.store.code[i] = String(digit)
+            }
+            self.focusedIndex = nil
         }
 
-        self.store.code[index] = cleanedCode
+        if newCode.count > oldCode.count, newCode.count == 2, self.focusedIndex != nil {
+            let newCharacter = newCode.filter { !oldCode.contains($0) }
+            cleanedCode = String(newCharacter)
 
+            self.store.code[index] = cleanedCode
+        }
         if !cleanedCode.isEmpty, index < 5 {
             self.focusedIndex = index + 1
         } else if cleanedCode.isEmpty, index > 0 {
