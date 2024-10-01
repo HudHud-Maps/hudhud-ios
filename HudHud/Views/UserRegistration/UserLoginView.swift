@@ -114,6 +114,11 @@ struct UserLoginView: View {
                 }
             }
         }
+        .onChange(of: self.loginStore.userLoggedIn) { _, _ in
+            if self.loginStore.userLoggedIn {
+                self.dismiss()
+            }
+        }
     }
 }
 

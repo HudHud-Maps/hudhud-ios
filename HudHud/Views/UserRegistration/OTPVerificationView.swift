@@ -17,6 +17,8 @@ struct OTPVerificationView: View {
 
     @Binding var path: NavigationPath
 
+    @Environment(\.dismiss) var dismiss
+
     @State private var store: OTPVerificationStore
     @FocusState private var focusedIndex: Int?
     private let loginStore: LoginStore
@@ -72,13 +74,13 @@ struct OTPVerificationView: View {
                             .frame(height: 50)
                             .hudhudFont(.title3)
                             .background(self.bottomBorder(for: index), alignment: .bottom)
-                            .onChange(of: self.store.code[index]) { _, newCode in
-                                self.handleCode(newCode, at: index)
+                            .onChange(of: self.store.code[index]) { oldCode, newCode in
+                                self.handleCode(oldCode, newCode, at: index)
                             }
                             .onSubmit {
                                 if index == 5, self.store.isCodeComplete {
                                     Task {
-                                        await self.store.verifyOTPIfComplete()
+                                        await self.store.verifyOTP()
                                     }
                                 }
                             }
@@ -94,7 +96,7 @@ struct OTPVerificationView: View {
             if let errorMessage = store.errorMessage {
                 Text(errorMessage)
                     .foregroundColor(.red)
-                    .font(.body)
+                    .hudhudFont()
                     .padding(10)
             }
 
@@ -116,11 +118,12 @@ struct OTPVerificationView: View {
                 .padding(.bottom)
                 Button {
                     Task {
-                        await self.store.verifyOTPIfComplete()
+                        await self.store.verifyOTP()
                     }
                 } label: {
                     if self.store.isLoading {
                         ProgressView()
+                        Text("Verify")
                     } else {
                         Text("Verify")
                     }
@@ -141,7 +144,11 @@ struct OTPVerificationView: View {
             .onChange(of: self.store.isCodeComplete) { _, _ in
                 if self.store.isCodeComplete {
                     Task {
-                        await self.store.verifyOTPIfComplete()
+                        await self.store.verifyOTP()
+                        if self.store.userLoggedIn {
+                            self.loginStore.userLoggedIn = true
+                            self.dismiss()
+                        }
                     }
                 }
             }
@@ -152,51 +159,37 @@ struct OTPVerificationView: View {
     private func bottomBorder(for index: Int) -> some View {
         Rectangle()
             .frame(height: 2)
-            .foregroundColor(self.focusedIndex == index ? Color.Colors.General._07BlueMain : Color.Colors.General._04GreyForLines)
+            .foregroundColor(self.store.errorMessage != nil ? Color.Colors.General._12Red :
+                (self.focusedIndex == index ? Color.Colors.General._10GreenMain : Color.Colors.General._04GreyForLines))
             .padding(.top, 8)
     }
 
     // MARK: Functions
 
-    private func handleCode(_ newCode: String, at index: Int) {
-        // Check if the filtered digits count exactly 6 digits ..it mean the new code is from SMS message
-        if newCode.count == 6 {
-            // Assign each digit to the code array
-            for (i, digit) in newCode.enumerated() {
-                self.store.code[i] = String(digit)
-            }
-            // Clear focus from all text fields and the keyboard will be dismissed
+    private func handleCode(_ oldCode: String, _ newCode: String, at index: Int) {
+        var cleanedCode = newCode
+
+        if newCode.count > oldCode.count {
+            let newCharacter = newCode.filter { !oldCode.contains($0) }
+            cleanedCode = String(newCharacter)
+        }
+
+        self.store.code[index] = cleanedCode
+
+        if !cleanedCode.isEmpty, index < 5 {
+            self.focusedIndex = index + 1
+        } else if cleanedCode.isEmpty, index > 0 {
+            self.focusedIndex = index - 1
+        }
+
+        if self.store.isCodeComplete {
             self.focusedIndex = nil
-        } else {
-            if newCode.isEmpty {
-                if index > 0 {
-                    self.focusedIndex = index - 1
-                }
-            } else {
-                // Update the code with the digits entered
-                self.store.code[index] = newCode
-                // If the user entered more than 1 digit..remove the first one
-                if newCode.count > 1 {
-                    self.store.code[index].removeFirst()
-                } else {
-                    if newCode.isEmpty {
-                        if index > 0 {
-                            self.focusedIndex = index - 1
-                        }
-                    } else if index < 5 {
-                        self.focusedIndex = index + 1
-                    }
-                }
-                // If the code is complete.. clear focus from all fields and the keyboard will be dismissed
-                self.focusedIndex = self.store.isCodeComplete ? nil : index
-            }
         }
     }
-
 }
 
 #Preview {
     @Previewable @State var path = NavigationPath()
-    var loginStore = LoginStore()
+    let loginStore = LoginStore()
     return OTPVerificationView(loginId: UUID().uuidString, loginIdentity: "+966503539560", duration: .now, path: $path, loginStore: loginStore)
 }

@@ -24,6 +24,7 @@ class OTPVerificationStore {
     var errorMessage: String?
     var verificationSuccessful: Bool = false
     var isLoading: Bool = false
+    var userLoggedIn: Bool = false
 
     private var registrationService = RegistrationService()
 
@@ -79,7 +80,7 @@ class OTPVerificationStore {
         }
     }
 
-    func verifyOTP(otp: String) async {
+    func verifyOTP() async {
         guard self.isCodeComplete else {
             self.errorMessage = "Please enter the complete verification code."
             return
@@ -91,26 +92,16 @@ class OTPVerificationStore {
         defer { isLoading = false }
 
         do {
-            try await self.registrationService.verifyOTP(loginId: self.loginId, otp: otp, baseURL: DebugStore().baseURL)
+            let fullCode = self.code.joined()
+            try await self.registrationService.verifyOTP(loginId: self.loginId, otp: fullCode, baseURL: DebugStore().baseURL)
 
             self.verificationSuccessful = true
+            self.userLoggedIn = true
             Logger.userRegistration.info("OTP verified successfully.")
 
         } catch {
             self.errorMessage = "An error occurred during verification. Please check your OTP code and try again."
             Logger.userRegistration.error("OTP verification failed: \(error.localizedDescription)")
-        }
-    }
-
-    func verifyOTPIfComplete() async {
-        guard self.isCodeComplete else { return }
-
-        let fullCode = self.code.joined()
-        await self.verifyOTP(otp: fullCode)
-        if self.verificationSuccessful {
-            Logger.userRegistration.info("Code is valid: \(fullCode)")
-        } else {
-            Logger.userRegistration.info("Code is invalid: \(fullCode)")
         }
     }
 

@@ -47,6 +47,7 @@ class LoginStore {
     var gender: String = ""
     var birthday = Date()
     var path = NavigationPath()
+    var userLoggedIn: Bool = false
 
     private var registrationService = RegistrationService()
 
