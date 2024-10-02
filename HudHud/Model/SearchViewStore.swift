@@ -154,7 +154,6 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-
     func fetch(category: String, enterSearch: Bool? = false) async {
         self.loadingInstance.state = .initialLoading
         self.startFetchingResultsTimer()
