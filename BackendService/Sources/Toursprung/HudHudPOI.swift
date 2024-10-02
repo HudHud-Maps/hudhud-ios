@@ -28,6 +28,7 @@ enum OpenAPIClientError: Error {
 enum HudHudClientError: Error {
     case poiIDNotFound
     case internalServerError(String)
+    case unprocessableContent(String)
     case badRequest(String)
     case unauthorized(String)
     case notFound(String)
