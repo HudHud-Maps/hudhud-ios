@@ -118,7 +118,7 @@ class LoginStore {
         }
 
         do {
-            let loginInput = self.userInput == .phone ? inputText.replacingOccurrences(of: " ", with: "") : inputText
+            let loginInput = inputText.replacingOccurrences(of: " ", with: "")
             let response = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
 
             // Extract loginIdentity and duration from response
