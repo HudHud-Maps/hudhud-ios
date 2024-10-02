@@ -113,13 +113,15 @@ struct ContentView: View {
                 mapControlInsets: self.mapControlInsets
             )
             .task {
-                do {
-                    let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
-                    self.mapLayerStore.hudhudMapLayers = mapLayers
-                    self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
-                } catch {
-                    self.mapLayerStore.hudhudMapLayers = nil
-                    Logger.searchView.error("\(error.localizedDescription)")
+                await refreshMapLayers()
+            }
+            .onReceive(
+                NotificationCenter
+                    .default
+                    .publisher(for: UIApplication.willEnterForegroundNotification)
+            ) { _ in
+                Task {
+                    await refreshMapLayers()
                 }
             }
             .task {
@@ -256,9 +258,9 @@ struct ContentView: View {
             }
         }
     }
+}
 
-    // MARK: Functions
-
+private extension ContentView {
     func reloadPOITrending() async {
         do {
             let currentUserLocation = self.mapStore.mapView?.userLocation?.coordinate
@@ -267,6 +269,17 @@ struct ContentView: View {
         } catch {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
+        }
+    }
+
+    func refreshMapLayers() async {
+        do {
+            let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
+            self.mapLayerStore.hudhudMapLayers = mapLayers
+            self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
+        } catch {
+            self.mapLayerStore.hudhudMapLayers = nil
+            Logger.searchView.error("Map layers fetching failed due to: \(error.localizedDescription)")
         }
     }
 }
