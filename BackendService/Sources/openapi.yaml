@@ -722,6 +722,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
     delete:
       tags:
         - User Profile
@@ -747,6 +749,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
     patch:
       tags:
         - User Profile
@@ -779,6 +783,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
       x-codegen-request-body-name: request
   /u/refresh-token:
     post:
@@ -813,6 +819,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
       x-codegen-request-body-name: request
 components:
   schemas:
@@ -1496,6 +1504,9 @@ components:
         mobile:
           type: string
           description: MobileNumber is the identity for the user during the login one of Email or MobileNumber has to be present
+        profile_picture_url:
+          type: string
+          format: uri
         user_id:
           type: string
           description: UserID the unique identifier for the user
@@ -1577,4 +1588,10 @@ components:
           type: integer
         start:
           type: integer
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      description: 'JWT Bearer token for authentication. Example: "Bearer <token>"'
+      name: Authorization
+      in: header
 x-original-swagger-version: "2.0"
