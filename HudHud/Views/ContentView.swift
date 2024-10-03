@@ -19,12 +19,6 @@ import SimpleToast
 import SwiftUI
 import TouchVisualizer
 
-// MARK: - SheetSubView
-
-enum SheetSubView: Hashable, Codable {
-    case mapStyle, debugView, navigationAddSearchView, favorites, navigationPreview
-}
-
 // MARK: - ContentView
 
 @MainActor
