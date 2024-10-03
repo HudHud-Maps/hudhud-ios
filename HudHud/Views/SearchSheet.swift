@@ -23,7 +23,7 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
-    @Bindable var mapViewStore: MapViewStore
+    @Bindable var sheetStore: SheetStore
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
 
@@ -31,11 +31,11 @@ struct SearchSheet: View {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
-        self.mapViewStore = mapViewStore
+        self.sheetStore = sheetStore
         self.searchIsFocused = false
     }
 
@@ -183,7 +183,7 @@ struct SearchSheet: View {
                 } else {
                     if self.searchStore.searchType != .favorites {
                         SearchSectionView(title: "Favorites") {
-                            FavoriteCategoriesView(mapViewStore: self.mapViewStore, searchStore: self.searchStore)
+                            FavoriteCategoriesView(sheetStore: self.sheetStore, searchStore: self.searchStore)
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                         .listRowSeparator(.hidden)
@@ -200,7 +200,7 @@ struct SearchSheet: View {
                         RecentSearchResultsView(
                             searchStore: self.searchStore,
                             searchType: self.searchStore.searchType,
-                            sheets: self.$mapViewStore.sheets
+                            sheets: self.$sheetStore.sheets
                         )
                     }
                     .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
@@ -264,5 +264,5 @@ extension [ResolvedItem]: RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing)
+    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing)
 }

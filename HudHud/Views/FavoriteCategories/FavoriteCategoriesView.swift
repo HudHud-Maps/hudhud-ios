@@ -16,7 +16,7 @@ struct FavoriteCategoriesView: View {
 
     // MARK: Properties
 
-    var mapViewStore: MapViewStore
+    var sheetStore: SheetStore
     let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
@@ -39,7 +39,7 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
                 Button("Add") {
-                    self.mapViewStore.sheets
+                    self.sheetStore.sheets
                         .append(SheetViewData(viewData: .favoritesViewMore))
                 }
                 .hudhudFont(size: 12, fontWeight: .medium)
@@ -62,7 +62,7 @@ struct FavoriteCategoriesView: View {
                 NavigationLink {
                     FavoritesViewMoreView(
                         searchStore: .storeSetUpForPreviewing,
-                        mapViewStore: .storeSetUpForPreviewing,
+                        sheetStore: .storeSetUpForPreviewing,
                         favoritesStore: .storeSetUpForPreviewing
                     )
                 } label: {
@@ -79,7 +79,7 @@ struct FavoriteCategoriesView: View {
                     }
                 }
             }
-            FavoriteCategoriesView(mapViewStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
         }
         .padding()
     }

@@ -227,5 +227,9 @@ private extension POIDetailSheet {
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     searchViewStore.mapStore.selectedItem = .artwork
-    return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: searchViewStore,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: .storeSetUpForPreviewing
+    )
 }

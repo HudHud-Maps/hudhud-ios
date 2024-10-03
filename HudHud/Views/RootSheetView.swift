@@ -21,7 +21,7 @@ struct RootSheetView: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
-    @Bindable var mapViewStore: MapViewStore
+    @Bindable var sheetStore: SheetStore
     @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
     @StateObject var favoritesStore = FavoritesStore()
@@ -31,20 +31,20 @@ struct RootSheetView: View {
     // MARK: Content
 
     var body: some View {
-        NavigationStack(path: self.$mapViewStore.sheets) {
+        NavigationStack(path: self.$sheetStore.sheets) {
             SearchSheet(mapStore: self.mapStore,
-                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
+                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore)
                 .background(Color(.Colors.General._05WhiteBackground))
                 .navigationDestination(for: SheetViewData.self) { value in
                     switch value.viewData {
                     case .mapStyle:
-                        MapLayersView(mapStore: self.mapStore, mapViewStore: self.mapViewStore, hudhudMapLayerStore: self.mapLayerStore)
+                        MapLayersView(mapStore: self.mapStore, sheetStore: self.sheetStore, hudhudMapLayerStore: self.mapLayerStore)
                             .navigationBarBackButtonHidden()
                             .presentationCornerRadius(21)
                     case .debugView:
                         DebugMenuView(debugSettings: self.debugStore)
                             .onDisappear(perform: {
-                                self.mapViewStore.reset()
+                                self.sheetStore.reset()
                             })
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:
@@ -52,26 +52,31 @@ struct RootSheetView: View {
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
                             let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                            let tempStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, mode: self.searchViewStore.mode)
+                            let tempStore = SearchViewStore(mapStore: freshMapStore, sheetStore: SheetStore(), routingStore: freshRoutingStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
                                 routingStore.add(item)
                             })
                             return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore).navigationBarBackButtonHidden()
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore).navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, mode: self.searchViewStore.mode)
-                            tempStore.searchType = .favorites
-                            return tempStore
+                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(
+                            mapStore: freshMapStore,
+                            sheetStore: self.sheetStore,
+                            routingStore: freshRoutingStore,
+                            mode: self.searchViewStore.mode
+                        )
+                        tempStore.searchType = .favorites
+                        return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore)
                     case .navigationPreview:
-                        NavigationSheetView(routingStore: self.searchViewStore.routingStore, mapViewStore: self.mapViewStore)
+                        NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
                             .navigationBarBackButtonHidden()
                             .presentationCornerRadius(21)
                     case let .pointOfInterest(item):
@@ -96,7 +101,7 @@ struct RootSheetView: View {
                     case .favoritesViewMore:
                         FavoritesViewMoreView(
                             searchStore: self.searchViewStore,
-                            mapViewStore: self.mapViewStore,
+                            sheetStore: self.sheetStore,
                             favoritesStore: self.favoritesStore
                         )
                     case let .editFavoritesForm(item, favoritesItem):
@@ -113,7 +118,7 @@ struct RootSheetView: View {
                         get: { self.searchViewStore.routingStore.navigationProgress == .feedback },
                         set: { _ in }
                     )) {
-                        RateNavigationView(mapViewStore: self.mapViewStore, selectedFace: { selectedFace in
+                        RateNavigationView(sheetStore: self.sheetStore, selectedFace: { selectedFace in
                             // selectedFace should be sent to backend along with detial of the route
                             self.searchViewStore.endTrip()
                             Logger.routing.log("selected Face of rating: \(selectedFace)")
@@ -126,12 +131,12 @@ struct RootSheetView: View {
                 }
              */
         }
-        .navigationTransition(self.mapViewStore.transition)
+        .navigationTransition(self.sheetStore.transition)
         .frame(minWidth: 320)
         .presentationCornerRadius(21)
         .presentationDetents(
-            self.mapViewStore.allowedDetents,
-            selection: self.$mapViewStore.selectedDetent
+            self.sheetStore.allowedDetents,
+            selection: self.$sheetStore.selectedDetent
         )
         .presentationBackgroundInteraction(.enabled)
         .interactiveDismissDisabled()
@@ -149,6 +154,9 @@ struct RootSheetView: View {
 }
 
 #Preview {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: .storeSetUpForPreviewing
+    )
 }

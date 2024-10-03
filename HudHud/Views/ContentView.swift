@@ -19,179 +19,6 @@ import SimpleToast
 import SwiftUI
 import TouchVisualizer
 
-// MARK: - SheetState
-
-/// this handles sheet states related to
-/// * the navigation path
-/// * the selected detent
-/// * the allowed detent
-struct SheetState: Hashable {
-
-    // MARK: Properties
-
-    var sheets: [SheetViewData] = []
-    var newSheetSelectedDetent: PresentationDetent?
-    var previousSheetSelectedDetent: PresentationDetent?
-//    var newSheetSelectedDetentAsCurrentSheetAllowedDetent: PresentationDetent?
-
-    private(set) var emptySheetSelectedDetent: PresentationDetent = .third
-
-    private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-
-    // MARK: Computed Properties
-
-    var selectedDetent: PresentationDetent {
-        get {
-            self.newSheetSelectedDetent ?? self.sheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        }
-
-        set {
-            if self.sheets.isEmpty {
-                self.emptySheetSelectedDetent = newValue
-            } else {
-                self.sheets[self.sheets.count - 1].selectedDetent = newValue
-            }
-        }
-    }
-
-    var allowedDetents: Set<PresentationDetent> {
-        get {
-            var allowedDetents = if self.sheets.isEmpty {
-                self.emptySheetAllowedDetents
-            } else {
-                self.sheets[self.sheets.count - 1].allowedDetents
-            }
-            if let previousSheetSelectedDetent {
-                allowedDetents.insert(previousSheetSelectedDetent)
-            }
-            if let newSheetSelectedDetent {
-                allowedDetents.insert(newSheetSelectedDetent)
-            }
-            return allowedDetents
-        }
-
-        set {
-            if self.sheets.isEmpty {
-                self.emptySheetAllowedDetents = newValue
-            } else {
-                self.sheets[self.sheets.count - 1].allowedDetents = newValue
-            }
-        }
-    }
-
-    var transition: AnyNavigationTransition {
-        self.sheets.last?.viewData.transition ?? .fade(.cross)
-    }
-}
-
-// MARK: - SheetViewData
-
-struct SheetViewData: Hashable {
-
-    // MARK: Nested Types
-
-    enum ViewData: Hashable {
-        case mapStyle
-        case debugView
-        case navigationAddSearchView
-        case favorites
-        case navigationPreview
-        case pointOfInterest(ResolvedItem)
-        case favoritesViewMore
-        case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
-
-        // MARK: Computed Properties
-
-        /// the allowed detents when the page is first presented, it can be changed later
-        var initialAllowedDetents: Set<PresentationDetent> {
-            switch self {
-            case .mapStyle:
-                [.medium]
-            case .debugView:
-                [.large]
-            case .navigationAddSearchView:
-                [.large]
-            case .favorites:
-                [.large]
-            case .navigationPreview:
-                [.height(150), .nearHalf]
-            case .pointOfInterest:
-                [.height(340), .large]
-            case .favoritesViewMore:
-                [.large]
-            case .editFavoritesForm:
-                [.large]
-            }
-        }
-
-        /// the selected detent when the page is first presented, it can be changed later
-        var initialSelectedDetent: PresentationDetent {
-            switch self {
-            case .mapStyle:
-                .medium
-            case .debugView:
-                .large
-            case .navigationAddSearchView:
-                .large
-            case .favorites:
-                .large
-            case .navigationPreview:
-                .nearHalf
-            case .pointOfInterest:
-                .height(340)
-            case .favoritesViewMore:
-                .large
-            case .editFavoritesForm:
-                .large
-            }
-        }
-
-        var transition: AnyNavigationTransition {
-            switch self {
-            case .editFavoritesForm:
-                .default
-            default:
-                .fade(.cross)
-            }
-        }
-    }
-
-    // MARK: Properties
-
-    let viewData: ViewData
-
-    private var cachedSelectedDetent: PresentationDetent?
-    private var cachedAllowedDetents: Set<PresentationDetent>?
-
-    // MARK: Computed Properties
-
-    var selectedDetent: PresentationDetent {
-        get {
-            self.cachedSelectedDetent ?? self.viewData.initialSelectedDetent
-        }
-
-        set {
-            self.cachedSelectedDetent = newValue
-        }
-    }
-
-    var allowedDetents: Set<PresentationDetent> {
-        get {
-            self.cachedAllowedDetents ?? self.viewData.initialAllowedDetents
-        }
-
-        set {
-            self.cachedAllowedDetents = newValue
-        }
-    }
-
-    // MARK: Lifecycle
-
-    init(viewData: ViewData) {
-        self.viewData = viewData
-    }
-}
-
 // MARK: - SheetSubView
 
 enum SheetSubView: Hashable, Codable {
@@ -218,14 +45,20 @@ struct ContentView: View {
     @ObservedObject private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
+    private let sheetStore: SheetStore
     private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore) {
+    init(
+        searchStore: SearchViewStore,
+        mapViewStore: MapViewStore,
+        sheetStore: SheetStore
+    ) {
         self.searchViewStore = searchStore
+        self.sheetStore = sheetStore
         self.mapStore = searchStore.mapStore
         self.userLocationStore = searchStore.mapStore.userLocationStore
         self.motionViewModel = searchStore.mapStore.motionViewModel
@@ -271,7 +104,7 @@ struct ContentView: View {
                             MapButtonsView(
                                 mapButtonsData: [
                                     MapButtonData(sfSymbol: .icon(.map)) {
-                                        self.mapViewStore.sheets.append(SheetViewData(viewData: .mapStyle))
+                                        self.sheetStore.sheets.append(SheetViewData(viewData: .mapStyle))
                                     },
                                     MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
                                         switch self.searchViewStore.mode {
@@ -292,7 +125,7 @@ struct ContentView: View {
                                         }
                                     },
                                     MapButtonData(sfSymbol: .icon(.terminal)) {
-                                        self.mapViewStore.sheets
+                                        self.sheetStore.sheets
                                             .append(
                                                 SheetViewData(viewData: .debugView)
                                             )
@@ -326,13 +159,13 @@ struct ContentView: View {
                             CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
-                    .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
+                    .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
                     .padding(.horizontal)
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$mapStore.searchShown) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetStore: self.sheetStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -357,7 +190,7 @@ struct ContentView: View {
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
-                        .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
+                        .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
             }
@@ -374,8 +207,8 @@ struct ContentView: View {
                     self.mapStore.searchShown = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
-            .onChange(of: self.mapViewStore.selectedDetent) {
-                if self.mapViewStore.selectedDetent == .small {
+            .onChange(of: self.sheetStore.selectedDetent) {
+                if self.sheetStore.selectedDetent == .small {
                     Task {
                         await self.reloadPOITrending()
                     }
@@ -438,13 +271,21 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview("Main Map") {
-    return ContentView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore()
+    )
 }
 
 #Preview("Touch Testing") {
     let store: SearchViewStore = .storeSetUpForPreviewing
     store.searchText = "shops"
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: store,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore()
+    )
 }
 
 #Preview("NavigationPreview") {
@@ -458,7 +299,11 @@ struct SizePreferenceKey: PreferenceKey {
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.selectedItem = poi
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: store,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore()
+    )
 }
 
 extension Binding where Value == Bool {
@@ -504,7 +349,7 @@ extension Binding where Value == Bool {
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing, sheetStore: SheetStore())
 }
 
 extension MapLayerIdentifier {

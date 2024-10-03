@@ -14,7 +14,7 @@ import SwiftUI
 struct MapLayersView: View {
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var mapStore: MapStore
-    var mapViewStore: MapViewStore
+    var sheetStore: SheetStore
     var hudhudMapLayerStore: HudHudMapLayerStore
 
     var body: some View {
@@ -31,8 +31,8 @@ struct MapLayersView: View {
                 }
                 Spacer()
                 Button {
-                    if !self.mapViewStore.sheets.isEmpty {
-                        self.mapViewStore.sheets.removeLast()
+                    if !self.sheetStore.sheets.isEmpty {
+                        self.sheetStore.sheets.removeLast()
                     }
                     self.dismiss()
                 } label: {
@@ -138,6 +138,10 @@ struct MapLayersView: View {
 
 #Preview {
     let hudhudMapLayerStore = HudHudMapLayerStore()
-    return MapLayersView(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, hudhudMapLayerStore: hudhudMapLayerStore)
-        .padding(.horizontal, 20)
+    return MapLayersView(
+        mapStore: .storeSetUpForPreviewing,
+        sheetStore: .storeSetUpForPreviewing,
+        hudhudMapLayerStore: hudhudMapLayerStore
+    )
+    .padding(.horizontal, 20)
 }

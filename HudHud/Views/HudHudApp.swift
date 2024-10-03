@@ -22,6 +22,7 @@ struct HudHudApp: App {
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
+    private let sheetStore: SheetStore
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
@@ -29,10 +30,14 @@ struct HudHudApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(searchStore: self.searchStore, mapViewStore: self.mapViewStore)
-                .onAppear {
-                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-                }
+            ContentView(
+                searchStore: self.searchStore,
+                mapViewStore: self.mapViewStore,
+                sheetStore: self.sheetStore
+            )
+            .onAppear {
+                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+            }
         }
     }
 
@@ -40,15 +45,20 @@ struct HudHudApp: App {
 
     init() {
         self.motionViewModel = .shared
+        self.sheetStore = SheetStore()
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .bestForNavigation
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
-        let mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
+        let mapViewStore = MapViewStore(
+            mapStore: self.mapStore,
+            routingStore: routingStore,
+            sheetStore: self.sheetStore
+        )
         self.mapViewStore = mapViewStore
         self.searchStore = SearchViewStore(
             mapStore: self.mapStore,
-            mapViewStore: mapViewStore,
+            sheetStore: self.sheetStore,
             routingStore: routingStore,
             mode: .live(provider: .hudhud)
         )

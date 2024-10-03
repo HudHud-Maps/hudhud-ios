@@ -78,7 +78,7 @@ final class SearchViewStore: ObservableObject {
 
     @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
 
-    private let mapViewStore: MapViewStore
+    private let sheetStore: SheetStore
 
     private var task: Task<Void, Error>?
     private var hudhud = HudHudPOI()
@@ -114,10 +114,15 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, mapViewStore: MapViewStore, routingStore: RoutingStore, mode: Mode) {
+    init(
+        mapStore: MapStore,
+        sheetStore: SheetStore,
+        routingStore: RoutingStore,
+        mode: Mode
+    ) {
         self.mapStore = mapStore
         self.routingStore = routingStore
-        self.mapViewStore = mapViewStore
+        self.sheetStore = sheetStore
         self.mode = mode
 
         self.bindSearchAutoComplete()
@@ -137,7 +142,7 @@ final class SearchViewStore: ObservableObject {
         case let .resolvedItem(item):
             await self.mapStore.resolve(item)
         case let .categoryItem(resolvedItem):
-            self.mapViewStore.selectedDetent = .third
+            self.sheetStore.selectedDetent = .third
             self.mapStore.selectedItem = resolvedItem
         case let .category(category):
             await self.fetch(category: category.name)
@@ -147,7 +152,7 @@ final class SearchViewStore: ObservableObject {
     }
 
     func resolve(item: DisplayableRow) async {
-        self.mapViewStore.selectedDetent = .third
+        self.sheetStore.selectedDetent = .third
         self.isSheetLoading = true
         defer { self.isSheetLoading = false }
         do {
@@ -163,13 +168,13 @@ final class SearchViewStore: ObservableObject {
                   let resolvedItem = firstItem.resolvedItem,
                   items.count == 1,
                   let resolvedItemIndex = self.mapStore.displayableItems.firstIndex(where: { $0.id == resolvedItem.id }) else {
-                self.mapViewStore.selectedDetent = .large
+                self.sheetStore.selectedDetent = .large
                 self.mapStore.displayableItems = items
                 return
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
             self.mapStore.selectedItem = resolvedItem
-            self.mapViewStore.selectedDetent = .third
+            self.sheetStore.selectedDetent = .third
         } catch {
             self.searchError = error
         }
@@ -198,7 +203,7 @@ final class SearchViewStore: ObservableObject {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
-        self.mapViewStore.selectedDetent = .third
+        self.sheetStore.selectedDetent = .third
 
         self.isSheetLoading = true
         defer { isSheetLoading = false }
@@ -222,7 +227,7 @@ final class SearchViewStore: ObservableObject {
         self.mapStore.selectedItem = nil
         self.mapStore.displayableItems = []
         self.searchText = ""
-        self.mapViewStore.reset()
+        self.sheetStore.reset()
     }
 
     func storeInRecent(_ item: ResolvedItem) {
@@ -249,7 +254,7 @@ private extension SearchViewStore {
         self.task = Task {
             defer { self.isSheetLoading = false }
             self.isSheetLoading = true
-            self.mapViewStore.selectedDetent = .third
+            self.sheetStore.selectedDetent = .third
 
             let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
             do {
@@ -261,7 +266,7 @@ private extension SearchViewStore {
                 }
                 self.searchError = nil
                 self.mapStore.displayableItems = result.items
-                self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {
+                self.sheetStore.selectedDetent = if provider == .hudhud, result.hasCategory {
                     .small // hudhud provider has coordinates in the response, so we can show the results in the map
                 } else {
                     .large // other providers do not return coordinates, so we show the result in a list in full page
@@ -306,5 +311,5 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, mode: .preview)
 }
