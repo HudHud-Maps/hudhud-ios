@@ -23,13 +23,13 @@ final class SheetStore {
 
     // MARK: Properties
 
-    var newSheetSelectedDetent: PresentationDetent?
-    var previousSheetSelectedDetent: PresentationDetent?
-
-    private(set) var emptySheetSelectedDetent: PresentationDetent = .third
+    private var newSheetSelectedDetent: PresentationDetent?
 
     private var _sheets: [SheetViewData] = []
+
+    // when `_sheets` is empty, we use these values
     private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    private var emptySheetSelectedDetent: PresentationDetent = .third
 
     // MARK: Computed Properties
 
@@ -61,13 +61,10 @@ final class SheetStore {
 
     var allowedDetents: Set<PresentationDetent> {
         get {
-            var allowedDetents = if self._sheets.isEmpty {
-                self.emptySheetAllowedDetents
+            var allowedDetents = if let lastIndex = self.sheets.indices.last {
+                self._sheets[lastIndex].allowedDetents
             } else {
-                self._sheets[self._sheets.count - 1].allowedDetents
-            }
-            if let previousSheetSelectedDetent {
-                allowedDetents.insert(previousSheetSelectedDetent)
+                self.emptySheetAllowedDetents
             }
             if let newSheetSelectedDetent {
                 allowedDetents.insert(newSheetSelectedDetent)
@@ -95,30 +92,15 @@ final class SheetStore {
     }
 
     // we do this to fix UI transition glitches
-    // the way the fix happens is by adding the new sheet's selected detent to
-    // the current selected & allowed detents, then wait for 100 ms
-    // the current selected & allowed detents, then wait for a little bit
-    // then apply the sheet transition
     private func setNewSheetsInAnAnimationFriendlyWay(newSheets: [SheetViewData]) async {
         guard self._sheets.count != newSheets.count else {
             self._sheets = newSheets
             return
         }
         self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+        try? await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
         self._sheets = newSheets
         self.newSheetSelectedDetent = nil
-    }
-
-    // needed to fix animation jumping sheet when transitioning
-    private func temporarilyAddLastSelectedDetent(previousSheets: [SheetViewData]) async {
-        guard self._sheets.count != previousSheets.count else {
-            return
-        }
-
-        self.previousSheetSelectedDetent = previousSheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        try? await Task.sleep(nanoseconds: 250 * NSEC_PER_MSEC)
-        self.previousSheetSelectedDetent = nil
     }
 }
 
