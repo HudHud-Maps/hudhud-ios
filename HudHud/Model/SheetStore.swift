@@ -204,34 +204,14 @@ struct SheetViewData: Hashable {
 
     let viewData: ViewData
 
-    private var cachedSelectedDetent: PresentationDetent?
-    private var cachedAllowedDetents: Set<PresentationDetent>?
-
-    // MARK: Computed Properties
-
-    var selectedDetent: PresentationDetent {
-        get {
-            self.cachedSelectedDetent ?? self.viewData.initialSelectedDetent
-        }
-
-        set {
-            self.cachedSelectedDetent = newValue
-        }
-    }
-
-    var allowedDetents: Set<PresentationDetent> {
-        get {
-            self.cachedAllowedDetents ?? self.viewData.initialAllowedDetents
-        }
-
-        set {
-            self.cachedAllowedDetents = newValue
-        }
-    }
+    var selectedDetent: PresentationDetent
+    var allowedDetents: Set<PresentationDetent>
 
     // MARK: Lifecycle
 
     init(viewData: ViewData) {
         self.viewData = viewData
+        self.selectedDetent = viewData.initialSelectedDetent
+        self.allowedDetents = viewData.initialAllowedDetents
     }
 }
