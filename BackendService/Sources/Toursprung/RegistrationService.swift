@@ -58,7 +58,9 @@ public struct RegistrationService {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .badRequest(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
+        case let .unprocessableContent(error):
+            throw try HudHudClientError.unprocessableContent(error.body.json.message)
         }
     }
 
@@ -116,7 +118,7 @@ public struct RegistrationService {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .badRequest(error):
-            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
+            throw try HudHudClientError.badRequest(error.body.json.message)
         case let .notFound(error):
             let errorMessage = try error.body.json.message
             throw HudHudClientError.notFound(errorMessage)
