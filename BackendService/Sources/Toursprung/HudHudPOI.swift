@@ -229,7 +229,8 @@ public struct HudHudPOI: POIServiceProtocol {
                                      rating: jsonResponse.data.value1.rating,
                                      ratingsCount: jsonResponse.data.value1.ratings_count,
                                      isOpen: jsonResponse.data.value1.is_open,
-                                     mediaURLs: mediaURLsList ?? [])]
+                                     mediaURLs: mediaURLsList ?? [],
+                                     priceRange: jsonResponse.data.value1.price_range)]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -324,7 +325,6 @@ public struct HudHudPOI: POIServiceProtocol {
             return body.data.map { item -> ResolvedItem in
                 let caseInsensitiveCategory = item.category.lowercased()
                 let resolvedPriceRange = PriceRange(rawValue: item.price_range ?? 0)
-
                 return ResolvedItem(
                     id: item.id,
                     title: item.name,

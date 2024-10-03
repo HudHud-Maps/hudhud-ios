@@ -35,6 +35,8 @@ struct POIDetailSheet: View {
 
     @EnvironmentObject var notificationQueue: NotificationQueue
 
+    let formatter = Formatters()
+
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
@@ -69,58 +71,41 @@ struct POIDetailSheet: View {
         ScrollView {
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
-                    VStack(spacing: 0.0) {
+                    VStack(alignment: .leading, spacing: 0.0) {
                         Text(self.item.title)
                             .hudhudFont(.title)
                             .foregroundStyle(Color.Colors.General._01Black)
                             .lineLimit(2)
                             .minimumScaleFactor(0.6)
                             .frame(maxWidth: .infinity, alignment: .leading)
-
-                        if let category = self.item.category {
-                            Text(category)
-                                .hudhudFont(.footnote)
-                                .foregroundStyle(Color.Colors.General._02Grey)
-                                .lineLimit(2)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.vertical, 6)
+                        self.categoryView
+                        HStack {
+                            self.ratingView
+                            self.priceRangeView
+                            self.accessibilityView
                         }
                         HStack {
-                            Text(self.item.subtitle ?? self.item.coordinate.formatted())
-                                .hudhudFont(.footnote)
-                                .foregroundStyle(Color.Colors.General._01Black)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(self.viewMore ? 3 : 1)
-                            if self.shouldShowButton {
-                                Button(self.viewMore ? "Read Less" : "Read More") {
-                                    self.viewMore.toggle()
-                                }
-                                .font(.footnote)
-                                .foregroundStyle(Color.Colors.General._07BlueMain)
-                            }
+                            self.openStatusView
+                            self.routeInformationView
                         }
-                        .fixedSize(horizontal: false, vertical: true)
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(self.item.category != nil ? .bottom : .vertical, 4)
                     }
-                    Button(action: {
+                    // Close Button
+                    Button {
                         self.dismiss()
                         self.onDismiss()
-                    }, label: {
+                    } label: {
                         ZStack {
                             Circle()
                                 .fill(Color.Colors.General._03LightGrey)
                                 .frame(width: 30, height: 30)
-
                             Image(.closeIcon)
                                 .font(.system(size: 15, weight: .bold, design: .rounded))
                         }
                         .padding(4)
                         .contentShape(Circle())
-                    })
+                    }
                     .tint(.secondary)
-                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                    .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
                 }
                 .padding([.top, .leading, .trailing], 20)
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -175,12 +160,7 @@ struct POIDetailSheet: View {
                     .padding(15)
                 }
                 .padding(.vertical, -15)
-                VStack {
-                    AdditionalPOIDetailsView(item: self.item, routes: self.routes)
-                        .fixedSize()
-                        .padding([.top, .trailing, .leading])
-                    POIMediaView(mediaURLs: self.item.mediaURLs)
-                }
+                POIMediaView(mediaURLs: self.item.mediaURLs)
             }
         }
         .alert(
@@ -200,6 +180,125 @@ struct POIDetailSheet: View {
         .onChange(of: self.item) { _, newItem in
             Task {
                 await self.calculateRoute(for: newItem)
+            }
+        }
+    }
+
+    private var categoryView: some View {
+        Group {
+            if let category = self.item.category {
+                HStack {
+                    Text(category)
+                        .hudhudFont(.footnote)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    if let subCategory = item.subCategory {
+                        Text("•")
+                            .hudhudFont(.footnote)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                        Text(subCategory)
+                            .hudhudFont(.footnote)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .padding(.vertical, 6)
+            }
+        }
+    }
+
+    private var ratingView: some View {
+        Group {
+            if let rating = self.item.rating {
+                HStack(spacing: 1) {
+                    Text("\(rating, specifier: "%.1f")")
+                        .hudhudFont(.headline)
+                        .foregroundStyle(Color.Colors.General._01Black)
+
+                    ForEach(1 ... 5, id: \.self) { index in
+                        Image(systemSymbol: .starFill)
+                            .font(.footnote)
+                            .foregroundColor(index <= Int(rating.rounded()) ? .Colors.General._13Orange : .Colors.General._04GreyForLines)
+                    }
+
+                    Text("•")
+                        .hudhudFont(.caption2)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+
+                    Text("(\(self.item.ratingsCount ?? 0))")
+                        .hudhudFont(.subheadline)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                }
+            } else {
+                Text("No ratings")
+                    .hudhudFont(.caption)
+                    .foregroundStyle(Color.Colors.General._02Grey)
+            }
+        }
+    }
+
+    private var priceRangeView: some View {
+        Group {
+            if let priceRangeValue = self.item.priceRange,
+               let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue) {
+                HStack {
+                    Text("•")
+                        .hudhudFont(.caption2)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                    Text(priceRange.displayValue)
+                        .hudhudFont(.subheadline)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                }
+            }
+        }
+    }
+
+    private var accessibilityView: some View {
+        Group {
+            if let wheelchairAccessible = self.item.isWheelchairAccessible {
+                HStack {
+                    Text("•")
+                        .hudhudFont(.caption2)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                    Image(systemSymbol: .figureRoll)
+                        .hudhudFont(.subheadline)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                }
+            }
+        }
+    }
+
+    private var openStatusView: some View {
+        Group {
+            if let isOpen = self.item.isOpen {
+                HStack {
+                    Text("\(isOpen ? "Open" : "Closed")")
+                        .hudhudFont(.subheadline)
+                        .foregroundStyle(isOpen ? Color(.Colors.General._06DarkGreen) : Color(.Colors.General._12Red))
+                    Text("•")
+                        .hudhudFont(.caption2)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                }
+            }
+        }
+    }
+
+    private var routeInformationView: some View {
+        Group {
+            if let route = routes?.routes.first {
+                HStack {
+                    Image(systemSymbol: .carFill)
+                        .hudhudFont(.caption2)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                    Text("\(self.formatter.formatDuration(duration: route.expectedTravelTime)) (\(self.formatter.formatDistance(distance: route.distance)))")
+                        .hudhudFont(.subheadline)
+                        .foregroundStyle(Color.Colors.General._02Grey)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                }
             }
         }
     }
@@ -231,6 +330,6 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.select(.artwork)
+    searchViewStore.mapStore.select(.ketchup)
     return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
 }
