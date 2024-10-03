@@ -258,7 +258,7 @@ struct POIDetailSheet: View {
 
     private var accessibilityView: some View {
         Group {
-            if let wheelchairAccessible = self.item.isWheelchairAccessible {
+            if let wheelchairAccessible = self.item.isWheelchairAccessible, wheelchairAccessible {
                 HStack {
                     Text("•")
                         .hudhudFont(.caption2)
