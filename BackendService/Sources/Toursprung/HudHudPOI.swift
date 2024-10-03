@@ -28,6 +28,7 @@ enum OpenAPIClientError: Error {
 enum HudHudClientError: Error {
     case poiIDNotFound
     case internalServerError(String)
+    case unprocessableContent(String)
     case badRequest(String)
     case unauthorized(String)
     case notFound(String)
@@ -241,7 +242,7 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -297,7 +298,7 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -353,9 +354,9 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         case let .badRequest(error):
-            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
+            throw try HudHudClientError.badRequest(error.body.json.message)
         }
     }
 
