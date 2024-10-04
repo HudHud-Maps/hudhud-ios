@@ -188,57 +188,61 @@ struct MapViewContainer: View {
                     .predicate(NSPredicate(format: "cluster != YES"))
                 }
 
-            } mapViewModifiersWhenNotNavigating: { content in
-                AnyView(
-                    content
+            } mapViewModifiers: { content, isNavigating in
+                if isNavigating {
+                    AnyView(content)
+                } else {
+                    AnyView(
+                        content
 
-                            .unsafeMapViewControllerModifier { mapViewController in
+                                .unsafeMapViewControllerModifier { mapViewController in
 
-                                mapViewController.mapView.locationManager = nil // if we don't do this, the user location puck is not shown at start up...
-                            }
+                                    mapViewController.mapView.locationManager = nil // if we don't do this, the user location puck is not shown at start up...
+                                }
 
-                            .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-                                /*
-                                 if self.searchViewStore.routingStore.navigationProgress == .feedback {
+                                .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
+                                    /*
+                                     if self.searchViewStore.routingStore.navigationProgress == .feedback {
                                      self.searchViewStore.endTrip()
                                      return
-                                 }
-                                  */
-                                self.mapViewStore.didTapOnMap(containing: features)
-                            }
-                            .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-                            //   .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
-                            .onStyleLoaded { style in
-                                self.mapStore.mapStyle = style
-                                self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
-                            }
-                            .onLongPressMapGesture(onPressChanged: { mapGesture in
-                                if self.searchViewStore.mapStore.selectedItem == nil {
-                                    let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                                    self.searchViewStore.mapStore.selectedItem = selectedItem
-                                    self.mapViewStore.selectedDetent = .third
+                                     }
+                                     */
+                                    self.mapViewStore.didTapOnMap(containing: features)
                                 }
-                            })
-                            .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
-                            .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
-                                if let route = newRoute {
-                                    let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
-                                    self.mapStore.camera = camera
+                                .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
+                                //   .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
+                                .onStyleLoaded { style in
+                                    self.mapStore.mapStyle = style
+                                    self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                                 }
-                            }
-                            .gesture(
-                                DragGesture()
-                                    .onChanged { _ in
-                                        if self.mapStore.trackingState != .none {
-                                            self.mapStore.trackingState = .none
-                                        }
+                                .onLongPressMapGesture(onPressChanged: { mapGesture in
+                                    if self.searchViewStore.mapStore.selectedItem == nil {
+                                        let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
+                                        self.searchViewStore.mapStore.selectedItem = selectedItem
+                                        self.mapViewStore.selectedDetent = .third
                                     }
-                            )
-                            .onAppear {
-                                self.userLocationStore.startMonitoringPermissions()
-                                self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
-                            }
-                )
+                                })
+                                .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
+                                .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
+                                    if let route = newRoute {
+                                        let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
+                                        self.mapStore.camera = camera
+                                    }
+                                }
+                                .gesture(
+                                    DragGesture()
+                                        .onChanged { _ in
+                                            if self.mapStore.trackingState != .none {
+                                                self.mapStore.trackingState = .none
+                                            }
+                                        }
+                                )
+                                .onAppear {
+                                    self.userLocationStore.startMonitoringPermissions()
+                                    self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
+                                }
+                    )
+                }
             }
             .innerGrid(
                 topCenter: {
