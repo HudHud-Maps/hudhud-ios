@@ -24,6 +24,7 @@ struct FavoritesViewMoreView: View {
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore = FavoritesStore()
+    @StateObject var filterStore = FilterStore()
 
     // MARK: Content
 
@@ -103,9 +104,9 @@ struct FavoritesViewMoreView: View {
     func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-        let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, mode: self.searchStore.mode)
+        let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, filterStore: filterStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites
-        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore(), mapViewStore: self.mapViewStore)
+        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore(), mapViewStore: self.mapViewStore, filterStore: self.filterStore)
     }
 }
 
@@ -116,7 +117,7 @@ struct FavoritesViewMoreView: View {
 }
 
 #Preview("testing title") {
-    @State var isLinkActive = true
+    @Previewable @State var isLinkActive = true
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {

@@ -26,7 +26,7 @@ struct MapViewContainer: View {
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @ObservedObject var mapViewStore: MapViewStore
-    var sheetSize: CGSize
+    @State var safeAreaInsets = UIEdgeInsets()
 
     @State private var didFocusOnUser = false
 
@@ -57,13 +57,11 @@ struct MapViewContainer: View {
         debugStore: DebugStore,
         searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore,
-        sheetSize: CGSize
+        mapViewStore: MapViewStore
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
-        self.sheetSize = sheetSize
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
 
@@ -194,53 +192,53 @@ struct MapViewContainer: View {
                 } else {
                     AnyView(
                         content
-
-                                .unsafeMapViewControllerModifier { mapViewController in
-
-                                    mapViewController.mapView.locationManager = nil // if we don't do this, the user location puck is not shown at start up...
+                            .unsafeMapViewControllerModifier { mapViewController in
+                                mapViewController.mapView.locationManager = nil
+                                mapViewController.mapView.compassViewMargins.y = 50
+                            }
+                            .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
+                                self.mapViewStore.didTapOnMap(containing: features)
+                            }
+                            .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
+                            .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
+                            .onStyleLoaded { style in
+                                self.mapStore.mapStyle = style
+                                self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
+                            }
+                            .onLongPressMapGesture(onPressChanged: { mapGesture in
+                                if self.searchViewStore.mapStore.selectedItem == nil {
+                                    let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
+                                    self.searchViewStore.mapStore.select(generatedPOI)
+                                    self.mapViewStore.selectedDetent = .third
                                 }
-
-                                .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-                                    /*
-                                     if self.searchViewStore.routingStore.navigationProgress == .feedback {
-                                     self.searchViewStore.endTrip()
-                                     return
-                                     }
-                                     */
-                                    self.mapViewStore.didTapOnMap(containing: features)
+                            })
+                            .mapControls {
+                                CompassView()
+                                LogoView()
+                                    .hidden(true)
+                                AttributionButton()
+                                    .hidden(true)
+                            }
+                            .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
+                                if let route = newRoute {
+                                    let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
+                                    self.mapStore.camera = camera
                                 }
-                                .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-                                //   .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
-                                .onStyleLoaded { style in
-                                    self.mapStore.mapStyle = style
-                                    self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
-                                }
-                                .onLongPressMapGesture(onPressChanged: { mapGesture in
-                                    if self.searchViewStore.mapStore.selectedItem == nil {
-                                        let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                                        self.searchViewStore.mapStore.selectedItem = selectedItem
-                                        self.mapViewStore.selectedDetent = .third
-                                    }
-                                })
-                                .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
-                                .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
-                                    if let route = newRoute {
-                                        let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
-                                        self.mapStore.camera = camera
-                                    }
-                                }
-                                .gesture(
-                                    DragGesture()
-                                        .onChanged { _ in
-                                            if self.mapStore.trackingState != .none {
-                                                self.mapStore.trackingState = .none
-                                            }
+                            }
+                            .gesture(
+                                DragGesture()
+                                    .onChanged { _ in
+                                        if self.mapStore.trackingState != .none {
+                                            self.mapStore.trackingState = .none
                                         }
-                                )
-                                .onAppear {
-                                    self.userLocationStore.startMonitoringPermissions()
-                                    self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
-                                }
+                                    }
+                            )
+                            .onAppear {
+                                self.userLocationStore.startMonitoringPermissions()
+                                guard !self.didFocusOnUser else { return }
+                                self.didFocusOnUser = true
+                                self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
+                            }
                     )
                 }
             }
@@ -278,17 +276,18 @@ struct MapViewContainer: View {
                             // The ferrostarCore.startNavigation will still start the location
                             // provider/simulator.
                             try simulated.setSimulatedRoute(route, resampleDistance: 5)
-                            print("DemoApp: setting route to be simulated")
                         }
 
                         // Starts the navigation state machine.
                         // It's worth having a look through the parameters,
                         // as most of the configuration happens here.
 
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                            print("Cam update...")
-                            self.mapStore.camera = .trackUserLocationWithCourse(zoom: 15, pitch: 45, pitchRange: .fixed(45))
-                        }
+                        /*
+                         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+                             print("updating camera...")
+                             self.mapStore.camera = .trackUserLocationWithCourse(zoom: 15, pitch: 45, pitchRange: .fixed(45))
+                         }
+                          */
                         try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
                         self.mapStore.searchShown = false
                     } catch {
@@ -300,9 +299,8 @@ struct MapViewContainer: View {
                 }
             }
             .task {
-                guard self.didFocusOnUser else { return }
+                guard !self.didFocusOnUser else { return }
                 self.didFocusOnUser = true
-                await self.mapStore.focusOnUser()
             }
         }
     }
@@ -311,17 +309,8 @@ struct MapViewContainer: View {
 
     // MARK: - Internal
 
-    func sheetPaddingSize() -> Double {
-        if self.sheetSize.height > 80 {
-            return 80
-        } else {
-            return self.sheetSize.height
-        }
-    }
-
     @MainActor
     func stopNavigation() {
-        print("Stopping navigation")
         self.searchViewStore.routingStore.ferrostarCore.stopNavigation()
         self.searchViewStore.routingStore.potentialRoute = nil
         self.searchViewStore.routingStore.navigatingRoute = nil
@@ -342,5 +331,5 @@ struct MapViewContainer: View {
 #Preview {
     @Previewable let mapStore: MapStore = .storeSetUpForPreviewing
     @Previewable let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(width: 80, height: 80))
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
 }

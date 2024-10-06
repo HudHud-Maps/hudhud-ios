@@ -41,7 +41,7 @@ struct POIDetailSheet: View {
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
-        return self.item.subtitle.count > maxCharacters
+        return (self.item.subtitle ?? self.item.coordinate.formatted()).count > maxCharacters
     }
 
     // MARK: Lifecycle
@@ -86,7 +86,7 @@ struct POIDetailSheet: View {
                                 .padding(.vertical, 6)
                         }
                         HStack {
-                            Text(self.item.subtitle)
+                            Text(self.item.subtitle ?? self.item.coordinate.formatted())
                                 .hudhudFont(.footnote)
                                 .foregroundStyle(Color.Colors.General._01Black)
                                 .multilineTextAlignment(.leading)
@@ -101,7 +101,7 @@ struct POIDetailSheet: View {
                         }
                         .fixedSize(horizontal: false, vertical: true)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.bottom, 4)
+                        .padding(self.item.category != nil ? .bottom : .vertical, 4)
                     }
                     Button(action: {
                         self.dismiss()
@@ -213,6 +213,10 @@ private extension POIDetailSheet {
             let routes = try await self.routingStore.calculateRoutes(for: item)
             self.routes = routes
         } catch let error as URLError {
+            if error.code == .cancelled {
+                // ignore cancelled errors
+                return
+            }
             // if the error is related to the user's internet connetion, display the error to the user
             let notification = Notification(error: error)
             self.notificationQueue.add(notification: notification)
@@ -226,6 +230,6 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.selectedItem = .artwork
+    searchViewStore.mapStore.select(.artwork)
     return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
 }

@@ -13,7 +13,7 @@ import SwiftUI
 
 class DebugStore: ObservableObject {
 
-    @AppStorage("routingHost") var routingHost: String = "gh.map.dev.hudhud.sa"
+    @AppStorage("routingHost") var routingHost: String = "gh-proxy.map.dev.hudhud.sa"
     @AppStorage("baseurl") var baseURL: String = "https://api.dev.hudhud.sa"
     @AppStorage("SFSymbolsMap") var customMapSymbols: Bool?
 

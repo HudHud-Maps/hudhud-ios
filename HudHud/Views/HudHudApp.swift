@@ -41,10 +41,10 @@ struct HudHudApp: App {
     init() {
         self.motionViewModel = .shared
         let location = Location() // swiftlint:disable:this location_usage
-        location.accuracy = .bestForNavigation
+        location.accuracy = .threeKilometers
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
         self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, mode: .live(provider: .hudhud))
+        self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
     }
 }

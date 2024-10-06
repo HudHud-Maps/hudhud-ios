@@ -20,12 +20,6 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Nested Types
 
-    enum FilterType {
-        case openNow
-        case topRated
-        case filter
-    }
-
     enum SearchType: Equatable {
 
         case selectPOI
@@ -70,6 +64,8 @@ final class SearchViewStore: ObservableObject {
     let mapStore: MapStore
     let routingStore: RoutingStore
     var apple = ApplePOI()
+    var progressViewTimer: Timer?
+    var loadingInstance = Loading()
 
     @Published var searchText: String = ""
     @Published var searchError: Error?
@@ -77,6 +73,8 @@ final class SearchViewStore: ObservableObject {
     @Published var searchType: SearchType = .selectPOI
 
     @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
+
+    @ObservedObject var filterStore: FilterStore
 
     private let mapViewStore: MapViewStore
 
@@ -86,38 +84,20 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Computed Properties
 
-    @Published var selectedFilter: FilterType? {
-        didSet {
-            switch self.selectedFilter {
-            case .openNow:
-                self.mapStore.displayableItems = self.mapStore.displayableItems.filter { $0.resolvedItem?.isOpen == true }
-            case .topRated:
-                Task {
-                    await self.fetch(category: self.searchText, topRated: true)
-                }
-            case .filter:
-                // Should open Filter sheet
-                Logger.searchView.debug("Filter Button Pressed")
-            case nil:
-                Logger.searchView.debug("No filter Required")
-            }
-        }
-    }
-
     @Published var mode: Mode {
         didSet {
             self.searchText = ""
-            self.mapStore.displayableItems = []
-            self.mapStore.selectedItem = nil
+            self.mapStore.clearItems()
         }
     }
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, mapViewStore: MapViewStore, routingStore: RoutingStore, mode: Mode) {
+    init(mapStore: MapStore, mapViewStore: MapViewStore, routingStore: RoutingStore, filterStore: FilterStore, mode: Mode) {
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.mapViewStore = mapViewStore
+        self.filterStore = filterStore
         self.mode = mode
 
         self.bindSearchAutoComplete()
@@ -126,11 +106,10 @@ final class SearchViewStore: ObservableObject {
             let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
+        self.bindFilterSearch()
     }
 
     // MARK: Functions
-
-    // MARK: - Internal
 
     func didSelect(_ item: DisplayableRow) async {
         switch item {
@@ -138,7 +117,7 @@ final class SearchViewStore: ObservableObject {
             await self.mapStore.resolve(item)
         case let .categoryItem(resolvedItem):
             self.mapViewStore.selectedDetent = .third
-            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.select(resolvedItem)
         case let .category(category):
             await self.fetch(category: category.name)
         case .predictionItem:
@@ -168,14 +147,16 @@ final class SearchViewStore: ObservableObject {
                 return
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
-            self.mapStore.selectedItem = resolvedItem
+            self.mapStore.select(resolvedItem, shouldFocusCamera: true)
             self.mapViewStore.selectedDetent = .third
         } catch {
             self.searchError = error
         }
     }
 
-    func fetch(category: String, topRated: Bool? = nil) async {
+    func fetch(category: String, enterSearch: Bool? = false) async {
+        self.loadingInstance.state = .initialLoading
+        self.startFetchingResultsTimer()
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -184,9 +165,28 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
-            let items = try await hudhud.items(for: category, topRated: topRated, location: userLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = items.map(DisplayableRow.categoryItem)
+            let currentUserLocation = await mapStore.userLocationStore.location(allowCached: true)
+            let items = try await hudhud.items(
+                for: category,
+                enterSearch: enterSearch ?? false,
+                topRated: self.filterStore.topRated,
+                priceRange: self.filterStore.priceSelection.hudHudPriceRange,
+                sortBy: self.filterStore.sortSelection.hudHudSortBy,
+                rating: Double(self.filterStore.ratingSelection.rawValue),
+                location: currentUserLocation?.coordinate,
+                baseURL: DebugStore().baseURL
+            )
+
+            var filteredItems = items
+            // Apply 'open now' filter locally
+            if self.filterStore.selectedFilters.contains(.openNow) {
+                filteredItems = filteredItems.filter { $0.isOpen == true }
+            }
+
+            let displayableItems = filteredItems.map(DisplayableRow.categoryItem)
+            self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
+            self.loadingInstance.resultIsEmpty = filteredItems.isEmpty
+            self.loadingInstance.state = .result
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -195,6 +195,9 @@ final class SearchViewStore: ObservableObject {
 
     // will called if the user pressed search in keyboard
     func fetchEnterResults() async {
+        self.loadingInstance.state = .initialLoading
+        self.startFetchingResultsTimer()
+
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -203,14 +206,17 @@ final class SearchViewStore: ObservableObject {
         self.isSheetLoading = true
         defer { isSheetLoading = false }
         do {
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
-            let results = try await self.hudhud.predict(term: self.searchText, coordinates: userLocation, baseURL: DebugStore().baseURL)
-            self.mapStore.displayableItems = results.items.compactMap { item in
+            let userLocation = await self.mapStore.userLocationStore.location(allowCached: true)
+            let results = try await self.hudhud.predict(term: self.searchText, coordinates: userLocation?.coordinate, baseURL: DebugStore().baseURL)
+            let items = results.items.compactMap { item in
                 if let resolvedItem = item.resolvedItem {
                     return DisplayableRow.categoryItem(resolvedItem)
                 }
                 return nil
             }
+            self.mapStore.replaceItemsAndFocusCamera(on: items)
+            self.loadingInstance.resultIsEmpty = results.items.isEmpty
+            self.loadingInstance.state = .result
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -219,8 +225,7 @@ final class SearchViewStore: ObservableObject {
 
     func endTrip() {
         self.routingStore.endTrip()
-        self.mapStore.selectedItem = nil
-        self.mapStore.displayableItems = []
+        self.mapStore.clearItems()
         self.searchText = ""
         self.mapViewStore.reset()
     }
@@ -233,6 +238,22 @@ final class SearchViewStore: ObservableObject {
             self.recentViewedItem.removeAll(where: { $0 == item })
         }
         self.recentViewedItem.insert(item, at: 0)
+    }
+
+    func startFetchingResultsTimer() {
+        // Invalidate any previous timers
+        self.progressViewTimer?.invalidate()
+
+        // Start the timer to show the Progress View after 0.2 seconds
+        self.progressViewTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] _ in
+            guard let self else { return }
+
+            Task { @MainActor in
+                if self.loadingInstance.state == .initialLoading, self.isSheetLoading {
+                    self.loadingInstance.state = .loading
+                }
+            }
+        }
     }
 }
 
@@ -247,20 +268,22 @@ private extension SearchViewStore {
             return
         }
         self.task = Task {
-            defer { self.isSheetLoading = false }
             self.isSheetLoading = true
+            defer { self.isSheetLoading = false }
             self.mapViewStore.selectedDetent = .third
 
-            let userLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let userLocation = await self.mapStore.userLocationStore.location(allowCached: true)
             do {
                 let result = switch provider {
                 case .apple:
-                    try await self.apple.predict(term: term, coordinates: userLocation, baseURL: "") // no need to send URL
+                    try await self.apple.predict(term: term, coordinates: userLocation?.coordinate, baseURL: "") // no need to send URL
                 case .hudhud:
-                    try await self.hudhud.predict(term: term, coordinates: userLocation, baseURL: DebugStore().baseURL)
+                    try await self.hudhud.predict(term: term, coordinates: userLocation?.coordinate, baseURL: DebugStore().baseURL)
                 }
+                self.loadingInstance.resultIsEmpty = result.items.isEmpty
+                self.loadingInstance.state = .result
                 self.searchError = nil
-                self.mapStore.displayableItems = result.items
+                self.mapStore.replaceItemsAndFocusCamera(on: result.items)
                 self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {
                     .small // hudhud provider has coordinates in the response, so we can show the results in the map
                 } else {
@@ -300,11 +323,23 @@ private extension SearchViewStore {
             }
             .store(in: &self.cancellables)
     }
+
+    func bindFilterSearch() {
+        self.filterStore.$selectedFilters
+            .sink { [weak self] _ in
+                guard let self else { return }
+                guard !self.searchText.isEmpty else { return }
+                Task {
+                    await self.fetch(category: self.searchText)
+                }
+            }
+            .store(in: &self.cancellables)
+    }
 }
 
 // MARK: - Previewable
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
 }

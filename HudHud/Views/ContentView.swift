@@ -34,6 +34,7 @@ struct ContentView: View {
 
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
+    @State var safeAreaInset = UIEdgeInsets()
 
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
@@ -70,8 +71,7 @@ struct ContentView: View {
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
-                mapViewStore: self.mapViewStore,
-                sheetSize: self.sheetSize
+                mapViewStore: self.mapViewStore
             )
             .task {
                 do {
@@ -226,7 +226,7 @@ struct ContentView: View {
 
     func reloadPOITrending() async {
         do {
-            let currentUserLocation = await self.mapStore.userLocationStore.location()?.coordinate
+            let currentUserLocation = await self.userLocationStore.location(allowCached: true)?.coordinate
             let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: currentUserLocation, baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
@@ -279,7 +279,7 @@ struct SizePreferenceKey: PreferenceKey {
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
-    store.mapStore.selectedItem = poi
+    store.mapStore.select(poi, shouldFocusCamera: true)
     return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
 }
 
@@ -342,5 +342,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize.zero)
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
 }

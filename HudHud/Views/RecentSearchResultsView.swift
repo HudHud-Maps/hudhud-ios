@@ -11,6 +11,8 @@ import MapKit
 import MapLibreSwiftUI
 import SwiftUI
 
+// MARK: - RecentSearchResultsView
+
 struct RecentSearchResultsView: View {
 
     // MARK: Properties
@@ -48,7 +50,7 @@ struct RecentSearchResultsView: View {
                         .foregroundStyle(.primary)
                         .lineLimit(1)
                         .foregroundColor(.primary)
-                    Text(item.subtitle)
+                    Text(item.subtitle ?? item.coordinate.formatted())
                         .hudhudFont(.body)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
@@ -65,10 +67,7 @@ struct RecentSearchResultsView: View {
                 }
             }
             .onTapGesture {
-                let selectedItem = item
-                let mapItems = [DisplayableRow.resolvedItem(item)]
-                self.searchStore.mapStore.selectedItem = selectedItem
-                self.searchStore.mapStore.displayableItems = mapItems
+                self.searchStore.mapStore.clearListAndSelect(item)
                 switch self.searchType {
                 case let .returnPOILocation(completion):
                     if let selectedItem = self.searchStore.mapStore.selectedItem {
@@ -93,16 +92,25 @@ struct RecentSearchResultsView: View {
     }
 }
 
-#Preview("EditFavoritesFormView") {
-    let item: ResolvedItem = .artwork
-    @State var favoriteItem = FavoritesItem(id: UUID(), title: item.title, tintColor: .personalShopping, item: item, type: item.category ?? "")
-    @State var camera = MapViewCamera.center(item.coordinate, zoom: 14)
-    @State var editFormViewIsShown = true
-    @StateObject var favoritesStore = FavoritesStore()
-    return NavigationStack {
-        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
-            .navigationDestination(isPresented: $editFormViewIsShown) {
-                EditFavoritesFormView(item: item, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
-            }
+// MARK: - EditFavoritesFormViewPreview
+
+struct EditFavoritesFormViewPreview: PreviewProvider {
+
+    static var previews: some View {
+        let item = ResolvedItem.artwork
+        let favoriteItem = FavoritesItem(id: UUID(),
+                                         title: item.title,
+                                         tintColor: .personalShopping,
+                                         item: item,
+                                         type: item.category ?? "")
+        let favoritesStore = FavoritesStore()
+
+        return NavigationStack {
+            RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+                .navigationDestination(isPresented: .constant(true)) {
+                    EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+                }
+        }
+        .previewDisplayName("EditFavoritesFormView")
     }
 }
