@@ -26,6 +26,7 @@ final class MapStore: ObservableObject {
 
     enum TrackingState {
         case none
+        case waitingForLocation
         case locateOnce
         case keepTracking
     }
@@ -45,7 +46,6 @@ final class MapStore: ObservableObject {
 
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
     @Published var shouldShowCustomSymbols = false
-    @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10, pitch: 0)
     @Published var searchShown: Bool = true
     @Published var trackingState: TrackingState = .none
 
@@ -56,18 +56,18 @@ final class MapStore: ObservableObject {
     var cachedScenes = [Int: StreetViewScene]()
     let userLocationStore: UserLocationStore
 
-    @Published var selectedItem: ResolvedItem?
+    @Published private(set) var selectedItem: ResolvedItem?
+
+    @Published var displayableItems: [DisplayableRow] = []
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
 
-    @Published var displayableItems: [DisplayableRow] = [] {
+    @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10) {
         didSet {
-            guard self.displayableItems != [] else { return }
-
-            self.updateCamera(state: .mapItems)
+            print("camera: \(self.camera)")
         }
     }
 
@@ -113,12 +113,41 @@ final class MapStore: ObservableObject {
         self.motionViewModel = motionViewModel
         self.userLocationStore = userLocationStore
         bindLayersVisability()
-        bindCameraToUserLocationForFirstTime()
     }
 
     // MARK: Functions
 
     // MARK: - Internal
+
+    // MARK: poi items functions
+
+    func replaceItemsAndFocusCamera(on items: [DisplayableRow]) {
+        self.displayableItems = items
+        self.updateCamera(state: .mapItems)
+    }
+
+    func clearListAndSelect(_ item: ResolvedItem) {
+        self.selectedItem = item
+        self.displayableItems = [DisplayableRow.resolvedItem(item)]
+    }
+
+    func unselectItem() {
+        self.selectedItem = nil
+    }
+
+    func select(_ item: ResolvedItem, shouldFocusCamera: Bool = false) {
+        self.selectedItem = item
+        if shouldFocusCamera {
+            self.updateCamera(state: .selectedItem(item))
+        }
+    }
+
+    func clearItems(clearResults: Bool? = true) {
+        self.selectedItem = nil
+        if clearResults == true {
+            self.displayableItems = []
+        }
+    }
 
     func getCameraPitch() -> Double {
         if case let .centered(
@@ -138,13 +167,6 @@ final class MapStore: ObservableObject {
             return URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
         }
         return styleUrl
-    }
-
-    func focusOnUser() async {
-        guard let location = await self.userLocationStore.location()?.coordinate else { return }
-        withAnimation {
-            self.updateCamera(state: .userLocation(location))
-        }
     }
 
     func updateCurrentMapStyle(mapLayers: [HudHudMapLayer]) {
@@ -176,11 +198,12 @@ final class MapStore: ObservableObject {
         if itemIfAvailable == nil {
             self.displayableItems.append(.resolvedItem(item))
         }
-        self.selectedItem = item
+        self.select(item, shouldFocusCamera: true)
         guard let detailedItem = try? await hudhudResolver.lookup(id: item.id, baseURL: DebugStore().baseURL),
               // we make sure that this item is still selected
               detailedItem.id == self.selectedItem?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
+
         var detailedItemUpdate = detailedItem
         detailedItemUpdate.systemColor = item.systemColor
         detailedItemUpdate.symbol = item.symbol
@@ -200,26 +223,7 @@ final class MapStore: ObservableObject {
                                                         edgePadding: UIEdgeInsets(top: 40, left: 40, bottom: 60, right: 40))
             }
         case let .selectedItem(selectedItem):
-            // if the item selected from multi-map items(nearby poi), the camera will not move
-            // Hint: the pin should animate or change the color of it. no camera move need it
-            if let bounds = mapItems.map(\.coordinate).boundingBox(),
-               bounds.contains(coordinate: selectedItem.coordinate),
-               mapItems.count > 1, !isAnyItemVisible() {
-                let coordinates = self.mapItems.map(\.coordinate)
-                if let camera = CameraState.boundingBox(from: coordinates) {
-                    self.camera = camera
-                }
-            } else {
-                if self.mapItems.count > 1 {
-                    // do not show any move
-                    if let zoom = self.camera.zoom {
-                        self.camera.setZoom(zoom)
-                    }
-                } else {
-                    // if poi choosing from Resents or directly from the search it will zoom and center around it
-                    self.camera = .center(selectedItem.coordinate, zoom: 15)
-                }
-            }
+            self.camera = .center(selectedItem.coordinate, zoom: self.camera.zoom ?? 15)
         case let .userLocation(userLocation):
             self.camera = MapViewCamera.center(userLocation, zoom: 14)
         case .mapItems:
@@ -229,12 +233,14 @@ final class MapStore: ObservableObject {
         }
     }
 
-    func switchToNextTrackingAction() async {
+    func switchToNextTrackingAction() {
         switch self.trackingState {
         case .none:
-            await self.focusOnUser()
+            self.trackingState = .waitingForLocation
             self.trackingState = .locateOnce
             Logger.mapInteraction.log("None action required")
+        case .waitingForLocation:
+            Logger.mapInteraction.log("waiting for location")
         case .locateOnce:
             self.trackingState = .keepTracking
             Logger.mapInteraction.log("locate me Once")
@@ -310,25 +316,13 @@ private extension MapStore {
 
     func bindLayersVisability() {
         self.$displayableItems
-            .map(\.isEmpty)
+            .map { $0.count <= 1 }
             .removeDuplicates()
-            .sink { [weak self] isEmpty in
+            .sink { [weak self] isVisible in
                 self?.mapStyle?.layers.forEach { layer in
                     if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
-                        layer.isVisible = isEmpty
+                        layer.isVisible = isVisible
                     }
-                }
-            }
-            .store(in: &self.subscriptions)
-    }
-
-    func bindCameraToUserLocationForFirstTime() {
-        self.userLocationStore.$permissionStatus
-            .filter(\.isEnabled) // only go through if the location permission is enabled
-            .first() // only call the closure once
-            .sink { [weak self] _ in
-                Task {
-                    await self?.focusOnUser()
                 }
             }
             .store(in: &self.subscriptions)

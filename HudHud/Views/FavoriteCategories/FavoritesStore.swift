@@ -42,6 +42,17 @@ final class FavoritesStore: ObservableObject {
         self.storedFavorites = favorites.rawValue
     }
 
+    func isFavorites(item: ResolvedItem) -> Bool {
+        return self.favoritesItems.contains(where: { $0.item == item })
+    }
+
+    func deleteSavedFavorite(item: ResolvedItem) {
+        if let index = favoritesItems.firstIndex(where: { $0.item == item }) {
+            self.favoritesItems.remove(at: index)
+            self.saveFavorites()
+        }
+    }
+
     func saveChanges(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem, description: String, selectedType: String) {
         let newFavoritesItem = self.createFavoritesItem(title: title, tintColor: tintColor, item: item, description: description, type: selectedType)
 

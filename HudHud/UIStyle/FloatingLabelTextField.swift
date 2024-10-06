@@ -6,11 +6,13 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import iPhoneNumberField
 import SwiftUI
 
 // MARK: - FloatingLabelInputType
 
 enum FloatingLabelInputType {
+    case phone(phone: Binding<String>)
     case text(text: Binding<String>)
     case dropdown(choice: Binding<String>, options: [String])
     case datePicker(date: Binding<Date>, dateFormatter: DateFormatter)
@@ -31,17 +33,30 @@ struct FloatingLabelInputField: View {
 
     var body: some View {
         ZStack(alignment: .leading) {
-            Text(self.placeholder)
-                .hudhudFont()
-                .foregroundColor(.secondary)
-                .offset(y: self.isFocused || !self.getTextField().isEmpty ? -35 : 0)
-                .scaleEffect(self.isFocused || !self.getTextField().isEmpty ? 0.8 : 1, anchor: .leading)
-
             VStack(alignment: .leading) {
                 switch self.inputType {
+                case let .phone(phone: phone):
+                    iPhoneNumberField(text: phone)
+                        .formatted()
+                        .defaultRegion("SA")
+                        .flagHidden(false)
+                        .flagSelectable(true)
+                        .prefixHidden(false)
+                        .autofillPrefix(true)
+                        .clearButtonMode(.whileEditing)
+                        .hudhudFont(.headline)
+                        .foregroundColor(Color.Colors.General._12Red)
+                        .bold()
+                        .padding(.bottom, 5)
+                        .onChange(of: phone.wrappedValue) { _, newValue in
+                            // Ensure the + sign is not removed
+                            if !newValue.hasPrefix("+") {
+                                phone.wrappedValue = "+" + newValue
+                            }
+                        }
+
                 case let .text(binding):
-                    TextField("", text: binding)
-                        .focused(self.$isFocused)
+                    TextField(self.placeholder, text: binding)
                         .hudhudFont()
                         .foregroundColor(Color.Colors.General._01Black)
                         .bold()
@@ -83,7 +98,7 @@ struct FloatingLabelInputField: View {
             // Bottom line
             Rectangle()
                 .frame(height: 1)
-                .foregroundColor(Color.Colors.General._02Grey)
+                .foregroundColor(Color.Colors.General._04GreyForLines)
                 .padding(.top, 35)
         }
         .padding(.top, 8)
@@ -94,6 +109,8 @@ struct FloatingLabelInputField: View {
 
     private func getTextField() -> String {
         switch self.inputType {
+        case let .phone(phone: phone):
+            return phone.wrappedValue
         case let .text(binding):
             return binding.wrappedValue
         case let .dropdown(binding, _):

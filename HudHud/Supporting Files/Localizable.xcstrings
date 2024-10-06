@@ -4,6 +4,9 @@
     "" : {
 
     },
+    " %@" : {
+
+    },
     "..." : {
 
     },
@@ -59,6 +62,9 @@
     "Add Type" : {
 
     },
+    "Apply" : {
+
+    },
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
     },
@@ -84,6 +90,9 @@
           }
         }
       }
+    },
+    "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
+
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
@@ -171,6 +180,9 @@
     "End" : {
 
     },
+    "Enter your phone number or email" : {
+
+    },
     "Enter your Verification Code" : {
 
     },
@@ -194,6 +206,9 @@
         }
       }
     },
+    "Filters" : {
+
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -204,6 +219,9 @@
           }
         }
       }
+    },
+    "Go Back" : {
+
     },
     "Heading: %@" : {
       "comment" : "street view"
@@ -300,6 +318,9 @@
     "Nearby Trending" : {
 
     },
+    "Next" : {
+
+    },
     "No Content To be Shown Here." : {
 
     },
@@ -324,9 +345,6 @@
     "Open" : {
 
     },
-    "Open Now" : {
-
-    },
     "Personal Information" : {
 
     },
@@ -337,6 +355,12 @@
 
     },
     "Please ensure location services are enabled and try again." : {
+
+    },
+    "Price" : {
+
+    },
+    "Rating" : {
 
     },
     "Ratings" : {
@@ -403,6 +427,9 @@
     "Simulation" : {
 
     },
+    "Sort By" : {
+
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -416,9 +443,6 @@
       }
     },
     "Suggestions" : {
-
-    },
-    "Top Rated" : {
 
     },
     "Touch Visualizer" : {
@@ -436,6 +460,9 @@
     "User location could not be found." : {
 
     },
+    "Verification code sent to the %@ below:" : {
+
+    },
     "Verify" : {
 
     },
@@ -449,9 +476,6 @@
         }
       }
     },
-    "We sent verification code on" : {
-
-    },
     "Web" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -463,9 +487,6 @@
         }
       }
     },
-    "Website" : {
-
-    },
     "Work" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -476,6 +497,9 @@
           }
         }
       }
+    },
+    "Work Schedule" : {
+
     },
     "You Have Arrived" : {
 

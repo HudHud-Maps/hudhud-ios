@@ -61,7 +61,7 @@ struct MapActionHandler {
 
             if let poi {
                 Logger.mapInteraction.debug("setting poi")
-                self.mapStore.selectedItem = poi
+                self.mapStore.select(poi)
             } else {
                 Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
             }

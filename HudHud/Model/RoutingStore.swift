@@ -170,6 +170,7 @@ final class RoutingStore: ObservableObject {
     func endTrip() {
         self.waypoints = nil
         self.potentialRoute = nil
+        self.mapStore.clearItems()
     }
 }
 

@@ -51,10 +51,12 @@ struct SearchResultItemView: View {
                     .foregroundStyle(.primary)
                     .font(.headline)
                     .lineLimit(1)
-                Text(self.item.subtitle)
-                    .foregroundStyle(.secondary)
-                    .font(.body)
-                    .lineLimit(1)
+                if let subtitle = self.item.subtitle {
+                    Text(subtitle)
+                        .foregroundStyle(.secondary)
+                        .font(.body)
+                        .lineLimit(1)
+                }
             }
             Spacer()
             Button(action: {
@@ -119,7 +121,7 @@ struct SearchResultItem {
         }
     }
 
-    var subtitle: String {
+    var subtitle: String? {
         switch self.displayableRow {
         case .category:
             ""
@@ -140,7 +142,7 @@ struct SearchResultItem {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    @State var searchText: String = ""
+    @Previewable @State var searchText: String = ""
     return SearchResultItemView(
         item: SearchResultItem(.predictionItem(PredictionItem(
             id: UUID().uuidString,

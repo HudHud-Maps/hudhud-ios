@@ -56,7 +56,7 @@ final class MapViewStore {
             if !self.sheetStore.sheets.isEmpty {
                 self.sheetStore.sheets.removeLast()
             }
-            self.mapStore.selectedItem = nil
+            self.mapStore.unselectItem()
         }
     }
 

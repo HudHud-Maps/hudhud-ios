@@ -28,9 +28,8 @@ struct FavoriteCategoriesView: View {
             HStack {
                 ForEach(self.favoritesStore.favoritesItems.prefix(4)) { favorite in
                     Button {
-                        if let selectedItem = favorite.item {
-                            self.searchStore.mapStore.selectedItem = selectedItem
-                            self.searchStore.mapStore.displayableItems = [DisplayableRow.resolvedItem(selectedItem)]
+                        if let item = favorite.item {
+                            self.searchStore.mapStore.clearListAndSelect(item)
                         }
                     } label: {
                         Text(favorite.type)

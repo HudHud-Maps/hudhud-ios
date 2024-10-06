@@ -2,6 +2,14 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>LSMinimumSystemVersion</key>
+	<string>14.0.0</string>
+	<key>MGLMapboxAccessToken</key>
+	<string>NOTAREALACCESSTOKEN</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>Allows HudHud to send real-time navigation updates and traffic alerts.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>PlusJakartaSans-MediumItalic.ttf</string>
@@ -18,18 +26,8 @@
 		<string>PlusJakartaSans-ExtraBold.ttf</string>
 		<string>PlusJakartaSans-BoldItalic.ttf</string>
 		<string>PlusJakartaSans-Bold.ttf</string>
-        <string>IBMPlexSansArabic-Regular.ttf</string>
+		<string>IBMPlexSansArabic-Regular.ttf</string>
 	</array>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
-	<key>ITSAppUsesNonExemptEncryption</key>
-	<false/>
-	<key>LSMinimumSystemVersion</key>
-	<string>14.0.0</string>
-	<key>MGLMapboxAccessToken</key>
-	<string>NOTAREALACCESSTOKEN</string>
-	<key>NSUserNotificationsUsageDescription</key>
-	<string>Allows HudHud to send real-time navigation updates and traffic alerts.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

@@ -33,7 +33,7 @@ struct RootSheetView: View {
     var body: some View {
         NavigationStack(path: self.$sheetStore.sheets) {
             SearchSheet(mapStore: self.mapStore,
-                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore)
+                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore, filterStore: self.searchViewStore.filterStore)
                 .background(Color(.Colors.General._05WhiteBackground))
                 .navigationDestination(for: SheetViewData.self) { value in
                     switch value.viewData {
@@ -52,29 +52,48 @@ struct RootSheetView: View {
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
                             let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                            let tempStore = SearchViewStore(mapStore: freshMapStore, sheetStore: SheetStore(), routingStore: freshRoutingStore, mode: self.searchViewStore.mode)
+                            let tempStore = SearchViewStore(
+                                mapStore: freshMapStore,
+                                sheetStore: SheetStore(),
+                                routingStore: freshRoutingStore,
+                                filterStore: self.searchViewStore.filterStore,
+                                mode: self.searchViewStore.mode
+                            )
                             tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
                                 routingStore.add(item)
                             })
                             return tempStore
                         }()
-                        SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore).navigationBarBackButtonHidden()
+                        SearchSheet(
+                            mapStore: freshSearchViewStore.mapStore,
+                            searchStore: freshSearchViewStore,
+                            trendingStore: self.trendingStore,
+                            sheetStore: self.sheetStore,
+                            filterStore: self.searchViewStore.filterStore
+                        )
+                        .navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(
-                            mapStore: freshMapStore,
-                            sheetStore: self.sheetStore,
-                            routingStore: freshRoutingStore,
-                            mode: self.searchViewStore.mode
-                        )
-                        tempStore.searchType = .favorites
-                        return tempStore
+                        let freshSearchViewStore: SearchViewStore = {
+                            let tempStore = SearchViewStore(
+                                mapStore: freshMapStore,
+                                sheetStore: SheetStore(),
+                                routingStore: freshRoutingStore,
+                                filterStore: self.searchViewStore.filterStore,
+                                mode: self.searchViewStore.mode
+                            )
+                            tempStore.searchType = .favorites
+                            return tempStore
                         }()
-                        SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore)
+                        SearchSheet(
+                            mapStore: freshSearchViewStore.mapStore,
+                            searchStore: freshSearchViewStore,
+                            trendingStore: self.trendingStore,
+                            sheetStore: SheetStore(),
+                            filterStore: self.searchViewStore.filterStore
+                        )
                     case .navigationPreview:
                         NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
                             .navigationBarBackButtonHidden()
@@ -95,19 +114,22 @@ struct RootSheetView: View {
                                 }
                             }
                         } onDismiss: {
-                            self.searchViewStore.mapStore.selectedItem = nil
+                            self.searchViewStore.mapStore
+                                .clearItems(clearResults: false)
                         }
-                        .navigationBarBackButtonHidden()
                     case .favoritesViewMore:
                         FavoritesViewMoreView(
                             searchStore: self.searchViewStore,
                             sheetStore: self.sheetStore,
                             favoritesStore: self.favoritesStore
                         )
-                    case let .editFavoritesForm(item, favoritesItem):
+                    case let .editFavoritesForm(
+                        item: item,
+                        favoriteItem: favoriteItem
+                    ):
                         EditFavoritesFormView(
                             item: item,
-                            favoritesItem: favoritesItem,
+                            favoritesItem: favoriteItem,
                             favoritesStore: self.favoritesStore
                         )
                     }

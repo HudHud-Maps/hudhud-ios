@@ -24,6 +24,7 @@ struct FavoritesViewMoreView: View {
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore: FavoritesStore
+    @StateObject var filterStore = FilterStore()
 
     // MARK: Content
 
@@ -110,6 +111,7 @@ struct FavoritesViewMoreView: View {
             mapStore: freshMapStore,
             sheetStore: SheetStore(),
             routingStore: freshRoutingStore,
+            filterStore: FilterStore(),
             mode: self.searchStore.mode
         )
         freshSearchViewStore.searchType = .favorites
@@ -117,7 +119,8 @@ struct FavoritesViewMoreView: View {
             mapStore: freshMapStore,
             searchStore: freshSearchViewStore,
             trendingStore: TrendingStore(),
-            sheetStore: self.sheetStore
+            sheetStore: self.sheetStore,
+            filterStore: FilterStore()
         )
     }
 }
@@ -133,7 +136,7 @@ struct FavoritesViewMoreView: View {
 }
 
 #Preview("testing title") {
-    @State var isLinkActive = true
+    @Previewable @State var isLinkActive = true
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {

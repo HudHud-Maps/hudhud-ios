@@ -59,7 +59,7 @@ struct DebugMenuView: View {
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button("Reset") {
-                    self.debugSettings.routingHost = "gh.map.dev.hudhud.sa"
+                    self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
                     self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
                 }
             }
@@ -73,7 +73,7 @@ struct DebugMenuView: View {
 }
 
 #Preview {
-    @StateObject var debugSettings = DebugStore()
+    @Previewable @StateObject var debugSettings = DebugStore()
 
     return DebugMenuView(debugSettings: debugSettings)
 }

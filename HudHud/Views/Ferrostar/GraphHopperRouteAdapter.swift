@@ -10,6 +10,7 @@ import BackendService
 import FerrostarCore
 import FerrostarCoreFFI
 import Foundation
+import OSLog
 
 // MARK: - HudHudGraphHopperRouteProvider
 
@@ -34,14 +35,13 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
             URLQueryItem(name: "roundabout_exits", value: "true"),
             URLQueryItem(name: "voice_instructions", value: "true"),
             URLQueryItem(name: "banner_instructions", value: "true"),
-            URLQueryItem(name: "voice_units", value: "metric"),
-            URLQueryItem(name: "no_annotations", value: "true") // current annotation format provided by our servers isn't ExtendedOSRM compatible, so we disable them
+            URLQueryItem(name: "voice_units", value: "metric")
         ]
         guard let url = components.url else {
             throw ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
         }
 
-        print(url)
+        Logger.routing.debug("Requesting route from \(url)")
         let answer: (data: Data, response: URLResponse) = try await URLSession.shared.data(from: url)
 
         guard answer.response.mimeType == "application/json" else {
