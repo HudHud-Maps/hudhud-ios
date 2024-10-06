@@ -39,6 +39,16 @@
         }
       }
     },
+    "%@ until %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ until %2$@"
+          }
+        }
+      }
+    },
     "•" : {
 
     },
@@ -139,6 +149,9 @@
         }
       }
     },
+    "Closed" : {
+
+    },
     "Create Account" : {
 
     },
@@ -169,13 +182,7 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
-    "Distance" : {
-
-    },
     "Done" : {
-
-    },
-    "Duration" : {
 
     },
     "Edit" : {
@@ -247,9 +254,6 @@
         }
       }
     },
-    "Hours" : {
-
-    },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
     },
@@ -316,9 +320,6 @@
         }
       }
     },
-    "N / A" : {
-
-    },
     "Name" : {
 
     },
@@ -335,9 +336,6 @@
 
     },
     "No ratings" : {
-
-    },
-    "No Ratings" : {
 
     },
     "No Results" : {
@@ -365,9 +363,6 @@
 
     },
     "Rating" : {
-
-    },
-    "Ratings" : {
 
     },
     "Recents" : {
@@ -444,9 +439,6 @@
 
     },
     "Touch Visualizer" : {
-
-    },
-    "Unknown" : {
 
     },
     "Use SF Symbols for POIs on map" : {

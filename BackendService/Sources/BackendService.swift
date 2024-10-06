@@ -191,6 +191,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var rating: Double?
     public var ratingsCount: Int?
     public var isOpen: Bool?
+    public let openingHours: [HudHudPOI.OpeningHours]?
     public var trendingImage: String?
     public var mediaURLs: [URL]
     public let distance: Double?
@@ -210,7 +211,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, isWheelchairAccessible: Bool? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, isWheelchairAccessible: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -224,6 +225,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.rating = rating
         self.ratingsCount = ratingsCount
         self.isOpen = isOpen
+        self.openingHours = openingHours
         self.trendingImage = trendingImage
         self.mediaURLs = mediaURLs
         self.systemColor = color

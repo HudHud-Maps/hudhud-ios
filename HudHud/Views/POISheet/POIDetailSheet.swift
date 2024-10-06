@@ -47,6 +47,11 @@ struct POIDetailSheet: View {
         return (self.item.subtitle ?? self.item.coordinate.formatted()).count > maxCharacters
     }
 
+    private var currentWeekday: HudHudPOI.OpeningHours.WeekDay {
+        let weekdayIndex = Calendar.current.component(.weekday, from: Date())
+        return HudHudPOI.OpeningHours.WeekDay.allCases[weekdayIndex - 1]
+    }
+
     // MARK: Lifecycle
 
     init(
@@ -273,14 +278,12 @@ struct POIDetailSheet: View {
 
     private var openStatusView: some View {
         Group {
-            if let isOpen = self.item.isOpen {
+            if let isOpen = self.item.isOpen,
+               let openingHoursToday = self.item.openingHours?.first(where: { $0.day == currentWeekday }) {
                 HStack {
-                    Text("\(isOpen ? "Open" : "Closed")")
+                    Text("\(isOpen ? "Open" : "Closed") until \(self.nextAvailableTime(isOpen: isOpen, hours: openingHoursToday.hours))")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(isOpen ? Color(.Colors.General._06DarkGreen) : Color(.Colors.General._12Red))
-                    Text("•")
-                        .hudhudFont(.caption2)
-                        .foregroundStyle(Color.Colors.General._02Grey)
                 }
             }
         }
@@ -302,6 +305,55 @@ struct POIDetailSheet: View {
             }
         }
     }
+
+    private var openiningHoursView: some View {
+        Group {
+            if let openingHoursList = item.openingHours {
+                ForEach(HudHudPOI.OpeningHours.WeekDay.allCases, id: \.self) { day in
+                    HStack {
+                        Text("\(day.displayValue)")
+                            .font(.headline)
+
+                        if let openingHoursForDay = openingHoursList.first(where: { $0.day == day }) {
+                            Text(openingHoursForDay.hours.map(\.displayValue).joined(separator: ", "))
+                                .font(.subheadline)
+                        } else {
+                            Text("Closed")
+                                .font(.subheadline)
+                                .foregroundColor(.red)
+                        }
+                    }
+                    .padding()
+                }
+            }
+        }
+    }
+
+    // MARK: Functions
+
+    private func nextAvailableTime(isOpen: Bool, hours: [HudHudPOI.OpeningHours.TimeRange]) -> String {
+        let nextTime = isOpen ? hours.last?.end : hours.first?.start
+        if let nextHour = nextTime {
+            return self.formatHour(nextHour)
+        } else {
+            return "Unknown"
+        }
+    }
+
+    private func formatHour(_ hour: Int) -> String {
+        var components = DateComponents()
+        components.hour = hour
+        let calendar = Calendar.current
+        if let date = calendar.date(from: components) {
+            let formatter = DateFormatter()
+            formatter.timeZone = .current
+            formatter.dateFormat = "h:mm a" // 12-hour format with minutes and AM/PM
+            return formatter.string(from: date)
+        } else {
+            return "Invalid Time"
+        }
+    }
+
 }
 
 // MARK: - Private
