@@ -24,9 +24,21 @@ struct MapViewContainer: View {
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @ObservedObject var mapViewStore: MapViewStore
-    var sheetSize: CGSize
+    @State var safeAreaInsets = UIEdgeInsets()
+    let mapControlInsets: UIEdgeInsets
 
     @State private var didFocusOnUser = false
+
+    // MARK: Computed Properties
+
+    private var insets: UIEdgeInsets {
+        UIEdgeInsets(
+            top: self.safeAreaInsets.top + self.mapControlInsets.top,
+            left: self.safeAreaInsets.left + self.mapControlInsets.left,
+            bottom: self.safeAreaInsets.bottom + self.mapControlInsets.bottom,
+            right: self.safeAreaInsets.right + self.mapControlInsets.right
+        )
+    }
 
     // MARK: Lifecycle
 
@@ -36,12 +48,12 @@ struct MapViewContainer: View {
         searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
         mapViewStore: MapViewStore,
-        sheetSize: CGSize
+        mapControlInsets: UIEdgeInsets
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
-        self.sheetSize = sheetSize
+        self.mapControlInsets = mapControlInsets
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
     }
@@ -49,49 +61,23 @@ struct MapViewContainer: View {
     // MARK: Content
 
     var body: some View {
-        MapView<NavigationViewController>(makeViewController: {
-            let viewController = NavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
+        MapView<MapNavigationViewController>(makeViewController: {
+            let viewController = MapNavigationViewController(dayStyle: CustomDayStyle(), nightStyle: CustomNightStyle())
             viewController.showsEndOfRouteFeedback = false // We show our own Feedback
             viewController.mapView.compassViewMargins.y = 50
+            viewController.onViewSafeAreaInsetsDidChange = { newSafeAreaInsets in
+                self.safeAreaInsets = newSafeAreaInsets
+            }
             self.mapStore.mapView = viewController.mapView
             return viewController
         }(), styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera) {
             // Display preview data as a polyline on the map
-            if let route = self.searchViewStore.routingStore.potentialRoute?.routes.first, self.searchViewStore.routingStore.navigationProgress == .none {
-                let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                    MLNPolylineFeature(coordinates: route.coordinates ?? [])
+            if let mapView = self.mapStore.mapView {
+                if let potentialRoutes = self.searchViewStore.routingStore.potentialRoute?.routes {
+                    mapView.showRoutes(potentialRoutes)
+                } else {
+                    mapView.removeRoutes()
                 }
-
-                // Add a polyline casing for a stroke effect
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.white)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
-
-                // Add an inner (blue) polyline
-                LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-                    .lineCap(.round)
-                    .lineJoin(.round)
-                    .lineColor(.systemBlue)
-                    .lineWidth(interpolatedBy: .zoomLevel,
-                               curveType: .linear,
-                               parameters: NSExpression(forConstantValue: 1.5),
-                               stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
-
-                let routePoints = self.searchViewStore.routingStore.routePoints
-
-                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                    .radius(16)
-                    .color(.systemRed)
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
             }
 
             if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty, self.mapStore.isSFSymbolLayerPresent(), self.mapStore.shouldShowCustomSymbols {
@@ -143,31 +129,25 @@ struct MapViewContainer: View {
                     .minimumZoomLevel(13.0)
                     .maximumZoomLevel(22.0)
                     .predicate(NSPredicate(format: "cluster != YES"))
+
+                // shows the selected pin
+                CircleStyleLayer(
+                    identifier: MapLayerIdentifier.selectedCircle,
+                    source: self.mapStore.selectedPoint
+                )
+                .radius(24)
+                .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
+                .strokeWidth(2)
+                .strokeColor(.white)
+                .predicate(NSPredicate(format: "cluster != YES"))
+                SymbolStyleLayer(
+                    identifier: MapLayerIdentifier.selectedCircleIcon,
+                    source: self.mapStore.selectedPoint
+                )
+                .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
+                .iconColor(.white)
+                .predicate(NSPredicate(format: "cluster != YES"))
             }
-            // shows the selected pin
-            CircleStyleLayer(
-                identifier: MapLayerIdentifier.selectedCircle,
-                source: self.mapStore.selectedPoint
-            )
-            .radius(24)
-            .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
-            .strokeWidth(2)
-            .strokeColor(.white)
-            .predicate(NSPredicate(format: "cluster != YES"))
-            SymbolStyleLayer(
-                identifier: MapLayerIdentifier.selectedCircleIcon,
-                source: self.mapStore.selectedPoint
-            )
-            .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
-            .iconColor(.white)
-            .predicate(NSPredicate(format: "cluster != YES"))
-        }
-        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-            if self.searchViewStore.routingStore.navigationProgress == .feedback {
-                self.searchViewStore.endTrip()
-                return
-            }
-            self.mapViewStore.didTapOnMap(containing: features)
         }
         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
         .unsafeMapViewControllerModifier { controller in
@@ -180,12 +160,19 @@ struct MapViewContainer: View {
         }
         .onLongPressMapGesture(onPressChanged: { mapGesture in
             if self.searchViewStore.mapStore.selectedItem == nil {
-                let selectedItem = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: "", type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                self.searchViewStore.mapStore.selectedItem = selectedItem
+                let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
+                self.searchViewStore.mapStore.select(generatedPOI)
                 self.mapViewStore.selectedDetent = .third
             }
         })
-        .safeAreaPadding(.bottom, self.mapStore.searchShown ? self.sheetPaddingSize() : 0)
+        .mapViewContentInset(self.insets)
+        .mapControls {
+            CompassView()
+            LogoView()
+                .hidden(true)
+            AttributionButton()
+                .hidden(true)
+        }
         .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
             if let routeUnwrapped = newRoute,
                let route = routeUnwrapped.routes.first,
@@ -203,32 +190,37 @@ struct MapViewContainer: View {
                     }
                 }
         )
+        .simultaneousGesture(
+            self.searchViewStore.routingStore.navigationProgress == .none ?
+                TapGesture().onEnded {
+                    // Check if there's no potential route and not in navigation progress
+                    guard self.searchViewStore.routingStore.potentialRoute?.routes == nil,
+                          self.searchViewStore.routingStore.navigationProgress != .navigating,
+                          let mapView = self.mapStore.mapView,
+                          let gestureRecognizers = mapView.gestureRecognizers else { return }
+
+                    // Loop through the gesture recognizers to find tap location
+                    for recognizer in gestureRecognizers {
+                        let locationInView = recognizer.location(in: mapView)
+                        let features = mapView.visibleFeatures(at: locationInView, styleLayerIdentifiers: MapLayerIdentifier.tapLayers)
+
+                        // Handle map tap if not in feedback mode
+                        self.mapViewStore.didTapOnMap(containing: features)
+                    }
+                } : nil
+        )
         .onAppear {
             self.userLocationStore.startMonitoringPermissions()
-        }
-        .task {
             guard self.didFocusOnUser else { return }
+
             self.didFocusOnUser = true
-            await self.mapStore.focusOnUser()
+            self.mapStore.focusOnUser()
         }
     }
-
-    // MARK: Functions
-
-    // MARK: - Internal
-
-    func sheetPaddingSize() -> Double {
-        if self.sheetSize.height > 80 {
-            return 80
-        } else {
-            return self.sheetSize.height
-        }
-    }
-
 }
 
 #Preview {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, sheetSize: CGSize(size: 80))
+    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, mapControlInsets: UIEdgeInsets(floatLiteral: 0))
 }

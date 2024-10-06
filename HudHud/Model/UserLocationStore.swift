@@ -18,9 +18,32 @@ import SwiftUI
 @MainActor
 final class UserLocationStore: ObservableObject {
 
+    // MARK: Nested Types
+
+    enum PermissionStatus: Hashable {
+        case enabled
+        case notDetermined
+        case denied
+
+        // MARK: Computed Properties
+
+        var isEnabled: Bool {
+            self == .enabled
+        }
+
+        var didDenyLocationPermission: Bool {
+            switch self {
+            case .enabled, .notDetermined:
+                false
+            case .denied:
+                true
+            }
+        }
+    }
+
     // MARK: Properties
 
-    @Published private(set) var isLocationPermissionEnabled: Bool = false
+    @Published private(set) var permissionStatus: PermissionStatus = .denied
 
     private var currentUserLocation: CLLocation?
 
@@ -91,9 +114,9 @@ final class UserLocationStore: ObservableObject {
 private extension UserLocationStore {
 
     func startMonitoringUserPermission() async {
-        self.isLocationPermissionEnabled = self.location.authorizationStatus.allowed
+        self.permissionStatus = self.location.authorizationStatus.permissionStatus
         for await event in await self.location.startMonitoringAuthorization() {
-            self.isLocationPermissionEnabled = event.authorizationStatus.allowed
+            self.permissionStatus = event.authorizationStatus.permissionStatus
         }
     }
 
@@ -101,7 +124,7 @@ private extension UserLocationStore {
         self.updateLocationSubscription = Timer.publish(every: 90, on: .main, in: .default)
             .autoconnect()
             .sink { [weak self] _ in
-                guard let self, self.isLocationPermissionEnabled else { return }
+                guard let self, self.permissionStatus.isEnabled else { return }
                 Task {
                     await self.updateToLatestLocation()
                 }
@@ -112,7 +135,7 @@ private extension UserLocationStore {
         self.didBecomeActiveSubscription = NotificationCenter.default
             .publisher(for: UIApplication.didBecomeActiveNotification)
             .sink { [weak self] _ in
-                guard let self, self.isLocationPermissionEnabled else { return }
+                guard let self, self.permissionStatus.isEnabled else { return }
                 Task {
                     await self.updateToLatestLocation()
                 }

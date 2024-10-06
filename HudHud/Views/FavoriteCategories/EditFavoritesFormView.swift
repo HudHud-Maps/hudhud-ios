@@ -56,7 +56,7 @@ struct EditFavoritesFormView: View {
                 Section {
                     TextField("Name", text: self.$title)
                     HStack {
-                        Text("\(self.item.subtitle)")
+                        Text("\(self.item.subtitle ?? self.item.coordinate.formatted())")
                         Spacer()
                         Button {} label: {
                             Image(systemSymbol: .pencil)
@@ -152,21 +152,21 @@ private extension EditFavoritesFormView {
 }
 
 #Preview {
-    @State var resolvedItem: ResolvedItem = .artwork
-    @State var favorite: FavoritesItem = .favoriteForPreview
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @StateObject var favoritesStore = FavoritesStore()
+    @Previewable @State var resolvedItem: ResolvedItem = .artwork
+    @Previewable @State var favorite: FavoritesItem = .favoriteForPreview
+    @Previewable @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @Previewable @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
         EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, favoritesStore: favoritesStore)
     }
 }
 
 #Preview("EditForvoritesFormView") {
-    @State var resolvedItem: ResolvedItem = .ketchup
-    @State var favorite: FavoritesItem = .favoriteForPreview
-    @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
-    @State var isLinkActive = true
-    @StateObject var favoritesStore = FavoritesStore()
+    @Previewable @State var resolvedItem: ResolvedItem = .ketchup
+    @Previewable @State var favorite: FavoritesItem = .favoriteForPreview
+    @Previewable @State var camera: MapViewCamera = .center(.riyadh, zoom: 16)
+    @Previewable @State var isLinkActive = true
+    @Previewable @StateObject var favoritesStore = FavoritesStore()
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {

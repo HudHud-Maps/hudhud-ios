@@ -30,7 +30,7 @@ public class RoutingService {
         // MARK: Properties
 
         public let waypoints: [Waypoint]
-        public let routes: [Route]
+        public var routes: [Route]
 
         // MARK: Lifecycle
 

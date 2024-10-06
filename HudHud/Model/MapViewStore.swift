@@ -53,7 +53,7 @@ final class MapViewStore: ObservableObject {
             if !self.path.isEmpty {
                 self.path.removeLast()
             }
-            self.mapStore.selectedItem = nil
+            self.mapStore.unselectItem()
         }
     }
 
@@ -93,12 +93,12 @@ private extension MapViewStore {
         .sink { [weak self] navigatingRoute, path, items in
             guard let self else { return }
             let elements = try? path.elements()
-            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil {
+            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil, self.mapStore.displayableItems.count > 1 {
                 true
             } else {
                 !items.isEmpty
             }
-            let isCurrentSheetListOfCategories = if case .categoryItem = items.first {
+            let isCurrentSheetListOfSearchResults: Bool = if case .resolvedItem = items.first, self.mapStore.displayableItems.count > 1 {
                 true
             } else {
                 false
@@ -107,7 +107,7 @@ private extension MapViewStore {
                 isCurrentlyNavigating: navigatingRoute != nil,
                 navigationPathItem: elements?.last,
                 isThereAnyPOIsOnTheMap: isThereAnyPOIsOnTheMap,
-                isCurrentSheetListOfCategories: isCurrentSheetListOfCategories
+                isCurrentSheetListOfSearchResults: isCurrentSheetListOfSearchResults
             )
         }
         .store(in: &self.subscriptions)
@@ -144,7 +144,7 @@ private extension MapViewStore {
      Failure to do so can result in the function not updating the detent properly when the new criteria change.
      **/
 
-    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, isThereAnyPOIsOnTheMap: Bool, isCurrentSheetListOfCategories: Bool) {
+    func updateSelectedSheetDetent(isCurrentlyNavigating: Bool, navigationPathItem: Any?, isThereAnyPOIsOnTheMap _: Bool, isCurrentSheetListOfSearchResults: Bool) {
         if isCurrentlyNavigating {
             let closed: PresentationDetent = .height(0)
             self.allowedDetents = [closed]
@@ -156,8 +156,8 @@ private extension MapViewStore {
 
         guard let navigationPathItem else {
             self.allowedDetents = [.small, .third, .large]
-            if isThereAnyPOIsOnTheMap, !isCurrentSheetListOfCategories {
-                self.selectedDetent = .small
+            if isCurrentSheetListOfSearchResults {
+                self.selectedDetent = .large
             } else {
                 self.selectedDetent = .third
             }

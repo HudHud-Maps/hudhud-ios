@@ -54,13 +54,11 @@ public struct HudhudStreetView {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                if let data = jsonResponse.data {
-                    let item = StreetViewItem(id: data.id,
-                                              coordinate: CLLocationCoordinate2D(latitude: data.point.lat, longitude: data.point.lon),
-                                              imageURL: data.url)
-                    return item
-                }
-                return nil
+                let data = jsonResponse.data
+                let item = StreetViewItem(id: data.value1.id,
+                                          coordinate: CLLocationCoordinate2D(latitude: data.value1.point.lat, longitude: data.value1.point.lon),
+                                          imageURL: data.value1.url)
+                return item
             }
         case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {
@@ -69,6 +67,10 @@ public struct HudhudStreetView {
                 nil
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message)
+        case let .badRequest(error):
+            throw try HudHudClientError.badRequest(error.body.json.message)
         }
     }
 
@@ -80,7 +82,7 @@ public struct HudhudStreetView {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let data = jsonResponse.data
+                let data = jsonResponse.data.value1
                 let item = StreetViewItem(id: data.id,
                                           coordinate: CLLocationCoordinate2D(latitude: data.point.lat, longitude: data.point.lon),
                                           imageURL: data.url)
@@ -97,6 +99,8 @@ public struct HudhudStreetView {
             throw HudHudClientError.poiIDNotFound
         case .notFound:
             throw HudHudClientError.poiIDNotFound
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -106,7 +110,7 @@ public struct HudhudStreetView {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let item = jsonResponse.data
+                let item = jsonResponse.data.value1
                 let streetViewScene = StreetViewScene(id: item.id,
                                                       name: item.name,
                                                       nextId: item.next_id,
@@ -132,6 +136,8 @@ public struct HudhudStreetView {
             throw HudHudClientError.poiIDNotFound
         case .notFound:
             throw HudHudClientError.poiIDNotFound
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -147,7 +153,7 @@ public struct HudhudStreetView {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let item = jsonResponse.data
+                let item = jsonResponse.data.value1
                 let streetViewScene = StreetViewScene(id: item.id,
                                                       name: item.name,
                                                       nextId: item.next_id,
@@ -169,6 +175,8 @@ public struct HudhudStreetView {
                 nil
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         case .badRequest:
             throw HudHudClientError.poiIDNotFound
         case .notFound:

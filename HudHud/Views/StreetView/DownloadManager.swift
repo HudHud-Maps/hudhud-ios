@@ -124,8 +124,6 @@ class DownloadManager {
 
         let thumb = "\(isThumb ? "_th" : "")"
         let newPathTh = NSTemporaryDirectory() + path.sha265 + thumb + ".\(ext)"
-        let newURL = URL(filePath: newPath)
-        let newURLTh = URL(filePath: newPathTh)
 
         let localPath = isThumb ? newPathTh : newPath
         if FileManager.default.fileExists(atPath: localPath) || DownloadManager.shared.inDownload[path.sha265] != nil {

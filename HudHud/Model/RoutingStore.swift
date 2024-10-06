@@ -77,7 +77,7 @@ final class RoutingStore: ObservableObject {
         let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
         options.shapeFormat = .polyline6
         options.distanceMeasurementSystem = .metric
-        options.attributeOptions = []
+        options.attributeOptions = [.congestionLevel]
 
         // Calculate the routes
         let result = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
@@ -87,14 +87,19 @@ final class RoutingStore: ObservableObject {
     }
 
     func calculateRoute(for item: ResolvedItem) async throws -> RoutingService.RouteCalculationResult {
-        guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+        guard let userLocation = self.mapStore.mapView?.userLocation?.location else {
             throw LocationNotEnabledError()
         }
         let waypoints = [Waypoint(location: userLocation), Waypoint(coordinate: item.coordinate)]
         return try await self.calculateRoute(for: waypoints)
     }
 
-    func navigate(to item: ResolvedItem, with route: RoutingService.RouteCalculationResult) {
+    func navigate(to item: ResolvedItem, with calculatedRouteIfAvailable: RoutingService.RouteCalculationResult? = nil) async throws {
+        let route = if let calculatedRouteIfAvailable {
+            calculatedRouteIfAvailable
+        } else {
+            try await self.calculateRoute(for: item)
+        }
         self.potentialRoute = route
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
         if let location = route.waypoints.first {
@@ -136,7 +141,7 @@ final class RoutingStore: ObservableObject {
                 self.navigationProgress = .navigating
             } else {
                 navigationController.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.isLocationPermissionEnabled && self.mapStore.streetViewScene == nil
+                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.permissionStatus.isEnabled && self.mapStore.streetViewScene == nil
             }
         case .navigating:
             if let route = self.navigatingRoute {
@@ -155,6 +160,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func navigate(to route: Route) {
+        self.potentialRoute?.routes = [route]
         self.navigatingRoute = route
     }
 
@@ -162,6 +168,26 @@ final class RoutingStore: ObservableObject {
         self.waypoints = nil
         self.potentialRoute = nil
         self.navigationProgress = .none
+        self.potentialRoute?.routes.removeAll()
+        self.mapStore.clearItems()
+    }
+}
+
+// MARK: - NavigationMapViewDelegate
+
+extension RoutingStore: NavigationMapViewDelegate {
+
+    func navigationViewController(_: NavigationViewController, didSelect route: Route) {
+        // Remove the selected route if it exists in the array
+        self.potentialRoute?.routes.removeAll(where: { $0 == route })
+
+        // Insert the selected route at the beginning of the array
+        self.potentialRoute?.routes.insert(route, at: 0)
+
+        // Update the map with the reordered routes
+        if let route = self.potentialRoute?.routes {
+            self.mapStore.mapView?.showRoutes(route)
+        }
     }
 }
 
@@ -169,18 +195,20 @@ final class RoutingStore: ObservableObject {
 
 extension RoutingStore: NavigationViewControllerDelegate {
 
-    func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
-        self.navigatingRoute = nil
+    nonisolated func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
+        Task { @MainActor in
+            self.navigatingRoute = nil
+        }
     }
 
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+    nonisolated func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
         return navigationViewController.routeController?.userIsOnRoute(location) == false
     }
 
-    func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
+    nonisolated func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
         Task {
             do {
-                guard let currentRoute = self.navigatingRoute?.routeOptions.waypoints.last else { return }
+                guard let currentRoute = await self.navigatingRoute?.routeOptions.waypoints.last else { return }
 
                 let routes = try await self.calculateRoute(for: [Waypoint(location: location), currentRoute])
                 if let route = routes.routes.first {
@@ -192,13 +220,17 @@ extension RoutingStore: NavigationViewControllerDelegate {
         }
     }
 
-    func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
-        Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
+    nonisolated func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
+        Task { @MainActor in
+            Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
+        }
     }
 
-    func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
-        self.navigatingRoute = route
-        Logger.routing.info("didRerouteAlong new route \(route)")
+    nonisolated func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
+        Task { @MainActor in
+            self.navigatingRoute = route
+            Logger.routing.info("didRerouteAlong new route \(route)")
+        }
     }
 }
 

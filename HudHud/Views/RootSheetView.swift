@@ -21,6 +21,7 @@ struct RootSheetView: View {
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
     @ObservedObject var mapViewStore: MapViewStore
+    @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
 
     @StateObject var notificationManager = NotificationManager()
@@ -30,7 +31,7 @@ struct RootSheetView: View {
     var body: some View {
         NavigationStack(path: self.$mapViewStore.path) {
             SearchSheet(mapStore: self.mapStore,
-                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
+                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, filterStore: self.searchViewStore.filterStore)
                 .background(Color(.Colors.General._05WhiteBackground))
                 .navigationDestination(for: SheetSubView.self) { value in
                     switch value {
@@ -49,42 +50,43 @@ struct RootSheetView: View {
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
                             let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                            let tempStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, mode: self.searchViewStore.mode)
+                            let tempStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, filterStore: self.searchViewStore.filterStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
                                 routingStore.add(item)
                             })
                             return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore).navigationBarBackButtonHidden()
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, filterStore: self.searchViewStore.filterStore).navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, mode: self.searchViewStore.mode)
+                        let freshSearchViewStore: SearchViewStore = { let tempStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, filterStore: self.searchViewStore.filterStore, mode: self.searchViewStore.mode)
                             tempStore.searchType = .favorites
                             return tempStore
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
-                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore)
+                                    searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, filterStore: self.searchViewStore.filterStore)
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
-                    POIDetailSheet(item: item, routingStore: self.searchViewStore.routingStore, onStart: { route in
+                    POIDetailSheet(
+                        item: item,
+                        routingStore: self.searchViewStore.routingStore,
+                        didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
+                    ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
-                        self.searchViewStore.routingStore.navigate(to: item, with: route)
                         Task {
-                            do {
-                                try? await self.notificationManager.requestAuthorization()
-                            }
+                            try? await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
+                            try? await self.notificationManager.requestAuthorization()
                         }
-                    }, onDismiss: {
-                        self.searchViewStore.mapStore.selectedItem = nil
-                        self.searchViewStore.mapStore.displayableItems = []
+                    } onDismiss: {
+                        self.searchViewStore.mapStore.clearItems(clearResults: false)
                         if !self.mapViewStore.path.isEmpty {
-                            self.mapViewStore.path.removeLast()
+                            self.mapViewStore.path = NavigationPath()
                         }
-                    })
+                    }
                     .navigationBarBackButtonHidden()
                 }
                 .navigationDestination(for: RoutingService.RouteCalculationResult.self) { _ in

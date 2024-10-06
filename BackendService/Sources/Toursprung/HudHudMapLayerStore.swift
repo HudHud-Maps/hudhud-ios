@@ -43,13 +43,14 @@ public class HudHudMapLayerStore: ObservableObject {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let mapLayer: [HudHudMapLayer] = jsonResponse.data.compactMap { mapStyle in
+                let mapLayer: [HudHudMapLayer] = jsonResponse.data.compactMap { mapStyle -> HudHudMapLayer? in
                     guard let styleURL = URL(string: mapStyle.style_url),
                           let thumbnailURL = URL(string: mapStyle.thumbnail_url) else {
                         Logger.parser.error("style_url or thumbnail_url missing, ignoring map layer")
                         return nil
                     }
-                    return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL, type: .init(BackendValue: mapStyle._type.rawValue))
+
+                    return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL, type: .init(BackendValue: mapStyle._type))
                 }
                 return mapLayer
             }
@@ -61,6 +62,8 @@ public class HudHudMapLayerStore: ObservableObject {
             }
             self.lastError = OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
+        case let .internalServerError(error):
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -89,14 +92,12 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
 
         // MARK: Lifecycle
 
-        public init(BackendValue value: String) {
+        init(BackendValue value: Components.Schemas.MapStyle._typePayload) {
             switch value {
-            case "map_type":
+            case .map_type:
                 self = .mapType
-            case "map_details":
+            case .map_details:
                 self = .mapDetails
-            default:
-                self = .mapType
             }
         }
 

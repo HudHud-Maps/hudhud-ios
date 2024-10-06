@@ -12,7 +12,7 @@ struct PersonalInformationScreenView: View {
 
     // MARK: Properties
 
-    @StateObject var loginStore: LoginStore
+    @State var loginStore: LoginStore
     var onDismiss: () -> Void
 
     // MARK: Content
@@ -36,7 +36,9 @@ struct PersonalInformationScreenView: View {
             } label: {
                 Text("Create Account")
             }
-            .buttonStyle(LargeButtonStyle(backgroundColor: Color.Colors.General._07BlueMain.opacity(self.loginStore.canCreateAccount ? 1 : 0.5), foregroundColor: .white))
+            .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                          backgroundColor: Color.Colors.General._07BlueMain.opacity(self.loginStore.canCreateAccount ? 1 : 0.5),
+                                          foregroundColor: .white))
             .disabled(!self.loginStore.canCreateAccount)
         }
         .padding()
@@ -44,6 +46,6 @@ struct PersonalInformationScreenView: View {
 }
 
 #Preview {
-    @State var showLogin = true
+    @Previewable @State var showLogin = true
     return PersonalInformationScreenView(loginStore: LoginStore(), onDismiss: {})
 }
