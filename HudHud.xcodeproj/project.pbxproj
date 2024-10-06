@@ -68,6 +68,7 @@
 		A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128EEC335247DA2600CF82C6 /* NotificationManager.swift */; };
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
+		AF34795A2CB2CCC000FE3D0B /* Semaphore in Frameworks */ = {isa = PBXBuildFile; productRef = AF3479592CB2CCC000FE3D0B /* Semaphore */; };
 		AF5D361C2C57A93800B11ABF /* CategoryItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5D361B2C57A93800B11ABF /* CategoryItemView.swift */; };
 		AF68CAD22CAE9F9300BCEA97 /* SheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF68CAD12CAE9F9300BCEA97 /* SheetStore.swift */; };
 		AFF87B692C773F91007EE60E /* RoutingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF87B682C773F91007EE60E /* RoutingStore.swift */; };
@@ -312,6 +313,7 @@
 				F22401782C58D61B008865AE /* SwiftUIPanoramaViewer in Frameworks */,
 				CDCC2A242C885989007D7940 /* FerrostarMapLibreUI in Frameworks */,
 				59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */,
+				AF34795A2CB2CCC000FE3D0B /* Semaphore in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CDCC2A262C885989007D7940 /* FerrostarSwiftUI in Frameworks */,
@@ -767,6 +769,7 @@
 				CDCC2A232C885989007D7940 /* FerrostarMapLibreUI */,
 				CDCC2A252C885989007D7940 /* FerrostarSwiftUI */,
 				CDF9F0F12C9829FE00F5D45E /* NukeUI */,
+				AF3479592CB2CCC000FE3D0B /* Semaphore */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -853,6 +856,7 @@
 				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
 				CDCC2A202C885989007D7940 /* XCRemoteSwiftPackageReference "ferrostar" */,
 				CDF9F0F02C9829FE00F5D45E /* XCRemoteSwiftPackageReference "Nuke" */,
+				AF3479582CB2CCBF00FE3D0B /* XCRemoteSwiftPackageReference "Semaphore" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1421,6 +1425,14 @@
 				kind = branch;
 			};
 		};
+		AF3479582CB2CCBF00FE3D0B /* XCRemoteSwiftPackageReference "Semaphore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/Semaphore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sanzaru/SimpleToast";
@@ -1500,6 +1512,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
 			productName = TouchVisualizer;
+		};
+		AF3479592CB2CCC000FE3D0B /* Semaphore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AF3479582CB2CCBF00FE3D0B /* XCRemoteSwiftPackageReference "Semaphore" */;
+			productName = Semaphore;
 		};
 		BC8E1D9CC7D3AAC1051857FA /* MapLibre */ = {
 			isa = XCSwiftPackageProductDependency;

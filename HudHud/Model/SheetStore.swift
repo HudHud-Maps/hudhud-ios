@@ -9,6 +9,7 @@
 import BackendService
 import Foundation
 import NavigationTransition
+import Semaphore
 import SwiftUI
 
 // MARK: - SheetStore
@@ -26,6 +27,7 @@ final class SheetStore {
     private var newSheetSelectedDetent: PresentationDetent?
 
     private var _sheets: [SheetViewData] = []
+    private var semaphore = AsyncSemaphore(value: 1)
 
     // when `_sheets` is empty, we use these values
     private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
@@ -93,12 +95,14 @@ final class SheetStore {
 
     // we do this to fix UI transition glitches
     private func setNewSheetsInAnAnimationFriendlyWay(newSheets: [SheetViewData]) async {
+        await self.semaphore.wait()
+        defer { semaphore.signal() }
         guard self._sheets.count != newSheets.count else {
             self._sheets = newSheets
             return
         }
         self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        try? await Task.sleep(nanoseconds: 50 * NSEC_PER_MSEC)
+        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
         self._sheets = newSheets
         self.newSheetSelectedDetent = nil
     }
