@@ -41,7 +41,7 @@ struct UserLoginView: View {
                 }
 
                 Text("Enter your phone number or email")
-                    .hudhudFont(.title)
+                    .hudhudFontStyle(.headingLarge)
 
                 VStack(alignment: .leading) {
                     // Text field for email or phone number based on user choose
@@ -70,14 +70,14 @@ struct UserLoginView: View {
                     if !self.loginStore.errorMessage.isEmpty {
                         Text(self.loginStore.errorMessage)
                             .foregroundColor(Color.Colors.General._12Red)
-                            .hudhudFont(.caption)
+                            .hudhudFontStyle(.paragraphSmall)
                             .padding(.bottom, 5)
                     }
                 }
                 Spacer()
                 if !self.loginStore.isInputEmpty {
                     Text("By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy.")
-                        .hudhudFont(.subheadline)
+                        .hudhudFontStyle(.paragraphSmall)
                         .padding(.bottom, 5)
                         .padding(.leading, 5)
                         .foregroundColor(Color.Colors.General._02Grey)
