@@ -125,8 +125,10 @@ class LoginStore {
             self.loginId = response.id
             self.otpResendDuration = response.canRequestOtpResendAt
 
-            // Navigate to OTP View
-            self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
+            await MainActor.run {
+                // Navigate to OTP View
+                self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
+            }
         } catch {
             self.errorMessage = error.localizedDescription.description
         }
