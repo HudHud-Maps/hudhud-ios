@@ -151,7 +151,7 @@ struct SheetViewData: Hashable {
             case .navigationPreview:
                 [.height(150), .nearHalf]
             case .pointOfInterest:
-                [.height(340), .large]
+                [.height(340)]
             case .favoritesViewMore:
                 [.large]
             case .editFavoritesForm:
