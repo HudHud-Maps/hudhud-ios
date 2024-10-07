@@ -9,7 +9,6 @@
 import BackendService
 import Foundation
 import NavigationTransition
-import Semaphore
 import SwiftUI
 
 // MARK: - SheetStore
@@ -24,91 +23,122 @@ final class SheetStore {
 
     // MARK: Properties
 
-    private var newSheetSelectedDetent: PresentationDetent?
+    // MARK: - Private Properties
 
     private var _sheets: [SheetViewData] = []
-    private var semaphore = AsyncSemaphore(value: 1)
+    private var defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    private let defaultSelectedDetent: PresentationDetent = .third
+    private var newSheetSelectedDetent: PresentationDetent?
 
-    // when `_sheets` is empty, we use these values
-    private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private var emptySheetSelectedDetent: PresentationDetent = .third
+    private let updateActor = UpdateActor()
 
     // MARK: Computed Properties
 
-    var sheets: [SheetViewData] {
-        get {
-            self._sheets
-        }
+    // MARK: - Public Properties
 
-        set {
-            Task {
-                await self.setNewSheetsInAnAnimationFriendlyWay(newSheets: newValue)
-            }
-        }
+    var currentSheet: SheetViewData? { self._sheets.last }
+
+    var sheets: [SheetViewData] {
+        get { self._sheets }
+        set { self.updateSheets(newValue) }
     }
 
     var selectedDetent: PresentationDetent {
-        get {
-            self.newSheetSelectedDetent ?? self._sheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        }
-
-        set {
-            if let lastIndex = self.sheets.indices.last {
-                self._sheets[lastIndex].selectedDetent = newValue
-            } else {
-                self.emptySheetSelectedDetent = newValue
-            }
-        }
+        get { self.newSheetSelectedDetent ?? self.currentSheet?.selectedDetent ?? self.defaultSelectedDetent }
+        set { self.updateSelectedDetent(newValue) }
     }
 
     var allowedDetents: Set<PresentationDetent> {
         get {
-            var allowedDetents = if let lastIndex = self.sheets.indices.last {
-                self._sheets[lastIndex].allowedDetents
-            } else {
-                self.emptySheetAllowedDetents
-            }
+            var detents = self.currentSheet?.allowedDetents ?? self.defaultAllowedDetents
             if let newSheetSelectedDetent {
-                allowedDetents.insert(newSheetSelectedDetent)
+                detents.insert(newSheetSelectedDetent)
             }
-            return allowedDetents
+            return detents
         }
-
-        set {
-            if self._sheets.isEmpty {
-                self.emptySheetAllowedDetents = newValue
-            } else {
-                self._sheets[self._sheets.count - 1].allowedDetents = newValue
-            }
-        }
+        set { self.updateAllowedDetents(newValue) }
     }
 
     var transition: AnyNavigationTransition {
-        self._sheets.last?.viewData.transition ?? .fade(.cross)
+        self.currentSheet?.viewData.transition ?? .fade(.cross)
     }
 
     // MARK: Functions
 
-    func reset() {
-        self._sheets = []
+    // MARK: - Public Methods
+
+    func pushSheet(_ sheet: SheetViewData) {
+        self.updateSheets(self._sheets + [sheet])
     }
 
-    // we do this to fix UI transition glitches
-    private func setNewSheetsInAnAnimationFriendlyWay(newSheets: [SheetViewData]) async {
-        await self.semaphore.wait()
-        defer { semaphore.signal() }
-        guard self._sheets.count != newSheets.count else {
-            self._sheets = newSheets
-            return
+    func popSheet() {
+        guard !self._sheets.isEmpty else { return }
+        self.updateSheets(Array(self._sheets.dropLast()))
+    }
+
+    func reset() {
+        self.updateSheets([])
+    }
+
+    // MARK: - Private Methods
+
+    private func updateSheets(_ newSheets: [SheetViewData]) {
+        Task {
+            await self.updateActor.update {
+                guard self._sheets.count != newSheets.count else {
+                    self._sheets = newSheets
+                    return
+                }
+
+                self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.defaultSelectedDetent
+                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+                withAnimation {
+                    self._sheets = newSheets
+                    self.newSheetSelectedDetent = nil
+                }
+            }
         }
-        self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-        self._sheets = newSheets
-        self.newSheetSelectedDetent = nil
+    }
+
+    private func updateSelectedDetent(_ newValue: PresentationDetent) {
+        Task {
+            await self.updateActor.update {
+                if self._sheets.isEmpty {
+                    self.newSheetSelectedDetent = newValue
+                    return
+                }
+
+                if let lastIndex = self._sheets.indices.last {
+                    self._sheets[lastIndex].selectedDetent = newValue
+                }
+            }
+        }
+    }
+
+    private func updateAllowedDetents(_ newValue: Set<PresentationDetent>) {
+        Task {
+            await self.updateActor.update {
+                if self._sheets.isEmpty {
+                    self.defaultAllowedDetents = newValue
+                } else {
+                    if let lastIndex = self._sheets.indices.last {
+                        self._sheets[lastIndex].allowedDetents = newValue
+                    }
+                }
+            }
+        }
     }
 }
 
-// MARK: - Previewable
+// MARK: - UpdateActor
+
+actor UpdateActor {
+    func update(_ operation: @escaping () async -> Void) async {
+        await operation()
+    }
+}
+
+// MARK: - SheetStore + Previewable
 
 extension SheetStore: Previewable {
     static let storeSetUpForPreviewing = SheetStore()

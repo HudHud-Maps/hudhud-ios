@@ -98,7 +98,7 @@ struct ContentView: View {
                             MapButtonsView(
                                 mapButtonsData: [
                                     MapButtonData(sfSymbol: .icon(.map)) {
-                                        self.sheetStore.sheets.append(SheetViewData(viewData: .mapStyle))
+                                        self.sheetStore.pushSheet(SheetViewData(viewData: .mapStyle))
                                     },
                                     MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
                                         switch self.searchViewStore.mode {
@@ -119,10 +119,7 @@ struct ContentView: View {
                                         }
                                     },
                                     MapButtonData(sfSymbol: .icon(.terminal)) {
-                                        self.sheetStore.sheets
-                                            .append(
-                                                SheetViewData(viewData: .debugView)
-                                            )
+                                        self.sheetStore.pushSheet(SheetViewData(viewData: .debugView))
                                     }
                                 ]
                             )

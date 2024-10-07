@@ -199,7 +199,7 @@ struct SearchSheet: View {
                             RecentSearchResultsView(
                                 searchStore: self.searchStore,
                                 searchType: self.searchStore.searchType,
-                                sheets: self.$sheetStore.sheets
+                                sheetStore: self.sheetStore
                             )
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))

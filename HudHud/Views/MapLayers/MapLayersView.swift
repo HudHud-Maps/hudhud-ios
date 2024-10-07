@@ -31,9 +31,7 @@ struct MapLayersView: View {
                 }
                 Spacer()
                 Button {
-                    if !self.sheetStore.sheets.isEmpty {
-                        self.sheetStore.sheets.removeLast()
-                    }
+                    self.sheetStore.popSheet()
                     self.dismiss()
                 } label: {
                     Image(systemSymbol: .xmark)
