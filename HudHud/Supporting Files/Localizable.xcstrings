@@ -55,6 +55,9 @@
     "+" : {
 
     },
+    "About" : {
+
+    },
     "action" : {
 
     },
@@ -350,6 +353,9 @@
     "Open" : {
 
     },
+    "Overview" : {
+
+    },
     "Personal Information" : {
 
     },
@@ -381,6 +387,9 @@
     "Reset" : {
 
     },
+    "Reviews" : {
+
+    },
     "Routing Configuration" : {
 
     },
@@ -408,10 +417,16 @@
         }
       }
     },
+    "Select a Tab" : {
+
+    },
     "Select Type" : {
 
     },
     "SF Symbols on Map" : {
+
+    },
+    "Similar Places" : {
 
     },
     "Simulate Ride during Navigation" : {

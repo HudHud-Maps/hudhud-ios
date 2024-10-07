@@ -27,6 +27,11 @@ struct POIDetailSheet: View {
     let onStart: (RoutingService.RouteCalculationResult?) -> Void
     let onDismiss: () -> Void
 
+    let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
+    @State var selectedTab = "Overview"
+    @Namespace var animation
+    @State var showTabView: Bool = false
+
     @State var routes: RoutingService.RouteCalculationResult?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
@@ -113,6 +118,25 @@ struct POIDetailSheet: View {
                     .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
                 }
                 .padding([.top, .leading, .trailing], 20)
+
+                if self.showTabView {
+                    self.tabView
+                    switch self.selectedTab {
+                    case "Overview":
+                        Text("Overview")
+                    case "Reviews":
+                        Text("Reviews")
+                    case "Photos":
+                        POIMediaView(mediaURLs: self.item.mediaURLs)
+                    case "Similar Places":
+                        Text("Similar Places")
+                    case "About":
+                        Text("About")
+                    default:
+                        Text("Select a Tab")
+                    }
+                }
+
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 4.0) {
                         Button(action: {
@@ -187,6 +211,41 @@ struct POIDetailSheet: View {
                 await self.calculateRoute(for: newItem)
             }
         }
+    }
+
+    var tabView: some View {
+        ScrollView(.horizontal) {
+            HStack {
+                ForEach(self.tabItems, id: \.self) { tab in
+                    VStack {
+                        Text(tab)
+                            .hudhudFont(.subheadline)
+                            .fontWeight(self.selectedTab == tab ? .semibold : .regular)
+                            .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
+                        if self.selectedTab == tab {
+                            Capsule()
+                                .foregroundStyle(Color.Colors.General._06DarkGreen)
+                                .frame(height: 3)
+                                .matchedGeometryEffect(id: "filter", in: self.animation)
+                        } else {
+                            Capsule()
+                                .foregroundColor(Color(.clear))
+                                .frame(height: 3)
+                        }
+                    }
+                    .padding(10)
+                    .onTapGesture {
+                        withAnimation(.easeOut) {
+                            self.selectedTab = tab
+                        }
+                    }
+                }
+            }
+        }.scrollIndicators(.hidden)
+            .overlay {
+                Divider()
+                    .offset(x: 0, y: 15)
+            }
     }
 
     private var categoryView: some View {
