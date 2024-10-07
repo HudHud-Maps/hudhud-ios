@@ -89,6 +89,7 @@ struct POIDetailSheet: View {
                             self.priceRangeView
                             self.accessibilityView
                         }
+                        .padding(.vertical, 5)
                         HStack {
                             self.openStatusView
                             self.routeInformationView
