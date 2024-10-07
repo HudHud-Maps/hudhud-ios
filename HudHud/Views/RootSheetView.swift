@@ -117,6 +117,7 @@ struct RootSheetView: View {
                             self.searchViewStore.mapStore
                                 .clearItems(clearResults: false)
                         }
+                        .navigationBarBackButtonHidden()
                     case .favoritesViewMore:
                         FavoritesViewMoreView(
                             searchStore: self.searchViewStore,
