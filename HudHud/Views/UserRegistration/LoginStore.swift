@@ -14,8 +14,9 @@ import SwiftUI
 
 // MARK: - LoginStore
 
+@MainActor
 @Observable
-class LoginStore {
+final class LoginStore {
 
     // MARK: Nested Types
 
@@ -124,9 +125,9 @@ class LoginStore {
             // Extract loginIdentity and duration from response
             self.loginId = response.id
             self.otpResendDuration = response.canRequestOtpResendAt
-
             // Navigate to OTP View
             self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
+
         } catch {
             self.errorMessage = error.localizedDescription.description
         }

@@ -28,9 +28,9 @@ struct OTPVerificationView: View {
     // MARK: Initialization
 
     init(loginId: String, loginIdentity: String, duration: Date, path: Binding<NavigationPath>, loginStore: LoginStore) {
-        self._store = State(initialValue: OTPVerificationStore(loginId: loginId, duration: duration, loginIdentity: loginIdentity))
         self._path = path
         self.loginStore = loginStore
+        self._store = State(initialValue: OTPVerificationStore(loginId: loginId, duration: duration, loginIdentity: loginIdentity))
     }
 
     // MARK: Content
@@ -62,37 +62,8 @@ struct OTPVerificationView: View {
             .padding(.vertical, 20)
             .padding(.leading)
 
-            VStack {
-                HStack(spacing: 10) {
-                    ForEach(0 ..< 6, id: \.self) { index in
-                        TextField("", text: self.$store.code[index])
-                            .focused(self.$focusedIndex, equals: index)
-                            .keyboardType(.asciiCapableNumberPad)
-                            .textContentType(.oneTimeCode)
-                            .scrollDismissesKeyboard(.interactively)
-                            .multilineTextAlignment(.center)
-                            .frame(height: 50)
-                            .hudhudFont(.title3)
-                            .background(self.bottomBorder(for: index), alignment: .bottom)
-                            .disabled(index > 0 && self.store.code[index - 1].isEmpty)
-                            .onChange(of: self.store.code[index]) { oldCode, newCode in
-                                self.handleCode(oldCode, newCode, at: index)
-                            }
-                            .onSubmit {
-                                if index == 5, self.store.isCodeComplete {
-                                    Task {
-                                        await self.store.verifyOTP()
-                                    }
-                                }
-                            }
-                    }
-                }
-                .padding()
-                .onAppear {
-                    self.focusedIndex = 0
-                }
-            }
-            .padding(.top, 50)
+            OTPFieldView(otp: self.$store.otp, isValid: self.$store.isValid)
+                .padding(.top, 50)
 
             if let errorMessage = store.errorMessage {
                 Text(errorMessage)
@@ -129,9 +100,14 @@ struct OTPVerificationView: View {
                         Text("Verify")
                     }
                 }
-                .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
-                                              backgroundColor: Color.Colors.General._10GreenMain.opacity(!self.store.isCodeComplete ? 0.5 : 1),
-                                              foregroundColor: .white))
+                .buttonStyle(
+                    LargeButtonStyle(
+                        isLoading: .constant(false),
+                        backgroundColor: Color.Colors.General._10GreenMain
+                            .opacity(!self.store.isCodeComplete ? 0.5 : 1),
+                        foregroundColor: .white
+                    )
+                )
                 .disabled(!self.store.isCodeComplete || self.store.isLoading)
             }
             .padding()
@@ -141,8 +117,8 @@ struct OTPVerificationView: View {
             .onDisappear {
                 self.store.timer?.invalidate()
             }
-            .onChange(of: self.store.isCodeComplete) { _, _ in
-                if self.store.isCodeComplete {
+            .onChange(of: self.store.otp) { newValue in
+                if newValue.count == 6 {
                     Task {
                         await self.store.verifyOTP()
                         if self.store.userLoggedIn {
@@ -152,45 +128,6 @@ struct OTPVerificationView: View {
                     }
                 }
             }
-        }
-    }
-
-    // One line under each TextField
-    private func bottomBorder(for index: Int) -> some View {
-        Rectangle()
-            .frame(height: 2)
-            .foregroundColor(self.store.errorMessage != nil ? Color.Colors.General._12Red :
-                (self.focusedIndex == index ? Color.Colors.General._10GreenMain : Color.Colors.General._04GreyForLines))
-            .padding(.top, 8)
-    }
-
-    // MARK: Functions
-
-    private func handleCode(_ oldCode: String, _ newCode: String, at index: Int) {
-        var cleanedCode = newCode
-        // code from SMS
-        if newCode.count == 6 {
-            // Assign each digit to the code array
-            for (i, digit) in newCode.enumerated() {
-                self.store.code[i] = String(digit)
-            }
-            self.focusedIndex = nil
-        }
-
-        if newCode.count > oldCode.count, newCode.count == 2, self.focusedIndex != nil {
-            let newCharacter = newCode.filter { !oldCode.contains($0) }
-            cleanedCode = String(newCharacter)
-
-            self.store.code[index] = cleanedCode
-        }
-        if !cleanedCode.isEmpty, index < 5 {
-            self.focusedIndex = index + 1
-        } else if cleanedCode.isEmpty, index > 0 {
-            self.focusedIndex = index - 1
-        }
-
-        if self.store.isCodeComplete {
-            self.focusedIndex = nil
         }
     }
 }
