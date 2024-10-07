@@ -18,7 +18,9 @@ struct OTPFieldView: View {
     @Binding var otp: String
     @Binding var isValid: Bool
 
+    @State private var hasBeenInvalidated: Bool = false
     @State private var pins: [String]
+
     @FocusState private var focusedField: Int?
 
     private let numberOfFields: Int = 6
@@ -64,12 +66,16 @@ struct OTPFieldView: View {
                             self.focusedField = index - 1
                         }
                     },
+                    onPasteOrAutofill: { text in
+                        self.handlePasteOrAutofill(text)
+                    },
                     isLastField: index == self.numberOfFields - 1,
                     allFieldsFilled: self.allFieldsFilled
                 )
                 .frame(width: 40, height: 50)
                 .background(self.bottomBorder(for: index), alignment: .bottom)
                 .focused(self.$focusedField, equals: index)
+                .textContentType(.oneTimeCode)
             }
         }
         .onAppear {
@@ -79,13 +85,18 @@ struct OTPFieldView: View {
         .onChange(of: self.otp) { _, newValue in
             self.pins = Array(newValue.prefix(6)).map(String.init) + Array(repeating: "", count: max(0, 6 - newValue.count))
         }
+        .onChange(of: self.isValid) { _, newValue in
+            if !newValue {
+                self.hasBeenInvalidated = true
+            }
+        }
     }
 
     private func bottomBorder(for index: Int) -> some View {
         var color: Color {
-            if !self.isValid {
+            if !self.isValid, self.hasBeenInvalidated {
                 return Color.Colors.General._12Red
-            } else if self.isValid, self.focusedField == index {
+            } else if self.focusedField == index {
                 return Color.Colors.General._10GreenMain
             } else {
                 return Color.Colors.General._04GreyForLines
@@ -100,8 +111,23 @@ struct OTPFieldView: View {
 
     // MARK: Functions
 
+    private func handlePasteOrAutofill(_ text: String) {
+        let otpDigits = text.filter(\.isNumber).prefix(self.numberOfFields)
+
+        if otpDigits.count == self.numberOfFields {
+            for (index, digit) in otpDigits.enumerated() {
+                self.pins[index] = String(digit)
+            }
+            self.updateOTP()
+            self.focusedField = self.numberOfFields - 1
+        }
+    }
+
     private func updateOTP() {
         self.otp = self.pins.joined()
+        if self.otp.isEmpty {
+            self.hasBeenInvalidated = false
+        }
     }
 }
 
@@ -144,6 +170,7 @@ struct CustomOTPTextFieldRepresentable: UIViewRepresentable {
     @Binding var text: String
     @Binding var isFocused: Bool
     var onBackspace: () -> Void
+    var onPasteOrAutofill: (String) -> Void
     var isLastField: Bool
     var allFieldsFilled: Bool
 
@@ -158,6 +185,8 @@ struct CustomOTPTextFieldRepresentable: UIViewRepresentable {
         textField.textColor = .black
         textField.onBackspace = self.onBackspace
         textField.isLastField = self.isLastField
+        textField.onPasteOrAutofill = self.onPasteOrAutofill
+        textField.textContentType = .oneTimeCode
 
         let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
         textField.addGestureRecognizer(tapGesture)
@@ -203,6 +232,7 @@ final class CustomOTPTextField: UITextField {
     // MARK: Properties
 
     var onBackspace: (() -> Void)?
+    var onPasteOrAutofill: ((String) -> Void)?
     var isLastField: Bool = false
     var allFieldsFilled: Bool = false
 
@@ -216,10 +246,27 @@ final class CustomOTPTextField: UITextField {
     }
 
     override func canPerformAction(_ action: Selector, withSender _: Any?) -> Bool {
+        if action == #selector(UIResponderStandardEditActions.paste(_:)) {
+            return true
+        }
         if self.isLastField, self.allFieldsFilled {
             return action == #selector(UIResponderStandardEditActions.copy(_:))
         }
         return false
+    }
+
+    override func paste(_: Any?) {
+        if let pasteboardString = UIPasteboard.general.string {
+            self.onPasteOrAutofill?(pasteboardString)
+        }
+    }
+
+    override func insertText(_ text: String) {
+        if text.count > 1 {
+            self.onPasteOrAutofill?(text)
+        } else {
+            super.insertText(text)
+        }
     }
 
     override func closestPosition(to point: CGPoint) -> UITextPosition? {
