@@ -593,6 +593,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=invalid_login_identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
       x-codegen-request-body-name: request
   /u/login/{id}/resend-otp:
     post:
@@ -672,7 +678,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SuccessResponse-VerifyOTPResponse'
         "400":
-          description: invalid_request
+          description: code=invalid_request
           content:
             application/json:
               schema:
@@ -722,6 +728,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
     delete:
       tags:
         - User Profile
@@ -747,6 +755,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
     patch:
       tags:
         - User Profile
@@ -774,11 +784,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/SuccessResponse-EditUserProfileResponse'
         "400":
-          description: Invalid Request
+          description: code=invalid_request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
       x-codegen-request-body-name: request
   /u/refresh-token:
     post:
@@ -786,7 +798,7 @@ paths:
         - Auth
       summary: Refresh Access Token
       description: This endpoint will allow the user to refresh their access token by submitting the access token alon with the refresh token
-      operationId: refreshAccessToken
+      operationId: Refresh Access Token
       parameters:
         - name: Accept-Language
           in: header
@@ -813,6 +825,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: code=login_session_is_no_longer_active
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: code=user_is_inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
       x-codegen-request-body-name: request
 components:
   schemas:
@@ -967,6 +993,9 @@ components:
           type: string
         geom:
           type: string
+        heading:
+          type: number
+          format: double
         id:
           type: integer
         name:
@@ -1080,6 +1109,9 @@ components:
           format: double
         geom:
           type: string
+        heading:
+          type: number
+          format: double
         id:
           type: integer
         metadata:
@@ -1496,6 +1528,9 @@ components:
         mobile:
           type: string
           description: MobileNumber is the identity for the user during the login one of Email or MobileNumber has to be present
+        profile_picture_url:
+          type: string
+          format: uri
         user_id:
           type: string
           description: UserID the unique identifier for the user
@@ -1577,4 +1612,10 @@ components:
           type: integer
         start:
           type: integer
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      description: 'JWT Bearer token for authentication. Example: "Bearer <token>"'
+      name: Authorization
+      in: header
 x-original-swagger-version: "2.0"

@@ -64,6 +64,8 @@ final class SearchViewStore: ObservableObject {
     let mapStore: MapStore
     let routingStore: RoutingStore
     var apple = ApplePOI()
+    var progressViewTimer: Timer?
+    var loadingInstance = Loading()
 
     @Published var searchText: String = ""
     @Published var searchError: Error?
@@ -152,7 +154,9 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String) async {
+    func fetch(category: String, enterSearch: Bool? = false) async {
+        self.loadingInstance.state = .initialLoading
+        self.startFetchingResultsTimer()
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -164,6 +168,7 @@ final class SearchViewStore: ObservableObject {
             let userLocation = self.mapStore.mapView?.centerCoordinate
             let items = try await hudhud.items(
                 for: category,
+                enterSearch: enterSearch ?? false,
                 topRated: self.filterStore.topRated,
                 priceRange: self.filterStore.priceSelection.hudHudPriceRange,
                 sortBy: self.filterStore.sortSelection.hudHudSortBy,
@@ -180,6 +185,8 @@ final class SearchViewStore: ObservableObject {
 
             let displayableItems = filteredItems.map(DisplayableRow.categoryItem)
             self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
+            self.loadingInstance.resultIsEmpty = filteredItems.isEmpty
+            self.loadingInstance.state = .result
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -188,6 +195,9 @@ final class SearchViewStore: ObservableObject {
 
     // will called if the user pressed search in keyboard
     func fetchEnterResults() async {
+        self.loadingInstance.state = .initialLoading
+        self.startFetchingResultsTimer()
+
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
@@ -205,6 +215,8 @@ final class SearchViewStore: ObservableObject {
                 return nil
             }
             self.mapStore.replaceItemsAndFocusCamera(on: items)
+            self.loadingInstance.resultIsEmpty = results.items.isEmpty
+            self.loadingInstance.state = .result
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
@@ -227,6 +239,22 @@ final class SearchViewStore: ObservableObject {
         }
         self.recentViewedItem.insert(item, at: 0)
     }
+
+    func startFetchingResultsTimer() {
+        // Invalidate any previous timers
+        self.progressViewTimer?.invalidate()
+
+        // Start the timer to show the Progress View after 0.2 seconds
+        self.progressViewTimer = Timer.scheduledTimer(withTimeInterval: 0.2, repeats: false) { [weak self] _ in
+            guard let self else { return }
+
+            Task { @MainActor in
+                if self.loadingInstance.state == .initialLoading, self.isSheetLoading {
+                    self.loadingInstance.state = .loading
+                }
+            }
+        }
+    }
 }
 
 // MARK: - Private
@@ -240,8 +268,8 @@ private extension SearchViewStore {
             return
         }
         self.task = Task {
-            defer { self.isSheetLoading = false }
             self.isSheetLoading = true
+            defer { self.isSheetLoading = false }
             self.mapViewStore.selectedDetent = .third
 
             let userLocation = self.mapStore.mapView?.userLocation?.coordinate
@@ -252,6 +280,8 @@ private extension SearchViewStore {
                 case .hudhud:
                     try await self.hudhud.predict(term: term, coordinates: userLocation, baseURL: DebugStore().baseURL)
                 }
+                self.loadingInstance.resultIsEmpty = result.items.isEmpty
+                self.loadingInstance.state = .result
                 self.searchError = nil
                 self.mapStore.replaceItemsAndFocusCamera(on: result.items)
                 self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {

@@ -6,11 +6,13 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import iPhoneNumberField
 import SwiftUI
 
 // MARK: - FloatingLabelInputType
 
 enum FloatingLabelInputType {
+    case phone(phone: Binding<String>)
     case text(text: Binding<String>)
     case dropdown(choice: Binding<String>, options: [String])
     case datePicker(date: Binding<Date>, dateFormatter: DateFormatter)
@@ -33,6 +35,26 @@ struct FloatingLabelInputField: View {
         ZStack(alignment: .leading) {
             VStack(alignment: .leading) {
                 switch self.inputType {
+                case let .phone(phone: phone):
+                    iPhoneNumberField(text: phone)
+                        .formatted()
+                        .defaultRegion("SA")
+                        .flagHidden(false)
+                        .flagSelectable(true)
+                        .prefixHidden(false)
+                        .autofillPrefix(true)
+                        .clearButtonMode(.whileEditing)
+                        .hudhudFont(.headline)
+                        .foregroundColor(Color.Colors.General._12Red)
+                        .bold()
+                        .padding(.bottom, 5)
+                        .onChange(of: phone.wrappedValue) { _, newValue in
+                            // Ensure the + sign is not removed
+                            if !newValue.hasPrefix("+") {
+                                phone.wrappedValue = "+" + newValue
+                            }
+                        }
+
                 case let .text(binding):
                     TextField(self.placeholder, text: binding)
                         .hudhudFont()
@@ -87,6 +109,8 @@ struct FloatingLabelInputField: View {
 
     private func getTextField() -> String {
         switch self.inputType {
+        case let .phone(phone: phone):
+            return phone.wrappedValue
         case let .text(binding):
             return binding.wrappedValue
         case let .dropdown(binding, _):

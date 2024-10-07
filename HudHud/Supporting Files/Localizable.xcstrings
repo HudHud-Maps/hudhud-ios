@@ -4,6 +4,9 @@
     "" : {
 
     },
+    " %@" : {
+
+    },
     "..." : {
 
     },
@@ -87,6 +90,9 @@
           }
         }
       }
+    },
+    "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
+
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
@@ -442,6 +448,9 @@
     "User is on Route" : {
 
     },
+    "Verification code sent to the %@ below:" : {
+
+    },
     "Verify" : {
 
     },
@@ -455,9 +464,6 @@
         }
       }
     },
-    "We sent verification code on %@" : {
-
-    },
     "Web" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -468,9 +474,6 @@
           }
         }
       }
-    },
-    "Website" : {
-
     },
     "Work" : {
       "extractionState" : "stale",

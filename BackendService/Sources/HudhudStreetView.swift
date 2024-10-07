@@ -68,9 +68,9 @@ public struct HudhudStreetView {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         case let .badRequest(error):
-            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
+            throw try HudHudClientError.badRequest(error.body.json.message)
         }
     }
 
@@ -100,7 +100,7 @@ public struct HudhudStreetView {
         case .notFound:
             throw HudHudClientError.poiIDNotFound
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -137,7 +137,7 @@ public struct HudhudStreetView {
         case .notFound:
             throw HudHudClientError.poiIDNotFound
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -176,7 +176,7 @@ public struct HudhudStreetView {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         case .badRequest:
             throw HudHudClientError.poiIDNotFound
         case .notFound:

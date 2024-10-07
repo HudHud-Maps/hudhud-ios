@@ -5,27 +5,41 @@
 //  Created by Fatima Aljaber on 01/09/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
-
+import BackendService
 import Combine
 import Foundation
+import OSLog
 
 @Observable
-class OTPVerificationStore {
+final class OTPVerificationStore {
 
     // MARK: Properties
 
+    var loginId: String
     var timer: Timer?
     let loginIdentity: String
-    var code: [String] = Array(repeating: "", count: 6)
     var resendEnabled: Bool = false
+    var errorMessage: String?
+    var verificationSuccessful: Bool = false
+    var isLoading: Bool = false
+    var userLoggedIn: Bool = false
+    var isValid: Bool = true
+
+    private var registrationService = RegistrationService()
 
     private var timeRemaining: Int = 60
-    private let duration: Date
+    private var duration: Date
 
     // MARK: Computed Properties
 
+    var otp: String = "" {
+        didSet {
+            self.resetValidity()
+        }
+    }
+
     var isCodeComplete: Bool {
-        return self.code.allSatisfy { $0.count == 1 }
+        return self.otp.count == 6
     }
 
     var formattedTime: String {
@@ -39,7 +53,8 @@ class OTPVerificationStore {
 
     // MARK: Lifecycle
 
-    init(duration: Date, loginIdentity: String) {
+    init(loginId: String, duration: Date, loginIdentity: String) {
+        self.loginId = loginId
         self.duration = duration
         self.loginIdentity = loginIdentity
     }
@@ -67,6 +82,50 @@ class OTPVerificationStore {
                 self.timer?.invalidate()
                 self.resendEnabled = true
             }
+        }
+    }
+
+    func verifyOTP() async {
+        guard self.isCodeComplete else {
+            self.errorMessage = "Please enter the complete verification code."
+            return
+        }
+
+        self.isLoading = true
+        self.errorMessage = nil
+
+        defer { isLoading = false }
+
+        do {
+            try await self.registrationService.verifyOTP(loginId: self.loginId, otp: self.otp, baseURL: DebugStore().baseURL)
+
+            self.verificationSuccessful = true
+            self.userLoggedIn = true
+            Logger.userRegistration.info("OTP verified successfully.")
+
+        } catch {
+            self.errorMessage = "An error occurred during verification. Please check your OTP code and try again."
+            self.isValid = false
+            Logger.userRegistration.error("OTP verification failed: \(error.localizedDescription)")
+        }
+    }
+
+    func resendOTP(loginId: String) async {
+        do {
+            let response = try await registrationService.resendOTP(loginId: loginId, baseURL: DebugStore().baseURL)
+            self.duration = response.canRequestOtpResendAt
+            self.otp = ""
+            self.isValid = true
+            self.errorMessage = nil
+        } catch {
+            Logger.userRegistration.info("error resending otp")
+        }
+    }
+
+    private func resetValidity() {
+        if !self.isValid, !self.isCodeComplete {
+            self.isValid = false
+            self.errorMessage = nil
         }
     }
 }
