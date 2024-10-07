@@ -250,7 +250,7 @@ struct ShowMoreButton: View {
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color.Colors.General._03LightGrey)
-                .cornerRadius(10)
+                .cornerRadius(100)
         }
     }
 }
