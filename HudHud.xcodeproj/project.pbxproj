@@ -23,6 +23,7 @@
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
 		341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */; };
+		379DDC2776272FE04C0B570A /* POIOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2183BECFE15DBC861312F863 /* POIOverviewView.swift */; };
 		3B651D907EB42F44B10A53DF /* MapActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41386D7314539DB91E42D41A /* MapActionHandler.swift */; };
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
 		44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734FB0DF376C6B77950814C5 /* Fonts.swift */; };
@@ -48,6 +49,7 @@
 		5E4B24E475601905AB732509 /* MapViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */; };
 		655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */; };
 		6BA3C89567E6EE1E0693F713 /* GraphHopperRouteAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2587798A4D347D96887F66E /* GraphHopperRouteAdapter.swift */; };
+		6E0F91ECD4821BAB4DB6897E /* POISheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0AB3D68D296351E8314E2D /* POISheetStore.swift */; };
 		73F84F1D2466A9DB8AF62C57 /* PlusJakartaSans-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92B7969B0AE81D4DAB16957A /* PlusJakartaSans-ExtraLightItalic.ttf */; };
 		74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */; };
 		78D60A6DAAE2D6B5BBCB1E06 /* PlusJakartaSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B629EDAD64E6EFF641F2427 /* PlusJakartaSans-SemiBoldItalic.ttf */; };
@@ -189,6 +191,7 @@
 		1A49E3EE7EB638EED6A6D564 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1E69A6191475F5E54A62147D /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
+		2183BECFE15DBC861312F863 /* POIOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIOverviewView.swift; sourceTree = "<group>"; };
 		23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
@@ -315,6 +318,7 @@
 		F2E81DD72C3EC45C00B1F3DD /* StreetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetView.swift; sourceTree = "<group>"; };
 		F3BB5BFA8CB42C0446317C57 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
 		FB6F376F14C1845A8F147ABF /* SearchResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultView.swift; sourceTree = "<group>"; };
+		FC0AB3D68D296351E8314E2D /* POISheetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetStore.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -487,8 +491,18 @@
 				3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */,
 				41386D7314539DB91E42D41A /* MapActionHandler.swift */,
 				7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */,
+				FC0AB3D68D296351E8314E2D /* POISheetStore.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		B545C86A2B8A71F09D3636EB /* POISearchView */ = {
+			isa = PBXGroup;
+			children = (
+				FB6F376F14C1845A8F147ABF /* SearchResultView.swift */,
+				2183BECFE15DBC861312F863 /* POIOverviewView.swift */,
+			);
+			path = POISearchView;
 			sourceTree = "<group>";
 		};
 		CB396FFE2B7C1C7300CF9D59 /* UIStyle */ = {
@@ -636,8 +650,8 @@
 				F2AF14EE2C50F6F4003E4F54 /* StreetView */,
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
 				CD8F7CA8F3403D938AC063FD /* UserRegistration */,
-				FB6F376F14C1845A8F147ABF /* SearchResultView.swift */,
 				AC276CFCF1456B56097AA04B /* Ferrostar */,
+				B545C86A2B8A71F09D3636EB /* POISearchView */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1089,6 +1103,8 @@
 				E3251B5454CD025CDE0D00F9 /* Navigation Delegate.swift in Sources */,
 				EDF32E0E88A8260CDD42AFE2 /* OTPFieldView.swift in Sources */,
 				AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */,
+				6E0F91ECD4821BAB4DB6897E /* POISheetStore.swift in Sources */,
+				379DDC2776272FE04C0B570A /* POIOverviewView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
