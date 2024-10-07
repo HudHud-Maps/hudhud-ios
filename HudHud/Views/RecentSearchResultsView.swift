@@ -22,7 +22,7 @@ struct RecentSearchResultsView: View {
 
     @ScaledMetric var imageSize = 24
     @Environment(\.dismiss) var dismiss
-    @Binding var sheets: [SheetViewData]
+    var sheetStore: SheetStore
 
     // MARK: Content
 
@@ -59,10 +59,7 @@ struct RecentSearchResultsView: View {
                 Spacer()
                 if self.searchType == .favorites {
                     Button("+") {
-                        self.sheets
-                            .append(
-                                SheetViewData(viewData: .editFavoritesForm(item: item))
-                            )
+                        self.sheetStore.pushSheet(SheetViewData(viewData: .editFavoritesForm(item: item)))
                     }
                     .foregroundStyle(Color(.label))
                 }
@@ -92,7 +89,7 @@ struct RecentSearchResultsView: View {
         RecentSearchResultsView(
             searchStore: .storeSetUpForPreviewing,
             searchType: .favorites,
-            sheets: .constant([])
+            sheetStore: SheetStore()
         )
     }
 }
@@ -114,7 +111,7 @@ struct EditFavoritesFormViewPreview: PreviewProvider {
             RecentSearchResultsView(
                 searchStore: .storeSetUpForPreviewing,
                 searchType: .favorites,
-                sheets: .constant([])
+                sheetStore: SheetStore()
             )
             .navigationDestination(isPresented: .constant(true)) {
                 EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)

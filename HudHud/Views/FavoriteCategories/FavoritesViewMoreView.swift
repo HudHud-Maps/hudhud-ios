@@ -63,10 +63,14 @@ struct FavoritesViewMoreView: View {
                 }
                 .confirmationDialog("action", isPresented: self.$actionSheetShown) {
                     Button("Edit") {
-                        self.sheetStore.sheets.append(SheetViewData(viewData: .editFavoritesForm(
-                            item: self.clickedFavorite.item ?? .starbucks,
-                            favoriteItem: self.clickedFavorite
-                        )))
+                        self.sheetStore.pushSheet(
+                            SheetViewData(
+                                viewData: .editFavoritesForm(
+                                    item: self.clickedFavorite.item ?? .starbucks,
+                                    favoriteItem: self.clickedFavorite
+                                )
+                            )
+                        )
                     }
                     Button("Delete", role: .destructive) {
                         self.favoritesStore.deleteFavorite(self.clickedFavorite)
@@ -78,7 +82,7 @@ struct FavoritesViewMoreView: View {
                 RecentSearchResultsView(
                     searchStore: self.searchStore,
                     searchType: .favorites,
-                    sheets: self.$sheetStore.sheets
+                    sheetStore: self.sheetStore
                 )
                 Spacer()
             }
@@ -100,7 +104,7 @@ struct FavoritesViewMoreView: View {
             self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) {
-            self.sheetStore.sheets.append(SheetViewData(viewData: .favorites))
+            self.sheetStore.pushSheet(SheetViewData(viewData: .favorites))
         }
     }
 

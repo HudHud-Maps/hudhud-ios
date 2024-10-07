@@ -38,8 +38,7 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
                 Button("Add") {
-                    self.sheetStore.sheets
-                        .append(SheetViewData(viewData: .favoritesViewMore))
+                    self.sheetStore.pushSheet(SheetViewData(viewData: .favoritesViewMore))
                 }
                 .hudhudFont(size: 12, fontWeight: .medium)
                 .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))

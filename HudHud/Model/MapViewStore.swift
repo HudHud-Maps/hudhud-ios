@@ -53,9 +53,7 @@ final class MapViewStore {
         if !didHaveAnAction {
             // user tapped nothing - deselect
             Logger.mapInteraction.debug("Tapped nothing - setting to nil...")
-            if !self.sheetStore.sheets.isEmpty {
-                self.sheetStore.sheets.removeLast()
-            }
+            self.sheetStore.popSheet()
             self.mapStore.unselectItem()
         }
     }
@@ -72,11 +70,11 @@ private extension MapViewStore {
             .sink { [weak self] newPotentialRoute in
                 guard let self else { return }
 
-                if let newPotentialRoute, case .pointOfInterest = self.sheetStore.sheets.last?.viewData {
-                    self.sheetStore.sheets.append(SheetViewData(viewData: .navigationPreview))
+                if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet?.viewData {
+                    self.sheetStore.pushSheet(SheetViewData(viewData: .navigationPreview))
                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
-                } else if self.sheetStore.sheets.last?.viewData == .navigationPreview, newPotentialRoute == nil {
-                    self.sheetStore.sheets.removeLast()
+                } else if self.sheetStore.currentSheet?.viewData == .navigationPreview, newPotentialRoute == nil {
+                    self.sheetStore.popSheet()
                 }
             }
             .store(in: &self.subscriptions)
@@ -89,10 +87,8 @@ private extension MapViewStore {
                 guard let self, self.routingStore.potentialRoute == nil else {
                     return
                 }
-                if !self.sheetStore.sheets.isEmpty {
-                    self.sheetStore.sheets.removeLast()
-                }
-                self.sheetStore.sheets.append(SheetViewData(viewData: .pointOfInterest(selectedItem)))
+                self.sheetStore.popSheet()
+                self.sheetStore.pushSheet(SheetViewData(viewData: .pointOfInterest(selectedItem)))
             }
             .store(in: &self.subscriptions)
     }
