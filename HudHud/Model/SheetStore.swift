@@ -9,6 +9,7 @@
 import BackendService
 import Foundation
 import NavigationTransition
+import Semaphore
 import SwiftUI
 
 // MARK: - SheetStore
@@ -27,10 +28,10 @@ final class SheetStore {
 
     private var _sheets: [SheetViewData] = []
     private var defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private let defaultSelectedDetent: PresentationDetent = .third
+    private var defaultSelectedDetent: PresentationDetent = .third
     private var newSheetSelectedDetent: PresentationDetent?
 
-    private let updateActor = UpdateActor()
+    private let semaphore = AsyncSemaphore(value: 1)
 
     // MARK: Computed Properties
 
@@ -40,7 +41,7 @@ final class SheetStore {
 
     var sheets: [SheetViewData] {
         get { self._sheets }
-        set { self.updateSheets(newValue) }
+        set { Task { await self.updateSheets(newValue) } }
     }
 
     var selectedDetent: PresentationDetent {
@@ -68,77 +69,51 @@ final class SheetStore {
     // MARK: - Public Methods
 
     func pushSheet(_ sheet: SheetViewData) {
-        self.updateSheets(self._sheets + [sheet])
+        self.sheets.append(sheet)
     }
 
-    func popSheet() {
-        guard !self._sheets.isEmpty else { return }
-        self.updateSheets(Array(self._sheets.dropLast()))
+    @discardableResult
+    func popSheet() -> SheetViewData? {
+        self.sheets.popLast()
     }
 
     func reset() {
-        self.updateSheets([])
+        self.sheets.removeAll()
     }
 
     // MARK: - Private Methods
 
-    private func updateSheets(_ newSheets: [SheetViewData]) {
-        Task {
-            await self.updateActor.update {
-                guard self._sheets.count != newSheets.count else {
-                    self._sheets = newSheets
-                    return
-                }
-
-                self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.defaultSelectedDetent
-                try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-                withAnimation {
-                    self._sheets = newSheets
-                    self.newSheetSelectedDetent = nil
-                }
-            }
+    private func updateSheets(_ newSheets: [SheetViewData]) async {
+        await self.semaphore.wait()
+        defer { semaphore.signal() }
+        guard self._sheets.count != newSheets.count else {
+            self._sheets = newSheets
+            return
         }
+        self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.defaultSelectedDetent
+        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
+        self._sheets = newSheets
+        self.newSheetSelectedDetent = nil
     }
 
     private func updateSelectedDetent(_ newValue: PresentationDetent) {
-        Task {
-            await self.updateActor.update {
-                if self._sheets.isEmpty {
-                    self.newSheetSelectedDetent = newValue
-                    return
-                }
-
-                if let lastIndex = self._sheets.indices.last {
-                    self._sheets[lastIndex].selectedDetent = newValue
-                }
-            }
+        if let lastIndex = self._sheets.indices.last {
+            self._sheets[lastIndex].selectedDetent = newValue
+        } else {
+            self.defaultSelectedDetent = newValue
         }
     }
 
     private func updateAllowedDetents(_ newValue: Set<PresentationDetent>) {
-        Task {
-            await self.updateActor.update {
-                if self._sheets.isEmpty {
-                    self.defaultAllowedDetents = newValue
-                } else {
-                    if let lastIndex = self._sheets.indices.last {
-                        self._sheets[lastIndex].allowedDetents = newValue
-                    }
-                }
-            }
+        if let lastIndex = self._sheets.indices.last {
+            self._sheets[lastIndex].allowedDetents = newValue
+        } else {
+            self.defaultAllowedDetents = newValue
         }
     }
 }
 
-// MARK: - UpdateActor
-
-actor UpdateActor {
-    func update(_ operation: @escaping () async -> Void) async {
-        await operation()
-    }
-}
-
-// MARK: - SheetStore + Previewable
+// MARK: - Previewable
 
 extension SheetStore: Previewable {
     static let storeSetUpForPreviewing = SheetStore()
