@@ -23,7 +23,7 @@ public struct RegistrationService {
 
     // MARK: Functions
 
-    public mutating func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
+    public func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
         let urlSessionConfiguration = URLSessionConfiguration.default
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
