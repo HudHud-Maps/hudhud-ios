@@ -12,10 +12,9 @@
     {
       "identity" : "ferrostar",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/ferrostar",
+      "location" : "https://github.com/hactar/ferrostar.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "1758ca2a1fbfd8fe4e4a9d3dbf6f51583cfc5993"
+        "revision" : "9afdad2daa000ed86f4dea23ac3dce1cf33b55cd"
       }
     },
     {
@@ -41,8 +40,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "816a24eb56b7cd004e389f7da404047839d5dc2b",
-        "version" : "6.4.2"
+        "revision" : "e409318144091c3ee9ad551b202e1c36695f8086",
+        "version" : "6.7.0"
       }
     },
     {
@@ -212,8 +211,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/swiftui-dsl",
       "state" : {
-        "revision" : "5ba75ef1e4382fcc7ee71e274eb9c2a50906b14e",
-        "version" : "0.1.0"
+        "revision" : "899457ffccf6abc802e1639e1bbae6e25e864702",
+        "version" : "0.2.0"
       }
     },
     {
