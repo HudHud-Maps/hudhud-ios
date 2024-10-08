@@ -18,24 +18,30 @@ import SwiftUI
 /// * the navigation path
 /// * the selected detent
 /// * the allowed detent
+/// * the sheet's visibility
 @MainActor
 @Observable
 final class SheetStore {
 
     // MARK: Properties
 
+    // MARK: - Public Properties
+
+    var isShown: Bool = true
+
     // MARK: - Private Properties
 
     private var _sheets: [SheetViewData] = []
-    private var defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private var defaultSelectedDetent: PresentationDetent = .third
     private var newSheetSelectedDetent: PresentationDetent?
 
     private let semaphore = AsyncSemaphore(value: 1)
 
-    // MARK: Computed Properties
+    private let defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    private let defaultSelectedDetent: PresentationDetent = .third
+    private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    private var emptySheetSelectedDetent: PresentationDetent = .third
 
-    // MARK: - Public Properties
+    // MARK: Computed Properties
 
     var currentSheet: SheetViewData? { self._sheets.last }
 
@@ -45,13 +51,15 @@ final class SheetStore {
     }
 
     var selectedDetent: PresentationDetent {
-        get { self.newSheetSelectedDetent ?? self.currentSheet?.selectedDetent ?? self.defaultSelectedDetent }
+        get {
+            self.newSheetSelectedDetent ?? self.currentSheet?.selectedDetent ?? self.emptySheetSelectedDetent
+        }
         set { self.updateSelectedDetent(newValue) }
     }
 
     var allowedDetents: Set<PresentationDetent> {
         get {
-            var detents = self.currentSheet?.allowedDetents ?? self.defaultAllowedDetents
+            var detents = self.currentSheet?.allowedDetents ?? self.emptySheetAllowedDetents
             if let newSheetSelectedDetent {
                 detents.insert(newSheetSelectedDetent)
             }
@@ -78,6 +86,8 @@ final class SheetStore {
     }
 
     func reset() {
+        self.emptySheetAllowedDetents = self.defaultAllowedDetents
+        self.emptySheetSelectedDetent = self.defaultSelectedDetent
         self.sheets.removeAll()
     }
 
@@ -90,7 +100,7 @@ final class SheetStore {
             self._sheets = newSheets
             return
         }
-        self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.defaultSelectedDetent
+        self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
         try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
         self._sheets = newSheets
         self.newSheetSelectedDetent = nil
@@ -100,7 +110,7 @@ final class SheetStore {
         if let lastIndex = self._sheets.indices.last {
             self._sheets[lastIndex].selectedDetent = newValue
         } else {
-            self.defaultSelectedDetent = newValue
+            self.emptySheetSelectedDetent = newValue
         }
     }
 
@@ -108,7 +118,7 @@ final class SheetStore {
         if let lastIndex = self._sheets.indices.last {
             self._sheets[lastIndex].allowedDetents = newValue
         } else {
-            self.defaultAllowedDetents = newValue
+            self.emptySheetAllowedDetents = newValue
         }
     }
 }

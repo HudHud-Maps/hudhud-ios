@@ -57,10 +57,6 @@ final class MapViewStore {
             self.mapStore.unselectItem()
         }
     }
-
-    func reset() {
-        self.sheetStore.reset()
-    }
 }
 
 private extension MapViewStore {

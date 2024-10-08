@@ -35,6 +35,7 @@ struct RootSheetView: View {
             SearchSheet(mapStore: self.mapStore,
                         searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore, filterStore: self.searchViewStore.filterStore)
                 .background(Color(.Colors.General._05WhiteBackground))
+                .toolbar(.hidden)
                 .navigationDestination(for: SheetViewData.self) { value in
                     switch value.viewData {
                     case .mapStyle:

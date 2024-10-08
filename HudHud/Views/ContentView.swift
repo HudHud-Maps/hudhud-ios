@@ -40,7 +40,7 @@ struct ContentView: View {
     @ObservedObject private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
-    private let sheetStore: SheetStore
+    @Bindable private var sheetStore: SheetStore
     private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
 
@@ -71,7 +71,9 @@ struct ContentView: View {
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
-                mapViewStore: self.mapViewStore
+                mapViewStore: self.mapViewStore,
+                routingStore: self.searchViewStore.routingStore,
+                isSheetShown: self.$sheetStore.isShown
             )
             .task {
                 do {
@@ -155,7 +157,7 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown) {
+            .backport.sheet(isPresented: self.$sheetStore.isShown) {
                 RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetStore: self.sheetStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
@@ -190,12 +192,12 @@ struct ContentView: View {
                     if self.mapStore.streetViewScene != nil {
                         StreetView(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
                             .onChange(of: self.mapStore.fullScreenStreetView) { _, newValue in
-                                self.mapStore.searchShown = !newValue
+                                self.sheetStore.isShown = !newValue
                             }
                     }
                 }
                 .onChange(of: self.mapStore.streetViewScene) { _, newValue in
-                    self.mapStore.searchShown = newValue == nil
+                    self.sheetStore.isShown = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
             .onChange(of: self.sheetStore.selectedDetent) {
@@ -356,5 +358,13 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    MapViewContainer(
+        mapStore: mapStore,
+        debugStore: DebugStore(),
+        searchViewStore: searchStore,
+        userLocationStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        routingStore: .storeSetUpForPreviewing,
+        isSheetShown: .constant(true)
+    )
 }

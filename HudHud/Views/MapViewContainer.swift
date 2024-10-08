@@ -26,7 +26,9 @@ struct MapViewContainer: View {
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     let mapViewStore: MapViewStore
+    @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
+    @Binding var isSheetShown: Bool
 
     @State private var didFocusOnUser = false
 
@@ -57,14 +59,17 @@ struct MapViewContainer: View {
         debugStore: DebugStore,
         searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore
+        mapViewStore: MapViewStore,
+        routingStore: RoutingStore,
+        isSheetShown: Binding<Bool>
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
-
+        self.routingStore = routingStore
+        self._isSheetShown = isSheetShown
         // boot up ferrostar
     }
 
@@ -276,7 +281,7 @@ struct MapViewContainer: View {
                         }
 
                         try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
-                        self.mapStore.searchShown = false
+                        self.isSheetShown = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                             self.mapStore.camera = .automotiveNavigation()
                         }
@@ -285,7 +290,7 @@ struct MapViewContainer: View {
                     }
                 } else {
                     self.stopNavigation()
-                    self.mapStore.searchShown = true
+                    self.isSheetShown = true
                 }
             }
             .task {
@@ -301,12 +306,8 @@ struct MapViewContainer: View {
 
     @MainActor
     func stopNavigation() {
-        self.searchViewStore.routingStore.ferrostarCore.stopNavigation()
-        self.searchViewStore.routingStore.potentialRoute = nil
-        self.searchViewStore.routingStore.navigatingRoute = nil
-
-        self.mapViewStore.reset()
-        self.mapStore.searchShown = true
+        self.searchViewStore.endTrip()
+        self.isSheetShown = true
 
         if let coordinates = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
@@ -322,5 +323,13 @@ struct MapViewContainer: View {
 #Preview {
     @Previewable let mapStore: MapStore = .storeSetUpForPreviewing
     @Previewable let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    MapViewContainer(
+        mapStore: mapStore,
+        debugStore: DebugStore(),
+        searchViewStore: searchStore,
+        userLocationStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        routingStore: .storeSetUpForPreviewing,
+        isSheetShown: .constant(true)
+    )
 }
