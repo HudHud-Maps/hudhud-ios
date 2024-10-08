@@ -10,28 +10,38 @@ import BackendService
 import Foundation
 import SwiftUI
 
-@Observable
-class POISheetStore {
+struct POISheetStore {
+
+    // MARK: Nested Types
+
+    enum OpeningHours: String, CaseIterable {
+        case monday = "Monday"
+        case tuesday = "Tuesday"
+        case wednesday = "Wednesday"
+        case thursday = "Thursday"
+        case friday = "Friday"
+        case saturday = "Saturday"
+        case sunday = "Sunday"
+
+        // MARK: Computed Properties
+
+        var hours: String {
+            switch self {
+            case .monday, .tuesday, .wednesday, .thursday:
+                return "9:00 AM - 10:00 PM"
+            case .friday:
+                return "Closed"
+            case .saturday:
+                return "10:00 AM - 8:00 PM"
+            case .sunday:
+                return "11:00 AM - 6:00 PM"
+            }
+        }
+    }
 
     // MARK: Properties
 
     let item: ResolvedItem
-    var openingHours = false
-
-    let hours: [String: String] = [
-        "Monday": "9:00 AM - 10:00 PM",
-        "Tuesday": "9:00 AM - 10:00 PM",
-        "Wednesday": "9:00 AM - 10:00 PM",
-        "Thursday": "9:00 AM - 10:00 PM",
-        "Friday": "Closed",
-        "Saturday": "10:00 AM - 8:00 PM"
-    ]
-
-    // MARK: Lifecycle
-
-    init(item: ResolvedItem, openingHours: Bool = false) {
-        self.item = item
-        self.openingHours = openingHours
-    }
+    @Binding var openingHoursExpanded: Bool
 
 }

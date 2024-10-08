@@ -49,7 +49,7 @@ struct POIOverviewView: View {
                     .background(Color.Colors.General._04GreyForLines)
 
                 // Claim Button
-                ClaimBusinessButton()
+                ClaimBusinessButtonView()
                     .padding(.horizontal)
             }
             .hudhudFont(size: 15, fontWeight: .regular)
@@ -58,7 +58,7 @@ struct POIOverviewView: View {
                 .background(Color.Colors.General._04GreyForLines)
 
             // Show more button
-            ShowMoreButton()
+            ShowMoreButtonView()
                 .padding(.horizontal)
         }
     }
@@ -98,8 +98,8 @@ struct OpeningHoursView: View {
 
     var body: some View {
         Button(action: {
-            withAnimation { self.data.openingHours.toggle() }
-        }) {
+            withAnimation { self.data.openingHoursExpanded.toggle() }
+        }, label: {
             HStack(alignment: .top) {
                 Image(systemSymbol: .clockFill)
                     .foregroundColor(.Colors.General._02Grey)
@@ -107,19 +107,19 @@ struct OpeningHoursView: View {
                     HStack {
                         Text(self.isOpen ? "Open" : "Closed")
                             .foregroundColor(self.isOpen ? .Colors.General._10GreenMain : .Colors.General._02Grey)
-                        Image(systemName: self.data.openingHours ? "chevron.up" : "chevron.down")
+                        Image(systemSymbol: self.data.openingHoursExpanded ? .chevronUp : .chevronDown)
                             .foregroundColor(Color.Colors.General._10GreenMain)
                     }
 
-                    if self.data.openingHours {
+                    if self.data.openingHoursExpanded {
                         VStack(alignment: .leading, spacing: 5) {
-                            ForEach(self.data.hours.keys.sorted(), id: \.self) { day in
+                            ForEach(POISheetStore.OpeningHours.allCases, id: \.self) { day in
                                 HStack {
-                                    Text(day)
+                                    Text(day.rawValue)
                                         .hudhudFont(.caption)
                                         .foregroundColor(.Colors.General._02Grey)
                                     Spacer()
-                                    Text(self.data.hours[day] ?? "")
+                                    Text(day.hours)
                                         .hudhudFont(.caption)
                                         .foregroundColor(.Colors.General._02Grey)
                                 }
@@ -128,7 +128,7 @@ struct OpeningHoursView: View {
                     }
                 }
             }
-        }
+        })
         .padding(.horizontal)
     }
 }
@@ -139,8 +139,8 @@ struct ContactDetailView: View {
 
     // MARK: Properties
 
-    let phone: String
-    let website: String
+    let phone: String?
+    let website: String?
 
     @Environment(\.openURL) private var openURL
 
@@ -151,30 +151,34 @@ struct ContactDetailView: View {
             Image(systemSymbol: .exclamationmarkCircleFill)
                 .foregroundColor(.Colors.General._02Grey)
             VStack(alignment: .leading, spacing: 7) {
-                Button(action: {
-                    if let url = URL(string: "tel://\(phone)") {
-                        self.openURL(url)
-                    }
-                }) {
-                    Text(self.phone)
-                        .foregroundColor(.Colors.General._10GreenMain)
+                if let phone {
+                    Button(action: {
+                        if let url = URL(string: "tel://\(phone)") {
+                            self.openURL(url)
+                        }
+                    }, label: {
+                        Text(phone)
+                            .foregroundColor(.Colors.General._10GreenMain)
+                    })
                 }
-                Link(self.website, destination: URL(string: self.website)!)
-                    .foregroundColor(.Colors.General._10GreenMain)
+                if let website, let url = URL(string: website) {
+                    Link(website, destination: url)
+                        .foregroundColor(.Colors.General._10GreenMain)
 
-                SocialMediaLinks()
-                    .padding(.top, 12)
+                    SocialMediaLinksView()
+                        .padding(.top, 12)
+                }
             }
         }
         .padding(.horizontal)
     }
 }
 
-// MARK: - SocialMediaLinks
+// MARK: - SocialMediaLinksView
 
 // Social media
 
-struct SocialMediaLinks: View {
+struct SocialMediaLinksView: View {
 
     // MARK: Properties
 
@@ -185,15 +189,15 @@ struct SocialMediaLinks: View {
     var body: some View {
         HStack(spacing: 20) {
             ForEach(self.icons, id: \.self) { icon in
-                CircularIcon(iconName: icon)
+                CircularIconView(iconName: icon)
             }
         }
     }
 }
 
-// MARK: - CircularIcon
+// MARK: - CircularIconView
 
-struct CircularIcon: View {
+struct CircularIconView: View {
 
     // MARK: Properties
 
@@ -221,40 +225,41 @@ struct CircularIcon: View {
     }
 }
 
-// MARK: - ClaimBusinessButton
+// MARK: - ClaimBusinessButtonView
 
-struct ClaimBusinessButton: View {
+struct ClaimBusinessButtonView: View {
     var body: some View {
         Button(action: {
             // Action for claim button
-        }) {
+        }, label: {
             HStack {
                 Image(systemSymbol: .checkmarkSealFill)
                     .foregroundColor(.Colors.General._02Grey)
                 Text("Claim this business")
                     .foregroundColor(.Colors.General._06DarkGreen)
             }
-        }
+        })
     }
 }
 
-// MARK: - ShowMoreButton
+// MARK: - ShowMoreButtonView
 
-struct ShowMoreButton: View {
+struct ShowMoreButtonView: View {
     var body: some View {
         Button(action: {
             // Action for show more button
-        }) {
+        }, label: {
             Text("Show more")
                 .foregroundColor(.Colors.General._06DarkGreen)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color.Colors.General._03LightGrey)
                 .cornerRadius(100)
-        }
+        })
     }
 }
 
 #Preview {
-    POIOverviewView(poiData: .init(item: .artwork, openingHours: false))
+    @Previewable @State var openingHoursExpanded = false
+    POIOverviewView(poiData: POISheetStore(item: .artwork, openingHoursExpanded: $openingHoursExpanded))
 }
