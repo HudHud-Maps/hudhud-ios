@@ -8,9 +8,6 @@
 
 import BackendService
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapKit
 import MapLibre
 import MapLibreSwiftUI
@@ -229,10 +226,6 @@ struct SearchSheet: View {
         }
     }
 }
-
-// MARK: - Route + Identifiable
-
-extension Route: @retroactive Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [

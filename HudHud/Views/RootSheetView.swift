@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import FerrostarCoreFFI
 import MapLibreSwiftUI
 import OSLog
 import SwiftUI
@@ -68,6 +69,15 @@ struct RootSheetView: View {
                         }()
                         SearchSheet(mapStore: freshSearchViewStore.mapStore,
                                     searchStore: freshSearchViewStore, trendingStore: self.trendingStore, mapViewStore: self.mapViewStore, filterStore: self.searchViewStore.filterStore)
+                    case .navigationPreview:
+                        NavigationSheetView(routingStore: self.searchViewStore.routingStore, mapViewStore: self.mapViewStore)
+                            .navigationBarBackButtonHidden()
+                            .onDisappear(perform: {
+                                if self.mapViewStore.path.contains(Route.self) == false {
+                                    self.searchViewStore.routingStore.endTrip()
+                                }
+                            })
+                            .presentationCornerRadius(21)
                     }
                 }
                 .navigationDestination(for: ResolvedItem.self) { item in
@@ -78,8 +88,12 @@ struct RootSheetView: View {
                     ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
                         Task {
-                            try? await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
-                            try? await self.notificationManager.requestAuthorization()
+                            do {
+                                try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
+                                try await self.notificationManager.requestAuthorization()
+                            } catch {
+                                Logger.routing.error("Error navigating to \(item): \(error)")
+                            }
                         }
                     } onDismiss: {
                         self.searchViewStore.mapStore.clearItems(clearResults: false)
@@ -89,16 +103,7 @@ struct RootSheetView: View {
                     }
                     .navigationBarBackButtonHidden()
                 }
-                .navigationDestination(for: RoutingService.RouteCalculationResult.self) { _ in
-                    NavigationSheetView(routingStore: self.searchViewStore.routingStore, mapViewStore: self.mapViewStore)
-                        .navigationBarBackButtonHidden()
-                        .onDisappear(perform: {
-                            if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) == false {
-                                self.searchViewStore.routingStore.endTrip()
-                            }
-                        })
-                        .presentationCornerRadius(21)
-                }
+            /*
                 .navigationDestination(isPresented:
                     Binding<Bool>(
                         get: { self.searchViewStore.routingStore.navigationProgress == .feedback },
@@ -115,8 +120,9 @@ struct RootSheetView: View {
                         .navigationBarBackButtonHidden()
                         .presentationCornerRadius(21)
                 }
+             */
         }
-        .navigationTransition(.fade(.cross).animation(nil))
+        .navigationTransition(.fade(.cross))
         .frame(minWidth: 320)
         .presentationCornerRadius(21)
         .presentationDetents(self.mapViewStore.allowedDetents, selection: self.$mapViewStore.selectedDetent)

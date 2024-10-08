@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import MapboxCoreNavigation
 import OSLog
 import SwiftLocation
 import SwiftUI
@@ -40,7 +39,6 @@ struct HudHudApp: App {
     // MARK: Lifecycle
 
     init() {
-        RouteControllerUserLocationSnappingDistance = DebugStore().userLocationSnappingDistance
         self.motionViewModel = .shared
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers

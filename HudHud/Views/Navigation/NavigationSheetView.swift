@@ -8,8 +8,6 @@
 
 import BackendService
 import CoreLocation
-import MapboxCoreNavigation
-import MapboxDirections
 import SwiftUI
 
 struct NavigationSheetView: View {
@@ -52,15 +50,15 @@ struct NavigationSheetView: View {
             .frame(height: 20)
             .padding(.horizontal)
             .padding(.top, 30)
-            if let route = self.routingStore.potentialRoute?.routes.first, let waypoints = self.routingStore.waypoints {
+            if let route = self.routingStore.potentialRoute, let waypoints = self.routingStore.waypoints {
                 ABCRouteConfigurationView(routeConfigurations: waypoints, mapViewStore: self.mapViewStore, routingStore: self.routingStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
-                        duration: route.expectedTravelTime,
+                        duration: route.duration,
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
-                        self.routingStore.navigate(to: route)
+                        self.routingStore.navigatingRoute = route
                     }
                 )
                 .padding([.horizontal, .bottom])
