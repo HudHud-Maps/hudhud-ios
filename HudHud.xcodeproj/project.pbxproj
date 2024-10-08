@@ -77,9 +77,9 @@
 		C224EF3E3FE5421938D5878A /* XCTestCase+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE59D45AFB7C19EA54441F81 /* XCTestCase+Additions.swift */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
-		CB04071F2C7F6D0C0090075B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		CB0407212C7F6D0C0090075B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		CB0407252C7F6D0C0090075B /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		CB04071F2C7F6D0C0090075B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CB0407212C7F6D0C0090075B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CB0407252C7F6D0C0090075B /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CB04072A2C808E660090075B /* OTPVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB0407292C808E660090075B /* OTPVerificationView.swift */; };
 		CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */; };
 		CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */; };
@@ -327,9 +327,9 @@
 				59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CB04071F2C7F6D0C0090075B /* BuildFile in Frameworks */,
-				CB0407252C7F6D0C0090075B /* BuildFile in Frameworks */,
-				CB0407212C7F6D0C0090075B /* BuildFile in Frameworks */,
+				CB04071F2C7F6D0C0090075B /* (null) in Frameworks */,
+				CB0407252C7F6D0C0090075B /* (null) in Frameworks */,
+				CB0407212C7F6D0C0090075B /* (null) in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
