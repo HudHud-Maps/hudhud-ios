@@ -10,6 +10,14 @@
       }
     },
     {
+      "identity" : "ferrostar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hactar/ferrostar.git",
+      "state" : {
+        "revision" : "9afdad2daa000ed86f4dea23ac3dce1cf33b55cd"
+      }
+    },
+    {
       "identity" : "iphonenumberfield",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MojtabaHs/iPhoneNumberField",
@@ -37,30 +45,12 @@
       }
     },
     {
-      "identity" : "mapbox-directions-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
-      "state" : {
-        "revision" : "6c19ecc4e1324887ae3250802b8d13d8d8b3ff2d",
-        "version" : "0.23.3"
-      }
-    },
-    {
       "identity" : "maplibre-gl-native-distribution",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "def156895a9ce38ea9bf9632c1e2272280ce0ae3",
-        "version" : "6.6.0"
-      }
-    },
-    {
-      "identity" : "maplibre-navigation-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
-      "state" : {
-        "branch" : "fix/add-congestion-colors-to-polylines",
-        "revision" : "1a779f53c0a96e9cebe6e510e812d78cea705cc1"
+        "revision" : "e409318144091c3ee9ad551b202e1c36695f8086",
+        "version" : "6.7.0"
       }
     },
     {
@@ -73,21 +63,12 @@
       }
     },
     {
-      "identity" : "maplibre-swiftui-dsl-playground",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
-      "state" : {
-        "branch" : "ability-to-change-font",
-        "revision" : "b53711017770dd2113584b7277f8755d1e54f789"
-      }
-    },
-    {
       "identity" : "mockable",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "81ccaead99a3c038c09345caa2888ae74b644ee9",
-        "version" : "0.0.9"
+        "revision" : "da977ecb20974c4b1cf185f5fd38771b2d4674fb",
+        "version" : "0.0.10"
       }
     },
     {
@@ -109,21 +90,21 @@
       }
     },
     {
+      "identity" : "pathkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kylef/PathKit.git",
+      "state" : {
+        "revision" : "3bfd2737b700b9a36565a8c94f4ad2b050a5e574",
+        "version" : "1.0.1"
+      }
+    },
+    {
       "identity" : "phonenumberkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
         "revision" : "c107075aa8d394be7aced273a46e944afe8b321b",
         "version" : "3.8.0"
-      }
-    },
-    {
-      "identity" : "polyline",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/raphaelmor/Polyline",
-      "state" : {
-        "revision" : "353f80378dcd8f17eefe8550090c6b1ae3c9da23",
-        "version" : "5.1.0"
       }
     },
     {
@@ -145,12 +126,21 @@
       }
     },
     {
-      "identity" : "solar",
+      "identity" : "spectre",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ceeK/Solar.git",
+      "location" : "https://github.com/kylef/Spectre.git",
       "state" : {
-        "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
-        "version" : "3.0.1"
+        "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
+        "version" : "0.10.1"
+      }
+    },
+    {
+      "identity" : "stencil",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stencilproject/Stencil.git",
+      "state" : {
+        "revision" : "4f222ac85d673f35df29962fc4c36ccfdaf9da5b",
+        "version" : "0.15.1"
       }
     },
     {
@@ -228,7 +218,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"
@@ -250,6 +240,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
+      }
+    },
+    {
+      "identity" : "swiftui-dsl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maplibre/swiftui-dsl",
+      "state" : {
+        "revision" : "899457ffccf6abc802e1639e1bbae6e25e864702",
+        "version" : "0.2.0"
       }
     },
     {
@@ -286,15 +285,6 @@
       "state" : {
         "revision" : "37a36647de5cbb9549d6685913a4aa54b48f4914",
         "version" : "5.0.0"
-      }
-    },
-    {
-      "identity" : "turf-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flitsmeister/turf-swift",
-      "state" : {
-        "revision" : "b05b4658d1b48eac4127a0d9ebbb5a6f965a8251",
-        "version" : "0.2.2"
       }
     },
     {
