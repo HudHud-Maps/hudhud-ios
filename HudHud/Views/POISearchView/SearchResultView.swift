@@ -32,8 +32,8 @@ struct SearchResultView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack {
                     if let rating = item.rating, let ratingsCount = item.ratingsCount {
-                        RatingView(ratingModel: Rating(
-                            rating: rating,
+                        RatingView(ratingModel: RatingStore(
+                            staticRating: rating,
                             ratingsCount: ratingsCount
                         ))
                     }
@@ -145,34 +145,27 @@ struct SearchResultView: View {
     }
 }
 
-// MARK: - Rating
-
-struct Rating: Hashable {
-    let rating: Double
-    let ratingsCount: Int
-}
-
 // MARK: - RatingView
 
 struct RatingView: View {
 
     // MARK: Properties
 
-    let ratingModel: Rating
+    let ratingModel: RatingStore
 
     // MARK: Content
 
     var body: some View {
         HStack(spacing: 4) {
-            Text("\(self.ratingModel.rating, specifier: "%.1f")")
+            Text("\(self.ratingModel.staticRating, specifier: "%.1f")")
                 .hudhudFont(.subheadline)
                 .foregroundStyle(Color.Colors.General._01Black)
             HStack(spacing: 4) {
-                Image(self.ratingModel.rating < 1 ? .starOff : .starOn)
-                Image(self.ratingModel.rating < 2 ? .starOff : .starOn)
-                Image(self.ratingModel.rating < 3 ? .starOff : .starOn)
-                Image(self.ratingModel.rating < 4 ? .starOff : .starOn)
-                Image(self.ratingModel.rating < 5 ? .starOff : .starOn)
+                Image(self.ratingModel.staticRating < 1 ? .starOff : .starOn)
+                Image(self.ratingModel.staticRating < 2 ? .starOff : .starOn)
+                Image(self.ratingModel.staticRating < 3 ? .starOff : .starOn)
+                Image(self.ratingModel.staticRating < 4 ? .starOff : .starOn)
+                Image(self.ratingModel.staticRating < 5 ? .starOff : .starOn)
             }
             HStack {
                 Text("•")

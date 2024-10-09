@@ -29,6 +29,9 @@
         }
       }
     },
+    "%lld Ratings" : {
+
+    },
     "•" : {
 
     },
@@ -136,6 +139,9 @@
 
     },
     "Create Account" : {
+
+    },
+    "Customers Rating" : {
 
     },
     "Debug Menu" : {
@@ -253,6 +259,9 @@
       "comment" : "traffic chart view, Hours range x axes"
     },
     "How was the navigation on this trip?" : {
+
+    },
+    "How was your experience?" : {
 
     },
     "Layers" : {
