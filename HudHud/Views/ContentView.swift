@@ -9,9 +9,6 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -25,7 +22,7 @@ import TouchVisualizer
 // MARK: - SheetSubView
 
 enum SheetSubView: Hashable, Codable {
-    case mapStyle, debugView, navigationAddSearchView, favorites
+    case mapStyle, debugView, navigationAddSearchView, favorites, navigationPreview
 }
 
 // MARK: - ContentView
@@ -52,41 +49,6 @@ struct ContentView: View {
     @ObservedObject private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
 
-    // MARK: Computed Properties
-
-    private var mapControlInsets: UIEdgeInsets {
-        UIEdgeInsets(
-            top: self.mapTopPadding,
-            left: self.mapLeadingPadding,
-            bottom: self.mapBottomPadding,
-            right: 0
-        )
-    }
-
-    private var mapLeadingPadding: CGFloat {
-        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
-            0
-        } else {
-            60
-        }
-    }
-
-    private var mapTopPadding: CGFloat {
-        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
-            0
-        } else {
-            40
-        }
-    }
-
-    private var mapBottomPadding: CGFloat {
-        if self.mapViewStore.path.contains(RoutingService.RouteCalculationResult.self) || self.mapViewStore.path.contains(ResolvedItem.self) {
-            self.sheetSize.height
-        } else {
-            self.sheetSize.height + 48
-        }
-    }
-
     // MARK: Lifecycle
 
     @MainActor
@@ -109,17 +71,18 @@ struct ContentView: View {
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
-                mapViewStore: self.mapViewStore,
-                mapControlInsets: self.mapControlInsets
+                mapViewStore: self.mapViewStore
             )
             .task {
-                do {
-                    let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
-                    self.mapLayerStore.hudhudMapLayers = mapLayers
-                    self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
-                } catch {
-                    self.mapLayerStore.hudhudMapLayers = nil
-                    Logger.searchView.error("\(error.localizedDescription)")
+                await refreshMapLayers()
+            }
+            .onReceive(
+                NotificationCenter
+                    .default
+                    .publisher(for: UIApplication.willEnterForegroundNotification)
+            ) { _ in
+                Task {
+                    await refreshMapLayers()
                 }
             }
             .task {
@@ -128,7 +91,10 @@ struct ContentView: View {
             .ignoresSafeArea()
             .edgesIgnoringSafeArea(.all)
             .safeAreaInset(edge: .bottom) {
-                if self.searchViewStore.routingStore.navigationProgress == .none, self.mapStore.streetViewScene == nil {
+                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.mapStore.streetViewScene != nil {
+                    // hide interface during navigation and streetview
+
+                } else {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
                             MapButtonsView(mapButtonsData: [
@@ -189,10 +155,7 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown && Binding<Bool>(
-                get: { self.searchViewStore.routingStore.navigationProgress == .none || self.searchViewStore.routingStore.navigationProgress == .feedback },
-                set: { _ in }
-            )) {
+            .backport.sheet(isPresented: self.$mapStore.searchShown) {
                 RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
@@ -215,7 +178,7 @@ struct ContentView: View {
                 }
             })
             VStack {
-                if self.searchViewStore.routingStore.navigationProgress == .none, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
+                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -243,30 +206,45 @@ struct ContentView: View {
                 }
             }
             .onChange(of: self.mapStore.camera) {
-                let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
-                guard let minLongitude = boundingBox?.sw.longitude else { return }
-                guard let minLatitude = boundingBox?.sw.latitude else { return }
+                // we should not be storing a reference to the mapView in the map store...
 
-                guard let maxLongitude = boundingBox?.ne.longitude else { return }
-                guard let maxLatitude = boundingBox?.ne.latitude else { return }
+                /*
+                 let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
+                 guard let minLongitude = boundingBox?.sw.longitude else { return }
+                 guard let minLatitude = boundingBox?.sw.latitude else { return }
 
-                Task {
-                    await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
-                }
+                 guard let maxLongitude = boundingBox?.ne.longitude else { return }
+                 guard let maxLatitude = boundingBox?.ne.latitude else { return }
+
+                 Task {
+                     await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
+                 }
+                  */
             }
         }
     }
+}
 
-    // MARK: Functions
-
+private extension ContentView {
     func reloadPOITrending() async {
         do {
-            let currentUserLocation = self.mapStore.mapView?.userLocation?.coordinate
+            let currentUserLocation = await self.userLocationStore.location(allowCached: true)?.coordinate
             let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: currentUserLocation, baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
+        }
+    }
+
+    func refreshMapLayers() async {
+        do {
+            let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
+            self.mapLayerStore.hudhudMapLayers = mapLayers
+            self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
+        } catch {
+            self.mapLayerStore.hudhudMapLayers = nil
+            Logger.searchView.error("Map layers fetching failed due to: \(error.localizedDescription)")
         }
     }
 }
@@ -333,12 +311,6 @@ extension Binding where Value == Bool {
     }
 }
 
-// MARK: - NavigationViewController + MapViewHostViewController
-
-extension NavigationViewController: @retroactive MapViewHostViewController {
-    public typealias MapType = NavigationMapView
-}
-
 // MARK: - Preview
 
 #Preview("Itmes") {
@@ -383,5 +355,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    return MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, mapControlInsets: UIEdgeInsets(floatLiteral: 0))
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
 }

@@ -7,10 +7,9 @@
 //
 
 import BackendService
+import FerrostarCore
+import FerrostarCoreFFI
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapLibre
 import MapLibreSwiftDSL
 import OSLog
@@ -22,11 +21,13 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Nested Types
 
-    enum NavigationProgress {
-        case none
-        case navigating
-        case feedback
-    }
+    /*
+     enum NavigationProgress {
+         case none
+         case navigating
+         case feedback
+     }
+     */
 
     // MARK: - Internal
 
@@ -35,14 +36,24 @@ final class RoutingStore: ObservableObject {
     // MARK: Properties
 
     @Published private(set) var waypoints: [ABCRouteConfigurationItem]?
-    @Published private(set) var navigationProgress: NavigationProgress = .none
+    // @Published private(set) var navigationProgress: NavigationProgress = .none
     let mapStore: MapStore
 
     // route that the user might choose, but still didn't choose yet
-    @Published private(set) var potentialRoute: RoutingService.RouteCalculationResult?
+    @Published var potentialRoute: Route?
 
     // if this is set, that means that the user is currently navigating using this route
-    @Published private(set) var navigatingRoute: Route?
+    @Published var navigatingRoute: Route?
+
+    let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider()
+
+    let ferrostarCore: FerrostarCore
+
+    private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
+        isMuted: false)
+
+    // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
+    private let navigationDelegate = NavigationDelegate()
 
     // MARK: Computed Properties
 
@@ -69,40 +80,67 @@ final class RoutingStore: ObservableObject {
 
     init(mapStore: MapStore) {
         self.mapStore = mapStore
+
+        let provider: LocationProviding
+
+        provider = CoreLocationProvider(
+            activityType: .automotiveNavigation,
+            allowBackgroundLocationUpdates: true
+        )
+        provider.startUpdating()
+
+        // Configure the navigation session.
+        // You have a lot of flexibility here based on your use case.
+        let config = SwiftNavigationControllerConfig(
+            stepAdvance: .relativeLineStringDistance(
+                minimumHorizontalAccuracy: 32, automaticAdvanceDistance: 10
+            ),
+            routeDeviationTracking: .staticThreshold(
+                minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20
+            ), snappedLocationCourseFiltering: .snapToRoute
+        )
+        let something = FerrostarCore(
+            customRouteProvider: HudHudGraphHopperRouteProvider(),
+            locationProvider: provider,
+            navigationControllerConfig: config
+        )
+
+        self.ferrostarCore = something
+
+        something.delegate = self.navigationDelegate
+
+        // Initialize text-to-speech; note that this is NOT automatic.
+        // You must set a spokenInstructionObserver.
+        // Fortunately, this is pretty easy with the provided class
+        // backed by AVSpeechSynthesizer.
+        // You can customize the instance it further as needed,
+        // or replace with your own.
+        something.spokenInstructionObserver = self.spokenInstructionObserver
     }
 
     // MARK: Functions
 
-    func calculateRoute(for waypoints: [Waypoint]) async throws -> RoutingService.RouteCalculationResult {
-        let options = NavigationRouteOptions(waypoints: waypoints, profileIdentifier: .automobileAvoidingTraffic)
-        options.shapeFormat = .polyline6
-        options.distanceMeasurementSystem = .metric
-        options.attributeOptions = [.congestionLevel]
-
-        // Calculate the routes
-        let result = try await RoutingService.shared.calculate(host: DebugStore().routingHost, options: options)
-
-        // Return the routes from the result
-        return result
+    func calculateRoutes(for waypoints: [Waypoint]) async throws -> [Route] {
+        return try await self.hudHudGraphHopperRouteProvider.getRoutes(waypoints: waypoints)
     }
 
-    func calculateRoute(for item: ResolvedItem) async throws -> RoutingService.RouteCalculationResult {
-        guard let userLocation = self.mapStore.mapView?.userLocation?.location else {
+    func calculateRoutes(for item: ResolvedItem) async throws -> [Route] {
+        guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
             throw LocationNotEnabledError()
         }
-        let waypoints = [Waypoint(location: userLocation), Waypoint(coordinate: item.coordinate)]
-        return try await self.calculateRoute(for: waypoints)
+        let waypoints = [Waypoint(coordinate: userLocation.coordinate), Waypoint(coordinate: item.coordinate)]
+        return try await self.calculateRoutes(for: waypoints)
     }
 
-    func navigate(to item: ResolvedItem, with calculatedRouteIfAvailable: RoutingService.RouteCalculationResult? = nil) async throws {
-        let route = if let calculatedRouteIfAvailable {
-            calculatedRouteIfAvailable
+    func navigate(to item: ResolvedItem, with calculatedRoutesIfAvailable: [Route]?) async throws {
+        let route = if let calculatedRoutesIfAvailable {
+            calculatedRoutesIfAvailable
         } else {
-            try await self.calculateRoute(for: item)
+            try await self.calculateRoutes(for: item)
         }
-        self.potentialRoute = route
+        self.potentialRoute = route.first
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
-        if let location = route.waypoints.first {
+        if let location = route.first?.waypoints.first {
             self.waypoints = [.myLocation(location), .waypoint(item)]
         }
     }
@@ -118,40 +156,10 @@ final class RoutingStore: ObservableObject {
                 }
             }
             self.waypoints = destinations
-            let routes = try await self.calculateRoute(for: waypoints)
-            self.potentialRoute = routes
+            let routes = try await self.calculateRoutes(for: waypoints)
+            self.potentialRoute = routes.first
         } catch {
             Logger.routing.error("Updating routes: \(error)")
-        }
-    }
-
-    func assign(to navigationController: NavigationViewController, shouldSimulateRoute: Bool) {
-        navigationController.delegate = self
-
-        switch self.navigationProgress {
-        case .none:
-            if let route = self.navigatingRoute {
-                if shouldSimulateRoute {
-                    let locationManager = SimulatedLocationManager(route: route)
-                    locationManager.speedMultiplier = 2
-                    navigationController.startNavigation(with: route, animated: true, locationManager: locationManager)
-                } else {
-                    navigationController.startNavigation(with: route, animated: true)
-                }
-                self.navigationProgress = .navigating
-            } else {
-                navigationController.mapView.userTrackingMode = self.mapStore.trackingState == .keepTracking ? .followWithCourse : .none
-                navigationController.mapView.showsUserLocation = self.mapStore.userLocationStore.permissionStatus.isEnabled && self.mapStore.streetViewScene == nil
-            }
-        case .navigating:
-            if let route = self.navigatingRoute {
-                navigationController.route = route
-            } else {
-                navigationController.endNavigation()
-                self.navigationProgress = .feedback
-            }
-        case .feedback:
-            break
         }
     }
 
@@ -159,86 +167,10 @@ final class RoutingStore: ObservableObject {
         self.waypoints?.append(item)
     }
 
-    func navigate(to route: Route) {
-        self.potentialRoute?.routes = [route]
-        self.navigatingRoute = route
-    }
-
     func endTrip() {
         self.waypoints = nil
         self.potentialRoute = nil
-        self.navigationProgress = .none
-        self.potentialRoute?.routes.removeAll()
         self.mapStore.clearItems()
-    }
-}
-
-// MARK: - NavigationMapViewDelegate
-
-extension RoutingStore: NavigationMapViewDelegate {
-
-    func navigationViewController(_: NavigationViewController, didSelect route: Route) {
-        // Remove the selected route if it exists in the array
-        self.potentialRoute?.routes.removeAll(where: { $0 == route })
-
-        // Insert the selected route at the beginning of the array
-        self.potentialRoute?.routes.insert(route, at: 0)
-
-        // Update the map with the reordered routes
-        if let route = self.potentialRoute?.routes {
-            self.mapStore.mapView?.showRoutes(route)
-        }
-    }
-}
-
-// MARK: - NavigationViewControllerDelegate
-
-extension RoutingStore: NavigationViewControllerDelegate {
-
-    nonisolated func navigationViewControllerDidFinishRouting(_: NavigationViewController) {
-        Task { @MainActor in
-            self.navigatingRoute = nil
-        }
-    }
-
-    nonisolated func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
-        return navigationViewController.routeController?.userIsOnRoute(location) == false
-    }
-
-    nonisolated func navigationViewController(_: NavigationViewController, willRerouteFrom location: CLLocation) {
-        Task {
-            do {
-                guard let currentRoute = await self.navigatingRoute?.routeOptions.waypoints.last else { return }
-
-                let routes = try await self.calculateRoute(for: [Waypoint(location: location), currentRoute])
-                if let route = routes.routes.first {
-                    await self.reroute(with: route)
-                }
-            } catch {
-                Logger.routing.error("Updating routes failed: \(error.localizedDescription)")
-            }
-        }
-    }
-
-    nonisolated func navigationViewController(_: NavigationViewController, didFailToRerouteWith error: any Error) {
-        Task { @MainActor in
-            Logger.routing.error("Failed to reroute: \(error.localizedDescription)")
-        }
-    }
-
-    nonisolated func navigationViewController(_: NavigationViewController, didRerouteAlong route: Route) {
-        Task { @MainActor in
-            self.navigatingRoute = route
-            Logger.routing.info("didRerouteAlong new route \(route)")
-        }
-    }
-}
-
-// MARK: - Private
-
-private extension RoutingStore {
-    func reroute(with route: Route) async {
-        self.navigatingRoute = route
     }
 }
 

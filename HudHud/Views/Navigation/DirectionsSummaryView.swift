@@ -7,8 +7,6 @@
 //
 
 import CoreLocation
-import MapboxCoreNavigation
-import MapboxDirections
 import SwiftUI
 
 struct DirectionsSummaryView: View {
