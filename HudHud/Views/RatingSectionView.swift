@@ -87,7 +87,7 @@ struct StarInteractionView: View {
     var body: some View {
         HStack(spacing: 4) {
             ForEach(1 ... 5, id: \.self) { index in
-                Image(index <= self.ratingModel.interactiveRating ? .starOn : .starOff)
+                Image(index <= self.ratingModel.interactiveRating ? .starOn : .starEmpty)
                     .resizable()
                     .frame(width: 50, height: 50)
                     .onTapGesture {
