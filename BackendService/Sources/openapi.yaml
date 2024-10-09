@@ -792,6 +792,53 @@ paths:
       security:
         - BearerAuth: []
       x-codegen-request-body-name: request
+  /u/profile/picture:
+    post:
+      tags:
+        - User Profile
+      summary: Edit User Profile
+      description: This endpoint will allow the user to update their profile and the user will be identified by their access token
+      operationId: uploadProfilePicture
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - picture
+              type: object
+              properties:
+                picture:
+                  type: string
+                  description: User Profile Picture should not exceed 5MB
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UploadProfilePictureResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
   /u/refresh-token:
     post:
       tags:
@@ -1292,6 +1339,30 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UploadProfilePictureResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UploadProfilePictureResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-UserProfile:
       required:
         - data
@@ -1509,6 +1580,8 @@ components:
           enum:
             - poi
             - category
+    UploadProfilePictureResponse:
+      type: object
     UserProfile:
       type: object
       properties:
@@ -1534,6 +1607,7 @@ components:
         user_id:
           type: string
           description: UserID the unique identifier for the user
+          format: uuid
     VerifyOTPRequest:
       type: object
       properties:
