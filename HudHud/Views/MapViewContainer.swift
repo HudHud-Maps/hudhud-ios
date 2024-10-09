@@ -290,7 +290,6 @@ struct MapViewContainer: View {
                     }
                 } else {
                     self.stopNavigation()
-                    self.isSheetShown = true
                 }
             }
             .task {

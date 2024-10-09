@@ -83,8 +83,11 @@ private extension MapViewStore {
                 guard let self, self.routingStore.potentialRoute == nil else {
                     return
                 }
-                self.sheetStore.popSheet()
-                self.sheetStore.pushSheet(SheetViewData(viewData: .pointOfInterest(selectedItem)))
+                if case let .pointOfInterest(item) = self.sheetStore.currentSheet?.viewData {
+                    self.sheetStore.sheets[self.sheetStore.sheets.count - 1] = SheetViewData(viewData: .pointOfInterest(selectedItem))
+                } else {
+                    self.sheetStore.pushSheet(SheetViewData(viewData: .pointOfInterest(selectedItem)))
+                }
             }
             .store(in: &self.subscriptions)
     }

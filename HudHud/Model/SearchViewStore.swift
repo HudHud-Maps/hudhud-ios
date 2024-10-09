@@ -158,7 +158,7 @@ final class SearchViewStore: ObservableObject {
         }
     }
 
-    func fetch(category: String, enterSearch: Bool? = false) async {
+    func fetch(category: String, enterSearch: Bool = false) async {
         self.loadingInstance.state = .initialLoading
         self.startFetchingResultsTimer()
         self.searchType = .categories
@@ -172,7 +172,7 @@ final class SearchViewStore: ObservableObject {
             let currentUserLocation = await mapStore.userLocationStore.location(allowCached: true)
             let items = try await hudhud.items(
                 for: category,
-                enterSearch: enterSearch ?? false,
+                enterSearch: enterSearch,
                 topRated: self.filterStore.topRated,
                 priceRange: self.filterStore.priceSelection.hudHudPriceRange,
                 sortBy: self.filterStore.sortSelection.hudHudSortBy,
@@ -231,7 +231,6 @@ final class SearchViewStore: ObservableObject {
         self.routingStore.endTrip()
         self.mapStore.clearItems()
         self.searchText = ""
-        self.sheetStore.reset()
     }
 
     func storeInRecent(_ item: ResolvedItem) {
