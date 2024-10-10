@@ -201,21 +201,19 @@ struct ContentView: View {
                     }
                 }
             }
-            .onChange(of: self.mapStore.camera) {
+            .onChange(of: self.mapStore.mapViewPort) {
                 // we should not be storing a reference to the mapView in the map store...
+                guard let viewport = self.mapStore.mapViewPort else { return }
 
-                /*
-                 let boundingBox = self.mapStore.mapView?.visibleCoordinateBounds
-                 guard let minLongitude = boundingBox?.sw.longitude else { return }
-                 guard let minLatitude = boundingBox?.sw.latitude else { return }
+                let boundingBox = viewport.calculateBoundingBox(viewWidth: 400, viewHeight: 800)
+                let minLongitude = boundingBox.southEast.longitude
+                let minLatitude = boundingBox.southEast.latitude
+                let maxLongitude = boundingBox.northWest.longitude
+                let maxLatitude = boundingBox.northWest.latitude
 
-                 guard let maxLongitude = boundingBox?.ne.longitude else { return }
-                 guard let maxLatitude = boundingBox?.ne.latitude else { return }
-
-                 Task {
-                     await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
-                 }
-                  */
+                Task {
+                    await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
+                }
             }
         }
     }
@@ -265,6 +263,42 @@ struct SizePreferenceKey: PreferenceKey {
 
     static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
         value = nextValue()
+    }
+}
+
+private extension MapViewPort {
+
+    func calculateBoundingBox(viewWidth: CGFloat, viewHeight: CGFloat) -> (northWest: CLLocationCoordinate2D, southEast: CLLocationCoordinate2D) {
+        // Earth's circumference in meters
+        let earthCircumference: Double = 40_075_016.686
+
+        // Meters per pixel at given zoom level
+        let metersPerPixel = earthCircumference / pow(2.0, self.zoom + 8)
+
+        // Calculate the span in meters
+        let spanX = Double(viewWidth) * metersPerPixel
+        let spanY = Double(viewHeight) * metersPerPixel
+
+        // Convert the latitude to radians
+        let latInRad = self.center.latitude * .pi / 180.0
+
+        // Calculate the latitude and longitude span
+        let latitudeSpan = (spanY / 2) / 111_320.0
+        let longitudeSpan = (spanX / 2) / (111_320.0 * cos(latInRad))
+
+        // North-west (top-left) coordinate
+        let northWest = CLLocationCoordinate2D(
+            latitude: self.center.latitude + latitudeSpan,
+            longitude: self.center.longitude - longitudeSpan
+        )
+
+        // South-east (bottom-right) coordinate
+        let southEast = CLLocationCoordinate2D(
+            latitude: self.center.latitude - latitudeSpan,
+            longitude: self.center.longitude + longitudeSpan
+        )
+
+        return (northWest, southEast)
     }
 }
 

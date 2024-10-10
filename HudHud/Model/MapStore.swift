@@ -48,6 +48,7 @@ final class MapStore: ObservableObject {
     @Published var shouldShowCustomSymbols = false
     @Published var searchShown: Bool = true
     @Published var trackingState: TrackingState = .none
+    @Published var mapViewPort: MapViewPort?
 
     var hudhudStreetView = HudhudStreetView()
     @Published var streetViewScene: StreetViewScene?

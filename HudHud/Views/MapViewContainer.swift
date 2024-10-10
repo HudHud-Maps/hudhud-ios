@@ -52,13 +52,7 @@ struct MapViewContainer: View {
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore
-    ) {
+    init(mapStore: MapStore, debugStore: DebugStore, searchViewStore: SearchViewStore, userLocationStore: UserLocationStore, mapViewStore: MapViewStore) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
@@ -200,6 +194,9 @@ struct MapViewContainer: View {
                         }
                         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
                         .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
+                        .onMapViewPortUpdate { viewPort in
+                            self.mapStore.mapViewPort = viewPort
+                        }
                         .onStyleLoaded { style in
                             self.mapStore.mapStyle = style
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
