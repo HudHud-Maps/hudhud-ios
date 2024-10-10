@@ -75,8 +75,8 @@ struct SearchResultView: View {
                     .padding(.bottom, 16)
             }
             POIBottomToolbar(item: self.item, directions: self.directions)
-                .padding(.vertical)
-                .padding(.leading, 4)
+                .padding(.bottom, 10)
+                .padding(.leading, 10)
         }
         .padding(.top)
     }
