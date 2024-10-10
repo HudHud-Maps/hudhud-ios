@@ -24,7 +24,7 @@ struct SearchResultView: View {
     // MARK: Content
 
     var body: some View {
-        VStack(spacing: .zero) {
+        VStack(alignment: .leading, spacing: .zero) {
             VStack(alignment: .leading, spacing: 7) {
                 Text(self.item.title)
                     .hudhudFont(.headline)
@@ -58,7 +58,7 @@ struct SearchResultView: View {
                         let distanceText = self.item.distance.map { "(\(self.formatter.formatDistance(distance: $0)))" }
                         HStack {
                             Text("•")
-                            Image("car_fill")
+                            Image(systemSymbol: .carFill)
                             Text("\([durationText, distanceText].compactMap(\.self).joined(separator: " "))")
                         }
                     }
@@ -74,72 +74,9 @@ struct SearchResultView: View {
                     .padding(.top, 9)
                     .padding(.bottom, 16)
             }
-            ScrollView(.horizontal) {
-                HStack(spacing: 10) {
-                    CategoryIconButton(
-                        icon: .arrowrightCircleIconFill,
-                        title: "Directions",
-                        foregroundColor: .white,
-                        backgroundColor: Color.Colors.General._06DarkGreen,
-                        onClick: self.directions
-                    )
-
-                    if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                        CategoryIconButton(
-                            icon: .phoneIcon,
-                            title: "Call",
-                            foregroundColor: Color.Colors.General._06DarkGreen,
-                            backgroundColor: Color.Colors.General._03LightGrey
-                        ) {
-                            self.openURL(url)
-                        }
-                    }
-
-                    if let website = item.website {
-                        CategoryIconButton(
-                            icon: .websiteIconFill,
-                            title: nil,
-                            foregroundColor: Color.Colors.General._06DarkGreen,
-                            backgroundColor: Color.Colors.General._03LightGrey
-                        ) {
-                            self.openURL(website)
-                        }
-                    }
-
-                    CategoryIconButton(
-                        icon: self.favoritesStore.isFavorites(item: self.item) ? .saveIconFill : .saveIcon,
-                        title: nil,
-                        foregroundColor: Color.Colors.General._06DarkGreen,
-                        backgroundColor: Color.Colors.General._03LightGrey
-                    ) {
-                        self.favoritesStore.isFavorites(item: self.item) ? self.favoritesStore.deleteSavedFavorite(item: self.item)
-                            : self.favoritesStore.saveChanges(
-                                title: self.item.title,
-                                tintColor: .personalShopping,
-                                item: self.item,
-                                description: self.item.description,
-                                selectedType: self.item.category ?? "Other"
-                            )
-                    }
-
-                    CategoryIconButton(
-                        icon: .shareIcon,
-                        title: nil,
-                        foregroundColor: Color.Colors.General._06DarkGreen,
-                        backgroundColor: Color.Colors.General._03LightGrey
-                    ) {
-                        // action
-                        //  self.openURL()
-                    }
-                    // currently hidden since no url return from the backend
-                    .hidden()
-
-                    Spacer()
-                }
-                .padding(.horizontal)
-                .padding(.bottom)
-            }
-            .scrollIndicators(.hidden)
+            POIBottomToolbar(item: self.item, directions: self.directions)
+                .padding(.vertical)
+                .padding(.leading, 4)
         }
         .padding(.top)
     }
@@ -178,46 +115,6 @@ struct RatingView: View {
                 Text("•")
                 Text("(\(self.ratingModel.ratingsCount))")
                     .hudhudFont(.subheadline)
-            }
-        }
-    }
-}
-
-// MARK: - CategoryIconButton
-
-private struct CategoryIconButton: View {
-
-    // MARK: Properties
-
-    let icon: ImageResource
-    let title: LocalizedStringKey?
-    let foregroundColor: Color
-    let backgroundColor: Color
-    let onClick: () -> Void
-
-    // MARK: Content
-
-    var body: some View {
-        Button(action: self.onClick) {
-            if let title {
-                // Show both icon and title
-                Label(title, image: self.icon)
-                    .foregroundColor(self.foregroundColor)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
-                    .background(self.backgroundColor)
-                    .clipShape(RoundedRectangle(cornerRadius: 25))
-            } else {
-                // Show only icon
-                Image(self.icon)
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 20, height: 20)
-                    .foregroundColor(self.foregroundColor)
-                    .padding(.vertical, 8)
-                    .padding(.horizontal, 12)
-                    .background(self.backgroundColor)
-                    .clipShape(Circle())
             }
         }
     }

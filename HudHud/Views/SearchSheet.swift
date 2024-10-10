@@ -136,13 +136,13 @@ struct SearchSheet: View {
                         ForEach(self.mapStore.displayableItems) { item in
                             switch item {
                             case let .categoryItem(item):
-                                Button(action: {
+                                Button {
                                     self.mapStore.select(item, shouldFocusCamera: true)
-                                }, label: {
+                                } label: {
                                     SearchResultView(item: item) {
                                         self.mapStore.select(item, shouldFocusCamera: true)
                                     }
-                                })
+                                }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
