@@ -32,7 +32,7 @@ struct SearchResultView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack {
                     if let rating = item.rating, let ratingsCount = item.ratingsCount {
-                        RatingView(ratingModel: RatingStore(
+                        RatingView(ratingStore: RatingStore(
                             staticRating: rating,
                             ratingsCount: ratingsCount
                         ))
@@ -151,26 +151,27 @@ struct RatingView: View {
 
     // MARK: Properties
 
-    let ratingModel: RatingStore
+    let ratingStore: RatingStore
 
     // MARK: Content
 
     var body: some View {
         HStack(spacing: 4) {
-            Text("\(self.ratingModel.staticRating, specifier: "%.1f")")
+            Text("\(self.ratingStore.state.staticRating, specifier: "%.1f")")
                 .hudhudFont(.subheadline)
                 .foregroundStyle(Color.Colors.General._01Black)
-            HStack(spacing: 4) {
-                Image(self.ratingModel.staticRating < 1 ? .starOff : .starOn)
-                Image(self.ratingModel.staticRating < 2 ? .starOff : .starOn)
-                Image(self.ratingModel.staticRating < 3 ? .starOff : .starOn)
-                Image(self.ratingModel.staticRating < 4 ? .starOff : .starOn)
-                Image(self.ratingModel.staticRating < 5 ? .starOff : .starOn)
-            }
-            HStack {
-                Text("•")
-                Text("(\(self.ratingModel.ratingsCount))")
-                    .hudhudFont(.subheadline)
+
+            self.starView(for: self.ratingStore.state.staticRating)
+        }
+    }
+
+    @ViewBuilder
+    private func starView(for rating: Double) -> some View {
+        HStack(spacing: 4) {
+            ForEach(1 ... 5, id: \.self) { index in
+                Image(rating < Double(index) ? .starOff : .starOn)
+                    .resizable()
+                    .frame(width: 16, height: 16)
             }
         }
     }

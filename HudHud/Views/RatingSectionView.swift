@@ -15,7 +15,7 @@ struct RatingSectionView: View {
 
     // MARK: Properties
 
-    var ratingModel: RatingStore
+    @State var store: RatingStore
 
     // MARK: Content
 
@@ -24,7 +24,7 @@ struct RatingSectionView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text("Customers Rating")
                     .hudhudFont(.headline)
-                StarDisplayView(ratingModel: self.ratingModel)
+                StarDisplayView(store: self.store)
             }
             .padding(.leading)
             .padding(.bottom, 16)
@@ -32,7 +32,7 @@ struct RatingSectionView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text("How was your experience?")
                     .hudhudFont(.headline)
-                StarInteractionView(ratingModel: self.ratingModel)
+                StarInteractionView(store: self.store)
             }
             .padding(.leading)
         }
@@ -46,26 +46,26 @@ struct StarDisplayView: View {
 
     // MARK: Properties
 
-    var ratingModel: RatingStore
+    let store: RatingStore
 
     // MARK: Content
 
     var body: some View {
         HStack(spacing: 12) {
-            Text("\(self.ratingModel.staticRating, specifier: "%.1f")")
+            Text("\(self.store.state.staticRating, specifier: "%.1f")")
                 .hudhudFont(.largeTitle)
                 .foregroundStyle(Color.Colors.General._01Black)
 
-            // Star icons
             HStack(spacing: 4) {
                 ForEach(1 ... 5, id: \.self) { index in
-                    Image(self.ratingModel.staticRating < Double(index) ? .starOff : .starOn)
+                    Image(self.store.state.staticRating < Double(index) ? .starOff : .starOn)
                         .resizable()
                         .frame(width: 24, height: 24)
                 }
             }
             Spacer()
-            Text("\(self.ratingModel.ratingsCount) Ratings")
+
+            Text("\(self.store.state.ratingsCount) Ratings")
                 .hudhudFont(.subheadline)
                 .foregroundStyle(Color.Colors.General._02Grey)
                 .padding(.trailing)
@@ -80,22 +80,21 @@ struct StarInteractionView: View {
 
     // MARK: Properties
 
-    var ratingModel: RatingStore
+    let store: RatingStore
 
     // MARK: Content
 
     var body: some View {
         HStack(spacing: 4) {
             ForEach(1 ... 5, id: \.self) { index in
-                Image(index <= self.ratingModel.interactiveRating ? .starOn : .starEmpty)
+                Image(index <= self.store.state.interactiveRating ? .starOn : .starEmpty)
                     .resizable()
                     .frame(width: 50, height: 50)
                     .onTapGesture {
                         withAnimation {
-                            self.ratingModel.interactiveRating = index
+                            self.store.reduce(action: .setInteractiveRating(index))
                         }
-                        // Navigate to rate and review page
-                        Logger.navigationPath.info("Navigate to rate and review page")
+                        self.navigateToRateAndReview()
                     }
                     .gesture(
                         DragGesture(minimumDistance: 0)
@@ -103,25 +102,30 @@ struct StarInteractionView: View {
                                 let starIndex = Int((value.location.x / 50).rounded(.down))
                                 let newRating = max(1, min(starIndex + 1, 5))
                                 withAnimation {
-                                    self.ratingModel.interactiveRating = newRating
+                                    self.store.reduce(action: .setInteractiveRating(newRating))
                                 }
                             }
                             .onEnded { _ in
-                                // Navigate to rate and review page
-                                Logger.navigationPath.info("Navigate to rate and review page")
+                                self.navigateToRateAndReview()
                             }
                     )
             }
             Spacer()
 
-            Text("\(self.ratingModel.getText())")
+            Text(self.store.state.ratingCategory?.description ?? "")
                 .hudhudFont(.caption)
                 .foregroundStyle(Color.Colors.General._02Grey)
                 .padding(.trailing)
         }
     }
+
+    // MARK: Functions
+
+    private func navigateToRateAndReview() {
+        Logger.navigationPath.info("Navigate to rate and review page")
+    }
 }
 
 #Preview {
-    RatingSectionView(ratingModel: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0))
+    RatingSectionView(store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0))
 }
