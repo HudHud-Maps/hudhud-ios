@@ -7,6 +7,7 @@
 //
 
 import MapboxCoreNavigation
+import Nuke
 import OSLog
 import SwiftLocation
 import SwiftUI
@@ -48,5 +49,25 @@ struct HudHudApp: App {
         let routingStore = RoutingStore(mapStore: self.mapStore)
         self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+
+        // Create a custom URLCache to store images on disk
+        let diskCache = URLCache(
+            memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
+            diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
+            diskPath: "sa.hudhud.hudhud.imageCache"
+        )
+
+        // Create a DataLoader with custom URLCache
+        let dataLoader = DataLoader(configuration: {
+            let configuration = URLSessionConfiguration.default
+            configuration.urlCache = diskCache
+            return configuration
+        }())
+
+        // Configure the pipeline with the custom DataLoader and cache
+        let pipeline = ImagePipeline {
+            $0.dataLoader = dataLoader
+            $0.imageCache = ImageCache.shared // Use in-memory cache as well
+        }
     }
 }

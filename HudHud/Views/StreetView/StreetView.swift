@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Nuke
 import OSLog
 import SwiftUI
 import SwiftUIPanoramaViewer
@@ -32,7 +33,7 @@ struct StreetView: View {
     @State var mapStore: MapStore
     @State var rotationIndicator: Float = 0.0
     @State var rotationZIndicator: Float = 0.0
-    @State var svimage: UIImage?
+    @MainActor @State var svimage: UIImage?
     @State var svimageId: String = ""
     @State var errorMsg: String?
     @State var isLoading: Bool = false
@@ -179,25 +180,13 @@ struct StreetView: View {
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch) { _ in
-
+            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch) { direction in
+                Logger.streetView.info("direction: \(direction)")
             } cameraMoved: { pitch, yaw, _ in
                 DispatchQueue.main.async {
                     self.rotationIndicator = yaw
                     self.rotationZIndicator = pitch * 2 + 30
                 }
-                // Logger.panoramaView.info("pitch: \(pitch)  \n yaw: \(yaw) \n roll: \(roll)")
-            }
-
-            VStack {
-                Spacer()
-                HStack {
-                    CompassView()
-                        .frame(width: 50.0, height: 50.0)
-                        .rotationEffect(Angle(degrees: Double(self.rotationIndicator * -1)))
-                    Spacer()
-                }
-                .padding()
             }
 
             if self.fullScreenStreetView, self.showLoading == false {
@@ -208,8 +197,15 @@ struct StreetView: View {
 
     // MARK: Functions
 
-    func getImageURL(_ name: String) -> String {
-        return "https://streetview.khaled-7ed.workers.dev/\(name)?api_key=34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh"
+    func getImageURL(_ name: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "streetview.khaled-7ed.workers.dev"
+        components.path = "/\(name)"
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: "34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh")
+        ]
+        return components.url
     }
 
     func loadSVImage() {
@@ -223,31 +219,27 @@ struct StreetView: View {
             return
         }
         Logger.streetView.debug("loadSVImage Value: \(self.streetViewScene?.id ?? -1), \(imageName)")
+        guard let url = self.getImageURL(imageName) else { return }
 
-        let link = self.getImageURL(imageName)
+        Task {
+            let imageTask = ImagePipeline.shared.imageTask(with: url)
+            for await progress in imageTask.progress {
+                self.progress = progress.fraction
+            }
+            let image = try await imageTask.image
 
-        let downloadProgress: ((_ progress: Float) -> Void) = { progress in
-            self.progress = progress
+            #if targetEnvironment(simulator)
+                // Simulator will crash with full size images
+                let resizedImage = image.resize(CGSize(width: image.size.width / 2.0, height: image.size.height / 2.0))
+            #else
+                let resizedImage = image
+            #endif
+
+            PanoramaManager.shouldUpdateImage = true
+            PanoramaManager.shouldResetCameraAngle = false
+            self.svimage = resizedImage
+            self.isLoading = false
         }
-
-//        DownloadManager.downloadFile(link,
-//                                     fileName: imageName,
-//                                     downloadProgress: downloadProgress,
-//                                     block: { path, error in
-//                                         if let path {
-//                                             AppQueue.main {
-//                                                 PanoramaManager.shouldUpdateImage = true
-//                                                 PanoramaManager.shouldResetCameraAngle = false
-//                                                 let img = UIImage(contentsOfFile: path)
-//                                                 self.svimage = img
-//                                                 self.isLoading = false
-//                                                 self.svimageId = path
-//                                             }
-//                                         } else {
-//                                             self.setMessage("Could not load the image - \(error ?? "N/A")")
-//                                             self.isLoading = false
-//                                         }
-//                                     })
     }
 
     // MARK: - Internal
@@ -318,18 +310,65 @@ extension StreetView {
 
     func preLoadItem(_ imgName: String?) {
         guard let imgName else { return }
+        guard let url = self.getImageURL(imgName) else { return }
 
-        let link = self.getImageURL(imgName)
-        print("preload: \(link)")
-
-//        let fileExist = DownloadManager.fileExistOrLoading(link, fileName: imgName)
-//        guard fileExist == false else { return }
-//
-//        DownloadManager.downloadFile(link,
-//                                     fileName: imgName,
-//                                     block: { _, error in
-//                                         Logger.streetView.debug("Done preLoadItem: \(imgName) error: \(error ?? "N/A")")
-//                                     })
+        Task {
+            do {
+                let imageTask = ImagePipeline.shared.imageTask(with: url)
+                _ = try await imageTask.image
+                Logger.streetView.debug("Done preLoadItem: \(imageTask.description)")
+            } catch {
+                Logger.streetView.debug("preLoadItem error: \(error)")
+            }
+        }
     }
 
+    // Function to download and manually assign an image with caching
+    func loadImageManually(url: URL, into imageView: UIImageView) {
+        // Get a reference to the shared image pipeline
+        let pipeline = ImagePipeline.shared
+
+        // Load the image using the pipeline
+        pipeline.loadImage(with: url) { result in
+            switch result {
+            case let .success(response):
+                // Image successfully loaded, assign it to the imageView
+                imageView.image = response.image
+
+                // The image is automatically cached, no need to do anything extra
+                Logger.streetView.info("Image loaded and cached successfully")
+            case let .failure(error):
+                // Handle failure
+                Logger.streetView.error("Image loading failed: \(error)")
+            }
+        }
+    }
+
+    // Function to retrieve an image from cache if available
+    func getCachedImage(url: URL) -> UIImage? {
+        let pipeline = ImagePipeline.shared
+
+        // Try to get the image from cache
+        if let cachedImage = pipeline.cache[ImageRequest(url: url)]?.image {
+            Logger.streetView.info("Image retrieved from cache")
+            return cachedImage
+        } else {
+            Logger.streetView.info("Image not found in cache")
+            return nil
+        }
+    }
+}
+
+private extension UIImage {
+
+    func resize(_ newSize: CGSize) -> UIImage {
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+
+        let image = UIGraphicsImageRenderer(size: newSize, format: format).image { _ in
+            draw(in: CGRect(origin: .zero, size: newSize))
+        }
+
+        return image.withRenderingMode(renderingMode)
+    }
 }
