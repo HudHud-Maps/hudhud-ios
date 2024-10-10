@@ -4,6 +4,9 @@
     "" : {
 
     },
+    " %@" : {
+
+    },
     "..." : {
 
     },
@@ -88,6 +91,9 @@
         }
       }
     },
+    "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
+
+    },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
       "localizations" : {
@@ -171,6 +177,9 @@
     "Enable Touch Visualizer" : {
 
     },
+    "End" : {
+
+    },
     "Enter your phone number or email" : {
 
     },
@@ -240,9 +249,6 @@
     "How was the navigation on this trip?" : {
 
     },
-    "In meters" : {
-
-    },
     "Layers" : {
       "localizations" : {
         "ar" : {
@@ -252,6 +258,9 @@
           }
         }
       }
+    },
+    "Loading route..." : {
+
     },
     "Location Needed" : {
 
@@ -324,6 +333,9 @@
     "No Results" : {
 
     },
+    "No route is available for the destination." : {
+
+    },
     "Note: Changing the URL requires restarting the app for the changes to take effect." : {
 
     },
@@ -340,6 +352,9 @@
       "comment" : "street view"
     },
     "Please enable your location to get directions" : {
+
+    },
+    "Please ensure location services are enabled and try again." : {
 
     },
     "Price" : {
@@ -433,13 +448,19 @@
     "Touch Visualizer" : {
 
     },
+    "Try a different destination or check for connectivity issues." : {
+
+    },
     "Unknown" : {
 
     },
     "Use SF Symbols for POIs on map" : {
 
     },
-    "User is on Route" : {
+    "User location could not be found." : {
+
+    },
+    "Verification code sent to the %@ below:" : {
 
     },
     "Verify" : {
@@ -455,9 +476,6 @@
         }
       }
     },
-    "We sent verification code on %@" : {
-
-    },
     "Web" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -468,9 +486,6 @@
           }
         }
       }
-    },
-    "Website" : {
-
     },
     "Work" : {
       "extractionState" : "stale",

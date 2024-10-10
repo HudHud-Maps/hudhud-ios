@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import iPhoneNumberField
 import OSLog
 import SwiftUI
 
@@ -41,25 +42,21 @@ struct UserLoginView: View {
                 Text("Enter your phone number or email")
                     .hudhudFont(.title)
 
-                HStack {
-                    // disply text field for country code only if phone number view selected
-                    if self.loginStore.userInput == .phone {
-                        FloatingLabelInputField(placeholder: "", inputType: .text(text: Binding(
-                            get: {
-                                return self.loginStore.countryCode
-                            },
-                            set: { newValue in
-                                self.loginStore.countryCode = newValue
-                            }
-                        )))
-                        .keyboardType(self.keyboardTypeForInput)
-                        .frame(width: 50)
-                    }
+                VStack(alignment: .leading) {
                     // Text field for email or phone number based on user choose
-                    FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: .text(text: self.bindingForInput))
+                    FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: self.loginStore.userInput == .email ? .text(text: self.bindingForInput) : .phone(phone: self.bindingForInput))
                         .textContentType(self.loginStore.userInput == .phone ? .telephoneNumber : .emailAddress)
                         .focused(self.$isFocused)
                         .keyboardType(self.keyboardTypeForInput)
+                        .textInputAutocapitalization(.never)
+                        .onChange(of: self.bindingForInput.wrappedValue) { _, _ in
+                            switch self.loginStore.userInput {
+                            case .phone:
+                                _ = self.loginStore.isPhoneNumberValid
+                            case .email:
+                                _ = self.loginStore.isEmailValid
+                            }
+                        }
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {
                                 Spacer()
@@ -68,6 +65,21 @@ struct UserLoginView: View {
                                 }
                             }
                         }
+                    // Error Message Display
+                    if !self.loginStore.errorMessage.isEmpty {
+                        Text(self.loginStore.errorMessage)
+                            .foregroundColor(Color.Colors.General._12Red)
+                            .hudhudFont(.caption)
+                            .padding(.bottom, 5)
+                    }
+                }
+                Spacer()
+                if !self.loginStore.isInputEmpty {
+                    Text("By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy.")
+                        .hudhudFont(.subheadline)
+                        .padding(.bottom, 5)
+                        .padding(.leading, 5)
+                        .foregroundColor(Color.Colors.General._02Grey)
                 }
             }
             .padding(.horizontal)
@@ -76,6 +88,8 @@ struct UserLoginView: View {
             HStack(spacing: 15) {
                 // Button to toggle between phone and email view
                 Button {
+                    // set the error message to nil
+                    self.loginStore.errorMessage = ""
                     // Dismiss the keyboard (cause we have 2 type of keyboard)
                     self.isFocused = false
                     // Toggle between phone and email
@@ -83,10 +97,9 @@ struct UserLoginView: View {
                 } label: {
                     Text(self.buttonTitle)
                 }
-                .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._03LightGrey.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
-                    foregroundColor: .black
-                ))
+                .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                              backgroundColor: Color.Colors.General._03LightGrey.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
+                                              foregroundColor: .black))
                 // Button to proceed to the next view (OTP view)
                 Button {
                     Task {
@@ -95,23 +108,27 @@ struct UserLoginView: View {
                 } label: {
                     Text("Next")
                 }
-                .buttonStyle(LargeButtonStyle(
-                    backgroundColor: Color.Colors.General._10GreenMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
-                    foregroundColor: .white
-                ))
-                .disabled(self.loginStore.isInputEmpty)
+                .buttonStyle(LargeButtonStyle(isLoading: self.$loginStore.isRunningRequest,
+                                              backgroundColor: Color.Colors.General._10GreenMain.opacity(self.loginStore.isInputEmpty ? 0.5 : 1),
+                                              foregroundColor: .white))
+                .disabled(self.loginStore.isInputEmpty || self.loginStore.isRunningRequest)
             }
             .padding(.bottom)
             .padding(.horizontal)
             .navigationDestination(for: LoginStore.UserRegistrationPath.self) { route in
                 switch route {
                 case let .OTPView(loginIdentity, duration):
-                    OTPVerificationView(loginIdentity: loginIdentity, duration: duration, path: self.$loginStore.path)
+                    OTPVerificationView(loginId: self.loginStore.loginId, loginIdentity: loginIdentity, duration: duration, path: self.$loginStore.path, loginStore: self.loginStore)
                         .toolbarRole(.editor)
                 case .personalInfoView:
                     PersonalInformationScreenView(loginStore: self.loginStore, onDismiss: { self.dismiss() })
                         .toolbarRole(.editor)
                 }
+            }
+        }
+        .onChange(of: self.loginStore.userLoggedIn) { _, _ in
+            if self.loginStore.userLoggedIn {
+                self.dismiss()
             }
         }
     }

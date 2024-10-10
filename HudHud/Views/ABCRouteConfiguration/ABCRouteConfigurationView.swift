@@ -8,8 +8,7 @@
 
 import BackendService
 import CoreLocation
-import MapboxCoreNavigation
-import MapboxDirections
+import FerrostarCoreFFI
 import OSLog
 import SFSafeSymbols
 import SwiftUI
@@ -119,7 +118,7 @@ struct ABCRouteConfigurationView: View {
 
 #Preview {
     ABCRouteConfigurationView(routeConfigurations: [
-        .myLocation(Waypoint(coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))),
+        .myLocation(Waypoint(coordinate: GeographicCoordinate(lat: 24.7192284, lng: 46.6468331), kind: .via)),
         .waypoint(.coffeeAddressRiyadh),
         .waypoint(.theGarageRiyadh)
     ], mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)

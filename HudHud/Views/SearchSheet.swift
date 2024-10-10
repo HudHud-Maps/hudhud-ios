@@ -8,9 +8,6 @@
 
 import BackendService
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapKit
 import MapLibre
 import MapLibreSwiftUI
@@ -74,7 +71,7 @@ struct SearchSheet: View {
                         )
                         .onSubmit {
                             Task {
-                                await self.searchStore.fetchEnterResults()
+                                await self.searchStore.fetch(category: self.searchStore.searchText, enterSearch: true)
                             }
                         }
                         .padding(.horizontal, 10)
@@ -118,28 +115,31 @@ struct SearchSheet: View {
                     .padding(.horizontal)
                     .padding(.top)
             }
-            List {
-                if !self.searchStore.searchText.isEmpty {
-                    if self.searchStore.isSheetLoading {
-                        ForEach(SearchSheet.fakeData.indices, id: \.self) { item in
-                            Button(action: {},
-                                   label: {
-                                       SearchSheet.fakeData[item]
-                                           .frame(maxWidth: .infinity)
-                                   })
-                                   .redacted(reason: .placeholder)
-                                   .disabled(true)
-                                   .listRowSeparator(.hidden)
-                                   .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
-                        }
-                    } else {
+            if self.searchStore.loadingInstance.shouldShowLoadingCircle {
+                VStack {
+                    ProgressView()
+                        .progressViewStyle(.circular)
+                        .cornerRadius(7.0)
+                        .controlSize(.large)
+                }
+                .tint(Color.Colors.General._10GreenMain)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 0, leading: 8, bottom: 2, trailing: 8))
+                .padding()
+            } else {
+                List {
+                    if !self.searchStore.searchText.isEmpty {
                         ForEach(self.mapStore.displayableItems) { item in
                             switch item {
                             case let .categoryItem(item):
-                                CategoryItemView(item: item) {
+                                Button(action: {
                                     self.mapStore.select(item, shouldFocusCamera: true)
-                                }
-                                .listRowSeparator(.hidden)
+                                }, label: {
+                                    SearchResultView(item: item) {
+                                        self.mapStore.select(item, shouldFocusCamera: true)
+                                    }
+                                })
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
@@ -163,15 +163,13 @@ struct SearchSheet: View {
                                 } label: {
                                     SearchResultItemView(item: SearchResultItem(item), searchText: nil)
                                         .frame(maxWidth: .infinity)
-                                        .redacted(reason: self.searchStore.isSheetLoading ? .placeholder : [])
                                 }
-                                .disabled(self.searchStore.isSheetLoading)
                                 .listRowSeparator(.hidden)
                                 .listRowInsets(EdgeInsets(top: 0, leading: 12, bottom: 2, trailing: 8))
                             }
                         }
                         .listStyle(.plain)
-                        if self.mapStore.displayableItems.isEmpty {
+                        if self.searchStore.loadingInstance.shouldShowNoResult {
                             let label = self.searchStore.searchError?.localizedDescription != nil ? "Search Error" : "No results"
                             ContentUnavailableView {
                                 Label(label, systemSymbol: .magnifyingglass)
@@ -181,32 +179,36 @@ struct SearchSheet: View {
                             .padding(.vertical, 50)
                             .listRowSeparator(.hidden)
                         }
-                    }
-                } else {
-                    if self.searchStore.searchType != .favorites {
-                        SearchSectionView(title: "Favorites") {
-                            FavoriteCategoriesView(mapViewStore: self.mapViewStore, searchStore: self.searchStore)
+                    } else {
+                        if self.searchStore.searchType != .favorites {
+                            SearchSectionView(title: "Favorites") {
+                                FavoriteCategoriesView(mapViewStore: self.mapViewStore, searchStore: self.searchStore)
+                            }
+                            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                            .listRowSeparator(.hidden)
                         }
-                        .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
-                        .listRowSeparator(.hidden)
-                    }
 
-                    if let trendingPOIs = self.trendingStore.trendingPOIs, !trendingPOIs.isEmpty {
-                        SearchSectionView(title: "Nearby Trending") {
-                            PoiTileGridView(trendingPOIs: self.trendingStore)
+                        if let trendingPOIs = self.trendingStore.trendingPOIs, !trendingPOIs.isEmpty {
+                            SearchSectionView(title: "Nearby Trending") {
+                                PoiTileGridView(trendingPOIs: self.trendingStore)
+                            }
+                            .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
+                            .listRowSeparator(.hidden)
+                        }
+                        SearchSectionView(title: "Recents") {
+                            RecentSearchResultsView(searchStore: self.searchStore, searchType: self.searchStore.searchType)
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                         .listRowSeparator(.hidden)
                     }
-                    SearchSectionView(title: "Recents") {
-                        RecentSearchResultsView(searchStore: self.searchStore, searchType: self.searchStore.searchType)
-                    }
-                    .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
-                    .listRowSeparator(.hidden)
                 }
+                .scrollIndicators(.hidden)
+                .listStyle(.plain)
             }
-            .scrollIndicators(.hidden)
-            .listStyle(.plain)
+        }
+        .onChange(of: self.searchStore.searchText) { _, _ in
+            self.searchStore.loadingInstance.state = .initialLoading
+            self.searchStore.startFetchingResultsTimer()
         }
         .fullScreenCover(isPresented: self.$loginShown) {
             UserLoginView(loginStore: LoginStore())
@@ -224,10 +226,6 @@ struct SearchSheet: View {
         }
     }
 }
-
-// MARK: - Route + Identifiable
-
-extension Route: @retroactive Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [

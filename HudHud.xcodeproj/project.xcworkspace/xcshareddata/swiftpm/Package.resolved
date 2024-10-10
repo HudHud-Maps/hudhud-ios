@@ -10,21 +10,29 @@
       }
     },
     {
+      "identity" : "ferrostar",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/hactar/ferrostar.git",
+      "state" : {
+        "revision" : "9afdad2daa000ed86f4dea23ac3dce1cf33b55cd"
+      }
+    },
+    {
+      "identity" : "iphonenumberfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MojtabaHs/iPhoneNumberField",
+      "state" : {
+        "revision" : "cd961621559393c5220c6c955690ecc52318e753",
+        "version" : "0.10.4"
+      }
+    },
+    {
       "identity" : "locationformatter",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/salishseasoftware/LocationFormatter.git",
       "state" : {
         "revision" : "d0a45f9a2471b20e0af4792533d79a469d86fc61",
         "version" : "1.1.1"
-      }
-    },
-    {
-      "identity" : "mapbox-directions-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flitsmeister/mapbox-directions-swift",
-      "state" : {
-        "revision" : "6c19ecc4e1324887ae3250802b8d13d8d8b3ff2d",
-        "version" : "0.23.3"
       }
     },
     {
@@ -37,15 +45,6 @@
       }
     },
     {
-      "identity" : "maplibre-navigation-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-navigation-ios.git",
-      "state" : {
-        "branch" : "fix/lanes-view-not-hidden-when-it-should-be-hidden",
-        "revision" : "d3934e14ea4d4352eb544a0a7ae917a23254e809"
-      }
-    },
-    {
       "identity" : "maplibre-swift-macros",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/maplibre-swift-macros.git",
@@ -55,21 +54,12 @@
       }
     },
     {
-      "identity" : "maplibre-swiftui-dsl-playground",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/maplibre-swiftui-dsl-playground",
-      "state" : {
-        "branch" : "ability-to-change-font",
-        "revision" : "b53711017770dd2113584b7277f8755d1e54f789"
-      }
-    },
-    {
       "identity" : "mockable",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Kolos65/Mockable.git",
       "state" : {
-        "revision" : "81ccaead99a3c038c09345caa2888ae74b644ee9",
-        "version" : "0.0.9"
+        "revision" : "da977ecb20974c4b1cf185f5fd38771b2d4674fb",
+        "version" : "0.0.10"
       }
     },
     {
@@ -91,12 +81,12 @@
       }
     },
     {
-      "identity" : "polyline",
+      "identity" : "phonenumberkit",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/raphaelmor/Polyline",
+      "location" : "https://github.com/marmelroy/PhoneNumberKit",
       "state" : {
-        "revision" : "353f80378dcd8f17eefe8550090c6b1ae3c9da23",
-        "version" : "5.1.0"
+        "revision" : "c107075aa8d394be7aced273a46e944afe8b321b",
+        "version" : "3.8.0"
       }
     },
     {
@@ -115,15 +105,6 @@
       "state" : {
         "revision" : "217c9c38dead686e05896fb3dd652880adedfedf",
         "version" : "0.9.0"
-      }
-    },
-    {
-      "identity" : "solar",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ceeK/Solar.git",
-      "state" : {
-        "revision" : "c2b96f2d5fb7f835b91cefac5e83101f54643901",
-        "version" : "3.0.1"
       }
     },
     {
@@ -201,7 +182,7 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
         "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
         "version" : "509.1.1"
@@ -223,6 +204,15 @@
       "state" : {
         "branch" : "master",
         "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
+      }
+    },
+    {
+      "identity" : "swiftui-dsl",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/maplibre/swiftui-dsl",
+      "state" : {
+        "revision" : "899457ffccf6abc802e1639e1bbae6e25e864702",
+        "version" : "0.2.0"
       }
     },
     {
@@ -250,15 +240,6 @@
       "state" : {
         "revision" : "37a36647de5cbb9549d6685913a4aa54b48f4914",
         "version" : "5.0.0"
-      }
-    },
-    {
-      "identity" : "turf-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/flitsmeister/turf-swift",
-      "state" : {
-        "revision" : "b05b4658d1b48eac4127a0d9ebbb5a6f965a8251",
-        "version" : "0.2.2"
       }
     },
     {

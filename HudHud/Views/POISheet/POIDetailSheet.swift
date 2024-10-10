@@ -8,9 +8,8 @@
 
 import BackendService
 import CoreLocation
+import FerrostarCoreFFI
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
 import OSLog
 import SFSafeSymbols
 import SimpleToast
@@ -24,10 +23,10 @@ struct POIDetailSheet: View {
 
     let item: ResolvedItem
     let didDenyLocationPermission: Bool
-    let onStart: (RoutingService.RouteCalculationResult?) -> Void
+    let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
 
-    @State var routes: RoutingService.RouteCalculationResult?
+    @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
@@ -51,7 +50,7 @@ struct POIDetailSheet: View {
         item: ResolvedItem,
         routingStore: RoutingStore,
         didDenyLocationPermission: Bool,
-        onStart: @escaping (RoutingService.RouteCalculationResult?) -> Void,
+        onStart: @escaping ([Route]?) -> Void,
         onDismiss: @escaping () -> Void
     ) {
         self.item = item
@@ -211,7 +210,7 @@ private extension POIDetailSheet {
 
     func calculateRoute(for item: ResolvedItem) async {
         do {
-            let routes = try await self.routingStore.calculateRoute(for: item)
+            let routes = try await self.routingStore.calculateRoutes(for: item)
             self.routes = routes
         } catch let error as URLError {
             if error.code == .cancelled {

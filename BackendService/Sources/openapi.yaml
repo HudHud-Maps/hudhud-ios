@@ -1,13 +1,13 @@
 openapi: 3.0.1
 info:
   title: Sinbad API
-  description: This API is a Backend for frontend (BFF) API created specially for HudHud iOS and Android apps. Named Sinbad API as a code name.
+  description: This API created specially for HudHud iOS and Android apps. Named Sinbad API as a code name.
   contact:
     name: Backend Team
     url: https://app.slack.com/huddle/T06C65MTNUF/C072Y7MDL9L
   version: "1.0"
 servers:
-  - url: //api.dev.hudhud.sa/
+  - url: /
 paths:
   /m/styles:
     get:
@@ -588,44 +588,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/SuccessResponse-Login'
         "400":
-          description: Bad Request
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=invalid_login_identity
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
       x-codegen-request-body-name: request
-  /u/login/{id}:
-    get:
-      tags:
-        - Login
-      summary: Request to resend OTP
-      description: This endpoint will allow the user to request for a resend of the OTP. Login has to be
-      operationId: getLoginByID
-      parameters:
-        - name: Accept-Language
-          in: header
-          description: User current language
-          schema:
-            type: string
-        - name: id
-          in: path
-          description: id of current login returned from /u/login endpoint
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Login Object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SuccessResponse-Login'
-        "400":
-          description: Invalid Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
   /u/login/{id}/resend-otp:
     post:
       tags:
@@ -651,9 +625,21 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse-Login'
+                $ref: '#/components/schemas/SuccessResponse-ResendOTPResponse'
         "400":
-          description: Invalid Request
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: code=resource_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "410":
+          description: code=otp_already_verified
           content:
             application/json:
               schema:
@@ -690,13 +676,216 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SuccessResponse-Login'
+                $ref: '#/components/schemas/SuccessResponse-VerifyOTPResponse'
         "400":
-          description: Invalid Request
+          description: code=invalid_request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: code=incorrect_otp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: code=resource_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "410":
+          description: code=otp_already_verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /u/profile:
+    get:
+      tags:
+        - User Profile
+      summary: GetUserProfile
+      description: This endpoint will allow the user to get their profile info and the user will be identified by their access token
+      operationId: getUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: UserProfile Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UserProfile'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+    delete:
+      tags:
+        - User Profile
+      summary: Delete User Profile
+      description: This endpoint will allow the user to delete their profile account and the user will be identified by their access token
+      operationId: deleteUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: No Data should be returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-DeleteUserProfileResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+    patch:
+      tags:
+        - User Profile
+      summary: Edit User Profile
+      description: This endpoint will allow the user to edit their profile and the user will be identified by their access token
+      operationId: editUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: edit profile request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserProfileRequest'
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-EditUserProfileResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+      x-codegen-request-body-name: request
+  /u/profile/picture:
+    post:
+      tags:
+        - User Profile
+      summary: Edit User Profile
+      description: This endpoint will allow the user to update their profile and the user will be identified by their access token
+      operationId: uploadProfilePicture
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - picture
+              type: object
+              properties:
+                picture:
+                  type: string
+                  description: User Profile Picture should not exceed 5MB
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UploadProfilePictureResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=profile_picture_format_is_unsupported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+  /u/refresh-token:
+    post:
+      tags:
+        - Auth
+      summary: Refresh Access Token
+      description: This endpoint will allow the user to refresh their access token by submitting the access token alon with the refresh token
+      operationId: Refresh Access Token
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: edit profile request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/routes.RefreshAccessTokenRequest'
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-routes_RefreshAccessTokenResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: code=login_session_is_no_longer_active
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: code=user_is_inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
       x-codegen-request-body-name: request
 components:
   schemas:
@@ -710,6 +899,23 @@ components:
           type: string
         name:
           type: string
+    DeleteUserProfileResponse:
+      type: object
+    EditUserProfileRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - unspecified
+            - male
+            - female
+        last_name:
+          type: string
+    EditUserProfileResponse:
+      type: object
     ErrorResponse:
       required:
         - message
@@ -771,29 +977,22 @@ components:
     Login:
       type: object
       properties:
-        access_token:
-          type: string
-          description: AccessToken JWT access token will be issued only if the otp verification was successful.
         can_request_otp_resend_at:
           type: string
-          description: CanRequestOTPResendAt the time when the user can request for a resend of the OTP
+          description: CanRequestOTPResendAt the time w¬hen the user can request for a resend of the OTP
+          format: date-time
         id:
           type: string
           description: ID the unique identifier for the login every attempt would have a different record with a unique identifier.
-        is_user_active:
-          type: boolean
-          description: |-
-            IsUserActive In case it's first login and the OTP was verified successfully
-            the user will be created and will be automatically active only if the waitlist is disabled
-        login_identity:
-          type: string
-          description: LoginIdentity the user unique login identity email or mobile
     LoginRequest:
+      required:
+        - login_identity
       type: object
       properties:
         login_identity:
           type: string
           description: LoginIdentity the user unique login identity email or mobile
+          example: mashail@hudhud.sa or +966509988765
     MapStyle:
       required:
         - name
@@ -823,6 +1022,44 @@ components:
           type: string
         url:
           type: string
+    OpeningHours:
+      type: object
+      properties:
+        friday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        monday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        saturday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        sunday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        thursday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        tuesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        wednesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+    OpeningRange:
+      type: object
+      properties:
+        end:
+          type: integer
+        start:
+          type: integer
     PanoramicImageScene:
       required:
         - id
@@ -840,6 +1077,9 @@ components:
           type: string
         geom:
           type: string
+        heading:
+          type: number
+          format: double
         id:
           type: integer
         name:
@@ -906,7 +1146,7 @@ components:
         name:
           type: string
         opening_hours:
-          $ref: '#/components/schemas/types.OpeningHours'
+          $ref: '#/components/schemas/OpeningHours'
         phone_number:
           type: string
         price_range:
@@ -932,6 +1172,13 @@ components:
         trip_info:
           type: object
           description: TODO Change the type of TripInfo from map[string]any to any
+    ResendOTPResponse:
+      type: object
+      properties:
+        can_request_otp_resend_at:
+          type: string
+          description: CanRequestOTPResendAt the time when the user can request for a resend of the OTP
+          format: date-time
     StreetViewImageDetails:
       required:
         - id
@@ -946,6 +1193,9 @@ components:
           format: double
         geom:
           type: string
+        heading:
+          type: number
+          format: double
         id:
           type: integer
         metadata:
@@ -958,6 +1208,54 @@ components:
           type: string
         url:
           type: string
+    SuccessResponse-DeleteUserProfileResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/DeleteUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-EditUserProfileResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/EditUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-Login:
       required:
         - data
@@ -1030,6 +1328,30 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-ResendOTPResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/ResendOTPResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-StreetViewImageDetails:
       required:
         - data
@@ -1043,6 +1365,78 @@ components:
             The Data could be an object or an array
           allOf:
             - $ref: '#/components/schemas/StreetViewImageDetails'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UploadProfilePictureResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UploadProfilePictureResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UserProfile:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UserProfile'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-VerifyOTPResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/VerifyOTPResponse'
         next_page_token:
           type: string
           description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
@@ -1172,6 +1566,30 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-routes_RefreshAccessTokenResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/routes.RefreshAccessTokenResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     TypeaheadItem:
       required:
         - android_category_icon
@@ -1199,48 +1617,77 @@ components:
           enum:
             - poi
             - category
+    UploadProfilePictureResponse:
+      type: object
+    UserProfile:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email is the identity for the user during the login one of Email or MobileNumber has to be present
+        first_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - unspecified
+            - male
+            - female
+        last_name:
+          type: string
+        mobile:
+          type: string
+          description: MobileNumber is the identity for the user during the login one of Email or MobileNumber has to be present
+        profile_picture_url:
+          type: string
+          format: uri
+        user_id:
+          type: string
+          description: UserID the unique identifier for the user
     VerifyOTPRequest:
       type: object
       properties:
         otp:
           type: string
           description: OTP 6 digit OTP code
-    types.OpeningHours:
+    VerifyOTPResponse:
       type: object
       properties:
-        friday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        monday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        saturday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        sunday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        thursday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        tuesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        wednesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-    types.OpeningRange:
+        access_token:
+          type: string
+          description: |-
+            AccessToken JWT access token is short-lived token that will be issued only if the otp verification was successful.
+            The token will be valid for 1 hour.
+          format: base64
+        is_user_active:
+          type: boolean
+          description: |-
+            IsUserActive In case it's first login and the OTP was verified successfully
+            the user will be created and will be automatically active only if the waitlist is disabled
+        refresh_token:
+          type: string
+          description: |-
+            RefreshToken JWT refresh token is a long-lived token that will be issued only if the otp verification was successful.
+            The refresh token will be non-expired one
+          format: base64
+    routes.RefreshAccessTokenRequest:
       type: object
       properties:
-        end:
-          type: integer
-        start:
-          type: integer
+        refresh_token:
+          type: string
+          description: RefreshToken the refresh token that was issued with the access token
+          format: base64
+    routes.RefreshAccessTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: AccessToken the new access token
+          format: base64
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      description: 'JWT Bearer token for authentication. Example: "Bearer <token>"'
+      name: Authorization
+      in: header
 x-original-swagger-version: "2.0"

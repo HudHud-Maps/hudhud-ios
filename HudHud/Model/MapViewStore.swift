@@ -8,6 +8,7 @@
 
 import BackendService
 import Combine
+import FerrostarCoreFFI
 import MapLibre
 import OSLog
 import SwiftUI
@@ -19,10 +20,10 @@ final class MapViewStore: ObservableObject {
 
     // MARK: Properties
 
-    @Published var path = NavigationPath()
-
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+
+    @Published var path = NavigationPath()
 
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore
@@ -73,13 +74,20 @@ final class MapViewStore: ObservableObject {
 private extension MapViewStore {
     func showPotentialRouteWhenAvailable() {
         self.routingStore.$potentialRoute
-            .compactMap { $0 }
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] newPotentialRoute in
-                guard let self,
-                      self.path.contains(RoutingService.RouteCalculationResult.self) == false else { return }
-                self.path.append(newPotentialRoute)
-                self.mapStore.updateCamera(state: .route(newPotentialRoute))
+
+                if let newPotentialRoute {
+                    guard let self,
+                          self.path.contains(SheetSubView.self) == false else { return }
+                    self.path.append(SheetSubView.navigationPreview)
+
+                    self.mapStore.updateCamera(state: .route(newPotentialRoute))
+                } else {
+                    if let lastElement = self?.path.last(), let somethingElse = lastElement as? SheetSubView, somethingElse == .navigationPreview {
+                        self?.path.removeLast()
+                    }
+                }
             }
             .store(in: &self.subscriptions)
     }
@@ -178,14 +186,13 @@ private extension MapViewStore {
             case .favorites:
                 self.allowedDetents = [.large]
                 self.selectedDetent = .large
+            case .navigationPreview:
+                self.allowedDetents = [.height(150), .nearHalf]
+                self.selectedDetent = .nearHalf
             }
         }
         if navigationPathItem is ResolvedItem {
             self.allowedDetents = [.small, .third, .nearHalf, .large]
-            self.selectedDetent = .nearHalf
-        }
-        if navigationPathItem is RoutingService.RouteCalculationResult {
-            self.allowedDetents = [.height(150), .nearHalf]
             self.selectedDetent = .nearHalf
         }
     }
@@ -193,7 +200,7 @@ private extension MapViewStore {
 
 // MARK: - Previewable
 
-extension MapViewStore: @preconcurrency Previewable {
+extension MapViewStore: Previewable {
     static let storeSetUpForPreviewing = MapViewStore(
         mapStore: .storeSetUpForPreviewing,
         routingStore: .storeSetUpForPreviewing
