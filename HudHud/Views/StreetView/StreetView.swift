@@ -171,7 +171,7 @@ struct StreetView: View {
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch) { direction in
+            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch, startAngle: .pi) { direction in
                 Logger.streetView.info("direction: \(direction)")
             } cameraMoved: { pitch, yaw, _ in
                 DispatchQueue.main.async {
