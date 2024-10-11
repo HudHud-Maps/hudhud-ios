@@ -16,15 +16,6 @@ import SwiftUIPanoramaViewer
 
 struct StreetView: View {
 
-    // MARK: Nested Types
-
-    enum NavDirection: Int {
-        case next
-        case previous
-        case east
-        case west
-    }
-
     // MARK: Properties
 
     @Binding var streetViewScene: StreetViewScene?
@@ -123,7 +114,7 @@ struct StreetView: View {
 
             VStack {
                 Button {
-                    loadImage(.previous)
+                    loadImage(.south)
                 } label: {
                     Image(systemSymbol: .chevronUpCircleFill)
                         .resizable()
@@ -161,7 +152,7 @@ struct StreetView: View {
                 }
 
                 Button {
-                    loadImage(.next)
+                    loadImage(.north)
                 } label: {
                     Image(systemSymbol: .chevronDownCircleFill)
                         .resizable()
@@ -187,10 +178,8 @@ struct StreetView: View {
                     self.rotationIndicator = yaw
                     self.rotationZIndicator = pitch * 2 + 30
                 }
-            }
-
-            if self.fullScreenStreetView, self.showLoading == false {
-                self.streetNavigationButtons
+            } tapHandler: { direction in
+                loadImage(direction)
             }
         }
     }
@@ -260,7 +249,7 @@ struct StreetView: View {
 
 extension StreetView {
 
-    func loadImage(_ direction: NavDirection) {
+    func loadImage(_ direction: CTNavigationDirection) {
         Task {
             let nextItem = self.getNextID(direction)
             guard let nextId = nextItem.id,
@@ -277,12 +266,12 @@ extension StreetView {
         }
     }
 
-    func getNextID(_ direction: NavDirection) -> (id: Int?, name: String?) {
+    func getNextID(_ direction: CTNavigationDirection) -> (id: Int?, name: String?) {
         Logger.streetView.debug("SVD: Direction: \(direction.rawValue)")
         switch direction {
-        case .next:
+        case .north:
             return (self.streetViewScene?.nextId, self.streetViewScene?.nextName)
-        case .previous:
+        case .south:
             return (self.streetViewScene?.previousId, self.streetViewScene?.previousName)
         case .east:
             return (self.streetViewScene?.eastId, self.streetViewScene?.eastName)
@@ -292,10 +281,10 @@ extension StreetView {
     }
 
     func preLoadScenes() {
-        let nextItem = self.getNextID(.next)
+        let nextItem = self.getNextID(.north)
         self.preLoadItem(nextItem.name)
 
-        let previousItem = self.getNextID(.previous)
+        let previousItem = self.getNextID(.south)
         self.preLoadItem(previousItem.name)
 
         Task {
