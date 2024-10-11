@@ -10,7 +10,7 @@ import KeychainAccess
 
 // MARK: - AuthProvider
 
-public struct AuthProvider {
+public class AuthProvider {
 
     // MARK: Static Properties
 
@@ -57,7 +57,7 @@ public struct Credentials: Codable {
     // MARK: Computed Properties
 
     public var isExpired: Bool {
-        return self.expiration > Date()
+        return self.expiration < Date()
     }
 
     // MARK: Lifecycle
