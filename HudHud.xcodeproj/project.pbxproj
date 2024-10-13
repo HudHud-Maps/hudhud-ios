@@ -77,6 +77,7 @@
 		A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128EEC335247DA2600CF82C6 /* NotificationManager.swift */; };
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
+		AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
@@ -98,12 +99,11 @@
 		CD1298822B99031E00EC3295 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CD1298832B99031E00EC3295 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054E2B681263003E5196 /* Preview Assets.xcassets */; };
 		CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */ = {isa = PBXBuildFile; fileRef = CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */; };
-		CD1882FC2BF63E8200C8AD49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		CD1882FE2BF63E8200C8AD49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CD1882FC2BF63E8200C8AD49 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		CD1882FE2BF63E8200C8AD49 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
 		CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C55C2C03EF43006DCDBA /* NavigationTransitions */; };
-		CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */; };
 		CD34C5612C05C7FA006DCDBA /* RootSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */; };
 		CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C5632C05EF07006DCDBA /* BetterSafariView */; };
 		CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C5942C0B3CC8006DCDBA /* BackendService */; };
@@ -130,7 +130,7 @@
 		CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDCF58422C8EEA6300906959 /* NukeUI */; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
-		CDE538CA2BA7868200D7FFE7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CDE538CA2BA7868200D7FFE7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
@@ -228,6 +228,7 @@
 		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
 		7A230BDAC75F2EAFD87603F6 /* IBMPlexSansArabic-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansArabic-Regular.ttf"; sourceTree = "<group>"; };
 		7C08918AE951B4460365873D /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetStore.swift; sourceTree = "<group>"; };
 		7E21300E9BF61F5A403DE2CE /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
 		7F64F898F2A8C418EC5938E6 /* Navigation Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Navigation Delegate.swift"; sourceTree = "<group>"; };
 		8B629EDAD64E6EFF641F2427 /* PlusJakartaSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
@@ -273,7 +274,6 @@
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219572BBFDBEE00042564 /* MotionViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MotionViewModel.swift; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
-		CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPath.swift; sourceTree = "<group>"; };
 		CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootSheetView.swift; sourceTree = "<group>"; };
 		CD34C5962C0B3CEB006DCDBA /* BackendService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BackendService; sourceTree = "<group>"; };
 		CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Double+Limits.swift"; sourceTree = "<group>"; };
@@ -333,17 +333,17 @@
 				59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CDE538CA2BA7868200D7FFE7 /* (null) in Frameworks */,
+				CDE538CA2BA7868200D7FFE7 /* BuildFile in Frameworks */,
 				CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
-				CD1882FE2BF63E8200C8AD49 /* (null) in Frameworks */,
+				CD1882FE2BF63E8200C8AD49 /* BuildFile in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CB7033BB2C9300610006681E /* TypographyKit in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
-				CD1882FC2BF63E8200C8AD49 /* (null) in Frameworks */,
+				CD1882FC2BF63E8200C8AD49 /* BuildFile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -486,6 +486,7 @@
 				5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */,
 				3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */,
 				41386D7314539DB91E42D41A /* MapActionHandler.swift */,
+				7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -694,7 +695,6 @@
 				CD71C3682BBBFF27009C3A1C /* CameraState.swift */,
 				CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */,
 				CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */,
-				CD34C55E2C05BFE3006DCDBA /* NavigationPath.swift */,
 				734FB0DF376C6B77950814C5 /* Fonts.swift */,
 				56265CBDEA22D04649BE38DE /* MapViewCamera.swift */,
 				AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */,
@@ -803,6 +803,10 @@
 				6B44549ADBEF118786234C7D /* FerrostarMapLibreUI */,
 				820F65EA227DAE994198AC8F /* FerrostarSwiftUI */,
 				CD3BCAD22CB6E402001F8CFD /* TokensEnumGenerator */,
+				335776DB4FF83459BA3081C4 /* Semaphore */,
+				532946F1B08D76575C26B170 /* FerrostarCore */,
+				774AC299E8C1C204EC968730 /* FerrostarMapLibreUI */,
+				E8327D7A606F9D7072DC0C08 /* FerrostarSwiftUI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -892,6 +896,8 @@
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				50C351AD9569672D140D334E /* XCRemoteSwiftPackageReference "ferrostar" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
+				F2575FF18C45531FA0A1064F /* XCRemoteSwiftPackageReference "Semaphore" */,
+				7C01ED3D13B2ECCC18596D7D /* XCRemoteSwiftPackageReference "ferrostar" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -984,7 +990,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD34C55F2C05BFE3006DCDBA /* NavigationPath.swift in Sources */,
 				90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */,
 				CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */,
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
@@ -1083,6 +1088,7 @@
 				6BA3C89567E6EE1E0693F713 /* GraphHopperRouteAdapter.swift in Sources */,
 				E3251B5454CD025CDE0D00F9 /* Navigation Delegate.swift in Sources */,
 				EDF32E0E88A8260CDD42AFE2 /* OTPFieldView.swift in Sources */,
+				AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1453,6 +1459,14 @@
 				minimumVersion = 0.10.4;
 			};
 		};
+		3B10208253D70F45227F6B66 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			requirement = {
+				kind = revision;
+				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
+			};
+		};
 		3DFBA7A5AEB2A3F3208529D7 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/ferrostar.git";
@@ -1493,12 +1507,28 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		7C01ED3D13B2ECCC18596D7D /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			requirement = {
+				kind = revision;
+				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
+			};
+		};
 		971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Patrick-Kladek/TouchVisualizer";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
+			};
+		};
+		A28C0A97B537B34CD9FD3149 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			requirement = {
+				kind = revision;
+				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
 			};
 		};
 		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
@@ -1515,6 +1545,14 @@
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		BB1F32AD23616484587885CB /* XCRemoteSwiftPackageReference "Semaphore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/Semaphore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
 			};
 		};
 		CB7033B92C9300610006681E /* XCRemoteSwiftPackageReference "TypographyKit" */ = {
@@ -1565,6 +1603,14 @@
 				minimumVersion = 12.8.0;
 			};
 		};
+		D77D007EDAC193345366F5AF /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			requirement = {
+				kind = revision;
+				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
+			};
+		};
 		E37B9367170CAD371E7A8E44 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
@@ -1589,6 +1635,14 @@
 				kind = branch;
 			};
 		};
+		F2575FF18C45531FA0A1064F /* XCRemoteSwiftPackageReference "Semaphore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/Semaphore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
@@ -1605,6 +1659,16 @@
 			package = 971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
 			productName = TouchVisualizer;
 		};
+		335776DB4FF83459BA3081C4 /* Semaphore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BB1F32AD23616484587885CB /* XCRemoteSwiftPackageReference "Semaphore" */;
+			productName = Semaphore;
+		};
+		532946F1B08D76575C26B170 /* FerrostarCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3B10208253D70F45227F6B66 /* XCRemoteSwiftPackageReference "ferrostar" */;
+			productName = FerrostarCore;
+		};
 		6B44549ADBEF118786234C7D /* FerrostarMapLibreUI */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DFBA7A5AEB2A3F3208529D7 /* XCRemoteSwiftPackageReference "ferrostar" */;
@@ -1614,6 +1678,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 40EA90C524381338B35A1C20 /* XCRemoteSwiftPackageReference "ferrostar" */;
 			productName = FerrostarCore;
+		};
+		774AC299E8C1C204EC968730 /* FerrostarMapLibreUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D77D007EDAC193345366F5AF /* XCRemoteSwiftPackageReference "ferrostar" */;
+			productName = FerrostarMapLibreUI;
 		};
 		820F65EA227DAE994198AC8F /* FerrostarSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1693,6 +1762,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
 			productName = NavigationTransitions;
+		};
+		E8327D7A606F9D7072DC0C08 /* FerrostarSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A28C0A97B537B34CD9FD3149 /* XCRemoteSwiftPackageReference "ferrostar" */;
+			productName = FerrostarSwiftUI;
 		};
 		F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */ = {
 			isa = XCSwiftPackageProductDependency;

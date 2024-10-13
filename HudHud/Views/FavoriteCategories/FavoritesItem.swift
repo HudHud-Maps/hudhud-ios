@@ -13,7 +13,7 @@ import SwiftUI
 
 // MARK: - FavoritesItem
 
-struct FavoritesItem: Identifiable, Codable, Equatable {
+struct FavoritesItem: Identifiable, Codable, Hashable {
     var id: UUID
     var title: String // change later to localized if you can
     let tintColor: TintColor

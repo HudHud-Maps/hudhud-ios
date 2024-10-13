@@ -15,7 +15,7 @@ struct NavigationSheetView: View {
     // MARK: Properties
 
     @ObservedObject var routingStore: RoutingStore
-    @ObservedObject var mapViewStore: MapViewStore
+    var sheetStore: SheetStore
 
     @Environment(\.dismiss) private var dismiss
 
@@ -51,7 +51,7 @@ struct NavigationSheetView: View {
             .padding(.horizontal)
             .padding(.top, 30)
             if let route = self.routingStore.potentialRoute, let waypoints = self.routingStore.waypoints {
-                ABCRouteConfigurationView(routeConfigurations: waypoints, mapViewStore: self.mapViewStore, routingStore: self.routingStore)
+                ABCRouteConfigurationView(routeConfigurations: waypoints, sheetStore: self.sheetStore, routingStore: self.routingStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
                         duration: route.duration,
@@ -59,6 +59,7 @@ struct NavigationSheetView: View {
                         typeOfRoute: "Fastest"
                     ), go: {
                         self.routingStore.navigatingRoute = route
+                        self.sheetStore.reset()
                     }
                 )
                 .padding([.horizontal, .bottom])
@@ -68,5 +69,5 @@ struct NavigationSheetView: View {
 }
 
 #Preview {
-    NavigationSheetView(routingStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    NavigationSheetView(routingStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
 }

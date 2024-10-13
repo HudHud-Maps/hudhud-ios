@@ -11,7 +11,9 @@ import Combine
 import Foundation
 import SwiftUI
 
-class FavoritesStore: ObservableObject {
+// MARK: - FavoritesStore
+
+final class FavoritesStore: ObservableObject {
 
     // MARK: Properties
 
@@ -124,4 +126,10 @@ class FavoritesStore: ObservableObject {
     private func isUpdatableType(_ type: String) -> Bool {
         return ["Home", "School", "Work"].contains(type)
     }
+}
+
+// MARK: - Previewable
+
+extension FavoritesStore: Previewable {
+    static let storeSetUpForPreviewing: FavoritesStore = .init()
 }
