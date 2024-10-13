@@ -1,0 +1,137 @@
+//
+//  SpeedView.swift
+//  HudHud
+//
+//  Created by Naif Alrashed on 13/10/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
+import CoreLocation
+import SwiftUI
+
+// MARK: - SpeedView
+
+struct SpeedView: View {
+
+    // MARK: Properties
+
+    let speed: CLLocationSpeed
+    let speedLimit: CLLocationSpeed?
+
+    // MARK: Computed Properties
+
+    private var isOverSpeedLimit: Bool {
+        if let speedLimit, speed > speedLimit {
+            true
+        } else {
+            false
+        }
+    }
+
+    // MARK: Content
+
+    var body: some View {
+        CurrentSpeedView(
+            speed: self.speed,
+            isOverSpeedLimit: self.isOverSpeedLimit
+        )
+        .overlay(alignment: .topTrailing) {
+            if let speedLimit {
+                Circle().fill(.red).frame(width: 10)
+                    .overlay {
+                        SpeedLimitView(speedLimit: speedLimit)
+                    }
+            }
+        }
+    }
+}
+
+// MARK: - CurrentSpeedView
+
+struct CurrentSpeedView: View {
+
+    // MARK: Properties
+
+    let speed: CLLocationSpeed
+    let isOverSpeedLimit: Bool
+
+    // MARK: Computed Properties
+
+    private var speedColor: Color {
+        if self.isOverSpeedLimit {
+            .red
+        } else {
+            .white
+        }
+    }
+
+    // MARK: Content
+
+    var body: some View {
+        VStack(spacing: 2) {
+            Text("\(self.speed, format: .number)")
+                .foregroundStyle(self.speedColor)
+                .hudhudFont(.headline)
+            Text("km/h")
+                .foregroundStyle(.white)
+        }
+        .padding(12)
+        .background(Circle().fill(Color.Colors.General._01Black))
+    }
+}
+
+// MARK: - SpeedLimitView
+
+struct SpeedLimitView: View {
+
+    // MARK: Properties
+
+    let speedLimit: CLLocationSpeed
+
+    // MARK: Content
+
+    var body: some View {
+        Text("\(self.speedLimit, format: .number)")
+            .lineLimit(1, reservesSpace: true)
+            .foregroundStyle(Color.Colors.General._17Text)
+            .padding(12)
+            .background(Circle().fill(.white))
+            .padding(3.5)
+            .background(Circle().fill(.red))
+            .frame(minWidth: 100, minHeight: 100)
+    }
+}
+
+// MARK: - OverSpeedLimitNotificationView
+
+struct OverSpeedLimitNotificationView: View {
+
+    // MARK: Properties
+
+    let currentSpeed: CLLocationSpeed
+
+    // MARK: Content
+
+    var body: some View {
+        Text("\(self.currentSpeed, format: .number)")
+            .foregroundStyle(.white)
+            .padding(12)
+            .background(Circle().fill(.red))
+            .padding(3.5)
+            .background(Circle().fill(.white))
+            .padding(3.5)
+            .background(Circle().fill(.red))
+    }
+}
+
+#Preview {
+    SpeedView(speed: 50, speedLimit: 60)
+    SpeedView(speed: 60, speedLimit: 50)
+    SpeedLimitView(speedLimit: 120)
+}
+
+#Preview("over speed limit notification") {
+    OverSpeedLimitNotificationView(currentSpeed: 121)
+        .environment(\.locale, Locale(identifier: "ar"))
+    OverSpeedLimitNotificationView(currentSpeed: 500)
+}
