@@ -46,7 +46,6 @@ final class MapStore: ObservableObject {
 
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
     @Published var shouldShowCustomSymbols = false
-    @Published var searchShown: Bool = true
     @Published var trackingState: TrackingState = .none
 
     var hudhudStreetView = HudhudStreetView()
@@ -107,9 +106,8 @@ final class MapStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
         self.camera = camera
-        self.searchShown = searchShown
         self.motionViewModel = motionViewModel
         self.userLocationStore = userLocationStore
         bindLayersVisability()
