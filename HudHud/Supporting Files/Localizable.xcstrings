@@ -215,6 +215,9 @@
     "Filters" : {
 
     },
+    "From %@" : {
+
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -464,6 +467,12 @@
 
     },
     "Use SF Symbols for POIs on map" : {
+
+    },
+    "Useful" : {
+
+    },
+    "Useful (%lld)" : {
 
     },
     "User location could not be found." : {
