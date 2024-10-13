@@ -21,7 +21,7 @@ struct ReviewSectionView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            userView(review: self.review)
+            UserView(review: self.review)
 
             RatingsView(review: self.review)
 
@@ -31,7 +31,7 @@ struct ReviewSectionView: View {
                 .lineLimit(nil)
                 .foregroundStyle(Color.Colors.General._01Black)
 
-            bottomBar(isUseful: self.review.isUseful, usefulCount: self.review.usefulCount)
+            BottomBar(isUseful: self.review.isUseful, usefulCount: self.review.usefulCount)
                 .padding(.top)
 
             Divider()
@@ -40,9 +40,9 @@ struct ReviewSectionView: View {
     }
 }
 
-// MARK: - userView
+// MARK: - UserView
 
-struct userView: View {
+struct UserView: View {
 
     // MARK: Properties
 
@@ -95,9 +95,9 @@ struct RatingsView: View {
     }
 }
 
-// MARK: - bottomBar
+// MARK: - BottomBar
 
-struct bottomBar: View {
+struct BottomBar: View {
 
     // MARK: Properties
 
