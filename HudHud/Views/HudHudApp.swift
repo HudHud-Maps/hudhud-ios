@@ -9,6 +9,7 @@
 import OSLog
 import SwiftLocation
 import SwiftUI
+import TypographyKit
 
 // MARK: - HudHudApp
 
@@ -50,18 +51,13 @@ struct HudHudApp: App {
         location.accuracy = .threeKilometers
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
-        let mapViewStore = MapViewStore(
-            mapStore: self.mapStore,
-            routingStore: routingStore,
-            sheetStore: self.sheetStore
-        )
-        self.mapViewStore = mapViewStore
-        self.searchStore = SearchViewStore(
-            mapStore: self.mapStore,
-            sheetStore: self.sheetStore,
-            routingStore: routingStore,
-            filterStore: .shared,
-            mode: .live(provider: .hudhud)
-        )
+        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore, sheetStore: self.sheetStore)
+        self.searchStore = SearchViewStore(mapStore: self.mapStore, sheetStore: self.sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        // Load custom typography configuration
+        if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
+            TypographyKit.configure(with:
+                TypographyKitConfiguration.default.setConfigurationURL(url)
+            )
+        }
     }
 }

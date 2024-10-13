@@ -36,8 +36,7 @@ struct MapViewContainer: View {
 
     var locationLabel: String {
         guard let userLocation = searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation else {
-            return
-                "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
+            return "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
         }
 
         return "±\(Int(userLocation.horizontalAccuracy))m accuracy"
@@ -54,15 +53,13 @@ struct MapViewContainer: View {
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore,
-        routingStore: RoutingStore,
-        isSheetShown: Binding<Bool>
-    ) {
+    init(mapStore: MapStore,
+         debugStore: DebugStore,
+         searchViewStore: SearchViewStore,
+         userLocationStore: UserLocationStore,
+         mapViewStore: MapViewStore,
+         routingStore: RoutingStore,
+         isSheetShown: Binding<Bool>) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
@@ -190,7 +187,6 @@ struct MapViewContainer: View {
                     .iconColor(.white)
                     .predicate(NSPredicate(format: "cluster != YES"))
                 }
-
             } mapViewModifiers: { content, isNavigating in
                 if isNavigating {
                     content
@@ -294,6 +290,7 @@ struct MapViewContainer: View {
             }
             .task {
                 guard !self.didFocusOnUser else { return }
+
                 self.didFocusOnUser = true
             }
         }
