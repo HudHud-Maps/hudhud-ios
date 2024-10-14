@@ -41,7 +41,6 @@ final class MapStore: ObservableObject {
 
     // MARK: Properties
 
-    let motionViewModel: MotionViewModel
     var mapStyle: MLNStyle?
 
     @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
@@ -108,12 +107,11 @@ final class MapStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
+    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, userLocationStore: UserLocationStore) {
         self.camera = camera
         self.searchShown = searchShown
-        self.motionViewModel = motionViewModel
         self.userLocationStore = userLocationStore
-        bindLayersVisability()
+        self.bindLayersVisability()
     }
 
     // MARK: Functions
@@ -308,7 +306,7 @@ final class MapStore: ObservableObject {
 
 extension MapStore: Previewable {
 
-    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = MapStore(userLocationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Private

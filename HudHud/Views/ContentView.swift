@@ -41,7 +41,6 @@ struct ContentView: View {
 
     @StateObject private var notificationQueue = NotificationQueue()
     @ObservedObject private var userLocationStore: UserLocationStore
-    @ObservedObject private var motionViewModel: MotionViewModel
     @ObservedObject private var searchViewStore: SearchViewStore
     @ObservedObject private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
@@ -56,7 +55,6 @@ struct ContentView: View {
         self.searchViewStore = searchStore
         self.mapStore = searchStore.mapStore
         self.userLocationStore = searchStore.mapStore.userLocationStore
-        self.motionViewModel = searchStore.mapStore.motionViewModel
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore

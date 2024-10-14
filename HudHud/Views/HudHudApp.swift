@@ -20,7 +20,6 @@ struct HudHudApp: App {
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
 
-    private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
     private let mapViewStore: MapViewStore
@@ -40,10 +39,9 @@ struct HudHudApp: App {
     // MARK: Lifecycle
 
     init() {
-        self.motionViewModel = .shared
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
-        self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
+        self.mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
         self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
         self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))

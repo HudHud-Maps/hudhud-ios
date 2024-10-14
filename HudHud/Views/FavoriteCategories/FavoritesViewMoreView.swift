@@ -102,7 +102,7 @@ struct FavoritesViewMoreView: View {
     }
 
     func searchSheetView() -> some View {
-        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
         let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, filterStore: filterStore, mode: self.searchStore.mode)
         freshSearchViewStore.searchType = .favorites
