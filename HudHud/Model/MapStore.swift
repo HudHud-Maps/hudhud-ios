@@ -35,6 +35,7 @@ final class MapStore: ObservableObject {
         case route(Route?)
         case selectedItem(ResolvedItem)
         case userLocation(CLLocationCoordinate2D)
+        case streetViewPoint(CLLocationCoordinate2D)
         case mapItems
         case defaultLocation
     }
@@ -53,12 +54,23 @@ final class MapStore: ObservableObject {
     @Published var streetViewScene: StreetViewScene?
     @Published var nearestStreetViewScene: StreetViewScene?
     @Published var fullScreenStreetView: Bool = false
+    @Published var streetViewHeading: Float = 0
     var cachedScenes = [Int: StreetViewScene]()
     let userLocationStore: UserLocationStore
 
     @Published private(set) var selectedItem: ResolvedItem?
 
     @Published var displayableItems: [DisplayableRow] = []
+
+    var streetViewSource: ShapeSource = .init(identifier: "street-view-point") {} /* {
+             ShapeSource(identifier: "street-view-point") {
+     //            if let coordinates = self.streetViewScene?.coordinates {
+     //                let streetViewPoint = StreetViewPoint(coordinates: coordinates,
+     //                                                      heading: self.streetViewHeading)
+     //                streetViewPoint.feature
+     //            }
+             }
+         }*/
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []

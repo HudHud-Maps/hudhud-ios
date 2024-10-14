@@ -22,8 +22,6 @@ struct StreetView: View {
     @Binding var fullScreenStreetView: Bool
 
     @State var mapStore: MapStore
-    @State var rotationIndicator: Float = 0.0
-    @State var rotationZIndicator: Float = 0.0
     @MainActor @State var svimage: UIImage?
     @State var svimageId: String = ""
     @State var errorMsg: String?
@@ -108,79 +106,17 @@ struct StreetView: View {
         })
     }
 
-    var streetNavigationButtons: some View {
-        VStack {
-            Spacer()
-
-            VStack {
-                Button {
-                    loadImage(.south)
-                } label: {
-                    Image(systemSymbol: .chevronUpCircleFill)
-                        .resizable()
-                        .frame(width: 36, height: 36)
-                        .accentColor(.white)
-                        .shadow(radius: 26)
-                        .opacity(self.streetViewScene?.previousId != nil ? 1.0 : 0.0)
-                }
-
-                HStack {
-                    Button {
-                        loadImage(.west)
-                    } label: {
-                        Image(systemSymbol: .chevronLeftCircleFill)
-                            .resizable()
-                            .frame(width: 36, height: 36)
-                            .accentColor(.white)
-                            .shadow(radius: 26)
-                            .opacity(self.streetViewScene?.westId != nil ? 1.0 : 0.0)
-                    }
-
-                    Spacer()
-                        .frame(width: 52)
-
-                    Button {
-                        loadImage(.east)
-                    } label: {
-                        Image(systemSymbol: .chevronRightCircleFill)
-                            .resizable()
-                            .frame(width: 36, height: 36)
-                            .accentColor(.white)
-                            .shadow(radius: 26)
-                            .opacity(self.streetViewScene?.eastId != nil ? 1.0 : 0.0)
-                    }
-                }
-
-                Button {
-                    loadImage(.north)
-                } label: {
-                    Image(systemSymbol: .chevronDownCircleFill)
-                        .resizable()
-                        .frame(width: 36, height: 36)
-                        .accentColor(.white)
-                        .shadow(radius: 26)
-                        .opacity(self.streetViewScene?.nextId != nil ? 1.0 : 0.0)
-                }
-            }
-            .rotation3DEffect(.degrees(Double(self.rotationIndicator)), axis: (x: 0, y: 0, z: 1))
-            .rotation3DEffect(.degrees(Double(self.rotationZIndicator)), axis: (x: 1, y: 0, z: 0))
-            .padding()
-            .padding(.bottom, 44)
-        }
-    }
-
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch, startAngle: .pi) { direction in
-                Logger.streetView.info("direction: \(direction)")
-            } cameraMoved: { pitch, yaw, _ in
-                DispatchQueue.main.async {
-                    self.rotationIndicator = yaw
-                    self.rotationZIndicator = pitch * 2 + 30
-                }
-            } tapHandler: { direction in
+            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch, startAngle: .pi, backgroundColor: .black, rotationHandler: { rotationKey in
+//                DispatchQueue.main.async {
+                self.mapStore.streetViewHeading = rotationKey.toDegrees()
+//                }
+            }, cameraMoved: { _, _, _ in
+
+            }, tapHandler: { direction in
                 loadImage(direction)
-            }
+            })
         }
     }
 

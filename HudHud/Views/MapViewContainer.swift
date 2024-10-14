@@ -162,22 +162,20 @@ struct MapViewContainer: View {
                         .predicate(NSPredicate(format: "cluster != YES"))
 
                     // shows the selected pin
-                    CircleStyleLayer(
-                        identifier: MapLayerIdentifier.selectedCircle,
-                        source: self.mapStore.selectedPoint
-                    )
-                    .radius(24)
-                    .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
-                    SymbolStyleLayer(
-                        identifier: MapLayerIdentifier.selectedCircleIcon,
-                        source: self.mapStore.selectedPoint
-                    )
-                    .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
+                    CircleStyleLayer(identifier: MapLayerIdentifier.selectedCircle, source: self.mapStore.selectedPoint)
+                        .radius(24)
+                        .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
+                        .strokeWidth(2)
+                        .strokeColor(.white)
+                        .predicate(NSPredicate(format: "cluster != YES"))
+                    SymbolStyleLayer(identifier: MapLayerIdentifier.selectedCircleIcon, source: self.mapStore.selectedPoint)
+                        .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
+                        .iconColor(.white)
+                        .predicate(NSPredicate(format: "cluster != YES"))
+
+//                    SymbolStyleLayer(identifier: "street-view-point", source: self.mapStore.streetViewSource)
+//                        .iconImage(UIImage.lookAroundPin /*.resize(to: CGSize(width: 128, height: 128))*/)
+//                        .iconRotation(featurePropertyNamed: "heading")
                 }
 
             } mapViewModifiers: { content, isNavigating in
@@ -263,7 +261,7 @@ struct MapViewContainer: View {
                 self.didFocusOnUser = true
                 self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
             }
-            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { newValue in
+            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { _, newValue in
                 if let route = newValue {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {

@@ -36,6 +36,13 @@ public struct StreetViewScene: Equatable {
     public let lon: Double
 }
 
+public extension StreetViewScene {
+
+    var coordinates: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: self.lat, longitude: self.lon)
+    }
+}
+
 // MARK: - HudhudStreetView
 
 public struct HudhudStreetView {
