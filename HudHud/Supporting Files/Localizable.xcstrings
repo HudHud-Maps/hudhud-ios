@@ -118,6 +118,9 @@
         }
       }
     },
+    "Claim this business" : {
+
+    },
     "Close" : {
       "comment" : "accesibility label instead of x",
       "localizations" : {
@@ -128,6 +131,9 @@
           }
         }
       }
+    },
+    "Closed" : {
+
     },
     "Create Account" : {
 
@@ -419,6 +425,9 @@
 
     },
     "SF Symbols on Map" : {
+
+    },
+    "Show more" : {
 
     },
     "Simulate Ride during Navigation" : {
