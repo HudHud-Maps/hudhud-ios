@@ -22,7 +22,7 @@ struct RecentSearchResultsView: View {
 
     @ScaledMetric var imageSize = 24
     @Environment(\.dismiss) var dismiss
-    @StateObject var favoritesStore = FavoritesStore()
+    var sheetStore: SheetStore
 
     // MARK: Content
 
@@ -58,12 +58,10 @@ struct RecentSearchResultsView: View {
                 }
                 Spacer()
                 if self.searchType == .favorites {
-                    NavigationLink {
-                        EditFavoritesFormView(item: item, favoritesStore: self.favoritesStore)
-                    } label: {
-                        Text("+")
-                            .foregroundStyle(Color(UIColor.label))
+                    Button("+") {
+                        self.sheetStore.pushSheet(SheetViewData(viewData: .editFavoritesForm(item: item)))
                     }
+                    .foregroundStyle(Color(.label))
                 }
             }
             .onTapGesture {
@@ -88,7 +86,11 @@ struct RecentSearchResultsView: View {
 
 #Preview {
     NavigationStack {
-        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
+        RecentSearchResultsView(
+            searchStore: .storeSetUpForPreviewing,
+            searchType: .favorites,
+            sheetStore: SheetStore()
+        )
     }
 }
 
@@ -106,10 +108,14 @@ struct EditFavoritesFormViewPreview: PreviewProvider {
         let favoritesStore = FavoritesStore()
 
         return NavigationStack {
-            RecentSearchResultsView(searchStore: .storeSetUpForPreviewing, searchType: .favorites)
-                .navigationDestination(isPresented: .constant(true)) {
-                    EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
-                }
+            RecentSearchResultsView(
+                searchStore: .storeSetUpForPreviewing,
+                searchType: .favorites,
+                sheetStore: SheetStore()
+            )
+            .navigationDestination(isPresented: .constant(true)) {
+                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+            }
         }
         .previewDisplayName("EditFavoritesFormView")
     }

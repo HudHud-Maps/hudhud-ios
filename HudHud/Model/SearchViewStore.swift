@@ -71,13 +71,11 @@ final class SearchViewStore: ObservableObject {
     @Published var searchError: Error?
     @Published var isSheetLoading = false
     @Published var searchType: SearchType = .selectPOI
+    let filterStore: FilterStore
 
     @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
 
-    @ObservedObject var filterStore: FilterStore
-
-    private let mapViewStore: MapViewStore
-
+    private let sheetStore: SheetStore
     private var task: Task<Void, Error>?
     private var hudhud = HudHudPOI()
     private var cancellables: Set<AnyCancellable> = []
@@ -93,10 +91,16 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, mapViewStore: MapViewStore, routingStore: RoutingStore, filterStore: FilterStore, mode: Mode) {
+    init(
+        mapStore: MapStore,
+        sheetStore: SheetStore,
+        routingStore: RoutingStore,
+        filterStore: FilterStore,
+        mode: Mode
+    ) {
         self.mapStore = mapStore
         self.routingStore = routingStore
-        self.mapViewStore = mapViewStore
+        self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.mode = mode
 
@@ -116,7 +120,7 @@ final class SearchViewStore: ObservableObject {
         case let .resolvedItem(item):
             await self.mapStore.resolve(item)
         case let .categoryItem(resolvedItem):
-            self.mapViewStore.selectedDetent = .third
+            self.sheetStore.selectedDetent = .third
             self.mapStore.select(resolvedItem)
         case let .category(category):
             await self.fetch(category: category.name)
@@ -126,7 +130,7 @@ final class SearchViewStore: ObservableObject {
     }
 
     func resolve(item: DisplayableRow) async {
-        self.mapViewStore.selectedDetent = .third
+        self.sheetStore.selectedDetent = .third
         self.isSheetLoading = true
         defer { self.isSheetLoading = false }
         do {
@@ -142,19 +146,19 @@ final class SearchViewStore: ObservableObject {
                   let resolvedItem = firstItem.resolvedItem,
                   items.count == 1,
                   let resolvedItemIndex = self.mapStore.displayableItems.firstIndex(where: { $0.id == resolvedItem.id }) else {
-                self.mapViewStore.selectedDetent = .large
+                self.sheetStore.selectedDetent = .large
                 self.mapStore.displayableItems = items
                 return
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
             self.mapStore.select(resolvedItem, shouldFocusCamera: true)
-            self.mapViewStore.selectedDetent = .third
+            self.sheetStore.selectedDetent = .third
         } catch {
             self.searchError = error
         }
     }
 
-    func fetch(category: String, enterSearch: Bool? = false) async {
+    func fetch(category: String, enterSearch: Bool = false) async {
         self.loadingInstance.state = .initialLoading
         self.startFetchingResultsTimer()
         self.searchType = .categories
@@ -168,7 +172,7 @@ final class SearchViewStore: ObservableObject {
             let currentUserLocation = await mapStore.userLocationStore.location(allowCached: true)
             let items = try await hudhud.items(
                 for: category,
-                enterSearch: enterSearch ?? false,
+                enterSearch: enterSearch,
                 topRated: self.filterStore.topRated,
                 priceRange: self.filterStore.priceSelection.hudHudPriceRange,
                 sortBy: self.filterStore.sortSelection.hudHudSortBy,
@@ -201,7 +205,7 @@ final class SearchViewStore: ObservableObject {
         self.searchType = .categories
         defer { self.searchType = .selectPOI }
 
-        self.mapViewStore.selectedDetent = .third
+        self.sheetStore.selectedDetent = .third
 
         self.isSheetLoading = true
         defer { isSheetLoading = false }
@@ -227,7 +231,6 @@ final class SearchViewStore: ObservableObject {
         self.routingStore.endTrip()
         self.mapStore.clearItems()
         self.searchText = ""
-        self.mapViewStore.reset()
     }
 
     func storeInRecent(_ item: ResolvedItem) {
@@ -270,7 +273,7 @@ private extension SearchViewStore {
         self.task = Task {
             self.isSheetLoading = true
             defer { self.isSheetLoading = false }
-            self.mapViewStore.selectedDetent = .third
+            self.sheetStore.selectedDetent = .third
 
             let userLocation = await self.mapStore.userLocationStore.location(allowCached: true)
             do {
@@ -284,7 +287,7 @@ private extension SearchViewStore {
                 self.loadingInstance.state = .result
                 self.searchError = nil
                 self.mapStore.replaceItemsAndFocusCamera(on: result.items)
-                self.mapViewStore.selectedDetent = if provider == .hudhud, result.hasCategory {
+                self.sheetStore.selectedDetent = if provider == .hudhud, result.hasCategory {
                     .small // hudhud provider has coordinates in the response, so we can show the results in the map
                 } else {
                     .large // other providers do not return coordinates, so we show the result in a list in full page
@@ -341,5 +344,5 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
 }

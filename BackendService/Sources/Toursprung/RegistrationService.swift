@@ -64,7 +64,7 @@ public struct RegistrationService {
         }
     }
 
-    public func verifyOTP(loginId: String, otp: String, baseURL: String) async throws {
+    public func verifyOTP(loginId: String, otp: String, baseURL: String) async throws -> VerifyOTPResponse {
         let header = Operations.verifyOTP.Input.Headers(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
         let path = Operations.verifyOTP.Input.Path(id: loginId)
         let verifyOTPRequest = Components.Schemas.VerifyOTPRequest(otp: otp)
@@ -73,8 +73,18 @@ public struct RegistrationService {
         let response = try await Client.makeClient(using: baseURL).verifyOTP(path: path, headers: header, body: body)
 
         switch response {
-        case .ok:
-            return
+        case let .ok(message):
+            switch message.body {
+            case let .json(jsonResponse):
+                guard let accessToken = jsonResponse.data.value1.access_token,
+                      let isUserActive = jsonResponse.data.value1.is_user_active,
+                      let refreshToken = jsonResponse.data.value1.refresh_token else {
+                    throw HudHudClientError.internalServerError("login failed")
+                }
+                return VerifyOTPResponse(accessToken: accessToken,
+                                         isUserActive: isUserActive,
+                                         refreshToken: refreshToken)
+            }
         case let .badRequest(error):
             let errorMessage = try error.body.json.message
             throw HudHudClientError.badRequest(errorMessage)
@@ -135,4 +145,12 @@ public struct RegistrationResponse {
 
     public let id: String
     public let canRequestOtpResendAt: Date
+}
+
+// MARK: - VerifyOTPResponse
+
+public struct VerifyOTPResponse {
+    public let accessToken: String
+    public let isUserActive: Bool
+    public let refreshToken: String
 }

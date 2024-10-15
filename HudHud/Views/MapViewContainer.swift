@@ -27,7 +27,10 @@ struct MapViewContainer: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
-    @ObservedObject var mapViewStore: MapViewStore
+    let mapViewStore: MapViewStore
+    @ObservedObject var routingStore: RoutingStore
+    @State var safeAreaInsets = UIEdgeInsets()
+    @Binding var isSheetShown: Bool
 
     // MARK: - State
 
@@ -37,13 +40,40 @@ struct MapViewContainer: View {
 
     // MARK: Computed Properties
 
-    private var locationLabel: String {
+    var locationLabel: String {
         guard let userLocation = searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation else {
-            return
-                "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
+            return "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
         }
 
         return "±\(Int(userLocation.horizontalAccuracy))m accuracy"
+    }
+
+    @State private var errorMessage: String? {
+        didSet {
+            Task {
+                try await Task.sleep(nanoseconds: 8 * NSEC_PER_SEC)
+                self.errorMessage = nil
+            }
+        }
+    }
+
+    // MARK: Lifecycle
+
+    init(mapStore: MapStore,
+         debugStore: DebugStore,
+         searchViewStore: SearchViewStore,
+         userLocationStore: UserLocationStore,
+         mapViewStore: MapViewStore,
+         routingStore: RoutingStore,
+         isSheetShown: Binding<Bool>) {
+        self.mapStore = mapStore
+        self.debugStore = debugStore
+        self.searchViewStore = searchViewStore
+        self.userLocationStore = userLocationStore
+        self.mapViewStore = mapViewStore
+        self.routingStore = routingStore
+        self._isSheetShown = isSheetShown
+        // boot up ferrostar
     }
 
     // MARK: Content
@@ -119,6 +149,22 @@ struct MapViewContainer: View {
         }
     }
 
+    // MARK: - Internal
+
+    @MainActor
+    func stopNavigation() {
+        self.searchViewStore.endTrip()
+        self.isSheetShown = true
+
+        if let coordinates = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
+            // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
+            self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .fixed(0))
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .free)
+            }
+        }
+    }
+
     @MapViewContentBuilder
     private func createMapContent() -> [StyleLayerDefinition] {
         if self.searchViewStore.routingStore.ferrostarCore.isNavigating {
@@ -172,25 +218,25 @@ struct MapViewContainer: View {
                 }
             }
 
-            if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty, self.mapStore.isSFSymbolLayerPresent(), self.mapStore.shouldShowCustomSymbols {
-                SymbolStyleLayer(identifier: MapLayerIdentifier.customPOI, source: MLNSource(identifier: "hpoi"), sourceLayerIdentifier: "public.poi")
-                    .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
-                    .iconAllowsOverlap(false)
-                    .text(featurePropertyNamed: "name")
-                    .textFontSize(11)
-                    .maximumTextWidth(8.0)
-                    .textHaloColor(UIColor.white)
-                    .textHaloWidth(1.0)
-                    .textHaloBlur(0.5)
-                    .textAnchor("top")
-                    .textColor(expression: SFSymbolSpriteSheet.colorExpression)
-                    .textOffset(CGVector(dx: 0, dy: 1.2))
-                    .minimumZoomLevel(13.0)
-                    .maximumZoomLevel(22.0)
-                    .textFontNames(["IBMPlexSansArabic-Regular"])
-            }
+            // Add a polyline casing for a stroke effect
+            LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
+                .lineCap(.round)
+                .lineJoin(.round)
+                .lineColor(.white)
+                .lineWidth(interpolatedBy: .zoomLevel,
+                           curveType: .linear,
+                           parameters: NSExpression(forConstantValue: 1.5),
+                           stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
 
-            let pointSource = self.mapStore.points
+            // Add an inner (blue) polyline
+            LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
+                .lineCap(.round)
+                .lineJoin(.round)
+                .lineColor(.systemBlue)
+                .lineWidth(interpolatedBy: .zoomLevel,
+                           curveType: .linear,
+                           parameters: NSExpression(forConstantValue: 1.5),
+                           stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
 
             // shows the clustered pins
             CircleStyleLayer(
@@ -392,6 +438,7 @@ struct MapViewContainer: View {
         default: return .blue
         }
     }
+
 }
 
 // MARK: - ErrorMessageBanner

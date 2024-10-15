@@ -16,7 +16,8 @@ opt_in_rules:
 
 excluded: 
   - Carthage
-  - BackendService/Package.swift
+  - BackendService
+  - StyleDictionary
   - build
 
 # Customised rules

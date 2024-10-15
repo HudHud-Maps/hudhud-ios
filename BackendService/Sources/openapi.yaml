@@ -792,6 +792,53 @@ paths:
       security:
         - BearerAuth: []
       x-codegen-request-body-name: request
+  /u/profile/picture:
+    post:
+      tags:
+        - User Profile
+      summary: Edit User Profile
+      description: This endpoint will allow the user to update their profile and the user will be identified by their access token
+      operationId: uploadProfilePicture
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - picture
+              type: object
+              properties:
+                picture:
+                  type: string
+                  description: User Profile Picture should not exceed 5MB
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UploadProfilePictureResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=profile_picture_format_is_unsupported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
   /u/refresh-token:
     post:
       tags:
@@ -937,7 +984,6 @@ components:
         id:
           type: string
           description: ID the unique identifier for the login every attempt would have a different record with a unique identifier.
-          format: uuid
     LoginRequest:
       required:
         - login_identity
@@ -976,6 +1022,44 @@ components:
           type: string
         url:
           type: string
+    OpeningHours:
+      type: object
+      properties:
+        friday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        monday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        saturday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        sunday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        thursday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        tuesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        wednesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+    OpeningRange:
+      type: object
+      properties:
+        end:
+          type: integer
+        start:
+          type: integer
     PanoramicImageScene:
       required:
         - id
@@ -1062,7 +1146,7 @@ components:
         name:
           type: string
         opening_hours:
-          $ref: '#/components/schemas/types.OpeningHours'
+          $ref: '#/components/schemas/OpeningHours'
         phone_number:
           type: string
         price_range:
@@ -1292,6 +1376,30 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UploadProfilePictureResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UploadProfilePictureResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-UserProfile:
       required:
         - data
@@ -1509,6 +1617,8 @@ components:
           enum:
             - poi
             - category
+    UploadProfilePictureResponse:
+      type: object
     UserProfile:
       type: object
       properties:
@@ -1574,44 +1684,6 @@ components:
           type: string
           description: AccessToken the new access token
           format: base64
-    types.OpeningHours:
-      type: object
-      properties:
-        friday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        monday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        saturday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        sunday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        thursday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        tuesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-        wednesday:
-          type: array
-          items:
-            $ref: '#/components/schemas/types.OpeningRange'
-    types.OpeningRange:
-      type: object
-      properties:
-        end:
-          type: integer
-        start:
-          type: integer
   securitySchemes:
     BearerAuth:
       type: apiKey

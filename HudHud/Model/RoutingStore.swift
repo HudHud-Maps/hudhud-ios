@@ -186,8 +186,10 @@ final class RoutingStore: ObservableObject {
     }
 
     func endTrip() {
+        self.ferrostarCore.stopNavigation()
         self.waypoints = nil
         self.potentialRoute = nil
+        self.navigatingRoute = nil
         self.mapStore.clearItems()
     }
 }
