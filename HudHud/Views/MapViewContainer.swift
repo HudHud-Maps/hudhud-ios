@@ -72,8 +72,11 @@ struct MapViewContainer: View {
 
     var body: some View {
         NavigationStack {
-            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera, navigationState: self.searchViewStore.routingStore.ferrostarCore.state) {
-                // onTapExit
+            DynamicallyOrientingNavigationView(
+                styleURL: self.mapStore.mapStyleUrl(),
+                camera: self.$mapStore.camera,
+                navigationState: self.searchViewStore.routingStore.ferrostarCore.state
+            ) {
                 self.stopNavigation()
             } makeMapContent: {
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating {

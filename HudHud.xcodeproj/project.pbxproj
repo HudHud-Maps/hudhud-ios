@@ -1510,10 +1510,10 @@
 		};
 		CDC874D42CB3DA2C005CC278 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
 			requirement = {
-				kind = revision;
-				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
+				branch = annotations;
+				kind = branch;
 			};
 		};
 		CDF9F0F02C9829FE00F5D45E /* XCRemoteSwiftPackageReference "Nuke" */ = {

@@ -132,6 +132,6 @@ struct OverSpeedLimitNotificationView: View {
 
 #Preview("over speed limit notification") {
     OverSpeedLimitNotificationView(currentSpeed: 121)
-        .environment(\.locale, Locale(identifier: "ar"))
+        .environment(\.locale, Locale(identifier: "ar_sa"))
     OverSpeedLimitNotificationView(currentSpeed: 500)
 }
