@@ -10,6 +10,7 @@
 		01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */; };
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		0BD4D9510545D1D3A315CD45 /* PersonalInformationScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0754448EC2EFE7B074F658AB /* PersonalInformationScreenView.swift */; };
+		0C166E002CBD050400991697 /* RouteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C166DFF2CBD050400991697 /* RouteModel.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
@@ -180,6 +181,7 @@
 		043900014DB7FBFB28D75FE7 /* pannellum.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pannellum.js; sourceTree = "<group>"; };
 		0754448EC2EFE7B074F658AB /* PersonalInformationScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalInformationScreenView.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
+		0C166DFF2CBD050400991697 /* RouteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModel.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 		AC313C27FE655AA88C1E9F69 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				0C166DFF2CBD050400991697 /* RouteModel.swift */,
 				4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */,
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
 				AFF87B682C773F91007EE60E /* RoutingStore.swift */,
@@ -1013,6 +1016,7 @@
 				CD34C5612C05C7FA006DCDBA /* RootSheetView.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
+				0C166E002CBD050400991697 /* RouteModel.swift in Sources */,
 				341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */,
 				FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */,
 				F20D974E2C46C65600457928 /* SearchResultItemView.swift in Sources */,
@@ -1498,10 +1502,10 @@
 		};
 		CDC874D42CB3DA2C005CC278 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			repositoryURL = "https://github.com/engali94/ferrostar.git";
 			requirement = {
-				kind = revision;
-				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
+				branch = annotations;
+				kind = branch;
 			};
 		};
 		CDF9F0F02C9829FE00F5D45E /* XCRemoteSwiftPackageReference "Nuke" */ = {

@@ -93,7 +93,13 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
         case 500 ... 599:
             throw ToursprungError.invalidResponse(message: "Server error HTTP status code: \(httpStatusCode)")
         case 200 ... 299:
-            return try osrmParser.parseResponse(response: answer.data)
+            let routes = try osrmParser.parseResponse(response: answer.data)
+            let segments = routes.map {
+                ($0.id, $0.extractCongestionSegments())
+            }
+            //            dump(routes.first?.geometryCLLocationCoordinate2D)
+            dump(segments.first)
+            return routes
         default:
             throw ToursprungError.invalidResponse(message: "Server error occurred")
         }
@@ -108,26 +114,26 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
 
     /*
      private func response(from json: JSONDictionary) throws -> (waypoint: [FerrostarCoreFFI.Waypoint], routes: [FerrostarCoreFFI.Route]) {
-         var namedWaypoints: [Waypoint] = []
-         if let jsonWaypoints = (json["waypoints"] as? [JSONDictionary]) {
-             namedWaypoints = try zip(jsonWaypoints, self.waypoints).compactMap { api, local -> Waypoint? in
-                 guard let location = api["location"] as? [Double] else {
-                     return nil
-                 }
-
-                 let coordinate = try CLLocationCoordinate2D(geoJSON: location)
-                 let possibleAPIName = api["name"] as? String
-                 let apiName = possibleAPIName?.nonEmptyString
-                 return Waypoint(coordinate: coordinate, name: local.name ?? apiName)
-             }
-         }
-
-         let routes = (json["routes"] as? [JSONDictionary] ?? []).compactMap {
-             Route(json: $0, waypoints: waypoints, options: self)
-         }
-         return (namedWaypoints, routes)
+     var namedWaypoints: [Waypoint] = []
+     if let jsonWaypoints = (json["waypoints"] as? [JSONDictionary]) {
+     namedWaypoints = try zip(jsonWaypoints, self.waypoints).compactMap { api, local -> Waypoint? in
+     guard let location = api["location"] as? [Double] else {
+     return nil
      }
-      */
+
+     let coordinate = try CLLocationCoordinate2D(geoJSON: location)
+     let possibleAPIName = api["name"] as? String
+     let apiName = possibleAPIName?.nonEmptyString
+     return Waypoint(coordinate: coordinate, name: local.name ?? apiName)
+     }
+     }
+
+     let routes = (json["routes"] as? [JSONDictionary] ?? []).compactMap {
+     Route(json: $0, waypoints: waypoints, options: self)
+     }
+     return (namedWaypoints, routes)
+     }
+     */
 
 }
 
@@ -239,5 +245,108 @@ public enum ToursprungError: LocalizedError, Equatable {
             description += " \(message)"
         }
         return description
+    }
+}
+
+import CoreLocation
+
+// MARK: - CongestionSegment
+
+struct CongestionSegment {
+    let level: String
+    let geometry: [CLLocationCoordinate2D]
+}
+
+extension Route {
+    var annotations: [ValhallaOsrmAnnotation] {
+        let decoder = JSONDecoder()
+
+        return steps
+            .compactMap(\.annotations)
+            .flatMap { annotations in
+                annotations.compactMap { annotationString in
+                    guard let data = annotationString.data(using: .utf8) else {
+                        return nil
+                    }
+                    return try? decoder.decode(ValhallaOsrmAnnotation.self, from: data)
+                }
+            }
+    }
+}
+
+extension Route {
+
+    func extractCongestionSegments() -> [CongestionSegment] {
+        var mergedSegments: [CongestionSegment] = []
+        var currentSegment: CongestionSegment?
+        var currentIndex = 0
+
+        for annotation in self.annotations {
+            guard let congestion = annotation.congestion else {
+                continue
+            }
+
+            let startIndex = currentIndex
+            let endIndex = startIndex + 1
+
+            if endIndex >= geometry.count {
+                break
+            }
+
+            let segmentGeometry = Array(geometry[startIndex ... endIndex])
+
+            if let current = currentSegment,
+               current.level == congestion,
+               let lastSegment = current.geometry.last {
+                currentSegment = CongestionSegment(
+                    level: congestion,
+                    geometry: current.geometry + [lastSegment]
+                )
+            } else {
+                if let current = currentSegment {
+                    mergedSegments.append(current)
+                }
+                currentSegment = CongestionSegment(
+                    level: congestion,
+                    geometry: segmentGeometry.map(\.clLocationCoordinate2D)
+                )
+            }
+
+            currentIndex = endIndex
+        }
+
+        if let lastSegment = currentSegment {
+            mergedSegments.append(lastSegment)
+        }
+        return mergedSegments
+    }
+
+    private func findEndIndex(startingFrom startIndex: Int, distance: Double) -> Int {
+        var remainingDistance = distance
+        var currentIndex = startIndex
+
+        while currentIndex < geometry.count - 1, remainingDistance > 0 {
+            let segmentDistance = geometry[currentIndex]
+                .clLocationCoordinate2D
+                .distance(
+                    to: geometry[currentIndex + 1].clLocationCoordinate2D
+                )
+            if remainingDistance >= segmentDistance {
+                remainingDistance -= segmentDistance
+                currentIndex += 1
+            } else {
+                break
+            }
+        }
+
+        return currentIndex
+    }
+}
+
+extension CLLocationCoordinate2D {
+    func distance(to other: CLLocationCoordinate2D) -> CLLocationDistance {
+        let from = CLLocation(latitude: latitude, longitude: longitude)
+        let to = CLLocation(latitude: other.latitude, longitude: other.longitude)
+        return from.distance(from: to)
     }
 }
