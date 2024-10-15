@@ -14,8 +14,9 @@ import SwiftUI
 
 // MARK: - LoginStore
 
+@MainActor
 @Observable
-class LoginStore {
+final class LoginStore {
 
     // MARK: Nested Types
 
@@ -104,15 +105,6 @@ class LoginStore {
         return allFieldsFilled && isOldEnough
     }
 
-    var countryCode: String = "+966" {
-        didSet {
-            // Always ensure "+" is at the start
-            if !self.countryCode.hasPrefix("+") {
-                self.countryCode = "+" + self.countryCode.trimmingCharacters(in: .punctuationCharacters)
-            }
-        }
-    }
-
     // MARK: Functions
 
     // Method to toggle between phone and email input types
@@ -127,15 +119,15 @@ class LoginStore {
         }
 
         do {
-            let loginInput = self.userInput == .phone ? self.countryCode + inputText : inputText
+            let loginInput = inputText.replacingOccurrences(of: " ", with: "")
             let response = try await registrationService.login(loginInput: loginInput, baseURL: DebugStore().baseURL)
 
             // Extract loginIdentity and duration from response
             self.loginId = response.id
             self.otpResendDuration = response.canRequestOtpResendAt
-
             // Navigate to OTP View
             self.path.append(LoginStore.UserRegistrationPath.OTPView(loginIdentity: loginInput, duration: self.otpResendDuration))
+
         } catch {
             self.errorMessage = error.localizedDescription.description
         }

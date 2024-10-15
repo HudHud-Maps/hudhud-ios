@@ -44,7 +44,7 @@ struct FloatingLabelInputField: View {
                         .prefixHidden(false)
                         .autofillPrefix(true)
                         .clearButtonMode(.whileEditing)
-                        .hudhudFont(.headline)
+                        .hudhudFontStyle(.paragraphLarge)
                         .foregroundColor(Color.Colors.General._12Red)
                         .bold()
                         .padding(.bottom, 5)

@@ -138,8 +138,11 @@
         }
       }
     },
+    "Claim this business" : {
+
+    },
     "Close" : {
-      "comment" : "Accessibility label instead of x\naccesibility label instead of x",
+      "comment" : "accesibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -192,6 +195,9 @@
 
     },
     "Enable Touch Visualizer" : {
+
+    },
+    "End" : {
 
     },
     "Enter your phone number or email" : {
@@ -260,9 +266,6 @@
     "How was the navigation on this trip?" : {
 
     },
-    "In meters" : {
-
-    },
     "Layers" : {
       "localizations" : {
         "ar" : {
@@ -272,6 +275,9 @@
           }
         }
       }
+    },
+    "Loading route..." : {
+
     },
     "Location Needed" : {
 
@@ -341,6 +347,9 @@
     "No Results" : {
 
     },
+    "No route is available for the destination." : {
+
+    },
     "Note: Changing the URL requires restarting the app for the changes to take effect." : {
 
     },
@@ -357,6 +366,9 @@
       "comment" : "street view"
     },
     "Please enable your location to get directions" : {
+
+    },
+    "Please ensure location services are enabled and try again." : {
 
     },
     "Price" : {
@@ -414,6 +426,9 @@
     "SF Symbols on Map" : {
 
     },
+    "Show more" : {
+
+    },
     "Simulate Ride during Navigation" : {
 
     },
@@ -441,10 +456,13 @@
     "Touch Visualizer" : {
 
     },
+    "Try a different destination or check for connectivity issues." : {
+
+    },
     "Use SF Symbols for POIs on map" : {
 
     },
-    "User is on Route" : {
+    "User location could not be found." : {
 
     },
     "Verification code sent to the %@ below:" : {

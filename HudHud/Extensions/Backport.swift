@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import MapLibreSwiftUI
 import SFSafeSymbols
 import SwiftUI
 

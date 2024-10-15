@@ -23,7 +23,7 @@ public struct RegistrationService {
 
     // MARK: Functions
 
-    public mutating func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
+    public func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
         let urlSessionConfiguration = URLSessionConfiguration.default
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
@@ -58,11 +58,13 @@ public struct RegistrationService {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .badRequest(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
+        case let .unprocessableContent(error):
+            throw try HudHudClientError.unprocessableContent(error.body.json.message)
         }
     }
 
-    public func verifyOTP(loginId: String, otp: String, baseURL: String) async throws {
+    public func verifyOTP(loginId: String, otp: String, baseURL: String) async throws -> VerifyOTPResponse {
         let header = Operations.verifyOTP.Input.Headers(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
         let path = Operations.verifyOTP.Input.Path(id: loginId)
         let verifyOTPRequest = Components.Schemas.VerifyOTPRequest(otp: otp)
@@ -71,8 +73,18 @@ public struct RegistrationService {
         let response = try await Client.makeClient(using: baseURL).verifyOTP(path: path, headers: header, body: body)
 
         switch response {
-        case .ok:
-            return
+        case let .ok(message):
+            switch message.body {
+            case let .json(jsonResponse):
+                guard let accessToken = jsonResponse.data.value1.access_token,
+                      let isUserActive = jsonResponse.data.value1.is_user_active,
+                      let refreshToken = jsonResponse.data.value1.refresh_token else {
+                    throw HudHudClientError.internalServerError("login failed")
+                }
+                return VerifyOTPResponse(accessToken: accessToken,
+                                         isUserActive: isUserActive,
+                                         refreshToken: refreshToken)
+            }
         case let .badRequest(error):
             let errorMessage = try error.body.json.message
             throw HudHudClientError.badRequest(errorMessage)
@@ -116,7 +128,7 @@ public struct RegistrationService {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .badRequest(error):
-            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
+            throw try HudHudClientError.badRequest(error.body.json.message)
         case let .notFound(error):
             let errorMessage = try error.body.json.message
             throw HudHudClientError.notFound(errorMessage)
@@ -133,4 +145,12 @@ public struct RegistrationResponse {
 
     public let id: String
     public let canRequestOtpResendAt: Date
+}
+
+// MARK: - VerifyOTPResponse
+
+public struct VerifyOTPResponse {
+    public let accessToken: String
+    public let isUserActive: Bool
+    public let refreshToken: String
 }
