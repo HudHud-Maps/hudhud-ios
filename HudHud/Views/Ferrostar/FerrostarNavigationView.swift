@@ -76,6 +76,23 @@ struct FerrostarNavigationView: View {
         }
     }
 
+    private var speedLimit: Measurement<UnitSpeed>? {
+        if let maxSpeed = try? self.ferrostarCore.state?
+            .currentAnnotation(as: MaxSpeed.self) {
+            maxSpeed.measurementValue
+        } else {
+            nil
+        }
+    }
+
+    private var speed: Measurement<UnitSpeed>? {
+        if let speed = self.locationProvider.lastLocation?.speed {
+            Measurement<UnitSpeed>(value: speed.value, unit: .kilometersPerHour)
+        } else {
+            nil
+        }
+    }
+
     // MARK: Lifecycle
 
     init(waypoints: [CLLocation]) {
@@ -172,6 +189,14 @@ struct FerrostarNavigationView: View {
                             .disabled(self.routes?.isEmpty == true)
                             .shadow(radius: 10)
                         }
+                    }
+                },
+                bottomLeading: {
+                    if self.ferrostarCore.isNavigating, let speed {
+                        SpeedView(
+                            speed: speed,
+                            speedLimit: self.speedLimit
+                        )
                     }
                 }
             )

@@ -15,8 +15,8 @@ struct SpeedView: View {
 
     // MARK: Properties
 
-    let speed: CLLocationSpeed
-    let speedLimit: CLLocationSpeed?
+    let speed: Measurement<UnitSpeed>
+    let speedLimit: Measurement<UnitSpeed>?
 
     // MARK: Computed Properties
 
@@ -52,7 +52,7 @@ struct CurrentSpeedView: View {
 
     // MARK: Properties
 
-    let speed: CLLocationSpeed
+    let speed: Measurement<UnitSpeed>
     let isOverSpeedLimit: Bool
 
     // MARK: Computed Properties
@@ -69,7 +69,7 @@ struct CurrentSpeedView: View {
 
     var body: some View {
         VStack(spacing: 2) {
-            Text("\(self.speed, format: .number)")
+            Text("\(self.speed.value, format: .number)")
                 .foregroundStyle(self.speedColor)
                 .hudhudFont(.headline)
             Text("km/h")
@@ -86,12 +86,18 @@ struct SpeedLimitView: View {
 
     // MARK: Properties
 
-    let speedLimit: CLLocationSpeed
+    let speedLimit: Measurement<UnitSpeed>
+
+    // MARK: Lifecycle
+
+    init(speedLimit: Measurement<UnitSpeed>) {
+        self.speedLimit = speedLimit.converted(to: .kilometersPerHour)
+    }
 
     // MARK: Content
 
     var body: some View {
-        Text("\(self.speedLimit, format: .number)")
+        Text("\(self.speedLimit.value, format: .number)")
             .lineLimit(1, reservesSpace: true)
             .foregroundStyle(Color.Colors.General._17Text)
             .padding(12)
@@ -125,9 +131,17 @@ struct OverSpeedLimitNotificationView: View {
 }
 
 #Preview {
-    SpeedView(speed: 50, speedLimit: 60)
-    SpeedView(speed: 60, speedLimit: 50)
-    SpeedLimitView(speedLimit: 120)
+    SpeedView(
+        speed: Measurement<UnitSpeed>(value: 50, unit: .kilometersPerHour),
+        speedLimit: Measurement<UnitSpeed>(value: 60, unit: .kilometersPerHour)
+    )
+    SpeedView(
+        speed: Measurement<UnitSpeed>(value: 60, unit: .kilometersPerHour),
+        speedLimit: Measurement<UnitSpeed>(value: 50, unit: .kilometersPerHour)
+    )
+    SpeedLimitView(
+        speedLimit: Measurement<UnitSpeed>(value: 120, unit: .kilometersPerHour)
+    )
 }
 
 #Preview("over speed limit notification") {
