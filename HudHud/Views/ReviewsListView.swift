@@ -20,11 +20,10 @@ struct ReviewsListView: View {
     // MARK: Content
 
     var body: some View {
-        Section(header: ReviewsHeaderView(reviews: self.reviews)) {
+        Section(header: ReviewsHeaderView(reviewsCount: self.reviews.count)) {
             List(self.reviews, id: \.id) { review in
                 ReviewSectionView(review: review)
-                    .background(Color.white)
-                    .cornerRadius(10)
+                    .padding(.vertical, 8)
             }
             .listStyle(.plain)
         }
@@ -37,21 +36,21 @@ struct ReviewsHeaderView: View {
 
     // MARK: Properties
 
-    let reviews: [Review]
+    let reviewsCount: Int
 
     // MARK: Content
 
     var body: some View {
         HStack {
-            Text("Reviews \(self.reviews.count)")
+            Text("Reviews \(self.reviewsCount)")
                 .hudhudFont(.headline)
                 .foregroundColor(.Colors.General._01Black)
             Spacer()
             Button {
-                // filter by date
+                // show filter by date
             }
             label: {
-                HStack(spacing: 0) {
+                HStack(spacing: 1) {
                     Text("By Date")
                     Image("arrowDown")
                 }
@@ -76,15 +75,11 @@ struct ReviewSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             UserView(review: self.review)
-
             RatingsView(review: self.review)
-
-            // Review Text
             Text(self.review.reviewText)
                 .hudhudFont(.body)
                 .lineLimit(nil)
-                .foregroundStyle(Color.Colors.General._01Black)
-
+                .foregroundColor(.Colors.General._01Black)
             ImageView(review: self.review)
                 .padding(.vertical, 2)
             BottomBar(isUseful: self.review.isUseful, usefulCount: self.review.usefulCount)
@@ -115,7 +110,7 @@ struct UserView: View {
                     .hudhudFont(.headline)
                 Text("From \(self.review.userType)")
                     .hudhudFont(.subheadline)
-                    .foregroundStyle(Color.Colors.General._02Grey)
+                    .foregroundColor(.Colors.General._02Grey)
             }
         }
     }
@@ -135,14 +130,14 @@ struct RatingsView: View {
         HStack(spacing: 6) {
             HStack(spacing: 1) {
                 ForEach(1 ... 5, id: \.self) { index in
-                    Image(self.review.rating < Int(index) ? .starOff : .starOn)
+                    Image(self.review.rating >= index ? .starOn : .starOff)
                         .resizable()
                         .frame(width: 14, height: 14)
                 }
             }
             Text(self.review.date)
                 .hudhudFont(.footnote)
-                .foregroundStyle(Color.Colors.General._02Grey)
+                .foregroundColor(.Colors.General._02Grey)
         }
     }
 }
@@ -161,48 +156,20 @@ struct ImageView: View {
 
     var body: some View {
         VStack {
-            if self.review.images.count == 1, let image = review.images.first {
-                AsyncImage(url: image) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: .infinity, height: 168)
-                        .clipped()
-                        .contentShape(.rect)
-                } placeholder: {
-                    ProgressView()
-                        .progressViewStyle(.automatic)
-                        .background(.secondary)
-                        .cornerRadius(10)
-                }
-                .background(.secondary)
-                .cornerRadius(10)
-                .frame(width: .infinity, height: 168)
-                .onTapGesture {
-                    self.selectedMedia = image
-                }
-            } else {
+            if let imageURL = review.images.first, review.images.count == 1 {
+                AsyncImageView(imageURL: imageURL)
+                    .onTapGesture {
+                        self.selectedMedia = imageURL
+                    }
+            } else if self.review.images.count > 1 {
                 ScrollView(.horizontal) {
                     HStack {
-                        ForEach(self.review.images, id: \.self) { mediaURL in
-                            AsyncImage(url: mediaURL) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFit()
-                                    .scaledToFill()
-                                    .frame(width: 120, height: 120)
-                            } placeholder: {
-                                ProgressView()
-                                    .progressViewStyle(.automatic)
-                                    .frame(width: 120, height: 120)
-                                    .background(.secondary)
-                                    .cornerRadius(10)
-                            }
-                            .background(.secondary)
-                            .cornerRadius(10)
-                            .onTapGesture {
-                                self.selectedMedia = mediaURL
-                            }
+                        ForEach(self.review.images, id: \.self) { imageURL in
+                            AsyncImageView(imageURL: imageURL)
+                                .frame(width: 120, height: 120)
+                                .onTapGesture {
+                                    self.selectedMedia = imageURL
+                                }
                         }
                     }
                 }
@@ -210,11 +177,37 @@ struct ImageView: View {
             }
         }
         .sheet(item: self.$selectedMedia) { mediaURL in
-            FullPageImage(
-                mediaURL: mediaURL,
-                mediaURLs: self.review.images
-            )
+            FullPageImage(mediaURL: mediaURL, mediaURLs: self.review.images)
         }
+    }
+}
+
+// MARK: - AsyncImageView
+
+struct AsyncImageView: View {
+
+    // MARK: Properties
+
+    let imageURL: URL
+
+    // MARK: Content
+
+    var body: some View {
+        AsyncImage(url: self.imageURL) { image in
+            image
+                .resizable()
+                .scaledToFill()
+                .frame(width: .infinity, height: 168)
+                .clipped()
+                .contentShape(.rect)
+        } placeholder: {
+            ProgressView()
+                .frame(width: .infinity, height: 168)
+                .background(.secondary)
+                .cornerRadius(10)
+        }
+        .background(.secondary)
+        .cornerRadius(10)
     }
 }
 
@@ -225,9 +218,8 @@ struct BottomBar: View {
     // MARK: Properties
 
     @State var isUseful: Bool
-    let usefulCount: Int
-
     @State private var moreButtonPressed: Bool = false
+    let usefulCount: Int
 
     // MARK: Content
 
@@ -235,16 +227,15 @@ struct BottomBar: View {
         HStack(spacing: 5) {
             Button {
                 self.isUseful.toggle()
-                // like the review
             }
             label: {
                 HStack(spacing: 5) {
                     Image(systemSymbol: self.isUseful ? .heartFill : .heart)
-                        .foregroundStyle(self.isUseful ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
+                        .foregroundColor(self.isUseful ? .Colors.General._06DarkGreen : .Colors.General._02Grey)
 
                     Text(self.isUseful ? "Useful (\(self.usefulCount))" : "UseFul")
                         .hudhudFont(.footnote)
-                        .foregroundStyle(self.isUseful ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
+                        .foregroundColor(self.isUseful ? .Colors.General._06DarkGreen : .Colors.General._02Grey)
                 }
             }
             .buttonStyle(.plain)
@@ -256,7 +247,7 @@ struct BottomBar: View {
             }
             label: {
                 Image(systemSymbol: .ellipsis)
-                    .foregroundStyle(Color.Colors.General._02Grey)
+                    .foregroundColor(.Colors.General._02Grey)
             }
             .buttonStyle(.plain)
                 .confirmationDialog("", isPresented: self.$moreButtonPressed) {
