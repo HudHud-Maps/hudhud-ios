@@ -1,5 +1,5 @@
 //
-//  ReviewSectionView.swift
+//  ReviewsListView.swift
 //  HudHud
 //
 //  Created by Fatima Aljaber on 10/10/2024.
@@ -8,6 +8,60 @@
 
 import Foundation
 import SwiftUI
+
+// MARK: - ReviewsListView
+
+struct ReviewsListView: View {
+
+    // MARK: Properties
+
+    let reviews: [Review]
+
+    // MARK: Content
+
+    var body: some View {
+        Section(header: ReviewsHeaderView(reviews: self.reviews)) {
+            List(self.reviews, id: \.id) { review in
+                ReviewSectionView(review: review)
+                    .background(Color.white)
+                    .cornerRadius(10)
+            }
+            .listStyle(.plain)
+        }
+    }
+}
+
+// MARK: - ReviewsHeaderView
+
+struct ReviewsHeaderView: View {
+
+    // MARK: Properties
+
+    let reviews: [Review]
+
+    // MARK: Content
+
+    var body: some View {
+        HStack {
+            Text("Reviews \(self.reviews.count)")
+                .hudhudFont(.headline)
+                .foregroundColor(.Colors.General._01Black)
+            Spacer()
+            Button {
+                // filter by date
+            }
+            label: {
+                HStack(spacing: 0) {
+                    Text("By Date")
+                    Image("arrowDown")
+                }
+                .hudhudFont(.headline)
+                .foregroundColor(.Colors.General._06DarkGreen)
+            }
+        }
+        .padding(.horizontal)
+    }
+}
 
 // MARK: - ReviewSectionView
 
@@ -34,10 +88,7 @@ struct ReviewSectionView: View {
             ImageView(review: self.review)
                 .padding(.vertical, 2)
             BottomBar(isUseful: self.review.isUseful, usefulCount: self.review.usefulCount)
-
-            Divider()
         }
-        .padding()
     }
 }
 
@@ -196,6 +247,7 @@ struct BottomBar: View {
                         .foregroundStyle(self.isUseful ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
                 }
             }
+            .buttonStyle(.plain)
 
             Spacer()
 
@@ -206,11 +258,12 @@ struct BottomBar: View {
                 Image(systemSymbol: .ellipsis)
                     .foregroundStyle(Color.Colors.General._02Grey)
             }
-        }
-        .confirmationDialog("", isPresented: self.$moreButtonPressed) {
-            Button("Share") {}
-            Button("Report", role: .destructive) {}
-            Button("Cancel", role: .cancel) {}
+            .buttonStyle(.plain)
+                .confirmationDialog("", isPresented: self.$moreButtonPressed) {
+                    Button("Share") {}
+                    Button("Report", role: .destructive) {}
+                    Button("Cancel", role: .cancel) {}
+                }
         }
     }
 }
@@ -227,4 +280,27 @@ struct BottomBar: View {
         usefulCount: 15
     )
     ReviewSectionView(review: review)
+}
+
+#Preview {
+    let reviews = [Review(
+        username: "Ahmad Kamal",
+        userType: "Trip Advisor", userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
+        rating: 4,
+        date: "12 September 2024",
+        reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
+        images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!],
+        isUseful: false,
+        usefulCount: 15
+    ), Review(
+        username: "Noura Ahmed",
+        userType: "Trip Advisor", userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
+        rating: 4,
+        date: "12 September 2024",
+        reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
+        images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!, URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!, URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!],
+        isUseful: false,
+        usefulCount: 15
+    )]
+    ReviewsListView(reviews: reviews)
 }

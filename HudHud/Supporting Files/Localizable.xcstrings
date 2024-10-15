@@ -91,6 +91,9 @@
         }
       }
     },
+    "By Date" : {
+
+    },
     "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
 
     },
@@ -391,10 +394,16 @@
         }
       }
     },
+    "Report" : {
+
+    },
     "Resend Code %@" : {
 
     },
     "Reset" : {
+
+    },
+    "Reviews %lld" : {
 
     },
     "Routing Configuration" : {
@@ -428,6 +437,9 @@
 
     },
     "SF Symbols on Map" : {
+
+    },
+    "Share" : {
 
     },
     "Show more" : {
@@ -469,7 +481,7 @@
     "Use SF Symbols for POIs on map" : {
 
     },
-    "Useful" : {
+    "UseFul" : {
 
     },
     "Useful (%lld)" : {
