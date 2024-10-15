@@ -323,7 +323,7 @@ public extension ResolvedItem {
                                       coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"),
-                                      mediaURLs: .previewMediaURLs)
+                                      isOpen: true, mediaURLs: .previewMediaURLs)
 
     static let pharmacy = ResolvedItem(id: UUID().uuidString,
                                        title: "Pharmacy",
