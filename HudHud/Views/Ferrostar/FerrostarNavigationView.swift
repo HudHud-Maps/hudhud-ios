@@ -130,6 +130,7 @@ struct FerrostarNavigationView: View {
                 styleURL: self.styleURL,
                 camera: self.$camera,
                 navigationState: self.ferrostarCore.state,
+                showZoom: false,
                 onTapExit: {
                     self.stopNavigation()
                     self.dismiss()

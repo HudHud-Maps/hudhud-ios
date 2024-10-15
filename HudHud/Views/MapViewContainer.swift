@@ -75,7 +75,8 @@ struct MapViewContainer: View {
             DynamicallyOrientingNavigationView(
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
-                navigationState: self.searchViewStore.routingStore.ferrostarCore.state
+                navigationState: self.searchViewStore.routingStore.ferrostarCore.state,
+                showZoom: false
             ) {
                 self.stopNavigation()
             } makeMapContent: {
