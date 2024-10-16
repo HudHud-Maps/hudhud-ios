@@ -97,6 +97,7 @@ struct POIDetailSheet: View {
                         self.routeInformationView
                     }
                 }
+
                 // Close Button
                 Button {
                     self.dismiss()
@@ -115,7 +116,6 @@ struct POIDetailSheet: View {
                 .tint(.secondary)
                 .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
             }
-            .padding([.top, .leading, .trailing], 20)
 
             if self.showTabView {
                 self.tabView
@@ -134,123 +134,82 @@ struct POIDetailSheet: View {
                     Text("Select a Tab")
                 }
             }
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 4.0) {
-                    Button(action: {
-                        if self.didDenyLocationPermission {
-                            self.askToEnableLocation = true
-                        } else {
-                            self.onStart(self.routes)
-                        }
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
-
-                    self.categoryView
-                    HStack {
-                        self.ratingView
-                        self.priceRangeView
-                        self.accessibilityView
-                    }
-                    .padding(.vertical, 5)
-                    HStack {
-                        self.openStatusView
-                        self.routeInformationView
-                    }
-                }
+        }
+        .padding([.top, .leading, .trailing], 20)
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 4.0) {
                 Button(action: {
-                    self.dismiss()
-                    self.onDismiss()
-                }, label: {
-                    ZStack {
-                        Circle()
-                            .fill(Color.Colors.General._03LightGrey)
-                            .frame(width: 30, height: 30)
-
-                        Image(.closeIcon)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                    if self.didDenyLocationPermission {
+                        self.askToEnableLocation = true
+                    } else {
+                        self.onStart(self.routes)
                     }
-                    .padding(4)
-                    .contentShape(Circle())
-                })
-                .tint(.secondary)
-                .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
-            }
-            .padding([.top, .leading, .trailing], 20)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 4.0) {
+                }, label: {})
+                    .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
+
+                if let phone = self.item.phone, !phone.isEmpty {
                     Button(action: {
-                        if self.didDenyLocationPermission {
-                            self.askToEnableLocation = true
-                        } else {
-                            self.onStart(self.routes)
+                        // Perform phone action
+                        if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+                            self.openURL(url)
                         }
+                        Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
                     }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
-
-                    if let phone = self.item.phone, !phone.isEmpty {
-                        Button(action: {
-                            // Perform phone action
-                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                                self.openURL(url)
-                            }
-                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
-                    }
-                    if let website = item.website {
-                        Button(action: {
-                            self.openURL(website)
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
-                    }
-                    // order, save, Review, Media, Report
-                    Button(action: {
-                        Logger.searchView.info("order")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
-                    Button(action: {
-                        Logger.searchView.info("save")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
-                    Button(action: {
-                        Logger.searchView.info("review")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
-                    Button(action: {
-                        Logger.searchView.info("media")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
-                    Button(action: {
-                        Logger.searchView.info("report")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
+                        .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
                 }
-                .padding(15)
+                if let website = item.website {
+                    Button(action: {
+                        self.openURL(website)
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
+                }
+                // order, save, Review, Media, Report
+                Button(action: {
+                    Logger.searchView.info("order")
+                }, label: {})
+                    .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
+                Button(action: {
+                    Logger.searchView.info("save")
+                }, label: {})
+                    .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
+                Button(action: {
+                    Logger.searchView.info("review")
+                }, label: {})
+                    .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
+                Button(action: {
+                    Logger.searchView.info("media")
+                }, label: {})
+                    .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
+                Button(action: {
+                    Logger.searchView.info("report")
+                }, label: {})
+                    .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
             }
-            .padding(.vertical, -15)
-            POIMediaView(mediaURLs: self.item.mediaURLs)
-            Spacer()
+            .padding(15)
         }
-        .alert(
-            "Location Needed",
-            isPresented: self.$askToEnableLocation
-        ) {
-            Button("Enable location in permissions") {
-                self.openURL(URL(string: UIApplication.openSettingsURLString)!) // swiftlint:disable:this force_unwrapping
-            }
-            Button("Cancel", role: .cancel) {}
-        } message: {
-            Text("Please enable your location to get directions")
-        }
-        .task {
-            await self.calculateRoute(for: self.item)
-        }
-        .onChange(of: self.item) { _, newItem in
-            Task {
-                await self.calculateRoute(for: newItem)
-            }
-        }
+        .padding(.vertical, -15)
+        POIMediaView(mediaURLs: self.item.mediaURLs)
+        Spacer()
+
+                .alert(
+                    "Location Needed",
+                    isPresented: self.$askToEnableLocation
+                ) {
+                    Button("Enable location in permissions") {
+                        self.openURL(URL(string: UIApplication.openSettingsURLString)!) // swiftlint:disable:this force_unwrapping
+                    }
+                    Button("Cancel", role: .cancel) {}
+                } message: {
+                    Text("Please enable your location to get directions")
+                }
+                .task {
+                    await self.calculateRoute(for: self.item)
+                }
+                .onChange(of: self.item) { _, newItem in
+                    Task {
+                        await self.calculateRoute(for: newItem)
+                    }
+                }
     }
 
     var tabView: some View {
