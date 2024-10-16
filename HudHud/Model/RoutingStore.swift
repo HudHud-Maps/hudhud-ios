@@ -49,6 +49,8 @@ final class RoutingStore: ObservableObject {
 
     let ferrostarCore: FerrostarCore
 
+    @Published var routes: [RouteModel] = []
+
     private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
         isMuted: false)
 
@@ -56,6 +58,10 @@ final class RoutingStore: ObservableObject {
     private let navigationDelegate = NavigationDelegate()
 
     // MARK: Computed Properties
+
+    var selectedRoute: RouteModel? {
+        self.routes.first(where: { $0.isSelected })
+    }
 
     var routePoints: ShapeSource {
         var features: [MLNPointFeature] = []
@@ -83,11 +89,17 @@ final class RoutingStore: ObservableObject {
 
         let provider: LocationProviding
 
-        provider = CoreLocationProvider(
-            activityType: .automotiveNavigation,
-            allowBackgroundLocationUpdates: true
-        )
-        provider.startUpdating()
+        if DebugStore().simulateRide {
+            let simulated = SimulatedLocationProvider(coordinate: .riyadh)
+            simulated.warpFactor = 2
+            provider = simulated
+        } else {
+            provider = CoreLocationProvider(
+                activityType: .automotiveNavigation,
+                allowBackgroundLocationUpdates: true
+            )
+            provider.startUpdating()
+        }
 
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.
@@ -120,11 +132,23 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Functions
 
-    func calculateRoutes(for waypoints: [Waypoint]) async throws -> [Route] {
-        return try await self.hudHudGraphHopperRouteProvider.getRoutes(waypoints: waypoints)
+    func selectRoute(withId id: Int) {
+        self.routes = self.routes.map { routeModel in
+            RouteModel(
+                route: routeModel.route,
+                isSelected: routeModel.id == id
+            )
+        }
     }
 
-    func calculateRoutes(for item: ResolvedItem) async throws -> [Route] {
+    func calculateRoutes(for waypoints: [Waypoint]) async throws -> [RouteModel] {
+        return try await self.hudHudGraphHopperRouteProvider.getRoutes(waypoints: waypoints)
+            .map { route in
+                RouteModel(route: route, isSelected: false)
+            }
+    }
+
+    func calculateRoutes(for item: ResolvedItem) async throws -> [RouteModel] {
         guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
             throw LocationNotEnabledError()
         }
@@ -134,13 +158,13 @@ final class RoutingStore: ObservableObject {
 
     func navigate(to item: ResolvedItem, with calculatedRoutesIfAvailable: [Route]?) async throws {
         let route = if let calculatedRoutesIfAvailable {
-            calculatedRoutesIfAvailable
+            calculatedRoutesIfAvailable.map { RouteModel(route: $0, isSelected: false) }
         } else {
             try await self.calculateRoutes(for: item)
         }
-        self.potentialRoute = route.first
+        self.potentialRoute = route.first?.route
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
-        if let location = route.first?.waypoints.first {
+        if let location = route.first?.route.waypoints.first {
             self.waypoints = [.myLocation(location), .waypoint(item)]
         }
     }
@@ -157,7 +181,7 @@ final class RoutingStore: ObservableObject {
             }
             self.waypoints = destinations
             let routes = try await self.calculateRoutes(for: waypoints)
-            self.potentialRoute = routes.first
+            self.potentialRoute = routes.first?.route
         } catch {
             Logger.routing.error("Updating routes: \(error)")
         }

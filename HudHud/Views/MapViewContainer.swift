@@ -74,49 +74,112 @@ struct MapViewContainer: View {
 
     var body: some View {
         NavigationStack {
-            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera, navigationState: self.searchViewStore.routingStore.ferrostarCore.state) {
+            DynamicallyOrientingNavigationView(
+                makeViewController: MLNMapViewController(),
+                styleURL: self.mapStore.mapStyleUrl(),
+                camera: self.$mapStore.camera,
+                locationProviding: self.searchViewStore.routingStore.ferrostarCore.locationProvider,
+                navigationState: self.searchViewStore.routingStore.ferrostarCore.state,
+                showZoom: false
+            ) {
                 // onTapExit
                 self.stopNavigation()
+
             } makeMapContent: {
+                let routePoints = self.searchViewStore.routingStore.routePoints
+                // Separate the selected route from alternatives
+                let selectedRoute = self.searchViewStore.routingStore.routes.first(where: { $0.isSelected })
+                let alternativeRoutes = self.searchViewStore.routingStore.routes.filter { !$0.isSelected }
+
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating {
                     // The state is .navigating
-                    // You can perform your actions here
                 } else {
-                    if let route = self.searchViewStore.routingStore.potentialRoute {
-                        let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                            MLNPolylineFeature(coordinates: route.geometry.clLocationCoordinate2Ds)
+                    // Render alternative routes first
+                    for routeModel in alternativeRoutes {
+                        let polylineSource = ShapeSource(identifier: "alternative-route-\(routeModel.id)") {
+                            MLNPolylineFeature(coordinates: routeModel.route.geometry.clLocationCoordinate2Ds)
                         }
 
-                        // Add a polyline casing for a stroke effect
-                        LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-                            .lineCap(.round)
-                            .lineJoin(.round)
-                            .lineColor(.white)
-                            .lineWidth(interpolatedBy: .zoomLevel,
-                                       curveType: .linear,
-                                       parameters: NSExpression(forConstantValue: 1.5),
-                                       stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+                        LineStyleLayer(
+                            identifier: "alternative-route-casing-\(routeModel.id)",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.lightGray)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 10, 20: 20]))
 
-                        // Add an inner (blue) polyline
-                        LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-                            .lineCap(.round)
-                            .lineJoin(.round)
-                            .lineColor(.systemBlue)
-                            .lineWidth(interpolatedBy: .zoomLevel,
-                                       curveType: .linear,
-                                       parameters: NSExpression(forConstantValue: 1.5),
-                                       stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+                        LineStyleLayer(
+                            identifier: "alternative-route-inner-\(routeModel.id)",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.systemBlue.withAlphaComponent(0.5))
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 8, 20: 14]))
 
-                        let routePoints = self.searchViewStore.routingStore.routePoints
+                        CircleStyleLayer(
+                            identifier: MapLayerIdentifier.simpleCirclesRoute + "\(routeModel.id)",
+                            source: routePoints
+                        )
+                        .radius(16)
+                        .color(.systemRed)
+                        .strokeWidth(2)
+                        .strokeColor(.white)
+                        SymbolStyleLayer(
+                            identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(routeModel.id)",
+                            source: routePoints
+                        )
+                        .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                        .iconColor(.white)
+                    }
 
-                        CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                            .radius(16)
-                            .color(.systemRed)
-                            .strokeWidth(2)
-                            .strokeColor(.white)
-                        SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-                            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                            .iconColor(.white)
+                    // Render the selected route
+                    if let selectedRoute {
+                        let polylineSource = ShapeSource(identifier: "selected-route") {
+                            MLNPolylineFeature(coordinates: selectedRoute.route.geometry.clLocationCoordinate2Ds)
+                        }
+
+                        LineStyleLayer(
+                            identifier: "selected-route-casing",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.white)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+                        LineStyleLayer(
+                            identifier: "selected-route-inner",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.systemBlue)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+                    }
+
+                    let allRoutes: [RouteModel] = alternativeRoutes + [selectedRoute].compactMap { $0 }
+                    for routeModel in allRoutes {
+                        let segments = routeModel.route.extractCongestionSegments()
+                        let congestionLevels = ["moderate", "heavy", "severe"]
+
+                        for level in congestionLevels {
+                            let source = self.congestionSource(for: level, segments: segments, id: routeModel.id)
+                            self.congestionLayer(for: level, source: source, id: routeModel.id)
+                        }
                     }
 
                     if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty, self.mapStore.isSFSymbolLayerPresent(), self.mapStore.shouldShowCustomSymbols {
@@ -274,6 +337,9 @@ struct MapViewContainer: View {
                             // The ferrostarCore.startNavigation will still start the location
                             // provider/simulator.
                             try simulated.setSimulatedRoute(route, resampleDistance: 5)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                simulated.startUpdating()
+                            }
                         }
 
                         try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
@@ -286,6 +352,9 @@ struct MapViewContainer: View {
                     }
                 } else {
                     self.stopNavigation()
+                    if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                        simulated.stopUpdating()
+                    }
                 }
             }
             .task {
@@ -311,6 +380,43 @@ struct MapViewContainer: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .free)
             }
+        }
+    }
+
+    private func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
+        ShapeSource(identifier: "congestion-\(level)-\(id)") {
+            segments.filter { $0.level == level }.map { segment in
+                MLNPolylineFeature(coordinates: segment.geometry)
+            }
+        }
+    }
+
+    private func congestionLayer(for level: String, source: ShapeSource, id: Int) -> LineStyleLayer {
+        LineStyleLayer(identifier: "congestion-line-\(level)-\(id)", source: source)
+            .lineCap(.round)
+            .lineJoin(.round)
+            .lineColor(self.colorForCongestionLevel(level))
+            .lineWidth(
+                interpolatedBy: .zoomLevel,
+                curveType: .linear,
+                parameters: NSExpression(forConstantValue: 1.5),
+                stops: NSExpression(forConstantValue: [
+                    14: 6,
+                    16: 7,
+                    18: 9,
+                    20: 16
+                ])
+            )
+    }
+
+    private func colorForCongestionLevel(_ level: String) -> UIColor {
+        switch level {
+        case "unknown": return .gray
+        case "low": return .green
+        case "moderate": return .yellow
+        case "heavy": return .orange
+        case "severe": return .red
+        default: return .blue
         }
     }
 
