@@ -18,12 +18,12 @@ struct FavoritesViewMoreView: View {
     // MARK: Properties
 
     @ObservedObject var searchStore: SearchViewStore
-    @ObservedObject var mapViewStore: MapViewStore
+    @Bindable var sheetStore: SheetStore
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @Environment(\.dismiss) var dismiss
-    @ObservedObject var favoritesStore = FavoritesStore()
+    @ObservedObject var favoritesStore: FavoritesStore
     @StateObject var filterStore = FilterStore()
 
     // MARK: Content
@@ -62,21 +62,28 @@ struct FavoritesViewMoreView: View {
                     }
                 }
                 .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                    NavigationLink {
-                        EditFavoritesFormView(item: self.clickedFavorite.item ?? .starbucks, favoritesItem: self.clickedFavorite, favoritesStore: self.favoritesStore)
-                    } label: {
-                        Text("Edit")
+                    Button("Edit") {
+                        self.sheetStore.pushSheet(
+                            SheetViewData(
+                                viewData: .editFavoritesForm(
+                                    item: self.clickedFavorite.item ?? .starbucks,
+                                    favoriteItem: self.clickedFavorite
+                                )
+                            )
+                        )
                     }
-                    Button(role: .destructive) {
+                    Button("Delete", role: .destructive) {
                         self.favoritesStore.deleteFavorite(self.clickedFavorite)
-                    } label: {
-                        Text("Delete")
                     }
                 }
             }
 
             Section("Suggestions") {
-                RecentSearchResultsView(searchStore: self.searchStore, searchType: .favorites)
+                RecentSearchResultsView(
+                    searchStore: self.searchStore,
+                    searchType: .favorites,
+                    sheetStore: self.sheetStore
+                )
                 Spacer()
             }
             Spacer()
@@ -97,22 +104,38 @@ struct FavoritesViewMoreView: View {
             self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) {
-            self.mapViewStore.path.append(SheetSubView.favorites)
+            self.sheetStore.pushSheet(SheetViewData(viewData: .favorites))
         }
     }
 
     func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-        let freshSearchViewStore = SearchViewStore(mapStore: freshMapStore, mapViewStore: MapViewStore(mapStore: freshMapStore, routingStore: freshRoutingStore), routingStore: freshRoutingStore, filterStore: filterStore, mode: self.searchStore.mode)
+        let freshSearchViewStore = SearchViewStore(
+            mapStore: freshMapStore,
+            sheetStore: SheetStore(),
+            routingStore: freshRoutingStore,
+            filterStore: FilterStore(),
+            mode: self.searchStore.mode
+        )
         freshSearchViewStore.searchType = .favorites
-        return SearchSheet(mapStore: freshMapStore, searchStore: freshSearchViewStore, trendingStore: TrendingStore(), mapViewStore: self.mapViewStore, filterStore: self.filterStore)
+        return SearchSheet(
+            mapStore: freshMapStore,
+            searchStore: freshSearchViewStore,
+            trendingStore: TrendingStore(),
+            sheetStore: self.sheetStore,
+            filterStore: FilterStore()
+        )
     }
 }
 
 #Preview {
     NavigationStack {
-        FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+        FavoritesViewMoreView(
+            searchStore: .storeSetUpForPreviewing,
+            sheetStore: .storeSetUpForPreviewing,
+            favoritesStore: .storeSetUpForPreviewing
+        )
     }
 }
 
@@ -121,7 +144,11 @@ struct FavoritesViewMoreView: View {
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {
-                FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+                FavoritesViewMoreView(
+                    searchStore: .storeSetUpForPreviewing,
+                    sheetStore: .storeSetUpForPreviewing,
+                    favoritesStore: .storeSetUpForPreviewing
+                )
             }
     }
 }

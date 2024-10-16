@@ -1,0 +1,5 @@
+enum TextStyle: String {
+	{% for style in styles %}
+	case {{ style.key }} = "{{ style.name }}"
+	{% endfor %}
+}

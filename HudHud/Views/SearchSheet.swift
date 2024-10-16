@@ -8,9 +8,6 @@
 
 import BackendService
 import Foundation
-import MapboxCoreNavigation
-import MapboxDirections
-import MapboxNavigation
 import MapKit
 import MapLibre
 import MapLibreSwiftUI
@@ -26,7 +23,7 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
-    @ObservedObject var mapViewStore: MapViewStore
+    @Bindable var sheetStore: SheetStore
     @ObservedObject var filterStore: FilterStore
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
@@ -35,11 +32,11 @@ struct SearchSheet: View {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, mapViewStore: MapViewStore, filterStore: FilterStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore, filterStore: FilterStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
-        self.mapViewStore = mapViewStore
+        self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.searchIsFocused = false
     }
@@ -185,7 +182,7 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(mapViewStore: self.mapViewStore, searchStore: self.searchStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore, searchStore: self.searchStore)
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)
@@ -199,7 +196,11 @@ struct SearchSheet: View {
                             .listRowSeparator(.hidden)
                         }
                         SearchSectionView(title: "Recents") {
-                            RecentSearchResultsView(searchStore: self.searchStore, searchType: self.searchStore.searchType)
+                            RecentSearchResultsView(
+                                searchStore: self.searchStore,
+                                searchType: self.searchStore.searchType,
+                                sheetStore: self.sheetStore
+                            )
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                         .listRowSeparator(.hidden)
@@ -229,10 +230,6 @@ struct SearchSheet: View {
         }
     }
 }
-
-// MARK: - Route + Identifiable
-
-extension Route: @retroactive Identifiable {}
 
 extension SearchSheet {
     static var fakeData = [
@@ -268,5 +265,5 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, mapViewStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

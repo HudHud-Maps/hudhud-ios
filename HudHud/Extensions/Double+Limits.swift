@@ -13,4 +13,13 @@ extension Double {
     func limit(lower _: Double = 0, upper: Double) -> Double {
         Double.minimum(Double.maximum(self, 0), upper)
     }
+
+    func wrap(min minValue: Double, max maxValue: Double) -> Double {
+        let range = maxValue - minValue
+        var wrappedValue = (self - minValue).truncatingRemainder(dividingBy: range)
+        if wrappedValue < 0 {
+            wrappedValue += range
+        }
+        return wrappedValue + minValue
+    }
 }

@@ -28,6 +28,7 @@ enum OpenAPIClientError: Error {
 enum HudHudClientError: Error {
     case poiIDNotFound
     case internalServerError(String)
+    case unprocessableContent(String)
     case badRequest(String)
     case unauthorized(String)
     case notFound(String)
@@ -195,10 +196,10 @@ public struct HudHudPOI: POIServiceProtocol {
 
         // MARK: Computed Properties
 
-        var backendValue: Components.Schemas.types_period_OpeningHours {
-            var backendOpeningHours = Components.Schemas.types_period_OpeningHours()
+        var backendValue: Components.Schemas.OpeningHours {
+            var backendOpeningHours = Components.Schemas.OpeningHours()
             let timeRanges = self.hours.map {
-                Components.Schemas.types_period_OpeningRange(end: $0.end, start: $0.start)
+                Components.Schemas.OpeningRange(end: $0.end, start: $0.start)
             }
 
             // Assign the time ranges based on the current day
@@ -300,7 +301,7 @@ public struct HudHudPOI: POIServiceProtocol {
                 let backendOpeningHours = jsonResponse.data.value1.opening_hours
 
                 let openingHoursList: [OpeningHours] = OpeningHours.WeekDay.allCases.compactMap { day -> OpeningHours? in
-                    let dayHours: [Components.Schemas.types_period_OpeningRange]? = backendOpeningHours?[keyPath: self.keyPathForDay(day)]
+                    let dayHours: [Components.Schemas.OpeningRange]? = backendOpeningHours?[keyPath: self.keyPathForDay(day)]
 
                     guard let hours = dayHours else { return nil }
 
@@ -336,7 +337,7 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -392,7 +393,7 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 
@@ -447,9 +448,9 @@ public struct HudHudPOI: POIServiceProtocol {
             }
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         case let .badRequest(error):
-            throw try HudHudClientError.badRequest(error.body.json.message.debugDescription)
+            throw try HudHudClientError.badRequest(error.body.json.message)
         }
     }
 
@@ -459,7 +460,7 @@ public struct HudHudPOI: POIServiceProtocol {
         try await self.lookup(id: id, prediction: (), baseURL: baseURL).first
     }
 
-    func keyPathForDay(_ day: OpeningHours.WeekDay) -> KeyPath<Components.Schemas.types_period_OpeningHours, [Components.Schemas.types_period_OpeningRange]?> {
+    func keyPathForDay(_ day: OpeningHours.WeekDay) -> KeyPath<Components.Schemas.OpeningHours, [Components.Schemas.OpeningRange]?> {
         switch day {
         case .sunday: return \.sunday
         case .monday: return \.monday
