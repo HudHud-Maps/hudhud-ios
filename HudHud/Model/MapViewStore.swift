@@ -22,8 +22,9 @@ final class MapViewStore: ObservableObject {
 
     @Published var selectedDetent: PresentationDetent = .small
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-
     @Published var path = NavigationPath()
+
+    @State var streetViewHeading: Float = .zero
 
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore

@@ -119,6 +119,8 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
+		CDBC2C8B2CBE3C46002E59E0 /* UIImage+resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2C8A2CBE3C46002E59E0 /* UIImage+resize.swift */; };
+		CDBC2C8D2CBE3D46002E59E0 /* StreetViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2C8C2CBE3D46002E59E0 /* StreetViewStore.swift */; };
 		CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDCF58422C8EEA6300906959 /* NukeUI */; };
 		CDD1F6B82CB9C15200374005 /* SwiftUIPanoramaViewer in Frameworks */ = {isa = PBXBuildFile; productRef = CDD1F6B72CB9C15200374005 /* SwiftUIPanoramaViewer */; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
@@ -273,6 +275,8 @@
 		CDAE05622B681263003E5196 /* HudHudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITests.swift; sourceTree = "<group>"; };
 		CDAE05A72B69358E003E5196 /* Terrain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Terrain.json; sourceTree = "<group>"; };
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
+		CDBC2C8A2CBE3C46002E59E0 /* UIImage+resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+resize.swift"; sourceTree = "<group>"; };
+		CDBC2C8C2CBE3D46002E59E0 /* StreetViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewStore.swift; sourceTree = "<group>"; };
 		CEDC06032B19C6430BD886AD /* HudhudSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudSegmentedPicker.swift; sourceTree = "<group>"; };
 		CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetView.swift; sourceTree = "<group>"; };
 		D1729921487F1004EB2D378E /* FerrostarNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerrostarNavigationView.swift; sourceTree = "<group>"; };
@@ -445,6 +449,7 @@
 				4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */,
 				CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */,
 				7E21300E9BF61F5A403DE2CE /* MapStore.swift */,
+				CDBC2C8C2CBE3D46002E59E0 /* StreetViewStore.swift */,
 				BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */,
 				B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */,
 				5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */,
@@ -664,6 +669,7 @@
 				6D6E65B0640253C2CCD4EA84 /* Locale+isArabic.swift */,
 				DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */,
 				7C08918AE951B4460365873D /* UIColor.swift */,
+				CDBC2C8A2CBE3C46002E59E0 /* UIImage+resize.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -950,6 +956,7 @@
 				90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */,
 				CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */,
 				CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */,
+				CDBC2C8D2CBE3D46002E59E0 /* StreetViewStore.swift in Sources */,
 				CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */,
 				591002252C7DCB6600CF4707 /* UserLoginView.swift in Sources */,
 				CDAE054A2B681261003E5196 /* ContentView.swift in Sources */,
@@ -1009,6 +1016,7 @@
 				7BA9280A0CF3479C97AE76AA /* RateNavigationView.swift in Sources */,
 				F0E22ED2CB7B3F4A38771265 /* POISheetButtonStyle.swift in Sources */,
 				5E4B24E475601905AB732509 /* MapViewStore.swift in Sources */,
+				CDBC2C8B2CBE3C46002E59E0 /* UIImage+resize.swift in Sources */,
 				A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */,
 				151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */,
 				2670A068B017EEE420D01F3B /* UIColor.swift in Sources */,

@@ -43,9 +43,9 @@ public extension StreetViewScene {
     }
 }
 
-// MARK: - HudhudStreetView
+// MARK: - StreetViewClient
 
-public struct HudhudStreetView {
+public struct StreetViewClient {
 
     // MARK: Lifecycle
 

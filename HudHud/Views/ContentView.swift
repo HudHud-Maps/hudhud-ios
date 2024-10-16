@@ -22,7 +22,11 @@ import TouchVisualizer
 // MARK: - SheetSubView
 
 enum SheetSubView: Hashable, Codable {
-    case mapStyle, debugView, navigationAddSearchView, favorites, navigationPreview
+    case mapStyle
+    case debugView
+    case navigationAddSearchView
+    case favorites
+    case navigationPreview
 }
 
 // MARK: - ContentView
@@ -46,6 +50,7 @@ struct ContentView: View {
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     @ObservedObject private var mapViewStore: MapViewStore
+    @State private var streetViewStore: StreetViewStore
     @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
@@ -58,121 +63,117 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
+        self.streetViewStore = StreetViewStore()
     }
 
     // MARK: Content
 
     var body: some View {
         ZStack {
-            MapViewContainer(
-                mapStore: self.mapStore,
-                debugStore: self.debugStore,
-                searchViewStore: self.searchViewStore,
-                userLocationStore: self.userLocationStore,
-                mapViewStore: self.mapViewStore
-            )
-            .task {
-                await refreshMapLayers()
-            }
-            .onReceive(
-                NotificationCenter
-                    .default
-                    .publisher(for: UIApplication.willEnterForegroundNotification)
-            ) { _ in
-                Task {
+            MapViewContainer(mapStore: self.mapStore,
+                             debugStore: self.debugStore,
+                             searchViewStore: self.searchViewStore,
+                             userLocationStore: self.userLocationStore,
+                             mapViewStore: self.mapViewStore,
+                             streetViewStore: self.streetViewStore)
+                .task {
                     await refreshMapLayers()
                 }
-            }
-            .task {
-                await self.reloadPOITrending()
-            }
-            .ignoresSafeArea()
-            .edgesIgnoringSafeArea(.all)
-            .safeAreaInset(edge: .bottom) {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.mapStore.streetViewScene != nil {
-                    // hide interface during navigation and streetview
+                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
+                    Task {
+                        await refreshMapLayers()
+                    }
+                }
+                .task {
+                    await self.reloadPOITrending()
+                }
+                .ignoresSafeArea()
+                .edgesIgnoringSafeArea(.all)
+                .safeAreaInset(edge: .bottom) {
+                    if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
+                        // hide interface during navigation and streetview
 
-                } else {
-                    HStack(alignment: .bottom) {
+                    } else {
                         HStack(alignment: .bottom) {
-                            MapButtonsView(mapButtonsData: [
-                                MapButtonData(sfSymbol: .icon(.map)) {
-                                    self.mapViewStore.path.append(SheetSubView.mapStyle)
-                                },
-                                MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-                                    switch self.searchViewStore.mode {
-                                    case let .live(provider):
-                                        self.searchViewStore.mode = .live(provider: provider.next())
-                                        Logger.searchView.info("Map Mode live")
-                                    case .preview:
-                                        self.searchViewStore.mode = .live(provider: .hudhud)
-                                        Logger.searchView.info("Map Mode toursprung")
+                            HStack(alignment: .bottom) {
+                                MapButtonsView(mapButtonsData: [
+                                    MapButtonData(sfSymbol: .icon(.map)) {
+                                        self.mapViewStore.path.append(SheetSubView.mapStyle)
+                                    },
+                                    MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+                                        switch self.searchViewStore.mode {
+                                        case let .live(provider):
+                                            self.searchViewStore.mode = .live(provider: provider.next())
+                                            Logger.searchView.info("Map Mode live")
+                                        case .preview:
+                                            self.searchViewStore.mode = .live(provider: .hudhud)
+                                            Logger.searchView.info("Map Mode toursprung")
+                                        }
+                                    },
+                                    MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
+                                        if self.mapStore.getCameraPitch() > 0 {
+                                            self.mapStore.camera.setPitch(0)
+                                        } else {
+                                            self.mapStore.camera.setZoom(17)
+                                            self.mapStore.camera.setPitch(60)
+                                        }
+                                    },
+                                    MapButtonData(sfSymbol: .icon(.terminal)) {
+                                        self.mapViewStore.path.append(SheetSubView.debugView)
                                     }
-                                },
-                                MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
-                                    if self.mapStore.getCameraPitch() > 0 {
-                                        self.mapStore.camera.setPitch(0)
-                                    } else {
-                                        self.mapStore.camera.setZoom(17)
-                                        self.mapStore.camera.setPitch(60)
-                                    }
-                                },
-                                MapButtonData(sfSymbol: .icon(.terminal)) {
-                                    self.mapViewStore.path.append(SheetSubView.debugView)
-                                }
-                            ])
+                                ])
 
-                            if let item = self.mapStore.nearestStreetViewScene {
-                                Button {
-                                    self.mapStore.streetViewScene = item
-                                    self.mapStore.zoomToStreetViewLocation()
-                                } label: {
-                                    Image(systemSymbol: .binoculars)
-                                        .font(.title2)
-                                        .padding(10)
-                                        .foregroundColor(.gray)
-                                        .background(Color.white)
-                                        .cornerRadius(15)
-                                        .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
-                                        .fixedSize()
+                                if let item = self.streetViewStore.nearestStreetViewScene {
+                                    Button {
+                                        self.streetViewStore.streetViewScene = item
+                                        self.streetViewStore.zoomToStreetViewLocation()
+                                    } label: {
+                                        Image(systemSymbol: .binoculars)
+                                            .font(.title2)
+                                            .padding(10)
+                                            .foregroundColor(.gray)
+                                            .background(Color.white)
+                                            .cornerRadius(15)
+                                            .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
+                                            .fixedSize()
+                                    }
                                 }
                             }
-                        }
 
-                        Spacer()
-                        VStack(alignment: .trailing) {
-                            CurrentLocationButton(mapStore: self.mapStore)
+                            Spacer()
+                            VStack(alignment: .trailing) {
+                                CurrentLocationButton(mapStore: self.mapStore)
+                            }
                         }
+                        .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
+                        .padding(.horizontal)
                     }
-                    .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
-                    .padding(.horizontal)
                 }
-            }
-            .backport.buttonSafeArea(length: self.sheetSize)
-            .backport.sheet(isPresented: self.$mapStore.searchShown) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
-            }
-            .safariView(item: self.$safariURL) { url in
-                SafariView(url: url)
-            }
-            .onOpenURL(handler: { url in
-                if let scheme = url.scheme, scheme == "https" || scheme == "http" {
-                    self.safariURL = url
-                    return .handled
+                .backport.buttonSafeArea(length: self.sheetSize)
+                .backport.sheet(isPresented: self.$mapStore.searchShown) {
+                    RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
                 }
-                return .systemAction
-            })
-            .environmentObject(self.notificationQueue)
-            .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
-                self.notificationQueue.removeFirst()
-            }, content: {
-                if let notification = self.notificationQueue.currentNotification {
-                    NotificationBanner(notification: notification)
-                        .padding(.horizontal, 8)
+                .safariView(item: self.$safariURL) { url in
+                    SafariView(url: url)
                 }
-            })
+                .onOpenURL(handler: { url in
+                    if let scheme = url.scheme, scheme == "https" || scheme == "http" {
+                        self.safariURL = url
+                        return .handled
+                    }
+                    return .systemAction
+                })
+                .environmentObject(self.notificationQueue)
+                .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
+                    self.notificationQueue.removeFirst()
+                }, content: {
+                    if let notification = self.notificationQueue.currentNotification {
+                        NotificationBanner(notification: notification)
+                            .padding(.horizontal, 8)
+                    }
+                })
             VStack {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.mapStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
+                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -180,17 +181,7 @@ struct ContentView: View {
                 Spacer()
             }
             .overlay(alignment: .top) {
-                VStack {
-                    if self.mapStore.streetViewScene != nil {
-                        StreetView(streetViewScene: self.$mapStore.streetViewScene, fullScreenStreetView: self.$mapStore.fullScreenStreetView, mapStore: self.mapStore)
-                            .onChange(of: self.mapStore.fullScreenStreetView) { _, newValue in
-                                self.mapStore.searchShown = !newValue
-                            }
-                    }
-                }
-                .onChange(of: self.mapStore.streetViewScene) { _, newValue in
-                    self.mapStore.searchShown = newValue == nil
-                } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
+                self.streetView
             }
             .onChange(of: self.mapViewStore.selectedDetent) {
                 if self.mapViewStore.selectedDetent == .small {
@@ -210,14 +201,29 @@ struct ContentView: View {
                 let maxLatitude = boundingBox.northWest.latitude
 
                 Task {
-                    await self.mapStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
+                    await self.streetViewStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
                 }
             }
+        }
+    }
+
+    var streetView: some View {
+        VStack {
+            if self.streetViewStore.streetViewScene != nil {
+                StreetView(store: self.streetViewStore)
+                    .onChange(of: self.streetViewStore.fullScreenStreetView) { _, newValue in
+                        self.mapStore.searchShown = !newValue
+                    }
+            }
+        }
+        .onChange(of: self.streetViewStore.streetViewScene) { _, newValue in
+            self.mapStore.searchShown = newValue == nil
         }
     }
 }
 
 private extension ContentView {
+
     func reloadPOITrending() async {
         do {
             let currentUserLocation = await self.userLocationStore.location(allowCached: true)?.coordinate
@@ -383,5 +389,5 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, streetViewStore: .storeSetUpForPreviewing)
 }

@@ -33,3 +33,10 @@ extension FloatingPoint {
         return self * .pi / 180
     }
 }
+
+extension CGSize {
+
+    static func square(_ length: CGFloat) -> CGSize {
+        return CGSize(width: length, height: length)
+    }
+}

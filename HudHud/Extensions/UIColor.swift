@@ -25,14 +25,3 @@ extension UIColor {
         return String(format: "#%06x", rgb)
     }
 }
-
-extension UIImage {
-
-    func resize(to size: CGSize) -> UIImage {
-        let image = UIGraphicsImageRenderer(size: size).image { _ in
-            self.draw(in: CGRect(origin: .zero, size: size))
-        }
-
-        return image.withRenderingMode(self.renderingMode)
-    }
-}

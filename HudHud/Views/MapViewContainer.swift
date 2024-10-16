@@ -26,6 +26,7 @@ struct MapViewContainer: View {
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @ObservedObject var mapViewStore: MapViewStore
+    var streetViewStore: StreetViewStore
     @State var safeAreaInsets = UIEdgeInsets()
 
     @State private var didFocusOnUser = false
@@ -52,12 +53,13 @@ struct MapViewContainer: View {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, debugStore: DebugStore, searchViewStore: SearchViewStore, userLocationStore: UserLocationStore, mapViewStore: MapViewStore) {
+    init(mapStore: MapStore, debugStore: DebugStore, searchViewStore: SearchViewStore, userLocationStore: UserLocationStore, mapViewStore: MapViewStore, streetViewStore: StreetViewStore) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
+        self.streetViewStore = streetViewStore
 
         // boot up ferrostar
     }
@@ -173,9 +175,8 @@ struct MapViewContainer: View {
                         .iconColor(.white)
                         .predicate(NSPredicate(format: "cluster != YES"))
 
-//                    SymbolStyleLayer(identifier: "street-view-point", source: self.mapStore.streetViewSource)
-//                        .iconImage(UIImage.lookAroundPin /*.resize(to: CGSize(width: 128, height: 128))*/)
-//                        .iconRotation(featurePropertyNamed: "heading")
+                    SymbolStyleLayer(identifier: "street-view-point", source: self.streetViewStore.streetViewSource)
+                        .iconImage(UIImage(systemSymbol: .cameraCircleFill, withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.white, .black])).resize(.square(32)))
                 }
 
             } mapViewModifiers: { content, isNavigating in
@@ -261,7 +262,7 @@ struct MapViewContainer: View {
                 self.didFocusOnUser = true
                 self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
             }
-            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { _, newValue in
+            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { newValue in
                 if let route = newValue {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
@@ -317,5 +318,5 @@ struct MapViewContainer: View {
 #Preview {
     @Previewable let mapStore: MapStore = .storeSetUpForPreviewing
     @Previewable let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, streetViewStore: .storeSetUpForPreviewing)
 }

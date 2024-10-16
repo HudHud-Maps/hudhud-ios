@@ -50,27 +50,10 @@ final class MapStore: ObservableObject {
     @Published var trackingState: TrackingState = .none
     @Published var mapViewPort: MapViewPort?
 
-    var hudhudStreetView = HudhudStreetView()
-    @Published var streetViewScene: StreetViewScene?
-    @Published var nearestStreetViewScene: StreetViewScene?
-    @Published var fullScreenStreetView: Bool = false
-    @Published var streetViewHeading: Float = 0
-    var cachedScenes = [Int: StreetViewScene]()
     let userLocationStore: UserLocationStore
 
     @Published private(set) var selectedItem: ResolvedItem?
-
     @Published var displayableItems: [DisplayableRow] = []
-
-    var streetViewSource: ShapeSource = .init(identifier: "street-view-point") {} /* {
-             ShapeSource(identifier: "street-view-point") {
-     //            if let coordinates = self.streetViewScene?.coordinates {
-     //                let streetViewPoint = StreetViewPoint(coordinates: coordinates,
-     //                                                      heading: self.streetViewHeading)
-     //                streetViewPoint.feature
-     //            }
-             }
-         }*/
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
@@ -119,7 +102,7 @@ final class MapStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), searchShown: Bool = true, userLocationStore: UserLocationStore) {
+    init(camera: MapViewCamera = .center(.riyadh, zoom: 10), searchShown: Bool = true, userLocationStore: UserLocationStore) {
         self.camera = camera
         self.searchShown = searchShown
         self.userLocationStore = userLocationStore
@@ -264,54 +247,6 @@ final class MapStore: ObservableObject {
     func isSFSymbolLayerPresent() -> Bool {
         return self.mapStyle?.layers.contains(where: { $0.identifier == MapLayerIdentifier.restaurants || $0.identifier == MapLayerIdentifier.shops }) ?? false
     }
-
-    func zoomToStreetViewLocation() {
-        guard let lat = streetViewScene?.lat else { return }
-        guard let lon = streetViewScene?.lon else { return }
-        self.camera = .center(CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                              zoom: 15, pitch: 0, pitchRange: .fixed(0))
-    }
-
-    func loadNearestStreetView(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async {
-        do {
-            self.nearestStreetViewScene = try await self.hudhudStreetView.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
-        } catch {
-            self.nearestStreetViewScene = nil
-            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
-        }
-    }
-
-    func loadStreetViewScene(id: Int) async {
-        if let item = self.cachedScenes[id] {
-            self.streetViewScene = item
-            return
-        }
-
-        do {
-            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
-                Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
-                self.streetViewScene = streetViewScene
-                self.cachedScenes[streetViewScene.id] = streetViewScene
-            }
-        } catch {
-            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
-        }
-    }
-
-    func preloadStreetViewScene(id: Int) async {
-        if self.cachedScenes[id] != nil {
-            return
-        }
-
-        do {
-            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
-                self.cachedScenes[streetViewScene.id] = streetViewScene
-            }
-        } catch {
-            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
-        }
-    }
-
 }
 
 // MARK: - Previewable
