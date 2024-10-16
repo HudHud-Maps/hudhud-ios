@@ -28,6 +28,14 @@ struct SpeedView: View {
         }
     }
 
+    // MARK: Lifecycle
+
+    init(speed: Measurement<UnitSpeed>?, speedLimit: Measurement<UnitSpeed>?) {
+        self.speed = speed?
+            .converted(to: speedLimit?.unit ?? .kilometersPerHour)
+        self.speedLimit = speedLimit
+    }
+
     // MARK: Content
 
     var body: some View {
@@ -67,9 +75,17 @@ struct CurrentSpeedView: View {
 
     private var speedValue: LocalizedStringKey {
         if let speed {
-            "\(speed.value, format: .number)"
+            "\(speed, formatter: speedFormatter.numberFormatter)"
         } else {
             "_"
+        }
+    }
+
+    private var speedUnit: LocalizedStringKey {
+        if let speed {
+            "\(speed.unit, formatter: speedFormatter)"
+        } else {
+            "km/h"
         }
     }
 
@@ -80,7 +96,7 @@ struct CurrentSpeedView: View {
             Text(self.speedValue)
                 .foregroundStyle(self.speedColor)
                 .hudhudFont(.headline)
-            Text("km/h")
+            Text(self.speedUnit)
                 .foregroundStyle(.white)
         }
         .padding(12)
@@ -99,13 +115,13 @@ struct SpeedLimitView: View {
     // MARK: Lifecycle
 
     init(speedLimit: Measurement<UnitSpeed>) {
-        self.speedLimit = speedLimit.converted(to: .kilometersPerHour)
+        self.speedLimit = speedLimit
     }
 
     // MARK: Content
 
     var body: some View {
-        Text("\(self.speedLimit.value, format: .number)")
+        Text("\(self.speedLimit, formatter: speedFormatter.numberFormatter)")
             .lineLimit(1, reservesSpace: true)
             .foregroundStyle(Color.Colors.General._17Text)
             .padding(12)
@@ -127,7 +143,7 @@ struct OverSpeedLimitNotificationView: View {
     // MARK: Content
 
     var body: some View {
-        Text("\(self.currentSpeed, format: .number)")
+        Text("\(NSNumber(floatLiteral: self.currentSpeed), formatter: speedFormatter.numberFormatter)")
             .foregroundStyle(.white)
             .padding(12)
             .background(Circle().fill(.red))
@@ -151,6 +167,13 @@ struct OverSpeedLimitNotificationView: View {
         speedLimit: Measurement<UnitSpeed>(value: 120, unit: .kilometersPerHour)
     )
 }
+
+private let speedFormatter: MeasurementFormatter = {
+    let formatter = MeasurementFormatter()
+    formatter.unitOptions = .providedUnit
+    formatter.unitStyle = .short
+    return formatter
+}()
 
 #Preview("over speed limit notification") {
     OverSpeedLimitNotificationView(currentSpeed: 121)
