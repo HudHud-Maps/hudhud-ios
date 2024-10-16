@@ -70,7 +70,7 @@ public class TrendingStore: ObservableObject {
             self.lastError = OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message.debugDescription)
+            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 

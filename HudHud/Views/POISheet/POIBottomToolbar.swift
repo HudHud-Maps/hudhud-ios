@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import FerrostarCoreFFI
 import SwiftUI
 
 // MARK: - POIBottomToolbar
@@ -18,10 +19,10 @@ struct POIBottomToolbar: View {
     @ObservedObject var favoritesStore = FavoritesStore()
     let item: ResolvedItem
     let duration: String?
-    let onStart: ((RoutingService.RouteCalculationResult?) -> Void)?
+    let onStart: (([Route]?) -> Void)?
     let onDismiss: (() -> Void)?
     let didDenyLocationPermission: Bool?
-    let routes: RoutingService.RouteCalculationResult?
+    let routes: [Route]?
     @State var askToEnableLocation = false
     let directions: (() -> Void)?
     @Environment(\.openURL) var openURL
@@ -32,10 +33,10 @@ struct POIBottomToolbar: View {
     init(
         item: ResolvedItem,
         duration: String?,
-        onStart: ((RoutingService.RouteCalculationResult?) -> Void)?,
+        onStart: (([Route]?) -> Void)?,
         onDismiss: @escaping () -> Void,
         didDenyLocationPermission: Bool?,
-        routes: RoutingService.RouteCalculationResult?
+        routes: [Route]?
     ) {
         self.item = item
         self.duration = duration

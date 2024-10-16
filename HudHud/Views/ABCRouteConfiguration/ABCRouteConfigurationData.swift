@@ -8,8 +8,8 @@
 
 import BackendService
 import CoreLocation
+import FerrostarCoreFFI
 import Foundation
-import MapboxDirections
 import MapKit
 import SFSafeSymbols
 import SwiftUI
