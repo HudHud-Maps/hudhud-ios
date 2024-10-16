@@ -73,20 +73,16 @@ struct CurrentSpeedView: View {
         }
     }
 
-    private var speedValue: LocalizedStringKey {
+    private var speedValue: String {
         if let speed {
-            "\(speed, formatter: speedFormatter.numberFormatter)"
+            distanceFormatter.string(from: speed.value as NSNumber) ?? ""
         } else {
             "_"
         }
     }
 
     private var speedUnit: LocalizedStringKey {
-        if let speed {
-            "\(speed.unit, formatter: speedFormatter)"
-        } else {
-            "km/h"
-        }
+        "km/h"
     }
 
     // MARK: Content
@@ -121,14 +117,17 @@ struct SpeedLimitView: View {
     // MARK: Content
 
     var body: some View {
-        Text("\(self.speedLimit, formatter: speedFormatter.numberFormatter)")
-            .lineLimit(1, reservesSpace: true)
-            .foregroundStyle(Color.Colors.General._17Text)
-            .padding(12)
-            .background(Circle().fill(.white))
-            .padding(3.5)
-            .background(Circle().fill(.red))
-            .frame(minWidth: 100, minHeight: 100)
+        Text(
+            distanceFormatter
+                .string(from: self.speedLimit.value as NSNumber) ?? "*****"
+        )
+        .lineLimit(1, reservesSpace: true)
+        .foregroundStyle(Color.Colors.General._17Text)
+        .padding(12)
+        .background(Circle().fill(.white))
+        .padding(3.5)
+        .background(Circle().fill(.red))
+        .frame(minWidth: 100, minHeight: 100)
     }
 }
 
@@ -143,7 +142,7 @@ struct OverSpeedLimitNotificationView: View {
     // MARK: Content
 
     var body: some View {
-        Text("\(NSNumber(floatLiteral: self.currentSpeed), formatter: speedFormatter.numberFormatter)")
+        Text("\(NSNumber(floatLiteral: self.currentSpeed), formatter: distanceFormatter)")
             .foregroundStyle(.white)
             .padding(12)
             .background(Circle().fill(.red))
@@ -168,10 +167,8 @@ struct OverSpeedLimitNotificationView: View {
     )
 }
 
-private let speedFormatter: MeasurementFormatter = {
-    let formatter = MeasurementFormatter()
-    formatter.unitOptions = .providedUnit
-    formatter.unitStyle = .short
+private let distanceFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
     return formatter
 }()
 

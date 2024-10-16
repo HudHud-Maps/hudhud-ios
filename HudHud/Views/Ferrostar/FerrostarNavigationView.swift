@@ -146,6 +146,7 @@ struct FerrostarNavigationView: View {
             DynamicallyOrientingNavigationView(
                 styleURL: self.styleURL,
                 camera: self.$camera,
+                locationProviding: self.ferrostarCore.locationProvider,
                 navigationState: self.ferrostarCore.state,
                 showZoom: false,
                 onTapExit: {

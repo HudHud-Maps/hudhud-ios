@@ -96,6 +96,7 @@ struct MapViewContainer: View {
             DynamicallyOrientingNavigationView(
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
+                locationProviding: self.routingStore.ferrostarCore.locationProvider,
                 navigationState: self.routingStore.ferrostarCore.state,
                 showZoom: false
             ) {
