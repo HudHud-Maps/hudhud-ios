@@ -15,13 +15,13 @@ struct SpeedView: View {
 
     // MARK: Properties
 
-    let speed: Measurement<UnitSpeed>
+    let speed: Measurement<UnitSpeed>?
     let speedLimit: Measurement<UnitSpeed>?
 
     // MARK: Computed Properties
 
     private var isOverSpeedLimit: Bool {
-        if let speedLimit, speed > speedLimit {
+        if let speedLimit, let speed, speed > speedLimit {
             true
         } else {
             false
@@ -52,7 +52,7 @@ struct CurrentSpeedView: View {
 
     // MARK: Properties
 
-    let speed: Measurement<UnitSpeed>
+    let speed: Measurement<UnitSpeed>?
     let isOverSpeedLimit: Bool
 
     // MARK: Computed Properties
@@ -65,11 +65,19 @@ struct CurrentSpeedView: View {
         }
     }
 
+    private var speedValue: LocalizedStringKey {
+        if let speed {
+            "\(speed.value, format: .number)"
+        } else {
+            "_"
+        }
+    }
+
     // MARK: Content
 
     var body: some View {
         VStack(spacing: 2) {
-            Text("\(self.speed.value, format: .number)")
+            Text(self.speedValue)
                 .foregroundStyle(self.speedColor)
                 .hudhudFont(.headline)
             Text("km/h")

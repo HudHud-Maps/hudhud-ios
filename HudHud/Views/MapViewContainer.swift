@@ -29,6 +29,7 @@ struct MapViewContainer: View {
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
 
+    @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
 
     // MARK: Computed Properties
@@ -51,11 +52,11 @@ struct MapViewContainer: View {
         }
     }
 
-    private var speed: Measurement<UnitSpeed> {
+    private var speed: Measurement<UnitSpeed>? {
         if let speed = self.routingStore.ferrostarCore.locationProvider.lastLocation?.speed {
-            Measurement<UnitSpeed>(value: speed.value, unit: .kilometersPerHour)
+            Measurement<UnitSpeed>(value: speed.value, unit: .metersPerSecond)
         } else {
-            Measurement<UnitSpeed>(value: 0, unit: .kilometersPerHour)
+            nil
         }
     }
 
@@ -84,7 +85,7 @@ struct MapViewContainer: View {
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
         self.routingStore = routingStore
-
+        self.core = routingStore.ferrostarCore
         // boot up ferrostar
     }
 
