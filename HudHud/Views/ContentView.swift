@@ -71,7 +71,8 @@ struct ContentView: View {
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
-                mapViewStore: self.mapViewStore
+                mapViewStore: self.mapViewStore,
+                routingStore: self.searchViewStore.routingStore
             )
             .task {
                 await refreshMapLayers()
@@ -355,5 +356,13 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    let routingStore = searchStore.routingStore
+    MapViewContainer(
+        mapStore: mapStore,
+        debugStore: DebugStore(),
+        searchViewStore: searchStore,
+        userLocationStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        routingStore: .storeSetUpForPreviewing
+    )
 }
