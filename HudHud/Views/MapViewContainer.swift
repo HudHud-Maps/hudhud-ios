@@ -50,6 +50,23 @@ struct MapViewContainer: View {
         }
     }
 
+    private var speed: Measurement<UnitSpeed> {
+        if let speed = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.speed {
+            Measurement<UnitSpeed>(value: speed.value, unit: .kilometersPerHour)
+        } else {
+            Measurement<UnitSpeed>(value: 0, unit: .kilometersPerHour)
+        }
+    }
+
+    private var speedLimit: Measurement<UnitSpeed>? {
+        if let maxSpeed = try? self.searchViewStore.routingStore.ferrostarCore.state?
+            .currentAnnotation(as: MaxSpeed.self) {
+            maxSpeed.measurementValue
+        } else {
+            nil
+        }
+    }
+
     // MARK: Lifecycle
 
     init(
@@ -247,6 +264,13 @@ struct MapViewContainer: View {
                                         .buttonBorder, style: FillStyle()
                                     ))
                         }
+                    }
+                }, bottomLeading: {
+                    if self.searchViewStore.routingStore.ferrostarCore.isNavigating {
+                        SpeedView(
+                            speed: self.speed,
+                            speedLimit: self.speedLimit
+                        )
                     }
                 }
             )
