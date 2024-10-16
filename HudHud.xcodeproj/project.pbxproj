@@ -920,7 +920,7 @@
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				F2575FF18C45531FA0A1064F /* XCRemoteSwiftPackageReference "Semaphore" */,
-				0C8ED3912CBFDB7300E503F9 /* XCRemoteSwiftPackageReference "ferrostar" */,
+				0C5352D92CC05E7500921EE7 /* XCRemoteSwiftPackageReference "ferrostar" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1481,7 +1481,7 @@
 				minimumVersion = 0.10.4;
 			};
 		};
-		0C8ED3912CBFDB7300E503F9 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+		0C5352D92CC05E7500921EE7 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
 			requirement = {

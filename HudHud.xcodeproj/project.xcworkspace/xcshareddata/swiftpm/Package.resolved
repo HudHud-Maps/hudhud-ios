@@ -15,7 +15,7 @@
       "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
         "branch" : "annotations",
-        "revision" : "3e4d306ead9a3d31c72b32dbe018857922cda71f"
+        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
       }
     },
     {
@@ -264,10 +264,10 @@
     {
       "identity" : "swiftui-dsl",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/swiftui-dsl",
+      "location" : "https://github.com/engali94/swiftui-dsl.git",
       "state" : {
-        "revision" : "c39688db3aac50b523ea062b286c584123022093",
-        "version" : "0.3.0"
+        "branch" : "main",
+        "revision" : "9b9909f936f3b54cc42f1487f6a67496430bf081"
       }
     },
     {
