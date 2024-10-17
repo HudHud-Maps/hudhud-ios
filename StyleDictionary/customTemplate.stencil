@@ -1,0 +1,20 @@
+// NOTE: Do not edit this auto generataed file. It will be recreated on every build
+//swiftlint:disable:all
+
+import Foundation
+import SwiftUI
+import TypographyKit
+
+// MARK: - HudHudTextStyle
+
+enum HudHudTextStyle: String { {% for style in styles %}
+	case {{ style.key }} = "{{ style.name }}" {% endfor %}
+}
+
+extension View {
+	func hudhudFontStyle(_ style: HudHudTextStyle) -> some View {
+		return self.typography(style: UIFont.TextStyle(rawValue: style.rawValue))
+	}
+}
+
+//swiftlint:enable:all

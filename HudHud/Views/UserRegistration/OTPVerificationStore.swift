@@ -5,9 +5,11 @@
 //  Created by Fatima Aljaber on 01/09/2024.
 //  Copyright © 2024 HudHud. All rights reserved.
 //
+
 import BackendService
 import Combine
 import Foundation
+import KeychainAccess
 import OSLog
 
 @Observable
@@ -97,12 +99,14 @@ final class OTPVerificationStore {
         defer { isLoading = false }
 
         do {
-            try await self.registrationService.verifyOTP(loginId: self.loginId, otp: self.otp, baseURL: DebugStore().baseURL)
+            let response = try await self.registrationService.verifyOTP(loginId: self.loginId, otp: self.otp, baseURL: DebugStore().baseURL)
+
+            let credentials = Credentials(accessToken: response.accessToken, refreshToken: response.refreshToken, expiration: Date.distantFuture)
+            try AuthProvider.shared.store(credentials: credentials)
 
             self.verificationSuccessful = true
             self.userLoggedIn = true
             Logger.userRegistration.info("OTP verified successfully.")
-
         } catch {
             self.errorMessage = "An error occurred during verification. Please check your OTP code and try again."
             self.isValid = false

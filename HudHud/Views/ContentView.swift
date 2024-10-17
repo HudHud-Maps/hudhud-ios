@@ -49,15 +49,17 @@ struct ContentView: View {
     private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
-    @ObservedObject private var mapViewStore: MapViewStore
     @State private var streetViewStore: StreetViewStore
+    @Bindable private var sheetStore: SheetStore
+    private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore) {
+    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore) {
         self.searchViewStore = searchStore
+        self.sheetStore = sheetStore
         self.mapStore = searchStore.mapStore
         self.userLocationStore = searchStore.mapStore.userLocationStore
         self.trendingStore = TrendingStore()
@@ -71,35 +73,42 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            MapViewContainer(mapStore: self.mapStore,
-                             debugStore: self.debugStore,
-                             searchViewStore: self.searchViewStore,
-                             userLocationStore: self.userLocationStore,
-                             mapViewStore: self.mapViewStore,
-                             streetViewStore: self.streetViewStore)
-                .task {
-                    await refreshMapLayers()
+            MapViewContainer(
+                mapStore: self.mapStore,
+                debugStore: self.debugStore,
+                searchViewStore: self.searchViewStore,
+                userLocationStore: self.userLocationStore,
+                mapViewStore: self.mapViewStore,
+                routingStore: self.searchViewStore.routingStore,
+                streetViewStore: self.streetViewStore,
+                isSheetShown: self.$sheetStore.isShown
+            )
+            .task {
+                do {
+                    let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
+                    self.mapLayerStore.hudhudMapLayers = mapLayers
+                    self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
+                } catch {
+                    self.mapLayerStore.hudhudMapLayers = nil
+                    Logger.searchView.error("\(error.localizedDescription)")
                 }
-                .onReceive(NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)) { _ in
-                    Task {
-                        await refreshMapLayers()
-                    }
-                }
-                .task {
-                    await self.reloadPOITrending()
-                }
-                .ignoresSafeArea()
-                .edgesIgnoringSafeArea(.all)
-                .safeAreaInset(edge: .bottom) {
-                    if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
-                        // hide interface during navigation and streetview
+            }
+            .task {
+                await self.reloadPOITrending()
+            }
+            .ignoresSafeArea()
+            .edgesIgnoringSafeArea(.all)
+            .safeAreaInset(edge: .bottom) {
+                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
+                    // hide interface during navigation and streetview
 
-                    } else {
+                } else {
+                    HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
-                            HStack(alignment: .bottom) {
-                                MapButtonsView(mapButtonsData: [
+                            MapButtonsView(
+                                mapButtonsData: [
                                     MapButtonData(sfSymbol: .icon(.map)) {
-                                        self.mapViewStore.path.append(SheetSubView.mapStyle)
+                                        self.sheetStore.pushSheet(SheetViewData(viewData: .mapStyle))
                                     },
                                     MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
                                         switch self.searchViewStore.mode {
@@ -120,76 +129,77 @@ struct ContentView: View {
                                         }
                                     },
                                     MapButtonData(sfSymbol: .icon(.terminal)) {
-                                        self.mapViewStore.path.append(SheetSubView.debugView)
+                                        self.sheetStore.pushSheet(SheetViewData(viewData: .debugView))
                                     }
-                                ])
+                                ]
+                            )
 
-                                if let item = self.streetViewStore.nearestStreetViewScene {
-                                    Button {
-                                        self.streetViewStore.streetViewScene = item
-                                        self.streetViewStore.zoomToStreetViewLocation()
-                                    } label: {
-                                        Image(systemSymbol: .binoculars)
-                                            .font(.title2)
-                                            .padding(10)
-                                            .foregroundColor(.gray)
-                                            .background(Color.white)
-                                            .cornerRadius(15)
-                                            .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
-                                            .fixedSize()
-                                    }
+                            if let item = self.streetViewStore.nearestStreetViewScene {
+                                Button {
+                                    self.streetViewStore.streetViewScene = item
+                                    self.streetViewStore.zoomToStreetViewLocation()
+                                } label: {
+                                    Image(systemSymbol: .binoculars)
+                                        .font(.title2)
+                                        .padding(10)
+                                        .foregroundColor(.gray)
+                                        .background(Color.white)
+                                        .cornerRadius(15)
+                                        .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
+                                        .fixedSize()
                                 }
                             }
-
-                            Spacer()
-                            VStack(alignment: .trailing) {
-                                CurrentLocationButton(mapStore: self.mapStore)
-                            }
                         }
-                        .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
-                        .padding(.horizontal)
+
+                        Spacer()
+                        VStack(alignment: .trailing) {
+                            CurrentLocationButton(mapStore: self.mapStore)
+                        }
                     }
+                    .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
+                    .padding(.horizontal)
                 }
-                .backport.buttonSafeArea(length: self.sheetSize)
-                .backport.sheet(isPresented: Binding(get: {
-                    self.mapStore.searchShown
-                }, set: {
-                    self.mapStore.searchShown = $0
-                })) {
-                    RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
+            }
+            .backport.buttonSafeArea(length: self.sheetSize)
+            .backport.sheet(isPresented: Binding(get: {
+                self.mapStore.searchShown
+            }, set: {
+                self.mapStore.searchShown = $0
+            })) {
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetStore: self.sheetStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
+            }
+            .safariView(item: self.$safariURL) { url in
+                SafariView(url: url)
+            }
+            .onOpenURL(handler: { url in
+                if let scheme = url.scheme, scheme == "https" || scheme == "http" {
+                    self.safariURL = url
+                    return .handled
                 }
-                .safariView(item: self.$safariURL) { url in
-                    SafariView(url: url)
+                return .systemAction
+            })
+            .environmentObject(self.notificationQueue)
+            .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
+                self.notificationQueue.removeFirst()
+            }, content: {
+                if let notification = self.notificationQueue.currentNotification {
+                    NotificationBanner(notification: notification)
+                        .padding(.horizontal, 8)
                 }
-                .onOpenURL(handler: { url in
-                    if let scheme = url.scheme, scheme == "https" || scheme == "http" {
-                        self.safariURL = url
-                        return .handled
-                    }
-                    return .systemAction
-                })
-                .environmentObject(self.notificationQueue)
-                .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
-                    self.notificationQueue.removeFirst()
-                }, content: {
-                    if let notification = self.notificationQueue.currentNotification {
-                        NotificationBanner(notification: notification)
-                            .padding(.horizontal, 8)
-                    }
-                })
+            })
             VStack {
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
-                        .opacity(self.mapViewStore.selectedDetent == .nearHalf ? 0 : 1)
+                        .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
                 }
                 Spacer()
             }
             .overlay(alignment: .top) {
                 self.streetView
             }
-            .onChange(of: self.mapViewStore.selectedDetent) {
-                if self.mapViewStore.selectedDetent == .small {
+            .onChange(of: self.sheetStore.selectedDetent) {
+                if self.sheetStore.selectedDetent == .small {
                     Task {
                         await self.reloadPOITrending()
                     }
@@ -237,17 +247,6 @@ private extension ContentView {
         } catch {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
-        }
-    }
-
-    func refreshMapLayers() async {
-        do {
-            let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
-            self.mapLayerStore.hudhudMapLayers = mapLayers
-            self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
-        } catch {
-            self.mapLayerStore.hudhudMapLayers = nil
-            Logger.searchView.error("Map layers fetching failed due to: \(error.localizedDescription)")
         }
     }
 }
@@ -312,13 +311,21 @@ private extension MapViewPort {
 }
 
 #Preview("Main Map") {
-    return ContentView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore()
+    )
 }
 
 #Preview("Touch Testing") {
     let store: SearchViewStore = .storeSetUpForPreviewing
     store.searchText = "shops"
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: store,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore()
+    )
 }
 
 #Preview("NavigationPreview") {
@@ -332,7 +339,11 @@ private extension MapViewPort {
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
     store.mapStore.select(poi, shouldFocusCamera: true)
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: store,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore()
+    )
 }
 
 extension Binding where Value == Bool {
@@ -378,7 +389,7 @@ extension Binding where Value == Bool {
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing, sheetStore: SheetStore())
 }
 
 extension MapLayerIdentifier {
@@ -394,5 +405,14 @@ extension MapLayerIdentifier {
 #Preview("map preview") {
     let mapStore: MapStore = .storeSetUpForPreviewing
     let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(mapStore: mapStore, debugStore: DebugStore(), searchViewStore: searchStore, userLocationStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing, streetViewStore: .storeSetUpForPreviewing)
+    MapViewContainer(
+        mapStore: mapStore,
+        debugStore: DebugStore(),
+        searchViewStore: searchStore,
+        userLocationStore: .storeSetUpForPreviewing,
+        mapViewStore: .storeSetUpForPreviewing,
+        routingStore: .storeSetUpForPreviewing,
+        streetViewStore: .storeSetUpForPreviewing,
+        isSheetShown: .constant(true)
+    )
 }

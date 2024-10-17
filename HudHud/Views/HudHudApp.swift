@@ -10,6 +10,7 @@ import Nuke
 import OSLog
 import SwiftLocation
 import SwiftUI
+import TypographyKit
 
 // MARK: - HudHudApp
 
@@ -23,29 +24,36 @@ struct HudHudApp: App {
     @State var mapStore: MapStore
 
     private let searchStore: SearchViewStore
-    private let mapViewStore: MapViewStore
+    private let sheetStore: SheetStore
+    @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
     // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
-            ContentView(searchStore: self.searchStore, mapViewStore: self.mapViewStore)
-                .onAppear {
-                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-                }
+            ContentView(
+                searchStore: self.searchStore,
+                mapViewStore: self.mapViewStore,
+                sheetStore: self.sheetStore
+            )
+            .onAppear {
+                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+            }
         }
     }
 
     // MARK: Lifecycle
 
     init() {
+        let sheetStore = SheetStore()
+        self.sheetStore = sheetStore
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
         let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: mapStore)
-        self.mapViewStore = MapViewStore(mapStore: mapStore, routingStore: routingStore)
-        self.searchStore = SearchViewStore(mapStore: mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        self.mapViewStore = MapViewStore(mapStore: mapStore, routingStore: routingStore, sheetStore: sheetStore)
+        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
         self.mapStore = mapStore
 
         // Create a custom URLCache to store images on disk
@@ -66,6 +74,11 @@ struct HudHudApp: App {
         let pipeline = ImagePipeline {
             $0.dataLoader = dataLoader
             $0.imageCache = ImageCache.shared // Use in-memory cache as well
+        }
+
+        // Load custom typography configuration
+        if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
+            TypographyKit.configure(with: TypographyKitConfiguration.default.setConfigurationURL(url))
         }
     }
 }

@@ -16,7 +16,7 @@ struct FavoriteCategoriesView: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapViewStore: MapViewStore
+    var sheetStore: SheetStore
     let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
@@ -37,12 +37,11 @@ struct FavoriteCategoriesView: View {
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
-                NavigationLink {
-                    FavoritesViewMoreView(searchStore: self.searchStore, mapViewStore: self.mapViewStore)
-                } label: {
-                    Text("Add")
-                        .hudhudFont(size: 12, fontWeight: .medium)
-                }.buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
+                Button("Add") {
+                    self.sheetStore.pushSheet(SheetViewData(viewData: .favoritesViewMore))
+                }
+                .hudhudFont(size: 12, fontWeight: .medium)
+                .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
             }
             Spacer()
         }
@@ -59,7 +58,11 @@ struct FavoriteCategoriesView: View {
                     .minimumScaleFactor(0.5)
                 Spacer()
                 NavigationLink {
-                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing, mapViewStore: .storeSetUpForPreviewing)
+                    FavoritesViewMoreView(
+                        searchStore: .storeSetUpForPreviewing,
+                        sheetStore: .storeSetUpForPreviewing,
+                        favoritesStore: .storeSetUpForPreviewing
+                    )
                 } label: {
                     HStack {
                         Text("View More")
@@ -74,7 +77,7 @@ struct FavoriteCategoriesView: View {
                     }
                 }
             }
-            FavoriteCategoriesView(mapViewStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
         }
         .padding()
     }

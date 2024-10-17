@@ -46,7 +46,6 @@ final class MapStore {
     var shouldShowCustomSymbols = false
     var searchShown: Bool = true
     var mapViewPort: MapViewPort?
-
     let userLocationStore: UserLocationStore
 
     private(set) var selectedItem: ResolvedItem?
