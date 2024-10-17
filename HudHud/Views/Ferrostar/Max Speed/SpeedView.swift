@@ -142,7 +142,7 @@ struct OverSpeedLimitNotificationView: View {
     // MARK: Content
 
     var body: some View {
-        Text("\(NSNumber(floatLiteral: self.currentSpeed), formatter: distanceFormatter)")
+        Text("\(self.currentSpeed as NSNumber, formatter: distanceFormatter)")
             .foregroundStyle(.white)
             .padding(12)
             .background(Circle().fill(.red))

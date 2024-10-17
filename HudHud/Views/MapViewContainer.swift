@@ -63,8 +63,8 @@ struct MapViewContainer: View {
 
     private var speedLimit: Measurement<UnitSpeed>? {
         if let annotation = try? self.routingStore.ferrostarCore.state?
-            .currentAnnotation(as: NavigationAnnotation.self) {
-            annotation.maxSpeed.measurementValue
+            .currentAnnotation(as: ValhallaOsrmAnnotation.self) {
+            annotation.speedLimit?.measurementValue
         } else {
             nil
         }
@@ -269,7 +269,8 @@ struct MapViewContainer: View {
                                     ))
                         }
                     }
-                }, bottomLeading: {
+                },
+                bottomLeading: {
                     if self.routingStore.ferrostarCore.isNavigating {
                         SpeedView(
                             speed: self.speed,

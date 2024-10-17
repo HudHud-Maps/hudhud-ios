@@ -85,7 +85,6 @@
 		AFE1EC832CC10D5900A9A5C4 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 774AC299E8C1C204EC968730 /* FerrostarMapLibreUI */; };
 		AFE1EC842CC10D5900A9A5C4 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E8327D7A606F9D7072DC0C08 /* FerrostarSwiftUI */; };
 		AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */; };
-		AFE1EC8B2CC10E4700A9A5C4 /* NavigationAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE1EC8A2CC10E4700A9A5C4 /* NavigationAnnotation.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
@@ -258,7 +257,6 @@
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
 		AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
-		AFE1EC8A2CC10E4700A9A5C4 /* NavigationAnnotation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAnnotation.swift; sourceTree = "<group>"; };
 		B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerrostarNavigationView.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
@@ -487,7 +485,6 @@
 				7F64F898F2A8C418EC5938E6 /* Navigation Delegate.swift */,
 				B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */,
 				C2587798A4D347D96887F66E /* GraphHopperRouteAdapter.swift */,
-				AFE1EC8A2CC10E4700A9A5C4 /* NavigationAnnotation.swift */,
 			);
 			path = Ferrostar;
 			sourceTree = "<group>";
@@ -1034,7 +1031,6 @@
 				CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */,
 				CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */,
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
-				AFE1EC8B2CC10E4700A9A5C4 /* NavigationAnnotation.swift in Sources */,
 				90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */,
 				59B8A1DE2C60C38400A12F5E /* MapViewContainer.swift in Sources */,
 				CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */,
