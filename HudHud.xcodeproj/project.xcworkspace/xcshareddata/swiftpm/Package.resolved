@@ -12,9 +12,10 @@
     {
       "identity" : "ferrostar",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/hactar/ferrostar.git",
+      "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
-        "revision" : "9afdad2daa000ed86f4dea23ac3dce1cf33b55cd"
+        "branch" : "annotations",
+        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
       }
     },
     {
@@ -263,10 +264,10 @@
     {
       "identity" : "swiftui-dsl",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/swiftui-dsl",
+      "location" : "https://github.com/engali94/swiftui-dsl.git",
       "state" : {
-        "revision" : "899457ffccf6abc802e1639e1bbae6e25e864702",
-        "version" : "0.2.0"
+        "branch" : "main",
+        "revision" : "9b9909f936f3b54cc42f1487f6a67496430bf081"
       }
     },
     {
