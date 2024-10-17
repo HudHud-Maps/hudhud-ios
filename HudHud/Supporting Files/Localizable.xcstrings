@@ -183,9 +183,6 @@
     "Enable Touch Visualizer" : {
 
     },
-    "End" : {
-
-    },
     "Enter your phone number or email" : {
 
     },
@@ -268,9 +265,6 @@
         }
       }
     },
-    "Loading route..." : {
-
-    },
     "Location Needed" : {
 
     },
@@ -342,9 +336,6 @@
     "No Results" : {
 
     },
-    "No route is available for the destination." : {
-
-    },
     "Note: Changing the URL requires restarting the app for the changes to take effect." : {
 
     },
@@ -361,9 +352,6 @@
       "comment" : "street view"
     },
     "Please enable your location to get directions" : {
-
-    },
-    "Please ensure location services are enabled and try again." : {
 
     },
     "Price" : {
@@ -460,16 +448,10 @@
     "Touch Visualizer" : {
 
     },
-    "Try a different destination or check for connectivity issues." : {
-
-    },
     "Unknown" : {
 
     },
     "Use SF Symbols for POIs on map" : {
-
-    },
-    "User location could not be found." : {
 
     },
     "Verification code sent to the %@ below:" : {
