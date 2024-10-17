@@ -24,18 +24,13 @@ final class StreetViewStore {
     var streetViewScene: StreetViewScene?
     var nearestStreetViewScene: StreetViewScene?
     var fullScreenStreetView: Bool = false
-
     var svimage: UIImage?
     var svimageId: String = ""
     var errorMsg: String?
     var isLoading: Bool = false
     var progress: Float = 0
-
-//    var camera: MapViewCamera?
     var mapStore: MapStore
-
     var streetViewClient = StreetViewClient()
-
     var cachedScenes = [Int: StreetViewScene]()
 
     // MARK: Computed Properties

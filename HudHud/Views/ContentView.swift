@@ -43,16 +43,20 @@ struct ContentView: View {
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
+    private var mapStore: MapStore
+    private var mapViewStore: MapViewStore
+
+    @State private var streetViewStore: StreetViewStore
+    @State private var sheetSize: CGSize = .zero
+
     @StateObject private var notificationQueue = NotificationQueue()
+
     @ObservedObject private var userLocationStore: UserLocationStore
     @ObservedObject private var searchViewStore: SearchViewStore
-    private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
-    @State private var streetViewStore: StreetViewStore
+
     @Bindable private var sheetStore: SheetStore
-    private var mapViewStore: MapViewStore
-    @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
 

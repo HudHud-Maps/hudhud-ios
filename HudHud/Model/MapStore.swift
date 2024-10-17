@@ -49,12 +49,21 @@ final class MapStore {
     let userLocationStore: UserLocationStore
 
     private(set) var selectedItem: ResolvedItem?
-    var displayableItems: [DisplayableRow] = []
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
+
+    var displayableItems: [DisplayableRow] = [] {
+        didSet {
+            self.mapStyle?.layers.forEach { layer in
+                if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
+                    layer.isVisible = self.displayableItems.hasElements
+                }
+            }
+        }
+    }
 
     @ObservationIgnored
     var mapStyleLayer: HudHudMapLayer? {
@@ -149,7 +158,6 @@ final class MapStore {
         self.camera = camera
         self.searchShown = searchShown
         self.userLocationStore = userLocationStore
-        self.bindLayersVisability()
     }
 
     // MARK: Functions
@@ -302,21 +310,6 @@ extension MapStore: Previewable {
 // MARK: - Private
 
 private extension MapStore {
-
-    func bindLayersVisability() {
-        // TODO: Fix
-//        self.displayableItems
-//            .map { $0.count <= 1 }
-//            .removeDuplicates()
-//            .sink { [weak self] isVisible in
-//                self?.mapStyle?.layers.forEach { layer in
-//                    if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
-//                        layer.isVisible = isVisible
-//                    }
-//                }
-//            }
-//            .store(in: &self.subscriptions)
-    }
 
     func generateMLNCoordinateBounds(from coordinates: [CLLocationCoordinate2D]) -> MLNCoordinateBounds? {
         guard !coordinates.isEmpty else {

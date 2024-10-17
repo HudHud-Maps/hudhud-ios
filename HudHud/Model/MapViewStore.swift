@@ -14,10 +14,20 @@ import NavigationTransition
 import OSLog
 import SwiftUI
 
+// from https://forums.swift.org/t/how-to-use-observation-to-actually-observe-changes-to-a-property/67591/16
+func withContinousObservation<T>(of value: @escaping @autoclosure () -> T, execute: @escaping (T) -> Void) {
+    withObservationTracking {
+        execute(value())
+    } onChange: {
+        Task { @MainActor in
+            withContinousObservation(of: value(), execute: execute)
+        }
+    }
+}
+
 // MARK: - MapViewStore
 
-@MainActor
-@Observable
+@MainActor @Observable
 final class MapViewStore {
 
     // MARK: Properties
@@ -37,9 +47,9 @@ final class MapViewStore {
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
-        // TODO: Fix
-//        self.showPotentialRouteWhenAvailable()
-//        self.showSelectedDetentWhenSelectingAnItem()
+
+        self.showPotentialRouteWhenAvailable()
+        self.showSelectedDetentWhenSelectingAnItem()
     }
 
     // MARK: Functions
@@ -67,48 +77,55 @@ final class MapViewStore {
 
 private extension MapViewStore {
 
-    // TODO: Fix
-    /*
-     func showPotentialRouteWhenAvailable() {
-         self.routingStore.$potentialRoute
-             .debounce(for: 0.3, scheduler: DispatchQueue.main)
-             .sink { [weak self] newPotentialRoute in
-                 guard let self else { return }
+    func showPotentialRouteWhenAvailable() {
+//        self.routingStore.$potentialRoute
+//            .debounce(for: 0.3, scheduler: DispatchQueue.main)
+//            .sink { [weak self] newPotentialRoute in
+//                guard let self else { return }
+//
+//                if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet?.viewData {
+//                    self.sheetStore.pushSheet(SheetViewData(viewData: .navigationPreview))
+//                    self.mapStore.updateCamera(state: .route(newPotentialRoute))
+//                } else if self.sheetStore.currentSheet?.viewData == .navigationPreview, newPotentialRoute == nil {
+//                    self.sheetStore.popSheet()
+//                    self.routingStore.routes = []
+//                    self.routingStore.potentialRoute = nil
+//                    self.routingStore.navigatingRoute = nil
+//                }
+//            }
+//            .store(in: &self.subscriptions)
+        withContinousObservation(of: self.routingStore.potentialRoute) { [weak self] newPotentialRoute in
+            guard let self else { return }
 
-                 if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet?.viewData {
-                     self.sheetStore.pushSheet(SheetViewData(viewData: .navigationPreview))
-                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
-                 } else if self.sheetStore.currentSheet?.viewData == .navigationPreview, newPotentialRoute == nil {
-                     self.sheetStore.popSheet()
-                 }
-             }
-             .store(in: &self.subscriptions)
-     }
+            if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet?.viewData {
+                self.sheetStore.pushSheet(SheetViewData(viewData: .navigationPreview))
+                self.mapStore.updateCamera(state: .route(newPotentialRoute))
+            } else if self.sheetStore.currentSheet?.viewData == .navigationPreview, newPotentialRoute == nil {
+                self.sheetStore.popSheet()
+                self.routingStore.routes = []
+                self.routingStore.potentialRoute = nil
+                self.routingStore.navigatingRoute = nil
+            }
+        }
+    }
 
-     func showSelectedDetentWhenSelectingAnItem() {
-         self.mapStore.$selectedItem
-             .compactMap { $0 }
-             .sink { [weak self] selectedItem in
-                 guard let self, self.routingStore.potentialRoute == nil else {
-                     return
-                 }
-                 if case let .pointOfInterest(item) = self.sheetStore.currentSheet?.viewData {
-                     self.sheetStore.sheets[self.sheetStore.sheets.count - 1] = SheetViewData(viewData: .pointOfInterest(selectedItem))
-                 } else {
-                     self.sheetStore.pushSheet(SheetViewData(viewData: .pointOfInterest(selectedItem)))
-                 }
-             }
-             .store(in: &self.subscriptions)
-     }
-      */
+    func showSelectedDetentWhenSelectingAnItem() {
+        withContinousObservation(of: self.mapStore.selectedItem) { [weak self] selectedItem in
+            guard let self, let selectedItem, self.routingStore.potentialRoute == nil else {
+                return
+            }
+
+            if case let .pointOfInterest(item) = self.sheetStore.currentSheet?.viewData {
+                self.sheetStore.sheets[self.sheetStore.sheets.count - 1] = SheetViewData(viewData: .pointOfInterest(item))
+            } else {
+                self.sheetStore.pushSheet(SheetViewData(viewData: .pointOfInterest(selectedItem)))
+            }
+        }
+    }
 }
 
 // MARK: - Previewable
 
 extension MapViewStore: Previewable {
-    static let storeSetUpForPreviewing = MapViewStore(
-        mapStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
+    static let storeSetUpForPreviewing = MapViewStore(mapStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
 }
