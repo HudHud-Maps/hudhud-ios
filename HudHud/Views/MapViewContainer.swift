@@ -28,6 +28,7 @@ struct MapViewContainer: View {
     @ObservedObject var mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
+    @Binding var isSheetShown: Bool
 
     @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
@@ -71,20 +72,20 @@ struct MapViewContainer: View {
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore,
-        routingStore: RoutingStore
-    ) {
+    init(mapStore: MapStore,
+         debugStore: DebugStore,
+         searchViewStore: SearchViewStore,
+         userLocationStore: UserLocationStore,
+         mapViewStore: MapViewStore,
+         routingStore: RoutingStore,
+         isSheetShown: Binding<Bool>) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
         self.routingStore = routingStore
+        self._isSheetShown = isSheetShown
         self.core = routingStore.ferrostarCore
         // boot up ferrostar
     }
@@ -211,7 +212,6 @@ struct MapViewContainer: View {
                     .iconColor(.white)
                     .predicate(NSPredicate(format: "cluster != YES"))
                 }
-
             } mapViewModifiers: { content, isNavigating in
                 if isNavigating {
                     content
@@ -233,8 +233,7 @@ struct MapViewContainer: View {
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
                             if self.mapStore.selectedItem == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                                self.mapStore.select(generatedPOI)
-                                self.mapViewStore.selectedDetent = .third
+                                self.searchViewStore.mapStore.select(generatedPOI)
                             }
                         })
                         .mapControls {
@@ -309,8 +308,8 @@ struct MapViewContainer: View {
                             try simulated.setSimulatedRoute(route, resampleDistance: 5)
                         }
 
-                        try self.routingStore.ferrostarCore.startNavigation(route: route)
-                        self.mapStore.searchShown = false
+                        try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
+                        self.isSheetShown = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                             self.mapStore.camera = .automotiveNavigation()
                         }
@@ -319,7 +318,6 @@ struct MapViewContainer: View {
                     }
                 } else {
                     self.stopNavigation()
-                    self.mapStore.searchShown = true
                 }
             }
             .onChange(of: self.core.state?.tripState) { oldValue, newValue in
@@ -331,6 +329,7 @@ struct MapViewContainer: View {
             }
             .task {
                 guard !self.didFocusOnUser else { return }
+
                 self.didFocusOnUser = true
             }
         }
@@ -342,11 +341,8 @@ struct MapViewContainer: View {
 
     @MainActor
     func stopNavigation() {
-        self.routingStore.ferrostarCore.stopNavigation()
-        self.routingStore.potentialRoute = nil
-        self.routingStore.navigatingRoute = nil
-
-        self.mapStore.searchShown = true
+        self.searchViewStore.endTrip()
+        self.isSheetShown = true
 
         if let coordinates = self.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
@@ -368,6 +364,7 @@ struct MapViewContainer: View {
         searchViewStore: searchStore,
         userLocationStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing
+        routingStore: .storeSetUpForPreviewing,
+        isSheetShown: .constant(true)
     )
 }

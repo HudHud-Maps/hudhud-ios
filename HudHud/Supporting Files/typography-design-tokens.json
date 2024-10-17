@@ -1,0 +1,179 @@
+{
+  "ui-font-text-styles": {
+    "heading.xxLarge": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 32,
+      "line-weight": 40,
+      "font-weight": "700",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 24"
+    },
+    "heading.xLarge": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 28,
+      "line-weight": 38,
+      "font-weight": "700",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 24dp"
+    },
+    "heading.large": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 24,
+      "line-weight": 32,
+      "font-weight": "700",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 20dp"
+    },
+    "heading.medium": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 20,
+      "line-weight": 28,
+      "font-weight": "700",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 16dp"
+    },
+    "heading.small": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 18,
+      "line-weight": 24,
+      "font-weight": "700",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 12dp"
+    },
+    "heading.xSmall": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 16,
+      "line-weight": 24,
+      "font-weight": "700",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 12dp"
+    },
+    "label.large": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 18,
+      "line-weight": 24,
+      "font-weight": "600",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 12"
+    },
+    "label.medium": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 16,
+      "line-weight": 20,
+      "font-weight": "600",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 8dp"
+    },
+    "label.small": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 14,
+      "line-weight": 16,
+      "font-weight": "600",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 8dp"
+    },
+    "label.smallExtraBold": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 14,
+      "line-weight": 16,
+      "font-weight": "800",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none"
+    },
+    "label.xSmall": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 12,
+      "line-weight": 16,
+      "font-weight": "600",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 8dp"
+    },
+    "label.xxSmall": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 10,
+      "line-weight": 12,
+      "font-weight": "600",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Labels on Map"
+    },
+    "paragraph.large": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 18,
+      "line-weight": 28,
+      "font-weight": "500",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 40dp"
+    },
+    "paragraph.medium": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 16,
+      "line-weight": 24,
+      "font-weight": "500",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 32dp"
+    },
+    "paragraph.small": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 14,
+      "line-weight": 20,
+      "font-weight": "500",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 28dp"
+    },
+    "paragraph.xSmall": {
+      "font-name": "Plus Jakarta Sans",
+      "point-size": 12,
+      "line-weight": 20,
+      "font-weight": "500",
+      "paragraph-spacing": 0,
+      "paragraph-indent": 0,
+      "letter-spacing": 0,
+      "decoration": "none",
+      "description": "Margin bottom: 28dp"
+    }
+  }
+}

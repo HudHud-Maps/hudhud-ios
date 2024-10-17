@@ -18,7 +18,7 @@ struct ABCRouteConfigurationView: View {
     // MARK: Properties
 
     @State var routeConfigurations: [ABCRouteConfigurationItem]
-    @ObservedObject var mapViewStore: MapViewStore
+    var sheetStore: SheetStore
     @ObservedObject var routingStore: RoutingStore
 
     // MARK: Content
@@ -60,7 +60,7 @@ struct ABCRouteConfigurationView: View {
 
                 footer: {
                     Button {
-                        self.mapViewStore.path.append(SheetSubView.navigationAddSearchView)
+                        self.sheetStore.pushSheet(SheetViewData(viewData: .navigationAddSearchView))
                     } label: {
                         HStack {
                             Image(systemSymbol: .plus)
@@ -121,5 +121,5 @@ struct ABCRouteConfigurationView: View {
         .myLocation(Waypoint(coordinate: GeographicCoordinate(lat: 24.7192284, lng: 46.6468331), kind: .via)),
         .waypoint(.coffeeAddressRiyadh),
         .waypoint(.theGarageRiyadh)
-    ], mapViewStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)
+    ], sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)
 }

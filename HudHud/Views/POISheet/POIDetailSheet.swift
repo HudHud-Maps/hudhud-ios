@@ -65,122 +65,121 @@ struct POIDetailSheet: View {
     // MARK: - View
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading) {
-                HStack(alignment: .top) {
-                    VStack(spacing: 0.0) {
-                        Text(self.item.title)
-                            .hudhudFont(.title)
-                            .foregroundStyle(Color.Colors.General._01Black)
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.6)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
-                        if let category = self.item.category {
-                            Text(category)
-                                .hudhudFont(.footnote)
-                                .foregroundStyle(Color.Colors.General._02Grey)
-                                .lineLimit(2)
-                                .fixedSize(horizontal: false, vertical: true)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .padding(.vertical, 6)
-                        }
-                        HStack {
-                            Text(self.item.subtitle ?? self.item.coordinate.formatted())
-                                .hudhudFont(.footnote)
-                                .foregroundStyle(Color.Colors.General._01Black)
-                                .multilineTextAlignment(.leading)
-                                .lineLimit(self.viewMore ? 3 : 1)
-                            if self.shouldShowButton {
-                                Button(self.viewMore ? "Read Less" : "Read More") {
-                                    self.viewMore.toggle()
-                                }
-                                .font(.footnote)
-                                .foregroundStyle(Color.Colors.General._07BlueMain)
-                            }
-                        }
-                        .fixedSize(horizontal: false, vertical: true)
+        VStack(alignment: .leading) {
+            HStack(alignment: .top) {
+                VStack(spacing: .zero) {
+                    Text(self.item.title)
+                        .hudhudFont(.title)
+                        .foregroundStyle(Color.Colors.General._01Black)
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(self.item.category != nil ? .bottom : .vertical, 4)
-                    }
-                    Button(action: {
-                        self.dismiss()
-                        self.onDismiss()
-                    }, label: {
-                        ZStack {
-                            Circle()
-                                .fill(Color.Colors.General._03LightGrey)
-                                .frame(width: 30, height: 30)
 
-                            Image(.closeIcon)
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                        }
-                        .padding(4)
-                        .contentShape(Circle())
-                    })
-                    .tint(.secondary)
-                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
-                }
-                .padding([.top, .leading, .trailing], 20)
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 4.0) {
-                        Button(action: {
-                            if self.didDenyLocationPermission {
-                                self.askToEnableLocation = true
-                            } else {
-                                self.onStart(self.routes)
+                    if let category = self.item.category {
+                        Text(category)
+                            .hudhudFont(.footnote)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                            .lineLimit(2)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 6)
+                    }
+                    HStack {
+                        Text(self.item.subtitle ?? self.item.coordinate.formatted())
+                            .hudhudFont(.footnote)
+                            .foregroundStyle(Color.Colors.General._01Black)
+                            .multilineTextAlignment(.leading)
+                            .lineLimit(self.viewMore ? 3 : 1)
+                        if self.shouldShowButton {
+                            Button(self.viewMore ? "Read Less" : "Read More") {
+                                self.viewMore.toggle()
                             }
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
-
-                        if let phone = self.item.phone, !phone.isEmpty {
-                            Button(action: {
-                                // Perform phone action
-                                if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                                    self.openURL(url)
-                                }
-                                Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
-                            }, label: {})
-                                .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
+                            .font(.footnote)
+                            .foregroundStyle(Color.Colors.General._07BlueMain)
                         }
-                        if let website = item.website {
-                            Button(action: {
-                                self.openURL(website)
-                            }, label: {})
-                                .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
-                        }
-                        // order, save, Review, Media, Report
-                        Button(action: {
-                            Logger.searchView.info("order")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
-                        Button(action: {
-                            Logger.searchView.info("save")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
-                        Button(action: {
-                            Logger.searchView.info("review")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
-                        Button(action: {
-                            Logger.searchView.info("media")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
-                        Button(action: {
-                            Logger.searchView.info("report")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
                     }
-                    .padding(15)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(self.item.category != nil ? .bottom : .vertical, 4)
                 }
-                .padding(.vertical, -15)
-                VStack {
-                    AdditionalPOIDetailsView(item: self.item, routes: self.routes)
-                        .fixedSize()
-                        .padding([.top, .trailing, .leading])
-                    POIMediaView(mediaURLs: self.item.mediaURLs)
-                }
+                Button(action: {
+                    self.dismiss()
+                    self.onDismiss()
+                }, label: {
+                    ZStack {
+                        Circle()
+                            .fill(Color.Colors.General._03LightGrey)
+                            .frame(width: 30, height: 30)
+
+                        Image(.closeIcon)
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                    }
+                    .padding(4)
+                    .contentShape(Circle())
+                })
+                .tint(.secondary)
+                .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
             }
+            .padding([.top, .leading, .trailing], 20)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 4.0) {
+                    Button(action: {
+                        if self.didDenyLocationPermission {
+                            self.askToEnableLocation = true
+                        } else {
+                            self.onStart(self.routes)
+                        }
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
+
+                    if let phone = self.item.phone, !phone.isEmpty {
+                        Button(action: {
+                            // Perform phone action
+                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+                                self.openURL(url)
+                            }
+                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
+                        }, label: {})
+                            .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
+                    }
+                    if let website = item.website {
+                        Button(action: {
+                            self.openURL(website)
+                        }, label: {})
+                            .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
+                    }
+                    // order, save, Review, Media, Report
+                    Button(action: {
+                        Logger.searchView.info("order")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
+                    Button(action: {
+                        Logger.searchView.info("save")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
+                    Button(action: {
+                        Logger.searchView.info("review")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
+                    Button(action: {
+                        Logger.searchView.info("media")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
+                    Button(action: {
+                        Logger.searchView.info("report")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
+                }
+                .padding(15)
+            }
+            .padding(.vertical, -15)
+            VStack {
+                AdditionalPOIDetailsView(item: self.item, routes: self.routes)
+                    .fixedSize()
+                    .padding([.top, .trailing, .leading])
+                POIMediaView(mediaURLs: self.item.mediaURLs)
+            }
+            Spacer()
         }
         .alert(
             "Location Needed",
@@ -231,5 +230,9 @@ private extension POIDetailSheet {
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     searchViewStore.mapStore.select(.artwork)
-    return ContentView(searchStore: searchViewStore, mapViewStore: .storeSetUpForPreviewing)
+    return ContentView(
+        searchStore: searchViewStore,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: .storeSetUpForPreviewing
+    )
 }
