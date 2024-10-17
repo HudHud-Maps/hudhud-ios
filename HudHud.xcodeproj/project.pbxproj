@@ -14,11 +14,12 @@
 		0C166E172CBEC53000991697 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 532946F1B08D76575C26B170 /* FerrostarCore */; };
 		0C166E182CBEC53000991697 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 774AC299E8C1C204EC968730 /* FerrostarMapLibreUI */; };
 		0C166E192CBEC53000991697 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E8327D7A606F9D7072DC0C08 /* FerrostarSwiftUI */; };
+		0C5352DE2CC0EBBF00921EE7 /* CongestionSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5352DD2CC0EBBF00921EE7 /* CongestionSegment.swift */; };
+		0C5352E02CC0EC0200921EE7 /* CongestionsExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C5352DF2CC0EC0200921EE7 /* CongestionsExtractor.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		0CBBC1EF2CBECA5200B4B8E7 /* RouteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CBBC1EE2CBECA5200B4B8E7 /* RouteModel.swift */; };
 		0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
-		10CE817BF1B306C4C771C367 /* FerrostarNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
@@ -190,6 +191,8 @@
 		032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalPOIDetailsView.swift; sourceTree = "<group>"; };
 		043900014DB7FBFB28D75FE7 /* pannellum.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pannellum.js; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
+		0C5352DD2CC0EBBF00921EE7 /* CongestionSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongestionSegment.swift; sourceTree = "<group>"; };
+		0C5352DF2CC0EC0200921EE7 /* CongestionsExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongestionsExtractor.swift; sourceTree = "<group>"; };
 		0CBBC1EE2CBECA5200B4B8E7 /* RouteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModel.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
@@ -257,7 +260,6 @@
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
-		B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerrostarNavigationView.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetButtonStyle.swift; sourceTree = "<group>"; };
@@ -400,6 +402,15 @@
 			path = Fonts;
 			sourceTree = "<group>";
 		};
+		0C5352DC2CC0EBAA00921EE7 /* TrafficCongestions */ = {
+			isa = PBXGroup;
+			children = (
+				0C5352DD2CC0EBBF00921EE7 /* CongestionSegment.swift */,
+				0C5352DF2CC0EC0200921EE7 /* CongestionsExtractor.swift */,
+			);
+			path = TrafficCongestions;
+			sourceTree = "<group>";
+		};
 		14EB9DF8741B47192AE67646 /* CategoriesBanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,7 +493,6 @@
 			isa = PBXGroup;
 			children = (
 				7F64F898F2A8C418EC5938E6 /* Navigation Delegate.swift */,
-				B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */,
 				C2587798A4D347D96887F66E /* GraphHopperRouteAdapter.swift */,
 			);
 			path = Ferrostar;
@@ -585,6 +595,7 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				0C5352DC2CC0EBAA00921EE7 /* TrafficCongestions */,
 				CD85CB2C2BB4650C00C99774 /* Protocols */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
@@ -1051,10 +1062,12 @@
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				CD34C5612C05C7FA006DCDBA /* RootSheetView.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
+				0C5352E02CC0EC0200921EE7 /* CongestionsExtractor.swift in Sources */,
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
 				341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */,
 				FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */,
 				F20D974E2C46C65600457928 /* SearchResultItemView.swift in Sources */,
+				0C5352DE2CC0EBBF00921EE7 /* CongestionSegment.swift in Sources */,
 				5936D87F2BF09A2600A258BE /* DebugStore.swift in Sources */,
 				CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */,
 				0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */,
@@ -1108,7 +1121,6 @@
 				DD7976DCF72FA010BE526906 /* FilterStore.swift in Sources */,
 				0CBBC1EF2CBECA5200B4B8E7 /* RouteModel.swift in Sources */,
 				9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */,
-				10CE817BF1B306C4C771C367 /* FerrostarNavigationView.swift in Sources */,
 				6BA3C89567E6EE1E0693F713 /* GraphHopperRouteAdapter.swift in Sources */,
 				E3251B5454CD025CDE0D00F9 /* Navigation Delegate.swift in Sources */,
 				EDF32E0E88A8260CDD42AFE2 /* OTPFieldView.swift in Sources */,
