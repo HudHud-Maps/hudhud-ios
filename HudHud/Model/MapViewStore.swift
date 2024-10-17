@@ -24,12 +24,11 @@ final class MapViewStore: ObservableObject {
     @Published var allowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     @Published var path = NavigationPath()
 
-    @State var streetViewHeading: Float = .zero
+    var streetViewStore: StreetViewStore?
 
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore
     private let mapStore: MapStore
-
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Lifecycle
@@ -38,16 +37,25 @@ final class MapViewStore: ObservableObject {
         self.mapActionHandler = MapActionHandler(mapStore: mapStore)
         self.mapStore = mapStore
         self.routingStore = routingStore
-        self.showPotentialRouteWhenAvailable()
-        self.updateDetentWhenAppropriate()
-        self.showSelectedDetentWhenSelectingAnItem()
+        // TODO: Fix
+//        self.showPotentialRouteWhenAvailable()
+//        self.updateDetentWhenAppropriate()
+//        self.showSelectedDetentWhenSelectingAnItem()
     }
 
     // MARK: Functions
 
     // MARK: - Internal
 
-    func didTapOnMap(containing features: [any MLNFeature]) {
+    func didTapOnMap(coordinates: CLLocationCoordinate2D, containing features: [any MLNFeature]) {
+        if self.streetViewStore?.streetViewScene != nil {
+            // handle streetView tap
+            Task {
+                await self.streetViewStore?.loadNearestStreetView(for: coordinates)
+            }
+            return
+        }
+
         let didHaveAnAction = self.mapActionHandler.didTapOnMap(containing: features)
         if !didHaveAnAction {
             // user tapped nothing - deselect
@@ -73,69 +81,73 @@ final class MapViewStore: ObservableObject {
 }
 
 private extension MapViewStore {
-    func showPotentialRouteWhenAvailable() {
-        self.routingStore.$potentialRoute
-            .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .sink { [weak self] newPotentialRoute in
 
-                if let newPotentialRoute {
-                    guard let self,
-                          self.path.contains(SheetSubView.self) == false else { return }
-                    self.path.append(SheetSubView.navigationPreview)
+    // TODO: Fix
+    /*
+     func showPotentialRouteWhenAvailable() {
+         self.routingStore.$potentialRoute
+             .debounce(for: 0.3, scheduler: DispatchQueue.main)
+             .sink { [weak self] newPotentialRoute in
 
-                    self.mapStore.updateCamera(state: .route(newPotentialRoute))
-                } else {
-                    if let lastElement = self?.path.last(), let somethingElse = lastElement as? SheetSubView, somethingElse == .navigationPreview {
-                        self?.path.removeLast()
-                    }
-                }
-            }
-            .store(in: &self.subscriptions)
-    }
+                 if let newPotentialRoute {
+                     guard let self,
+                           self.path.contains(SheetSubView.self) == false else { return }
+                     self.path.append(SheetSubView.navigationPreview)
 
-    func updateDetentWhenAppropriate() {
-        Publishers.CombineLatest3(
-            self.routingStore.$navigatingRoute,
-            self.$path,
-            self.mapStore.$displayableItems
-        )
-        .sink { [weak self] navigatingRoute, path, items in
-            guard let self else { return }
-            let elements = try? path.elements()
-            let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil, self.mapStore.displayableItems.count > 1 {
-                true
-            } else {
-                !items.isEmpty
-            }
-            let isCurrentSheetListOfSearchResults: Bool = if case .resolvedItem = items.first, self.mapStore.displayableItems.count > 1 {
-                true
-            } else {
-                false
-            }
-            self.updateSelectedSheetDetent(
-                isCurrentlyNavigating: navigatingRoute != nil,
-                navigationPathItem: elements?.last,
-                isThereAnyPOIsOnTheMap: isThereAnyPOIsOnTheMap,
-                isCurrentSheetListOfSearchResults: isCurrentSheetListOfSearchResults
-            )
-        }
-        .store(in: &self.subscriptions)
-    }
+                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
+                 } else {
+                     if let lastElement = self?.path.last(), let somethingElse = lastElement as? SheetSubView, somethingElse == .navigationPreview {
+                         self?.path.removeLast()
+                     }
+                 }
+             }
+             .store(in: &self.subscriptions)
+     }
 
-    func showSelectedDetentWhenSelectingAnItem() {
-        self.mapStore.$selectedItem
-            .compactMap { $0 }
-            .sink { [weak self] selectedItem in
-                guard let self, self.routingStore.potentialRoute == nil else {
-                    return
-                }
-                if !self.path.isEmpty {
-                    self.path.removeLast()
-                }
-                self.path.append(selectedItem)
-            }
-            .store(in: &self.subscriptions)
-    }
+     func updateDetentWhenAppropriate() {
+         Publishers.CombineLatest3(
+             self.routingStore.$navigatingRoute,
+             self.$path,
+             self.mapStore.$displayableItems
+         )
+         .sink { [weak self] navigatingRoute, path, items in
+             guard let self else { return }
+             let elements = try? path.elements()
+             let isThereAnyPOIsOnTheMap = if self.mapStore.selectedItem != nil, self.mapStore.displayableItems.count > 1 {
+                 true
+             } else {
+                 !items.isEmpty
+             }
+             let isCurrentSheetListOfSearchResults: Bool = if case .resolvedItem = items.first, self.mapStore.displayableItems.count > 1 {
+                 true
+             } else {
+                 false
+             }
+             self.updateSelectedSheetDetent(
+                 isCurrentlyNavigating: navigatingRoute != nil,
+                 navigationPathItem: elements?.last,
+                 isThereAnyPOIsOnTheMap: isThereAnyPOIsOnTheMap,
+                 isCurrentSheetListOfSearchResults: isCurrentSheetListOfSearchResults
+             )
+         }
+         .store(in: &self.subscriptions)
+     }
+
+     func showSelectedDetentWhenSelectingAnItem() {
+         self.mapStore.$selectedItem
+             .compactMap { $0 }
+             .sink { [weak self] selectedItem in
+                 guard let self, self.routingStore.potentialRoute == nil else {
+                     return
+                 }
+                 if !self.path.isEmpty {
+                     self.path.removeLast()
+                 }
+                 self.path.append(selectedItem)
+             }
+             .store(in: &self.subscriptions)
+     }
+      */
 
     /**
      This function determines the appropriate sheet detent based on the current state of the map store and search text.

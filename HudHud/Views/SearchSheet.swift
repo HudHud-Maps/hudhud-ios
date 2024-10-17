@@ -20,7 +20,7 @@ struct SearchSheet: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapViewStore: MapViewStore

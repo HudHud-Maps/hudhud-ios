@@ -31,7 +31,8 @@ final class StreetViewStore {
     var isLoading: Bool = false
     var progress: Float = 0
 
-    var camera: CurrentValueSubject<MapViewCamera, Never>?
+//    var camera: MapViewCamera?
+    var mapStore: MapStore
 
     var streetViewClient = StreetViewClient()
 
@@ -51,17 +52,13 @@ final class StreetViewStore {
 
     // MARK: Lifecycle
 
-    init(camera: CurrentValueSubject<MapViewCamera, Never>?) {
-        self.camera = camera
-    }
-
-    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false, camera: CurrentValueSubject<MapViewCamera, Never>? = nil, streetViewClient: StreetViewClient = StreetViewClient(), cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
+    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false, mapStore: MapStore, streetViewClient: StreetViewClient = StreetViewClient(), cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
         self.streetViewScene = streetViewScene
         self.nearestStreetViewScene = nearestStreetViewScene
         self.fullScreenStreetView = fullScreenStreetView
         self.streetViewClient = streetViewClient
         self.cachedScenes = cachedScenes
-        self.camera = camera
+        self.mapStore = mapStore
     }
 
     // MARK: Functions
@@ -101,15 +98,26 @@ final class StreetViewStore {
         guard let lat = streetViewScene?.lat else { return }
         guard let lon = streetViewScene?.lon else { return }
 
-        self.camera?.value = .center(CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                                     zoom: 15,
-                                     pitch: 0,
-                                     pitchRange: .fixed(0))
+        self.mapStore.camera = .center(CLLocationCoordinate2D(latitude: lat, longitude: lon),
+                                       zoom: 15,
+                                       pitch: 0,
+                                       pitchRange: .fixed(0))
     }
 
     func loadNearestStreetView(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async {
         do {
             self.nearestStreetViewScene = try await self.streetViewClient.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
+        } catch {
+            self.nearestStreetViewScene = nil
+            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+        }
+    }
+
+    func loadNearestStreetView(for _: CLLocationCoordinate2D) async {
+        do {
+            // This is not working as `getStreetView` doesn't return a scene but the older format
+            // This means we could show the streetView Image but not navigate around
+//            self.nearestStreetViewScene = try await self.streetViewClient.getStreetView(lat: location.latitude, lon: location.longitude, baseURL: DebugStore().baseURL)
         } catch {
             self.nearestStreetViewScene = nil
             Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
@@ -121,6 +129,6 @@ final class StreetViewStore {
 
 extension StreetViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = StreetViewStore()
+    static let storeSetUpForPreviewing = StreetViewStore(mapStore: .storeSetUpForPreviewing)
 
 }

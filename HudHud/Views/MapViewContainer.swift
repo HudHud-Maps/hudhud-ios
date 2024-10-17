@@ -21,7 +21,7 @@ struct MapViewContainer: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
@@ -68,7 +68,11 @@ struct MapViewContainer: View {
 
     var body: some View {
         NavigationStack {
-            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera, navigationState: self.searchViewStore.routingStore.ferrostarCore.state) {
+            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: Binding(get: {
+                self.mapStore.camera
+            }, set: {
+                self.mapStore.camera = $0
+            }), navigationState: self.searchViewStore.routingStore.ferrostarCore.state) {
                 // onTapExit
                 self.stopNavigation()
             } makeMapContent: {
@@ -188,8 +192,8 @@ struct MapViewContainer: View {
                             mapViewController.mapView.locationManager = nil
                             mapViewController.mapView.compassViewMargins.y = 50
                         }
-                        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-                            self.mapViewStore.didTapOnMap(containing: features)
+                        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { point, features in
+                            self.mapViewStore.didTapOnMap(coordinates: point.coordinate, containing: features)
                         }
                         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
                         .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
@@ -262,7 +266,7 @@ struct MapViewContainer: View {
                 self.didFocusOnUser = true
                 self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
             }
-            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { newValue in
+            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { _, newValue in
                 if let route = newValue {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {

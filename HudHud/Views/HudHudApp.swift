@@ -20,7 +20,8 @@ struct HudHudApp: App {
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
 
-    private let mapStore: MapStore
+    @State var mapStore: MapStore
+
     private let searchStore: SearchViewStore
     private let mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
@@ -41,10 +42,11 @@ struct HudHudApp: App {
     init() {
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
-        self.mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
-        let routingStore = RoutingStore(mapStore: self.mapStore)
-        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore)
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
+        let routingStore = RoutingStore(mapStore: mapStore)
+        self.mapViewStore = MapViewStore(mapStore: mapStore, routingStore: routingStore)
+        self.searchStore = SearchViewStore(mapStore: mapStore, mapViewStore: self.mapViewStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        self.mapStore = mapStore
 
         // Create a custom URLCache to store images on disk
         let diskCache = URLCache(

@@ -100,7 +100,7 @@ struct StreetView: View {
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch, startAngle: .pi, rotationHandler: { _ in
+            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .both, startAngle: .pi, rotationHandler: { _ in
                 // Callback for heading from streetView here
 //                self.store.heading = rotation.toDegrees()
             }, cameraMoved: { _, _, _ in
@@ -188,6 +188,9 @@ extension StreetView {
             self.store.isLoading = true
             self.store.progress = 0.0
             await self.store.loadStreetViewScene(id: nextId)
+            if let coordinates = self.store.streetViewScene?.coordinates {
+                self.store.mapStore.camera = .center(coordinates, zoom: self.store.mapStore.camera.zoom ?? 16)
+            }
             Logger.streetView.log("SVD: streetViewScene1: \(self.store.streetViewScene.debugDescription)")
             self.loadSVImage()
         }

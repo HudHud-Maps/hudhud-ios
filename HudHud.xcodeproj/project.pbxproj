@@ -53,7 +53,7 @@
 		793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E69A6191475F5E54A62147D /* DirectionModeButton.swift */; };
 		79F27CAE0D2E895B98F74A3C /* PlusJakartaSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB904EE6E9CC9D7EF909FD1 /* PlusJakartaSans-MediumItalic.ttf */; };
 		7BA9280A0CF3479C97AE76AA /* RateNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD1DAD5D70546BFCA560FDF9 /* RateNavigationView.swift */; };
-		7C2F5DB91F0E3C77E8118C46 /* Navigation Delegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E13C253A2D696950457B7F0 /* Navigation Delegate.swift */; };
+		7C2F5DB91F0E3C77E8118C46 /* NavigationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E13C253A2D696950457B7F0 /* NavigationDelegate.swift */; };
 		7E0FCBD36F248D3870E23EA9 /* RoutingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */; };
 		808BFD828EC6604D91FE39EF /* HudhudSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEDC06032B19C6430BD886AD /* HudhudSegmentedPicker.swift */; };
 		81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399B3BCB097127A460F4081C /* CaseIterable.swift */; };
@@ -176,7 +176,7 @@
 		174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
 		1A49E3EE7EB638EED6A6D564 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
 		1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		1E13C253A2D696950457B7F0 /* Navigation Delegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Navigation Delegate.swift"; sourceTree = "<group>"; };
+		1E13C253A2D696950457B7F0 /* NavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDelegate.swift; sourceTree = "<group>"; };
 		1E69A6191475F5E54A62147D /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
 		23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
 		26EF0C90F5F7A339BAA4CFA5 /* FilterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStore.swift; sourceTree = "<group>"; };
@@ -693,7 +693,7 @@
 		F7C7405F2326198008EAD44D /* Ferrostar */ = {
 			isa = PBXGroup;
 			children = (
-				1E13C253A2D696950457B7F0 /* Navigation Delegate.swift */,
+				1E13C253A2D696950457B7F0 /* NavigationDelegate.swift */,
 				D1729921487F1004EB2D378E /* FerrostarNavigationView.swift */,
 				DB1408F236AE1629CB9EDE61 /* GraphHopperRouteAdapter.swift */,
 			);
@@ -743,6 +743,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				CDBC2C9C2CC01660002E59E0 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -1031,7 +1032,7 @@
 				9393C828012F10F877B2F3F5 /* MoreFiltersView.swift in Sources */,
 				1703F7C330A8ABC6F8091A24 /* FerrostarNavigationView.swift in Sources */,
 				F01B96A1E42C6B9A62177E21 /* GraphHopperRouteAdapter.swift in Sources */,
-				7C2F5DB91F0E3C77E8118C46 /* Navigation Delegate.swift in Sources */,
+				7C2F5DB91F0E3C77E8118C46 /* NavigationDelegate.swift in Sources */,
 				31A81252A79A1224CD3C789C /* SearchResultView.swift in Sources */,
 				3D2F606DC78B55320848AB78 /* Loading.swift in Sources */,
 				1947F52EF46B3B23C6F0417C /* OTPFieldView.swift in Sources */,
@@ -1068,6 +1069,10 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
+		};
+		CDBC2C9C2CC01660002E59E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CDBC2C9B2CC01660002E59E0 /* SwiftLint */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1580,6 +1585,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
 			productName = SwiftLocation;
+		};
+		CDBC2C9B2CC01660002E59E0 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CDCF58422C8EEA6300906959 /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;

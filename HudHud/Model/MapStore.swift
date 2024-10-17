@@ -19,8 +19,8 @@ import SwiftUI
 
 // MARK: - MapStore
 
-@MainActor
-final class MapStore: ObservableObject {
+@Observable @MainActor
+final class MapStore {
 
     // MARK: Nested Types
 
@@ -43,26 +43,70 @@ final class MapStore: ObservableObject {
     // MARK: Properties
 
     var mapStyle: MLNStyle?
-
-    @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
-    @Published var shouldShowCustomSymbols = false
-    @Published var searchShown: Bool = true
-    @Published var trackingState: TrackingState = .none
-    @Published var mapViewPort: MapViewPort?
+    var shouldShowCustomSymbols = false
+    var searchShown: Bool = true
+    var mapViewPort: MapViewPort?
 
     let userLocationStore: UserLocationStore
 
-    @Published private(set) var selectedItem: ResolvedItem?
-    @Published var displayableItems: [DisplayableRow] = []
+    private(set) var selectedItem: ResolvedItem?
+    var displayableItems: [DisplayableRow] = []
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
 
-    @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10) {
+    @ObservationIgnored
+    var mapStyleLayer: HudHudMapLayer? {
+        get {
+            access(keyPath: \.mapStyleLayer)
+            guard let data = UserDefaults.standard.value(forKey: "mapStyleLayer") as? Data else { return nil }
+
+            return try? JSONDecoder().decode(HudHudMapLayer.self, from: data)
+        }
+        set {
+            withMutation(keyPath: \.mapStyleLayer) {
+                guard let data = try? JSONEncoder().encode(newValue) else { return }
+
+                UserDefaults.standard.set(data, forKey: "mapStyleLayer")
+            }
+        }
+    }
+
+    var trackingState: TrackingState = .none {
         didSet {
-            print("camera: \(self.camera)")
+            switch self.trackingState {
+            case .none:
+                break
+            case .waitingForLocation:
+                break
+            case .locateOnce:
+                Task {
+                    guard let location = await self.userLocationStore.location() else { return }
+
+                    self.camera = .center(location.coordinate, zoom: 14, reason: .programmatic)
+                }
+            case .keepTracking:
+                self.camera = .trackUserLocationWithCourse(zoom: 16)
+            }
+        }
+    }
+
+    var camera: MapViewCamera = .center(.riyadh, zoom: 10) {
+        didSet {
+            switch self.camera.lastReasonForChange {
+            case .gesturePan:
+                self.trackingState = .none
+
+            case .gestureRotate:
+                if self.trackingState == .keepTracking {
+                    self.trackingState = .none
+                }
+
+            default:
+                break
+            }
         }
     }
 
@@ -239,7 +283,7 @@ final class MapStore: ObservableObject {
             self.trackingState = .keepTracking
             Logger.mapInteraction.log("locate me Once")
         case .keepTracking:
-            self.trackingState = .none
+            self.trackingState = .locateOnce
             Logger.mapInteraction.log("keep Tracking of user location")
         }
     }
@@ -261,17 +305,18 @@ extension MapStore: Previewable {
 private extension MapStore {
 
     func bindLayersVisability() {
-        self.$displayableItems
-            .map { $0.count <= 1 }
-            .removeDuplicates()
-            .sink { [weak self] isVisible in
-                self?.mapStyle?.layers.forEach { layer in
-                    if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
-                        layer.isVisible = isVisible
-                    }
-                }
-            }
-            .store(in: &self.subscriptions)
+        // TODO: Fix
+//        self.displayableItems
+//            .map { $0.count <= 1 }
+//            .removeDuplicates()
+//            .sink { [weak self] isVisible in
+//                self?.mapStyle?.layers.forEach { layer in
+//                    if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
+//                        layer.isVisible = isVisible
+//                    }
+//                }
+//            }
+//            .store(in: &self.subscriptions)
     }
 
     func generateMLNCoordinateBounds(from coordinates: [CLLocationCoordinate2D]) -> MLNCoordinateBounds? {

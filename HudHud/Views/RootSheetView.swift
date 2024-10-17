@@ -16,7 +16,7 @@ struct RootSheetView: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore

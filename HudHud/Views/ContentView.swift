@@ -46,7 +46,7 @@ struct ContentView: View {
     @StateObject private var notificationQueue = NotificationQueue()
     @ObservedObject private var userLocationStore: UserLocationStore
     @ObservedObject private var searchViewStore: SearchViewStore
-    @ObservedObject private var mapStore: MapStore
+    private var mapStore: MapStore
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     @ObservedObject private var mapViewStore: MapViewStore
@@ -63,7 +63,8 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore()
+        self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
+        self.mapViewStore.streetViewStore = self.streetViewStore
     }
 
     // MARK: Content
@@ -150,7 +151,11 @@ struct ContentView: View {
                     }
                 }
                 .backport.buttonSafeArea(length: self.sheetSize)
-                .backport.sheet(isPresented: self.$mapStore.searchShown) {
+                .backport.sheet(isPresented: Binding(get: {
+                    self.mapStore.searchShown
+                }, set: {
+                    self.mapStore.searchShown = $0
+                })) {
                     RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, mapViewStore: self.mapViewStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
                 }
                 .safariView(item: self.$safariURL) { url in

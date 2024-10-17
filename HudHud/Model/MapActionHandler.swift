@@ -69,7 +69,7 @@ struct MapActionHandler {
             Task {
                 await self.mapStore.resolve(item)
             }
-        case let .streetViewScene(sceneID):
+        case .streetViewScene:
             break
         }
         return true
