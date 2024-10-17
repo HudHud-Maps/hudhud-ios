@@ -19,6 +19,7 @@ excluded:
   - BackendService
   - StyleDictionary
   - build
+  - POIService
 
 # Customised rules
 force_try:
