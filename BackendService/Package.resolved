@@ -15,7 +15,7 @@
       "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
         "branch" : "annotations",
-        "revision" : "20c719fe0b0b77af020c48f96e1711f573b6d62f"
+        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
       }
     },
     {
@@ -34,6 +34,15 @@
       "state" : {
         "revision" : "84e546727d66f1adc5439debad16270d0fdd04e7",
         "version" : "4.2.2"
+      }
+    },
+    {
+      "identity" : "lettercase",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rwbutler/LetterCase",
+      "state" : {
+        "revision" : "03589da8c6554655b276ba187cfc1cd35ad711d2",
+        "version" : "1.6.1"
       }
     },
     {
@@ -91,6 +100,15 @@
       }
     },
     {
+      "identity" : "pathkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kylef/PathKit.git",
+      "state" : {
+        "revision" : "3bfd2737b700b9a36565a8c94f4ad2b050a5e574",
+        "version" : "1.0.1"
+      }
+    },
+    {
       "identity" : "phonenumberkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/marmelroy/PhoneNumberKit",
@@ -124,6 +142,24 @@
       "state" : {
         "revision" : "217c9c38dead686e05896fb3dd652880adedfedf",
         "version" : "0.9.0"
+      }
+    },
+    {
+      "identity" : "spectre",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kylef/Spectre.git",
+      "state" : {
+        "revision" : "26cc5e9ae0947092c7139ef7ba612e34646086c7",
+        "version" : "0.10.1"
+      }
+    },
+    {
+      "identity" : "stencil",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/stencilproject/Stencil.git",
+      "state" : {
+        "revision" : "4f222ac85d673f35df29962fc4c36ccfdaf9da5b",
+        "version" : "0.15.1"
       }
     },
     {
@@ -228,10 +264,10 @@
     {
       "identity" : "swiftui-dsl",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/maplibre/swiftui-dsl",
+      "location" : "https://github.com/engali94/swiftui-dsl.git",
       "state" : {
-        "revision" : "c39688db3aac50b523ea062b286c584123022093",
-        "version" : "0.3.0"
+        "branch" : "main",
+        "revision" : "4246f6e4196950d5a51ec17eb5dee7b3c20228e3"
       }
     },
     {
@@ -268,6 +304,15 @@
       "state" : {
         "revision" : "37a36647de5cbb9549d6685913a4aa54b48f4914",
         "version" : "5.0.0"
+      }
+    },
+    {
+      "identity" : "typographykit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/rwbutler/TypographyKit",
+      "state" : {
+        "revision" : "df271ee39c52ea6bfce00bb0aa4b83db2aea26e4",
+        "version" : "5.1.1"
       }
     },
     {

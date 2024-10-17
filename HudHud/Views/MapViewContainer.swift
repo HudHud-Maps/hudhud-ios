@@ -25,7 +25,7 @@ struct MapViewContainer: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
-    @ObservedObject var mapViewStore: MapViewStore
+    var mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
     @Binding var isSheetShown: Bool
