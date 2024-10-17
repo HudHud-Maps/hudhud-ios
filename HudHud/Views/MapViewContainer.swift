@@ -61,9 +61,9 @@ struct MapViewContainer: View {
     }
 
     private var speedLimit: Measurement<UnitSpeed>? {
-        if let maxSpeed = try? self.routingStore.ferrostarCore.state?
-            .currentAnnotation(as: MaxSpeed.self) {
-            maxSpeed.measurementValue
+        if let annotation = try? self.routingStore.ferrostarCore.state?
+            .currentAnnotation(as: NavigationAnnotation.self) {
+            annotation.maxSpeed.measurementValue
         } else {
             nil
         }
