@@ -299,7 +299,7 @@ struct MapViewContainer: View {
                 self.didFocusOnUser = true
                 self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
             }
-            .onChange(of: self.routingStore.navigatingRoute) { newValue in
+            .onChange(of: self.routingStore.navigatingRoute) { _, newValue in
                 if let route = newValue {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
@@ -321,6 +321,13 @@ struct MapViewContainer: View {
                     self.stopNavigation()
                     self.mapStore.searchShown = true
                 }
+            }
+            .onChange(of: self.core.state?.tripState) { oldValue, newValue in
+                guard let oldValue,
+                      let newValue,
+                      case .navigating = oldValue,
+                      newValue == .complete else { return }
+                self.stopNavigation()
             }
             .task {
                 guard !self.didFocusOnUser else { return }
