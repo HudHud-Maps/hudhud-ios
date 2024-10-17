@@ -132,6 +132,10 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Functions
 
+    func clearRoutes() {
+        self.routes.removeAll()
+    }
+
     func selectRoute(withId id: Int) {
         self.routes = self.routes.map { routeModel in
             RouteModel(

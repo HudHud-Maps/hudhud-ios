@@ -381,6 +381,7 @@ struct MapViewContainer: View {
                 self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .free)
             }
         }
+        self.routingStore.clearRoutes()
     }
 
     private func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
@@ -419,7 +420,6 @@ struct MapViewContainer: View {
         default: return .blue
         }
     }
-
 }
 
 #Preview {
