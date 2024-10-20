@@ -84,12 +84,12 @@ struct PhotoSectionView: View {
     private func actionButton(title: String, imageName: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             VStack {
-                Text(title)
-                    .font(.headline)
-                    .foregroundColor(Color.Colors.General._10GreenMain)
                 Image(imageName)
                     .resizable()
                     .frame(width: 25, height: 25)
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(Color.Colors.General._06DarkGreen)
             }
             .frame(width: 120, height: 120)
             .background(Color.Colors.General._11GreenLight)
