@@ -30,13 +30,15 @@ struct MapViewContainer: View {
     @State var safeAreaInsets = UIEdgeInsets()
     @Binding var isSheetShown: Bool
 
+    @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
 
     // MARK: Computed Properties
 
     var locationLabel: String {
         guard let userLocation = searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation else {
-            return "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
+            return
+                "No location - authed as \(self.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
         }
 
         return "±\(Int(userLocation.horizontalAccuracy))m accuracy"
@@ -48,6 +50,23 @@ struct MapViewContainer: View {
                 try await Task.sleep(nanoseconds: 8 * NSEC_PER_SEC)
                 self.errorMessage = nil
             }
+        }
+    }
+
+    private var speed: Measurement<UnitSpeed>? {
+        if let speed = self.routingStore.ferrostarCore.locationProvider.lastLocation?.speed {
+            Measurement<UnitSpeed>(value: speed.value, unit: .metersPerSecond)
+        } else {
+            nil
+        }
+    }
+
+    private var speedLimit: Measurement<UnitSpeed>? {
+        if let annotation = try? self.routingStore.ferrostarCore.state?
+            .currentAnnotation(as: ValhallaOsrmAnnotation.self) {
+            annotation.speedLimit?.measurementValue
+        } else {
+            nil
         }
     }
 
@@ -67,6 +86,7 @@ struct MapViewContainer: View {
         self.mapViewStore = mapViewStore
         self.routingStore = routingStore
         self._isSheetShown = isSheetShown
+        self.core = routingStore.ferrostarCore
         // boot up ferrostar
     }
 
@@ -75,11 +95,10 @@ struct MapViewContainer: View {
     var body: some View {
         NavigationStack {
             DynamicallyOrientingNavigationView(
-                makeViewController: MLNMapViewController(),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
-                locationProviding: self.searchViewStore.routingStore.ferrostarCore.locationProvider,
-                navigationState: self.searchViewStore.routingStore.ferrostarCore.state,
+                locationProviding: self.routingStore.ferrostarCore.locationProvider,
+                navigationState: self.routingStore.ferrostarCore.state,
                 showZoom: false
             ) {
                 // onTapExit
@@ -263,13 +282,13 @@ struct MapViewContainer: View {
                             self.mapViewStore.didTapOnMap(containing: features)
                         }
                         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-                        .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
+                        .cameraModifierDisabled(self.routingStore.navigatingRoute != nil)
                         .onStyleLoaded { style in
                             self.mapStore.mapStyle = style
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                         }
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
-                            if self.searchViewStore.mapStore.selectedItem == nil {
+                            if self.mapStore.selectedItem == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                                 self.searchViewStore.mapStore.select(generatedPOI)
                             }
@@ -296,7 +315,7 @@ struct MapViewContainer: View {
                 },
                 bottomTrailing: {
                     VStack {
-                        if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true {
+                        if self.routingStore.ferrostarCore.isNavigating == true {
                             Text(self.locationLabel)
                                 .font(.caption)
                                 .padding(.all, 8)
@@ -307,10 +326,18 @@ struct MapViewContainer: View {
                                     ))
                         }
                     }
+                },
+                bottomLeading: {
+                    if self.routingStore.ferrostarCore.isNavigating {
+                        SpeedView(
+                            speed: self.speed,
+                            speedLimit: self.speedLimit
+                        )
+                    }
                 }
             )
-            .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
-                if let route = newRoute, self.searchViewStore.routingStore.navigatingRoute == nil {
+            .onChange(of: self.routingStore.potentialRoute) { _, newRoute in
+                if let route = newRoute, self.routingStore.navigatingRoute == nil {
                     let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
                     self.mapStore.camera = camera
                 }
@@ -329,7 +356,7 @@ struct MapViewContainer: View {
                 self.didFocusOnUser = true
                 self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
             }
-            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { newValue in
+            .onChange(of: self.routingStore.navigatingRoute) { _, newValue in
                 if let route = newValue {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
@@ -357,6 +384,13 @@ struct MapViewContainer: View {
                     }
                 }
             }
+            .onChange(of: self.core.state?.tripState) { oldValue, newValue in
+                guard let oldValue,
+                      let newValue,
+                      case .navigating = oldValue,
+                      newValue == .complete else { return }
+                self.stopNavigation()
+            }
             .task {
                 guard !self.didFocusOnUser else { return }
 
@@ -374,7 +408,7 @@ struct MapViewContainer: View {
         self.searchViewStore.endTrip()
         self.isSheetShown = true
 
-        if let coordinates = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
+        if let coordinates = self.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
             self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .fixed(0))
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
