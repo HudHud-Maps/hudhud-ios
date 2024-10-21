@@ -48,7 +48,7 @@ final class MapStore {
     var mapViewPort: MapViewPort?
     let userLocationStore: UserLocationStore
 
-    private(set) var selectedItem: ResolvedItem?
+    private(set) var selectedItem: CurrentValueSubject<ResolvedItem?, Never>
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
@@ -121,7 +121,7 @@ final class MapStore {
     var mapItems: [ResolvedItem] {
         let allItems = Set(self.displayableItems)
 
-        if let selectedItem {
+        if let selectedItem = selectedItem.value {
             let items = allItems.union([DisplayableRow.resolvedItem(selectedItem)])
             return items.compactMap(\.resolvedItem)
         }
@@ -144,7 +144,7 @@ final class MapStore {
 
     var selectedPoint: ShapeSource {
         ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
-            if let selectedItem {
+            if let selectedItem = selectedItem.value {
                 let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
                 feature.attributes["poi_id"] = selectedItem.id
                 feature
@@ -158,6 +158,7 @@ final class MapStore {
         self.camera = camera
         self.searchShown = searchShown
         self.userLocationStore = userLocationStore
+        self.selectedItem = CurrentValueSubject(nil)
     }
 
     // MARK: Functions
@@ -172,23 +173,23 @@ final class MapStore {
     }
 
     func clearListAndSelect(_ item: ResolvedItem) {
-        self.selectedItem = item
+        self.selectedItem.value = item
         self.displayableItems = [DisplayableRow.resolvedItem(item)]
     }
 
     func unselectItem() {
-        self.selectedItem = nil
+        self.selectedItem.value = nil
     }
 
     func select(_ item: ResolvedItem, shouldFocusCamera: Bool = false) {
-        self.selectedItem = item
+        self.selectedItem.value = item
         if shouldFocusCamera {
             self.updateCamera(state: .selectedItem(item))
         }
     }
 
     func clearItems(clearResults: Bool? = true) {
-        self.selectedItem = nil
+        self.selectedItem.value = nil
         if clearResults == true {
             self.displayableItems = []
         }
@@ -246,14 +247,14 @@ final class MapStore {
         self.select(item, shouldFocusCamera: true)
         guard let detailedItem = try? await hudhudResolver.lookup(id: item.id, baseURL: DebugStore().baseURL),
               // we make sure that this item is still selected
-              detailedItem.id == self.selectedItem?.id,
+              detailedItem.id == self.selectedItem.value?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
 
         var detailedItemUpdate = detailedItem
         detailedItemUpdate.systemColor = item.systemColor
         detailedItemUpdate.symbol = item.symbol
         self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
-        self.selectedItem = detailedItemUpdate
+        self.selectedItem.value = detailedItemUpdate
     }
 
     func updateCamera(state: CameraUpdateState) {

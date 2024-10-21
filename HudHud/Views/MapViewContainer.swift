@@ -236,12 +236,12 @@ struct MapViewContainer: View {
                     // shows the selected pin
                     CircleStyleLayer(identifier: MapLayerIdentifier.selectedCircle, source: self.mapStore.selectedPoint)
                         .radius(24)
-                        .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
+                        .color(UIColor(self.mapStore.selectedItem.value?.color ?? Color(.systemRed)))
                         .strokeWidth(2)
                         .strokeColor(.white)
                         .predicate(NSPredicate(format: "cluster != YES"))
                     SymbolStyleLayer(identifier: MapLayerIdentifier.selectedCircleIcon, source: self.mapStore.selectedPoint)
-                        .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
+                        .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem.value?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
                         .iconColor(.white)
                         .predicate(NSPredicate(format: "cluster != YES"))
 
@@ -270,7 +270,7 @@ struct MapViewContainer: View {
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                         }
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
-                            if self.mapStore.selectedItem == nil {
+                            if self.mapStore.selectedItem.value == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                                 self.mapStore.select(generatedPOI)
                             }
