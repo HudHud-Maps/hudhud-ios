@@ -30,7 +30,7 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
             URLQueryItem(name: "overview", value: "full"),
             URLQueryItem(name: "steps", value: "true"),
             URLQueryItem(name: "continue_straight", value: "true"),
-            URLQueryItem(name: "annotations", value: "congestion,distance"),
+            URLQueryItem(name: "annotations", value: "congestion,distance,maxspeed"),
             URLQueryItem(name: "language", value: Locale.preferredLanguages.first ?? "en-US"),
             URLQueryItem(name: "roundabout_exits", value: "true"),
             URLQueryItem(name: "voice_instructions", value: "true"),

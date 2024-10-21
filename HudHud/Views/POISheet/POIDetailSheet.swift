@@ -29,9 +29,9 @@ struct POIDetailSheet: View {
     let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
     @State var selectedTab = "Overview"
     @Namespace var animation
-    @State var showTabView: Bool = false
+    @State var showTabView: Bool = true
 
-    @State var routes: [Route]?
+    @State var routes: [RouteModel]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
@@ -144,11 +144,11 @@ struct POIDetailSheet: View {
                     Rectangle() // Top divider
                         .fill(Color.black.opacity(0.025))
                         .frame(height: 3)
-                    POIBottomToolbar(item: self.item, duration: self.formatter.formatDuration(duration: route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes)
-                        .padding(.bottom)
-                        .padding(.vertical, 7)
-                        .padding(.horizontal, 20)
-                        .background(Color.white)
+                    POIBottomToolbar(item: self.item, duration: self.formatter.formatDuration(duration: route.route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes?.map(\.route))
+//                        .padding(.bottom)
+                            .padding(.vertical, 7)
+                            .padding(.horizontal, 20)
+                            .background(Color.white)
                 }
             }
         }.ignoresSafeArea()
@@ -174,38 +174,47 @@ struct POIDetailSheet: View {
     }
 
     var tabView: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(self.tabItems, id: \.self) { tab in
-                    VStack {
-                        Text(tab)
-                            .hudhudFont(.subheadline)
-                            .fontWeight(self.selectedTab == tab ? .semibold : .regular)
-                            .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
-                        if self.selectedTab == tab {
-                            Capsule()
-                                .foregroundStyle(Color.Colors.General._06DarkGreen)
-                                .frame(height: 3)
-                                .matchedGeometryEffect(id: "filter", in: self.animation)
-                        } else {
-                            Capsule()
-                                .foregroundColor(Color(.clear))
-                                .frame(height: 3)
+        ScrollViewReader { scrollProxy in
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(self.tabItems, id: \.self) { tab in
+                        VStack {
+                            Text(tab)
+                                .hudhudFont(.subheadline)
+                                .fontWeight(self.selectedTab == tab ? .semibold : .regular)
+                                .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
+
+                            if self.selectedTab == tab {
+                                Capsule()
+                                    .foregroundStyle(Color.Colors.General._06DarkGreen)
+                                    .frame(height: 3)
+                                    .matchedGeometryEffect(id: "filter", in: self.animation)
+                            } else {
+                                Capsule()
+                                    .foregroundColor(Color(.clear))
+                                    .frame(height: 3)
+                            }
                         }
-                    }
-                    .padding(10)
-                    .onTapGesture {
-                        withAnimation(.easeOut) {
-                            self.selectedTab = tab
+                        .padding(10)
+                        .onTapGesture {
+                            withAnimation(.easeOut) {
+                                self.selectedTab = tab
+                            }
+
+                            // Scroll to the selected tab
+                            withAnimation {
+                                scrollProxy.scrollTo(tab, anchor: .center)
+                            }
                         }
                     }
                 }
             }
-        }.scrollIndicators(.hidden)
+            .scrollIndicators(.hidden)
             .overlay {
                 Divider()
                     .offset(x: 0, y: 15)
             }
+        }
     }
 
     private var categoryView: some View {
@@ -315,7 +324,7 @@ struct POIDetailSheet: View {
                     Image(systemSymbol: .carFill)
                         .hudhudFont(.caption2)
                         .foregroundStyle(Color.Colors.General._02Grey)
-                    Text("\(self.formatter.formatDuration(duration: route.duration)) (\(self.formatter.formatDistance(distance: route.distance)))")
+                    Text("\(self.formatter.formatDuration(duration: route.route.duration)) (\(self.formatter.formatDistance(distance: route.route.distance)))")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
@@ -383,6 +392,8 @@ private extension POIDetailSheet {
         do {
             let routes = try await self.routingStore.calculateRoutes(for: item)
             self.routes = routes
+            self.routingStore.routes = routes // TODO: Improve it
+            self.routingStore.selectRoute(withId: routes.last?.id ?? 0)
         } catch let error as URLError {
             if error.code == .cancelled {
                 // ignore cancelled errors
