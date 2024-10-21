@@ -297,7 +297,7 @@ struct POIDetailSheet: View {
                     Image(systemSymbol: .carFill)
                         .hudhudFont(.caption2)
                         .foregroundStyle(Color.Colors.General._02Grey)
-                    Text("\(self.formatter.formatDuration(duration: route.duration)) (\(self.formatter.formatDistance(distance: route.distance)))")
+                    Text("\(self.formatter.formatDuration(duration: route.route.duration)) (\(self.formatter.formatDistance(distance: route.route.distance)))")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
