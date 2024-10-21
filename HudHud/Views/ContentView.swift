@@ -30,9 +30,6 @@ struct ContentView: View {
     @State var safariURL: URL?
     @State var safeAreaInset = UIEdgeInsets()
 
-    @StateObject var favoritesStore = FavoritesStore()
-    @StateObject var notificationManager = NotificationManager()
-
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
@@ -161,112 +158,7 @@ struct ContentView: View {
             }
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.sheet(isPresented: self.$sheetStore.isShown) {
-                SheetContainerView(sheetStore: self.sheetStore) { sheet in
-                    switch sheet.viewData {
-                    case .mapStyle:
-                        MapLayersView(mapStore: self.mapStore, sheetStore: self.sheetStore, hudhudMapLayerStore: self.mapLayerStore)
-                            .navigationBarBackButtonHidden()
-                            .presentationCornerRadius(21)
-                    case .debugView:
-                        DebugMenuView(debugSettings: self.debugStore)
-                            .onDisappear(perform: {
-                                self.sheetStore.reset()
-                            })
-                            .navigationBarBackButtonHidden()
-                    case .navigationAddSearchView:
-                        // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
-                        let freshSearchViewStore: SearchViewStore = {
-                            let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                            let tempStore = SearchViewStore(
-                                mapStore: freshMapStore,
-                                sheetStore: SheetStore(),
-                                routingStore: freshRoutingStore,
-                                filterStore: self.searchViewStore.filterStore,
-                                mode: self.searchViewStore.mode
-                            )
-                            tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
-                                routingStore.add(item)
-                            })
-                            return tempStore
-                        }()
-                        SearchSheet(
-                            mapStore: freshSearchViewStore.mapStore,
-                            searchStore: freshSearchViewStore,
-                            trendingStore: self.trendingStore,
-                            sheetStore: self.sheetStore,
-                            filterStore: self.searchViewStore.filterStore
-                        )
-                        .navigationBarBackButtonHidden()
-                    case .favorites:
-                        // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
-                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                        let freshSearchViewStore: SearchViewStore = {
-                            let tempStore = SearchViewStore(
-                                mapStore: freshMapStore,
-                                sheetStore: SheetStore(),
-                                routingStore: freshRoutingStore,
-                                filterStore: self.searchViewStore.filterStore,
-                                mode: self.searchViewStore.mode
-                            )
-                            tempStore.searchType = .favorites
-                            return tempStore
-                        }()
-                        SearchSheet(
-                            mapStore: freshSearchViewStore.mapStore,
-                            searchStore: freshSearchViewStore,
-                            trendingStore: self.trendingStore,
-                            sheetStore: SheetStore(),
-                            filterStore: self.searchViewStore.filterStore
-                        )
-                    case .navigationPreview:
-                        NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
-                            .navigationBarBackButtonHidden()
-                            .presentationCornerRadius(21)
-                    case let .pointOfInterest(item):
-                        POIDetailSheet(
-                            item: item,
-                            routingStore: self.searchViewStore.routingStore,
-                            didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
-                        ) { routeIfAvailable in
-                            Logger.searchView.info("Start item \(item)")
-                            Task {
-                                do {
-                                    try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
-                                    try await self.notificationManager.requestAuthorization()
-                                } catch {
-                                    Logger.routing.error("Error navigating to \(item): \(error)")
-                                }
-                            }
-                        } onDismiss: {
-                            self.searchViewStore.mapStore
-                                .clearItems(clearResults: false)
-                        }
-                        .navigationBarBackButtonHidden()
-                    case .favoritesViewMore:
-                        FavoritesViewMoreView(
-                            searchStore: self.searchViewStore,
-                            sheetStore: self.sheetStore,
-                            favoritesStore: self.favoritesStore
-                        )
-                    case let .editFavoritesForm(
-                        item: item,
-                        favoriteItem: favoriteItem
-                    ):
-                        EditFavoritesFormView(
-                            item: item,
-                            favoritesItem: favoriteItem,
-                            favoritesStore: self.favoritesStore
-                        )
-                    }
-                } rootSheetView: {
-                    SearchSheet(mapStore: self.mapStore,
-                                searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore, filterStore: self.searchViewStore.filterStore)
-                        .background(Color(.Colors.General._05WhiteBackground))
-                        .toolbar(.hidden)
-                }
-//                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetStore: self.sheetStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetStore: self.sheetStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
