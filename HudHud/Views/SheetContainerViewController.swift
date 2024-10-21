@@ -17,7 +17,7 @@ enum Detent: Hashable {
     case fraction(CGFloat)
     case height(CGFloat)
 
-    // MARK: Properties
+    // MARK: Computed Properties
 
     var resolver: (any UISheetPresentationControllerDetentResolutionContext) -> CGFloat? {
         switch self {
@@ -27,8 +27,6 @@ enum Detent: Hashable {
         case let .height(height): return { _ in height }
         }
     }
-
-    // MARK: Computed Properties
 
     var uiKitDetent: UISheetPresentationController.Detent {
         .custom(identifier: self.identifier, resolver: self.resolver)
@@ -54,7 +52,7 @@ struct SheetContainerView<Content: View, RootView: View>: UIViewControllerRepres
     func makeUIViewController(context: Context) -> UINavigationController {
         let sheetContainerViewController = UINavigationController()
         sheetContainerViewController.sheetPresentationController!.largestUndimmedDetentIdentifier = .medium
-        sheetContainerViewController.sheetPresentationController!.delegate = context.coordinator
+        sheetContainerViewController.presentationController?.delegate = context.coordinator
         return sheetContainerViewController
     }
 
@@ -117,7 +115,7 @@ extension SheetContainerView {
             self.sheets = self.sheetStore.sheets
         }
 
-        @objc func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
+        func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {
             false
         }
 

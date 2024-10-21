@@ -28,7 +28,7 @@ struct MapViewContainer: View {
     let mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
-    @Binding var isSheetShown: Bool
+    var sheetStore: SheetStore
 
     @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
@@ -78,14 +78,14 @@ struct MapViewContainer: View {
          userLocationStore: UserLocationStore,
          mapViewStore: MapViewStore,
          routingStore: RoutingStore,
-         isSheetShown: Binding<Bool>) {
+         sheetStore: SheetStore) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
         self.routingStore = routingStore
-        self._isSheetShown = isSheetShown
+        self.sheetStore = sheetStore
         self.core = routingStore.ferrostarCore
         // boot up ferrostar
     }
@@ -95,6 +95,10 @@ struct MapViewContainer: View {
     var body: some View {
         NavigationStack {
             DynamicallyOrientingNavigationView(
+                makeViewController: MapViewController(
+                    sheetStore: self.sheetStore,
+                    styleURL: self.mapStore.mapStyleUrl()
+                ),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
                 locationProviding: self.routingStore.ferrostarCore.locationProvider,
@@ -370,7 +374,7 @@ struct MapViewContainer: View {
                         }
 
                         try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
-                        self.isSheetShown = false
+                        self.sheetStore.isShown = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                             self.mapStore.camera = .automotiveNavigation()
                         }
@@ -406,7 +410,7 @@ struct MapViewContainer: View {
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
-        self.isSheetShown = true
+        self.sheetStore.isShown = true
 
         if let coordinates = self.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
@@ -466,6 +470,6 @@ struct MapViewContainer: View {
         userLocationStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
         routingStore: .storeSetUpForPreviewing,
-        isSheetShown: .constant(true)
+        sheetStore: .storeSetUpForPreviewing
     )
 }
