@@ -116,6 +116,7 @@ struct POIDetailSheet: View {
                 .tint(.secondary)
                 .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
             }
+            .padding([.top, .leading, .trailing], 20)
 
             if self.showTabView {
                 self.tabView
@@ -135,60 +136,62 @@ struct POIDetailSheet: View {
                 }
             }
         }
-        .padding([.top, .leading, .trailing], 20)
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 4.0) {
-                Button(action: {
-                    if self.didDenyLocationPermission {
-                        self.askToEnableLocation = true
-                    } else {
-                        self.onStart(self.routes)
-                    }
-                }, label: {})
-                    .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
 
-                if let phone = self.item.phone, !phone.isEmpty {
+        if !self.showTabView {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 4.0) {
                     Button(action: {
-                        // Perform phone action
-                        if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                            self.openURL(url)
+                        if self.didDenyLocationPermission {
+                            self.askToEnableLocation = true
+                        } else {
+                            self.onStart(self.routes)
                         }
-                        Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
                     }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
-                }
-                if let website = item.website {
+                        .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
+
+                    if let phone = self.item.phone, !phone.isEmpty {
+                        Button(action: {
+                            // Perform phone action
+                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+                                self.openURL(url)
+                            }
+                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
+                        }, label: {})
+                            .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
+                    }
+                    if let website = item.website {
+                        Button(action: {
+                            self.openURL(website)
+                        }, label: {})
+                            .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
+                    }
+                    // order, save, Review, Media, Report
                     Button(action: {
-                        self.openURL(website)
+                        Logger.searchView.info("order")
                     }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
+                        .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
+                    Button(action: {
+                        Logger.searchView.info("save")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
+                    Button(action: {
+                        Logger.searchView.info("review")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
+                    Button(action: {
+                        Logger.searchView.info("media")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
+                    Button(action: {
+                        Logger.searchView.info("report")
+                    }, label: {})
+                        .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
                 }
-                // order, save, Review, Media, Report
-                Button(action: {
-                    Logger.searchView.info("order")
-                }, label: {})
-                    .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
-                Button(action: {
-                    Logger.searchView.info("save")
-                }, label: {})
-                    .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
-                Button(action: {
-                    Logger.searchView.info("review")
-                }, label: {})
-                    .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
-                Button(action: {
-                    Logger.searchView.info("media")
-                }, label: {})
-                    .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
-                Button(action: {
-                    Logger.searchView.info("report")
-                }, label: {})
-                    .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
+                .padding(15)
             }
-            .padding(15)
+            .padding(.vertical, -15)
+            POIMediaView(mediaURLs: self.item.mediaURLs)
         }
-        .padding(.vertical, -15)
-        POIMediaView(mediaURLs: self.item.mediaURLs)
         Spacer()
 
                 .alert(
@@ -213,38 +216,47 @@ struct POIDetailSheet: View {
     }
 
     var tabView: some View {
-        ScrollView(.horizontal) {
-            HStack {
-                ForEach(self.tabItems, id: \.self) { tab in
-                    VStack {
-                        Text(tab)
-                            .hudhudFont(.subheadline)
-                            .fontWeight(self.selectedTab == tab ? .semibold : .regular)
-                            .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
-                        if self.selectedTab == tab {
-                            Capsule()
-                                .foregroundStyle(Color.Colors.General._06DarkGreen)
-                                .frame(height: 3)
-                                .matchedGeometryEffect(id: "filter", in: self.animation)
-                        } else {
-                            Capsule()
-                                .foregroundColor(Color(.clear))
-                                .frame(height: 3)
+        ScrollViewReader { scrollProxy in
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(self.tabItems, id: \.self) { tab in
+                        VStack {
+                            Text(tab)
+                                .hudhudFont(.subheadline)
+                                .fontWeight(self.selectedTab == tab ? .semibold : .regular)
+                                .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
+
+                            if self.selectedTab == tab {
+                                Capsule()
+                                    .foregroundStyle(Color.Colors.General._06DarkGreen)
+                                    .frame(height: 3)
+                                    .matchedGeometryEffect(id: "filter", in: self.animation)
+                            } else {
+                                Capsule()
+                                    .foregroundColor(Color(.clear))
+                                    .frame(height: 3)
+                            }
                         }
-                    }
-                    .padding(10)
-                    .onTapGesture {
-                        withAnimation(.easeOut) {
-                            self.selectedTab = tab
+                        .padding(10)
+                        .onTapGesture {
+                            withAnimation(.easeOut) {
+                                self.selectedTab = tab
+                            }
+
+                            // Scroll to the selected tab
+                            withAnimation {
+                                scrollProxy.scrollTo(tab, anchor: .center)
+                            }
                         }
                     }
                 }
             }
-        }.scrollIndicators(.hidden)
+            .scrollIndicators(.hidden)
             .overlay {
                 Divider()
                     .offset(x: 0, y: 15)
             }
+        }
     }
 
     private var categoryView: some View {
