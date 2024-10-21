@@ -13,3 +13,8 @@ extension PresentationDetent {
     static let third: PresentationDetent = .fraction(0.33)
     static let nearHalf: PresentationDetent = .height(UIScreen.main.bounds.height / 2.5)
 }
+
+extension Detent {
+    static let small: Detent = .height(80)
+    static let third: Detent = .fraction(0.33)
+}
