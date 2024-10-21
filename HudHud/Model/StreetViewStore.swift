@@ -21,6 +21,7 @@ final class StreetViewStore {
 
     // MARK: Properties
 
+    var heading: Float = 0
     var streetViewScene: StreetViewScene?
     var nearestStreetViewScene: StreetViewScene?
     var fullScreenStreetView: Bool = false

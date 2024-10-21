@@ -100,9 +100,9 @@ struct StreetView: View {
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
-            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .both, startAngle: .pi, rotationHandler: { _ in
+            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch, startAngle: .pi, rotationHandler: { rotation in
                 // Callback for heading from streetView here
-//                self.store.heading = rotation.toDegrees()
+                self.store.heading = rotation.toDegrees()
             }, cameraMoved: { _, _, _ in
 
             }, tapHandler: { direction in

@@ -247,6 +247,7 @@ struct MapViewContainer: View {
 
                     SymbolStyleLayer(identifier: "street-view-point", source: self.streetViewStore.streetViewSource)
                         .iconImage(UIImage(systemSymbol: .cameraCircleFill, withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.white, .black])).resize(.square(32)))
+                        .iconRotation(featurePropertyNamed: "heading")
                 }
             } mapViewModifiers: { content, isNavigating in
                 if isNavigating {
