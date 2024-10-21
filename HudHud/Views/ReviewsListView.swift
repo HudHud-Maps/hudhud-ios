@@ -259,6 +259,7 @@ struct BottomBar: View {
     }
 }
 
+// swiftlint:disable force_unwrapping
 #Preview {
     let review = Review(
         username: "Ahmad Kamal",
@@ -295,3 +296,5 @@ struct BottomBar: View {
     )]
     ReviewsListView(reviews: reviews)
 }
+
+// swiftlint:enable force_unwrapping
