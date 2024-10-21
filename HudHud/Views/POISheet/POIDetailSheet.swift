@@ -30,8 +30,8 @@ struct POIDetailSheet: View {
     @State var selectedTab = "Overview"
     @Namespace var animation
     @State var showTabView: Bool = false
-
-    @State var routes: [Route]?
+  
+    @State var routes: [RouteModel]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
@@ -144,7 +144,7 @@ struct POIDetailSheet: View {
                         if self.didDenyLocationPermission {
                             self.askToEnableLocation = true
                         } else {
-                            self.onStart(self.routes)
+                            self.onStart(self.routes?.map(\.route))
                         }
                     }, label: {})
                         .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
@@ -190,6 +190,7 @@ struct POIDetailSheet: View {
                 .padding(15)
             }
             .padding(.vertical, -15)
+
             POIMediaView(mediaURLs: self.item.mediaURLs)
         }
         Spacer()
@@ -366,7 +367,7 @@ struct POIDetailSheet: View {
                     Image(systemSymbol: .carFill)
                         .hudhudFont(.caption2)
                         .foregroundStyle(Color.Colors.General._02Grey)
-                    Text("\(self.formatter.formatDuration(duration: route.duration)) (\(self.formatter.formatDistance(distance: route.distance)))")
+                    Text("\(self.formatter.formatDuration(duration: route.route.duration)) (\(self.formatter.formatDistance(distance: route.route.distance)))")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
@@ -434,6 +435,8 @@ private extension POIDetailSheet {
         do {
             let routes = try await self.routingStore.calculateRoutes(for: item)
             self.routes = routes
+            self.routingStore.routes = routes // TODO: Improve it
+            self.routingStore.selectRoute(withId: routes.last?.id ?? 0)
         } catch let error as URLError {
             if error.code == .cancelled {
                 // ignore cancelled errors

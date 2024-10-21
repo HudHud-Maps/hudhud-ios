@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		017CB492E6448DA1E1C9C215 /* CongestionSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE86C07E10163BBC1FD5330 /* CongestionSegment.swift */; };
 		01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */; };
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		084218394FED84B4D341E953 /* HudhudSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48038A71580732C5D1A40BE /* HudhudSegmentedPicker.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
-		10CE817BF1B306C4C771C367 /* FerrostarNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
@@ -52,6 +52,7 @@
 		6E0F91ECD4821BAB4DB6897E /* POISheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC0AB3D68D296351E8314E2D /* POISheetStore.swift */; };
 		73F84F1D2466A9DB8AF62C57 /* PlusJakartaSans-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92B7969B0AE81D4DAB16957A /* PlusJakartaSans-ExtraLightItalic.ttf */; };
 		74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */; };
+		75EF8B431A9CE965F993E16A /* CongestionsExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC517036BCB7FDB633991439 /* CongestionsExtractor.swift */; };
 		78D60A6DAAE2D6B5BBCB1E06 /* PlusJakartaSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B629EDAD64E6EFF641F2427 /* PlusJakartaSans-SemiBoldItalic.ttf */; };
 		793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E69A6191475F5E54A62147D /* DirectionModeButton.swift */; };
 		79F27CAE0D2E895B98F74A3C /* PlusJakartaSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB904EE6E9CC9D7EF909FD1 /* PlusJakartaSans-MediumItalic.ttf */; };
@@ -72,6 +73,7 @@
 		980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */; };
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
 		9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F75C4E4220C498F691DF33 /* MoreFiltersView.swift */; };
+		9EF7276B2CC4F7F000B15A8D /* SheetContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF7276A2CC4F7F000B15A8D /* SheetContainerViewController.swift */; };
 		A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49E3EE7EB638EED6A6D564 /* View.swift */; };
 		A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6E65B0640253C2CCD4EA84 /* Locale+isArabic.swift */; };
 		A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */; };
@@ -80,7 +82,13 @@
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
 		AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */; };
+		AFE1EC812CC10D5900A9A5C4 /* Semaphore in Frameworks */ = {isa = PBXBuildFile; productRef = 335776DB4FF83459BA3081C4 /* Semaphore */; };
+		AFE1EC822CC10D5900A9A5C4 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 532946F1B08D76575C26B170 /* FerrostarCore */; };
+		AFE1EC832CC10D5900A9A5C4 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 774AC299E8C1C204EC968730 /* FerrostarMapLibreUI */; };
+		AFE1EC842CC10D5900A9A5C4 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E8327D7A606F9D7072DC0C08 /* FerrostarSwiftUI */; };
+		AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */; };
 		B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */; };
+		BE61453352EA813A2E2134E5 /* RouteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025F79C6C593259B0ED3FE95 /* RouteModel.swift */; };
 		C33A9F84AF743524F6EEFE33 /* pannellum.js in Resources */ = {isa = PBXBuildFile; fileRef = 043900014DB7FBFB28D75FE7 /* pannellum.js */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
 		C6E15E332EA9397C549C3AFF /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6F376F14C1845A8F147ABF /* SearchResultView.swift */; };
@@ -101,8 +109,8 @@
 		CD1298822B99031E00EC3295 /* Riyadh.gpx in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */; };
 		CD1298832B99031E00EC3295 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054E2B681263003E5196 /* Preview Assets.xcassets */; };
 		CD1298842B99031E00EC3295 /* toursprung-navigation-sample.json in Resources */ = {isa = PBXBuildFile; fileRef = CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */; };
-		CD1882FC2BF63E8200C8AD49 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
-		CD1882FE2BF63E8200C8AD49 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		CD1882FC2BF63E8200C8AD49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		CD1882FE2BF63E8200C8AD49 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CD2219582BBFDBEE00042564 /* MotionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219572BBFDBEE00042564 /* MotionViewModel.swift */; };
 		CD22195A2BBFF0F300042564 /* Previewable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD2219592BBFF0F300042564 /* Previewable.swift */; };
 		CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C55C2C03EF43006DCDBA /* NavigationTransitions */; };
@@ -132,7 +140,7 @@
 		CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDCF58422C8EEA6300906959 /* NukeUI */; };
 		CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = CD1BD8AC2B9087C100A591BD /* MapLibre */; };
 		CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = BC8E1D9CC7D3AAC1051857FA /* MapLibre */; };
-		CDE538CA2BA7868200D7FFE7 /* BuildFile in Frameworks */ = {isa = PBXBuildFile; };
+		CDE538CA2BA7868200D7FFE7 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
@@ -182,6 +190,7 @@
 /* Begin PBXFileReference section */
 		0042DF164855E7AE12B8EDE8 /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
+		025F79C6C593259B0ED3FE95 /* RouteModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteModel.swift; sourceTree = "<group>"; };
 		043900014DB7FBFB28D75FE7 /* pannellum.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = pannellum.js; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
@@ -244,13 +253,14 @@
 		93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
 		930C5C4AFBCBE90A662DA243 /* XCTestCase+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Additions.swift"; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
+		9EF7276A2CC4F7F000B15A8D /* SheetContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetContainerViewController.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
 		A48038A71580732C5D1A40BE /* HudhudSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudSegmentedPicker.swift; sourceTree = "<group>"; };
 		A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-BoldItalic.ttf"; sourceTree = "<group>"; };
 		AC3D481DC9A15C372F30E42E /* streetview.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = streetview.html; sourceTree = "<group>"; };
 		AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+Environment.swift"; sourceTree = "<group>"; };
 		AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-LightItalic.ttf"; sourceTree = "<group>"; };
-		B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FerrostarNavigationView.swift; sourceTree = "<group>"; };
+		AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
 		B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SFSymbolSpriteSheet.swift; sourceTree = "<group>"; };
 		B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatters.swift; sourceTree = "<group>"; };
 		B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POISheetButtonStyle.swift; sourceTree = "<group>"; };
@@ -309,6 +319,8 @@
 		E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
 		E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Italic.ttf"; sourceTree = "<group>"; };
 		E918AD2DA0F42670B5F7ED6F /* FilterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStore.swift; sourceTree = "<group>"; };
+		EAE86C07E10163BBC1FD5330 /* CongestionSegment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongestionSegment.swift; sourceTree = "<group>"; };
+		EC517036BCB7FDB633991439 /* CongestionsExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongestionsExtractor.swift; sourceTree = "<group>"; };
 		EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentSearchResultsView.swift; sourceTree = "<group>"; };
 		F0345701786FBBD3E4678869 /* OTPVerificationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPVerificationStore.swift; sourceTree = "<group>"; };
 		F20D97482C46B9E300457928 /* DownloadManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadManager.swift; sourceTree = "<group>"; };
@@ -325,6 +337,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFE1EC842CC10D5900A9A5C4 /* FerrostarSwiftUI in Frameworks */,
+				AFE1EC832CC10D5900A9A5C4 /* FerrostarMapLibreUI in Frameworks */,
+				AFE1EC822CC10D5900A9A5C4 /* FerrostarCore in Frameworks */,
+				AFE1EC812CC10D5900A9A5C4 /* Semaphore in Frameworks */,
 				CD3BCAD02CB680C8001F8CFD /* FerrostarSwiftUI in Frameworks */,
 				CD3BCACF2CB680C8001F8CFD /* FerrostarMapLibreUI in Frameworks */,
 				CD3BCACE2CB680C8001F8CFD /* FerrostarCore in Frameworks */,
@@ -336,17 +352,17 @@
 				59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */,
-				CDE538CA2BA7868200D7FFE7 /* BuildFile in Frameworks */,
+				CDE538CA2BA7868200D7FFE7 /* (null) in Frameworks */,
 				CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
-				CD1882FE2BF63E8200C8AD49 /* BuildFile in Frameworks */,
+				CD1882FE2BF63E8200C8AD49 /* (null) in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CB7033BB2C9300610006681E /* TypographyKit in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
-				CD1882FC2BF63E8200C8AD49 /* BuildFile in Frameworks */,
+				CD1882FC2BF63E8200C8AD49 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -470,8 +486,8 @@
 		AC276CFCF1456B56097AA04B /* Ferrostar */ = {
 			isa = PBXGroup;
 			children = (
+				AFE1EC882CC10E3800A9A5C4 /* Max Speed */,
 				7F64F898F2A8C418EC5938E6 /* Navigation Delegate.swift */,
-				B0BE6EEC535E15E77D504013 /* FerrostarNavigationView.swift */,
 				C2587798A4D347D96887F66E /* GraphHopperRouteAdapter.swift */,
 			);
 			path = Ferrostar;
@@ -491,8 +507,17 @@
 				41386D7314539DB91E42D41A /* MapActionHandler.swift */,
 				7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */,
 				FC0AB3D68D296351E8314E2D /* POISheetStore.swift */,
+				025F79C6C593259B0ED3FE95 /* RouteModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		AFE1EC882CC10E3800A9A5C4 /* Max Speed */ = {
+			isa = PBXGroup;
+			children = (
+				AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */,
+			);
+			path = "Max Speed";
 			sourceTree = "<group>";
 		};
 		B545C86A2B8A71F09D3636EB /* POISearchView */ = {
@@ -502,6 +527,15 @@
 				2183BECFE15DBC861312F863 /* POIOverviewView.swift */,
 			);
 			path = POISearchView;
+			sourceTree = "<group>";
+		};
+		B613EB14BDC54B6907DD2448 /* TrafficCongestions */ = {
+			isa = PBXGroup;
+			children = (
+				EAE86C07E10163BBC1FD5330 /* CongestionSegment.swift */,
+				EC517036BCB7FDB633991439 /* CongestionsExtractor.swift */,
+			);
+			path = TrafficCongestions;
 			sourceTree = "<group>";
 		};
 		CB396FFE2B7C1C7300CF9D59 /* UIStyle */ = {
@@ -582,6 +616,7 @@
 				FB53CF8783EC95AF1ECE21DD /* Supporting Files */,
 				398DAF9369B1E05633706D37 /* Enums */,
 				1AC466BF59F2D9323F5D3955 /* Classes */,
+				B613EB14BDC54B6907DD2448 /* TrafficCongestions */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
@@ -651,6 +686,7 @@
 				CD8F7CA8F3403D938AC063FD /* UserRegistration */,
 				AC276CFCF1456B56097AA04B /* Ferrostar */,
 				B545C86A2B8A71F09D3636EB /* POISearchView */,
+				9EF7276A2CC4F7F000B15A8D /* SheetContainerViewController.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -792,7 +828,6 @@
 			);
 			dependencies = (
 				CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */,
-				CD3BCAD92CB6EB9A001F8CFD /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -909,7 +944,7 @@
 				50C351AD9569672D140D334E /* XCRemoteSwiftPackageReference "ferrostar" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				F2575FF18C45531FA0A1064F /* XCRemoteSwiftPackageReference "Semaphore" */,
-				7C01ED3D13B2ECCC18596D7D /* XCRemoteSwiftPackageReference "ferrostar" */,
+				650C9F6270C6C554A7DBD8D6 /* XCRemoteSwiftPackageReference "ferrostar" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1040,6 +1075,7 @@
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				CD34C5612C05C7FA006DCDBA /* RootSheetView.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
+				AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */,
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
 				341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */,
 				FB0FAF112891FD096E9FDE20 /* DateFormatter.swift in Sources */,
@@ -1061,6 +1097,7 @@
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
 				655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */,
+				9EF7276B2CC4F7F000B15A8D /* SheetContainerViewController.swift in Sources */,
 				EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */,
 				1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */,
 				DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */,
@@ -1095,13 +1132,15 @@
 				084218394FED84B4D341E953 /* HudhudSegmentedPicker.swift in Sources */,
 				DD7976DCF72FA010BE526906 /* FilterStore.swift in Sources */,
 				9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */,
-				10CE817BF1B306C4C771C367 /* FerrostarNavigationView.swift in Sources */,
 				6BA3C89567E6EE1E0693F713 /* GraphHopperRouteAdapter.swift in Sources */,
 				E3251B5454CD025CDE0D00F9 /* Navigation Delegate.swift in Sources */,
 				EDF32E0E88A8260CDD42AFE2 /* OTPFieldView.swift in Sources */,
 				AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */,
 				6E0F91ECD4821BAB4DB6897E /* POISheetStore.swift in Sources */,
 				379DDC2776272FE04C0B570A /* POIOverviewView.swift in Sources */,
+				75EF8B431A9CE965F993E16A /* CongestionsExtractor.swift in Sources */,
+				017CB492E6448DA1E1C9C215 /* CongestionSegment.swift in Sources */,
+				BE61453352EA813A2E2134E5 /* RouteModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1126,10 +1165,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		CD3BCAD92CB6EB9A001F8CFD /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = CD3BCAD82CB6EB9A001F8CFD /* SwiftLint */;
-		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = CD3BCADA2CB6F1B8001F8CFD /* TokensEnumGeneratorPlugin */;
@@ -1498,10 +1533,18 @@
 		};
 		50C351AD9569672D140D334E /* XCRemoteSwiftPackageReference "ferrostar" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hactar/ferrostar.git";
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
 			requirement = {
-				kind = revision;
-				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
+				branch = annotations;
+				kind = branch;
+			};
+		};
+		650C9F6270C6C554A7DBD8D6 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
+			requirement = {
+				branch = annotations;
+				kind = branch;
 			};
 		};
 		66B0813B009950A4E8AF1401 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
@@ -1518,14 +1561,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
-			};
-		};
-		7C01ED3D13B2ECCC18596D7D /* XCRemoteSwiftPackageReference "ferrostar" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hactar/ferrostar.git";
-			requirement = {
-				kind = revision;
-				revision = 9afdad2daa000ed86f4dea23ac3dce1cf33b55cd;
 			};
 		};
 		971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
@@ -1741,11 +1776,6 @@
 		CD3BCAD22CB6E402001F8CFD /* TokensEnumGenerator */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TokensEnumGenerator;
-		};
-		CD3BCAD82CB6EB9A001F8CFD /* SwiftLint */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
-			productName = "plugin:SwiftLint";
 		};
 		CD3BCADA2CB6F1B8001F8CFD /* TokensEnumGeneratorPlugin */ = {
 			isa = XCSwiftPackageProductDependency;

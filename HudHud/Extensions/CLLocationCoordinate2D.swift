@@ -19,3 +19,11 @@ extension CLLocationCoordinate2D {
     static let image2 = CLLocationCoordinate2D(latitude: 25, longitude: 46)
     static let image3 = CLLocationCoordinate2D(latitude: 20, longitude: 40)
 }
+
+extension CLLocationCoordinate2D {
+    func distance(to other: CLLocationCoordinate2D) -> CLLocationDistance {
+        let from = CLLocation(latitude: latitude, longitude: longitude)
+        let to = CLLocation(latitude: other.latitude, longitude: other.longitude)
+        return from.distance(from: to)
+    }
+}
