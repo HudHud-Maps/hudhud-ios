@@ -29,6 +29,11 @@ final class SheetStore {
 
     var isShown: Bool = true
 
+    private(set) var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    private(set) var emptySheetSelectedDetent: PresentationDetent = .third
+    private(set) var uiKitEmptySheetAllowedDetents: [Detent] = [.small, .third, .large]
+    private(set) var uiKitEmptySheetSelectedDetent: Detent = .third
+
     // MARK: - Private Properties
 
     private var _sheets: [SheetViewData] = []
@@ -38,8 +43,6 @@ final class SheetStore {
 
     private let defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     private let defaultSelectedDetent: PresentationDetent = .third
-    private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private var emptySheetSelectedDetent: PresentationDetent = .third
 
     // MARK: Computed Properties
 
@@ -169,6 +172,28 @@ struct SheetViewData: Hashable {
             }
         }
 
+        /// the allowed detents when the page is first presented, it can be changed later
+        var uiKitInitialAllowedDetents: [Detent] {
+            switch self {
+            case .mapStyle:
+                [.medium]
+            case .debugView:
+                [.large]
+            case .navigationAddSearchView:
+                [.large]
+            case .favorites:
+                [.large]
+            case .navigationPreview:
+                [.height(150), .fraction(0.5)]
+            case .pointOfInterest:
+                [.height(340)]
+            case .favoritesViewMore:
+                [.large]
+            case .editFavoritesForm:
+                [.large]
+            }
+        }
+
         /// the selected detent when the page is first presented, it can be changed later
         var initialSelectedDetent: PresentationDetent {
             switch self {
@@ -182,6 +207,28 @@ struct SheetViewData: Hashable {
                 .large
             case .navigationPreview:
                 .nearHalf
+            case .pointOfInterest:
+                .height(340)
+            case .favoritesViewMore:
+                .large
+            case .editFavoritesForm:
+                .large
+            }
+        }
+
+        /// the selected detent when the page is first presented, it can be changed later
+        var uiKitInitialSelectedDetent: Detent {
+            switch self {
+            case .mapStyle:
+                .medium
+            case .debugView:
+                .large
+            case .navigationAddSearchView:
+                .large
+            case .favorites:
+                .large
+            case .navigationPreview:
+                .fraction(0.5)
             case .pointOfInterest:
                 .height(340)
             case .favoritesViewMore:
@@ -208,11 +255,16 @@ struct SheetViewData: Hashable {
     var selectedDetent: PresentationDetent
     var allowedDetents: Set<PresentationDetent>
 
+    var uiKitSelectedDetent: Detent
+    var uiKitAllowedDetents: [Detent]
+
     // MARK: Lifecycle
 
     init(viewData: ViewData) {
         self.viewData = viewData
         self.selectedDetent = viewData.initialSelectedDetent
         self.allowedDetents = viewData.initialAllowedDetents
+        self.uiKitAllowedDetents = viewData.uiKitInitialAllowedDetents
+        self.uiKitSelectedDetent = viewData.uiKitInitialSelectedDetent
     }
 }
