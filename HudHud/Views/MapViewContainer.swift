@@ -32,13 +32,15 @@ struct MapViewContainer: View {
     @State var safeAreaInsets = UIEdgeInsets()
     @Binding var isSheetShown: Bool
 
+    @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
 
     // MARK: Computed Properties
 
     var locationLabel: String {
         guard let userLocation = searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation else {
-            return "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
+            return
+                "No location - authed as \(self.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
         }
 
         return "±\(Int(userLocation.horizontalAccuracy))m accuracy"
@@ -53,6 +55,23 @@ struct MapViewContainer: View {
         }
     }
 
+    private var speed: Measurement<UnitSpeed>? {
+        if let speed = self.routingStore.ferrostarCore.locationProvider.lastLocation?.speed {
+            Measurement<UnitSpeed>(value: speed.value, unit: .metersPerSecond)
+        } else {
+            nil
+        }
+    }
+
+    private var speedLimit: Measurement<UnitSpeed>? {
+        if let annotation = try? self.routingStore.ferrostarCore.state?
+            .currentAnnotation(as: ValhallaOsrmAnnotation.self) {
+            annotation.speedLimit?.measurementValue
+        } else {
+            nil
+        }
+    }
+
     // MARK: Lifecycle
 
     init(mapStore: MapStore, debugStore: DebugStore, searchViewStore: SearchViewStore, userLocationStore: UserLocationStore, mapViewStore: MapViewStore, routingStore: RoutingStore, streetViewStore: StreetViewStore, isSheetShown: Binding<Bool>) {
@@ -64,6 +83,7 @@ struct MapViewContainer: View {
         self.streetViewStore = streetViewStore
         self.routingStore = routingStore
         self._isSheetShown = isSheetShown
+        self.core = routingStore.ferrostarCore
         // boot up ferrostar
     }
 
@@ -72,7 +92,6 @@ struct MapViewContainer: View {
     var body: some View {
         NavigationStack {
             DynamicallyOrientingNavigationView(
-                makeViewController: MLNMapViewController(),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: Binding(get: {
                     self.mapStore.camera
@@ -271,7 +290,7 @@ struct MapViewContainer: View {
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                         }
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
-                            if self.mapStore.selectedItem.value == nil {
+                            if self.mapStore.selectedItem == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                                 self.mapStore.select(generatedPOI)
                             }
@@ -308,6 +327,14 @@ struct MapViewContainer: View {
                                         .buttonBorder, style: FillStyle()
                                     ))
                         }
+                    }
+                },
+                bottomLeading: {
+                    if self.routingStore.ferrostarCore.isNavigating {
+                        SpeedView(
+                            speed: self.speed,
+                            speedLimit: self.speedLimit
+                        )
                     }
                 }
             )
@@ -358,6 +385,13 @@ struct MapViewContainer: View {
                         simulated.stopUpdating()
                     }
                 }
+            }
+            .onChange(of: self.core.state?.tripState) { oldValue, newValue in
+                guard let oldValue,
+                      let newValue,
+                      case .navigating = oldValue,
+                      newValue == .complete else { return }
+                self.stopNavigation()
             }
             .task {
                 guard !self.didFocusOnUser else { return }

@@ -14,6 +14,7 @@
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
+		1847B0B59F3FE3DECA27D56C /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384F463E013AD9F308F84F08 /* SpeedView.swift */; };
 		1947F52EF46B3B23C6F0417C /* OTPFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E877D3EA97E2F23065ECFAA5 /* OTPFieldView.swift */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
 		2670A068B017EEE420D01F3B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C08918AE951B4460365873D /* UIColor.swift */; };
@@ -189,6 +190,7 @@
 		26EF0C90F5F7A339BAA4CFA5 /* FilterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStore.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
+		384F463E013AD9F308F84F08 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		41386D7314539DB91E42D41A /* MapActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapActionHandler.swift; sourceTree = "<group>"; };
@@ -433,6 +435,14 @@
 				A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */,
 			);
 			path = PadSheet;
+			sourceTree = "<group>";
+		};
+		7E19860F963C71795DA52CC3 /* Max Speed */ = {
+			isa = PBXGroup;
+			children = (
+				384F463E013AD9F308F84F08 /* SpeedView.swift */,
+			);
+			path = "Max Speed";
 			sourceTree = "<group>";
 		};
 		99E435A00BB464A6561C2838 /* MapButtons */ = {
@@ -730,6 +740,7 @@
 			children = (
 				1E13C253A2D696950457B7F0 /* NavigationDelegate.swift */,
 				DB1408F236AE1629CB9EDE61 /* GraphHopperRouteAdapter.swift */,
+				7E19860F963C71795DA52CC3 /* Max Speed */,
 			);
 			path = Ferrostar;
 			sourceTree = "<group>";
@@ -892,6 +903,7 @@
 				CDBC2CAB2CC1733B002E59E0 /* XCRemoteSwiftPackageReference "TypographyKit" */,
 				CDBC2CB42CC173EC002E59E0 /* XCRemoteSwiftPackageReference "Semaphore" */,
 				CDBC2CB72CC174F7002E59E0 /* XCLocalSwiftPackageReference "StyleDictionary" */,
+				74BAB5A95E9C42B03CB956D0 /* XCRemoteSwiftPackageReference "ferrostar" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1081,6 +1093,7 @@
 				7C2F5DB91F0E3C77E8118C46 /* NavigationDelegate.swift in Sources */,
 				3D2F606DC78B55320848AB78 /* Loading.swift in Sources */,
 				1947F52EF46B3B23C6F0417C /* OTPFieldView.swift in Sources */,
+				1847B0B59F3FE3DECA27D56C /* SpeedView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1485,6 +1498,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
+			};
+		};
+		74BAB5A95E9C42B03CB956D0 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
+			requirement = {
+				branch = annotations;
+				kind = branch;
 			};
 		};
 		9387F78AA6FD0B1632FCCFA4 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */ = {
