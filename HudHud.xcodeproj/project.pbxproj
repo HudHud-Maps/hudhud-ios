@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -112,6 +112,14 @@
 		CD8679922CC79E7600728DDE /* SizeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */; };
 		CD8679962CC7A36B00728DDE /* MainEntryPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */; };
 		CD86799B2CC7BA4000728DDE /* DeviceSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD86799A2CC7BA4000728DDE /* DeviceSupport.swift */; };
+		CD86799D2CC7CCC400728DDE /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = FF23CB5ECC2BCBFA58BEC7F8 /* FerrostarCore */; };
+		CD86799E2CC7CCC400728DDE /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = C38ACC958EAE6CCCBCF56F78 /* FerrostarMapLibreUI */; };
+		CD86799F2CC7CCC400728DDE /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 87BB51654AF2AE46D9ECD954 /* FerrostarSwiftUI */; };
+		CD8679A02CC7CCC400728DDE /* Semaphore in Frameworks */ = {isa = PBXBuildFile; productRef = CDBC2CB52CC173EC002E59E0 /* Semaphore */; };
+		CD8679D62CC7DB6900728DDE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679D32CC7DB6900728DDE /* ContentView.swift */; };
+		CD8679D72CC7DB6900728DDE /* emptyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679D42CC7DB6900728DDE /* emptyApp.swift */; };
+		CD8679D82CC7DB6900728DDE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD8679D22CC7DB6900728DDE /* Assets.xcassets */; };
+		CD8679D92CC7DB6900728DDE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD8679D02CC7DB6900728DDE /* Preview Assets.xcassets */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
@@ -161,6 +169,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		CD8679E22CC7DB8C00728DDE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CDAE053C2B681261003E5196 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CD8679A52CC7DA9100728DDE;
+			remoteInfo = empty;
+		};
 		CDAE05552B681263003E5196 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CDAE053C2B681261003E5196 /* Project object */;
@@ -279,6 +294,12 @@
 		CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeCalculatorTests.swift; sourceTree = "<group>"; };
 		CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
 		CD86799A2CC7BA4000728DDE /* DeviceSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSupport.swift; sourceTree = "<group>"; };
+		CD8679A62CC7DA9100728DDE /* empty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = empty.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD8679D02CC7DB6900728DDE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		CD8679D22CC7DB6900728DDE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CD8679D32CC7DB6900728DDE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		CD8679D42CC7DB6900728DDE /* emptyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = emptyApp.swift; sourceTree = "<group>"; };
+		CD8679DE2CC7DB8C00728DDE /* emptyTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emptyTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
@@ -323,11 +344,33 @@
 		F3BB5BFA8CB42C0446317C57 /* Backport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Backport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		CD8679DF2CC7DB8C00728DDE /* emptyTest */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = emptyTest; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
+		CD8679A32CC7DA9100728DDE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD8679DB2CC7DB8C00728DDE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDAE05412B681261003E5196 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CD8679A02CC7CCC400728DDE /* Semaphore in Frameworks */,
+				CD86799F2CC7CCC400728DDE /* FerrostarSwiftUI in Frameworks */,
+				CD86799E2CC7CCC400728DDE /* FerrostarMapLibreUI in Frameworks */,
+				CD86799D2CC7CCC400728DDE /* FerrostarCore in Frameworks */,
 				CD3BCAEA2CB834E8001F8CFD /* iPhoneNumberField in Frameworks */,
 				CDBC2CAD2CC1733C002E59E0 /* TypographyKit in Frameworks */,
 				59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */,
@@ -524,6 +567,25 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		CD8679D12CC7DB6900728DDE /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				CD8679D02CC7DB6900728DDE /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		CD8679D52CC7DB6900728DDE /* empty */ = {
+			isa = PBXGroup;
+			children = (
+				CD8679D12CC7DB6900728DDE /* Preview Content */,
+				CD8679D22CC7DB6900728DDE /* Assets.xcassets */,
+				CD8679D32CC7DB6900728DDE /* ContentView.swift */,
+				CD8679D42CC7DB6900728DDE /* emptyApp.swift */,
+			);
+			path = empty;
+			sourceTree = "<group>";
+		};
 		CD8F7CA8F3403D938AC063FD /* UserRegistration */ = {
 			isa = PBXGroup;
 			children = (
@@ -541,6 +603,8 @@
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
 				CDAE05612B681263003E5196 /* HudHudUITests */,
+				CD8679D52CC7DB6900728DDE /* empty */,
+				CD8679DF2CC7DB8C00728DDE /* emptyTest */,
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
@@ -555,6 +619,8 @@
 				CDAE05442B681261003E5196 /* HudHud.app */,
 				CDAE05542B681263003E5196 /* HudHudTests.xctest */,
 				CDAE055E2B681263003E5196 /* HudHudUITests.xctest */,
+				CD8679A62CC7DA9100728DDE /* empty.app */,
+				CD8679DE2CC7DB8C00728DDE /* emptyTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -789,6 +855,48 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CD8679A52CC7DA9100728DDE /* empty */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD8679CD2CC7DA9200728DDE /* Build configuration list for PBXNativeTarget "empty" */;
+			buildPhases = (
+				CD8679A22CC7DA9100728DDE /* Sources */,
+				CD8679A32CC7DA9100728DDE /* Frameworks */,
+				CD8679A42CC7DA9100728DDE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = empty;
+			packageProductDependencies = (
+			);
+			productName = empty;
+			productReference = CD8679A62CC7DA9100728DDE /* empty.app */;
+			productType = "com.apple.product-type.application";
+		};
+		CD8679DD2CC7DB8C00728DDE /* emptyTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CD8679E42CC7DB8C00728DDE /* Build configuration list for PBXNativeTarget "emptyTest" */;
+			buildPhases = (
+				CD8679DA2CC7DB8C00728DDE /* Sources */,
+				CD8679DB2CC7DB8C00728DDE /* Frameworks */,
+				CD8679DC2CC7DB8C00728DDE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CD8679E32CC7DB8C00728DDE /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CD8679DF2CC7DB8C00728DDE /* emptyTest */,
+			);
+			name = emptyTest;
+			packageProductDependencies = (
+			);
+			productName = emptyTest;
+			productReference = CD8679DE2CC7DB8C00728DDE /* emptyTest.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CDAE05432B681261003E5196 /* HudHud */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CDAE05682B681263003E5196 /* Build configuration list for PBXNativeTarget "HudHud" */;
@@ -876,10 +984,17 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1520;
+				LastSwiftUpdateCheck = 1600;
 				LastUpgradeCheck = 1540;
 				ORGANIZATIONNAME = HudHud;
 				TargetAttributes = {
+					CD8679A52CC7DA9100728DDE = {
+						CreatedOnToolsVersion = 16.0;
+					};
+					CD8679DD2CC7DB8C00728DDE = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = CD8679A52CC7DA9100728DDE;
+					};
 					CDAE05432B681261003E5196 = {
 						CreatedOnToolsVersion = 15.2;
 						LastSwiftMigration = 1520;
@@ -927,11 +1042,29 @@
 				CDAE05432B681261003E5196 /* HudHud */,
 				CDAE05532B681263003E5196 /* HudHudTests */,
 				CDAE055D2B681263003E5196 /* HudHudUITests */,
+				CD8679A52CC7DA9100728DDE /* empty */,
+				CD8679DD2CC7DB8C00728DDE /* emptyTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CD8679A42CC7DA9100728DDE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD8679D82CC7DB6900728DDE /* Assets.xcassets in Resources */,
+				CD8679D92CC7DB6900728DDE /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD8679DC2CC7DB8C00728DDE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDAE05422B681261003E5196 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1003,6 +1136,22 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CD8679A22CC7DA9100728DDE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CD8679D62CC7DB6900728DDE /* ContentView.swift in Sources */,
+				CD8679D72CC7DB6900728DDE /* emptyApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CD8679DA2CC7DB8C00728DDE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CDAE05402B681261003E5196 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1143,6 +1292,11 @@
 		8E8BEEEF50F6F02447232677 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
+		CD8679E32CC7DB8C00728DDE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CD8679A52CC7DA9100728DDE /* empty */;
+			targetProxy = CD8679E22CC7DB8C00728DDE /* PBXContainerItemProxy */;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -1167,6 +1321,96 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		CD8679C72CC7DA9200728DDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"empty/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.test.empty;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CD8679C82CC7DA9200728DDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"empty/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.test.empty;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		CD8679E52CC7DB8C00728DDE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.test.emptyTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/empty.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/empty";
+			};
+			name = Debug;
+		};
+		CD8679E62CC7DB8C00728DDE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = sa.hudhud.test.emptyTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/empty.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/empty";
+			};
+			name = Release;
+		};
 		CDAE05662B681263003E5196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1364,7 +1608,6 @@
 		CDAE056C2B681263003E5196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1382,7 +1625,6 @@
 		CDAE056D2B681263003E5196 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1400,7 +1642,6 @@
 		CDAE056F2B681263003E5196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YN76B7J2LN;
@@ -1417,7 +1658,6 @@
 		CDAE05702B681263003E5196 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YN76B7J2LN;
@@ -1434,6 +1674,24 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CD8679CD2CC7DA9200728DDE /* Build configuration list for PBXNativeTarget "empty" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD8679C72CC7DA9200728DDE /* Debug */,
+				CD8679C82CC7DA9200728DDE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CD8679E42CC7DB8C00728DDE /* Build configuration list for PBXNativeTarget "emptyTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CD8679E52CC7DB8C00728DDE /* Debug */,
+				CD8679E62CC7DB8C00728DDE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CDAE053F2B681261003E5196 /* Build configuration list for PBXProject "HudHud" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
