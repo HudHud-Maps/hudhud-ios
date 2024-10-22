@@ -230,13 +230,13 @@ struct ContentView: View {
         VStack {
             if self.streetViewStore.streetViewScene != nil {
                 StreetView(store: self.streetViewStore, debugStore: self.debugStore)
-                    .onChange(of: self.streetViewStore.fullScreenStreetView) { _, newValue in
-                        self.mapStore.searchShown = !newValue
-                    }
             }
         }
-        .onChange(of: self.streetViewStore.streetViewScene) { _, newValue in
-            self.mapStore.searchShown = newValue == nil
+        .onChange(of: self.streetViewStore.streetViewScene) { _, _ in
+            self.updateSearchShown()
+        }
+        .onChange(of: self.streetViewStore.fullScreenStreetView) { _, _ in
+            self.updateSearchShown()
         }
     }
 }
@@ -252,6 +252,10 @@ private extension ContentView {
             self.trendingStore.trendingPOIs = nil
             Logger.searchView.error("\(error.localizedDescription)")
         }
+    }
+
+    func updateSearchShown() {
+        self.mapStore.searchShown = !self.streetViewStore.fullScreenStreetView && self.streetViewStore.streetViewScene.isNil
     }
 }
 
