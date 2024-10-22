@@ -290,7 +290,7 @@ struct MapViewContainer: View {
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                         }
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
-                            if self.mapStore.selectedItem == nil {
+                            if self.mapStore.selectedItem.value == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                                 self.mapStore.select(generatedPOI)
                             }

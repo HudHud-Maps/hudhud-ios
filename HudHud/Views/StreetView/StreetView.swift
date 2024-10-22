@@ -37,6 +37,7 @@ struct StreetView: View {
         ZStack(alignment: .top) {
             if self.store.svimage != nil {
                 self.panoramaView(self.$store.svimage)
+                    .ignoresSafeArea()
             }
 
             if let errorMsg = self.store.errorMsg {
@@ -53,11 +54,8 @@ struct StreetView: View {
                     Button {
                         self.dismissView()
                     } label: {
-                        Image(systemSymbol: .xCircleFill)
-                            .symbolRenderingMode(.monochrome)
-                            .font(.system(size: 26))
-                            .tint(.white)
-                            .shadow(color: Color(white: 0, opacity: 0.3), radius: 15)
+                        Image(.arrowLeftCircleFill)
+                            .frame(width: 44, height: 44)
                     }
 
                     Spacer()
@@ -67,11 +65,8 @@ struct StreetView: View {
                             self.store.fullScreenStreetView.toggle()
                         }
                     } label: {
-                        Image(systemSymbol: self.store.fullScreenStreetView ? .arrowDownRightAndArrowUpLeftCircleFill : .arrowUpLeftAndArrowDownRightCircleFill)
-                            .symbolRenderingMode(.monochrome)
-                            .font(.system(size: 26))
-                            .tint(.white)
-                            .shadow(color: Color(white: 0, opacity: 0.3), radius: 15)
+                        Image(self.store.fullScreenStreetView ? .minimizeCircleFill : .maximizeCircleFill)
+                            .frame(width: 44, height: 44)
                     }
                 }
                 Spacer()
@@ -81,19 +76,20 @@ struct StreetView: View {
                         .clipped()
                 }
             }
-            .padding(.top, self.store.fullScreenStreetView ? 64 : 16)
             .padding(.horizontal, 16)
         }
         .background(Color.black)
-        .cornerRadius(16)
-        .frame(width: UIScreen.main.bounds.width - (self.store.fullScreenStreetView ? 0 : 20),
-               height: UIScreen.main.bounds.height - (self.store.fullScreenStreetView ? 0 : UIScreen.main.bounds.height / 1.5))
-        .ignoresSafeArea()
-        .padding(.top, self.store.fullScreenStreetView ? 0 : 60)
+        .frame(width: UIScreen.main.bounds.width,
+               height: UIScreen.main.bounds.height / (self.store.fullScreenStreetView ? 1.0 : 3.0))
         .onAppear(perform: {
             self.loadSVImage()
         })
     }
+}
+
+// MARK: - Private
+
+private extension StreetView {
 
     func panoramaView(_ img: Binding<UIImage?>) -> some View {
         ZStack {
@@ -103,84 +99,10 @@ struct StreetView: View {
             }, cameraMoved: { _, _, _ in
 
             }, tapHandler: { direction in
-                loadImage(direction)
+                self.loadImage(direction)
             })
         }
     }
-
-    // MARK: Functions
-
-    func getImageURL(_ name: String) -> URL? {
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "streetview.dev.hudhud.sa"
-        components.path = "/\(name)"
-        components.queryItems = [
-            URLQueryItem(name: "api_key", value: "34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh")
-        ]
-
-        if let size = self.debugStore.streetViewQuality.size {
-            let clipped = size.clipToMaximumSupportedTextureSize()
-            components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
-            components.queryItems?.append(URLQueryItem(name: "height", value: "\(clipped.height)"))
-        }
-        if let quality = self.debugStore.streetViewQuality.quality {
-            components.queryItems?.append(URLQueryItem(name: "quality", value: "\(quality)"))
-        }
-
-        return components.url
-    }
-
-    func loadSVImage() {
-        // we will attempt to preload next and previous images if its not yet loaded
-        self.preLoadScenes()
-
-        Logger.streetView.log("SVD: streetViewScene3: \(self.store.streetViewScene.debugDescription)")
-
-        guard let imageName = self.store.streetViewScene?.name else {
-            self.store.isLoading = false
-            return
-        }
-        Logger.streetView.debug("loadSVImage Value: \(self.store.streetViewScene?.id ?? -1), \(imageName)")
-        guard let url = self.getImageURL(imageName) else { return }
-
-        Task {
-            let imageTask = ImagePipeline.shared.imageTask(with: url)
-            for await progress in imageTask.progress {
-                self.store.progress = progress.fraction
-            }
-            var image = try await imageTask.image
-
-            // Some older devices might crash with full size images
-            // For testing we have the option to request full size images from the server
-            // Once we agree on the right size & quality we will request compatible images
-            // for every device, then we can remove this
-            let targetSize = image.size.clipToMaximumSupportedTextureSize()
-            if image.size.width > targetSize.width || image.size.height > targetSize.height {
-                image = image.resize(targetSize, scale: 1)
-            }
-
-            PanoramaManager.shouldUpdateImage = true
-            PanoramaManager.shouldResetCameraAngle = false
-            self.store.svimage = image
-            self.store.isLoading = false
-        }
-    }
-
-    // MARK: - Internal
-
-    func dismissView() {
-        if let imgName = self.store.streetViewScene?.name, let url = self.getImageURL(imgName) {
-            let imageTask = ImagePipeline.shared.imageTask(with: url)
-            imageTask.cancel()
-        }
-
-        self.store.streetViewScene = nil
-        self.store.fullScreenStreetView = false
-    }
-}
-
-extension StreetView {
 
     func loadImage(_ direction: CTNavigationDirection) {
         Task {
@@ -245,6 +167,73 @@ extension StreetView {
             } catch {
                 Logger.streetView.debug("preLoadItem error: \(error)")
             }
+        }
+    }
+
+    func dismissView() {
+        if let imgName = self.store.streetViewScene?.name, let url = self.getImageURL(imgName) {
+            let imageTask = ImagePipeline.shared.imageTask(with: url)
+            imageTask.cancel()
+        }
+
+        self.store.streetViewScene = nil
+        self.store.fullScreenStreetView = false
+    }
+
+    func getImageURL(_ name: String) -> URL? {
+        var components = URLComponents()
+        components.scheme = "https"
+        components.host = "streetview.dev.hudhud.sa"
+        components.path = "/\(name)"
+        components.queryItems = [
+            URLQueryItem(name: "api_key", value: "34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh")
+        ]
+
+        if let size = self.debugStore.streetViewQuality.size {
+            let clipped = size.clipToMaximumSupportedTextureSize()
+            components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
+            components.queryItems?.append(URLQueryItem(name: "height", value: "\(clipped.height)"))
+        }
+        if let quality = self.debugStore.streetViewQuality.quality {
+            components.queryItems?.append(URLQueryItem(name: "quality", value: "\(quality)"))
+        }
+
+        return components.url
+    }
+
+    func loadSVImage() {
+        // we will attempt to preload next and previous images if its not yet loaded
+        self.preLoadScenes()
+
+        Logger.streetView.log("SVD: streetViewScene3: \(self.store.streetViewScene.debugDescription)")
+
+        guard let imageName = self.store.streetViewScene?.name else {
+            self.store.isLoading = false
+            return
+        }
+        Logger.streetView.debug("loadSVImage Value: \(self.store.streetViewScene?.id ?? -1), \(imageName)")
+        guard let url = self.getImageURL(imageName) else { return }
+
+        Task {
+            let imageTask = ImagePipeline.shared.imageTask(with: url)
+            for await progress in imageTask.progress {
+                self.store.progress = progress.fraction
+            }
+            var image = try await imageTask.image
+
+            // Some older devices might crash with full size images
+            // For testing we have the option to request full size images from the server
+            // Once we agree on the right size & quality we will request compatible images
+            // for every device, then we can remove this
+            let targetSize = image.size.clipToMaximumSupportedTextureSize()
+            if image.size.width > targetSize.width || image.size.height > targetSize.height {
+                image = image.resize(targetSize, scale: 1)
+            }
+
+            PanoramaManager.shouldUpdateImage = true
+            PanoramaManager.shouldResetCameraAngle = false
+            self.store.svimage = image
+            self.store.isLoading = false
         }
     }
 }

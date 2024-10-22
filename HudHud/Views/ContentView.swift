@@ -165,12 +165,20 @@ struct ContentView: View {
                 }
             }
             .backport.buttonSafeArea(length: self.sheetSize)
+            .backport.streetViewSafeArea(length: self.streetViewStore.streetViewScene == nil ? 0 : UIScreen.main.bounds.height / 2.0)
             .backport.sheet(isPresented: Binding(get: {
                 self.mapStore.searchShown
             }, set: {
                 self.mapStore.searchShown = $0
             })) {
-                RootSheetView(mapStore: self.mapStore, searchViewStore: self.searchViewStore, debugStore: self.debugStore, trendingStore: self.trendingStore, mapLayerStore: self.mapLayerStore, sheetStore: self.sheetStore, userLocationStore: self.userLocationStore, sheetSize: self.$sheetSize)
+                RootSheetView(mapStore: self.mapStore,
+                              searchViewStore: self.searchViewStore,
+                              debugStore: self.debugStore,
+                              trendingStore: self.trendingStore,
+                              mapLayerStore: self.mapLayerStore,
+                              sheetStore: self.sheetStore,
+                              userLocationStore: self.userLocationStore,
+                              sheetSize: self.$sheetSize)
             }
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
@@ -191,6 +199,7 @@ struct ContentView: View {
                         .padding(.horizontal, 8)
                 }
             })
+
             VStack {
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
