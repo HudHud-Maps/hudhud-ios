@@ -38,6 +38,20 @@ public class AuthProvider {
 
         return try JSONDecoder().decode(Credentials.self, from: data)
     }
+
+    public func delete() throws {
+        let keychain = Keychain(service: Self.service)
+        try keychain.remove(Credentials.key)
+    }
+
+    public func isLoggedIn() -> Bool {
+        do {
+            let credentials = try retrive()
+            return credentials != nil
+        } catch {
+            return false
+        }
+    }
 }
 
 // MARK: - Credentials
