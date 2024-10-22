@@ -56,4 +56,4 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Test
-        run: set -o pipefail && xcodebuild test -scheme empty -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation
+        run: set -o pipefail && xcodebuild test -scheme Empty -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation
