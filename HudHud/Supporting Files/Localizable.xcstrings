@@ -32,6 +32,9 @@
         }
       }
     },
+    "%lld Ratings" : {
+
+    },
     "•" : {
 
     },
@@ -97,6 +100,9 @@
         }
       }
     },
+    "By Date" : {
+
+    },
     "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
 
     },
@@ -142,6 +148,9 @@
 
     },
     "Create Account" : {
+
+    },
+    "Customers Rating" : {
 
     },
     "Debug Menu" : {
@@ -218,6 +227,9 @@
     "Filters" : {
 
     },
+    "From %@" : {
+
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -254,6 +266,9 @@
     },
     "How was the navigation on this trip?" : {
 
+    },
+    "How was your experience?" : {
+        
     },
     "km/h" : {
 
@@ -382,10 +397,16 @@
         }
       }
     },
+    "Report" : {
+
+    },
     "Resend Code %@" : {
 
     },
     "Reset" : {
+
+    },
+    "Reviews %lld" : {
 
     },
     "Routing Configuration" : {
@@ -419,6 +440,9 @@
 
     },
     "SF Symbols on Map" : {
+
+    },
+    "Share" : {
 
     },
     "Show more" : {
@@ -464,6 +488,15 @@
 
     },
     "Use SF Symbols for POIs on map" : {
+
+    },
+    "UseFul" : {
+
+    },
+    "Useful (%lld)" : {
+
+    },
+    "User location could not be found." : {
 
     },
     "Verification code sent to the %@ below:" : {

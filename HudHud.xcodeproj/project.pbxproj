@@ -17,6 +17,7 @@
 		1847B0B59F3FE3DECA27D56C /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384F463E013AD9F308F84F08 /* SpeedView.swift */; };
 		1947F52EF46B3B23C6F0417C /* OTPFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E877D3EA97E2F23065ECFAA5 /* OTPFieldView.swift */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
+		1C8F778244BA414982636B9A /* ReviewsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E719AA6118FF0860E1465AA /* ReviewsListView.swift */; };
 		2670A068B017EEE420D01F3B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C08918AE951B4460365873D /* UIColor.swift */; };
 		28B76BD4868024F1EA8666DB /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48CEA7AF61F08D98C5D3236B /* PlusJakartaSans-ExtraBold.ttf */; };
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
@@ -25,6 +26,7 @@
 		3B651D907EB42F44B10A53DF /* MapActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41386D7314539DB91E42D41A /* MapActionHandler.swift */; };
 		3D2F606DC78B55320848AB78 /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01F34F0CE9E36844298F82DE /* Loading.swift */; };
 		3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3BB5BFA8CB42C0446317C57 /* Backport.swift */; };
+		3F569D8ECF14360CA5DBA2EF /* RatingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D522B3E47D02BEE225E03922 /* RatingStore.swift */; };
 		44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734FB0DF376C6B77950814C5 /* Fonts.swift */; };
 		48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */; };
 		591002232C7DC9AB00CF4707 /* FloatingLabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */; };
@@ -70,6 +72,7 @@
 		9393C828012F10F877B2F3F5 /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1E4E4FF8F4AC807975607F0 /* MoreFiltersView.swift */; };
 		980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */; };
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
+		9FED45A52E7237B54313B2B4 /* ReviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A98497F319C9802D33A9531 /* ReviewStore.swift */; };
 		A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A49E3EE7EB638EED6A6D564 /* View.swift */; };
 		A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6E65B0640253C2CCD4EA84 /* Locale+isArabic.swift */; };
 		A3A4BC2269B8DDE7FE30C20C /* DirectionModePickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE145840AB4B8912DF270355 /* DirectionModePickerView.swift */; };
@@ -99,9 +102,6 @@
 		CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C5632C05EF07006DCDBA /* BetterSafariView */; };
 		CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */ = {isa = PBXBuildFile; productRef = CD34C5942C0B3CC8006DCDBA /* BackendService */; };
 		CD3BCAEA2CB834E8001F8CFD /* iPhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = 86E1446EBADA81D38D4EA8AD /* iPhoneNumberField */; };
-		CD3BCAEB2CB834E8001F8CFD /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = FF23CB5ECC2BCBFA58BEC7F8 /* FerrostarCore */; };
-		CD3BCAEC2CB834E8001F8CFD /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = C38ACC958EAE6CCCBCF56F78 /* FerrostarMapLibreUI */; };
-		CD3BCAED2CB834E8001F8CFD /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 87BB51654AF2AE46D9ECD954 /* FerrostarSwiftUI */; };
 		CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD4718D02BB6CECB00A24C68 /* Double+Limits.swift */; };
 		CD71C3622BBBD186009C3A1C /* StreetViewPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3612BBBD186009C3A1C /* StreetViewPoint.swift */; };
 		CD71C3642BBBD3FB009C3A1C /* Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3632BBBD3FB009C3A1C /* Optional.swift */; };
@@ -128,7 +128,6 @@
 		CDBC2CB12CC17370002E59E0 /* RouteModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2CAF2CC17370002E59E0 /* RouteModel.swift */; };
 		CDBC2CB22CC17370002E59E0 /* POISheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2CAE2CC17370002E59E0 /* POISheetStore.swift */; };
 		CDBC2CB32CC17370002E59E0 /* SheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2CB02CC17370002E59E0 /* SheetStore.swift */; };
-		CDBC2CB62CC173EC002E59E0 /* Semaphore in Frameworks */ = {isa = PBXBuildFile; productRef = CDBC2CB52CC173EC002E59E0 /* Semaphore */; };
 		CDBC2CB92CC174F8002E59E0 /* TokensEnumGenerator in Frameworks */ = {isa = PBXBuildFile; productRef = CDBC2CB82CC174F8002E59E0 /* TokensEnumGenerator */; };
 		CDBC2CC02CC17562002E59E0 /* CongestionSegment.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2CBD2CC17562002E59E0 /* CongestionSegment.swift */; };
 		CDBC2CC12CC17562002E59E0 /* CongestionsExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2CBE2CC17562002E59E0 /* CongestionsExtractor.swift */; };
@@ -139,6 +138,7 @@
 		CDE538CB2BA7868200D7FFE7 /* MapLibre in Frameworks */ = {isa = PBXBuildFile; productRef = DE3A66FF070A2B17657129E4 /* MapLibre */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
+		D547A8201A601C4CCA5206D9 /* RatingSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC056365B7B74AC2099210E3 /* RatingSectionView.swift */; };
 		D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */; };
 		D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */; };
 		DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417081C775FE86E29A6F3437 /* SafariWebView.swift */; };
@@ -186,6 +186,7 @@
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
 		1A49E3EE7EB638EED6A6D564 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
+		1A98497F319C9802D33A9531 /* ReviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStore.swift; sourceTree = "<group>"; };
 		1D5CF12207471DFDF69BCF43 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		1E13C253A2D696950457B7F0 /* NavigationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationDelegate.swift; sourceTree = "<group>"; };
 		1E69A6191475F5E54A62147D /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
@@ -196,6 +197,7 @@
 		384F463E013AD9F308F84F08 /* SpeedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedView.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
+		3E719AA6118FF0860E1465AA /* ReviewsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsListView.swift; sourceTree = "<group>"; };
 		41386D7314539DB91E42D41A /* MapActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapActionHandler.swift; sourceTree = "<group>"; };
 		417081C775FE86E29A6F3437 /* SafariWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebView.swift; sourceTree = "<group>"; };
 		45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceIdentifier.swift; sourceTree = "<group>"; };
@@ -300,9 +302,11 @@
 		CDBC2CBE2CC17562002E59E0 /* CongestionsExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CongestionsExtractor.swift; sourceTree = "<group>"; };
 		CEDC06032B19C6430BD886AD /* HudhudSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudSegmentedPicker.swift; sourceTree = "<group>"; };
 		CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetView.swift; sourceTree = "<group>"; };
+		D522B3E47D02BEE225E03922 /* RatingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingStore.swift; sourceTree = "<group>"; };
 		D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesButton.swift; sourceTree = "<group>"; };
 		D96678092BFF998BE9F3D925 /* PlusJakartaSans-ExtraLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-ExtraLight.ttf"; sourceTree = "<group>"; };
 		DB1408F236AE1629CB9EDE61 /* GraphHopperRouteAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphHopperRouteAdapter.swift; sourceTree = "<group>"; };
+		DC056365B7B74AC2099210E3 /* RatingSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingSectionView.swift; sourceTree = "<group>"; };
 		DCB904EE6E9CC9D7EF909FD1 /* PlusJakartaSans-MediumItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-MediumItalic.ttf"; sourceTree = "<group>"; };
 		DD1DAD5D70546BFCA560FDF9 /* RateNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RateNavigationView.swift; sourceTree = "<group>"; };
 		DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolStyleLayer.swift; sourceTree = "<group>"; };
@@ -324,9 +328,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CD3BCAED2CB834E8001F8CFD /* FerrostarSwiftUI in Frameworks */,
-				CD3BCAEC2CB834E8001F8CFD /* FerrostarMapLibreUI in Frameworks */,
-				CD3BCAEB2CB834E8001F8CFD /* FerrostarCore in Frameworks */,
 				CD3BCAEA2CB834E8001F8CFD /* iPhoneNumberField in Frameworks */,
 				CDBC2CAD2CC1733C002E59E0 /* TypographyKit in Frameworks */,
 				59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */,
@@ -338,7 +339,6 @@
 				CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */,
 				CDE538C92BA7868200D7FFE7 /* MapLibre in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
-				CDBC2CB62CC173EC002E59E0 /* Semaphore in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
 				CDE538C72BA7868200D7FFE7 /* MapLibre in Frameworks */,
@@ -660,6 +660,10 @@
 				F20D974D2C46C65600457928 /* SearchResultItemView.swift */,
 				CD8F7CA8F3403D938AC063FD /* UserRegistration */,
 				F7C7405F2326198008EAD44D /* Ferrostar */,
+				1A98497F319C9802D33A9531 /* ReviewStore.swift */,
+				3E719AA6118FF0860E1465AA /* ReviewsListView.swift */,
+				DC056365B7B74AC2099210E3 /* RatingSectionView.swift */,
+				D522B3E47D02BEE225E03922 /* RatingStore.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -799,6 +803,8 @@
 			dependencies = (
 				CDBC2CBB2CC17501002E59E0 /* PBXTargetDependency */,
 				CDBC2C9C2CC01660002E59E0 /* PBXTargetDependency */,
+				8E8BEEEF50F6F02447232677 /* PBXTargetDependency */,
+				F2A520B651EF648952A310C2 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -1105,6 +1111,10 @@
 				3D2F606DC78B55320848AB78 /* Loading.swift in Sources */,
 				1947F52EF46B3B23C6F0417C /* OTPFieldView.swift in Sources */,
 				1847B0B59F3FE3DECA27D56C /* SpeedView.swift in Sources */,
+				9FED45A52E7237B54313B2B4 /* ReviewStore.swift in Sources */,
+				1C8F778244BA414982636B9A /* ReviewsListView.swift in Sources */,
+				D547A8201A601C4CCA5206D9 /* RatingSectionView.swift in Sources */,
+				3F569D8ECF14360CA5DBA2EF /* RatingStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1130,6 +1140,9 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		8E8BEEEF50F6F02447232677 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
@@ -1147,6 +1160,9 @@
 		CDBC2CBB2CC17501002E59E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = CDBC2CBA2CC17501002E59E0 /* TokensEnumGeneratorPlugin */;
+		};
+		F2A520B651EF648952A310C2 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
 		};
 /* End PBXTargetDependency section */
 

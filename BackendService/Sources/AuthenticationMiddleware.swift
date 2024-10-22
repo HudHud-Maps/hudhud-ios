@@ -37,7 +37,7 @@ extension AuthenticationMiddleware: ClientMiddleware {
         var request = request
 
         if let token = try AuthProvider.shared.retrive() {
-            request.headerFields[.authorization] = token.refreshToken
+            request.headerFields[.authorization] = "Bearer " + token.refreshToken
         }
 
         return try await next(request, body, baseURL)
