@@ -109,6 +109,8 @@
 		CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */; };
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
+		CD8679922CC79E7600728DDE /* SizeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */; };
+		CD8679962CC7A36B00728DDE /* MainEntryPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
@@ -271,6 +273,8 @@
 		CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
+		CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeCalculatorTests.swift; sourceTree = "<group>"; };
+		CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
@@ -584,6 +588,7 @@
 			children = (
 				CDAE05582B681263003E5196 /* HudHudTests.swift */,
 				9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */,
+				CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */,
 			);
 			path = HudHudTests;
 			sourceTree = "<group>";
@@ -630,6 +635,7 @@
 				EA1DDF0CC8C6FE9D396004B2 /* MapLayers */,
 				AA1E80A95AFCDC7507E3B613 /* Navigation */,
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
+				CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
 				59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */,
 				CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */,
@@ -1003,6 +1009,7 @@
 				CD4718D12BB6CECB00A24C68 /* Double+Limits.swift in Sources */,
 				CB494DB92BC1078B00B67A22 /* NavigationSheetView.swift in Sources */,
 				CB3970062B81F4C300CF9D59 /* MapLayersView.swift in Sources */,
+				CD8679962CC7A36B00728DDE /* MainEntryPoint.swift in Sources */,
 				90CBC0492B8362E3009ADD79 /* DirectionPreviewData.swift in Sources */,
 				59B8A1DE2C60C38400A12F5E /* MapViewContainer.swift in Sources */,
 				CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */,
@@ -1103,6 +1110,7 @@
 			files = (
 				CDAE05592B681263003E5196 /* HudHudTests.swift in Sources */,
 				FF8E88E9065A59885E75605B /* CalculateTests.swift in Sources */,
+				CD8679922CC79E7600728DDE /* SizeCalculatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

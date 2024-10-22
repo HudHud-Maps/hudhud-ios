@@ -19,6 +19,7 @@ struct StreetView: View {
     // MARK: Properties
 
     @Bindable var store: StreetViewStore
+    @ObservedObject var debugStore: DebugStore
 
     // MARK: Computed Properties
 
@@ -45,16 +46,6 @@ struct StreetView: View {
                 }
             }
 
-            if self.showLoading {
-                VStack {
-                    ProgressView()
-                        .tint(.white)
-                    Text("Loading..." + self.loadingProgress)
-                        .foregroundStyle(.white)
-                        .multilineTextAlignment(.center)
-                }
-            }
-
             VStack {
                 HStack {
                     Button {
@@ -73,7 +64,6 @@ struct StreetView: View {
                         withAnimation {
                             self.store.fullScreenStreetView.toggle()
                         }
-
                     } label: {
                         Image(systemSymbol: self.store.fullScreenStreetView ? .arrowDownRightAndArrowUpLeftCircleFill : .arrowUpLeftAndArrowDownRightCircleFill)
                             .resizable()
@@ -83,6 +73,11 @@ struct StreetView: View {
                     }
                 }
                 Spacer()
+                if self.showLoading {
+                    ProgressView(value: self.store.progress)
+                        .tint(.white)
+                        .clipped()
+                }
             }
             .padding(.top, self.store.fullScreenStreetView ? 64 : 16)
             .padding(.horizontal, 16)
@@ -116,11 +111,21 @@ struct StreetView: View {
     func getImageURL(_ name: String) -> URL? {
         var components = URLComponents()
         components.scheme = "https"
-        components.host = "streetview.khaled-7ed.workers.dev"
+        components.host = "streetview.dev.hudhud.sa"
         components.path = "/\(name)"
         components.queryItems = [
             URLQueryItem(name: "api_key", value: "34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh")
         ]
+
+        if let size = self.debugStore.streetViewQuality.size {
+            let clipped = DeviceSupport.clipToMaximumSupportedTextureSize(size)
+            components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
+            components.queryItems?.append(URLQueryItem(name: "height", value: "\(clipped.height)"))
+        }
+        if let quality = self.debugStore.streetViewQuality.quality {
+            components.queryItems?.append(URLQueryItem(name: "quality", value: "\(quality)"))
+        }
+
         return components.url
     }
 
@@ -142,18 +147,20 @@ struct StreetView: View {
             for await progress in imageTask.progress {
                 self.store.progress = progress.fraction
             }
-            let image = try await imageTask.image
+            var image = try await imageTask.image
 
-            #if targetEnvironment(simulator)
-                // Simulator will crash with full size images
-                let resizedImage = image.resize(CGSize(width: image.size.width / 2.0, height: image.size.height / 2.0), scale: 1)
-            #else
-                let resizedImage = image
-            #endif
+            // Some older devices might crash with full size images
+            // For testing we have the option to request full size images from the server
+            // Once we agree on the right size & quality we will request compatible images
+            // for every device, then we can remove this
+            let targetSize = DeviceSupport.clipToMaximumSupportedTextureSize(image.size)
+            if image.size.width > targetSize.width || image.size.height > targetSize.height {
+                image = image.resize(targetSize, scale: 1)
+            }
 
             PanoramaManager.shouldUpdateImage = true
             PanoramaManager.shouldResetCameraAngle = false
-            self.store.svimage = resizedImage
+            self.store.svimage = image
             self.store.isLoading = false
         }
     }
@@ -161,6 +168,11 @@ struct StreetView: View {
     // MARK: - Internal
 
     func dismissView() {
+        if let imgName = self.store.streetViewScene?.name, let url = self.getImageURL(imgName) {
+            let imageTask = ImagePipeline.shared.imageTask(with: url)
+            imageTask.cancel()
+        }
+
         self.store.streetViewScene = nil
         self.store.fullScreenStreetView = false
     }
@@ -239,41 +251,6 @@ extension StreetView {
             } catch {
                 Logger.streetView.debug("preLoadItem error: \(error)")
             }
-        }
-    }
-
-    // Function to download and manually assign an image with caching
-    func loadImageManually(url: URL, into imageView: UIImageView) {
-        // Get a reference to the shared image pipeline
-        let pipeline = ImagePipeline.shared
-
-        // Load the image using the pipeline
-        pipeline.loadImage(with: url) { result in
-            switch result {
-            case let .success(response):
-                // Image successfully loaded, assign it to the imageView
-                imageView.image = response.image
-
-                // The image is automatically cached, no need to do anything extra
-                Logger.streetView.info("Image loaded and cached successfully")
-            case let .failure(error):
-                // Handle failure
-                Logger.streetView.error("Image loading failed: \(error)")
-            }
-        }
-    }
-
-    // Function to retrieve an image from cache if available
-    func getCachedImage(url: URL) -> UIImage? {
-        let pipeline = ImagePipeline.shared
-
-        // Try to get the image from cache
-        if let cachedImage = pipeline.cache[ImageRequest(url: url)]?.image {
-            Logger.streetView.info("Image retrieved from cache")
-            return cachedImage
-        } else {
-            Logger.streetView.info("Image not found in cache")
-            return nil
         }
     }
 }

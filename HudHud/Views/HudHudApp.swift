@@ -14,7 +14,6 @@ import TypographyKit
 
 // MARK: - HudHudApp
 
-@main
 struct HudHudApp: App {
 
     // MARK: Properties

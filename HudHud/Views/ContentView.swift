@@ -229,7 +229,7 @@ struct ContentView: View {
     var streetView: some View {
         VStack {
             if self.streetViewStore.streetViewScene != nil {
-                StreetView(store: self.streetViewStore)
+                StreetView(store: self.streetViewStore, debugStore: self.debugStore)
                     .onChange(of: self.streetViewStore.fullScreenStreetView) { _, newValue in
                         self.mapStore.searchShown = !newValue
                     }

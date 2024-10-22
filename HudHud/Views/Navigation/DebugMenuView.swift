@@ -54,6 +54,8 @@ struct DebugMenuView: View {
                     Text("Use SF Symbols for POIs on map")
                 }
             }
+
+            self.streetViewQualitySection
         }
         .navigationTitle("Debug Menu")
         .toolbar {
@@ -66,6 +68,44 @@ struct DebugMenuView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button("Done") {
                     self.dismiss()
+                }
+            }
+        }
+    }
+
+    var streetViewQualitySection: some View {
+        Section {
+            Picker("Quality", selection: self.$debugSettings.streetViewQuality) {
+                ForEach(StreetViewQuality.allCases) {
+                    Text($0.rawValue.localizedCapitalized)
+                }
+            }
+            .pickerStyle(.segmented)
+        } header: {
+            Text("StreetView Quality")
+        } footer: {
+            Grid(alignment: .leading, horizontalSpacing: nil) {
+                ForEach(StreetViewQuality.allCases) { quality in
+                    GridRow {
+                        Text("• \(quality.rawValue.localizedCapitalized)")
+                            .gridColumnAlignment(.leading)
+                        let size = quality.size ?? CGSize(width: 13504, height: 6752)
+                        Text(size.width.formatted() + " x " + size.height.formatted())
+                            .gridColumnAlignment(.trailing)
+                        if let percentage = quality.quality {
+                            Text("@")
+                            Text((Double(percentage) / 100.0).formatted(.percent))
+                                .gridColumnAlignment(.trailing)
+                        } else {
+                            Text("")
+                            Text("")
+                        }
+                        Text("Size:")
+                        Text(quality.approximateFileSize.formatted(.byteCount(style: .file)))
+                            .gridColumnAlignment(.trailing)
+                    }
+                    .lineLimit(0)
+                    .monospacedDigit()
                 }
             }
         }
