@@ -1755,6 +1755,10 @@ components:
             AccessToken JWT access token is short-lived token that will be issued only if the otp verification was successful.
             The token will be valid for 1 hour.
           format: base64
+        expires_at:
+          type: string
+          description: ExpiresAt the time when the access token will expire
+          format: date-time
         is_user_active:
           type: boolean
           description: |-
@@ -1780,6 +1784,10 @@ components:
           type: string
           description: AccessToken the new access token
           format: base64
+        expires_at:
+          type: string
+          description: ExpiresAt the time when the access token will expire
+          format: date-time
   securitySchemes:
     BearerAuth:
       type: apiKey
