@@ -59,5 +59,4 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Test
-        run: set -o pipefail && xcodebuild test -scheme Empty -destination 'platform=iOS Simulator,OS=18.0,name=iPhone 16 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
-        
+        run: set -o pipefail && xcodebuild test -scheme HudHud -testPlan HudHud -destination 'platform=iOS Simulator,OS=18.0,name=iPhone 16 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
