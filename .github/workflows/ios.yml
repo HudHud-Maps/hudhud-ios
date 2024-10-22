@@ -19,13 +19,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         
-      
       - uses: irgaly/xcode-cache@v1
         with:
           key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.sha }}
           restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
           deriveddata-directory: ./build
-        
         
       - name: Install the Apple certificate and provisioning profile
         env:
@@ -58,4 +56,4 @@ jobs:
           cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
 
       - name: Test
-        run: set -o pipefail && xcodebuild test -scheme empty -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation | xcbeautify --renderer github-actions
+        run: set -o pipefail && xcodebuild test -scheme empty -destination 'platform=iOS Simulator,OS=17.5,name=iPhone 15 Pro' -derivedDataPath ./build -skipPackagePluginValidation -skipMacroValidation
