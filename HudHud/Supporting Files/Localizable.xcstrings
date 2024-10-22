@@ -119,6 +119,7 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

@@ -17,7 +17,7 @@ enum Detent: Hashable {
     case fraction(CGFloat)
     case height(CGFloat)
 
-    // MARK: Properties
+    // MARK: Computed Properties
 
     var resolver: (any UISheetPresentationControllerDetentResolutionContext) -> CGFloat? {
         switch self {
@@ -27,8 +27,6 @@ enum Detent: Hashable {
         case let .height(height): return { _ in height }
         }
     }
-
-    // MARK: Computed Properties
 
     var uiKitDetent: UISheetPresentationController.Detent {
         .custom(identifier: self.identifier, resolver: self.resolver)

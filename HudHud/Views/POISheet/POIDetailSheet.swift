@@ -29,8 +29,8 @@ struct POIDetailSheet: View {
     let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
     @State var selectedTab = "Overview"
     @Namespace var animation
-    @State var showTabView: Bool = false
-  
+    @State var showTabView: Bool = true
+
     @State var routes: [RouteModel]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
@@ -135,85 +135,42 @@ struct POIDetailSheet: View {
                     Text("Select a Tab")
                 }
             }
-        }
-
-        if !self.showTabView {
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 4.0) {
-                    Button(action: {
-                        if self.didDenyLocationPermission {
-                            self.askToEnableLocation = true
-                        } else {
-                            self.onStart(self.routes?.map(\.route))
-                        }
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
-
-                    if let phone = self.item.phone, !phone.isEmpty {
-                        Button(action: {
-                            // Perform phone action
-                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                                self.openURL(url)
-                            }
-                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
-                    }
-                    if let website = item.website {
-                        Button(action: {
-                            self.openURL(website)
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
-                    }
-                    // order, save, Review, Media, Report
-                    Button(action: {
-                        Logger.searchView.info("order")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
-                    Button(action: {
-                        Logger.searchView.info("save")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
-                    Button(action: {
-                        Logger.searchView.info("review")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
-                    Button(action: {
-                        Logger.searchView.info("media")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
-                    Button(action: {
-                        Logger.searchView.info("report")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
-                }
-                .padding(15)
-            }
-            .padding(.vertical, -15)
-
             POIMediaView(mediaURLs: self.item.mediaURLs)
+            Spacer()
         }
-        Spacer()
-
-                .alert(
-                    "Location Needed",
-                    isPresented: self.$askToEnableLocation
-                ) {
-                    Button("Enable location in permissions") {
-                        self.openURL(URL(string: UIApplication.openSettingsURLString)!) // swiftlint:disable:this force_unwrapping
-                    }
-                    Button("Cancel", role: .cancel) {}
-                } message: {
-                    Text("Please enable your location to get directions")
+        .overlay(alignment: .bottom) {
+            if let route = routes?.first {
+                VStack(spacing: 0) {
+                    Rectangle() // Top divider
+                        .fill(Color.black.opacity(0.025))
+                        .frame(height: 3)
+                    POIBottomToolbar(item: self.item, duration: self.formatter.formatDuration(duration: route.route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes?.map(\.route))
+//                        .padding(.bottom)
+                            .padding(.vertical, 7)
+                            .padding(.horizontal, 20)
+                            .background(Color.white)
                 }
-                .task {
-                    await self.calculateRoute(for: self.item)
-                }
-                .onChange(of: self.item) { _, newItem in
-                    Task {
-                        await self.calculateRoute(for: newItem)
-                    }
-                }
+            }
+        }.ignoresSafeArea()
+        .alert(
+            "Location Needed",
+            isPresented: self.$askToEnableLocation
+        ) {
+            Button("Enable location in permissions") {
+                self.openURL(URL(string: UIApplication.openSettingsURLString)!) // swiftlint:disable:this force_unwrapping
+            }
+            Button("Cancel", role: .cancel) {}
+        } message: {
+            Text("Please enable your location to get directions")
+        }
+        .task {
+            await self.calculateRoute(for: self.item)
+        }
+        .onChange(of: self.item) { _, newItem in
+            Task {
+                await self.calculateRoute(for: newItem)
+            }
+        }
     }
 
     var tabView: some View {
