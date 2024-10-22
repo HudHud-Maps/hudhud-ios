@@ -65,6 +65,9 @@
     "Add Type" : {
 
     },
+    "Already Logged In" : {
+
+    },
     "Apply" : {
 
     },
@@ -265,7 +268,7 @@
 
     },
     "How was your experience?" : {
-        
+
     },
     "km/h" : {
 
@@ -281,6 +284,9 @@
       }
     },
     "Location Needed" : {
+
+    },
+    "Log Out" : {
 
     },
     "Map Details" : {
@@ -356,6 +362,9 @@
     },
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
+    },
+    "OK" : {
+
     },
     "Open" : {
 
@@ -484,9 +493,6 @@
     "Useful (%lld)" : {
 
     },
-    "User location could not be found." : {
-
-    },
     "Verification code sent to the %@ below:" : {
 
     },
@@ -502,6 +508,9 @@
           }
         }
       }
+    },
+    "We are currently working on the UI and this feature is a work in progress." : {
+
     },
     "Web" : {
       "extractionState" : "stale",
