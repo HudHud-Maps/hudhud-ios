@@ -52,10 +52,10 @@ struct StreetView: View {
                         self.dismissView()
                     } label: {
                         Image(systemSymbol: .xCircleFill)
-                            .resizable()
-                            .frame(width: 26, height: 26)
-                            .accentColor(.white)
-                            .shadow(radius: 26)
+                            .symbolRenderingMode(.monochrome)
+                            .font(.system(size: 26))
+                            .tint(.white)
+                            .shadow(color: Color(white: 0, opacity: 0.3), radius: 15)
                     }
 
                     Spacer()
@@ -66,10 +66,10 @@ struct StreetView: View {
                         }
                     } label: {
                         Image(systemSymbol: self.store.fullScreenStreetView ? .arrowDownRightAndArrowUpLeftCircleFill : .arrowUpLeftAndArrowDownRightCircleFill)
-                            .resizable()
-                            .frame(width: 26, height: 26)
-                            .accentColor(.white)
-                            .shadow(radius: 26)
+                            .symbolRenderingMode(.monochrome)
+                            .font(.system(size: 26))
+                            .tint(.white)
+                            .shadow(color: Color(white: 0, opacity: 0.3), radius: 15)
                     }
                 }
                 Spacer()
