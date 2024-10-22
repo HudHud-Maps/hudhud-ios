@@ -268,7 +268,7 @@
 
     },
     "How was your experience?" : {
-        
+
     },
     "km/h" : {
 
@@ -494,9 +494,6 @@
 
     },
     "Useful (%lld)" : {
-
-    },
-    "User location could not be found." : {
 
     },
     "Verification code sent to the %@ below:" : {

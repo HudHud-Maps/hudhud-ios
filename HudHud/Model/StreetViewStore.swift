@@ -68,11 +68,13 @@ final class StreetViewStore {
         do {
             if let streetViewScene = try await self.streetViewClient.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
                 Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
+                self.errorMsg = nil
                 self.streetViewScene = streetViewScene
                 self.cachedScenes[streetViewScene.id] = streetViewScene
             }
         } catch {
             Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+            self.errorMsg = error.localizedDescription
         }
     }
 
@@ -103,20 +105,24 @@ final class StreetViewStore {
     func loadNearestStreetView(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async {
         do {
             self.nearestStreetViewScene = try await self.streetViewClient.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
+            self.errorMsg = nil
         } catch {
             self.nearestStreetViewScene = nil
             Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+            self.errorMsg = error.localizedDescription
         }
     }
 
-    func loadNearestStreetView(for _: CLLocationCoordinate2D) async {
+    func loadNearestStreetView(for coordinate: CLLocationCoordinate2D) async {
         do {
             // This is not working as `getStreetView` doesn't return a scene but the older format
             // This means we could show the streetView Image but not navigate around
-//            self.nearestStreetViewScene = try await self.streetViewClient.getStreetView(lat: location.latitude, lon: location.longitude, baseURL: DebugStore().baseURL)
+            self.nearestStreetViewScene = try await self.streetViewClient.getStreetView(lat: coordinate.latitude, lon: coordinate.longitude, baseURL: DebugStore().baseURL)
+            self.errorMsg = nil
         } catch {
             self.nearestStreetViewScene = nil
             Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
+            self.errorMsg = error.localizedDescription
         }
     }
 }

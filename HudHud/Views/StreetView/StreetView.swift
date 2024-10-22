@@ -34,16 +34,18 @@ struct StreetView: View {
     // MARK: Content
 
     var body: some View {
-        ZStack {
+        ZStack(alignment: .top) {
             if self.store.svimage != nil {
                 self.panoramaView(self.$store.svimage)
-            } else {
-                if let errorMsg = self.store.errorMsg {
-                    Text(errorMsg)
-                        .multilineTextAlignment(.center)
-                        .foregroundStyle(.red)
-                        .padding()
-                }
+            }
+
+            if let errorMsg = self.store.errorMsg {
+                Text(errorMsg)
+                    .multilineTextAlignment(.center)
+                    .foregroundColor(.yellow)
+                    .padding()
+                    .background(.black)
+                    .cornerRadius(15)
             }
 
             VStack {
@@ -176,14 +178,6 @@ struct StreetView: View {
         self.store.streetViewScene = nil
         self.store.fullScreenStreetView = false
     }
-
-    func setMessage(_ msg: String) {
-        self.store.errorMsg = msg
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.dismissView()
-        }
-    }
-
 }
 
 extension StreetView {
