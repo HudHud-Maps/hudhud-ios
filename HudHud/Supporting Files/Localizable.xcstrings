@@ -29,6 +29,9 @@
         }
       }
     },
+    "%lld Ratings" : {
+
+    },
     "•" : {
 
     },
@@ -136,6 +139,9 @@
 
     },
     "Create Account" : {
+
+    },
+    "Customers Rating" : {
 
     },
     "Debug Menu" : {
@@ -251,6 +257,9 @@
     },
     "How was the navigation on this trip?" : {
 
+    },
+    "How was your experience?" : {
+        
     },
     "km/h" : {
 
