@@ -28,6 +28,8 @@ struct SearchSheet: View {
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
 
+    @State private var showAlert = false
+
     @FocusState private var searchIsFocused: Bool
 
     // MARK: Lifecycle
@@ -90,8 +92,14 @@ struct SearchSheet: View {
                 .background(.quinary)
                 .cornerRadius(12)
                 Button {
-                    // dismiss the search and show login view
-                    self.loginShown = true
+                    if AuthProvider.shared.isLoggedIn() {
+                        // Show alert if the user is already logged in
+                        self.showAlert = true
+                    } else {
+                        // Proceed with login flow
+                        // dismiss the search and show login view
+                        self.loginShown = true
+                    }
                 } label: {
                     Image(systemSymbol: .person)
                         .resizable()
@@ -218,15 +226,35 @@ struct SearchSheet: View {
             UserLoginView(loginStore: LoginStore())
                 .toolbarRole(.editor)
         }
+        .alert(isPresented: self.$showAlert) {
+            Alert(
+                title: Text("Already Logged In"),
+                message: Text("We are currently working on the UI and this feature is a work in progress."),
+                primaryButton: .default(Text("Log Out"), action: {
+                    self.logOut()
+                }),
+                secondaryButton: .default(Text("OK"))
+            )
+        }
     }
 
     // MARK: Functions
 
-    // MARK: - Internal
-
     func storeRecent(item: ResolvedItem) {
         withAnimation {
             self.searchStore.storeInRecent(item)
+        }
+    }
+
+    // MARK: - Internal
+
+    // Log out function
+    private func logOut() {
+        do {
+            try AuthProvider.shared.delete()
+            print("Logged out")
+        } catch {
+            print("Error logging out: \(error)")
         }
     }
 }

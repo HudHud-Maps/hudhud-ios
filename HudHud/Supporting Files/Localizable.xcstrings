@@ -71,6 +71,9 @@
     "Add Type" : {
 
     },
+    "Already Logged In" : {
+
+    },
     "Apply" : {
 
     },
@@ -286,6 +289,9 @@
     "Location Needed" : {
 
     },
+    "Log Out" : {
+
+    },
     "Map Details" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -360,11 +366,20 @@
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
+    "OK" : {
+
+    },
     "Open" : {
 
     },
     "Personal Information" : {
 
+    },
+    "Photos" : {
+
+    },
+    "Pitch: %@" : {
+      "comment" : "street view"
     },
     "Please enable your location to get directions" : {
 
@@ -511,6 +526,9 @@
           }
         }
       }
+    },
+    "We are currently working on the UI and this feature is a work in progress." : {
+
     },
     "Web" : {
       "extractionState" : "stale",
