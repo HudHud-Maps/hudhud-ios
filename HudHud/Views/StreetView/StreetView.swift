@@ -118,7 +118,7 @@ struct StreetView: View {
         ]
 
         if let size = self.debugStore.streetViewQuality.size {
-            let clipped = DeviceSupport.clipToMaximumSupportedTextureSize(size)
+            let clipped = size.clipToMaximumSupportedTextureSize()
             components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
             components.queryItems?.append(URLQueryItem(name: "height", value: "\(clipped.height)"))
         }
@@ -153,7 +153,7 @@ struct StreetView: View {
             // For testing we have the option to request full size images from the server
             // Once we agree on the right size & quality we will request compatible images
             // for every device, then we can remove this
-            let targetSize = DeviceSupport.clipToMaximumSupportedTextureSize(image.size)
+            let targetSize = image.size.clipToMaximumSupportedTextureSize()
             if image.size.width > targetSize.width || image.size.height > targetSize.height {
                 image = image.resize(targetSize, scale: 1)
             }

@@ -111,6 +111,7 @@
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8679922CC79E7600728DDE /* SizeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */; };
 		CD8679962CC7A36B00728DDE /* MainEntryPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */; };
+		CD86799B2CC7BA4000728DDE /* DeviceSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD86799A2CC7BA4000728DDE /* DeviceSupport.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
@@ -275,6 +276,7 @@
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeCalculatorTests.swift; sourceTree = "<group>"; };
 		CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
+		CD86799A2CC7BA4000728DDE /* DeviceSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSupport.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
@@ -486,6 +488,7 @@
 				5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */,
 				3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */,
 				41386D7314539DB91E42D41A /* MapActionHandler.swift */,
+				CD86799A2CC7BA4000728DDE /* DeviceSupport.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -1033,6 +1036,7 @@
 				33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */,
 				01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */,
 				5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */,
+				CD86799B2CC7BA4000728DDE /* DeviceSupport.swift in Sources */,
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
 				CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */,
 				854A602E692EA22AC381F9CA /* FavoritesItem.swift in Sources */,
