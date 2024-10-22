@@ -362,7 +362,7 @@ enum DeviceSupport {
         var maxLength: CGFloat = 4096
 
         guard let device = MTLCreateSystemDefaultDevice() else {
-            fatalError("Could not create Metal Device")
+            assertionFailure("Could not create Metal Device")
             return .square(maxLength)
         }
 
