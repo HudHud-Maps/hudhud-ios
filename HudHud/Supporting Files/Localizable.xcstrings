@@ -58,6 +58,9 @@
     "+" : {
 
     },
+    "About" : {
+
+    },
     "action" : {
 
     },
@@ -119,6 +122,7 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -145,7 +149,7 @@
 
     },
     "Close" : {
-      "comment" : "accesibility label instead of x",
+      "comment" : "Accessibility label instead of x\naccesibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -362,6 +366,9 @@
     "Open" : {
 
     },
+    "Overview" : {
+
+    },
     "Personal Information" : {
 
     },
@@ -393,6 +400,9 @@
     "Reset" : {
 
     },
+    "Reviews" : {
+
+    },
     "Routing Configuration" : {
 
     },
@@ -420,6 +430,9 @@
         }
       }
     },
+    "Select a Tab" : {
+
+    },
     "Select Type" : {
 
     },
@@ -427,6 +440,9 @@
 
     },
     "Show more" : {
+
+    },
+    "Similar Places" : {
 
     },
     "Simulate Ride during Navigation" : {

@@ -26,6 +26,11 @@ struct POIDetailSheet: View {
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
 
+    let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
+    @State var selectedTab = "Overview"
+    @Namespace var animation
+    @State var showTabView: Bool = true
+
     @State var routes: [RouteModel]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
@@ -74,101 +79,79 @@ struct POIDetailSheet: View {
     var body: some View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
-                VStack(alignment: .leading, spacing: .zero) {
+                VStack(alignment: .leading, spacing: 0.0) {
                     Text(self.item.title)
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(2)
                         .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
-
                     self.categoryView
                     HStack {
                         self.ratingView
                         self.priceRangeView
                         self.accessibilityView
                     }
-                    .padding(.vertical, 5)
                     HStack {
                         self.openStatusView
                         self.routeInformationView
                     }
                 }
-                Button(action: {
+
+                // Close Button
+                Button {
                     self.dismiss()
                     self.onDismiss()
-                }, label: {
+                } label: {
                     ZStack {
                         Circle()
                             .fill(Color.Colors.General._03LightGrey)
                             .frame(width: 30, height: 30)
-
                         Image(.closeIcon)
                             .font(.system(size: 15, weight: .bold, design: .rounded))
                     }
                     .padding(4)
                     .contentShape(Circle())
-                })
+                }
                 .tint(.secondary)
-                .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
             }
             .padding([.top, .leading, .trailing], 20)
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 4.0) {
-                    Button(action: {
-                        if self.didDenyLocationPermission {
-                            self.askToEnableLocation = true
-                        } else {
-                            self.onStart(self.routes?.map(\.route))
-                        }
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
 
-                    if let phone = self.item.phone, !phone.isEmpty {
-                        Button(action: {
-                            // Perform phone action
-                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                                self.openURL(url)
-                            }
-                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
-                    }
-                    if let website = item.website {
-                        Button(action: {
-                            self.openURL(website)
-                        }, label: {})
-                            .buttonStyle(POISheetButtonStyle(title: "Web Site", icon: .websiteFill))
-                    }
-                    // order, save, Review, Media, Report
-                    Button(action: {
-                        Logger.searchView.info("order")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Order", icon: .restaurant))
-                    Button(action: {
-                        Logger.searchView.info("save")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Save", icon: .heartFill))
-                    Button(action: {
-                        Logger.searchView.info("review")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Review", icon: .starSolid))
-                    Button(action: {
-                        Logger.searchView.info("media")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Media", icon: .photoSolid))
-                    Button(action: {
-                        Logger.searchView.info("report")
-                    }, label: {})
-                        .buttonStyle(POISheetButtonStyle(title: "Report", icon: .reportSolid))
+            if self.showTabView {
+                self.tabView
+                switch self.selectedTab {
+                case "Overview":
+                    Text("Overview")
+                case "Reviews":
+                    Text("Reviews")
+                case "Photos":
+                    POIMediaView(mediaURLs: self.item.mediaURLs)
+                case "Similar Places":
+                    Text("Similar Places")
+                case "About":
+                    Text("About")
+                default:
+                    Text("Select a Tab")
                 }
-                .padding(15)
             }
-            .padding(.vertical, -15)
-
             POIMediaView(mediaURLs: self.item.mediaURLs)
             Spacer()
         }
+        .overlay(alignment: .bottom) {
+            if let route = routes?.first {
+                VStack(spacing: 0) {
+                    Rectangle() // Top divider
+                        .fill(Color.black.opacity(0.025))
+                        .frame(height: 3)
+                    POIBottomToolbar(item: self.item, duration: self.formatter.formatDuration(duration: route.route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes?.map(\.route))
+//                        .padding(.bottom)
+                            .padding(.vertical, 7)
+                            .padding(.horizontal, 20)
+                            .background(Color.white)
+                }
+            }
+        }.ignoresSafeArea()
         .alert(
             "Location Needed",
             isPresented: self.$askToEnableLocation
@@ -186,6 +169,50 @@ struct POIDetailSheet: View {
         .onChange(of: self.item) { _, newItem in
             Task {
                 await self.calculateRoute(for: newItem)
+            }
+        }
+    }
+
+    var tabView: some View {
+        ScrollViewReader { scrollProxy in
+            ScrollView(.horizontal) {
+                HStack {
+                    ForEach(self.tabItems, id: \.self) { tab in
+                        VStack {
+                            Text(tab)
+                                .hudhudFont(.subheadline)
+                                .fontWeight(self.selectedTab == tab ? .semibold : .regular)
+                                .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
+
+                            if self.selectedTab == tab {
+                                Capsule()
+                                    .foregroundStyle(Color.Colors.General._06DarkGreen)
+                                    .frame(height: 3)
+                                    .matchedGeometryEffect(id: "filter", in: self.animation)
+                            } else {
+                                Capsule()
+                                    .foregroundColor(Color(.clear))
+                                    .frame(height: 3)
+                            }
+                        }
+                        .padding(10)
+                        .onTapGesture {
+                            withAnimation(.easeOut) {
+                                self.selectedTab = tab
+                            }
+
+                            // Scroll to the selected tab
+                            withAnimation {
+                                scrollProxy.scrollTo(tab, anchor: .center)
+                            }
+                        }
+                    }
+                }
+            }
+            .scrollIndicators(.hidden)
+            .overlay {
+                Divider()
+                    .offset(x: 0, y: 15)
             }
         }
     }
