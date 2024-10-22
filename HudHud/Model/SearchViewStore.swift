@@ -16,7 +16,7 @@ import SwiftUI
 // MARK: - SearchViewStore
 
 @MainActor
-final class SearchViewStore: ObservableObject {
+final class SearchViewStore: ObservableObject, SheetElement {
 
     // MARK: Nested Types
 
@@ -60,6 +60,9 @@ final class SearchViewStore: ObservableObject {
     }
 
     // MARK: Properties
+
+    var sheetType: SheetType = .search
+    var detentData = CurrentValueSubject<DetentData, Never>(DetentData(selectedDetent: .small, allowedDetents: [.small, .large]))
 
     let mapStore: MapStore
     let routingStore: RoutingStore

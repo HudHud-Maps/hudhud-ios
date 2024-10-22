@@ -838,6 +838,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				9EE17AF22CC7B5FE00316799 /* PBXTargetDependency */,
 				CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */,
 				6E75A916776AA6E01F44FC98 /* PBXTargetDependency */,
 			);
@@ -1183,6 +1184,10 @@
 /* Begin PBXTargetDependency section */
 		6E75A916776AA6E01F44FC98 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+		};
+		9EE17AF22CC7B5FE00316799 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 9EE17AF12CC7B5FE00316799 /* SwiftLint */;
 		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1755,6 +1760,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 66B0813B009950A4E8AF1401 /* XCRemoteSwiftPackageReference "ferrostar" */;
 			productName = FerrostarSwiftUI;
+		};
+		9EE17AF12CC7B5FE00316799 /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		A9C242CCE05D8DBC345B5D4D /* iPhoneNumberField */ = {
 			isa = XCSwiftPackageProductDependency;

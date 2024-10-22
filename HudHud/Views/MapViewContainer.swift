@@ -17,7 +17,7 @@ import MapLibreSwiftUI
 import OSLog
 import SwiftUI
 
-struct MapViewContainer: View {
+struct MapViewContainer<SheetContentView: View>: View {
 
     // MARK: Properties
 
@@ -29,6 +29,8 @@ struct MapViewContainer: View {
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
     var sheetStore: SheetStore
+
+    @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
     @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
@@ -72,13 +74,16 @@ struct MapViewContainer: View {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore,
-         debugStore: DebugStore,
-         searchViewStore: SearchViewStore,
-         userLocationStore: UserLocationStore,
-         mapViewStore: MapViewStore,
-         routingStore: RoutingStore,
-         sheetStore: SheetStore) {
+    init(
+        mapStore: MapStore,
+        debugStore: DebugStore,
+        searchViewStore: SearchViewStore,
+        userLocationStore: UserLocationStore,
+        mapViewStore: MapViewStore,
+        routingStore: RoutingStore,
+        sheetStore: SheetStore,
+        @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
+    ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
@@ -87,6 +92,7 @@ struct MapViewContainer: View {
         self.routingStore = routingStore
         self.sheetStore = sheetStore
         self.core = routingStore.ferrostarCore
+        self.sheetToView = sheetToView
         // boot up ferrostar
     }
 
@@ -97,7 +103,9 @@ struct MapViewContainer: View {
             DynamicallyOrientingNavigationView(
                 makeViewController: MapViewController(
                     sheetStore: self.sheetStore,
-                    styleURL: self.mapStore.mapStyleUrl()
+                    emptySheet: self.searchViewStore,
+                    styleURL: self.mapStore.mapStyleUrl(),
+                    sheetToView: self.sheetToView
                 ),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
@@ -471,5 +479,5 @@ struct MapViewContainer: View {
         mapViewStore: .storeSetUpForPreviewing,
         routingStore: .storeSetUpForPreviewing,
         sheetStore: .storeSetUpForPreviewing
-    )
+    ) { _ in EmptyView() }
 }

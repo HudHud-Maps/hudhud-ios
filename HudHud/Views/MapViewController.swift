@@ -9,22 +9,32 @@
 import Combine
 import MapLibre
 import MapLibreSwiftUI
+import SwiftUI
 import UIKit
 
-class MapViewController: UIViewController, MapViewHostViewController {
+class MapViewController<SheetContent: View>: UIViewController, MapViewHostViewController {
 
     // MARK: Properties
 
     let mapView: MLNMapView
 
     private let sheetStore: SheetStore
-    private var showSheetSubscription: AnyCancellable?
+    private let sheetToView: (SheetType) -> SheetContent
+    private let emptySheet: SheetElement
+    private var sheetSubscription: AnyCancellable?
 
     // MARK: Lifecycle
 
-    init(sheetStore: SheetStore, styleURL: URL) {
-        self.sheetStore = sheetStore
+    init(
+        sheetStore: SheetStore,
+        emptySheet: SheetElement,
+        styleURL: URL,
+        sheetToView: @escaping (SheetType) -> SheetContent
+    ) {
         self.mapView = MLNMapView(frame: .zero, styleURL: styleURL)
+        self.emptySheet = emptySheet
+        self.sheetToView = sheetToView
+        self.sheetStore = sheetStore
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -46,13 +56,13 @@ class MapViewController: UIViewController, MapViewHostViewController {
             self.sheetStore.isShown.toggle()
         }
 
-        withObservationTracking {
-            _ = self.sheetStore.isShown
-        } onChange: { [weak self] in
-            Task {
-                await self?.handleSheetChange()
-            }
-        }
+//        withObservationTracking {
+//            _ = self.sheetStore.isShown
+//        } onChange: { [weak self] in
+//            Task {
+//                await self?.handleSheetChange()
+//            }
+//        }
         self.handleSheetChange()
     }
 
@@ -60,9 +70,7 @@ class MapViewController: UIViewController, MapViewHostViewController {
 
     private func handleSheetChange() {
         if self.sheetStore.isShown, self.presentedViewController == nil {
-            let aa = UIViewController()
-            aa.view.backgroundColor = .red
-            let viewController = UINavigationController(rootViewController: aa)
+            let viewController = SheetContainerViewController(emptySheet: self.emptySheet, sheetToView: self.sheetToView)
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 self.present(viewController, animated: true)
             }
