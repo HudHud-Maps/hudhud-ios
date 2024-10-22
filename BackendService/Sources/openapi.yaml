@@ -141,6 +141,69 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /p/saved-pois:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: List user saved POIs
+      description: List user saved POIs
+      operationId: listUserSavedPOIs
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_Poi'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+    post:
+      tags:
+        - Point Of Interests (POIs)
+      summary: Save/Unsave POI in user's saved POIs list
+      description: Save/Unsave POI in user's saved POIs list
+      operationId: updatePOIUserSaveStatus
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      requestBody:
+        description: toggle POI save status request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TogglePOIUserSaveStatusRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-TogglePOIUserSaveStatusResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+      x-codegen-request-body-name: request
   /p/trending:
     get:
       tags:
@@ -1376,6 +1439,30 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-TogglePOIUserSaveStatusResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/TogglePOIUserSaveStatusResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-UploadProfilePictureResponse:
       required:
         - data
@@ -1590,6 +1677,15 @@ components:
         total:
           type: integer
           description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    TogglePOIUserSaveStatusRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: boolean
+    TogglePOIUserSaveStatusResponse:
+      type: object
     TypeaheadItem:
       required:
         - android_category_icon
