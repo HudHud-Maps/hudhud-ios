@@ -30,13 +30,15 @@ struct MapViewContainer: View {
     @State var safeAreaInsets = UIEdgeInsets()
     @Binding var isSheetShown: Bool
 
+    @ObservedObject private var core: FerrostarCore
     @State private var didFocusOnUser = false
 
     // MARK: Computed Properties
 
     var locationLabel: String {
         guard let userLocation = searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation else {
-            return "No location - authed as \(self.searchViewStore.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
+            return
+                "No location - authed as \(self.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
         }
 
         return "±\(Int(userLocation.horizontalAccuracy))m accuracy"
@@ -48,6 +50,23 @@ struct MapViewContainer: View {
                 try await Task.sleep(nanoseconds: 8 * NSEC_PER_SEC)
                 self.errorMessage = nil
             }
+        }
+    }
+
+    private var speed: Measurement<UnitSpeed>? {
+        if let speed = self.routingStore.ferrostarCore.locationProvider.lastLocation?.speed {
+            Measurement<UnitSpeed>(value: speed.value, unit: .metersPerSecond)
+        } else {
+            nil
+        }
+    }
+
+    private var speedLimit: Measurement<UnitSpeed>? {
+        if let annotation = try? self.routingStore.ferrostarCore.state?
+            .currentAnnotation(as: ValhallaOsrmAnnotation.self) {
+            annotation.speedLimit?.measurementValue
+        } else {
+            nil
         }
     }
 
@@ -67,6 +86,7 @@ struct MapViewContainer: View {
         self.mapViewStore = mapViewStore
         self.routingStore = routingStore
         self._isSheetShown = isSheetShown
+        self.core = routingStore.ferrostarCore
         // boot up ferrostar
     }
 
@@ -74,49 +94,111 @@ struct MapViewContainer: View {
 
     var body: some View {
         NavigationStack {
-            DynamicallyOrientingNavigationView(styleURL: self.mapStore.mapStyleUrl(), camera: self.$mapStore.camera, navigationState: self.searchViewStore.routingStore.ferrostarCore.state) {
+            DynamicallyOrientingNavigationView(
+                styleURL: self.mapStore.mapStyleUrl(),
+                camera: self.$mapStore.camera,
+                locationProviding: self.routingStore.ferrostarCore.locationProvider,
+                navigationState: self.routingStore.ferrostarCore.state,
+                showZoom: false
+            ) {
                 // onTapExit
                 self.stopNavigation()
+
             } makeMapContent: {
+                let routePoints = self.searchViewStore.routingStore.routePoints
+                // Separate the selected route from alternatives
+                let selectedRoute = self.searchViewStore.routingStore.routes.first(where: { $0.isSelected })
+                let alternativeRoutes = self.searchViewStore.routingStore.routes.filter { !$0.isSelected }
+
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating {
                     // The state is .navigating
-                    // You can perform your actions here
                 } else {
-                    if let route = self.searchViewStore.routingStore.potentialRoute {
-                        let polylineSource = ShapeSource(identifier: MapSourceIdentifier.pedestrianPolyline) {
-                            MLNPolylineFeature(coordinates: route.geometry.clLocationCoordinate2Ds)
+                    // Render alternative routes first
+                    for routeModel in alternativeRoutes {
+                        let polylineSource = ShapeSource(identifier: "alternative-route-\(routeModel.id)") {
+                            MLNPolylineFeature(coordinates: routeModel.route.geometry.clLocationCoordinate2Ds)
                         }
 
-                        // Add a polyline casing for a stroke effect
-                        LineStyleLayer(identifier: MapLayerIdentifier.routeLineCasing, source: polylineSource)
-                            .lineCap(.round)
-                            .lineJoin(.round)
-                            .lineColor(.white)
-                            .lineWidth(interpolatedBy: .zoomLevel,
-                                       curveType: .linear,
-                                       parameters: NSExpression(forConstantValue: 1.5),
-                                       stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+                        LineStyleLayer(
+                            identifier: "alternative-route-casing-\(routeModel.id)",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.lightGray)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 10, 20: 20]))
 
-                        // Add an inner (blue) polyline
-                        LineStyleLayer(identifier: MapLayerIdentifier.routeLineInner, source: polylineSource)
-                            .lineCap(.round)
-                            .lineJoin(.round)
-                            .lineColor(.systemBlue)
-                            .lineWidth(interpolatedBy: .zoomLevel,
-                                       curveType: .linear,
-                                       parameters: NSExpression(forConstantValue: 1.5),
-                                       stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+                        LineStyleLayer(
+                            identifier: "alternative-route-inner-\(routeModel.id)",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.systemBlue.withAlphaComponent(0.5))
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 8, 20: 14]))
 
-                        let routePoints = self.searchViewStore.routingStore.routePoints
+                        CircleStyleLayer(
+                            identifier: MapLayerIdentifier.simpleCirclesRoute + "\(routeModel.id)",
+                            source: routePoints
+                        )
+                        .radius(16)
+                        .color(.systemRed)
+                        .strokeWidth(2)
+                        .strokeColor(.white)
+                        SymbolStyleLayer(
+                            identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(routeModel.id)",
+                            source: routePoints
+                        )
+                        .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                        .iconColor(.white)
+                    }
 
-                        CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute, source: routePoints)
-                            .radius(16)
-                            .color(.systemRed)
-                            .strokeWidth(2)
-                            .strokeColor(.white)
-                        SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute, source: routePoints)
-                            .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                            .iconColor(.white)
+                    // Render the selected route
+                    if let selectedRoute {
+                        let polylineSource = ShapeSource(identifier: "selected-route") {
+                            MLNPolylineFeature(coordinates: selectedRoute.route.geometry.clLocationCoordinate2Ds)
+                        }
+
+                        LineStyleLayer(
+                            identifier: "selected-route-casing",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.white)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 14, 20: 26]))
+
+                        LineStyleLayer(
+                            identifier: "selected-route-inner",
+                            source: polylineSource
+                        )
+                        .lineCap(.round)
+                        .lineJoin(.round)
+                        .lineColor(.systemBlue)
+                        .lineWidth(interpolatedBy: .zoomLevel,
+                                   curveType: .linear,
+                                   parameters: NSExpression(forConstantValue: 1.5),
+                                   stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+                    }
+
+                    let allRoutes: [RouteModel] = alternativeRoutes + [selectedRoute].compactMap { $0 }
+                    for routeModel in allRoutes {
+                        let segments = routeModel.route.extractCongestionSegments()
+                        let congestionLevels = ["moderate", "heavy", "severe"]
+
+                        for level in congestionLevels {
+                            let source = self.congestionSource(for: level, segments: segments, id: routeModel.id)
+                            self.congestionLayer(for: level, source: source, id: routeModel.id)
+                        }
                     }
 
                     if self.debugStore.customMapSymbols == true, self.mapStore.displayableItems.isEmpty, self.mapStore.isSFSymbolLayerPresent(), self.mapStore.shouldShowCustomSymbols {
@@ -200,13 +282,13 @@ struct MapViewContainer: View {
                             self.mapViewStore.didTapOnMap(containing: features)
                         }
                         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
-                        .cameraModifierDisabled(self.searchViewStore.routingStore.navigatingRoute != nil)
+                        .cameraModifierDisabled(self.routingStore.navigatingRoute != nil)
                         .onStyleLoaded { style in
                             self.mapStore.mapStyle = style
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                         }
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
-                            if self.searchViewStore.mapStore.selectedItem == nil {
+                            if self.mapStore.selectedItem == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
                                 self.searchViewStore.mapStore.select(generatedPOI)
                             }
@@ -233,7 +315,7 @@ struct MapViewContainer: View {
                 },
                 bottomTrailing: {
                     VStack {
-                        if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true {
+                        if self.routingStore.ferrostarCore.isNavigating == true {
                             Text(self.locationLabel)
                                 .font(.caption)
                                 .padding(.all, 8)
@@ -244,10 +326,18 @@ struct MapViewContainer: View {
                                     ))
                         }
                     }
+                },
+                bottomLeading: {
+                    if self.routingStore.ferrostarCore.isNavigating {
+                        SpeedView(
+                            speed: self.speed,
+                            speedLimit: self.speedLimit
+                        )
+                    }
                 }
             )
-            .onChange(of: self.searchViewStore.routingStore.potentialRoute) { _, newRoute in
-                if let route = newRoute, self.searchViewStore.routingStore.navigatingRoute == nil {
+            .onChange(of: self.routingStore.potentialRoute) { _, newRoute in
+                if let route = newRoute, self.routingStore.navigatingRoute == nil {
                     let camera = MapViewCamera.boundingBox(route.bbox.mlnCoordinateBounds)
                     self.mapStore.camera = camera
                 }
@@ -266,7 +356,7 @@ struct MapViewContainer: View {
                 self.didFocusOnUser = true
                 self.mapStore.camera = .trackUserLocation() // without this line the user location puck does not appear on start up
             }
-            .onChange(of: self.searchViewStore.routingStore.navigatingRoute) { newValue in
+            .onChange(of: self.routingStore.navigatingRoute) { _, newValue in
                 if let route = newValue {
                     do {
                         if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
@@ -274,6 +364,9 @@ struct MapViewContainer: View {
                             // The ferrostarCore.startNavigation will still start the location
                             // provider/simulator.
                             try simulated.setSimulatedRoute(route, resampleDistance: 5)
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                                simulated.startUpdating()
+                            }
                         }
 
                         try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
@@ -286,7 +379,17 @@ struct MapViewContainer: View {
                     }
                 } else {
                     self.stopNavigation()
+                    if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                        simulated.stopUpdating()
+                    }
                 }
+            }
+            .onChange(of: self.core.state?.tripState) { oldValue, newValue in
+                guard let oldValue,
+                      let newValue,
+                      case .navigating = oldValue,
+                      newValue == .complete else { return }
+                self.stopNavigation()
             }
             .task {
                 guard !self.didFocusOnUser else { return }
@@ -305,15 +408,52 @@ struct MapViewContainer: View {
         self.searchViewStore.endTrip()
         self.isSheetShown = true
 
-        if let coordinates = self.searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
+        if let coordinates = self.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
             self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .fixed(0))
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .free)
             }
         }
+        self.routingStore.clearRoutes()
     }
 
+    private func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
+        ShapeSource(identifier: "congestion-\(level)-\(id)") {
+            segments.filter { $0.level == level }.map { segment in
+                MLNPolylineFeature(coordinates: segment.geometry)
+            }
+        }
+    }
+
+    private func congestionLayer(for level: String, source: ShapeSource, id: Int) -> LineStyleLayer {
+        LineStyleLayer(identifier: "congestion-line-\(level)-\(id)", source: source)
+            .lineCap(.round)
+            .lineJoin(.round)
+            .lineColor(self.colorForCongestionLevel(level))
+            .lineWidth(
+                interpolatedBy: .zoomLevel,
+                curveType: .linear,
+                parameters: NSExpression(forConstantValue: 1.5),
+                stops: NSExpression(forConstantValue: [
+                    14: 6,
+                    16: 7,
+                    18: 9,
+                    20: 16
+                ])
+            )
+    }
+
+    private func colorForCongestionLevel(_ level: String) -> UIColor {
+        switch level {
+        case "unknown": return .gray
+        case "low": return .green
+        case "moderate": return .yellow
+        case "heavy": return .orange
+        case "severe": return .red
+        default: return .blue
+        }
+    }
 }
 
 #Preview {
