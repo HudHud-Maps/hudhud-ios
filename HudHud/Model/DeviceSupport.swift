@@ -16,6 +16,7 @@ enum DeviceSupport {
     // MARK: Nested Types
 
     // swiftlint:disable identifier_name
+    // From https://stackoverflow.com/a/46234519/7269707
     enum Model: String {
 
         // Simulator
