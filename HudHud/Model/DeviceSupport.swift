@@ -11,11 +11,11 @@ import Metal
 
 // MARK: - DeviceSupport
 
-// swiftlint:disable identifier_name
 enum DeviceSupport {
 
     // MARK: Nested Types
 
+    // swiftlint:disable identifier_name
     enum Model: String {
 
         // Simulator
@@ -133,6 +133,8 @@ enum DeviceSupport {
 
         case unrecognized = "?unrecognized?"
     }
+
+    // swiftlint:enable identifier_name
 
     // MARK: Static Computed Properties
 
@@ -389,7 +391,4 @@ extension CGSize {
 
         return currentSize
     }
-
 }
-
-// swiftlint:enable identifier_name
