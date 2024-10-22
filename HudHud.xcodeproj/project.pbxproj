@@ -117,7 +117,7 @@
 		CD86799F2CC7CCC400728DDE /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 87BB51654AF2AE46D9ECD954 /* FerrostarSwiftUI */; };
 		CD8679A02CC7CCC400728DDE /* Semaphore in Frameworks */ = {isa = PBXBuildFile; productRef = CDBC2CB52CC173EC002E59E0 /* Semaphore */; };
 		CD8679D62CC7DB6900728DDE /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679D32CC7DB6900728DDE /* ContentView.swift */; };
-		CD8679D72CC7DB6900728DDE /* emptyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679D42CC7DB6900728DDE /* emptyApp.swift */; };
+		CD8679D72CC7DB6900728DDE /* EmptyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8679D42CC7DB6900728DDE /* EmptyApp.swift */; };
 		CD8679D82CC7DB6900728DDE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD8679D22CC7DB6900728DDE /* Assets.xcassets */; };
 		CD8679D92CC7DB6900728DDE /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CD8679D02CC7DB6900728DDE /* Preview Assets.xcassets */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
@@ -294,12 +294,12 @@
 		CD8679912CC79E7600728DDE /* SizeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SizeCalculatorTests.swift; sourceTree = "<group>"; };
 		CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
 		CD86799A2CC7BA4000728DDE /* DeviceSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSupport.swift; sourceTree = "<group>"; };
-		CD8679A62CC7DA9100728DDE /* empty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = empty.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD8679A62CC7DA9100728DDE /* Empty.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Empty.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD8679D02CC7DB6900728DDE /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		CD8679D22CC7DB6900728DDE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD8679D32CC7DB6900728DDE /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		CD8679D42CC7DB6900728DDE /* emptyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = emptyApp.swift; sourceTree = "<group>"; };
-		CD8679DE2CC7DB8C00728DDE /* emptyTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emptyTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CD8679D42CC7DB6900728DDE /* EmptyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyApp.swift; sourceTree = "<group>"; };
+		CD8679DE2CC7DB8C00728DDE /* EmptyTest.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = EmptyTest.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
@@ -345,7 +345,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CD8679DF2CC7DB8C00728DDE /* emptyTest */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = emptyTest; sourceTree = "<group>"; };
+		CD8679DF2CC7DB8C00728DDE /* EmptyTest */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = EmptyTest; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -575,15 +575,15 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		CD8679D52CC7DB6900728DDE /* empty */ = {
+		CD8679D52CC7DB6900728DDE /* Empty */ = {
 			isa = PBXGroup;
 			children = (
 				CD8679D12CC7DB6900728DDE /* Preview Content */,
 				CD8679D22CC7DB6900728DDE /* Assets.xcassets */,
 				CD8679D32CC7DB6900728DDE /* ContentView.swift */,
-				CD8679D42CC7DB6900728DDE /* emptyApp.swift */,
+				CD8679D42CC7DB6900728DDE /* EmptyApp.swift */,
 			);
-			path = empty;
+			path = Empty;
 			sourceTree = "<group>";
 		};
 		CD8F7CA8F3403D938AC063FD /* UserRegistration */ = {
@@ -603,8 +603,8 @@
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
 				CDAE05612B681263003E5196 /* HudHudUITests */,
-				CD8679D52CC7DB6900728DDE /* empty */,
-				CD8679DF2CC7DB8C00728DDE /* emptyTest */,
+				CD8679D52CC7DB6900728DDE /* Empty */,
+				CD8679DF2CC7DB8C00728DDE /* EmptyTest */,
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
 				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
@@ -619,8 +619,8 @@
 				CDAE05442B681261003E5196 /* HudHud.app */,
 				CDAE05542B681263003E5196 /* HudHudTests.xctest */,
 				CDAE055E2B681263003E5196 /* HudHudUITests.xctest */,
-				CD8679A62CC7DA9100728DDE /* empty.app */,
-				CD8679DE2CC7DB8C00728DDE /* emptyTest.xctest */,
+				CD8679A62CC7DA9100728DDE /* Empty.app */,
+				CD8679DE2CC7DB8C00728DDE /* EmptyTest.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -855,9 +855,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CD8679A52CC7DA9100728DDE /* empty */ = {
+		CD8679A52CC7DA9100728DDE /* Empty */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CD8679CD2CC7DA9200728DDE /* Build configuration list for PBXNativeTarget "empty" */;
+			buildConfigurationList = CD8679CD2CC7DA9200728DDE /* Build configuration list for PBXNativeTarget "Empty" */;
 			buildPhases = (
 				CD8679A22CC7DA9100728DDE /* Sources */,
 				CD8679A32CC7DA9100728DDE /* Frameworks */,
@@ -867,16 +867,16 @@
 			);
 			dependencies = (
 			);
-			name = empty;
+			name = Empty;
 			packageProductDependencies = (
 			);
 			productName = empty;
-			productReference = CD8679A62CC7DA9100728DDE /* empty.app */;
+			productReference = CD8679A62CC7DA9100728DDE /* Empty.app */;
 			productType = "com.apple.product-type.application";
 		};
-		CD8679DD2CC7DB8C00728DDE /* emptyTest */ = {
+		CD8679DD2CC7DB8C00728DDE /* EmptyTest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CD8679E42CC7DB8C00728DDE /* Build configuration list for PBXNativeTarget "emptyTest" */;
+			buildConfigurationList = CD8679E42CC7DB8C00728DDE /* Build configuration list for PBXNativeTarget "EmptyTest" */;
 			buildPhases = (
 				CD8679DA2CC7DB8C00728DDE /* Sources */,
 				CD8679DB2CC7DB8C00728DDE /* Frameworks */,
@@ -888,13 +888,13 @@
 				CD8679E32CC7DB8C00728DDE /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				CD8679DF2CC7DB8C00728DDE /* emptyTest */,
+				CD8679DF2CC7DB8C00728DDE /* EmptyTest */,
 			);
-			name = emptyTest;
+			name = EmptyTest;
 			packageProductDependencies = (
 			);
 			productName = emptyTest;
-			productReference = CD8679DE2CC7DB8C00728DDE /* emptyTest.xctest */;
+			productReference = CD8679DE2CC7DB8C00728DDE /* EmptyTest.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		CDAE05432B681261003E5196 /* HudHud */ = {
@@ -1042,8 +1042,8 @@
 				CDAE05432B681261003E5196 /* HudHud */,
 				CDAE05532B681263003E5196 /* HudHudTests */,
 				CDAE055D2B681263003E5196 /* HudHudUITests */,
-				CD8679A52CC7DA9100728DDE /* empty */,
-				CD8679DD2CC7DB8C00728DDE /* emptyTest */,
+				CD8679A52CC7DA9100728DDE /* Empty */,
+				CD8679DD2CC7DB8C00728DDE /* EmptyTest */,
 			);
 		};
 /* End PBXProject section */
@@ -1141,7 +1141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CD8679D62CC7DB6900728DDE /* ContentView.swift in Sources */,
-				CD8679D72CC7DB6900728DDE /* emptyApp.swift in Sources */,
+				CD8679D72CC7DB6900728DDE /* EmptyApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1294,7 +1294,7 @@
 		};
 		CD8679E32CC7DB8C00728DDE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CD8679A52CC7DA9100728DDE /* empty */;
+			target = CD8679A52CC7DA9100728DDE /* Empty */;
 			targetProxy = CD8679E22CC7DB8C00728DDE /* PBXContainerItemProxy */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
@@ -1674,7 +1674,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CD8679CD2CC7DA9200728DDE /* Build configuration list for PBXNativeTarget "empty" */ = {
+		CD8679CD2CC7DA9200728DDE /* Build configuration list for PBXNativeTarget "Empty" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD8679C72CC7DA9200728DDE /* Debug */,
@@ -1683,7 +1683,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CD8679E42CC7DB8C00728DDE /* Build configuration list for PBXNativeTarget "emptyTest" */ = {
+		CD8679E42CC7DB8C00728DDE /* Build configuration list for PBXNativeTarget "EmptyTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CD8679E52CC7DB8C00728DDE /* Debug */,

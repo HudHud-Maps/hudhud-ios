@@ -9,11 +9,8 @@ on:
 jobs:
   test:
     name: Build and Test
-    runs-on: macos-14
+    runs-on: macos-15
     steps:
-      - name: Install tools
-        run: brew install xcbeautify
-        
       - name: Setup Xcode
         uses: maxim-lobanov/setup-xcode@v1
         with:
@@ -27,6 +24,7 @@ jobs:
         with:
           key: xcode-cache-deriveddata-${{ github.workflow }}-${{ github.sha }}
           restore-keys: xcode-cache-deriveddata-${{ github.workflow }}-
+          deriveddata-directory: ./build
         
         
       - name: Install the Apple certificate and provisioning profile

@@ -1,6 +1,6 @@
 //
 //  ContentView.swift
-//  empty
+//  Empty
 //
 //  Created by Patrick Kladek on 22.10.24.
 //  Copyright © 2024 HudHud. All rights reserved.
