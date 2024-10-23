@@ -158,6 +158,7 @@ struct ContentView: View {
                     } onDismiss: {
                         self.searchViewStore.mapStore
                             .clearItems(clearResults: false)
+                        self.sheetStore.popSheet()
                     }
                     .navigationBarBackButtonHidden()
                 case .favoritesViewMore:

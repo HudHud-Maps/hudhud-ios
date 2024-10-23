@@ -74,7 +74,7 @@ final class SheetStore {
             return
         }
         _ = self.sheets.popLast()
-        let destinationDetentCurrentValueSubject = self.sheets.last?.detentData ?? self.emptySheetData.detentData
+        let destinationDetentCurrentValueSubject = self.currentSheet.detentData
         self.navigationCommands.send(.pop(destinationPageDetentPublisher: destinationDetentCurrentValueSubject))
     }
 

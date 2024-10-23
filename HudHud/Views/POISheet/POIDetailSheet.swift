@@ -34,7 +34,6 @@ struct POIDetailSheet: View {
 
     @EnvironmentObject var notificationQueue: NotificationQueue
 
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
     // MARK: Computed Properties
@@ -103,7 +102,6 @@ struct POIDetailSheet: View {
                     .padding(self.item.category != nil ? .bottom : .vertical, 4)
                 }
                 Button(action: {
-                    self.dismiss()
                     self.onDismiss()
                 }, label: {
                     ZStack {
