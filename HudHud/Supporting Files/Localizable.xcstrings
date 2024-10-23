@@ -514,6 +514,9 @@
     "Verify" : {
 
     },
+    "Visualize taps in screen recordings to help understand your bug reports" : {
+
+    },
     "walk" : {
       "localizations" : {
         "ar" : {
@@ -537,6 +540,9 @@
           }
         }
       }
+    },
+    "WEBP has a maximum limit of %@ pixels, image will look pixelated as its divided by a fractional number" : {
+
     },
     "Work" : {
       "extractionState" : "stale",

@@ -101,6 +101,11 @@ private extension StreetView {
             }, tapHandler: { direction in
                 self.loadImage(direction)
             })
+            .onChange(of: self.store.streetViewScene) { _, _ in
+                self.store.isLoading = true
+                self.store.progress = 0
+                self.loadSVImage()
+            }
         }
     }
 
@@ -111,7 +116,7 @@ private extension StreetView {
                   let nextName = nextItem.name else {
                 return
             }
-            Logger.streetView.debug("SVD: Direction: \(direction.rawValue), Value: \(nextId), \(nextName)")
+            Logger.streetView.debug("SVD: Direction: \(String(reflecting: direction)), Value: \(nextId), \(nextName)")
             self.store.errorMsg = nil
             self.store.isLoading = true
             self.store.progress = 0.0
@@ -189,6 +194,10 @@ private extension StreetView {
             URLQueryItem(name: "api_key", value: "34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh")
         ]
 
+        if let format = self.debugStore.streetViewQuality.format {
+            components.queryItems?.append(URLQueryItem(name: "format", value: format))
+        }
+
         if let size = self.debugStore.streetViewQuality.size {
             let clipped = size.clipToMaximumSupportedTextureSize()
             components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
@@ -197,6 +206,8 @@ private extension StreetView {
         if let quality = self.debugStore.streetViewQuality.quality {
             components.queryItems?.append(URLQueryItem(name: "quality", value: "\(quality)"))
         }
+
+        Logger.streetView.debug("Parameters: \(components.queryItems ?? [])")
 
         return components.url
     }
@@ -220,6 +231,8 @@ private extension StreetView {
                 self.store.progress = progress.fraction
             }
             var image = try await imageTask.image
+            let contentLength = try await imageTask.response.urlResponse?.expectedContentLength ?? 0
+            Logger.streetView.debug("Content-Length: \(contentLength.formatted(.byteCount(style: .binary)))")
 
             // Some older devices might crash with full size images
             // For testing we have the option to request full size images from the server

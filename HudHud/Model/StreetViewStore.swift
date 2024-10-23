@@ -117,10 +117,10 @@ final class StreetViewStore {
         do {
             // This is not working as `getStreetView` doesn't return a scene but the older format
             // This means we could show the streetView Image but not navigate around
-            self.nearestStreetViewScene = try await self.streetViewClient.getStreetView(lat: coordinate.latitude, lon: coordinate.longitude, baseURL: DebugStore().baseURL)
+            self.streetViewScene = try await self.streetViewClient.getStreetView(lat: coordinate.latitude, lon: coordinate.longitude, baseURL: DebugStore().baseURL)
             self.errorMsg = nil
         } catch {
-            self.nearestStreetViewScene = nil
+            self.streetViewScene = nil
             Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
             self.errorMsg = error.localizedDescription
         }

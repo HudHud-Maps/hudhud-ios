@@ -29,6 +29,8 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
     case original
     case medium
     case low
+    case webp1
+    case webp2
 
     // MARK: Computed Properties
 
@@ -44,6 +46,10 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
             return CGSize(width: 6752, height: 3376)
         case .low:
             return CGSize(width: 6752, height: 3376)
+        case .webp1:
+            return CGSize(width: 5500, height: 2850)
+        case .webp2:
+            return CGSize(width: 5500, height: 2750)
         }
     }
 
@@ -54,6 +60,10 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
         case .medium:
             return 85
         case .low:
+            return 50
+        case .webp1:
+            return 80
+        case .webp2:
             return 50
         }
     }
@@ -66,6 +76,25 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
             return 1_803_411
         case .low:
             return 788_736
+        case .webp1:
+            return 729_264
+        case .webp2:
+            return 222_454
+        }
+    }
+
+    var format: String? {
+        switch self {
+        case .original:
+            return nil
+        case .medium:
+            return "jpeg"
+        case .low:
+            return "jpeg"
+        case .webp1:
+            return "webp"
+        case .webp2:
+            return "webp"
         }
     }
 }
