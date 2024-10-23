@@ -381,7 +381,7 @@ struct MapViewContainer<SheetContentView: View>: View {
                         }
 
                         try self.searchViewStore.routingStore.ferrostarCore.startNavigation(route: route)
-                        self.sheetStore.isShown = false
+                        self.sheetStore.isShown.value = false
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                             self.mapStore.camera = .automotiveNavigation()
                         }
@@ -417,7 +417,7 @@ struct MapViewContainer<SheetContentView: View>: View {
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
-        self.sheetStore.isShown = true
+        self.sheetStore.isShown.value = true
 
         if let coordinates = self.routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.

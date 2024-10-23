@@ -26,7 +26,7 @@ final class SheetStore {
     // MARK: Properties
 
     let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
-    var isShown = true
+    var isShown = CurrentValueSubject<Bool, Never>(true)
 
     private var sheets: [SheetData] = []
 

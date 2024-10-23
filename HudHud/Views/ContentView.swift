@@ -301,12 +301,12 @@ struct ContentView: View {
                     if self.mapStore.streetViewScene != nil {
                         StreetView(streetViewScene: self.$mapStore.streetViewScene, mapStore: self.mapStore, fullScreenStreetView: self.$mapStore.fullScreenStreetView)
                             .onChange(of: self.mapStore.fullScreenStreetView) { _, newValue in
-                                self.sheetStore.isShown = !newValue
+                                self.sheetStore.isShown.value = !newValue
                             }
                     }
                 }
                 .onChange(of: self.mapStore.streetViewScene) { _, newValue in
-                    self.sheetStore.isShown = newValue == nil
+                    self.sheetStore.isShown.value = newValue == nil
                 } // I moved the if statment in VStack to allow onChange to be notified, if the onChange is inside the if statment it will not be triggered
             }
             .onChange(of: self.sheetStore.selectedDetent) {
