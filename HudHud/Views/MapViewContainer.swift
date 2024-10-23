@@ -28,7 +28,7 @@ struct MapViewContainer<SheetContentView: View>: View {
     let mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
-    var sheetStore: SheetStore
+    var sheetStore: MySheet
 
     @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
@@ -81,7 +81,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         userLocationStore: UserLocationStore,
         mapViewStore: MapViewStore,
         routingStore: RoutingStore,
-        sheetStore: SheetStore,
+        sheetStore: MySheet,
         @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
@@ -102,7 +102,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         NavigationStack {
             DynamicallyOrientingNavigationView(
                 makeViewController: MapViewController(
-                    sheetStore: MySheet(emptySheetType: .search),
+                    sheetStore: self.sheetStore,
                     styleURL: self.mapStore.mapStyleUrl(),
                     sheetToView: self.sheetToView
                 ),

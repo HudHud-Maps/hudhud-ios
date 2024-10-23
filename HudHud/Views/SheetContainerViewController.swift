@@ -117,7 +117,7 @@ enum SheetType: Hashable {
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
-        case let .pointOfInterest(resolvedItem):
+        case let .pointOfInterest:
             DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])

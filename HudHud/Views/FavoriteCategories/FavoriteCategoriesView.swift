@@ -16,7 +16,7 @@ struct FavoriteCategoriesView: View {
 
     // MARK: Properties
 
-    var sheetStore: SheetStore
+    var sheetStore: MySheet
     let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
@@ -38,7 +38,7 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
                 Button("Add") {
-                    self.sheetStore.pushSheet(SheetViewData(viewData: .favoritesViewMore))
+                    self.sheetStore.show(.favoritesViewMore)
                 }
                 .hudhudFont(size: 12, fontWeight: .medium)
                 .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))

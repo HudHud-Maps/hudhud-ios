@@ -79,7 +79,7 @@ struct ContentView: View {
                 userLocationStore: self.userLocationStore,
                 mapViewStore: self.mapViewStore,
                 routingStore: self.searchViewStore.routingStore,
-                sheetStore: self.sheetStore
+                sheetStore: self.mySheet
             ) { sheetType in
                 switch sheetType {
                 case .mapStyle:
@@ -113,7 +113,7 @@ struct ContentView: View {
                         mapStore: freshSearchViewStore.mapStore,
                         searchStore: freshSearchViewStore,
                         trendingStore: self.trendingStore,
-                        sheetStore: self.sheetStore,
+                        sheetStore: self.sheetStore, mySheet: self.mySheet,
                         filterStore: self.searchViewStore.filterStore
                     )
                     .navigationBarBackButtonHidden()
@@ -136,7 +136,7 @@ struct ContentView: View {
                         mapStore: freshSearchViewStore.mapStore,
                         searchStore: freshSearchViewStore,
                         trendingStore: self.trendingStore,
-                        sheetStore: SheetStore(),
+                        sheetStore: SheetStore(), mySheet: MySheet(emptySheetType: .search),
                         filterStore: self.searchViewStore.filterStore
                     )
                 case .navigationPreview:
@@ -184,6 +184,7 @@ struct ContentView: View {
                         searchStore: self.searchViewStore,
                         trendingStore: self.trendingStore,
                         sheetStore: self.sheetStore,
+                        mySheet: self.mySheet,
                         filterStore: self.searchViewStore.filterStore
                     )
                     .background(Color(.Colors.General._05WhiteBackground))

@@ -33,7 +33,7 @@ struct RootSheetView: View {
     var body: some View {
         NavigationStack(path: self.$sheetStore.sheets) {
             SearchSheet(mapStore: self.mapStore,
-                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore, filterStore: self.searchViewStore.filterStore)
+                        searchStore: self.searchViewStore, trendingStore: self.trendingStore, sheetStore: self.sheetStore, mySheet: MySheet(emptySheetType: .search), filterStore: self.searchViewStore.filterStore)
                 .background(Color(.Colors.General._05WhiteBackground))
                 .toolbar(.hidden)
                 .navigationDestination(for: SheetViewData.self) { value in
@@ -69,7 +69,7 @@ struct RootSheetView: View {
                             mapStore: freshSearchViewStore.mapStore,
                             searchStore: freshSearchViewStore,
                             trendingStore: self.trendingStore,
-                            sheetStore: self.sheetStore,
+                            sheetStore: self.sheetStore, mySheet: MySheet(emptySheetType: .search),
                             filterStore: self.searchViewStore.filterStore
                         )
                         .navigationBarBackButtonHidden()
@@ -92,7 +92,7 @@ struct RootSheetView: View {
                             mapStore: freshSearchViewStore.mapStore,
                             searchStore: freshSearchViewStore,
                             trendingStore: self.trendingStore,
-                            sheetStore: SheetStore(),
+                            sheetStore: SheetStore(), mySheet: MySheet(emptySheetType: .search),
                             filterStore: self.searchViewStore.filterStore
                         )
                     case .navigationPreview:

@@ -123,7 +123,7 @@ struct FavoritesViewMoreView: View {
             mapStore: freshMapStore,
             searchStore: freshSearchViewStore,
             trendingStore: TrendingStore(),
-            sheetStore: self.sheetStore,
+            sheetStore: self.sheetStore, mySheet: MySheet(emptySheetType: .search),
             filterStore: FilterStore()
         )
     }
