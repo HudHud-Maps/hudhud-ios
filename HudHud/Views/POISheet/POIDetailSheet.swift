@@ -29,7 +29,7 @@ struct POIDetailSheet: View {
     let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
     @State var selectedTab = "Overview"
     @Namespace var animation
-    @State var showTabView: Bool = true
+    @State var showTabView: Bool = false
 
     @State var routes: [RouteModel]?
     @State var viewMore: Bool = false
@@ -122,7 +122,7 @@ struct POIDetailSheet: View {
                 self.tabView
                 switch self.selectedTab {
                 case "Overview":
-                    Text("Overview")
+                    POIOverviewView(poiData: POISheetStore(item: self.item))
                 case "Reviews":
                     Text("Reviews")
                 case "Photos":
@@ -135,9 +135,13 @@ struct POIDetailSheet: View {
                     Text("Select a Tab")
                 }
             }
-            POIMediaView(mediaURLs: self.item.mediaURLs)
-            Spacer()
+            ScrollView {
+                POIOverviewView(poiData: POISheetStore(item: self.item))
+                POIMediaView(mediaURLs: self.item.mediaURLs)
+            }
+            //                Spacer()
         }
+//            .padding(.bottom, 100)
         .overlay(alignment: .bottom) {
             if let route = routes?.first {
                 VStack(spacing: 0) {
@@ -145,10 +149,10 @@ struct POIDetailSheet: View {
                         .fill(Color.black.opacity(0.025))
                         .frame(height: 3)
                     POIBottomToolbar(item: self.item, duration: self.formatter.formatDuration(duration: route.route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes?.map(\.route))
-//                        .padding(.bottom)
-                            .padding(.vertical, 7)
-                            .padding(.horizontal, 20)
-                            .background(Color.white)
+                        .padding(.bottom)
+                        .padding(.vertical, 7)
+                        .padding(.horizontal, 20)
+                        .background(Color.white)
                 }
             }
         }.ignoresSafeArea()
