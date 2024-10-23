@@ -42,13 +42,14 @@ enum Detent: Hashable {
 
 enum NavigationCommand {
     case show(SheetData)
+    case pop(destinationPageDetentPublisher: CurrentValueSubject<DetentData, Never>)
 }
 
-// MARK: - MySheet
+// MARK: - SheetStore
 
 @Observable
 @MainActor
-final class MySheet {
+final class SheetStore {
 
     // MARK: Properties
 
@@ -58,6 +59,21 @@ final class MySheet {
     private var sheets: [SheetData] = []
 
     private let emptySheetData: SheetData
+
+    // MARK: Computed Properties
+
+    var currentSheet: SheetData {
+        self.sheets.last ?? self.emptySheetData
+    }
+
+    var selectedDetent: Detent {
+        get {
+            self.currentSheet.detentData.value.selectedDetent
+        }
+        set {
+            self.currentSheet.detentData.value.selectedDetent = newValue
+        }
+    }
 
     // MARK: Lifecycle
 
@@ -80,12 +96,23 @@ final class MySheet {
         self.sheets.append(sheetData)
         self.navigationCommands.send(.show(sheetData))
     }
+
+    func popSheet() {
+        guard !self.sheets.isEmpty else {
+            return
+        }
+        _ = self.sheets.popLast()
+        let destinationDetentCurrentValueSubject = self.sheets.last?.detentData ?? self.emptySheetData.detentData
+        self.navigationCommands.send(.pop(destinationPageDetentPublisher: destinationDetentCurrentValueSubject))
+    }
+
+    func reset() {}
 }
 
 // MARK: - Previewable
 
-extension MySheet: Previewable {
-    static var storeSetUpForPreviewing: MySheet = .init(emptySheetType: .search)
+extension SheetStore: Previewable {
+    static let storeSetUpForPreviewing = SheetStore(emptySheetType: .search)
 }
 
 // MARK: - SheetType
@@ -152,12 +179,12 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     private let sheetToView: (SheetType) -> Content
     private var sheetSubscription: AnyCancellable?
     private var sheetUpdatesSubscription: AnyCancellable?
-    private let sheetStore: MySheet
+    private let sheetStore: SheetStore
 
     // MARK: Lifecycle
 
     init(
-        sheetStore: MySheet,
+        sheetStore: SheetStore,
         sheetToView: @escaping (SheetType) -> Content
     ) {
         self.sheetStore = sheetStore
@@ -179,6 +206,8 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             switch navigationCommand {
             case let .show(sheetData):
                 self?.show(sheetData)
+            case let .pop(destinationPageDetentPublisher):
+                self?.pop(destinationPageDetentPublisher: destinationPageDetentPublisher)
             }
         }
         self.sheetStore.start()
@@ -205,6 +234,24 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             sheetPresentationController.animateChanges {
                 sheetPresentationController.detents = detentData.allowedDetents.map(\.uiKitDetent)
                 sheetPresentationController.selectedDetentIdentifier = detentData.selectedDetent.identifier
+            }
+        }
+    }
+
+    private func pop(destinationPageDetentPublisher: CurrentValueSubject<DetentData, Never>) {
+        guard let sheetPresentationController else {
+            assertionFailure("expected to have a sheet presentation controller")
+            return
+        }
+        sheetPresentationController.animateChanges {
+            sheetPresentationController.detents = destinationPageDetentPublisher.value.allowedDetents.map(\.uiKitDetent)
+            sheetPresentationController.selectedDetentIdentifier = destinationPageDetentPublisher.value.selectedDetent.identifier
+            self.popViewController(animated: true)
+        }
+        self.sheetSubscription = destinationPageDetentPublisher.dropFirst().removeDuplicates().sink { pageDetent in
+            sheetPresentationController.animateChanges {
+                sheetPresentationController.detents = pageDetent.allowedDetents.map(\.uiKitDetent)
+                sheetPresentationController.selectedDetentIdentifier = pageDetent.selectedDetent.identifier
             }
         }
     }

@@ -16,7 +16,7 @@ struct FavoriteCategoriesView: View {
 
     // MARK: Properties
 
-    var sheetStore: MySheet
+    var sheetStore: SheetStore
     let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()

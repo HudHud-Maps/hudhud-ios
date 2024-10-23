@@ -20,12 +20,10 @@ struct HudHudApp: App {
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
 
-    @State var mySheet = MySheet(emptySheetType: .search)
-
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
-    private let sheetStore: SheetStore
+    @State private var sheetStore: SheetStore
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
@@ -36,8 +34,7 @@ struct HudHudApp: App {
             ContentView(
                 searchStore: self.searchStore,
                 mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore,
-                mySheet: self.mySheet
+                sheetStore: self.sheetStore
             )
             .onAppear {
                 self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
@@ -48,14 +45,15 @@ struct HudHudApp: App {
     // MARK: Lifecycle
 
     init() {
+        let sheetStore = SheetStore(emptySheetType: .search)
+        self.sheetStore = sheetStore
         self.motionViewModel = .shared
-        self.sheetStore = SheetStore()
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: self.mapStore)
-        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore, sheetStore: self.sheetStore)
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, sheetStore: self.sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore, sheetStore: sheetStore)
+        self.searchStore = SearchViewStore(mapStore: self.mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
         // Load custom typography configuration
         if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
             TypographyKit.configure(with:

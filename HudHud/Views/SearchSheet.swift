@@ -28,18 +28,16 @@ struct SearchSheet: View {
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
 
-    private let mySheet: MySheet
     @FocusState private var searchIsFocused: Bool
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore, mySheet: MySheet, filterStore: FilterStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore, filterStore: FilterStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
         self.sheetStore = sheetStore
         self.filterStore = filterStore
-        self.mySheet = mySheet
         self.searchIsFocused = false
     }
 
@@ -184,7 +182,7 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(sheetStore: self.mySheet, searchStore: self.searchStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore, searchStore: self.searchStore)
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)
@@ -267,5 +265,5 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, mySheet: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+    SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

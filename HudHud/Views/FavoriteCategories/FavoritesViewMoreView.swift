@@ -63,14 +63,10 @@ struct FavoritesViewMoreView: View {
                 }
                 .confirmationDialog("action", isPresented: self.$actionSheetShown) {
                     Button("Edit") {
-                        self.sheetStore.pushSheet(
-                            SheetViewData(
-                                viewData: .editFavoritesForm(
-                                    item: self.clickedFavorite.item ?? .starbucks,
-                                    favoriteItem: self.clickedFavorite
-                                )
-                            )
-                        )
+                        self.sheetStore.show(.editFavoritesForm(
+                            item: self.clickedFavorite.item ?? .starbucks,
+                            favoriteItem: self.clickedFavorite
+                        ))
                     }
                     Button("Delete", role: .destructive) {
                         self.favoritesStore.deleteFavorite(self.clickedFavorite)
@@ -104,16 +100,17 @@ struct FavoritesViewMoreView: View {
             self.searchSheetView()
         }
         .onChange(of: self.searchSheetShown) {
-            self.sheetStore.pushSheet(SheetViewData(viewData: .favorites))
+            self.sheetStore.show(.favorites)
         }
     }
 
     func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+        let freshSheetStore = SheetStore(emptySheetType: .search)
         let freshSearchViewStore = SearchViewStore(
             mapStore: freshMapStore,
-            sheetStore: SheetStore(),
+            sheetStore: freshSheetStore,
             routingStore: freshRoutingStore,
             filterStore: FilterStore(),
             mode: self.searchStore.mode
@@ -123,7 +120,7 @@ struct FavoritesViewMoreView: View {
             mapStore: freshMapStore,
             searchStore: freshSearchViewStore,
             trendingStore: TrendingStore(),
-            sheetStore: self.sheetStore, mySheet: MySheet(emptySheetType: .search),
+            sheetStore: freshSheetStore,
             filterStore: FilterStore()
         )
     }

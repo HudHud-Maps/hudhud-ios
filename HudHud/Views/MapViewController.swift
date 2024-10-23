@@ -18,7 +18,7 @@ class MapViewController: UIViewController, MapViewHostViewController {
 
     let mapView: MLNMapView
 
-    private let sheetStore: MySheet
+    private let sheetStore: SheetStore
     private let sheetViewController: UIViewController
     private var sheetSubscription: AnyCancellable?
     private var isFirstAppear = true
@@ -26,7 +26,7 @@ class MapViewController: UIViewController, MapViewHostViewController {
     // MARK: Lifecycle
 
     init(
-        sheetStore: MySheet,
+        sheetStore: SheetStore,
         styleURL: URL,
         sheetToView: @escaping (SheetType) -> some View
     ) {

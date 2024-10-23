@@ -12,7 +12,7 @@ import NavigationTransition
 import Semaphore
 import SwiftUI
 
-// MARK: - SheetStore
+// MARK: - SheetStoreLegacy
 
 /// this handles sheet states related to
 /// * the navigation path
@@ -21,7 +21,7 @@ import SwiftUI
 /// * the sheet's visibility
 @MainActor
 @Observable
-final class SheetStore {
+final class SheetStoreLegacy {
 
     // MARK: Properties
 
@@ -128,8 +128,8 @@ final class SheetStore {
 
 // MARK: - Previewable
 
-extension SheetStore: Previewable {
-    static let storeSetUpForPreviewing = SheetStore()
+extension SheetStoreLegacy: Previewable {
+    static let storeSetUpForPreviewing = SheetStoreLegacy()
 }
 
 // MARK: - SheetViewData

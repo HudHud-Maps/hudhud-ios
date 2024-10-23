@@ -66,10 +66,10 @@ private extension MapViewStore {
             .sink { [weak self] newPotentialRoute in
                 guard let self else { return }
 
-                if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet?.viewData {
-                    self.sheetStore.pushSheet(SheetViewData(viewData: .navigationPreview))
+                if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet.sheetType {
+                    self.sheetStore.show(.navigationPreview)
                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
-                } else if self.sheetStore.currentSheet?.viewData == .navigationPreview, newPotentialRoute == nil {
+                } else if self.sheetStore.currentSheet.sheetType == .navigationPreview, newPotentialRoute == nil {
                     self.sheetStore.popSheet()
                 }
             }
@@ -83,10 +83,10 @@ private extension MapViewStore {
                 guard let self, self.routingStore.potentialRoute == nil else {
                     return
                 }
-                if case let .pointOfInterest(item) = self.sheetStore.currentSheet?.viewData {
-                    self.sheetStore.sheets[self.sheetStore.sheets.count - 1] = SheetViewData(viewData: .pointOfInterest(selectedItem))
+                if case let .pointOfInterest(item) = self.sheetStore.currentSheet.sheetType {
+                    // TODO: self.sheetStore.sheets[self.sheetStore.sheets.count - 1] = SheetViewData(viewData: .pointOfInterest(selectedItem))
                 } else {
-                    self.sheetStore.pushSheet(SheetViewData(viewData: .pointOfInterest(selectedItem)))
+                    self.sheetStore.show(.pointOfInterest(selectedItem))
                 }
             }
             .store(in: &self.subscriptions)

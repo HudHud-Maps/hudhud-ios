@@ -28,7 +28,7 @@ struct MapViewContainer<SheetContentView: View>: View {
     let mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
-    var sheetStore: MySheet
+    var sheetStore: SheetStore
 
     @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
@@ -81,7 +81,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         userLocationStore: UserLocationStore,
         mapViewStore: MapViewStore,
         routingStore: RoutingStore,
-        sheetStore: MySheet,
+        sheetStore: SheetStore,
         @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
