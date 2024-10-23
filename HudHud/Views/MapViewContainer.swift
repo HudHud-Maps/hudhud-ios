@@ -102,8 +102,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         NavigationStack {
             DynamicallyOrientingNavigationView(
                 makeViewController: MapViewController(
-                    sheetStore: self.sheetStore,
-                    emptySheet: self.searchViewStore,
+                    sheetStore: MySheet(emptySheetType: .search),
                     styleURL: self.mapStore.mapStyleUrl(),
                     sheetToView: self.sheetToView
                 ),

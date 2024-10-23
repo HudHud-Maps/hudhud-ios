@@ -38,6 +38,40 @@ enum Detent: Hashable {
     }
 }
 
+// MARK: - NavigationCommand
+
+enum NavigationCommand {
+    case show(SheetData)
+}
+
+// MARK: - MySheet
+
+final class MySheet {
+
+    // MARK: Properties
+
+    let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
+
+    var isShown = true
+
+    private let emptySheetData: SheetData
+
+    // MARK: Lifecycle
+
+    init(emptySheetType: SheetType) {
+        self.emptySheetData = SheetData(
+            sheetType: emptySheetType,
+            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
+        )
+    }
+
+    // MARK: Functions
+
+    func start() {
+        self.navigationCommands.send(.show(self.emptySheetData))
+    }
+}
+
 // MARK: - SheetType
 
 enum SheetType: Hashable {
@@ -50,6 +84,38 @@ enum SheetType: Hashable {
     case pointOfInterest(ResolvedItem)
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
+
+    // MARK: Computed Properties
+
+    var initialDetentData: DetentData {
+        switch self {
+        case .search:
+            DetentData(selectedDetent: .third, allowedDetents: [.small, .third, .large])
+        case .mapStyle:
+            DetentData(selectedDetent: .medium, allowedDetents: [.medium])
+        case .debugView:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .navigationAddSearchView:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .favorites:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .navigationPreview:
+            DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
+        case let .pointOfInterest(resolvedItem):
+            DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+        case .favoritesViewMore:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .editFavoritesForm:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        }
+    }
+}
+
+// MARK: - SheetData
+
+struct SheetData {
+    let sheetType: SheetType
+    let detentData: CurrentValueSubject<DetentData, Never>
 }
 
 import Combine
@@ -61,42 +127,25 @@ struct DetentData: Hashable {
     let allowedDetents: [Detent]
 }
 
-// MARK: - SheetElement
-
-@MainActor
-protocol SheetElement {
-    var sheetType: SheetType { get }
-    var detentData: CurrentValueSubject<DetentData, Never> { get }
-}
-
 // MARK: - SheetContainerViewController
 
 final class SheetContainerViewController<Content: View>: UINavigationController, UISheetPresentationControllerDelegate {
 
     // MARK: Properties
 
-    private var sheets: [SheetElement] = []
-    private let emptySheet: SheetElement
     private let sheetToView: (SheetType) -> Content
     private var sheetSubscription: AnyCancellable?
-    private var _allowedDetents: CurrentValueSubject<[Detent], Never>
-    private var _selectedDetent: CurrentValueSubject<Detent, Never>
-
-    // MARK: Computed Properties
-
-    var allowedDetents: any Publisher<[Detent], Never> { self._allowedDetents }
-    var selectedDetent: any Publisher<Detent, Never> { self._selectedDetent }
+    private var sheetUpdatesSubscription: AnyCancellable?
+    private let sheetStore: MySheet
 
     // MARK: Lifecycle
 
     init(
-        emptySheet: SheetElement,
+        sheetStore: MySheet,
         sheetToView: @escaping (SheetType) -> Content
     ) {
-        self.emptySheet = emptySheet
+        self.sheetStore = sheetStore
         self.sheetToView = sheetToView
-        self._allowedDetents = CurrentValueSubject(emptySheet.detentData.value.allowedDetents)
-        self._selectedDetent = CurrentValueSubject(emptySheet.detentData.value.selectedDetent)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -114,7 +163,13 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sheetPresentationController?.delegate = self
-        self.show(self.emptySheet)
+        self.sheetUpdatesSubscription = self.sheetStore.navigationCommands.sink { [weak self] navigationCommand in
+            switch navigationCommand {
+            case let .show(sheetData):
+                self?.show(sheetData)
+            }
+        }
+        self.sheetStore.start()
     }
 
     // MARK: Functions
@@ -123,15 +178,15 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         false
     }
 
-    private func show(_ sheet: SheetElement) {
+    private func show(_ sheet: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
             return
         }
+        let viewController = self.buildSheet(for: sheet.sheetType)
         sheetPresentationController.animateChanges {
             sheetPresentationController.detents = sheet.detentData.value.allowedDetents.map(\.uiKitDetent)
             sheetPresentationController.selectedDetentIdentifier = sheet.detentData.value.selectedDetent.identifier
-            let viewController = self.viewController(for: sheet)
             self.pushViewController(viewController, animated: true)
         }
         self.sheetSubscription = sheet.detentData.dropFirst().removeDuplicates().sink { detentData in
@@ -142,14 +197,8 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         }
     }
 
-    private func popSheet() {
-        guard self.viewControllers.count > 2, let sheetPresentationController else {
-            return
-        }
-    }
-
-    private func viewController(for sheet: SheetElement) -> UIViewController {
-        let view = self.sheetToView(sheet.sheetType)
+    private func buildSheet(for sheetType: SheetType) -> UIViewController {
+        let view = self.sheetToView(sheetType)
         let viewController = UIHostingController(rootView: view)
         return viewController
     }

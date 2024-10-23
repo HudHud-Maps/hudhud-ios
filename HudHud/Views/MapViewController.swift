@@ -12,29 +12,30 @@ import MapLibreSwiftUI
 import SwiftUI
 import UIKit
 
-class MapViewController<SheetContent: View>: UIViewController, MapViewHostViewController {
+class MapViewController: UIViewController, MapViewHostViewController {
 
     // MARK: Properties
 
     let mapView: MLNMapView
 
-    private let sheetStore: SheetStore
-    private let sheetToView: (SheetType) -> SheetContent
-    private let emptySheet: SheetElement
+    private let sheetStore: MySheet
+    private let sheetViewController: UIViewController
     private var sheetSubscription: AnyCancellable?
+    private var isFirstAppear = true
 
     // MARK: Lifecycle
 
     init(
-        sheetStore: SheetStore,
-        emptySheet: SheetElement,
+        sheetStore: MySheet,
         styleURL: URL,
-        sheetToView: @escaping (SheetType) -> SheetContent
+        sheetToView: @escaping (SheetType) -> some View
     ) {
         self.mapView = MLNMapView(frame: .zero, styleURL: styleURL)
-        self.emptySheet = emptySheet
-        self.sheetToView = sheetToView
         self.sheetStore = sheetStore
+        self.sheetViewController = SheetContainerViewController(
+            sheetStore: sheetStore,
+            sheetToView: sheetToView
+        )
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -49,33 +50,22 @@ class MapViewController<SheetContent: View>: UIViewController, MapViewHostViewCo
         self.view = self.mapView
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(10)) {
-            self.sheetStore.isShown.toggle()
+        if self.isFirstAppear {
+            self.isFirstAppear = false
+            self.handleSheetChange()
         }
-
-//        withObservationTracking {
-//            _ = self.sheetStore.isShown
-//        } onChange: { [weak self] in
-//            Task {
-//                await self?.handleSheetChange()
-//            }
-//        }
-        self.handleSheetChange()
     }
 
     // MARK: Functions
 
     private func handleSheetChange() {
         if self.sheetStore.isShown, self.presentedViewController == nil {
-            let viewController = SheetContainerViewController(emptySheet: self.emptySheet, sheetToView: self.sheetToView)
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                self.present(viewController, animated: true)
-            }
-        } else if !self.sheetStore.isShown, let presentedViewController {
-            presentedViewController.dismiss(animated: true, completion: nil)
+            self.present(self.sheetViewController, animated: true)
+        } else if !self.sheetStore.isShown, self.presentedViewController != nil {
+            self.sheetViewController.dismiss(animated: true, completion: nil)
         }
     }
 }
