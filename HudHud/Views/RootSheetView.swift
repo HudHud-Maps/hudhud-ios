@@ -181,6 +181,7 @@ struct RootSheetView: View {
     return ContentView(
         searchStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        mySheet: .storeSetUpForPreviewing
     )
 }

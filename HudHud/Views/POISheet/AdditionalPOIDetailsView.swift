@@ -142,6 +142,7 @@ struct AdditionalPOIDetailsView: View {
     return ContentView(
         searchStore: searchViewStore,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        mySheet: .storeSetUpForPreviewing
     )
 }

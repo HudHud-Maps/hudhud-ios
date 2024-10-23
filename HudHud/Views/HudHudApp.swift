@@ -20,6 +20,8 @@ struct HudHudApp: App {
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
 
+    @State var mySheet = MySheet(emptySheetType: .search)
+
     private let motionViewModel: MotionViewModel
     private let mapStore: MapStore
     private let searchStore: SearchViewStore
@@ -34,7 +36,8 @@ struct HudHudApp: App {
             ContentView(
                 searchStore: self.searchStore,
                 mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore
+                sheetStore: self.sheetStore,
+                mySheet: self.mySheet
             )
             .onAppear {
                 self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)

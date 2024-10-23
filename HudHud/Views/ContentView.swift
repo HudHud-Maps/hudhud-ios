@@ -44,6 +44,7 @@ struct ContentView: View {
     @ObservedObject private var trendingStore: TrendingStore
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     @Bindable private var sheetStore: SheetStore
+    private let mySheet: MySheet
     private var mapViewStore: MapViewStore
     @State private var sheetSize: CGSize = .zero
 
@@ -53,7 +54,8 @@ struct ContentView: View {
     init(
         searchStore: SearchViewStore,
         mapViewStore: MapViewStore,
-        sheetStore: SheetStore
+        sheetStore: SheetStore,
+        mySheet: MySheet
     ) {
         self.searchViewStore = searchStore
         self.sheetStore = sheetStore
@@ -63,6 +65,7 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
+        self.mySheet = mySheet
     }
 
     // MARK: Content
@@ -481,10 +484,11 @@ struct SizePreferenceKey: PreferenceKey {
 }
 
 #Preview("Main Map") {
-    return ContentView(
+    ContentView(
         searchStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: SheetStore()
+        sheetStore: SheetStore(),
+        mySheet: .storeSetUpForPreviewing
     )
 }
 
@@ -494,7 +498,8 @@ struct SizePreferenceKey: PreferenceKey {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: SheetStore()
+        sheetStore: SheetStore(),
+        mySheet: .storeSetUpForPreviewing
     )
 }
 
@@ -512,7 +517,8 @@ struct SizePreferenceKey: PreferenceKey {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: SheetStore()
+        sheetStore: SheetStore(),
+        mySheet: .storeSetUpForPreviewing
     )
 }
 
@@ -559,7 +565,12 @@ extension Binding where Value == Bool {
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing, sheetStore: SheetStore())
+    return ContentView(
+        searchStore: store,
+        mapViewStore: .storeSetUpForPreviewing,
+        sheetStore: SheetStore(),
+        mySheet: .storeSetUpForPreviewing
+    )
 }
 
 extension MapLayerIdentifier {

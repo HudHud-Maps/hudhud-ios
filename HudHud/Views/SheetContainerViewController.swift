@@ -46,13 +46,16 @@ enum NavigationCommand {
 
 // MARK: - MySheet
 
+@Observable
+@MainActor
 final class MySheet {
 
     // MARK: Properties
 
     let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
-
     var isShown = true
+
+    private var sheets: [SheetData] = []
 
     private let emptySheetData: SheetData
 
@@ -70,6 +73,19 @@ final class MySheet {
     func start() {
         self.navigationCommands.send(.show(self.emptySheetData))
     }
+
+    func show(_ sheetType: SheetType) {
+        let detentCurrentValueSubject = CurrentValueSubject<DetentData, Never>(sheetType.initialDetentData)
+        let sheetData = SheetData(sheetType: sheetType, detentData: detentCurrentValueSubject)
+        self.sheets.append(sheetData)
+        self.navigationCommands.send(.show(sheetData))
+    }
+}
+
+// MARK: - Previewable
+
+extension MySheet: Previewable {
+    static var storeSetUpForPreviewing: MySheet = .init(emptySheetType: .search)
 }
 
 // MARK: - SheetType

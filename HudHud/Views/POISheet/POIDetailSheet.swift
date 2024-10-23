@@ -235,6 +235,7 @@ private extension POIDetailSheet {
     return ContentView(
         searchStore: searchViewStore,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        mySheet: .storeSetUpForPreviewing
     )
 }
