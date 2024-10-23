@@ -18,7 +18,7 @@ struct StreetView: View {
 
     // MARK: Properties
 
-    @Bindable var store: StreetViewStore
+    var store: StreetViewStore
     @ObservedObject var debugStore: DebugStore
 
     // MARK: Computed Properties
@@ -35,10 +35,8 @@ struct StreetView: View {
 
     var body: some View {
         ZStack(alignment: .top) {
-            if self.store.svimage != nil {
-                self.panoramaView(self.$store.svimage)
-                    .ignoresSafeArea()
-            }
+            self.panoramaView()
+                .ignoresSafeArea()
 
             if let errorMsg = self.store.errorMsg {
                 Text(errorMsg)
@@ -69,14 +67,14 @@ struct StreetView: View {
                             .frame(width: 44, height: 44)
                     }
                 }
+                .padding(.horizontal, 16)
+
                 Spacer()
                 if self.showLoading {
                     ProgressView(value: self.store.progress)
                         .tint(.white)
-                        .clipped()
                 }
             }
-            .padding(.horizontal, 16)
         }
         .background(Color.black)
         .frame(width: UIScreen.main.bounds.width,
@@ -85,29 +83,31 @@ struct StreetView: View {
             self.loadSVImage()
         })
     }
+
+    func panoramaView() -> some View {
+        PanoramaViewer(image: Binding(get: {
+            self.store.svimage
+        }, set: { _ in
+
+        }), panoramaType: .spherical, controlMethod: .touch, startAngle: .pi, rotationHandler: { rotation in
+            // Callback for heading from streetView here
+            self.store.heading = rotation.toDegrees()
+        }, cameraMoved: { _, _, _ in
+
+        }, tapHandler: { direction in
+            self.loadImage(direction)
+        })
+        .onChange(of: self.store.streetViewScene) { _, _ in
+            self.store.isLoading = true
+            self.store.progress = 0
+            self.loadSVImage()
+        }
+    }
 }
 
 // MARK: - Private
 
 private extension StreetView {
-
-    func panoramaView(_ img: Binding<UIImage?>) -> some View {
-        ZStack {
-            PanoramaViewer(image: img, panoramaType: .spherical, controlMethod: .touch, startAngle: .pi, rotationHandler: { rotation in
-                // Callback for heading from streetView here
-                self.store.heading = rotation.toDegrees()
-            }, cameraMoved: { _, _, _ in
-
-            }, tapHandler: { direction in
-                self.loadImage(direction)
-            })
-            .onChange(of: self.store.streetViewScene) { _, _ in
-                self.store.isLoading = true
-                self.store.progress = 0
-                self.loadSVImage()
-            }
-        }
-    }
 
     func loadImage(_ direction: CTNavigationDirection) {
         Task {
@@ -231,8 +231,6 @@ private extension StreetView {
                 self.store.progress = progress.fraction
             }
             var image = try await imageTask.image
-            let contentLength = try await imageTask.response.urlResponse?.expectedContentLength ?? 0
-            Logger.streetView.debug("Content-Length: \(contentLength.formatted(.byteCount(style: .binary)))")
 
             // Some older devices might crash with full size images
             // For testing we have the option to request full size images from the server
