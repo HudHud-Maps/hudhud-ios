@@ -117,7 +117,7 @@ enum SheetType: Hashable {
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
-        case let .pointOfInterest:
+        case .pointOfInterest:
             DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
@@ -168,10 +168,6 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     @available(*, unavailable)
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-
-    deinit {
-        print("deinit SheetContainerCoordinator")
     }
 
     // MARK: Overridden Functions
