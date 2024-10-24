@@ -69,14 +69,12 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         }
         let viewController = self.buildSheet(for: sheet.sheetType)
         sheetPresentationController.animateChanges {
-            sheetPresentationController.detents = sheet.detentData.value.allowedDetents.map(\.uiKitDetent)
-            sheetPresentationController.selectedDetentIdentifier = sheet.detentData.value.selectedDetent.identifier
+            self.updateDetents(with: sheet.detentData.value, in: sheetPresentationController)
             self.pushViewController(viewController, animated: true)
         }
         self.sheetSubscription = sheet.detentData.dropFirst().removeDuplicates().sink { detentData in
             sheetPresentationController.animateChanges {
-                sheetPresentationController.detents = detentData.allowedDetents.map(\.uiKitDetent)
-                sheetPresentationController.selectedDetentIdentifier = detentData.selectedDetent.identifier
+                self.updateDetents(with: detentData, in: sheetPresentationController)
             }
         }
     }
@@ -87,14 +85,12 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             return
         }
         sheetPresentationController.animateChanges {
-            sheetPresentationController.detents = destinationPageDetentPublisher.value.allowedDetents.map(\.uiKitDetent)
-            sheetPresentationController.selectedDetentIdentifier = destinationPageDetentPublisher.value.selectedDetent.identifier
+            self.updateDetents(with: destinationPageDetentPublisher.value, in: sheetPresentationController)
             self.popViewController(animated: true)
         }
         self.sheetSubscription = destinationPageDetentPublisher.dropFirst().removeDuplicates().sink { pageDetent in
             sheetPresentationController.animateChanges {
-                sheetPresentationController.detents = pageDetent.allowedDetents.map(\.uiKitDetent)
-                sheetPresentationController.selectedDetentIdentifier = pageDetent.selectedDetent.identifier
+                self.updateDetents(with: pageDetent, in: sheetPresentationController)
             }
         }
     }
@@ -105,21 +101,63 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             return
         }
         sheetPresentationController.animateChanges {
-            sheetPresentationController.detents = rootDetentPublisher.value.allowedDetents.map(\.uiKitDetent)
-            sheetPresentationController.selectedDetentIdentifier = rootDetentPublisher.value.selectedDetent.identifier
+            self.updateDetents(with: rootDetentPublisher.value, in: sheetPresentationController)
             self.popToRootViewController(animated: true)
         }
         self.sheetSubscription = rootDetentPublisher.dropFirst().removeDuplicates().sink { rootDetent in
             sheetPresentationController.animateChanges {
-                sheetPresentationController.detents = rootDetent.allowedDetents.map(\.uiKitDetent)
-                sheetPresentationController.selectedDetentIdentifier = rootDetent.selectedDetent.identifier
+                self.updateDetents(with: rootDetent, in: sheetPresentationController)
             }
         }
+    }
+
+    private func updateDetents(with detentData: DetentData, in sheetPresentationController: UISheetPresentationController) {
+        sheetPresentationController.detents = detentData.allowedDetents.map(\.uiKitDetent)
+        sheetPresentationController.selectedDetentIdentifier = detentData.selectedDetent.identifier
+        let currentScreenHeight = UIScreen.main.bounds.height
+        let largestDetent = detentData.allowedDetents
+            .map {
+                ComparableDetent(detent: $0, currentViewHeight: currentScreenHeight)
+            }
+            .sorted()
+            .last?.detent
+        sheetPresentationController.largestUndimmedDetentIdentifier = largestDetent?.identifier
     }
 
     private func buildSheet(for sheetType: SheetType) -> UIViewController {
         let view = self.sheetToView(sheetType)
         let viewController = UIHostingController(rootView: view)
         return viewController
+    }
+}
+
+// MARK: - ComparableDetent
+
+struct ComparableDetent: Comparable {
+
+    // MARK: Properties
+
+    let detent: Detent
+    let currentViewHeight: CGFloat
+
+    // MARK: Computed Properties
+
+    var height: CGFloat {
+        switch self.detent {
+        case .large:
+            self.currentViewHeight
+        case .medium:
+            self.currentViewHeight / 2
+        case let .fraction(fraction):
+            self.currentViewHeight * fraction
+        case let .height(height):
+            height
+        }
+    }
+
+    // MARK: Static Functions
+
+    static func < (lhs: ComparableDetent, rhs: ComparableDetent) -> Bool {
+        lhs.height < rhs.height
     }
 }
