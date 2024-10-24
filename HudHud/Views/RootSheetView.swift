@@ -16,7 +16,7 @@ struct RootSheetView: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore
@@ -50,7 +50,7 @@ struct RootSheetView: View {
                             .navigationBarBackButtonHidden()
                     case .navigationAddSearchView:
                         // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+                        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
                             let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
                             let tempStore = SearchViewStore(
@@ -75,7 +75,7 @@ struct RootSheetView: View {
                         .navigationBarBackButtonHidden()
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
-                        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+                        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
                         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
                         let freshSearchViewStore: SearchViewStore = {
                             let tempStore = SearchViewStore(

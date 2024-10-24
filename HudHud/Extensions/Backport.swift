@@ -28,6 +28,14 @@ public struct Backport<Content> {
 
 extension Backport where Content: View {
 
+    @ViewBuilder func streetViewSafeArea(length: CGFloat) -> some View {
+        if UIDevice.current.userInterfaceIdiom == .pad {
+            self.content.safeAreaPadding(.trailing, length)
+        } else {
+            self.content.safeAreaPadding(.top, length + 8)
+        }
+    }
+
     @ViewBuilder func buttonSafeArea(length: CGSize) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
             self.content.safeAreaPadding(.leading, length.width)

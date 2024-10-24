@@ -117,7 +117,7 @@ struct OTPVerificationView: View {
             .onDisappear {
                 self.store.timer?.invalidate()
             }
-            .onChange(of: self.store.otp) { newValue in
+            .onChange(of: self.store.otp) { _, newValue in
                 if newValue.count == 6 {
                     Task {
                         await self.store.verifyOTP()

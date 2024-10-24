@@ -25,7 +25,7 @@ enum OpenAPIClientError: Error {
 // MARK: - HudHudClientError
 
 // errors specific to our backend
-enum HudHudClientError: Error {
+enum HudHudClientError: LocalizedError {
     case poiIDNotFound
     case internalServerError(String)
     case unprocessableContent(String)
@@ -34,6 +34,26 @@ enum HudHudClientError: Error {
     case notFound(String)
     case gone(String)
 
+    // MARK: Computed Properties
+
+    var errorDescription: String? {
+        switch self {
+        case .poiIDNotFound:
+            return "POI not found"
+        case let .internalServerError(string):
+            return string
+        case let .unprocessableContent(string):
+            return string
+        case let .badRequest(string):
+            return string
+        case let .unauthorized(string):
+            return string
+        case let .notFound(string):
+            return string
+        case let .gone(string):
+            return string
+        }
+    }
 }
 
 // MARK: - POIResponse

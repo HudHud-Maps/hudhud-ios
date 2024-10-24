@@ -20,7 +20,7 @@ struct SearchSheet: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
     @Bindable var sheetStore: SheetStore
@@ -155,12 +155,12 @@ struct SearchSheet: View {
                                     Task {
                                         self.searchIsFocused = false
                                         await self.searchStore.didSelect(item)
-                                        if let resolvedItem = mapStore.selectedItem {
+                                        if let resolvedItem = self.mapStore.selectedItem.value {
                                             self.storeRecent(item: resolvedItem)
                                         }
                                         switch self.searchStore.searchType {
                                         case let .returnPOILocation(completion):
-                                            if let selectedItem = self.mapStore.selectedItem {
+                                            if let selectedItem = self.mapStore.selectedItem.value {
                                                 completion?(.waypoint(selectedItem))
                                                 self.dismiss()
                                             }

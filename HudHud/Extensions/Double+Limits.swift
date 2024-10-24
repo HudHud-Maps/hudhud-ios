@@ -23,3 +23,20 @@ extension Double {
         return wrappedValue + minValue
     }
 }
+
+extension FloatingPoint {
+    func toDegrees() -> Self {
+        return self * 180 / .pi
+    }
+
+    func toRadians() -> Self {
+        return self * .pi / 180
+    }
+}
+
+extension CGSize {
+
+    static func square(_ length: CGFloat) -> CGSize {
+        return CGSize(width: length, height: length)
+    }
+}
