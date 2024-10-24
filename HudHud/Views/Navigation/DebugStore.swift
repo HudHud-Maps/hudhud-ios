@@ -47,7 +47,7 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
         case .low:
             return CGSize(width: 6752, height: 3376)
         case .webp1:
-            return CGSize(width: 5500, height: 2850)
+            return CGSize(width: 5500, height: 2750)
         case .webp2:
             return CGSize(width: 5500, height: 2750)
         }
@@ -77,7 +77,7 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
         case .low:
             return 788_736
         case .webp1:
-            return 729_264
+            return 456_222
         case .webp2:
             return 222_454
         }
