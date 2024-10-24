@@ -27,12 +27,22 @@ final class SheetStore {
 
     let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
     var isShown = CurrentValueSubject<Bool, Never>(true)
+    var rawSheetheight: CGFloat = 0
+    var safeAreaInsets = EdgeInsets()
 
     private var sheets: [SheetData] = []
 
     private let emptySheetData: SheetData
 
     // MARK: Computed Properties
+
+    var sheetHeight: CGFloat {
+        if self.isShown.value {
+            self.rawSheetheight - self.safeAreaInsets.bottom
+        } else {
+            0
+        }
+    }
 
     var currentSheet: SheetData {
         self.sheets.last ?? self.emptySheetData

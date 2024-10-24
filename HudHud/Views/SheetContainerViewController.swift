@@ -56,6 +56,22 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         self.sheetStore.start()
     }
 
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        self.sheetStore.rawSheetheight = self.view.frame.height
+    }
+
+    override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+
+        self.sheetStore.safeAreaInsets = EdgeInsets(
+            top: self.view.safeAreaInsets.top,
+            leading: self.view.safeAreaInsets.left,
+            bottom: self.view.safeAreaInsets.bottom,
+            trailing: self.view.safeAreaInsets.right
+        )
+    }
+
     // MARK: Functions
 
     func presentationControllerShouldDismiss(_: UIPresentationController) -> Bool {

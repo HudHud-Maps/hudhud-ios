@@ -45,7 +45,6 @@ struct ContentView: View {
     @ObservedObject private var mapLayerStore: HudHudMapLayerStore
     private let sheetStore: SheetStore
     private var mapViewStore: MapViewStore
-    @State private var sheetSize: CGSize = .zero
 
     // MARK: Lifecycle
 
@@ -267,9 +266,10 @@ struct ContentView: View {
                     }
                     .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
                     .padding(.horizontal)
+                    .offset(y: -(self.sheetStore.sheetHeight + 8))
+                    .animation(.easeInOut(duration: 0.2), value: self.sheetStore.sheetHeight)
                 }
             }
-            .backport.buttonSafeArea(length: self.sheetSize)
             .safariView(item: self.$safariURL) { url in
                 SafariView(url: url)
             }
