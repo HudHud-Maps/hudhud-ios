@@ -44,7 +44,6 @@ final class MapStore {
 
     var mapStyle: MLNStyle?
     var shouldShowCustomSymbols = false
-    var searchShown: Bool = true
     var mapViewPort: MapViewPort?
     let userLocationStore: UserLocationStore
 
@@ -154,9 +153,8 @@ final class MapStore {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = .center(.riyadh, zoom: 10), searchShown: Bool = true, userLocationStore: UserLocationStore) {
+    init(camera: MapViewCamera = .center(.riyadh, zoom: 10), userLocationStore: UserLocationStore) {
         self.camera = camera
-        self.searchShown = searchShown
         self.userLocationStore = userLocationStore
         self.selectedItem = CurrentValueSubject(nil)
     }

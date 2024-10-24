@@ -21,7 +21,7 @@ struct MapViewContainer: View {
 
     // MARK: Properties
 
-    var mapStore: MapStore
+    @Bindable var mapStore: MapStore
     var streetViewStore: StreetViewStore
     let mapViewStore: MapViewStore
 
@@ -93,11 +93,7 @@ struct MapViewContainer: View {
         NavigationStack {
             DynamicallyOrientingNavigationView(
                 styleURL: self.mapStore.mapStyleUrl(),
-                camera: Binding(get: {
-                    self.mapStore.camera
-                }, set: {
-                    self.mapStore.camera = $0
-                }),
+                camera: self.$mapStore.camera,
                 locationProviding: self.routingStore.ferrostarCore.locationProvider,
                 navigationState: self.routingStore.ferrostarCore.state,
                 showZoom: false

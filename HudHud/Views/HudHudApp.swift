@@ -75,6 +75,8 @@ struct HudHudApp: App {
             $0.imageCache = ImageCache.shared // Use in-memory cache as well
         }
 
+        ImagePipeline.shared = pipeline
+
         // Load custom typography configuration
         if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
             TypographyKit.configure(with: TypographyKitConfiguration.default.setConfigurationURL(url))

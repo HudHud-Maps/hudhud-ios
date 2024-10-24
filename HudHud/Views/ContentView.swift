@@ -19,16 +19,6 @@ import SimpleToast
 import SwiftUI
 import TouchVisualizer
 
-// MARK: - SheetSubView
-
-enum SheetSubView: Hashable, Codable {
-    case mapStyle
-    case debugView
-    case navigationAddSearchView
-    case favorites
-    case navigationPreview
-}
-
 // MARK: - ContentView
 
 @MainActor
@@ -167,9 +157,9 @@ struct ContentView: View {
             .backport.buttonSafeArea(length: self.sheetSize)
             .backport.streetViewSafeArea(length: self.streetViewStore.streetViewScene == nil ? 0 : UIScreen.main.bounds.height / 2.0)
             .backport.sheet(isPresented: Binding(get: {
-                self.mapStore.searchShown
+                self.sheetStore.isShown
             }, set: {
-                self.mapStore.searchShown = $0
+                self.sheetStore.isShown = $0
             })) {
                 RootSheetView(mapStore: self.mapStore,
                               searchViewStore: self.searchViewStore,
@@ -264,7 +254,7 @@ private extension ContentView {
     }
 
     func updateSearchShown() {
-        self.mapStore.searchShown = !self.streetViewStore.fullScreenStreetView && self.streetViewStore.streetViewScene.isNil
+        self.sheetStore.isShown = !self.streetViewStore.fullScreenStreetView && self.streetViewStore.streetViewScene.isNil
     }
 }
 

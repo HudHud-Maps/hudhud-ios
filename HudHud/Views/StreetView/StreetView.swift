@@ -14,6 +14,7 @@ import SwiftUIPanoramaViewer
 
 // MARK: - StreetView
 
+@MainActor
 struct StreetView: View {
 
     // MARK: Properties
