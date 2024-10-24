@@ -10,7 +10,6 @@ import BackendService
 import Combine
 import FerrostarCoreFFI
 import MapLibre
-import NavigationTransition
 import OSLog
 import SwiftUI
 
@@ -83,11 +82,10 @@ private extension MapViewStore {
                 guard let self, self.routingStore.potentialRoute == nil else {
                     return
                 }
-                if case let .pointOfInterest(item) = self.sheetStore.currentSheet.sheetType {
-                    // TODO: self.sheetStore.sheets[self.sheetStore.sheets.count - 1] = SheetViewData(viewData: .pointOfInterest(selectedItem))
-                } else {
-                    self.sheetStore.show(.pointOfInterest(selectedItem))
+                if case .pointOfInterest = self.sheetStore.currentSheet.sheetType {
+                    return
                 }
+                self.sheetStore.show(.pointOfInterest(selectedItem))
             }
             .store(in: &self.subscriptions)
     }

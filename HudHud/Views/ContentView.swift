@@ -141,7 +141,7 @@ struct ContentView: View {
                         .presentationCornerRadius(21)
                 case let .pointOfInterest(item):
                     POIDetailSheet(
-                        item: item,
+                        mapStore: self.mapStore,
                         routingStore: self.searchViewStore.routingStore,
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
