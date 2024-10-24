@@ -163,7 +163,7 @@
         }
       }
     },
-    "Camera access is required to take photos. Please enable it in Settings >  > Camera" : {
+    "Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera" : {
 
     },
     "Camera Access Required" : {
@@ -186,7 +186,7 @@
 
     },
     "Close" : {
-      "comment" : "Accessibility label instead of x",
+      "comment" : "accesibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
