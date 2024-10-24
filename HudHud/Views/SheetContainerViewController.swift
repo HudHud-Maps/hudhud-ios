@@ -43,14 +43,15 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     override func viewDidLoad() {
         super.viewDidLoad()
         self.sheetPresentationController?.delegate = self
+        self.view.backgroundColor = .white
         self.sheetUpdatesSubscription = self.sheetStore.navigationCommands.sink { [weak self] navigationCommand in
             switch navigationCommand {
             case let .show(sheetData):
                 self?.show(sheetData)
-            case let .pop(destinationPageDetentPublisher):
-                self?.pop(destinationPageDetentPublisher: destinationPageDetentPublisher)
-            case let .popToRoot(rootDetentPublisher):
-                self?.popToRoot(rootDetentPublisher: rootDetentPublisher)
+            case let .pop(destinationSheetData):
+                self?.pop(destinationSheetData: destinationSheetData)
+            case let .popToRoot(rootSheetData):
+                self?.popToRoot(rootSheetData: rootSheetData)
             }
         }
         self.sheetStore.start()
@@ -86,6 +87,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         let viewController = self.buildSheet(for: sheet.sheetType)
         sheetPresentationController.animateChanges {
             self.updateDetents(with: sheet.detentData.value, in: sheetPresentationController)
+            self.setNavigationTransition(sheet.sheetType.transition)
             self.pushViewController(viewController, animated: true)
         }
         self.sheetSubscription = sheet.detentData.dropFirst().removeDuplicates().sink { detentData in
@@ -95,32 +97,34 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         }
     }
 
-    private func pop(destinationPageDetentPublisher: CurrentValueSubject<DetentData, Never>) {
+    private func pop(destinationSheetData: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
             return
         }
         sheetPresentationController.animateChanges {
-            self.updateDetents(with: destinationPageDetentPublisher.value, in: sheetPresentationController)
+            self.updateDetents(with: destinationSheetData.detentData.value, in: sheetPresentationController)
             self.popViewController(animated: true)
+            self.setNavigationTransition(destinationSheetData.sheetType.transition)
         }
-        self.sheetSubscription = destinationPageDetentPublisher.dropFirst().removeDuplicates().sink { pageDetent in
+        self.sheetSubscription = destinationSheetData.detentData.dropFirst().removeDuplicates().sink { pageDetent in
             sheetPresentationController.animateChanges {
                 self.updateDetents(with: pageDetent, in: sheetPresentationController)
             }
         }
     }
 
-    private func popToRoot(rootDetentPublisher: CurrentValueSubject<DetentData, Never>) {
+    private func popToRoot(rootSheetData: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
             return
         }
         sheetPresentationController.animateChanges {
-            self.updateDetents(with: rootDetentPublisher.value, in: sheetPresentationController)
+            self.updateDetents(with: rootSheetData.detentData.value, in: sheetPresentationController)
             self.popToRootViewController(animated: true)
+            self.setNavigationTransition(rootSheetData.sheetType.transition)
         }
-        self.sheetSubscription = rootDetentPublisher.dropFirst().removeDuplicates().sink { rootDetent in
+        self.sheetSubscription = rootSheetData.detentData.dropFirst().removeDuplicates().sink { rootDetent in
             sheetPresentationController.animateChanges {
                 self.updateDetents(with: rootDetent, in: sheetPresentationController)
             }

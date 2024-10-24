@@ -9,6 +9,7 @@
 import BackendService
 import Combine
 import Foundation
+import NavigationTransition
 import SwiftUI
 
 // MARK: - SheetStore
@@ -85,7 +86,7 @@ final class SheetStore {
         }
         _ = self.sheets.popLast()
         let destinationDetentCurrentValueSubject = self.currentSheet.detentData
-        self.navigationCommands.send(.pop(destinationPageDetentPublisher: destinationDetentCurrentValueSubject))
+        self.navigationCommands.send(.pop(destinationSheetData: self.currentSheet))
     }
 
     func reset() {
@@ -93,7 +94,7 @@ final class SheetStore {
             return
         }
         self.sheets = []
-        self.navigationCommands.send(.popToRoot(rootDetentPublisher: self.emptySheetData.detentData))
+        self.navigationCommands.send(.popToRoot(rootSheetData: self.emptySheetData))
     }
 }
 
@@ -135,8 +136,8 @@ enum Detent: Hashable {
 
 enum NavigationCommand {
     case show(SheetData)
-    case pop(destinationPageDetentPublisher: CurrentValueSubject<DetentData, Never>)
-    case popToRoot(rootDetentPublisher: CurrentValueSubject<DetentData, Never>)
+    case pop(destinationSheetData: SheetData)
+    case popToRoot(rootSheetData: SheetData)
 }
 
 // MARK: - SheetType
@@ -174,6 +175,13 @@ enum SheetType: Hashable {
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
+        }
+    }
+
+    var transition: AnyNavigationTransition {
+        switch self {
+        default:
+            .fade(.cross)
         }
     }
 }
