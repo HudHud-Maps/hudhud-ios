@@ -141,6 +141,68 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /p/saved:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: List user saved POIs
+      description: List user saved POIs
+      operationId: listUserSavedPOIs
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_Poi'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+  /p/saved/{id}:
+    delete:
+      tags:
+        - Point Of Interests (POIs)
+      summary: Remove a POI from user's saved list
+      description: Remove a POI from user's saved list
+      operationId: removePOIFromSavedList
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of the POI
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-RemovePOIFromSavedListResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
   /p/trending:
     get:
       tags:
@@ -273,6 +335,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /p/{id}/save:
+    post:
+      tags:
+        - Point Of Interests (POIs)
+      summary: Save a POI to user's saved list
+      description: Save a POI to user's saved list
+      operationId: addPOIToSavedList
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of the POI
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-AddPOIToSavedListResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
   /sv/nearby:
     get:
       tags:
@@ -386,6 +482,47 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         "404":
           description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/scene/nearby:
+    get:
+      tags:
+        - Street View
+      summary: Get nearest Street View scene image to a point
+      description: Get nearest Street View scene image to a point
+      operationId: getStreetViewImageSceneNearBy
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude
+          required: true
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-PanoramicImageScene'
+        "400":
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -889,6 +1026,8 @@ paths:
       x-codegen-request-body-name: request
 components:
   schemas:
+    AddPOIToSavedListResponse:
+      type: object
     AndroidCategoryIcon:
       required:
         - color
@@ -1172,6 +1311,8 @@ components:
         trip_info:
           type: object
           description: TODO Change the type of TripInfo from map[string]any to any
+    RemovePOIFromSavedListResponse:
+      type: object
     ResendOTPResponse:
       type: object
       properties:
@@ -1208,6 +1349,30 @@ components:
           type: string
         url:
           type: string
+    SuccessResponse-AddPOIToSavedListResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/AddPOIToSavedListResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
     SuccessResponse-DeleteUserProfileResponse:
       required:
         - data
@@ -1317,6 +1482,30 @@ components:
             The Data could be an object or an array
           allOf:
             - $ref: '#/components/schemas/Poi'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-RemovePOIFromSavedListResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/RemovePOIFromSavedListResponse'
         next_page_token:
           type: string
           description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
@@ -1659,6 +1848,10 @@ components:
             AccessToken JWT access token is short-lived token that will be issued only if the otp verification was successful.
             The token will be valid for 1 hour.
           format: base64
+        expires_at:
+          type: string
+          description: ExpiresAt the time when the access token will expire
+          format: date-time
         is_user_active:
           type: boolean
           description: |-
@@ -1684,6 +1877,10 @@ components:
           type: string
           description: AccessToken the new access token
           format: base64
+        expires_at:
+          type: string
+          description: ExpiresAt the time when the access token will expire
+          format: date-time
   securitySchemes:
     BearerAuth:
       type: apiKey
