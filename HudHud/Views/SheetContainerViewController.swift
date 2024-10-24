@@ -49,6 +49,8 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
                 self?.show(sheetData)
             case let .pop(destinationPageDetentPublisher):
                 self?.pop(destinationPageDetentPublisher: destinationPageDetentPublisher)
+            case let .popToRoot(rootDetentPublisher):
+                self?.popToRoot(rootDetentPublisher: rootDetentPublisher)
             }
         }
         self.sheetStore.start()
@@ -93,6 +95,24 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             sheetPresentationController.animateChanges {
                 sheetPresentationController.detents = pageDetent.allowedDetents.map(\.uiKitDetent)
                 sheetPresentationController.selectedDetentIdentifier = pageDetent.selectedDetent.identifier
+            }
+        }
+    }
+
+    private func popToRoot(rootDetentPublisher: CurrentValueSubject<DetentData, Never>) {
+        guard let sheetPresentationController else {
+            assertionFailure("expected to have a sheet presentation controller")
+            return
+        }
+        sheetPresentationController.animateChanges {
+            sheetPresentationController.detents = rootDetentPublisher.value.allowedDetents.map(\.uiKitDetent)
+            sheetPresentationController.selectedDetentIdentifier = rootDetentPublisher.value.selectedDetent.identifier
+            self.popToRootViewController(animated: true)
+        }
+        self.sheetSubscription = rootDetentPublisher.dropFirst().removeDuplicates().sink { rootDetent in
+            sheetPresentationController.animateChanges {
+                sheetPresentationController.detents = rootDetent.allowedDetents.map(\.uiKitDetent)
+                sheetPresentationController.selectedDetentIdentifier = rootDetent.selectedDetent.identifier
             }
         }
     }

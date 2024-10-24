@@ -78,7 +78,13 @@ final class SheetStore {
         self.navigationCommands.send(.pop(destinationPageDetentPublisher: destinationDetentCurrentValueSubject))
     }
 
-    func reset() {}
+    func reset() {
+        guard !self.sheets.isEmpty else {
+            return
+        }
+        self.sheets = []
+        self.navigationCommands.send(.popToRoot(rootDetentPublisher: self.emptySheetData.detentData))
+    }
 }
 
 // MARK: - Previewable
@@ -120,6 +126,7 @@ enum Detent: Hashable {
 enum NavigationCommand {
     case show(SheetData)
     case pop(destinationPageDetentPublisher: CurrentValueSubject<DetentData, Never>)
+    case popToRoot(rootDetentPublisher: CurrentValueSubject<DetentData, Never>)
 }
 
 // MARK: - SheetType
