@@ -13,6 +13,18 @@
         }
       }
     },
+    "NSCameraUsageDescription" : {
+      "comment" : "Privacy - Camera Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You will be able to take picture and add it"
+          }
+        }
+      }
+    },
     "NSLocationAlwaysAndWhenInUseUsageDescription" : {
       "comment" : "Privacy - Location Always and When In Use Usage Description",
       "extractionState" : "extracted_with_value",
@@ -33,6 +45,18 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "Allows HudHud to show your location on the map"
+          }
+        }
+      }
+    },
+    "NSPhotoLibraryUsageDescription" : {
+      "comment" : "Privacy - Photo Library Usage Description",
+      "extractionState" : "extracted_with_value",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "You will be able to add your photos"
           }
         }
       }

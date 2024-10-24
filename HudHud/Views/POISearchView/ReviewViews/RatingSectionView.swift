@@ -89,7 +89,7 @@ struct StarInteractionView: View {
             ForEach(1 ... 5, id: \.self) { index in
                 Image(index <= self.store.state.interactiveRating ? .starOn : .starEmpty)
                     .resizable()
-                    .frame(width: 50, height: 50)
+                    .frame(width: 45, height: 45)
                     .onTapGesture {
                         withAnimation {
                             self.store.reduce(action: .setInteractiveRating(index))

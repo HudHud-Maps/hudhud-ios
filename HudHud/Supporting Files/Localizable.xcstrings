@@ -104,6 +104,9 @@
         }
       }
     },
+    "Add photos and videos" : {
+
+    },
     "Add Type" : {
 
     },
@@ -159,6 +162,12 @@
           }
         }
       }
+    },
+    "Camera access is required to take photos. Please enable it in Settings >  > Camera" : {
+
+    },
+    "Camera Access Required" : {
+
     },
     "Cancel" : {
 
@@ -421,7 +430,7 @@
     "Price" : {
 
     },
-    "Quality" : {
+    "Rate and review" : {
 
     },
     "Rating" : {
@@ -488,7 +497,11 @@
     "Share" : {
 
     },
+
     "Show Less" : {
+    },
+    "Share your experience" : {
+
 
     },
     "Show more" : {
@@ -525,6 +538,8 @@
       }
     },
     "StreetView Quality" : {
+    },
+    "Submit" : {
 
     },
     "Suggestions" : {
