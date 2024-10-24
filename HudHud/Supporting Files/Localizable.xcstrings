@@ -65,6 +65,9 @@
     "Add Type" : {
 
     },
+    "Already Logged In" : {
+
+    },
     "Apply" : {
 
     },
@@ -93,6 +96,9 @@
           }
         }
       }
+    },
+    "By Date" : {
+
     },
     "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
 
@@ -218,6 +224,9 @@
     "Filters" : {
 
     },
+    "From %@" : {
+
+    },
     "Go" : {
       "comment" : "start navigation",
       "localizations" : {
@@ -259,7 +268,7 @@
 
     },
     "How was your experience?" : {
-        
+
     },
     "km/h" : {
 
@@ -275,6 +284,9 @@
       }
     },
     "Location Needed" : {
+
+    },
+    "Log Out" : {
 
     },
     "Map Details" : {
@@ -351,10 +363,16 @@
     "Occupancy Range" : {
       "comment" : "traffic chart view, Occupancy Range y axes"
     },
+    "OK" : {
+
+    },
     "Open" : {
 
     },
     "Personal Information" : {
+
+    },
+    "Photos" : {
 
     },
     "Pitch: %@" : {
@@ -388,10 +406,16 @@
         }
       }
     },
+    "Report" : {
+
+    },
     "Resend Code %@" : {
 
     },
     "Reset" : {
+
+    },
+    "Reviews %lld" : {
 
     },
     "Routing Configuration" : {
@@ -425,6 +449,9 @@
 
     },
     "SF Symbols on Map" : {
+
+    },
+    "Share" : {
 
     },
     "Show more" : {
@@ -463,6 +490,12 @@
     "Use SF Symbols for POIs on map" : {
 
     },
+    "UseFul" : {
+
+    },
+    "Useful (%lld)" : {
+
+    },
     "Verification code sent to the %@ below:" : {
 
     },
@@ -478,6 +511,9 @@
           }
         }
       }
+    },
+    "We are currently working on the UI and this feature is a work in progress." : {
+
     },
     "Web" : {
       "extractionState" : "stale",
