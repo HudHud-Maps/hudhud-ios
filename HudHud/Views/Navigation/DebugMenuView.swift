@@ -17,55 +17,57 @@ struct DebugMenuView: View {
     @ObservedObject var touchManager = TouchManager.shared
 
     var body: some View {
-        Form {
-            Section(header: Text("Routing Configuration")) {
-                TextField("Routing URL", text: self.$debugSettings.routingHost)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-            }
+        NavigationStack {
+            Form {
+                Section(header: Text("Routing Configuration")) {
+                    TextField("Routing URL", text: self.$debugSettings.routingHost)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                }
 
-            Section(header: Text("Base URL"), footer: Text("Note: Changing the URL requires restarting the app for the changes to take effect.")) {
-                TextField("Base URL", text: self.$debugSettings.baseURL)
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    .onChange(of: self.debugSettings.baseURL) { _, newValue in
-                        if newValue.isEmpty {
-                            self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
-                        } else {
-                            self.debugSettings.baseURL = newValue
+                Section(header: Text("Base URL"), footer: Text("Note: Changing the URL requires restarting the app for the changes to take effect.")) {
+                    TextField("Base URL", text: self.$debugSettings.baseURL)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                        .onChange(of: self.debugSettings.baseURL) { _, newValue in
+                            if newValue.isEmpty {
+                                self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
+                            } else {
+                                self.debugSettings.baseURL = newValue
+                            }
                         }
+                }
+
+                Section(header: Text("Simulation")) {
+                    Toggle(isOn: self.$debugSettings.simulateRide) {
+                        Text("Simulate Ride during Navigation")
                     }
-            }
+                }
 
-            Section(header: Text("Simulation")) {
-                Toggle(isOn: self.$debugSettings.simulateRide) {
-                    Text("Simulate Ride during Navigation")
+                Section(header: Text("Touch Visualizer")) {
+                    Toggle(isOn: self.$touchManager.isTouchVisualizerEnabled ?? self.touchManager.defaultTouchVisualizerSetting) {
+                        Text("Enable Touch Visualizer")
+                    }
                 }
-            }
 
-            Section(header: Text("Touch Visualizer")) {
-                Toggle(isOn: self.$touchManager.isTouchVisualizerEnabled ?? self.touchManager.defaultTouchVisualizerSetting) {
-                    Text("Enable Touch Visualizer")
+                Section(header: Text("SF Symbols on Map")) {
+                    Toggle(isOn: self.$debugSettings.customMapSymbols ?? false) {
+                        Text("Use SF Symbols for POIs on map")
+                    }
                 }
             }
-
-            Section(header: Text("SF Symbols on Map")) {
-                Toggle(isOn: self.$debugSettings.customMapSymbols ?? false) {
-                    Text("Use SF Symbols for POIs on map")
+            .navigationTitle("Debug Menu")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Reset") {
+                        self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
+                        self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
+                    }
                 }
-            }
-        }
-        .navigationTitle("Debug Menu")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Reset") {
-                    self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
-                    self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Done") {
-                    self.dismiss()
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        self.dismiss()
+                    }
                 }
             }
         }
