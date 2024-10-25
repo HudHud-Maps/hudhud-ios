@@ -33,10 +33,12 @@ struct FavoritesResolvedItems: RawRepresentable {
     // MARK: Computed Properties
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(favoritesItems) else {
+        guard let data = try? JSONEncoder().encode(favoritesItems),
+              let result = String(data: data, encoding: .utf8) else {
             return "[]"
         }
-        return String(decoding: data, as: UTF8.self)
+
+        return result
     }
 
     // MARK: Lifecycle

@@ -96,8 +96,8 @@ private extension MapActionHandler {
     func extractItem(from feature: any MLNFeature) -> ResolvedItem? {
         guard let feature = feature as? MLNPointFeature,
               let id = feature.attribute(forKey: "id") as? Int,
-              (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String != nil,
-              (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) as? String != nil else { return nil }
+              (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) is String,
+              (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) is String else { return nil }
 
         let colorString = feature.attribute(forKey: "ios_category_icon_color") as? String
 
