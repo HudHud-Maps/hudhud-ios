@@ -68,7 +68,6 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        print(self.view.frame.height)
         self.sheetStore.rawSheetheight = self.view.frame.height
     }
 
