@@ -192,7 +192,7 @@ enum SheetType: Hashable {
 
     var transition: AnyNavigationTransition {
         switch self {
-        case .editFavoritesForm, .favorites:
+        case .favoritesViewMore, .editFavoritesForm, .favorites:
             .default
         default:
             .fade(.cross)
