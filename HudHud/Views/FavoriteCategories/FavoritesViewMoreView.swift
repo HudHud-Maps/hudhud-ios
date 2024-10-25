@@ -95,10 +95,6 @@ struct FavoritesViewMoreView: View {
                 Image(systemSymbol: .plus)
             }
         )
-
-        .sheet(isPresented: self.$searchSheetShown) {
-            self.searchSheetView()
-        }
         .onChange(of: self.searchSheetShown) {
             self.sheetStore.show(.favorites)
         }
