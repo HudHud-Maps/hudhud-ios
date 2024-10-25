@@ -21,6 +21,9 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     private var sheetSubscription: AnyCancellable?
     private var sheetUpdatesSubscription: AnyCancellable?
     private let sheetStore: SheetStore
+    private var currentDetentPublisher: CurrentValueSubject<DetentData, Never>?
+    /// when the detent is being updated from the user, we do not want to do animation and change the detent again
+    private var isDetentUpdatingFromUI = false
 
     // MARK: Lifecycle
 
@@ -79,6 +82,17 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         false
     }
 
+    func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
+        guard let selectedDetentIdentifier = sheetPresentationController.selectedDetentIdentifier,
+              let currentDetentPublisher else { return }
+        self.isDetentUpdatingFromUI = true
+        defer { self.isDetentUpdatingFromUI = false }
+        guard let selectedDetent = currentDetentPublisher.value
+            .allowedDetents
+            .first(where: { $0.identifier == selectedDetentIdentifier }) else { return }
+        currentDetentPublisher.value.selectedDetent = selectedDetent
+    }
+
     private func show(_ sheet: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
@@ -90,11 +104,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             self.setNavigationTransition(sheet.sheetType.transition)
             self.pushViewController(viewController, animated: true)
         }
-        self.sheetSubscription = sheet.detentData.dropFirst().removeDuplicates().sink { detentData in
-            sheetPresentationController.animateChanges {
-                self.updateDetents(with: detentData, in: sheetPresentationController)
-            }
-        }
+        self.observeChanges(in: sheet.detentData, andApplyIn: sheetPresentationController)
     }
 
     private func pop(destinationSheetData: SheetData) {
@@ -107,11 +117,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             self.popViewController(animated: true)
             self.setNavigationTransition(destinationSheetData.sheetType.transition)
         }
-        self.sheetSubscription = destinationSheetData.detentData.dropFirst().removeDuplicates().sink { pageDetent in
-            sheetPresentationController.animateChanges {
-                self.updateDetents(with: pageDetent, in: sheetPresentationController)
-            }
-        }
+        self.observeChanges(in: destinationSheetData.detentData, andApplyIn: sheetPresentationController)
     }
 
     private func popToRoot(rootSheetData: SheetData) {
@@ -124,9 +130,15 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             self.popToRootViewController(animated: true)
             self.setNavigationTransition(rootSheetData.sheetType.transition)
         }
-        self.sheetSubscription = rootSheetData.detentData.dropFirst().removeDuplicates().sink { rootDetent in
+        self.observeChanges(in: rootSheetData.detentData, andApplyIn: sheetPresentationController)
+    }
+
+    private func observeChanges(in detentPublisher: CurrentValueSubject<DetentData, Never>, andApplyIn sheetPresentationController: UISheetPresentationController) {
+        self.currentDetentPublisher = detentPublisher
+        self.sheetSubscription = detentPublisher.dropFirst().removeDuplicates().sink { [weak self] detentData in
+            guard let self, !self.isDetentUpdatingFromUI else { return }
             sheetPresentationController.animateChanges {
-                self.updateDetents(with: rootDetent, in: sheetPresentationController)
+                self.updateDetents(with: detentData, in: sheetPresentationController)
             }
         }
     }
