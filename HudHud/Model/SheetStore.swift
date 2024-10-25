@@ -28,20 +28,20 @@ final class SheetStore {
 
     let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
     var isShown = CurrentValueSubject<Bool, Never>(true)
-    var rawSheetheight: CGFloat = 0
     var safeAreaInsets = EdgeInsets()
+
+    private(set) var sheetHeight: CGFloat = 0
 
     private var sheets: [SheetData] = []
 
     private let emptySheetData: SheetData
+    private var updateSheetHeightSubscription: AnyCancellable?
 
     // MARK: Computed Properties
 
-    var sheetHeight: CGFloat {
-        if self.isShown.value {
-            self.rawSheetheight - self.safeAreaInsets.bottom
-        } else {
-            0
+    var rawSheetheight: CGFloat = 0 {
+        didSet {
+            self.sheetHeight = self.computeSheetHeight()
         }
     }
 
@@ -65,6 +65,10 @@ final class SheetStore {
             sheetType: emptySheetType,
             detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
         )
+        self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
+            guard let self else { return }
+            self.sheetHeight = self.computeSheetHeight()
+        }
     }
 
     // MARK: Functions
@@ -96,6 +100,15 @@ final class SheetStore {
         self.sheets = []
         self.navigationCommands.send(.popToRoot(rootSheetData: self.emptySheetData))
     }
+
+    private func computeSheetHeight() -> CGFloat {
+        if self.isShown.value {
+            self.rawSheetheight - self.safeAreaInsets.bottom
+        } else {
+            0
+        }
+    }
+
 }
 
 // MARK: - Previewable

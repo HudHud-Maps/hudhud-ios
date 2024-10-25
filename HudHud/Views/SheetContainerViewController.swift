@@ -45,7 +45,6 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.sheetPresentationController?.delegate = self
         self.view.backgroundColor = .white
         self.sheetUpdatesSubscription = self.sheetStore.navigationCommands.sink { [weak self] navigationCommand in
             switch navigationCommand {
@@ -60,8 +59,16 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         self.sheetStore.start()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.sheetPresentationController?.delegate = self
+        guard let currentDetentPublisher, let sheetPresentationController else { return }
+        self.updateDetents(with: currentDetentPublisher.value, in: sheetPresentationController)
+    }
+
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        print(self.view.frame.height)
         self.sheetStore.rawSheetheight = self.view.frame.height
     }
 
