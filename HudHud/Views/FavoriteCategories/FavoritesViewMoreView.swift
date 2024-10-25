@@ -64,8 +64,9 @@ struct FavoritesViewMoreView: View {
                     }
                     .confirmationDialog("action", isPresented: self.$actionSheetShown) {
                         Button("Edit") {
+                            guard let item = self.clickedFavorite.item else { return }
                             self.sheetStore.show(.editFavoritesForm(
-                                item: self.clickedFavorite.item ?? .starbucks,
+                                item: item,
                                 favoriteItem: self.clickedFavorite
                             ))
                         }
