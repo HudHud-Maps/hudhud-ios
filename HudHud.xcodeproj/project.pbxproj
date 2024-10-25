@@ -125,6 +125,7 @@
 		CDAE05632B681263003E5196 /* HudHudUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05622B681263003E5196 /* HudHudUITests.swift */; };
 		CDAE05A82B69358E003E5196 /* Terrain.json in Resources */ = {isa = PBXBuildFile; fileRef = CDAE05A72B69358E003E5196 /* Terrain.json */; };
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
+		CDB3D58C2CCB8BCC003571A8 /* WhatToTest.en-US.txt in Resources */ = {isa = PBXBuildFile; fileRef = CDB3D58B2CCB8BCC003571A8 /* WhatToTest.en-US.txt */; };
 		CDBC2C8B2CBE3C46002E59E0 /* UIImage+resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2C8A2CBE3C46002E59E0 /* UIImage+resize.swift */; };
 		CDBC2C8D2CBE3D46002E59E0 /* StreetViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2C8C2CBE3D46002E59E0 /* StreetViewStore.swift */; };
 		CDBC2CA92CC172BA002E59E0 /* POIOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDBC2CA62CC172BA002E59E0 /* POIOverviewView.swift */; };
@@ -297,6 +298,7 @@
 		CDAE05622B681263003E5196 /* HudHudUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudUITests.swift; sourceTree = "<group>"; };
 		CDAE05A72B69358E003E5196 /* Terrain.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Terrain.json; sourceTree = "<group>"; };
 		CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Riyadh.gpx; sourceTree = "<group>"; };
+		CDB3D58B2CCB8BCC003571A8 /* WhatToTest.en-US.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "WhatToTest.en-US.txt"; sourceTree = "<group>"; };
 		CDBC2C8A2CBE3C46002E59E0 /* UIImage+resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+resize.swift"; sourceTree = "<group>"; };
 		CDBC2C8C2CBE3D46002E59E0 /* StreetViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewStore.swift; sourceTree = "<group>"; };
 		CDBC2CA62CC172BA002E59E0 /* POIOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIOverviewView.swift; sourceTree = "<group>"; };
@@ -547,6 +549,7 @@
 		CDAE053B2B681261003E5196 = {
 			isa = PBXGroup;
 			children = (
+				CDB3D58A2CCB8AEF003571A8 /* TestFlight */,
 				CD34C5962C0B3CEB006DCDBA /* BackendService */,
 				CDAE05462B681261003E5196 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
@@ -620,6 +623,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		CDB3D58A2CCB8AEF003571A8 /* TestFlight */ = {
+			isa = PBXGroup;
+			children = (
+				CDB3D58B2CCB8BCC003571A8 /* WhatToTest.en-US.txt */,
+			);
+			path = TestFlight;
 			sourceTree = "<group>";
 		};
 		CDBC2CA82CC172BA002E59E0 /* POISearchView */ = {
@@ -961,6 +972,7 @@
 				167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */,
 				F7056410CE68B8E8068BD2F2 /* PlusJakartaSans-Bold.ttf in Resources */,
 				28B76BD4868024F1EA8666DB /* PlusJakartaSans-ExtraBold.ttf in Resources */,
+				CDB3D58C2CCB8BCC003571A8 /* WhatToTest.en-US.txt in Resources */,
 				B1A0E917290CDD4B106BA45C /* PlusJakartaSans-SemiBold.ttf in Resources */,
 				5B11693ACCDF9D47295E69D5 /* PlusJakartaSans-LightItalic.ttf in Resources */,
 				79F27CAE0D2E895B98F74A3C /* PlusJakartaSans-MediumItalic.ttf in Resources */,
