@@ -88,7 +88,7 @@ struct ContentView: View {
                 case .debugView:
                     DebugMenuView(debugSettings: self.debugStore)
                         .onDisappear(perform: {
-                            self.sheetStore.reset()
+                            self.sheetStore.popToRoot()
                         })
                         .navigationBarBackButtonHidden()
                 case .navigationAddSearchView:

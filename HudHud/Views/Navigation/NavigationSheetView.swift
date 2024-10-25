@@ -59,7 +59,7 @@ struct NavigationSheetView: View {
                         typeOfRoute: "Fastest"
                     ), go: {
                         self.routingStore.navigatingRoute = route
-                        self.sheetStore.reset()
+                        self.sheetStore.popToRoot()
                     }
                 )
                 .padding([.horizontal, .bottom])

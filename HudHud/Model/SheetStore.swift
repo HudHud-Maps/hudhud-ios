@@ -89,11 +89,10 @@ final class SheetStore {
             return
         }
         _ = self.sheets.popLast()
-        let destinationDetentCurrentValueSubject = self.currentSheet.detentData
         self.navigationCommands.send(.pop(destinationSheetData: self.currentSheet))
     }
 
-    func reset() {
+    func popToRoot() {
         guard !self.sheets.isEmpty else {
             return
         }

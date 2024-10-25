@@ -128,7 +128,7 @@ struct EditFavoritesFormView: View {
                     },
                     trailing: Button("Add") {
                         self.saveChanges()
-                        self.sheetStore.reset()
+                        self.sheetStore.popToRoot()
                     }
                 )
             }
