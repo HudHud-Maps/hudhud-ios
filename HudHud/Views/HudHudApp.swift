@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import Nuke
 import OSLog
 import SwiftLocation
 import SwiftUI
@@ -13,15 +14,14 @@ import TypographyKit
 
 // MARK: - HudHudApp
 
-@main
 struct HudHudApp: App {
 
     // MARK: Properties
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
 
-    private let motionViewModel: MotionViewModel
-    private let mapStore: MapStore
+    @State var mapStore: MapStore
+
     private let searchStore: SearchViewStore
     @State private var sheetStore: SheetStore
     @State private var mapViewStore: MapViewStore
@@ -47,18 +47,39 @@ struct HudHudApp: App {
     init() {
         let sheetStore = SheetStore(emptySheetType: .search)
         self.sheetStore = sheetStore
-        self.motionViewModel = .shared
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
-        self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
-        let routingStore = RoutingStore(mapStore: self.mapStore)
-        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore, sheetStore: sheetStore)
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
+        let routingStore = RoutingStore(mapStore: mapStore)
+        self.mapViewStore = MapViewStore(mapStore: mapStore, routingStore: routingStore, sheetStore: sheetStore)
+        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        self.mapStore = mapStore
+
+        // Create a custom URLCache to store images on disk
+        let diskCache = URLCache(
+            memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
+            diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
+            diskPath: "sa.hudhud.hudhud.imageCache"
+        )
+
+        // Create a DataLoader with custom URLCache
+        let dataLoader = DataLoader(configuration: {
+            let configuration = URLSessionConfiguration.default
+            configuration.urlCache = diskCache
+            return configuration
+        }())
+
+        // Configure the pipeline with the custom DataLoader and cache
+        let pipeline = ImagePipeline {
+            $0.dataLoader = dataLoader
+            $0.imageCache = ImageCache.shared // Use in-memory cache as well
+        }
+
+        ImagePipeline.shared = pipeline
+
         // Load custom typography configuration
         if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
-            TypographyKit.configure(with:
-                TypographyKitConfiguration.default.setConfigurationURL(url)
-            )
+            TypographyKit.configure(with: TypographyKitConfiguration.default.setConfigurationURL(url))
         }
     }
 }

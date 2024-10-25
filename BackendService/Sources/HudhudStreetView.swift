@@ -36,9 +36,16 @@ public struct StreetViewScene: Equatable {
     public let lon: Double
 }
 
-// MARK: - HudhudStreetView
+public extension StreetViewScene {
 
-public struct HudhudStreetView {
+    var coordinates: CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: self.lat, longitude: self.lon)
+    }
+}
+
+// MARK: - StreetViewClient
+
+public struct StreetViewClient {
 
     // MARK: Lifecycle
 
@@ -46,19 +53,28 @@ public struct HudhudStreetView {
 
     // MARK: Functions
 
-    public func getStreetView(lat: Double, lon: Double, baseURL: String) async throws -> StreetViewItem? {
-        let query = Operations.getNearestStreetViewImage.Input.Query(lat: lat, lon: lon)
-        let input = Operations.getNearestStreetViewImage.Input(query: query)
-        let response = try await Client.makeClient(using: baseURL).getNearestStreetViewImage(input)
+    public func getStreetView(lat: Double, lon: Double, baseURL: String) async throws -> StreetViewScene? {
+        let query = Operations.getStreetViewImageSceneNearBy.Input.Query(lat: lat, lon: lon)
+        let input = Operations.getStreetViewImageSceneNearBy.Input(query: query)
+        let response = try await Client.makeClient(using: baseURL).getStreetViewImageSceneNearBy(input)
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
             case let .json(jsonResponse):
-                let data = jsonResponse.data
-                let item = StreetViewItem(id: data.value1.id,
-                                          coordinate: CLLocationCoordinate2D(latitude: data.value1.point.lat, longitude: data.value1.point.lon),
-                                          imageURL: data.value1.url)
-                return item
+                let item = jsonResponse.data.value1
+                let streetViewScene = StreetViewScene(id: item.id,
+                                                      name: item.name,
+                                                      nextId: item.next_id,
+                                                      nextName: item.next_name,
+                                                      previousId: item.previous_id,
+                                                      previousName: item.previous_name,
+                                                      westId: item.west_id,
+                                                      westName: item.west_name,
+                                                      eastId: item.east_id,
+                                                      eastName: item.east_name,
+                                                      lat: item.point.lat,
+                                                      lon: item.point.lon)
+                return streetViewScene
             }
         case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {
@@ -71,36 +87,6 @@ public struct HudhudStreetView {
             throw try HudHudClientError.internalServerError(error.body.json.message)
         case let .badRequest(error):
             throw try HudHudClientError.badRequest(error.body.json.message)
-        }
-    }
-
-    public func getStreetViewDetails(id: Int, baseURL: String) async throws -> StreetViewItem? {
-        let response = try await Client.makeClient(using: baseURL).getStreetViewImage(
-            path: Operations.getStreetViewImage.Input.Path(id: id)
-        )
-        switch response {
-        case let .ok(okResponse):
-            switch okResponse.body {
-            case let .json(jsonResponse):
-                let data = jsonResponse.data.value1
-                let item = StreetViewItem(id: data.id,
-                                          coordinate: CLLocationCoordinate2D(latitude: data.point.lat, longitude: data.point.lon),
-                                          imageURL: data.url)
-                return item
-            }
-        case let .undocumented(statusCode: statusCode, payload):
-            let bodyString: String? = if let body = payload.body {
-                try await String(collecting: body, upTo: 1024 * 1024)
-            } else {
-                nil
-            }
-            throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
-        case .badRequest:
-            throw HudHudClientError.poiIDNotFound
-        case .notFound:
-            throw HudHudClientError.poiIDNotFound
-        case let .internalServerError(error):
-            throw try HudHudClientError.internalServerError(error.body.json.message)
         }
     }
 

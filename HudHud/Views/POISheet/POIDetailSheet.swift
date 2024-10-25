@@ -21,7 +21,7 @@ struct POIDetailSheet: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
@@ -40,7 +40,7 @@ struct POIDetailSheet: View {
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
-        guard let item = self.mapStore.selectedItem else { return false }
+        guard let item = self.mapStore.selectedItem.value else { return false }
         return (item.subtitle ?? item.coordinate.formatted()).count > maxCharacters
     }
 
@@ -65,7 +65,7 @@ struct POIDetailSheet: View {
     // MARK: - View
 
     var body: some View {
-        if let item = self.mapStore.selectedItem {
+        if let item = self.mapStore.selectedItem.value {
             VStack(alignment: .leading) {
                 HStack(alignment: .top) {
                     VStack(spacing: .zero) {
@@ -193,10 +193,10 @@ struct POIDetailSheet: View {
                 Text("Please enable your location to get directions")
             }
             .task {
-                guard let item = self.mapStore.selectedItem else { return }
+                guard let item = self.mapStore.selectedItem.value else { return }
                 await self.calculateRoute(for: item)
             }
-            .onChange(of: self.mapStore.selectedItem) { _, newItem in
+            .onReceive(self.mapStore.selectedItem) { newItem in
                 guard let newItem else { return }
                 Task {
                     await self.calculateRoute(for: newItem)

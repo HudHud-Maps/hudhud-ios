@@ -15,30 +15,27 @@ import SwiftUI
 
 // MARK: - MapViewStore
 
-@MainActor
-@Observable
+@MainActor @Observable
 final class MapViewStore {
 
     // MARK: Properties
+
+    var streetViewStore: StreetViewStore?
 
     private let mapActionHandler: MapActionHandler
     private let routingStore: RoutingStore
     private let mapStore: MapStore
     private let sheetStore: SheetStore
-
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        routingStore: RoutingStore,
-        sheetStore: SheetStore
-    ) {
+    init(mapStore: MapStore, routingStore: RoutingStore, sheetStore: SheetStore) {
         self.mapActionHandler = MapActionHandler(mapStore: mapStore)
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
+
         self.showPotentialRouteWhenAvailable()
         self.showSelectedDetentWhenSelectingAnItem()
     }
@@ -47,7 +44,15 @@ final class MapViewStore {
 
     // MARK: - Internal
 
-    func didTapOnMap(containing features: [any MLNFeature]) {
+    func didTapOnMap(coordinates: CLLocationCoordinate2D, containing features: [any MLNFeature]) {
+        if self.streetViewStore?.streetViewScene != nil {
+            // handle streetView tap
+            Task {
+                await self.streetViewStore?.loadNearestStreetView(for: coordinates)
+            }
+            return
+        }
+
         let didHaveAnAction = self.mapActionHandler.didTapOnMap(containing: features)
         if !didHaveAnAction {
             // user tapped nothing - deselect
@@ -59,6 +64,7 @@ final class MapViewStore {
 }
 
 private extension MapViewStore {
+
     func showPotentialRouteWhenAvailable() {
         self.routingStore.$potentialRoute
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
@@ -70,13 +76,16 @@ private extension MapViewStore {
                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
                 } else if self.sheetStore.currentSheet.sheetType == .navigationPreview, newPotentialRoute == nil {
                     self.sheetStore.popSheet()
+                    self.routingStore.routes = []
+                    self.routingStore.potentialRoute = nil
+                    self.routingStore.navigatingRoute = nil
                 }
             }
             .store(in: &self.subscriptions)
     }
 
     func showSelectedDetentWhenSelectingAnItem() {
-        self.mapStore.$selectedItem
+        self.mapStore.selectedItem
             .compactMap { $0 }
             .sink { [weak self] selectedItem in
                 guard let self, self.routingStore.potentialRoute == nil else {
@@ -94,9 +103,5 @@ private extension MapViewStore {
 // MARK: - Previewable
 
 extension MapViewStore: Previewable {
-    static let storeSetUpForPreviewing = MapViewStore(
-        mapStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
+    static let storeSetUpForPreviewing = MapViewStore(mapStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
 }

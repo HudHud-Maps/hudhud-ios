@@ -1,15 +1,12 @@
 {
   "images" : [
     {
-      "filename" : "currentLocation.pdf",
+      "filename" : "Frame 1000008556.pdf",
       "idiom" : "universal"
     }
   ],
   "info" : {
     "author" : "xcode",
     "version" : 1
-  },
-  "properties" : {
-    "preserves-vector-representation" : true
   }
 }

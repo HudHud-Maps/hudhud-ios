@@ -291,10 +291,10 @@
     {
       "identity" : "swiftuipanoramaviewer",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/azizdev/SwiftUIPanoramaViewer.git",
+      "location" : "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "9efa5c7845d57ef36d24626c8e93d100a46a3ac3"
+        "branch" : "hudhud",
+        "revision" : "2e5b8e3bd8fc4eb76f857224b6095bd2a6fbe0c7"
       }
     },
     {

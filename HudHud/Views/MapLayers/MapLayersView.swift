@@ -13,7 +13,7 @@ import SwiftUI
 
 struct MapLayersView: View {
     @Environment(\.dismiss) private var dismiss
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     var sheetStore: SheetStore
     var hudhudMapLayerStore: HudHudMapLayerStore
 
@@ -136,7 +136,7 @@ struct MapLayersView: View {
 
 #Preview {
     let hudhudMapLayerStore = HudHudMapLayerStore()
-    return MapLayersView(
+    MapLayersView(
         mapStore: .storeSetUpForPreviewing,
         sheetStore: .storeSetUpForPreviewing,
         hudhudMapLayerStore: hudhudMapLayerStore

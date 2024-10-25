@@ -19,8 +19,8 @@ import SwiftUI
 
 // MARK: - MapStore
 
-@MainActor
-final class MapStore: ObservableObject {
+@Observable @MainActor
+final class MapStore {
 
     // MARK: Nested Types
 
@@ -35,45 +35,92 @@ final class MapStore: ObservableObject {
         case route(Route?)
         case selectedItem(ResolvedItem)
         case userLocation(CLLocationCoordinate2D)
+        case streetViewPoint(CLLocationCoordinate2D)
         case mapItems
         case defaultLocation
     }
 
     // MARK: Properties
 
-    let motionViewModel: MotionViewModel
     var mapStyle: MLNStyle?
-
-    @AppStorage("mapStyleLayer") var mapStyleLayer: HudHudMapLayer?
-    @Published var shouldShowCustomSymbols = false
-    @Published var trackingState: TrackingState = .none
-
-    var hudhudStreetView = HudhudStreetView()
-    @Published var streetViewScene: StreetViewScene?
-    @Published var nearestStreetViewScene: StreetViewScene?
-    @Published var fullScreenStreetView: Bool = false
-    var cachedScenes = [Int: StreetViewScene]()
+    var shouldShowCustomSymbols = false
+    var mapViewPort: MapViewPort?
     let userLocationStore: UserLocationStore
 
-    @Published private(set) var selectedItem: ResolvedItem?
-
-    @Published var displayableItems: [DisplayableRow] = []
+    private(set) var selectedItem: CurrentValueSubject<ResolvedItem?, Never>
 
     private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
 
-    @Published var camera: MapViewCamera = .center(.riyadh, zoom: 10) {
+    var displayableItems: [DisplayableRow] = [] {
         didSet {
-            print("camera: \(self.camera)")
+            self.mapStyle?.layers.forEach { layer in
+                if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
+                    layer.isVisible = self.displayableItems.hasElements
+                }
+            }
+        }
+    }
+
+    @ObservationIgnored
+    var mapStyleLayer: HudHudMapLayer? {
+        get {
+            access(keyPath: \.mapStyleLayer)
+            guard let data = UserDefaults.standard.value(forKey: "mapStyleLayer") as? Data else { return nil }
+
+            return try? JSONDecoder().decode(HudHudMapLayer.self, from: data)
+        }
+        set {
+            withMutation(keyPath: \.mapStyleLayer) {
+                guard let data = try? JSONEncoder().encode(newValue) else { return }
+
+                UserDefaults.standard.set(data, forKey: "mapStyleLayer")
+            }
+        }
+    }
+
+    var trackingState: TrackingState = .none {
+        didSet {
+            switch self.trackingState {
+            case .none:
+                break
+            case .waitingForLocation:
+                break
+            case .locateOnce:
+                Task {
+                    guard let location = await self.userLocationStore.location() else { return }
+
+                    self.camera = .center(location.coordinate, zoom: 14, reason: .programmatic)
+                }
+            case .keepTracking:
+                self.camera = .trackUserLocationWithCourse(zoom: 16)
+            }
+        }
+    }
+
+    var camera: MapViewCamera = .center(.riyadh, zoom: 10) {
+        didSet {
+            switch self.camera.lastReasonForChange {
+            case .gesturePan:
+                self.trackingState = .none
+
+            case .gestureRotate:
+                if self.trackingState == .keepTracking {
+                    self.trackingState = .none
+                }
+
+            default:
+                break
+            }
         }
     }
 
     var mapItems: [ResolvedItem] {
         let allItems = Set(self.displayableItems)
 
-        if let selectedItem {
+        if let selectedItem = selectedItem.value {
             let items = allItems.union([DisplayableRow.resolvedItem(selectedItem)])
             return items.compactMap(\.resolvedItem)
         }
@@ -96,7 +143,7 @@ final class MapStore: ObservableObject {
 
     var selectedPoint: ShapeSource {
         ShapeSource(identifier: MapSourceIdentifier.selectedPoint, options: [.clustered: false]) {
-            if let selectedItem {
+            if let selectedItem = selectedItem.value {
                 let feature = MLNPointFeature(coordinate: selectedItem.coordinate)
                 feature.attributes["poi_id"] = selectedItem.id
                 feature
@@ -106,11 +153,10 @@ final class MapStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = MapViewCamera.center(.riyadh, zoom: 10), motionViewModel: MotionViewModel, userLocationStore: UserLocationStore) {
+    init(camera: MapViewCamera = .center(.riyadh, zoom: 10), userLocationStore: UserLocationStore) {
         self.camera = camera
-        self.motionViewModel = motionViewModel
         self.userLocationStore = userLocationStore
-        bindLayersVisability()
+        self.selectedItem = CurrentValueSubject(nil)
     }
 
     // MARK: Functions
@@ -125,23 +171,23 @@ final class MapStore: ObservableObject {
     }
 
     func clearListAndSelect(_ item: ResolvedItem) {
-        self.selectedItem = item
+        self.selectedItem.value = item
         self.displayableItems = [DisplayableRow.resolvedItem(item)]
     }
 
     func unselectItem() {
-        self.selectedItem = nil
+        self.selectedItem.value = nil
     }
 
     func select(_ item: ResolvedItem, shouldFocusCamera: Bool = false) {
-        self.selectedItem = item
+        self.selectedItem.value = item
         if shouldFocusCamera {
             self.updateCamera(state: .selectedItem(item))
         }
     }
 
     func clearItems(clearResults: Bool? = true) {
-        self.selectedItem = nil
+        self.selectedItem.value = nil
         if clearResults == true {
             self.displayableItems = []
         }
@@ -199,14 +245,14 @@ final class MapStore: ObservableObject {
         self.select(item, shouldFocusCamera: true)
         guard let detailedItem = try? await hudhudResolver.lookup(id: item.id, baseURL: DebugStore().baseURL),
               // we make sure that this item is still selected
-              detailedItem.id == self.selectedItem?.id,
+              detailedItem.id == self.selectedItem.value?.id,
               let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
 
         var detailedItemUpdate = detailedItem
         detailedItemUpdate.systemColor = item.systemColor
         detailedItemUpdate.symbol = item.symbol
         self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
-        self.selectedItem = detailedItemUpdate
+        self.selectedItem.value = detailedItemUpdate
     }
 
     func updateCamera(state: CameraUpdateState) {
@@ -243,7 +289,7 @@ final class MapStore: ObservableObject {
             self.trackingState = .keepTracking
             Logger.mapInteraction.log("locate me Once")
         case .keepTracking:
-            self.trackingState = .none
+            self.trackingState = .locateOnce
             Logger.mapInteraction.log("keep Tracking of user location")
         }
     }
@@ -251,80 +297,18 @@ final class MapStore: ObservableObject {
     func isSFSymbolLayerPresent() -> Bool {
         return self.mapStyle?.layers.contains(where: { $0.identifier == MapLayerIdentifier.restaurants || $0.identifier == MapLayerIdentifier.shops }) ?? false
     }
-
-    func zoomToStreetViewLocation() {
-        guard let lat = streetViewScene?.lat else { return }
-        guard let lon = streetViewScene?.lon else { return }
-        self.camera = .center(CLLocationCoordinate2D(latitude: lat, longitude: lon),
-                              zoom: 15, pitch: 0, pitchRange: .fixed(0))
-    }
-
-    func loadNearestStreetView(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async {
-        do {
-            self.nearestStreetViewScene = try await self.hudhudStreetView.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
-        } catch {
-            self.nearestStreetViewScene = nil
-            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
-        }
-    }
-
-    func loadStreetViewScene(id: Int) async {
-        if let item = self.cachedScenes[id] {
-            self.streetViewScene = item
-            return
-        }
-
-        do {
-            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
-                Logger.streetView.log("SVD: streetViewScene0: \(self.streetViewScene.debugDescription)")
-                self.streetViewScene = streetViewScene
-                self.cachedScenes[streetViewScene.id] = streetViewScene
-            }
-        } catch {
-            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
-        }
-    }
-
-    func preloadStreetViewScene(id: Int) async {
-        if self.cachedScenes[id] != nil {
-            return
-        }
-
-        do {
-            if let streetViewScene = try await hudhudStreetView.getStreetViewScene(id: id, baseURL: DebugStore().baseURL) {
-                self.cachedScenes[streetViewScene.id] = streetViewScene
-            }
-        } catch {
-            Logger.streetViewScene.error("Loading StreetViewScene failed \(error)")
-        }
-    }
-
 }
 
 // MARK: - Previewable
 
 extension MapStore: Previewable {
 
-    static let storeSetUpForPreviewing = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = MapStore(userLocationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Private
 
 private extension MapStore {
-
-    func bindLayersVisability() {
-        self.$displayableItems
-            .map { $0.count <= 1 }
-            .removeDuplicates()
-            .sink { [weak self] isVisible in
-                self?.mapStyle?.layers.forEach { layer in
-                    if layer.identifier.hasPrefix(MapLayerIdentifier.hudhudPOIPrefix) {
-                        layer.isVisible = isVisible
-                    }
-                }
-            }
-            .store(in: &self.subscriptions)
-    }
 
     func generateMLNCoordinateBounds(from coordinates: [CLLocationCoordinate2D]) -> MLNCoordinateBounds? {
         guard !coordinates.isEmpty else {

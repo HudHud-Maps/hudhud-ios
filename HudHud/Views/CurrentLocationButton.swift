@@ -16,7 +16,7 @@ struct CurrentLocationButton: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
 
     // MARK: Content
 

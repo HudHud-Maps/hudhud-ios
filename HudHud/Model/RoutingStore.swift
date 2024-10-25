@@ -204,6 +204,14 @@ final class RoutingStore: ObservableObject {
     }
 }
 
+// MARK: - Private
+
+private extension RoutingStore {
+    func reroute(with route: Route) async {
+        self.navigatingRoute = route
+    }
+}
+
 // MARK: - Previewable
 
 extension RoutingStore: Previewable {

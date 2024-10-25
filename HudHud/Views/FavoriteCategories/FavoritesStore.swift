@@ -131,5 +131,5 @@ final class FavoritesStore: ObservableObject {
 // MARK: - Previewable
 
 extension FavoritesStore: Previewable {
-    static let storeSetUpForPreviewing: FavoritesStore = .init()
+    static let storeSetUpForPreviewing = FavoritesStore()
 }

@@ -68,7 +68,7 @@ struct RecentSearchResultsView: View {
                 self.searchStore.mapStore.clearListAndSelect(item)
                 switch self.searchType {
                 case let .returnPOILocation(completion):
-                    if let selectedItem = self.searchStore.mapStore.selectedItem {
+                    if let selectedItem = self.searchStore.mapStore.selectedItem.value {
                         completion?(.waypoint(selectedItem))
                         self.dismiss()
                     }

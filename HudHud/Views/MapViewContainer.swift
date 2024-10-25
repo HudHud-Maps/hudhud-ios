@@ -21,11 +21,13 @@ struct MapViewContainer<SheetContentView: View>: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    @Bindable var mapStore: MapStore
+    var streetViewStore: StreetViewStore
+    let mapViewStore: MapViewStore
+
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
-    let mapViewStore: MapViewStore
     @ObservedObject var routingStore: RoutingStore
     @State var safeAreaInsets = UIEdgeInsets()
     var sheetStore: SheetStore
@@ -82,6 +84,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         mapViewStore: MapViewStore,
         routingStore: RoutingStore,
         sheetStore: SheetStore,
+        streetViewStore: StreetViewStore,
         @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
@@ -89,6 +92,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
         self.mapViewStore = mapViewStore
+        self.streetViewStore = streetViewStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
         self.core = routingStore.ferrostarCore
@@ -116,12 +120,12 @@ struct MapViewContainer<SheetContentView: View>: View {
                 self.stopNavigation()
 
             } makeMapContent: {
-                let routePoints = self.searchViewStore.routingStore.routePoints
+                let routePoints = self.routingStore.routePoints
                 // Separate the selected route from alternatives
-                let selectedRoute = self.searchViewStore.routingStore.routes.first(where: { $0.isSelected })
-                let alternativeRoutes = self.searchViewStore.routingStore.routes.filter { !$0.isSelected }
+                let selectedRoute = self.routingStore.routes.first(where: { $0.isSelected })
+                let alternativeRoutes = self.routingStore.routes.filter { !$0.isSelected }
 
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating {
+                if self.routingStore.ferrostarCore.isNavigating {
                     // The state is .navigating
                 } else {
                     // Render alternative routes first
@@ -263,22 +267,20 @@ struct MapViewContainer<SheetContentView: View>: View {
                         .predicate(NSPredicate(format: "cluster != YES"))
 
                     // shows the selected pin
-                    CircleStyleLayer(
-                        identifier: MapLayerIdentifier.selectedCircle,
-                        source: self.mapStore.selectedPoint
-                    )
-                    .radius(24)
-                    .color(UIColor(self.mapStore.selectedItem?.color ?? Color(.systemRed)))
-                    .strokeWidth(2)
-                    .strokeColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
-                    SymbolStyleLayer(
-                        identifier: MapLayerIdentifier.selectedCircleIcon,
-                        source: self.mapStore.selectedPoint
-                    )
-                    .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
-                    .iconColor(.white)
-                    .predicate(NSPredicate(format: "cluster != YES"))
+                    CircleStyleLayer(identifier: MapLayerIdentifier.selectedCircle, source: self.mapStore.selectedPoint)
+                        .radius(24)
+                        .color(UIColor(self.mapStore.selectedItem.value?.color ?? Color(.systemRed)))
+                        .strokeWidth(2)
+                        .strokeColor(.white)
+                        .predicate(NSPredicate(format: "cluster != YES"))
+                    SymbolStyleLayer(identifier: MapLayerIdentifier.selectedCircleIcon, source: self.mapStore.selectedPoint)
+                        .iconImage(UIImage(systemSymbol: self.mapStore.selectedItem.value?.symbol ?? .mappin, withConfiguration: UIImage.SymbolConfiguration(pointSize: 24)).withRenderingMode(.alwaysTemplate))
+                        .iconColor(.white)
+                        .predicate(NSPredicate(format: "cluster != YES"))
+
+                    SymbolStyleLayer(identifier: "street-view-point", source: self.streetViewStore.streetViewSource)
+                        .iconImage(UIImage(systemSymbol: .cameraCircleFill, withConfiguration: UIImage.SymbolConfiguration(paletteColors: [.white, .black])).resize(.square(32)))
+                        .iconRotation(featurePropertyNamed: "heading")
                 }
             } mapViewModifiers: { content, isNavigating in
                 if isNavigating {
@@ -289,19 +291,22 @@ struct MapViewContainer<SheetContentView: View>: View {
                             mapViewController.mapView.locationManager = nil
                             mapViewController.mapView.compassViewMargins.y = 50
                         }
-                        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { _, features in
-                            self.mapViewStore.didTapOnMap(containing: features)
+                        .onTapMapGesture(on: MapLayerIdentifier.tapLayers) { point, features in
+                            self.mapViewStore.didTapOnMap(coordinates: point.coordinate, containing: features)
                         }
                         .expandClustersOnTapping(clusteredLayers: [ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered, sourceIdentifier: MapSourceIdentifier.points)])
                         .cameraModifierDisabled(self.routingStore.navigatingRoute != nil)
+                        .onMapViewPortUpdate { viewPort in
+                            self.mapStore.mapViewPort = viewPort
+                        }
                         .onStyleLoaded { style in
                             self.mapStore.mapStyle = style
                             self.mapStore.shouldShowCustomSymbols = self.mapStore.isSFSymbolLayerPresent()
                         }
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
-                            if self.mapStore.selectedItem == nil {
+                            if self.mapStore.selectedItem.value == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                                self.searchViewStore.mapStore.select(generatedPOI)
+                                self.mapStore.select(generatedPOI)
                             }
                         })
                         .mapControls {
@@ -370,7 +375,7 @@ struct MapViewContainer<SheetContentView: View>: View {
             .onChange(of: self.routingStore.navigatingRoute) { _, newValue in
                 if let route = newValue {
                     do {
-                        if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                        if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
                             // This configures the simulator to the desired route.
                             // The ferrostarCore.startNavigation will still start the location
                             // provider/simulator.
@@ -390,7 +395,7 @@ struct MapViewContainer<SheetContentView: View>: View {
                     }
                 } else {
                     self.stopNavigation()
-                    if let simulated = searchViewStore.routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                    if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
                         simulated.stopUpdating()
                     }
                 }
@@ -477,6 +482,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         userLocationStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
         routingStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        streetViewStore: .storeSetUpForPreviewing
     ) { _ in EmptyView() }
 }

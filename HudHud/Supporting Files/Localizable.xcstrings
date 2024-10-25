@@ -13,6 +13,9 @@
     "(%lld)" : {
 
     },
+    "@" : {
+
+    },
     "%.1f" : {
 
     },
@@ -33,6 +36,9 @@
 
     },
     "•" : {
+
+    },
+    "• %@" : {
 
     },
     "+" : {
@@ -241,9 +247,6 @@
     "Go Back" : {
 
     },
-    "Heading: %@" : {
-      "comment" : "street view"
-    },
     "Help improve HudHud maps." : {
 
     },
@@ -375,13 +378,13 @@
     "Photos" : {
 
     },
-    "Pitch: %@" : {
-      "comment" : "street view"
-    },
     "Please enable your location to get directions" : {
 
     },
     "Price" : {
+
+    },
+    "Quality" : {
 
     },
     "Rating" : {
@@ -463,6 +466,9 @@
     "Simulation" : {
 
     },
+    "Size:" : {
+
+    },
     "Sort By" : {
 
     },
@@ -478,10 +484,16 @@
         }
       }
     },
+    "StreetView Quality" : {
+
+    },
     "Suggestions" : {
 
     },
     "Touch Visualizer" : {
+
+    },
+    "Unit Testing in progress" : {
 
     },
     "Unknown" : {
@@ -500,6 +512,9 @@
 
     },
     "Verify" : {
+
+    },
+    "Visualize taps in screen recordings to help understand your bug reports" : {
 
     },
     "walk" : {
@@ -525,6 +540,9 @@
           }
         }
       }
+    },
+    "WEBP has a maximum limit of %@ pixels, image will look pixelated as its divided by a fractional number" : {
+
     },
     "Work" : {
       "extractionState" : "stale",
