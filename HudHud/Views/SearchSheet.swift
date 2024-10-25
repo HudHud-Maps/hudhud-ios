@@ -263,7 +263,7 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
     }
 }
 
-#Preview {
-    let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
-}
+// #Preview {
+//    let trendingStroe = TrendingStore()
+//    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+// }

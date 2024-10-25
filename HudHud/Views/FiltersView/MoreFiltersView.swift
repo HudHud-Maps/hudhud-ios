@@ -99,6 +99,7 @@ struct MoreFiltersView: View {
     }
 }
 
-#Preview {
-    return MoreFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
-}
+//
+// #Preview {
+//    return MoreFiltersView(searchStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+// }

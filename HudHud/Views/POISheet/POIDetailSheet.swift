@@ -24,15 +24,18 @@ struct POIDetailSheet: View {
     let item: ResolvedItem
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
+    let preplanRoutes: (ResolvedItem) -> Void
     let onDismiss: () -> Void
 
-    @State var routes: [RouteModel]?
+    @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
-    @ObservedObject var routingStore: RoutingStore
+    var navigationVisualization: NavigationVisualization
 
     @EnvironmentObject var notificationQueue: NotificationQueue
+
+    var mapStore: MapStore
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
@@ -47,16 +50,20 @@ struct POIDetailSheet: View {
     // MARK: Lifecycle
 
     init(
+        mapStore: MapStore,
         item: ResolvedItem,
-        routingStore: RoutingStore,
+        navigationVisualization: NavigationVisualization,
         didDenyLocationPermission: Bool,
         onStart: @escaping ([Route]?) -> Void,
+        preplanRoutes: @escaping (ResolvedItem) -> Void,
         onDismiss: @escaping () -> Void
     ) {
+        self.mapStore = mapStore
         self.item = item
         self.onStart = onStart
         self.onDismiss = onDismiss
-        self.routingStore = routingStore
+        self.navigationVisualization = navigationVisualization
+        self.preplanRoutes = preplanRoutes
         self.didDenyLocationPermission = didDenyLocationPermission
     }
 
@@ -127,7 +134,7 @@ struct POIDetailSheet: View {
                         if self.didDenyLocationPermission {
                             self.askToEnableLocation = true
                         } else {
-                            self.onStart(self.routes?.map(\.route))
+                            self.onStart(self.routes)
                         }
                     }, label: {})
                         .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
@@ -174,7 +181,7 @@ struct POIDetailSheet: View {
             }
             .padding(.vertical, -15)
             VStack {
-                AdditionalPOIDetailsView(item: self.item, routes: self.routes?.map(\.route))
+                AdditionalPOIDetailsView(item: self.item, routes: self.routes)
                     .fixedSize()
                     .padding([.top, .trailing, .leading])
                 POIMediaView(mediaURLs: self.item.mediaURLs)
@@ -208,33 +215,29 @@ struct POIDetailSheet: View {
 private extension POIDetailSheet {
 
     func calculateRoute(for item: ResolvedItem) async {
-        do {
-            let routes = try await self.routingStore.calculateRoutes(for: item)
-            self.routes = routes
-            self.routingStore.routes = routes // TODO: Improve it
-            self.routingStore.selectRoute(withId: routes.last?.id ?? 0)
-        } catch let error as URLError {
-            if error.code == .cancelled {
-                // ignore cancelled errors
-                return
-            }
-            // if the error is related to the user's internet connetion, display the error to the user
-            let notification = Notification(error: error)
-            self.notificationQueue.add(notification: notification)
-        } catch {
-            // we do not show an error in all other cases
-        }
+        self.preplanRoutes(item)
     }
 }
 
 // MARK: - Preview
 
-#Preview(traits: .sizeThatFitsLayout) {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.select(.artwork)
-    return ContentView(
-        searchStore: searchViewStore,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
+// #Preview(traits: .sizeThatFitsLayout) {
+//    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+//    searchViewStore.mapStore.select(.artwork)
+//    return ContentView(
+//        store: .init(
+//            mapStore: .storeSetUpForPreviewing,
+//            sheetStore: .storeSetUpForPreviewing,
+//            mapViewStore: .storeSetUpForPreviewing,
+//            searchViewStore: searchViewStore,
+//            userLocationStore: .storeSetUpForPreviewing,
+//            navigationEngine: .init(),
+//            mapContainerViewStore: MapViewContainerStore(
+//                navigationVisualization: .init(
+//                    navigationEngine: .init(),
+//                    routePlanner: RoutePlanner(routingService: GraphHopperRouteProvider())
+//                )
+//            )
+//        )
+//    )
+// }

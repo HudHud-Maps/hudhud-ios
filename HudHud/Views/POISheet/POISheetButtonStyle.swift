@@ -52,12 +52,23 @@ struct POISheetButtonStyle: ButtonStyle {
         .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
 }
 
-#Preview(traits: .sizeThatFitsLayout) {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.select(.coffeeAddressRiyadh)
-    return ContentView(
-        searchStore: searchViewStore,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
+// #Preview(traits: .sizeThatFitsLayout) {
+//    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+//    searchViewStore.mapStore.select(.coffeeAddressRiyadh)
+//    return ContentView(
+//        store: .init(
+//            mapStore: .storeSetUpForPreviewing,
+//            sheetStore: .storeSetUpForPreviewing,
+//            mapViewStore: .storeSetUpForPreviewing,
+//            searchViewStore: searchViewStore,
+//            userLocationStore: .storeSetUpForPreviewing,
+//            navigationEngine: .init(),
+//            mapContainerViewStore: MapViewContainerStore(
+//                navigationVisualization: .init(
+//                    navigationEngine: .init(),
+//                    routePlanner: RoutePlanner(routingService: GraphHopperRouteProvider())
+//                )
+//            )
+//        )
+//    )
+// }

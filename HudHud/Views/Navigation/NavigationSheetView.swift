@@ -8,16 +8,20 @@
 
 import BackendService
 import CoreLocation
+import FerrostarCoreFFI
 import SwiftUI
 
 struct NavigationSheetView: View {
 
     // MARK: Properties
 
-    @ObservedObject var routingStore: RoutingStore
+//    @ObservedObject var routingStore: RoutingStore
     var sheetStore: SheetStore
+    let navigationVisualization: NavigationVisualization
 
     @Environment(\.dismiss) private var dismiss
+    @State var selctedRoute: Route?
+    @State var waypoints: [ABCRouteConfigurationItem] = []
 
     // MARK: Content
 
@@ -29,7 +33,7 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
-                    self.routingStore.endTrip()
+                    self.navigationVisualization.clear()
                     self.dismiss()
                 }, label: {
                     ZStack {
@@ -50,24 +54,37 @@ struct NavigationSheetView: View {
             .frame(height: 20)
             .padding(.horizontal)
             .padding(.top, 30)
-            if let route = self.routingStore.potentialRoute, let waypoints = self.routingStore.waypoints {
-                ABCRouteConfigurationView(routeConfigurations: waypoints, sheetStore: self.sheetStore, routingStore: self.routingStore)
+
+            if let route = self.navigationVisualization.selectedRoute {
+                let waypoints = self.navigationVisualization.waypoints
+                ABCRouteConfigurationView(
+                    routeConfigurations: waypoints,
+                    sheetStore: self.sheetStore,
+                    navigationVisualization: self.navigationVisualization
+                )
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
                         duration: route.duration,
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
-                        self.routingStore.navigatingRoute = route
+//                        self.routingStore.navigatingRoute = route
+                        self.navigationVisualization.startNavigation()
                         self.sheetStore.reset()
                     }
                 )
                 .padding([.horizontal, .bottom])
             }
         }
+        .onChange(of: self.navigationVisualization.selectedRoute) { _, newValue in
+            self.selctedRoute = newValue
+        }
+        .onChange(of: self.navigationVisualization.waypoints) { _, newValue in
+            self.waypoints = newValue
+        }
     }
 }
 
-#Preview {
-    NavigationSheetView(routingStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
-}
+// #Preview {
+//    NavigationSheetView(routingStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
+// }

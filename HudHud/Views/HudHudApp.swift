@@ -16,6 +16,15 @@ import TypographyKit
 @main
 struct HudHudApp: App {
 
+    // MARK: Static Properties
+
+    static let navigationEngine = NavigationEngine()
+    static let routePlanner = RoutePlanner(routingService: GraphHopperRouteProvider())
+    static let navigationVisualization = NavigationVisualization(
+        navigationEngine: navigationEngine,
+        routePlanner: routePlanner
+    )
+
     // MARK: Properties
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
@@ -27,14 +36,22 @@ struct HudHudApp: App {
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
+    private let mapContainerViewStore: MapViewContainerStore
+
     // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
             ContentView(
-                searchStore: self.searchStore,
-                mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore
+                store: ContentViewStore(
+                    mapStore: self.mapStore,
+                    sheetStore: self.sheetStore,
+                    mapViewStore: self.mapViewStore,
+                    searchViewStore: self.searchStore,
+                    userLocationStore: self.mapStore.userLocationStore,
+                    navigationVisualization: Self.navigationVisualization,
+                    mapContainerViewStore: self.mapContainerViewStore
+                )
             )
             .onAppear {
                 self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
@@ -50,9 +67,33 @@ struct HudHudApp: App {
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
         self.mapStore = MapStore(motionViewModel: self.motionViewModel, userLocationStore: UserLocationStore(location: location))
-        let routingStore = RoutingStore(mapStore: self.mapStore)
-        self.mapViewStore = MapViewStore(mapStore: self.mapStore, routingStore: routingStore, sheetStore: self.sheetStore)
-        self.searchStore = SearchViewStore(mapStore: self.mapStore, sheetStore: self.sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+//        let routingStore = RoutingStore(mapStore: self.mapStore)
+        self.mapViewStore = MapViewStore(
+            mapStore: self.mapStore,
+            navigationVisualization: Self.navigationVisualization,
+            sheetStore: self.sheetStore
+        )
+        self.searchStore = SearchViewStore(
+            mapStore: self.mapStore,
+            sheetStore: self.sheetStore,
+            navigationVisualization: Self.navigationVisualization,
+            filterStore: .shared,
+            mode: .live(provider: .hudhud)
+        )
+
+        self.mapContainerViewStore = MapViewContainerStore(
+            navigationVisualization: Self.navigationVisualization,
+            mapViewStore: MapViewStore(
+                mapStore: self.mapStore,
+                navigationVisualization: Self.navigationVisualization,
+                sheetStore: self.sheetStore
+            ),
+            mapStore: self.mapStore,
+            debugStore: DebugStore(),
+            searchViewStore: self.searchStore,
+            userLocationStore: self.mapStore.userLocationStore
+        )
+
         // Load custom typography configuration
         if let url = Bundle.main.url(forResource: "typography-design-tokens", withExtension: "json") {
             TypographyKit.configure(with:

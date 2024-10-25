@@ -8,6 +8,7 @@
 
 import BackendService
 import FerrostarCoreFFI
+import Foundation
 import MapLibreSwiftUI
 import OSLog
 import SwiftUI
@@ -27,6 +28,8 @@ struct RootSheetView: View {
     @StateObject var favoritesStore = FavoritesStore()
 
     @StateObject var notificationManager = NotificationManager()
+
+    var navigationVisualization: NavigationVisualization
 
     // MARK: Content
 
@@ -52,16 +55,17 @@ struct RootSheetView: View {
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
                         let freshSearchViewStore: SearchViewStore = {
-                            let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+                            self.navigationVisualization.clear()
+
                             let tempStore = SearchViewStore(
                                 mapStore: freshMapStore,
                                 sheetStore: SheetStore(),
-                                routingStore: freshRoutingStore,
+                                navigationVisualization: navigationVisualization,
                                 filterStore: self.searchViewStore.filterStore,
                                 mode: self.searchViewStore.mode
                             )
-                            tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
-                                routingStore.add(item)
+                            tempStore.searchType = .returnPOILocation(completion: { item in
+                                self.navigationVisualization.add(item)
                             })
                             return tempStore
                         }()
@@ -76,12 +80,13 @@ struct RootSheetView: View {
                     case .favorites:
                         // Initialize fresh instances of MapStore and SearchViewStore
                         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
-                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+//                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+//                        _ = navigationVisualization.clear()
                         let freshSearchViewStore: SearchViewStore = {
                             let tempStore = SearchViewStore(
                                 mapStore: freshMapStore,
                                 sheetStore: SheetStore(),
-                                routingStore: freshRoutingStore,
+                                navigationVisualization: navigationVisualization,
                                 filterStore: self.searchViewStore.filterStore,
                                 mode: self.searchViewStore.mode
                             )
@@ -96,25 +101,72 @@ struct RootSheetView: View {
                             filterStore: self.searchViewStore.filterStore
                         )
                     case .navigationPreview:
-                        NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
-                            .navigationBarBackButtonHidden()
-                            .presentationCornerRadius(21)
+                        NavigationSheetView(
+                            sheetStore: self.sheetStore,
+                            navigationVisualization: self.navigationVisualization
+                        )
+                        .navigationBarBackButtonHidden()
+                        .presentationCornerRadius(21)
                     case let .pointOfInterest(item):
                         POIDetailSheet(
+                            mapStore: self.mapStore,
                             item: item,
-                            routingStore: self.searchViewStore.routingStore,
+                            navigationVisualization: self.navigationVisualization,
                             didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
-                        ) { routeIfAvailable in
+                        ) { _ in
                             Logger.searchView.info("Start item \(item)")
                             Task {
+                                guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+                                    return
+                                }
+                                self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
+
+                                self.navigationVisualization.displayRoute(from: userLocation.coordinate, to: item.coordinate)
+
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                    if let location = navigationVisualization.routes.first?.waypoints.first {
+                                        self.navigationVisualization.waypoints = [.myLocation(location), .waypoint(item)]
+                                    }
+                                }
+
+                                //            self.waypoints = [.myLocation(location), .waypoint(item)]
+                                //        }
+
+//                                fatalError()
+//                                do {
+//                                    try await self.navigationVisualization.navigate(to: item, with: routeIfAvailable)
+//                                    try await self.notificationManager.requestAuthorization()
+//                                } catch {
+//                                    Logger.routing.error("Error navigating to \(item): \(error)")
+//                                }
+                            }
+                        }
+                        preplanRoutes: { item in
+                            Task {
                                 do {
-                                    try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
-                                    try await self.notificationManager.requestAuthorization()
+                                    guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
+                                        return
+                                    }
+
+                                    try await self.navigationVisualization.preplanRoutes(
+                                        from: userLocation.coordinate,
+                                        to: item.coordinate
+                                    )
+
+                                } catch let error as URLError {
+                                    if error.code == .cancelled {
+                                        // ignore cancelled errors
+                                        return
+                                    }
+
+                                    let notification = Notification(error: error)
+//                                    self.notificationQueue.add(notification: notification)
                                 } catch {
-                                    Logger.routing.error("Error navigating to \(item): \(error)")
+                                    // we do not show an error in all other cases
                                 }
                             }
-                        } onDismiss: {
+                        }
+                        onDismiss: {
                             self.searchViewStore.mapStore
                                 .clearItems(clearResults: false)
                         }
@@ -123,7 +175,8 @@ struct RootSheetView: View {
                         FavoritesViewMoreView(
                             searchStore: self.searchViewStore,
                             sheetStore: self.sheetStore,
-                            favoritesStore: self.favoritesStore
+                            favoritesStore: self.favoritesStore,
+                            navigationVisualization: self.navigationVisualization
                         )
                     case let .editFavoritesForm(
                         item: item,
@@ -177,10 +230,21 @@ struct RootSheetView: View {
     }
 }
 
-#Preview {
-    return ContentView(
-        searchStore: .storeSetUpForPreviewing,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
+// #Preview {
+//    ContentView(
+//        store: .init(
+//            mapStore: .storeSetUpForPreviewing,
+//            sheetStore: .storeSetUpForPreviewing,
+//            mapViewStore: .storeSetUpForPreviewing,
+//            searchViewStore: .storeSetUpForPreviewing,
+//            userLocationStore: .storeSetUpForPreviewing,
+//            navigationEngine: .init(),
+//            mapContainerViewStore: MapViewContainerStore(
+//                navigationVisualization: .init(
+//                    navigationEngine: .init(),
+//                    routePlanner: RoutePlanner(routingService: GraphHopperRouteProvider())
+//                )
+//            )
+//        )
+//    )
+// }

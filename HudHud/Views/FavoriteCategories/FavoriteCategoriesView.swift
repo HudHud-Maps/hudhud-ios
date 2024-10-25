@@ -61,7 +61,8 @@ struct FavoriteCategoriesView: View {
                     FavoritesViewMoreView(
                         searchStore: .storeSetUpForPreviewing,
                         sheetStore: .storeSetUpForPreviewing,
-                        favoritesStore: .storeSetUpForPreviewing
+                        favoritesStore: .storeSetUpForPreviewing,
+                        navigationVisualization: .preview
                     )
                 } label: {
                     HStack {

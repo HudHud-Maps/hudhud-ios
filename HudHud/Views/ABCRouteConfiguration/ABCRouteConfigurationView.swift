@@ -18,8 +18,10 @@ struct ABCRouteConfigurationView: View {
     // MARK: Properties
 
     @State var routeConfigurations: [ABCRouteConfigurationItem]
+
     var sheetStore: SheetStore
-    @ObservedObject var routingStore: RoutingStore
+
+    var navigationVisualization: NavigationVisualization
 
     // MARK: Content
 
@@ -53,7 +55,6 @@ struct ABCRouteConfigurationView: View {
                     .onDelete { indexSet in
                         self.routeConfigurations.remove(atOffsets: indexSet)
                     }
-
                     .environment(\.defaultMinListRowHeight, 55)
                     .listRowBackground(Color(.quaternarySystemFill))
                 }
@@ -98,28 +99,26 @@ struct ABCRouteConfigurationView: View {
                 }
             }
             .task(id: self.routeConfigurations) {
-                await self.routingStore.navigate(to: self.routeConfigurations)
+                await self.navigationVisualization.navigate(to: self.routeConfigurations)
             }
         }
         // This line will update the routeConfigurations with latest waypoints after added stop point
-        .onChange(of: self.routingStore.waypoints ?? []) { _, waypoints in
+        .onChange(of: self.navigationVisualization.waypoints) { _, waypoints in
             self.routeConfigurations = waypoints
         }
     }
 
     // MARK: Functions
 
-    // MARK: - Internal
-
     func moveAction(from source: IndexSet, to destination: Int) {
         self.routeConfigurations.move(fromOffsets: source, toOffset: destination)
     }
 }
 
-#Preview {
-    ABCRouteConfigurationView(routeConfigurations: [
-        .myLocation(Waypoint(coordinate: GeographicCoordinate(lat: 24.7192284, lng: 46.6468331), kind: .via)),
-        .waypoint(.coffeeAddressRiyadh),
-        .waypoint(.theGarageRiyadh)
-    ], sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)
-}
+// #Preview {
+//    ABCRouteConfigurationView(routeConfigurations: [
+//        .myLocation(Waypoint(coordinate: GeographicCoordinate(lat: 24.7192284, lng: 46.6468331), kind: .via)),
+//        .waypoint(.coffeeAddressRiyadh),
+//        .waypoint(.theGarageRiyadh)
+//    ], sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing)
+// }

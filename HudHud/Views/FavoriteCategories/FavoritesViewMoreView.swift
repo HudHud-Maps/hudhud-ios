@@ -25,6 +25,7 @@ struct FavoritesViewMoreView: View {
     @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore: FavoritesStore
     @StateObject var filterStore = FilterStore()
+    var navigationVisualization: NavigationVisualization
 
     // MARK: Content
 
@@ -110,11 +111,12 @@ struct FavoritesViewMoreView: View {
 
     func searchSheetView() -> some View {
         let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
-        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+//        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+        self.navigationVisualization.clear()
         let freshSearchViewStore = SearchViewStore(
             mapStore: freshMapStore,
             sheetStore: SheetStore(),
-            routingStore: freshRoutingStore,
+            navigationVisualization: navigationVisualization,
             filterStore: FilterStore(),
             mode: self.searchStore.mode
         )
@@ -134,21 +136,22 @@ struct FavoritesViewMoreView: View {
         FavoritesViewMoreView(
             searchStore: .storeSetUpForPreviewing,
             sheetStore: .storeSetUpForPreviewing,
-            favoritesStore: .storeSetUpForPreviewing
+            favoritesStore: .storeSetUpForPreviewing,
+            navigationVisualization: .preview
         )
     }
 }
 
-#Preview("testing title") {
-    @Previewable @State var isLinkActive = true
-    return NavigationStack {
-        Text("root view")
-            .navigationDestination(isPresented: $isLinkActive) {
-                FavoritesViewMoreView(
-                    searchStore: .storeSetUpForPreviewing,
-                    sheetStore: .storeSetUpForPreviewing,
-                    favoritesStore: .storeSetUpForPreviewing
-                )
-            }
-    }
-}
+// #Preview("testing title") {
+//    @Previewable @State var isLinkActive = true
+//    return NavigationStack {
+//        Text("root view")
+//            .navigationDestination(isPresented: $isLinkActive) {
+//                FavoritesViewMoreView(
+//                    searchStore: .storeSetUpForPreviewing,
+//                    sheetStore: .storeSetUpForPreviewing,
+//                    favoritesStore: .storeSetUpForPreviewing
+//                )
+//            }
+//    }
+// }

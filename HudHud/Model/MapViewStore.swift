@@ -23,7 +23,7 @@ final class MapViewStore {
     // MARK: Properties
 
     private let mapActionHandler: MapActionHandler
-    private let routingStore: RoutingStore
+    private let navigationVisualization: NavigationVisualization
     private let mapStore: MapStore
     private let sheetStore: SheetStore
 
@@ -33,12 +33,12 @@ final class MapViewStore {
 
     init(
         mapStore: MapStore,
-        routingStore: RoutingStore,
+        navigationVisualization: NavigationVisualization,
         sheetStore: SheetStore
     ) {
         self.mapActionHandler = MapActionHandler(mapStore: mapStore)
         self.mapStore = mapStore
-        self.routingStore = routingStore
+        self.navigationVisualization = navigationVisualization
         self.sheetStore = sheetStore
         self.showPotentialRouteWhenAvailable()
         self.showSelectedDetentWhenSelectingAnItem()
@@ -61,11 +61,11 @@ final class MapViewStore {
 
 private extension MapViewStore {
     func showPotentialRouteWhenAvailable() {
-        self.routingStore.$potentialRoute
+        self.navigationVisualization.$routes
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .sink { [weak self] newPotentialRoute in
+            .sink { [weak self] routes in
                 guard let self else { return }
-
+                let newPotentialRoute = routes.first
                 if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet?.viewData {
                     self.sheetStore.pushSheet(SheetViewData(viewData: .navigationPreview))
                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
@@ -80,7 +80,7 @@ private extension MapViewStore {
         self.mapStore.$selectedItem
             .compactMap { $0 }
             .sink { [weak self] selectedItem in
-                guard let self, self.routingStore.potentialRoute == nil else {
+                guard let self, self.navigationVisualization.routes.isEmpty else {
                     return
                 }
                 if case let .pointOfInterest(item) = self.sheetStore.currentSheet?.viewData {
@@ -98,7 +98,7 @@ private extension MapViewStore {
 extension MapViewStore: Previewable {
     static let storeSetUpForPreviewing = MapViewStore(
         mapStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
+        navigationVisualization: .preview,
         sheetStore: .storeSetUpForPreviewing
     )
 }

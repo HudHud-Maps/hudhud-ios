@@ -40,7 +40,7 @@ struct CategoriesBannerView: View {
 }
 
 #Preview {
-    return VStack {
+    VStack {
         CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: .storeSetUpForPreviewing)
         Spacer()
     }
