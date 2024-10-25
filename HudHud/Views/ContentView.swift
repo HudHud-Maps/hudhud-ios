@@ -176,7 +176,8 @@ struct ContentView: View {
                     EditFavoritesFormView(
                         item: item,
                         favoritesItem: favoriteItem,
-                        favoritesStore: self.favoritesStore
+                        favoritesStore: self.favoritesStore,
+                        sheetStore: self.sheetStore
                     )
                 case .search:
                     SearchSheet(

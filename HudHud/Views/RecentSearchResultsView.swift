@@ -114,7 +114,7 @@ struct EditFavoritesFormViewPreview: PreviewProvider {
                 sheetStore: .storeSetUpForPreviewing
             )
             .navigationDestination(isPresented: .constant(true)) {
-                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore, sheetStore: .storeSetUpForPreviewing)
             }
         }
         .previewDisplayName("EditFavoritesFormView")
