@@ -1,1 +1,0 @@
-This is a sample Message to test automatic release notes from Xcode Cloud
