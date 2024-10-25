@@ -15,7 +15,7 @@ import XCTest
 final class CalculateTests: XCTestCase {
 
     func testCalculateValidCoordinatesReturnsRouteWithSteps() async throws {
-        let hudhudGraphhopper = HudHudGraphHopperRouteProvider()
+        let hudhudGraphhopper = HudHudGraphHopperRouteProvider(host: "gh.map.dev.hudhud.sa")
 
         // When
         let startCoordinate = CLLocationCoordinate2D(latitude: 24.6875, longitude: 46.6845) //  Alfaisaliah Tower, Riyadh

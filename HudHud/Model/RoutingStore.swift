@@ -45,7 +45,7 @@ final class RoutingStore: ObservableObject {
     // if this is set, that means that the user is currently navigating using this route
     @Published var navigatingRoute: Route?
 
-    let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider()
+    let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider(host: DebugStore().routingHost)
 
     let ferrostarCore: FerrostarCore
 
@@ -112,7 +112,7 @@ final class RoutingStore: ObservableObject {
             ), snappedLocationCourseFiltering: .snapToRoute
         )
         let something = FerrostarCore(
-            customRouteProvider: HudHudGraphHopperRouteProvider(),
+            customRouteProvider: HudHudGraphHopperRouteProvider(host: DebugStore().routingHost),
             locationProvider: provider,
             navigationControllerConfig: config
         )

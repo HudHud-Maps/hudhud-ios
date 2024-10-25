@@ -16,12 +16,24 @@ import OSLog
 
 struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
 
+    // MARK: Properties
+
+    var host: () -> String
+
+    // MARK: Lifecycle
+
+    init(host: @escaping @autoclosure () -> String) {
+        self.host = host
+    }
+
+    // MARK: Functions
+
     func getRoutes(waypoints: [FerrostarCoreFFI.Waypoint]) async throws -> [FerrostarCoreFFI.Route] {
         let stops = waypoints.map { "\($0.coordinate.lng),\($0.coordinate.lat)" }.joined(separator: ";")
 
         var components = URLComponents()
         components.scheme = "https"
-        components.host = DebugStore().routingHost
+        components.host = self.host()
         components.path = "/navigate/directions/v5/gh/car/\(stops)"
         components.queryItems = [
             URLQueryItem(name: "access_token", value: ""),
