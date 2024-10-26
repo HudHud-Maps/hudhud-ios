@@ -213,8 +213,7 @@ final class SearchViewStore: ObservableObject {
     }
 
     func applySearchResultsOnMapIfNeeded() {
-        guard !self.searchResults.isEmpty,
-              self.mapStore.displayableItems != self.searchResults else { return }
+        guard !self.searchResults.isEmpty else { return }
         self.mapStore.replaceItemsAndFocusCamera(on: self.searchResults)
     }
 
