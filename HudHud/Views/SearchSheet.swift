@@ -62,7 +62,7 @@ struct SearchSheet: View {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
                                     Button {
-                                        self.searchStore.searchText = ""
+                                        self.searchStore.cancelSearch()
                                     } label: {
                                         Image(systemSymbol: .multiplyCircleFill)
                                             .foregroundColor(.gray)

@@ -120,7 +120,6 @@ final class SearchViewStore: ObservableObject {
         case let .resolvedItem(item):
             await self.mapStore.resolve(item)
         case let .categoryItem(resolvedItem):
-            self.sheetStore.selectedDetent = .third
             self.mapStore.select(resolvedItem)
         case let .category(category):
             await self.fetch(category: category.name)
@@ -191,10 +190,24 @@ final class SearchViewStore: ObservableObject {
             self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
             self.loadingInstance.resultIsEmpty = filteredItems.isEmpty
             self.loadingInstance.state = .result
+            if !filteredItems.isEmpty {
+                self.sheetStore.currentSheet.detentData.value = DetentData(
+                    selectedDetent: .third,
+                    allowedDetents: [.third, .large]
+                )
+            }
         } catch {
             self.searchError = error
             Logger.poiData.error("fetching category error: \(error)")
         }
+    }
+
+    func cancelSearch() {
+        self.searchText = ""
+        self.sheetStore.currentSheet.detentData.value = DetentData(
+            selectedDetent: .third,
+            allowedDetents: [.small, .third, .large]
+        )
     }
 
     // will called if the user pressed search in keyboard
