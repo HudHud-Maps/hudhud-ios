@@ -10,6 +10,9 @@
 		01CE15C8D3AE81FF4982F21C /* SearchSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */; };
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
+		0CB17C412CCD504600952B99 /* MapContentLayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17C402CCD504600952B99 /* MapContentLayers.swift */; };
+		0CB17C432CCD509200952B99 /* ErrorBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17C422CCD509200952B99 /* ErrorBannerView.swift */; };
+		0CB17C452CCD50BE00952B99 /* LocationInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17C442CCD50BE00952B99 /* LocationInfoView.swift */; };
 		0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
@@ -188,6 +191,9 @@
 		01F34F0CE9E36844298F82DE /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalPOIDetailsView.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
+		0CB17C402CCD504600952B99 /* MapContentLayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContentLayers.swift; sourceTree = "<group>"; };
+		0CB17C422CCD509200952B99 /* ErrorBannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBannerView.swift; sourceTree = "<group>"; };
+		0CB17C442CCD50BE00952B99 /* LocationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoView.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
@@ -418,6 +424,17 @@
 				6C149F3F0C53411C08D87B5C /* ObservedMacroChild.swift */,
 			);
 			path = Common;
+			sourceTree = "<group>";
+		};
+		0CB17C3E2CCD502D00952B99 /* MapScreen */ = {
+			isa = PBXGroup;
+			children = (
+				59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */,
+				0CB17C402CCD504600952B99 /* MapContentLayers.swift */,
+				0CB17C422CCD509200952B99 /* ErrorBannerView.swift */,
+				0CB17C442CCD50BE00952B99 /* LocationInfoView.swift */,
+			);
+			path = MapScreen;
 			sourceTree = "<group>";
 		};
 		14EB9DF8741B47192AE67646 /* CategoriesBanner */ = {
@@ -655,6 +672,7 @@
 		D14C3F8A5C428C7F0A18A65A /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				0CB17C3E2CCD502D00952B99 /* MapScreen */,
 				CDBC2CA82CC172BA002E59E0 /* POISearchView */,
 				14EB9DF8741B47192AE67646 /* CategoriesBanner */,
 				EA1DDF0CC8C6FE9D396004B2 /* MapLayers */,
@@ -662,7 +680,6 @@
 				CDAE05472B681261003E5196 /* HudHudApp.swift */,
 				CD8679952CC7A36B00728DDE /* MainEntryPoint.swift */,
 				CDAE05492B681261003E5196 /* ContentView.swift */,
-				59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */,
 				CD34C5602C05C7FA006DCDBA /* RootSheetView.swift */,
 				CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */,
 				47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */,
@@ -938,7 +955,7 @@
 				CDBC2CAB2CC1733B002E59E0 /* XCRemoteSwiftPackageReference "TypographyKit" */,
 				CDBC2CB42CC173EC002E59E0 /* XCRemoteSwiftPackageReference "Semaphore" */,
 				CDBC2CB72CC174F7002E59E0 /* XCLocalSwiftPackageReference "StyleDictionary" */,
-				0C3412772CCD2ABD0026AC3A /* XCLocalSwiftPackageReference "../ferrostar" */,
+				0CB17C472CCD5B2300952B99 /* XCRemoteSwiftPackageReference "ferrostar" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1115,8 +1132,10 @@
 				CDBC2C8B2CBE3C46002E59E0 /* UIImage+resize.swift in Sources */,
 				A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */,
 				151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */,
+				0CB17C412CCD504600952B99 /* MapContentLayers.swift in Sources */,
 				2670A068B017EEE420D01F3B /* UIColor.swift in Sources */,
 				E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */,
+				0CB17C432CCD509200952B99 /* ErrorBannerView.swift in Sources */,
 				980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */,
 				8C2807D362FD49761D07A6DA /* OTPVerificationView.swift in Sources */,
 				F9EB502B38BDE095F842C7D8 /* OTPVerificationStore.swift in Sources */,
@@ -1129,6 +1148,7 @@
 				7C2F5DB91F0E3C77E8118C46 /* NavigationDelegate.swift in Sources */,
 				3D2F606DC78B55320848AB78 /* Loading.swift in Sources */,
 				1947F52EF46B3B23C6F0417C /* OTPFieldView.swift in Sources */,
+				0CB17C452CCD50BE00952B99 /* LocationInfoView.swift in Sources */,
 				1847B0B59F3FE3DECA27D56C /* SpeedView.swift in Sources */,
 				9FED45A52E7237B54313B2B4 /* ReviewStore.swift in Sources */,
 				1C8F778244BA414982636B9A /* ReviewsListView.swift in Sources */,
@@ -1487,10 +1507,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		0C3412772CCD2ABD0026AC3A /* XCLocalSwiftPackageReference "../ferrostar" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../ferrostar;
-		};
 		CDBC2CB72CC174F7002E59E0 /* XCLocalSwiftPackageReference "StyleDictionary" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = StyleDictionary;
@@ -1498,6 +1514,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		0CB17C472CCD5B2300952B99 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
+			requirement = {
+				branch = annotations;
+				kind = branch;
+			};
+		};
 		1B0C42B9FD71EE5D42A9E2C6 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/MojtabaHs/iPhoneNumberField";

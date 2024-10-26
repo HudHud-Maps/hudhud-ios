@@ -49,7 +49,7 @@ final class RoutingStore: ObservableObject {
 
     let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider()
 
-    let ferrostarCore: FerrostarCore
+    @ObservedChild private(set) var ferrostarCore: FerrostarCore
 
     @Published var routes: [Route] = []
 
@@ -95,7 +95,7 @@ final class RoutingStore: ObservableObject {
 
         if DebugStore().simulateRide {
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 2
+            simulated.warpFactor = 3
             provider = simulated
         } else {
             provider = CoreLocationProvider(
@@ -116,11 +116,11 @@ final class RoutingStore: ObservableObject {
             ), snappedLocationCourseFiltering: .snapToRoute
         )
 
-        self.ferrostarCore = FerrostarCore(
+        self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
             customRouteProvider: HudHudGraphHopperRouteProvider(),
             locationProvider: provider,
             navigationControllerConfig: config
-        )
+        ))
 
         self.ferrostarCore.delegate = self.navigationDelegate
         self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver

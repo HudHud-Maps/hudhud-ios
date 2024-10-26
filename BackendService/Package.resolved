@@ -15,7 +15,7 @@
       "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
         "branch" : "annotations",
-        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
+        "revision" : "8890bee3d6d9da030c2a94650757c5ca67cda19a"
       }
     },
     {
@@ -84,7 +84,7 @@
     {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke.git",
+      "location" : "https://github.com/kean/Nuke",
       "state" : {
         "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
         "version" : "12.8.0"
@@ -267,7 +267,7 @@
       "location" : "https://github.com/engali94/swiftui-dsl.git",
       "state" : {
         "branch" : "main",
-        "revision" : "4246f6e4196950d5a51ec17eb5dee7b3c20228e3"
+        "revision" : "9f941bb12850cebacc6fa6fc74eeabda9ba6de39"
       }
     },
     {
@@ -291,10 +291,10 @@
     {
       "identity" : "swiftuipanoramaviewer",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/azizdev/SwiftUIPanoramaViewer.git",
+      "location" : "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "9efa5c7845d57ef36d24626c8e93d100a46a3ac3"
+        "branch" : "hudhud",
+        "revision" : "2e5b8e3bd8fc4eb76f857224b6095bd2a6fbe0c7"
       }
     },
     {

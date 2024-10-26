@@ -115,6 +115,7 @@ struct RootSheetView: View {
                                 }
                             }
                         } onDismiss: {
+                            self.searchViewStore.routingStore.clearRoutes()
                             self.searchViewStore.mapStore
                                 .clearItems(clearResults: false)
                         }

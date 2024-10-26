@@ -41,6 +41,8 @@ struct ObservedChild<T: ObservableObject> {
                         (instance.objectWillChange as? ObservableObjectPublisher)?.send()
                     }
                     .store(in: &wrapper.cancellables)
+
+                instance[keyPath: storageKeyPath] = wrapper
             }
 
             return wrapper.wrappedValue
@@ -67,6 +69,8 @@ struct ObservedChild<T: ObservableObject> {
                         }
                     }
                     .store(in: &wrapper.cancellables)
+
+                instance[keyPath: storageKeyPath] = wrapper
             }
 
             return wrapper.wrappedValue
