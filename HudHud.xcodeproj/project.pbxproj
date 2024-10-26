@@ -83,6 +83,7 @@
 		9ED68ECF2CCBE29000AA7CE0 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 532946F1B08D76575C26B170 /* FerrostarCore */; };
 		9ED68ED02CCBE29000AA7CE0 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 774AC299E8C1C204EC968730 /* FerrostarMapLibreUI */; };
 		9ED68ED12CCBE29000AA7CE0 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E8327D7A606F9D7072DC0C08 /* FerrostarSwiftUI */; };
+		9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */; };
 		9EE17AEF2CC79EC800316799 /* SheetContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */; };
 		9EF7276D2CC6576B00B15A8D /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EF7276C2CC6576B00B15A8D /* MapViewController.swift */; };
 		A202FCE4BB36037C8A0A8C19 /* MainEntryPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 068C2923E00182040CFB46FB /* MainEntryPoint.swift */; };
@@ -255,6 +256,7 @@
 		93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
 		930C5C4AFBCBE90A662DA243 /* XCTestCase+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Additions.swift"; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
+		9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointOfInterestStore.swift; sourceTree = "<group>"; };
 		9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetContainerViewController.swift; sourceTree = "<group>"; };
 		9EF7276C2CC6576B00B15A8D /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 				41386D7314539DB91E42D41A /* MapActionHandler.swift */,
 				7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */,
 				FC0AB3D68D296351E8314E2D /* POISheetStore.swift */,
+				9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */,
 				025F79C6C593259B0ED3FE95 /* RouteModel.swift */,
 				71EE1F0888626374B153C98F /* StreetViewStore.swift */,
 				3ACB9C5FC9974E6C1AA9E87D /* DeviceSupport.swift */,
@@ -1058,6 +1061,7 @@
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
 				CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */,
 				854A602E692EA22AC381F9CA /* FavoritesItem.swift in Sources */,
+				9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */,
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,

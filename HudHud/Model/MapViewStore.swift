@@ -31,7 +31,7 @@ final class MapViewStore {
     // MARK: Lifecycle
 
     init(mapStore: MapStore, routingStore: RoutingStore, sheetStore: SheetStore) {
-        self.mapActionHandler = MapActionHandler(mapStore: mapStore)
+        self.mapActionHandler = MapActionHandler(mapStore: mapStore, sheetStore: sheetStore)
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore

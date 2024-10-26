@@ -34,12 +34,14 @@ struct MapActionHandler {
     // MARK: Properties
 
     private let mapStore: MapStore
+    private let sheetStore: SheetStore
     private let hudhudResolver = HudHudPOI()
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore) {
+    init(mapStore: MapStore, sheetStore: SheetStore) {
         self.mapStore = mapStore
+        self.sheetStore = sheetStore
     }
 
     // MARK: Functions
@@ -47,9 +49,6 @@ struct MapActionHandler {
     // MARK: - Internal
 
     func didTapOnMap(containing features: [any MLNFeature]) -> Bool {
-        if self.mapStore.displayableItems.count == 1 {
-            self.mapStore.displayableItems = []
-        }
         guard let item = extractItemTapped(from: features) else {
             return false
         }
@@ -61,14 +60,12 @@ struct MapActionHandler {
 
             if let poi {
                 Logger.mapInteraction.debug("setting poi")
-                self.mapStore.select(poi)
+                self.sheetStore.show(.pointOfInterest(poi))
             } else {
                 Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
             }
         case let .mapElement(item):
-            Task {
-                await self.mapStore.resolve(item)
-            }
+            self.sheetStore.show(.pointOfInterest(item))
         case .streetViewScene:
             break
         }

@@ -49,7 +49,6 @@ final class MapStore {
 
     private(set) var selectedItem: CurrentValueSubject<ResolvedItem?, Never>
 
-    private let hudhudResolver = HudHudPOI()
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
@@ -179,7 +178,7 @@ final class MapStore {
         self.selectedItem.value = nil
     }
 
-    func select(_ item: ResolvedItem, shouldFocusCamera: Bool = false) {
+    func show(_ item: ResolvedItem, shouldFocusCamera: Bool = false) {
         self.selectedItem.value = item
         if shouldFocusCamera {
             self.updateCamera(state: .selectedItem(item))
@@ -234,25 +233,6 @@ final class MapStore {
                 Logger().error("No available map layers from the server.")
             }
         }
-    }
-
-    func resolve(_ item: ResolvedItem) async {
-        let itemIfAvailable = self.displayableItems
-            .first { $0.id == item.id }
-        if itemIfAvailable == nil {
-            self.displayableItems.append(.resolvedItem(item))
-        }
-        self.select(item, shouldFocusCamera: true)
-        guard let detailedItem = try? await hudhudResolver.lookup(id: item.id, baseURL: DebugStore().baseURL),
-              // we make sure that this item is still selected
-              detailedItem.id == self.selectedItem.value?.id,
-              let index = self.displayableItems.firstIndex(where: { $0.id == detailedItem.id }) else { return }
-
-        var detailedItemUpdate = detailedItem
-        detailedItemUpdate.systemColor = item.systemColor
-        detailedItemUpdate.symbol = item.symbol
-        self.displayableItems[index] = .resolvedItem(detailedItemUpdate)
-        self.selectedItem.value = detailedItemUpdate
     }
 
     func updateCamera(state: CameraUpdateState) {

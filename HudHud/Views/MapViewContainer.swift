@@ -306,7 +306,7 @@ struct MapViewContainer<SheetContentView: View>: View {
                         .onLongPressMapGesture(onPressChanged: { mapGesture in
                             if self.mapStore.selectedItem.value == nil {
                                 let generatedPOI = ResolvedItem(id: UUID().uuidString, title: "Dropped Pin", subtitle: nil, type: .hudhud, coordinate: mapGesture.coordinate, color: .systemRed)
-                                self.mapStore.select(generatedPOI)
+                                self.sheetStore.show(.pointOfInterest(generatedPOI))
                             }
                         })
                         .mapControls {

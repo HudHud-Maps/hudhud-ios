@@ -142,12 +142,10 @@ struct SearchSheet: View {
                             switch item {
                             case let .categoryItem(item):
                                 Button(action: {
-                                    self.mapStore.clearItems()
-                                    self.mapStore.select(item, shouldFocusCamera: true)
+                                    self.sheetStore.show(.pointOfInterest(item))
                                 }, label: {
                                     SearchResultView(item: item) {
-                                        self.mapStore.clearItems()
-                                        self.mapStore.select(item, shouldFocusCamera: true)
+                                        self.sheetStore.show(.pointOfInterest(item))
                                     }
                                 })
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))

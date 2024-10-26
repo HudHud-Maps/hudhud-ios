@@ -144,7 +144,11 @@ struct ContentView: View {
                         .presentationCornerRadius(21)
                 case let .pointOfInterest(item):
                     POIDetailSheet(
-                        mapStore: self.mapStore,
+                        pointOfInterestStore: PointOfInterestStore(
+                            pointOfInterest: item,
+                            mapStore: self.mapStore,
+                            sheetStore: self.sheetStore
+                        ),
                         routingStore: self.searchViewStore.routingStore,
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
@@ -445,7 +449,6 @@ private extension MapViewPort {
                            coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
                            phone: "0503539560",
                            website: URL(string: "https://hudhud.sa"))
-    store.mapStore.select(poi, shouldFocusCamera: true)
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,

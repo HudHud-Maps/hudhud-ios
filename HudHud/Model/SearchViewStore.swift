@@ -118,11 +118,8 @@ final class SearchViewStore: ObservableObject {
 
     func didSelect(_ item: DisplayableRow) async {
         switch item {
-        case let .resolvedItem(item):
-            self.mapStore.clearItems()
-            self.mapStore.select(item, shouldFocusCamera: true)
-        case let .categoryItem(resolvedItem):
-            self.mapStore.select(resolvedItem)
+        case let .resolvedItem(item), let .categoryItem(item):
+            self.sheetStore.show(.pointOfInterest(item))
         case let .category(category):
             await self.fetch(category: category.name)
         case .predictionItem:
@@ -146,13 +143,14 @@ final class SearchViewStore: ObservableObject {
             guard let firstItem = items.first,
                   let resolvedItem = firstItem.resolvedItem,
                   items.count == 1,
-                  let resolvedItemIndex = self.mapStore.displayableItems.firstIndex(where: { $0.id == resolvedItem.id }) else {
+                  self.mapStore.displayableItems.firstIndex(where: { $0.id == resolvedItem.id }) != nil else {
                 self.sheetStore.selectedDetent = .large
                 self.mapStore.displayableItems = items
                 return
             }
-            self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
-            self.mapStore.select(resolvedItem, shouldFocusCamera: true)
+            if let resolvedItem = firstItem.resolvedItem {
+                self.sheetStore.show(.pointOfInterest(resolvedItem))
+            }
         } catch {
             self.searchError = error
         }
@@ -206,6 +204,8 @@ final class SearchViewStore: ObservableObject {
 
     func cancelSearch() {
         self.searchText = ""
+        self.searchResults = []
+        self.mapStore.clearItems()
         self.sheetStore.currentSheet.detentData.value = DetentData(
             selectedDetent: .third,
             allowedDetents: [.small, .third, .large]
@@ -213,7 +213,10 @@ final class SearchViewStore: ObservableObject {
     }
 
     func applySearchResultsOnMapIfNeeded() {
-        guard !self.searchResults.isEmpty else { return }
+        if self.searchResults.isEmpty {
+            self.mapStore.clearItems()
+            return
+        }
         self.mapStore.replaceItemsAndFocusCamera(on: self.searchResults)
     }
 
@@ -254,6 +257,7 @@ final class SearchViewStore: ObservableObject {
         self.routingStore.endTrip()
         self.mapStore.clearItems()
         self.searchText = ""
+        self.searchResults = []
     }
 
     func storeInRecent(_ item: ResolvedItem) {
