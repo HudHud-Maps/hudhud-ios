@@ -117,7 +117,7 @@ struct SearchSheet: View {
             .padding(.horizontal)
             .padding(.top)
             // Show the filter UI if the search view is displaying an item that was fetched from a category.
-            if let firstItem = self.mapStore.displayableItems.first,
+            if let firstItem = self.searchStore.searchResults.first,
                case .categoryItem = firstItem {
                 MainFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
                     .padding(.horizontal)
@@ -138,13 +138,15 @@ struct SearchSheet: View {
             } else {
                 List {
                     if !self.searchStore.searchText.isEmpty {
-                        ForEach(self.mapStore.displayableItems) { item in
+                        ForEach(self.searchStore.searchResults) { item in
                             switch item {
                             case let .categoryItem(item):
                                 Button(action: {
+                                    self.mapStore.clearItems()
                                     self.mapStore.select(item, shouldFocusCamera: true)
                                 }, label: {
                                     SearchResultView(item: item) {
+                                        self.mapStore.clearItems()
                                         self.mapStore.select(item, shouldFocusCamera: true)
                                     }
                                 })
@@ -235,6 +237,9 @@ struct SearchSheet: View {
                 }),
                 secondaryButton: .default(Text("OK"))
             )
+        }
+        .onAppear {
+            self.searchStore.applySearchResultsOnMapIfNeeded()
         }
     }
 

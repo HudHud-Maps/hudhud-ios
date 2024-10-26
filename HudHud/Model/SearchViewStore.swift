@@ -71,6 +71,7 @@ final class SearchViewStore: ObservableObject {
     @Published var searchError: Error?
     @Published var isSheetLoading = false
     @Published var searchType: SearchType = .selectPOI
+    @Published var searchResults: [DisplayableRow] = []
     let filterStore: FilterStore
 
     @AppStorage("RecentViewedItem") var recentViewedItem = [ResolvedItem]()
@@ -151,7 +152,6 @@ final class SearchViewStore: ObservableObject {
             }
             self.mapStore.displayableItems[resolvedItemIndex] = .resolvedItem(resolvedItem)
             self.mapStore.select(resolvedItem, shouldFocusCamera: true)
-            self.sheetStore.selectedDetent = .third
         } catch {
             self.searchError = error
         }
@@ -187,10 +187,11 @@ final class SearchViewStore: ObservableObject {
             }
 
             let displayableItems = filteredItems.map(DisplayableRow.categoryItem)
-            self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
             self.loadingInstance.resultIsEmpty = filteredItems.isEmpty
             self.loadingInstance.state = .result
+            self.searchResults = displayableItems
             if !filteredItems.isEmpty {
+                self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
                 self.sheetStore.currentSheet.detentData.value = DetentData(
                     selectedDetent: .third,
                     allowedDetents: [.third, .large]
@@ -208,6 +209,12 @@ final class SearchViewStore: ObservableObject {
             selectedDetent: .third,
             allowedDetents: [.small, .third, .large]
         )
+    }
+
+    func applySearchResultsOnMapIfNeeded() {
+        guard !self.searchResults.isEmpty,
+              self.mapStore.displayableItems != self.searchResults else { return }
+        self.mapStore.replaceItemsAndFocusCamera(on: self.searchResults)
     }
 
     // will called if the user pressed search in keyboard
@@ -231,7 +238,10 @@ final class SearchViewStore: ObservableObject {
                 }
                 return nil
             }
-            self.mapStore.replaceItemsAndFocusCamera(on: items)
+            self.searchResults = items
+            if !items.isEmpty {
+                self.mapStore.replaceItemsAndFocusCamera(on: items)
+            }
             self.loadingInstance.resultIsEmpty = results.items.isEmpty
             self.loadingInstance.state = .result
         } catch {
@@ -299,7 +309,10 @@ private extension SearchViewStore {
                 self.loadingInstance.resultIsEmpty = result.items.isEmpty
                 self.loadingInstance.state = .result
                 self.searchError = nil
-                self.mapStore.replaceItemsAndFocusCamera(on: result.items)
+                self.searchResults = result.items
+                if !result.items.isEmpty {
+                    self.mapStore.replaceItemsAndFocusCamera(on: result.items)
+                }
                 self.sheetStore.selectedDetent = if provider == .hudhud, result.hasCategory {
                     .small // hudhud provider has coordinates in the response, so we can show the results in the map
                 } else {

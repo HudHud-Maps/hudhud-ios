@@ -202,6 +202,12 @@ final class RoutingStore: ObservableObject {
         self.navigatingRoute = nil
         self.mapStore.clearItems()
     }
+
+    func cancelCurrentRoutePlan() {
+        self.waypoints = nil
+        self.potentialRoute = nil
+        self.navigatingRoute = nil
+    }
 }
 
 // MARK: - Private

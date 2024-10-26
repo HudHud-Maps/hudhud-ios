@@ -186,7 +186,7 @@ final class MapStore {
         }
     }
 
-    func clearItems(clearResults: Bool? = true) {
+    func clearItems(clearResults: Bool = true) {
         self.selectedItem.value = nil
         if clearResults == true {
             self.displayableItems = []
