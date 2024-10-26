@@ -9,6 +9,9 @@
 import Foundation
 
 enum MapLayerIdentifier {
+
+    // MARK: Static Properties
+
     static var routeLineCasing = "routeLineCasing"
     static var routeLineInner = "routeLineInner"
     static var simpleCirclesRoute = "simpleCirclesRoute"
@@ -28,4 +31,13 @@ enum MapLayerIdentifier {
     static let streetView = "\(Self.hudhudPOIPrefix)sv"
 
     static let customPOI = "patPOI"
+
+    static let routePrefix = "route"
+    static let congestionPrefix = "congestion"
+
+    // MARK: Static Functions
+
+    static func routeInner(_ index: Int) -> String { "\(self.routePrefix)-inner-\(index)" }
+    static func routeCasing(_ index: Int) -> String { "\(self.routePrefix)-casing-\(index)" }
+    static func congestion(_ level: String, index: Int) -> String { "\(self.congestionPrefix)-\(level)-\(index)" }
 }

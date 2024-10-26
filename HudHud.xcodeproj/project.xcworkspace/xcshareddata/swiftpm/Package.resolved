@@ -10,15 +10,6 @@
       }
     },
     {
-      "identity" : "ferrostar",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/ferrostar.git",
-      "state" : {
-        "branch" : "annotations",
-        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
-      }
-    },
-    {
       "identity" : "iphonenumberfield",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/MojtabaHs/iPhoneNumberField",
@@ -259,15 +250,6 @@
       "state" : {
         "branch" : "master",
         "revision" : "8ecfda131311c4019e7e0bed0ef91297ad81994b"
-      }
-    },
-    {
-      "identity" : "swiftui-dsl",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/engali94/swiftui-dsl.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "4246f6e4196950d5a51ec17eb5dee7b3c20228e3"
       }
     },
     {
