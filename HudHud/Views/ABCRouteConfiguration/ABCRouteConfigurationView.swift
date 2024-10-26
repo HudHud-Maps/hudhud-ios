@@ -19,9 +19,9 @@ struct ABCRouteConfigurationView: View {
 
     @State var routeConfigurations: [ABCRouteConfigurationItem]
 
-    var sheetStore: SheetStore
+    @ObservedObject var sheetStore: SheetStore
 
-    var navigationVisualization: NavigationVisualization
+    @ObservedObject var navigationVisualization: NavigationVisualization
 
     // MARK: Content
 

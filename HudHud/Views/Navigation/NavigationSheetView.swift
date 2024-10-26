@@ -16,12 +16,10 @@ struct NavigationSheetView: View {
     // MARK: Properties
 
 //    @ObservedObject var routingStore: RoutingStore
-    var sheetStore: SheetStore
-    let navigationVisualization: NavigationVisualization
+    @ObservedObject var sheetStore: SheetStore
+    @ObservedObject var navigationVisualization: NavigationVisualization
 
     @Environment(\.dismiss) private var dismiss
-    @State var selctedRoute: Route?
-    @State var waypoints: [ABCRouteConfigurationItem] = []
 
     // MARK: Content
 
@@ -75,12 +73,6 @@ struct NavigationSheetView: View {
                 )
                 .padding([.horizontal, .bottom])
             }
-        }
-        .onChange(of: self.navigationVisualization.selectedRoute) { _, newValue in
-            self.selctedRoute = newValue
-        }
-        .onChange(of: self.navigationVisualization.waypoints) { _, newValue in
-            self.waypoints = newValue
         }
     }
 }

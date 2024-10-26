@@ -18,14 +18,14 @@ struct FavoritesViewMoreView: View {
     // MARK: Properties
 
     @ObservedObject var searchStore: SearchViewStore
-    @Bindable var sheetStore: SheetStore
+    @ObservedObject var sheetStore: SheetStore
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
     @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore: FavoritesStore
     @StateObject var filterStore = FilterStore()
-    var navigationVisualization: NavigationVisualization
+    @ObservedObject var navigationVisualization: NavigationVisualization
 
     // MARK: Content
 

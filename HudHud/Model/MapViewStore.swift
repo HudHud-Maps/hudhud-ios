@@ -17,15 +17,17 @@ import SwiftUI
 // MARK: - MapViewStore
 
 @MainActor
-@Observable
-final class MapViewStore {
+final class MapViewStore: ObservableObject {
 
     // MARK: Properties
 
+    @ObservedObjectChild var navigationVisualization: NavigationVisualization
+
     private let mapActionHandler: MapActionHandler
-    private let navigationVisualization: NavigationVisualization
-    private let mapStore: MapStore
-    private let sheetStore: SheetStore
+
+    @ObservedObjectChild private var mapStore: MapStore
+
+    private var sheetStore: SheetStore
 
     private var subscriptions: Set<AnyCancellable> = []
 

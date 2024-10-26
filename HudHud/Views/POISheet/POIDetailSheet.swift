@@ -31,11 +31,11 @@ struct POIDetailSheet: View {
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
-    var navigationVisualization: NavigationVisualization
+    @ObservedObject var navigationVisualization: NavigationVisualization
 
     @EnvironmentObject var notificationQueue: NotificationQueue
 
-    var mapStore: MapStore
+    @ObservedObject var mapStore: MapStore
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL

@@ -24,34 +24,41 @@ typealias TrendingPOI = ResolvedItem
 // MARK: - ContentViewStore
 
 @MainActor
-@Observable
-final class ContentViewStore {
+final class ContentViewStore: ObservableObject {
 
     // MARK: Properties
 
-    var isSheetShown = true
-    var selectedDetent: PresentationDetent = .medium
-    var safariURL: URL?
-    var streetViewScene: StreetViewScene?
-    var fullScreenStreetView = false
-    var currentNotification: Notification?
-    var sheetSize: CGSize = .zero
-    var mapLayers: [HudHudMapLayer]?
-    var trendingPOIs: [TrendingPOI]?
+    @Published var isSheetShown = true
+    @Published var selectedDetent: PresentationDetent = .medium
+    @Published var safariURL: URL?
+    @Published var streetViewScene: StreetViewScene?
+    @Published var fullScreenStreetView = false
+    @Published var currentNotification: Notification?
+    @Published var sheetSize: CGSize = .zero
+    @Published var mapLayers: [HudHudMapLayer]?
+    @Published var trendingPOIs: [TrendingPOI]?
 
-    var sheetStore: SheetStore
+    @ObservedObjectChild var sheetStore: SheetStore
 
-    var mapStore: MapStore
-    let searchViewStore: SearchViewStore
-    let userLocationStore: UserLocationStore
-    let debugStore: DebugStore
-    var notificationQueue: NotificationQueue
-    let trendingStore: TrendingStore
-    let mapLayerStore: HudHudMapLayerStore
-    let mapViewStore: MapViewStore
-    let navigationVisualization: NavigationVisualization
+    @ObservedObjectChild var mapStore: MapStore
 
-    let mapContainerViewStore: MapViewContainerStore
+    @ObservedObjectChild var searchViewStore: SearchViewStore
+
+    @ObservedObjectChild var userLocationStore: UserLocationStore
+
+    @ObservedObjectChild var debugStore: DebugStore
+
+    @ObservedObjectChild var trendingStore: TrendingStore
+
+    @ObservedObjectChild var mapLayerStore: HudHudMapLayerStore
+
+    @ObservedObjectChild var mapViewStore: MapViewStore
+
+    @ObservedObjectChild var navigationVisualization: NavigationVisualization
+
+    @ObservedObjectChild var mapContainerViewStore: MapViewContainerStore
+
+    @ObservedObjectChild var notificationQueue: NotificationQueue
 
     // MARK: Computed Properties
 
@@ -171,7 +178,7 @@ struct ContentView: View {
 
     // MARK: Properties
 
-    @State var store: ContentViewStore
+    @StateObject var store: ContentViewStore
 
     // MARK: Content
 
@@ -179,7 +186,6 @@ struct ContentView: View {
         ZStack {
             MapViewContainer(
                 store: self.store.mapContainerViewStore,
-                mapStore: self.store.mapStore,
                 isSheetShown: self.$store.isSheetShown
             )
             .task {
@@ -311,110 +317,3 @@ struct SizePreferenceKey: PreferenceKey {
         value = nextValue()
     }
 }
-
-//
-// #Preview("Main Map") {
-//    return ContentView(
-//        searchStore: .storeSetUpForPreviewing,
-//        mapViewStore: .storeSetUpForPreviewing,
-//        sheetStore: SheetStore()
-//    )
-// }
-//
-// #Preview("Touch Testing") {
-//    let store: SearchViewStore = .storeSetUpForPreviewing
-//    store.searchText = "shops"
-//    return ContentView(
-//        searchStore: store,
-//        mapViewStore: .storeSetUpForPreviewing,
-//        sheetStore: SheetStore()
-//    )
-// }
-//
-// #Preview("NavigationPreview") {
-//    let store: SearchViewStore = .storeSetUpForPreviewing
-//
-//    let poi = ResolvedItem(id: UUID().uuidString,
-//                           title: "Pharmacy",
-//                           subtitle: "Al-Olya - Riyadh",
-//                           type: .hudhud,
-//                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-//                           phone: "0503539560",
-//                           website: URL(string: "https://hudhud.sa"))
-//    store.mapStore.select(poi, shouldFocusCamera: true)
-//    return ContentView(
-//        searchStore: store,
-//        mapViewStore: .storeSetUpForPreviewing,
-//        sheetStore: SheetStore()
-//    )
-// }
-//
-// extension Binding where Value == Bool {
-//
-//    static func && (_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
-//        return Binding<Bool>(get: { lhs.wrappedValue && rhs.wrappedValue },
-//                             set: { _ in })
-//    }
-//
-//    static prefix func ! (_ binding: Binding<Bool>) -> Binding<Bool> {
-//        return Binding<Bool>(
-//            get: { !binding.wrappedValue },
-//            set: { _ in }
-//        )
-//    }
-// }
-//
-//// MARK: - Preview
-//
-// #Preview("Itmes") {
-//    let store: SearchViewStore = .storeSetUpForPreviewing
-//
-//    let poi = ResolvedItem(id: UUID().uuidString,
-//                           title: "Half Million",
-//                           subtitle: "Al Takhassousi, Al Mohammadiyyah, Riyadh 12364",
-//                           type: .appleResolved,
-//                           coordinate: CLLocationCoordinate2D(latitude: 24.7332836, longitude: 46.6488895),
-//                           phone: "0503539560",
-//                           website: URL(string: "https://hudhud.sa"))
-//    let artwork = ResolvedItem(id: UUID().uuidString,
-//                               title: "Artwork",
-//                               subtitle: "artwork - Al-Olya - Riyadh",
-//                               type: .hudhud,
-//                               coordinate: CLLocationCoordinate2D(latitude: 24.77888564128478, longitude: 46.61555160031425),
-//                               phone: "0503539560",
-//                               website: URL(string: "https://hudhud.sa"))
-//
-//    let pharmacy = ResolvedItem(id: UUID().uuidString,
-//                                title: "Pharmacy",
-//                                subtitle: "Al-Olya - Riyadh",
-//                                type: .hudhud,
-//                                coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-//                                phone: "0503539560",
-//                                website: URL(string: "https://hudhud.sa"))
-//    store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-//    return ContentView(searchStore: store, mapViewStore: .storeSetUpForPreviewing, sheetStore: SheetStore())
-// }
-//
-// extension MapLayerIdentifier {
-//    nonisolated static let tapLayers: Set<String> = [
-//        Self.restaurants,
-//        Self.shops,
-//        Self.simpleCircles,
-//        Self.streetView,
-//        Self.customPOI
-//    ]
-// }
-//
-// #Preview("map preview") {
-//    let mapStore: MapStore = .storeSetUpForPreviewing
-//    let searchStore: SearchViewStore = .storeSetUpForPreviewing
-//    MapViewContainer(
-//        mapStore: mapStore,
-//        debugStore: DebugStore(),
-//        searchViewStore: searchStore,
-//        userLocationStore: .storeSetUpForPreviewing,
-//        mapViewStore: .storeSetUpForPreviewing,
-//        routingStore: .storeSetUpForPreviewing,
-//        isSheetShown: .constant(true)
-//    )
-// }

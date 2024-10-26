@@ -22,14 +22,14 @@ struct RootSheetView: View {
     @ObservedObject var debugStore: DebugStore
     @ObservedObject var trendingStore: TrendingStore
     @ObservedObject var mapLayerStore: HudHudMapLayerStore
-    @Bindable var sheetStore: SheetStore
+    @ObservedObject var sheetStore: SheetStore
     @ObservedObject var userLocationStore: UserLocationStore
     @Binding var sheetSize: CGSize
     @StateObject var favoritesStore = FavoritesStore()
 
     @StateObject var notificationManager = NotificationManager()
 
-    var navigationVisualization: NavigationVisualization
+    @ObservedObject var navigationVisualization: NavigationVisualization
 
     // MARK: Content
 

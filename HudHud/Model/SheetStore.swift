@@ -20,26 +20,26 @@ import SwiftUI
 /// * the allowed detent
 /// * the sheet's visibility
 @MainActor
-@Observable
-final class SheetStore {
+final class SheetStore: ObservableObject {
 
     // MARK: Properties
 
     // MARK: - Public Properties
 
-    var isShown: Bool = true
+    @Published var isShown: Bool = true
 
     // MARK: - Private Properties
 
-    private var _sheets: [SheetViewData] = []
-    private var newSheetSelectedDetent: PresentationDetent?
+    @Published private var _sheets: [SheetViewData] = []
+    @Published private var newSheetSelectedDetent: PresentationDetent?
 
     private let semaphore = AsyncSemaphore(value: 1)
 
     private let defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
     private let defaultSelectedDetent: PresentationDetent = .third
-    private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private var emptySheetSelectedDetent: PresentationDetent = .third
+
+    @Published private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
+    @Published private var emptySheetSelectedDetent: PresentationDetent = .third
 
     // MARK: Computed Properties
 

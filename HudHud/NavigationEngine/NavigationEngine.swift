@@ -22,6 +22,7 @@ final class NavigationEngine {
     // MARK: Properties
 
     var navigationEvents: PassthroughSubject<NavigationEvent, Never> = .init()
+    var navigationState: PassthroughSubject<NavigationState, Never> = .init() // temporary until we migrate away from ferrostar ui
 
     private(set) var provider: LocationProviding
 
@@ -78,6 +79,8 @@ final class NavigationEngine {
 
         self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
         self.ferrostarCore.delegate = self
+
+        self.listenForFerrostarEvents()
     }
 
     // MARK: Functions
@@ -86,7 +89,7 @@ final class NavigationEngine {
         switch providerKind {
         case .simulated:
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 20
+            simulated.warpFactor = 4
             self.provider = simulated
         case .coreLocation:
             self.provider = CoreLocationProvider(
@@ -130,12 +133,14 @@ final class NavigationEngine {
 
     func listenForFerrostarEvents() {
         self.ferrostarCore.$state
-            .compactMap { $0?.tripState }
-            .removeDuplicates()
-            .sink { [weak self] newTripState in
-                self?.handleTripStateChange(newTripState)
-            }
-            .store(in: &self.cancellables)
+//            .compactMap { $0?.tripState }
+                .removeDuplicates()
+                .compactMap { $0 }
+                .sink { [weak self] navigationState in
+                    self?.navigationState.send(navigationState)
+                    self?.handleTripStateChange(navigationState.tripState)
+                }
+                .store(in: &self.cancellables)
     }
 
     private func handleTripStateChange(_ newState: TripState) {

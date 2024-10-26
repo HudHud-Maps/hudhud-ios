@@ -52,7 +52,8 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         try handleAPIStatus(from: json)
 
         let osrmParser = createOsrmResponseParser(polylinePrecision: 6)
-        return try osrmParser.parseResponse(response: data)
+        let parsedRoutes = try osrmParser.parseResponse(response: data)
+        return parsedRoutes
     }
 
     private func buildURL(for stops: String) throws -> URL {

@@ -11,7 +11,7 @@ import Foundation
 import OSLog
 import SwiftUI
 
-class DebugStore: ObservableObject {
+final class DebugStore: ObservableObject {
 
     @AppStorage("routingHost") var routingHost: String = "gh-proxy.map.dev.hudhud.sa"
     @AppStorage("baseurl") var baseURL: String = "https://api.dev.hudhud.sa"

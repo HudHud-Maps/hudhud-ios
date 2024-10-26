@@ -61,8 +61,8 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Properties
 
-    let mapStore: MapStore
-    let navigationVisualization: NavigationVisualization
+    @ObservedObjectChild var mapStore: MapStore
+    @ObservedObjectChild var navigationVisualization: NavigationVisualization
     var apple = ApplePOI()
     var progressViewTimer: Timer?
     var loadingInstance = Loading()

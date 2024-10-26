@@ -17,7 +17,8 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
 
-final class NavigationVisualization {
+@MainActor
+final class NavigationVisualization: ObservableObject {
 
     // MARK: Nested Types
 
@@ -32,12 +33,14 @@ final class NavigationVisualization {
 
     // MARK: Properties
 
-    var map: MLNMapView?
-    var style: MLNStyle?
-
     @Published var routes: [Route] = []
     @Published var selectedRoute: Route?
     @Published var waypoints: [ABCRouteConfigurationItem] = []
+    @Published var navigationState: NavigationState?
+
+    // MARK: Private
+
+    private var style: MLNStyle?
 
     private let navigationEngine: NavigationEngine
     private let routePlanner: RoutePlanner
@@ -92,6 +95,10 @@ final class NavigationVisualization {
 
     // MARK: Functions
 
+    func intilize(style: MLNStyle) {
+        self.style = style
+    }
+
     func add(_ item: ABCRouteConfigurationItem) {
         self.waypoints.append(item)
     } // refactor
@@ -107,7 +114,7 @@ final class NavigationVisualization {
                 }
             }
             self.waypoints = destinations
-            self.temporaryRoutes.removeAll()
+//            self.temporaryRoutes.removeAll()
             guard let firstWaypoint = waypoints.first,
                   let lastWaypoint = waypoints.last else { return }
             let others = waypoints.filter { wapoint in
@@ -129,7 +136,7 @@ final class NavigationVisualization {
     }
 
     func displayRoute(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D) {
-        Task {
+        Task { @MainActor in
             if self.temporaryRoutes.isEmpty {
                 try await self.preplanRoutes(from: from, to: to)
                 self.render(routes: self.routes)
@@ -167,12 +174,12 @@ final class NavigationVisualization {
             source.shape = nil
         }
         self.routes = []
+        self.temporaryRoutes = []
         self.selectedRoute = nil
     }
 
     private func render(routes _: [Route]) {
         self.routes = self.temporaryRoutes
-        self.temporaryRoutes.removeAll()
 
 //        guard let style = style else {
 //            Logger.navigationViewRating.error("Style not available for rendering routes")
@@ -249,48 +256,32 @@ final class NavigationVisualization {
     }
 
     private func listenForNavigationEvents() {
-        self.navigationEngine.navigationEvents.sink { [weak self] event in
-            guard let self else { return }
-            switch event {
-            case .idle:
-                break
-            case let .devaited(deviation):
-                self.handleRouteDeviation(deviation)
-            case let .progressing(tripProgress):
-                self.updateTripProgress(tripProgress)
-            case let .visualInstruction(instructions):
-                self.showVisualInstructions(instructions)
-            case let .spokenInstruction(spokenInstruction):
-                self.handleSpokenInstruction(spokenInstruction)
-            case let .currentPositionAnnotation(currentAnnotation):
-                self.updateCurrentPositionAnnotation(currentAnnotation)
-            case .arrived:
-                self.handleArrival()
-            }
+        self.navigationEngine.navigationState.sink { [weak self] state in
+            self?.navigationState = state
         }.store(in: &self.cancellables)
     }
 
-    private func handleRouteDeviation(_: RouteDeviation) {
-        // Implement route deviation handling
-    }
-
-    private func updateTripProgress(_: TripProgress) {
-        // Update UI with trip progress
-    }
-
-    private func showVisualInstructions(_: VisualInstruction?) {
-        // Display visual instructions in the UI
-    }
-
-    private func handleSpokenInstruction(_: SpokenInstruction) {
-        // Implement text-to-speech or other audio handling
-    }
-
-    private func updateCurrentPositionAnnotation(_: ValhallaOsrmAnnotation?) {
-        // Update the current position annotation on the map
-    }
-
-    private func handleArrival() {
-        // Handle arrival at the destination
-    }
+//    private func handleRouteDeviation(_ deviation: RouteDeviation) {
+//        navigationState = .devaited(deviation)
+//    }
+//
+//    private func updateTripProgress(_ progress: TripProgress) {
+//        navigationState = .progressing(progress)
+//    }
+//
+//    private func showVisualInstructions(_ instruction: VisualInstruction?) {
+//        navigationState = .visualInstruction(instruction)
+//    }
+//
+//    private func handleSpokenInstruction(_ instruction: SpokenInstruction) {
+//        navigationState = .spokenInstruction(instruction)
+//    }
+//
+//    private func updateCurrentPositionAnnotation(_ annotation: ValhallaOsrmAnnotation?) {
+//        navigationState = .currentPositionAnnotation(annotation)
+//    }
+//
+//    private func handleArrival() {
+//        navigationState = .arrived
+//    }
 }

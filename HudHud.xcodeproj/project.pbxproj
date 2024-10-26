@@ -28,6 +28,8 @@
 		0CF3BB3E2CC4150D0069DADE /* RoutingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3BB3D2CC4150D0069DADE /* RoutingOptions.swift */; };
 		0CF3BB412CC417D80069DADE /* GraphHopperRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3BB402CC417D80069DADE /* GraphHopperRouteProvider.swift */; };
 		0CF3BB452CC571600069DADE /* style.json in Resources */ = {isa = PBXBuildFile; fileRef = 0CF3BB442CC571600069DADE /* style.json */; };
+		0CF3BB4F2CCBEF5E0069DADE /* ObservedObjectChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3BB4E2CCBEF5E0069DADE /* ObservedObjectChild.swift */; };
+		0CF3BB512CCBEF8E0069DADE /* ObservedMacroChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3BB502CCBEF8E0069DADE /* ObservedMacroChild.swift */; };
 		0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
@@ -214,6 +216,8 @@
 		0CF3BB3D2CC4150D0069DADE /* RoutingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingOptions.swift; sourceTree = "<group>"; };
 		0CF3BB402CC417D80069DADE /* GraphHopperRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphHopperRouteProvider.swift; sourceTree = "<group>"; };
 		0CF3BB442CC571600069DADE /* style.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = style.json; sourceTree = "<group>"; };
+		0CF3BB4E2CCBEF5E0069DADE /* ObservedObjectChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservedObjectChild.swift; sourceTree = "<group>"; };
+		0CF3BB502CCBEF8E0069DADE /* ObservedMacroChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservedMacroChild.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
@@ -469,6 +473,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		0CF3BB4C2CCBEF4F0069DADE /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				0CF3BB4E2CCBEF5E0069DADE /* ObservedObjectChild.swift */,
+				0CF3BB502CCBEF8E0069DADE /* ObservedMacroChild.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
 		14EB9DF8741B47192AE67646 /* CategoriesBanner */ = {
 			isa = PBXGroup;
 			children = (
@@ -653,6 +666,7 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
+				0CF3BB4C2CCBEF4F0069DADE /* Common */,
 				0CF3BB332CC142460069DADE /* NavigationVisualization */,
 				0CF3BB302CC1261D0069DADE /* RoutePlanner */,
 				0CF3BB282CC125AF0069DADE /* NavigationEngine */,
@@ -1162,9 +1176,11 @@
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
 				594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */,
 				CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */,
+				0CF3BB512CCBEF8E0069DADE /* ObservedMacroChild.swift in Sources */,
 				F20D974A2C46B9E300457928 /* DownloadManager.swift in Sources */,
 				10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */,
 				CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */,
+				0CF3BB4F2CCBEF5E0069DADE /* ObservedObjectChild.swift in Sources */,
 				44C7C90B46F1841B7D2C279D /* Fonts.swift in Sources */,
 				591002292C7F260A00CF4707 /* LoginStore.swift in Sources */,
 				0CF3BB352CC142540069DADE /* NavigationVisulaization.swift in Sources */,

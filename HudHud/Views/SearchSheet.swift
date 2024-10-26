@@ -23,7 +23,7 @@ struct SearchSheet: View {
     @ObservedObject var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
-    @Bindable var sheetStore: SheetStore
+    @ObservedObject var sheetStore: SheetStore
     @ObservedObject var filterStore: FilterStore
     @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
