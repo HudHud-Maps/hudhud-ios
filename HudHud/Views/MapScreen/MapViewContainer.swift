@@ -242,11 +242,11 @@ private extension MapViewContainer {
     func handleNavigatingRouteChange(_: Route?, _ newValue: Route?) {
         if let route = newValue {
             do {
-                if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                try self.routingStore.ferrostarCore.startNavigation(route: route)
+                if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
                     try configureLocationSimulator(simulated, with: route)
                 }
 
-                try self.routingStore.ferrostarCore.startNavigation(route: route)
                 self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
@@ -329,6 +329,7 @@ private extension MapViewContainer {
 
     func configureLocationSimulator(_ simulated: SimulatedLocationProvider, with route: Route) throws {
         try simulated.setSimulatedRoute(route, resampleDistance: 5)
+        simulated.stopUpdating() // to privent camera jumps when we simulate location at high speeds
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             simulated.startUpdating()
         }
@@ -339,5 +340,11 @@ private extension MapViewContainer {
             self.mapStore.displayableItems.isEmpty &&
             self.mapStore.isSFSymbolLayerPresent() &&
             self.mapStore.shouldShowCustomSymbols
+    }
+}
+
+extension FerrostarCore {
+    var simulatedLocationProvider: SimulatedLocationProvider? {
+        self.locationProvider as? SimulatedLocationProvider
     }
 }
