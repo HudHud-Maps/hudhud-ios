@@ -27,7 +27,7 @@ struct POIDetailSheet: View {
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
 
-    @State var routes: [RouteModel]?
+    @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
@@ -126,7 +126,7 @@ struct POIDetailSheet: View {
                         if self.didDenyLocationPermission {
                             self.askToEnableLocation = true
                         } else {
-                            self.onStart(self.routes?.map(\.route))
+                            self.onStart(self.routes)
                         }
                     }, label: {})
                         .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
@@ -173,7 +173,7 @@ struct POIDetailSheet: View {
             }
             .padding(.vertical, -15)
             VStack {
-                AdditionalPOIDetailsView(item: self.pointOfInterestStore.pointOfInterest, routes: self.routes?.map(\.route))
+                AdditionalPOIDetailsView(item: self.pointOfInterestStore.pointOfInterest, routes: self.routes)
                     .fixedSize()
                     .padding([.top, .trailing, .leading])
                 POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
@@ -208,8 +208,6 @@ private extension POIDetailSheet {
         do {
             let routes = try await self.routingStore.calculateRoutes(for: item)
             self.routes = routes
-            self.routingStore.routes = routes // TODO: Improve it
-            self.routingStore.selectRoute(withId: routes.last?.id ?? 0)
         } catch let error as URLError {
             if error.code == .cancelled {
                 // ignore cancelled errors

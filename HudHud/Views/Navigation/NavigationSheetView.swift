@@ -48,7 +48,7 @@ struct NavigationSheetView: View {
             .frame(height: 20)
             .padding(.horizontal)
             .padding(.top, 30)
-            if let route = self.routingStore.potentialRoute, let waypoints = self.routingStore.waypoints {
+            if let route = self.routingStore.selectedRoute, let waypoints = self.routingStore.waypoints {
                 ABCRouteConfigurationView(routeConfigurations: waypoints, sheetStore: self.sheetStore, routingStore: self.routingStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
@@ -56,7 +56,7 @@ struct NavigationSheetView: View {
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
-                        self.routingStore.navigatingRoute = route
+                        self.routingStore.startNavigation()
                         self.sheetStore.popToRoot()
                     }
                 )

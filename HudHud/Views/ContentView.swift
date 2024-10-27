@@ -155,7 +155,10 @@ struct ContentView: View {
                         Logger.searchView.info("Start item \(item)")
                         Task {
                             do {
-                                try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
+                                try await self.searchViewStore.routingStore.showRoutes(
+                                    to: item,
+                                    with: routeIfAvailable
+                                )
                                 try await self.notificationManager.requestAuthorization()
                                 self.sheetStore.show(.navigationPreview)
                             } catch {
@@ -515,19 +518,4 @@ extension MapLayerIdentifier {
         Self.streetView,
         Self.customPOI
     ]
-}
-
-#Preview("map preview") {
-    let mapStore: MapStore = .storeSetUpForPreviewing
-    let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(
-        mapStore: mapStore,
-        debugStore: DebugStore(),
-        searchViewStore: searchStore,
-        userLocationStore: .storeSetUpForPreviewing,
-        mapViewStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        streetViewStore: .storeSetUpForPreviewing
-    ) { _ in EmptyView() }
 }
