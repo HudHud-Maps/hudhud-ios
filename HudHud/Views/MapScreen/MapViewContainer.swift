@@ -79,7 +79,7 @@ struct MapViewContainer<SheetContentView: View>: View {
                 ),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
-                locationProviding: self.routingStore.ferrostarCore.locationProvider,
+                locationProviding: nil,
                 navigationState: self.routingStore.ferrostarCore.state,
                 showZoom: false,
                 onTapExit: stopNavigation,
@@ -291,7 +291,9 @@ private extension MapViewContainer {
     }
 
     func configureMapViewController(_ mapViewController: MapViewController) {
-        mapViewController.mapView.locationManager = LocationManagerProxy(locationProvider: self.routingStore.ferrostarCore.locationProvider)
+        if self.routingStore.ferrostarCore.simulatedLocationProvider != nil {
+            mapViewController.mapView.locationManager = LocationManagerProxy(locationProvider: self.routingStore.ferrostarCore.locationProvider)
+        }
 
         mapViewController.mapView.compassViewMargins.y = 50
     }
