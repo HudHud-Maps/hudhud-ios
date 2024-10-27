@@ -40,10 +40,9 @@ final class RatingStore {
         case setInteractiveRating(Int)
         case updateStaticRating(rating: Double, count: Int)
         case resetInteractiveRating
-        case addImage([PhotosPickerItem])
         case removeImage(UIImage)
         case updateReviewText(String)
-        case updateSelection([PhotosPickerItem])
+        case addImages([PhotosPickerItem])
         case removePlaceHolder
     }
 
@@ -75,26 +74,23 @@ final class RatingStore {
         case .resetInteractiveRating:
             self.state.interactiveRating = 0
 
-        case let .addImage(newImages):
-            self.addImagesFromLibrary(newImages: newImages)
-
         case let .removeImage(image):
             self.state.selectedImages.removeAll { $0 == image }
 
         case let .updateReviewText(text):
             self.state.reviewText = text
 
-        case let .updateSelection(items):
-            self.state.selection = items
+        case let .addImages(images):
+            self.addImages(images)
 
         case .removePlaceHolder:
             self.state.placeholderString = ""
         }
     }
 
-    func addImagesFromLibrary(newImages: [PhotosPickerItem]) {
+    func addImages(_ images: [PhotosPickerItem]) {
         Task {
-            for image in newImages {
+            for image in images {
                 if let data = try? await image.loadTransferable(type: Data.self),
                    let uiImage = UIImage(data: data) {
                     self.state.selectedImages.append(uiImage)

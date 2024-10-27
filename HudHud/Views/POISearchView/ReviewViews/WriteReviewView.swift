@@ -147,7 +147,7 @@ struct WriteReviewView: View {
                 PhotosPicker(
                     selection: Binding(
                         get: { self.store.state.selection },
-                        set: { self.store.reduce(action: .updateSelection($0)) }
+                        set: { self.store.reduce(action: .addImages($0)) }
                     ),
                     matching: .images
                 ) {
@@ -159,9 +159,6 @@ struct WriteReviewView: View {
                     .frame(width: 72, height: 72)
                     .background(Color.Colors.General._05WhiteBackground)
                     .cornerRadius(10)
-                }
-                .onChange(of: self.store.state.selection) { _, newImages in
-                    self.store.reduce(action: .addImage(newImages))
                 }
 
                 ScrollView(.horizontal, showsIndicators: false) {
