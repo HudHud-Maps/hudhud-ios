@@ -11,7 +11,6 @@
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		0CF3BB572CCC87D70069DADE /* ObservedChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3BB562CCC87D70069DADE /* ObservedChild.swift */; };
-		0CF3BB592CCC88370069DADE /* ObservedMacroChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CF3BB582CCC88370069DADE /* ObservedMacroChild.swift */; };
 		0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
@@ -190,7 +189,6 @@
 		032B9F89AE6B117C05892563 /* AdditionalPOIDetailsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalPOIDetailsView.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
 		0CF3BB562CCC87D70069DADE /* ObservedChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservedChild.swift; sourceTree = "<group>"; };
-		0CF3BB582CCC88370069DADE /* ObservedMacroChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservedMacroChild.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TouchManager.swift; sourceTree = "<group>"; };
@@ -415,7 +413,6 @@
 			isa = PBXGroup;
 			children = (
 				0CF3BB562CCC87D70069DADE /* ObservedChild.swift */,
-				0CF3BB582CCC88370069DADE /* ObservedMacroChild.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -1104,7 +1101,6 @@
 				DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */,
 				D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */,
 				0F3F0BC2A6BA985F6E2793EA /* AdditionalPOIDetailsView.swift in Sources */,
-				0CF3BB592CCC88370069DADE /* ObservedMacroChild.swift in Sources */,
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,
 				594C48772C0DBB8A00756633 /* FavoritesViewMoreView.swift in Sources */,
 				CB5F74C62C74A6B300E6FAC0 /* MainFiltersView.swift in Sources */,
