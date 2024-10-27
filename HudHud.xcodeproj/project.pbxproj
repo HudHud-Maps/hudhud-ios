@@ -82,6 +82,8 @@
 		9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0552CCE69FC00F67DC5 /* FerrostarCore */; };
 		9E82F0582CCE69FC00F67DC5 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */; };
 		9E82F05A2CCE69FC00F67DC5 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */; };
+		9E82F06A2CCE858100F67DC5 /* PulseProxy in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0692CCE858100F67DC5 /* PulseProxy */; };
+		9E82F06C2CCE858100F67DC5 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F06B2CCE858100F67DC5 /* PulseUI */; };
 		9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F75C4E4220C498F691DF33 /* MoreFiltersView.swift */; };
 		9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */; };
 		9EE17AEF2CC79EC800316799 /* SheetContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */; };
@@ -340,6 +342,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E82F06C2CCE858100F67DC5 /* PulseUI in Frameworks */,
 				CBC7C7C62CB2932600210404 /* iPhoneNumberField in Frameworks */,
 				59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */,
 				9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */,
@@ -350,6 +353,7 @@
 				59A28FFD2C3EC9B800780307 /* NavigationTransitions in Frameworks */,
 				CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */,
 				CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */,
+				9E82F06A2CCE858100F67DC5 /* PulseProxy in Frameworks */,
 				CD34C5952C0B3CC8006DCDBA /* BackendService in Frameworks */,
 				CD34C5642C05EF07006DCDBA /* BetterSafariView in Frameworks */,
 				CD34C55D2C03EF43006DCDBA /* NavigationTransitions in Frameworks */,
@@ -858,6 +862,8 @@
 				9E82F0552CCE69FC00F67DC5 /* FerrostarCore */,
 				9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */,
 				9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */,
+				9E82F0692CCE858100F67DC5 /* PulseProxy */,
+				9E82F06B2CCE858100F67DC5 /* PulseUI */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -947,6 +953,7 @@
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */,
+				9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1551,6 +1558,14 @@
 				kind = branch;
 			};
 		};
+		9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.2;
+			};
+		};
 		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
@@ -1661,6 +1676,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */;
 			productName = FerrostarSwiftUI;
+		};
+		9E82F0692CCE858100F67DC5 /* PulseProxy */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseProxy;
+		};
+		9E82F06B2CCE858100F67DC5 /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
 		};
 		A9C242CCE05D8DBC345B5D4D /* iPhoneNumberField */ = {
 			isa = XCSwiftPackageProductDependency;

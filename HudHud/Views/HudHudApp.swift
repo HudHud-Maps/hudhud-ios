@@ -8,6 +8,8 @@
 
 import Nuke
 import OSLog
+import Pulse
+import PulseProxy
 import SwiftLocation
 import SwiftUI
 import TypographyKit
@@ -45,6 +47,7 @@ struct HudHudApp: App {
     // MARK: Lifecycle
 
     init() {
+        NetworkLogger.enableProxy()
         let sheetStore = SheetStore(emptySheetType: .search)
         self.sheetStore = sheetStore
         let location = Location() // swiftlint:disable:this location_usage

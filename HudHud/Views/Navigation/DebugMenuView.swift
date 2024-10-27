@@ -7,6 +7,7 @@
 //
 
 import CoreLocation
+import PulseUI
 import SwiftUI
 
 // MARK: - DebugMenuView
@@ -19,6 +20,9 @@ struct DebugMenuView: View {
     var body: some View {
         NavigationStack {
             Form {
+                NavigationLink(destination: ConsoleView()) {
+                    Text("Network Logger")
+                }
                 self.routingSection
                 self.baseURLSection
                 self.simulationSection
