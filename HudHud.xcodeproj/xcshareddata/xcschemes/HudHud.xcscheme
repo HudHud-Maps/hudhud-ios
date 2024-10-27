@@ -81,6 +81,13 @@
             ReferencedContainer = "container:HudHud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <LocationScenarioReference
          identifier = "../../HudHud/Preview Content/Riyadh.gpx"
          referenceType = "0">

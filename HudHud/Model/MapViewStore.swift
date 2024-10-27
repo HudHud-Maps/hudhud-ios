@@ -67,7 +67,7 @@ final class MapViewStore {
 private extension MapViewStore {
 
     func showPotentialRouteWhenAvailable() {
-        self.routingStore.$potentialRoute
+        self.routingStore.$potentialRoute // is it meant to be the selcted route?
             .debounce(for: 0.3, scheduler: DispatchQueue.main)
             .sink { [weak self] newPotentialRoute in
                 guard let self else { return }
@@ -77,9 +77,7 @@ private extension MapViewStore {
                     self.mapStore.updateCamera(state: .route(newPotentialRoute))
                 } else if self.sheetStore.currentSheet?.viewData == .navigationPreview, newPotentialRoute == nil {
                     self.sheetStore.popSheet()
-                    self.routingStore.routes = []
-                    self.routingStore.potentialRoute = nil
-                    self.routingStore.navigatingRoute = nil
+                    self.routingStore.reset()
                 }
             }
             .store(in: &self.subscriptions)

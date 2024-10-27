@@ -108,13 +108,14 @@ struct RootSheetView: View {
                             Logger.searchView.info("Start item \(item)")
                             Task {
                                 do {
-                                    try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
+                                    try await self.searchViewStore.routingStore.showRoutes(to: item, with: routeIfAvailable)
                                     try await self.notificationManager.requestAuthorization()
                                 } catch {
                                     Logger.routing.error("Error navigating to \(item): \(error)")
                                 }
                             }
                         } onDismiss: {
+                            self.searchViewStore.routingStore.clearRoutes()
                             self.searchViewStore.mapStore
                                 .clearItems(clearResults: false)
                         }
