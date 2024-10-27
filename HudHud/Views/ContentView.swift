@@ -28,7 +28,6 @@ struct ContentView: View {
 
     @StateObject var debugStore = DebugStore()
     @State var safariURL: URL?
-    @State var safeAreaInset = UIEdgeInsets()
 
     @StateObject var favoritesStore = FavoritesStore()
     @StateObject var notificationManager = NotificationManager()
@@ -370,23 +369,6 @@ private extension ContentView {
 
 extension SimpleToastOptions {
     static let notification = SimpleToastOptions(alignment: .top, hideAfter: 5, modifierType: .slide)
-}
-
-// MARK: - SizePreferenceKey
-
-struct SizePreferenceKey: PreferenceKey {
-
-    // MARK: Static Properties
-
-    static var defaultValue: CGSize = .zero
-
-    // MARK: Static Functions
-
-    // MARK: - Internal
-
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
 }
 
 private extension MapViewPort {
