@@ -12,7 +12,7 @@ import MapLibreSwiftUI
 import SwiftUI
 import UIKit
 
-class MapViewController: UIViewController, MapViewHostViewController {
+final class MapViewController: UIViewController, MapViewHostViewController {
 
     // MARK: Properties
 
