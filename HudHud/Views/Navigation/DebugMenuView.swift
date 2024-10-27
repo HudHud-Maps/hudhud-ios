@@ -17,25 +17,27 @@ struct DebugMenuView: View {
     @ObservedObject var touchManager = TouchManager.shared
 
     var body: some View {
-        Form {
-            self.routingSection
-            self.baseURLSection
-            self.simulationSection
-            self.touchesSection
-            self.sfsymbolsSection
-            self.streetViewQualitySection
-        }
-        .navigationTitle("Debug Menu")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Reset") {
-                    self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
-                    self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
-                }
+        NavigationStack {
+            Form {
+                self.routingSection
+                self.baseURLSection
+                self.simulationSection
+                self.touchesSection
+                self.sfsymbolsSection
+                self.streetViewQualitySection
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Done") {
-                    self.dismiss()
+            .navigationTitle("Debug Menu")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Reset") {
+                        self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
+                        self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        self.dismiss()
+                    }
                 }
             }
         }

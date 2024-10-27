@@ -132,7 +132,7 @@ final class RoutingStore: ObservableObject {
         self.navigatingRoute = self.selectedRoute
     }
 
-    func reset() {
+    func cancelCurrentRoutePlan() {
         self.routes = []
         self.potentialRoute = nil
         self.navigatingRoute = nil

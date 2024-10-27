@@ -19,7 +19,7 @@ import SwiftUI
 
 // MARK: - MapViewContainer
 
-struct MapViewContainer: View {
+struct MapViewContainer<SheetContentView: View>: View {
 
     // MARK: Properties
 
@@ -31,9 +31,11 @@ struct MapViewContainer: View {
     let streetViewStore: StreetViewStore
     let mapViewStore: MapViewStore
 
+    @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
+
     @State private var safeAreaInsets = UIEdgeInsets()
     @State private var didFocusOnUser = false
-    @Binding private var isSheetShown: Bool
+    private var sheetStore: SheetStore
 
     // MARK: Computed Properties
 
@@ -50,8 +52,9 @@ struct MapViewContainer: View {
         userLocationStore: UserLocationStore,
         mapViewStore: MapViewStore,
         routingStore: RoutingStore,
+        sheetStore: SheetStore,
         streetViewStore: StreetViewStore,
-        isSheetShown: Binding<Bool>
+        @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
@@ -60,7 +63,8 @@ struct MapViewContainer: View {
         self.mapViewStore = mapViewStore
         self.streetViewStore = streetViewStore
         self.routingStore = routingStore
-        self._isSheetShown = isSheetShown
+        self.sheetStore = sheetStore
+        self.sheetToView = sheetToView
     }
 
     // MARK: Content
@@ -68,6 +72,11 @@ struct MapViewContainer: View {
     var body: some View {
         return NavigationStack {
             DynamicallyOrientingNavigationView(
+                makeViewController: MapViewController(
+                    sheetStore: self.sheetStore,
+                    styleURL: self.mapStore.mapStyleUrl(),
+                    sheetToView: self.sheetToView
+                ),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
                 locationProviding: self.routingStore.ferrostarCore.locationProvider,
@@ -156,7 +165,7 @@ private extension MapViewContainer {
         return layers
     }
 
-    func makeMapViewModifiers(content: MapView<MLNMapViewController>, isNavigating: Bool) -> MapView<MLNMapViewController> {
+    func makeMapViewModifiers(content: MapView<MapViewController>, isNavigating: Bool) -> MapView<MapViewController> {
         guard !isNavigating else { return content }
         let allRouteIndices = 0 ..< 5 // max possible routes
         let routeLayers = allRouteIndices.flatMap { index in
@@ -238,7 +247,7 @@ private extension MapViewContainer {
                 }
 
                 try self.routingStore.ferrostarCore.startNavigation(route: route)
-                self.isSheetShown = false
+                self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.mapStore.camera = .automotiveNavigation()
@@ -278,10 +287,10 @@ private extension MapViewContainer {
             coordinate: gesture.coordinate,
             color: .systemRed
         )
-        self.mapStore.select(generatedPOI)
+        self.sheetStore.show(.pointOfInterest(generatedPOI))
     }
 
-    func configureMapViewController(_ mapViewController: MLNMapViewController) {
+    func configureMapViewController(_ mapViewController: MapViewController) {
         mapViewController.mapView.locationManager = LocationManagerProxy(locationProvider: self.routingStore.ferrostarCore.locationProvider)
 
         mapViewController.mapView.compassViewMargins.y = 50
@@ -295,7 +304,7 @@ private extension MapViewContainer {
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
-        self.isSheetShown = true
+        self.sheetStore.isShown.value = true
 
         if let coordinates = routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             self.resetCamera(to: coordinates)

@@ -54,7 +54,6 @@ struct POISheetButtonStyle: ButtonStyle {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.select(.coffeeAddressRiyadh)
     return ContentView(
         searchStore: searchViewStore,
         mapViewStore: .storeSetUpForPreviewing,

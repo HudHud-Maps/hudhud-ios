@@ -17,7 +17,6 @@ struct FavoriteCategoriesView: View {
     // MARK: Properties
 
     var sheetStore: SheetStore
-    let searchStore: SearchViewStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
 
@@ -29,7 +28,7 @@ struct FavoriteCategoriesView: View {
                 ForEach(self.favoritesStore.favoritesItems.prefix(4)) { favorite in
                     Button {
                         if let item = favorite.item {
-                            self.searchStore.mapStore.clearListAndSelect(item)
+                            self.sheetStore.show(.pointOfInterest(item))
                         }
                     } label: {
                         Text(favorite.type)
@@ -38,7 +37,7 @@ struct FavoriteCategoriesView: View {
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
                 Button("Add") {
-                    self.sheetStore.pushSheet(SheetViewData(viewData: .favoritesViewMore))
+                    self.sheetStore.show(.favoritesViewMore)
                 }
                 .hudhudFont(size: 12, fontWeight: .medium)
                 .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
@@ -77,7 +76,7 @@ struct FavoriteCategoriesView: View {
                     }
                 }
             }
-            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing)
         }
         .padding()
     }

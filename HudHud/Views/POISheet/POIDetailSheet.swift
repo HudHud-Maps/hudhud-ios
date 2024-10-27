@@ -21,7 +21,8 @@ struct POIDetailSheet: View {
 
     // MARK: Properties
 
-    let item: ResolvedItem
+    @State var pointOfInterestStore: PointOfInterestStore
+
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
@@ -34,26 +35,25 @@ struct POIDetailSheet: View {
 
     @EnvironmentObject var notificationQueue: NotificationQueue
 
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
     // MARK: Computed Properties
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
-        return (self.item.subtitle ?? self.item.coordinate.formatted()).count > maxCharacters
+        return (self.pointOfInterestStore.pointOfInterest.subtitle ?? self.pointOfInterestStore.pointOfInterest.coordinate.formatted()).count > maxCharacters
     }
 
     // MARK: Lifecycle
 
     init(
-        item: ResolvedItem,
+        pointOfInterestStore: PointOfInterestStore,
         routingStore: RoutingStore,
         didDenyLocationPermission: Bool,
         onStart: @escaping ([Route]?) -> Void,
         onDismiss: @escaping () -> Void
     ) {
-        self.item = item
+        self.pointOfInterestStore = pointOfInterestStore
         self.onStart = onStart
         self.onDismiss = onDismiss
         self.routingStore = routingStore
@@ -68,14 +68,14 @@ struct POIDetailSheet: View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 VStack(spacing: .zero) {
-                    Text(self.item.title)
+                    Text(self.pointOfInterestStore.pointOfInterest.title)
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(2)
                         .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
 
-                    if let category = self.item.category {
+                    if let category = self.pointOfInterestStore.pointOfInterest.category {
                         Text(category)
                             .hudhudFont(.footnote)
                             .foregroundStyle(Color.Colors.General._02Grey)
@@ -85,7 +85,7 @@ struct POIDetailSheet: View {
                             .padding(.vertical, 6)
                     }
                     HStack {
-                        Text(self.item.subtitle ?? self.item.coordinate.formatted())
+                        Text(self.pointOfInterestStore.pointOfInterest.subtitle ?? self.pointOfInterestStore.pointOfInterest.coordinate.formatted())
                             .hudhudFont(.footnote)
                             .foregroundStyle(Color.Colors.General._01Black)
                             .multilineTextAlignment(.leading)
@@ -100,10 +100,9 @@ struct POIDetailSheet: View {
                     }
                     .fixedSize(horizontal: false, vertical: true)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(self.item.category != nil ? .bottom : .vertical, 4)
+                    .padding(self.pointOfInterestStore.pointOfInterest.category != nil ? .bottom : .vertical, 4)
                 }
                 Button(action: {
-                    self.dismiss()
                     self.onDismiss()
                 }, label: {
                     ZStack {
@@ -132,17 +131,17 @@ struct POIDetailSheet: View {
                     }, label: {})
                         .buttonStyle(POISheetButtonStyle(title: "Directions", icon: .arrowRightCircleFill, backgroundColor: .Colors.General._07BlueMain, fontColor: .white))
 
-                    if let phone = self.item.phone, !phone.isEmpty {
+                    if let phone = self.pointOfInterestStore.pointOfInterest.phone, !phone.isEmpty {
                         Button(action: {
                             // Perform phone action
-                            if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
+                            if let phone = self.pointOfInterestStore.pointOfInterest.phone, let url = URL(string: "tel://\(phone)") {
                                 self.openURL(url)
                             }
-                            Logger.searchView.info("Item phone \(self.item.phone ?? "nil")")
+                            Logger.searchView.info("Item phone \(self.pointOfInterestStore.pointOfInterest.phone ?? "nil")")
                         }, label: {})
                             .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
                     }
-                    if let website = item.website {
+                    if let website = self.pointOfInterestStore.pointOfInterest.website {
                         Button(action: {
                             self.openURL(website)
                         }, label: {})
@@ -174,10 +173,10 @@ struct POIDetailSheet: View {
             }
             .padding(.vertical, -15)
             VStack {
-                AdditionalPOIDetailsView(item: self.item, routes: self.routes)
+                AdditionalPOIDetailsView(item: self.pointOfInterestStore.pointOfInterest, routes: self.routes)
                     .fixedSize()
                     .padding([.top, .trailing, .leading])
-                POIMediaView(mediaURLs: self.item.mediaURLs)
+                POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
             }
             Spacer()
         }
@@ -193,12 +192,10 @@ struct POIDetailSheet: View {
             Text("Please enable your location to get directions")
         }
         .task {
-            await self.calculateRoute(for: self.item)
+            await self.calculateRoute(for: self.pointOfInterestStore.pointOfInterest)
         }
-        .onChange(of: self.item) { _, newItem in
-            Task {
-                await self.calculateRoute(for: newItem)
-            }
+        .onAppear {
+            self.pointOfInterestStore.reApplyThePointOfInterestToTheMapIfNeeded()
         }
     }
 }
@@ -229,7 +226,6 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.select(.artwork)
     return ContentView(
         searchStore: searchViewStore,
         mapViewStore: .storeSetUpForPreviewing,
