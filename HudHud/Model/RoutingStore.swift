@@ -43,13 +43,15 @@ final class RoutingStore: ObservableObject {
     @Published var potentialRoute: Route?
 
     // if this is set, that means that the user is currently navigating using this route
-    @Published var navigatingRoute: Route?
+    @Published private(set) var navigatingRoute: Route?
+
+    @Published private(set) var selectedRoute: Route?
 
     let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider()
 
-    let ferrostarCore: FerrostarCore
+    @ObservedChild private(set) var ferrostarCore: FerrostarCore
 
-    @Published var routes: [RouteModel] = []
+    @Published var routes: [Route] = []
 
     private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
         isMuted: false)
@@ -59,8 +61,10 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Computed Properties
 
-    var selectedRoute: RouteModel? {
-        self.routes.first(where: { $0.isSelected })
+    var alternativeRoutes: [Route] {
+        self.routes.filter {
+            $0.id != self.selectedRoute?.id
+        }
     }
 
     var routePoints: ShapeSource {
@@ -91,7 +95,7 @@ final class RoutingStore: ObservableObject {
 
         if DebugStore().simulateRide {
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 2
+            simulated.warpFactor = 3
             provider = simulated
         } else {
             provider = CoreLocationProvider(
@@ -111,48 +115,44 @@ final class RoutingStore: ObservableObject {
                 minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20
             ), snappedLocationCourseFiltering: .snapToRoute
         )
-        let something = FerrostarCore(
+
+        self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
             customRouteProvider: HudHudGraphHopperRouteProvider(),
             locationProvider: provider,
             navigationControllerConfig: config
-        )
+        ))
 
-        self.ferrostarCore = something
-
-        something.delegate = self.navigationDelegate
-
-        // Initialize text-to-speech; note that this is NOT automatic.
-        // You must set a spokenInstructionObserver.
-        // Fortunately, this is pretty easy with the provided class
-        // backed by AVSpeechSynthesizer.
-        // You can customize the instance it further as needed,
-        // or replace with your own.
-        something.spokenInstructionObserver = self.spokenInstructionObserver
+        self.ferrostarCore.delegate = self.navigationDelegate
+        self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
     }
 
     // MARK: Functions
 
+    func startNavigation() {
+        self.navigatingRoute = self.selectedRoute
+    }
+
+    func reset() {
+        self.routes = []
+        self.potentialRoute = nil
+        self.navigatingRoute = nil
+        self.selectedRoute = nil
+    }
+
     func clearRoutes() {
         self.routes.removeAll()
+        self.selectedRoute = nil
     }
 
     func selectRoute(withId id: Int) {
-        self.routes = self.routes.map { routeModel in
-            RouteModel(
-                route: routeModel.route,
-                isSelected: routeModel.id == id
-            )
-        }
+        self.selectedRoute = self.routes.first(where: { $0.id == id })
     }
 
-    func calculateRoutes(for waypoints: [Waypoint]) async throws -> [RouteModel] {
+    func calculateRoutes(for waypoints: [Waypoint]) async throws -> [Route] {
         return try await self.hudHudGraphHopperRouteProvider.getRoutes(waypoints: waypoints)
-            .map { route in
-                RouteModel(route: route, isSelected: false)
-            }
     }
 
-    func calculateRoutes(for item: ResolvedItem) async throws -> [RouteModel] {
+    func calculateRoutes(for item: ResolvedItem) async throws -> [Route] {
         guard let userLocation = await self.mapStore.userLocationStore.location(allowCached: false) else {
             throw LocationNotEnabledError()
         }
@@ -160,15 +160,17 @@ final class RoutingStore: ObservableObject {
         return try await self.calculateRoutes(for: waypoints)
     }
 
-    func navigate(to item: ResolvedItem, with calculatedRoutesIfAvailable: [Route]?) async throws {
+    func showRoutes(to item: ResolvedItem, with calculatedRoutesIfAvailable: [Route]?) async throws {
         let route = if let calculatedRoutesIfAvailable {
-            calculatedRoutesIfAvailable.map { RouteModel(route: $0, isSelected: false) }
+            calculatedRoutesIfAvailable
         } else {
             try await self.calculateRoutes(for: item)
         }
-        self.potentialRoute = route.first?.route
+        self.potentialRoute = route.first
+        self.routes = route
+        self.selectRoute(withId: self.routes.first?.id ?? 0)
         self.mapStore.displayableItems = [DisplayableRow.resolvedItem(item)]
-        if let location = route.first?.route.waypoints.first {
+        if let location = route.first?.waypoints.first {
             self.waypoints = [.myLocation(location), .waypoint(item)]
         }
     }
@@ -185,7 +187,7 @@ final class RoutingStore: ObservableObject {
             }
             self.waypoints = destinations
             let routes = try await self.calculateRoutes(for: waypoints)
-            self.potentialRoute = routes.first?.route
+            self.potentialRoute = routes.first
         } catch {
             Logger.routing.error("Updating routes: \(error)")
         }

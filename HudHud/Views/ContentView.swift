@@ -408,18 +408,3 @@ extension MapLayerIdentifier {
         Self.customPOI
     ]
 }
-
-#Preview("map preview") {
-    let mapStore: MapStore = .storeSetUpForPreviewing
-    let searchStore: SearchViewStore = .storeSetUpForPreviewing
-    MapViewContainer(
-        mapStore: mapStore,
-        debugStore: DebugStore(),
-        searchViewStore: searchStore,
-        userLocationStore: .storeSetUpForPreviewing,
-        mapViewStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
-        streetViewStore: .storeSetUpForPreviewing,
-        isSheetShown: .constant(true)
-    )
-}
