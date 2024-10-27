@@ -51,7 +51,7 @@ struct HudHudApp: App {
         location.accuracy = .threeKilometers
         let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: mapStore)
-        self.mapViewStore = MapViewStore(mapStore: mapStore, routingStore: routingStore, sheetStore: sheetStore)
+        self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
         self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
         self.mapStore = mapStore
 

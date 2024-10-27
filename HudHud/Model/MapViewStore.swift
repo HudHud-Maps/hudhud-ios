@@ -23,21 +23,16 @@ final class MapViewStore {
     var streetViewStore: StreetViewStore?
 
     private let mapActionHandler: MapActionHandler
-    private let routingStore: RoutingStore
     private let mapStore: MapStore
     private let sheetStore: SheetStore
     private var subscriptions: Set<AnyCancellable> = []
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, routingStore: RoutingStore, sheetStore: SheetStore) {
+    init(mapStore: MapStore, sheetStore: SheetStore) {
         self.mapActionHandler = MapActionHandler(mapStore: mapStore, sheetStore: sheetStore)
         self.mapStore = mapStore
-        self.routingStore = routingStore
         self.sheetStore = sheetStore
-
-        self.showPotentialRouteWhenAvailable()
-        self.showSelectedDetentWhenSelectingAnItem()
     }
 
     // MARK: Functions
@@ -63,45 +58,8 @@ final class MapViewStore {
     }
 }
 
-private extension MapViewStore {
-
-    func showPotentialRouteWhenAvailable() {
-        self.routingStore.$potentialRoute
-            .debounce(for: 0.3, scheduler: DispatchQueue.main)
-            .sink { [weak self] newPotentialRoute in
-                guard let self else { return }
-
-                if let newPotentialRoute, case .pointOfInterest = self.sheetStore.currentSheet.sheetType {
-                    self.sheetStore.show(.navigationPreview)
-                    self.mapStore.updateCamera(state: .route(newPotentialRoute))
-                } else if self.sheetStore.currentSheet.sheetType == .navigationPreview, newPotentialRoute == nil {
-                    self.sheetStore.popSheet()
-                    self.routingStore.routes = []
-                    self.routingStore.potentialRoute = nil
-                    self.routingStore.navigatingRoute = nil
-                }
-            }
-            .store(in: &self.subscriptions)
-    }
-
-    func showSelectedDetentWhenSelectingAnItem() {
-        self.mapStore.selectedItem
-            .compactMap { $0 }
-            .sink { [weak self] selectedItem in
-                guard let self, self.routingStore.potentialRoute == nil else {
-                    return
-                }
-                if case .pointOfInterest = self.sheetStore.currentSheet.sheetType {
-                    return
-                }
-                self.sheetStore.show(.pointOfInterest(selectedItem))
-            }
-            .store(in: &self.subscriptions)
-    }
-}
-
 // MARK: - Previewable
 
 extension MapViewStore: Previewable {
-    static let storeSetUpForPreviewing = MapViewStore(mapStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = MapViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
 }

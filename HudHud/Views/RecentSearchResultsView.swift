@@ -65,7 +65,7 @@ struct RecentSearchResultsView: View {
                 }
             }
             .onTapGesture {
-                self.searchStore.mapStore.clearListAndSelect(item)
+                self.sheetStore.show(.pointOfInterest(item))
                 switch self.searchType {
                 case let .returnPOILocation(completion):
                     if let selectedItem = self.searchStore.mapStore.selectedItem.value {

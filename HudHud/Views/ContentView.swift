@@ -157,6 +157,7 @@ struct ContentView: View {
                             do {
                                 try await self.searchViewStore.routingStore.navigate(to: item, with: routeIfAvailable)
                                 try await self.notificationManager.requestAuthorization()
+                                self.sheetStore.show(.navigationPreview)
                             } catch {
                                 Logger.routing.error("Error navigating to \(item): \(error)")
                             }

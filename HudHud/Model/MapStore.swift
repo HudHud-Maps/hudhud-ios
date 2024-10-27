@@ -169,11 +169,6 @@ final class MapStore {
         self.updateCamera(state: .mapItems)
     }
 
-    func clearListAndSelect(_ item: ResolvedItem) {
-        self.selectedItem.value = item
-        self.displayableItems = [DisplayableRow.resolvedItem(item)]
-    }
-
     func unselectItem() {
         self.selectedItem.value = nil
     }
