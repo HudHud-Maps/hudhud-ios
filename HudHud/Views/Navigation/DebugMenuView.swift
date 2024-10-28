@@ -13,9 +13,14 @@ import SwiftUI
 // MARK: - DebugMenuView
 
 struct DebugMenuView: View {
-    @Environment(\.dismiss) private var dismiss
+
+    // MARK: Properties
+
     @ObservedObject var debugSettings: DebugStore
     @ObservedObject var touchManager = TouchManager.shared
+    let sheetStore: SheetStore
+
+    // MARK: Content
 
     var body: some View {
         NavigationStack {
@@ -40,7 +45,7 @@ struct DebugMenuView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
-                        self.dismiss()
+                        self.sheetStore.popSheet()
                     }
                 }
             }
@@ -145,7 +150,7 @@ struct DebugMenuView: View {
 #Preview {
     @Previewable @StateObject var debugSettings = DebugStore()
 
-    return DebugMenuView(debugSettings: debugSettings)
+    return DebugMenuView(debugSettings: debugSettings, sheetStore: .storeSetUpForPreviewing)
 }
 
 func optionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T> {
