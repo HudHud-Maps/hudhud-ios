@@ -9,7 +9,7 @@
 import CoreLocation
 import Foundation
 import MapKit
-import OpenAPIURLSession
+import OpenAPIRuntime
 import OSLog
 import SwiftUI
 
@@ -17,27 +17,26 @@ import SwiftUI
 
 public struct RegistrationService {
 
+    // MARK: Properties
+
+    private let transport: ClientTransport
+
     // MARK: Lifecycle
 
-    public init() {}
+    public init(transport: ClientTransport) {
+        self.transport = transport
+    }
 
     // MARK: Functions
 
     public func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
-        let urlSessionConfiguration = URLSessionConfiguration.default
-        urlSessionConfiguration.waitsForConnectivity = true
-        urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
-
-        let urlSession = URLSession(configuration: urlSessionConfiguration)
-        let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
-        let transport = URLSessionTransport(configuration: transportConfiguration)
         let body = Operations.login.Input.Body.json(
             Components.Schemas.LoginRequest(login_identity: loginInput)
         )
         let headers = Operations.login.Input.Headers(
             Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"
         )
-        let response = try await Client.makeClient(using: baseURL, transport: transport).login(headers: headers, body: body)
+        let response = try await Client.makeClient(using: baseURL, transport: self.transport).login(headers: headers, body: body)
 
         switch response {
         case let .created(okResponse):
@@ -70,7 +69,7 @@ public struct RegistrationService {
         let verifyOTPRequest = Components.Schemas.VerifyOTPRequest(otp: otp)
         let body = Operations.verifyOTP.Input.Body.json(verifyOTPRequest)
 
-        let response = try await Client.makeClient(using: baseURL).verifyOTP(path: path, headers: header, body: body)
+        let response = try await Client.makeClient(using: baseURL, transport: self.transport).verifyOTP(path: path, headers: header, body: body)
 
         switch response {
         case let .ok(message):
@@ -109,7 +108,7 @@ public struct RegistrationService {
 
     public func resendOTP(loginId: String, baseURL: String) async throws -> RegistrationResponse {
         let path = Operations.resendOTP.Input.Path(id: loginId)
-        let response = try await Client.makeClient(using: baseURL).resendOTP(path: path)
+        let response = try await Client.makeClient(using: baseURL, transport: self.transport).resendOTP(path: path)
 
         switch response {
         case let .ok(created):

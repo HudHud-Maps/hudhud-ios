@@ -7,10 +7,10 @@
 //
 
 import Foundation
-import OpenAPIURLSession
+import OpenAPIRuntime
 
 extension Client {
-    static func makeClient(using baseURLString: String, transport: URLSessionTransport = URLSessionTransport()) -> Client {
+    static func makeClient(using baseURLString: String, transport: ClientTransport) -> Client {
         if let baseURL = URL(string: baseURLString) {
             return Client(serverURL: baseURL, transport: transport, middlewares: [AuthenticationMiddleware(authorizationHeaderFieldValue: "123")])
         } else {

@@ -27,7 +27,7 @@ final class OTPVerificationStore {
     var userLoggedIn: Bool = false
     var isValid: Bool = true
 
-    private var registrationService = RegistrationService()
+    private var registrationService = RegistrationService(transport: transport)
 
     private var timeRemaining: Int = 60
     private var duration: Date

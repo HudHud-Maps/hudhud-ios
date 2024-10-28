@@ -9,7 +9,7 @@
 
 import CoreLocation
 import Foundation
-import OpenAPIURLSession
+import OpenAPIRuntime
 import OSLog
 
 // MARK: - HudHudMapLayerStore
@@ -21,24 +21,18 @@ public class HudHudMapLayerStore: ObservableObject {
     @Published public var hudhudMapLayers: [HudHudMapLayer]?
     @Published public var lastError: Error?
 
+    private let transport: ClientTransport
+
     // MARK: Lifecycle
 
-    public init() {}
+    public init(transport: ClientTransport) {
+        self.transport = transport
+    }
 
     // MARK: Functions
 
     public func getMaplayers(baseURL: String) async throws -> [HudHudMapLayer] {
-        let urlSessionConfiguration = URLSessionConfiguration.default
-        urlSessionConfiguration.waitsForConnectivity = true
-        urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
-
-        let urlSession = URLSession(configuration: urlSessionConfiguration)
-
-        let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
-
-        let transport = URLSessionTransport(configuration: transportConfiguration)
-
-        let response = try await Client.makeClient(using: baseURL, transport: transport).listMapStyles()
+        let response = try await Client.makeClient(using: baseURL, transport: self.transport).listMapStyles()
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
