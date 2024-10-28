@@ -295,6 +295,6 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
 }
 
 #Preview {
-    let trendingStroe = TrendingStore(transport: transport)
+    let trendingStroe = TrendingStore(transport: Network.transport)
     SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

@@ -58,8 +58,8 @@ struct ContentView: View {
         self.sheetStore = sheetStore
         self.mapStore = searchStore.mapStore
         self.userLocationStore = searchStore.mapStore.userLocationStore
-        self.trendingStore = TrendingStore(transport: transport)
-        self.mapLayerStore = HudHudMapLayerStore(transport: transport)
+        self.trendingStore = TrendingStore(transport: Network.transport)
+        self.mapLayerStore = HudHudMapLayerStore(transport: Network.transport)
         self.mapViewStore = mapViewStore
         self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
         self.mapViewStore.streetViewStore = self.streetViewStore

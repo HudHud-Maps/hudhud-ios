@@ -120,7 +120,7 @@ struct FavoritesViewMoreView: View {
         return SearchSheet(
             mapStore: freshMapStore,
             searchStore: freshSearchViewStore,
-            trendingStore: TrendingStore(transport: transport),
+            trendingStore: TrendingStore(transport: Network.transport),
             sheetStore: freshSheetStore,
             filterStore: FilterStore()
         )

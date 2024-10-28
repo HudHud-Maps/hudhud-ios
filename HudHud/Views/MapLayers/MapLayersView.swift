@@ -128,7 +128,7 @@ struct MapLayersView: View {
 }
 
 #Preview {
-    let hudhudMapLayerStore = HudHudMapLayerStore(transport: transport)
+    let hudhudMapLayerStore = HudHudMapLayerStore(transport: Network.transport)
     MapLayersView(
         mapStore: .storeSetUpForPreviewing,
         sheetStore: .storeSetUpForPreviewing,

@@ -54,7 +54,7 @@ final class LoginStore {
     var isRunningRequest: Bool = false
 
     private let phoneNumberKit = PhoneNumberKit()
-    private var registrationService = RegistrationService(transport: transport)
+    private var registrationService = RegistrationService(transport: Network.transport)
 
     // MARK: Computed Properties
 

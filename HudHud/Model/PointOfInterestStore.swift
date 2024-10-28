@@ -19,7 +19,7 @@ final class PointOfInterestStore {
 
     private let mapStore: MapStore
     private let sheetStore: SheetStore
-    private let hudhudResolver = HudHudPOI(transport: transport)
+    private let hudhudResolver = HudHudPOI(transport: Network.transport)
 
     // MARK: Lifecycle
 

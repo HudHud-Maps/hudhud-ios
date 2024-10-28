@@ -1,5 +1,5 @@
 //
-//  urlSession.swift
+//  Network.swift
 //  HudHud
 //
 //  Created by Naif Alrashed on 27/10/2024.
@@ -11,10 +11,16 @@ import HTTPTypes
 import OpenAPIRuntime
 @preconcurrency import Pulse
 
+// MARK: - Network
+
 // this is the url session instance that pulse will monitor to show logs
-let urlSession: URLSessionProtocol = session
-private let session: URLSessionProxy = .init(configuration: .default)
-let transport = URLSessionTransport(session: session)
+
+enum Network {
+    static let urlSession: URLSessionProtocol = Network.session
+    static let transport = URLSessionTransport(session: Network.session)
+
+    private static let session: URLSessionProxy = .init(configuration: .default)
+}
 
 // MARK: - URLSessionTransport
 

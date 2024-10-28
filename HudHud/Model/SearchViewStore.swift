@@ -78,7 +78,7 @@ final class SearchViewStore: ObservableObject {
 
     private let sheetStore: SheetStore
     private var task: Task<Void, Error>?
-    private var hudhud = HudHudPOI(transport: transport)
+    private var hudhud = HudHudPOI(transport: Network.transport)
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
