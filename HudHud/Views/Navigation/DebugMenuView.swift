@@ -25,11 +25,11 @@ struct DebugMenuView: View {
     var body: some View {
         NavigationStack {
             Form {
+                self.routingSection
+                self.baseURLSection
                 NavigationLink(destination: ConsoleView()) {
                     Text("Network Logger")
                 }
-                self.routingSection
-                self.baseURLSection
                 self.simulationSection
                 self.touchesSection
                 self.sfsymbolsSection

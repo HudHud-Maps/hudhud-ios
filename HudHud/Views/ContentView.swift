@@ -85,7 +85,7 @@ struct ContentView: View {
                         .navigationBarBackButtonHidden()
                         .presentationCornerRadius(21)
                 case .debugView:
-                    DebugMenuView(debugSettings: self.debugStore)
+                    DebugMenuView(debugSettings: self.debugStore, sheetStore: self.sheetStore)
                         .onDisappear(perform: {
                             self.sheetStore.popToRoot()
                         })
