@@ -20,7 +20,6 @@ let package = Package(
         .package(url: "https://github.com/SFSafeSymbols/SFSafeSymbols.git", from: "4.1.1"),
         .package(url: "https://github.com/apple/swift-openapi-generator", exact: "1.3.1"),
         .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
-        .package(url: "https://github.com/apple/swift-openapi-urlsession", from: "1.0.0"),
         .package(url: "https://github.com/salishseasoftware/LocationFormatter.git", from: "1.1.0"),
         .package(url: "https://github.com/kishikawakatsumi/KeychainAccess.git", from: "4.2.2")
     ],
@@ -32,7 +31,6 @@ let package = Package(
             dependencies: [
                 .product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
                 .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
-                .product(name: "OpenAPIURLSession", package: "swift-openapi-urlsession"),
                 .product(name: "LocationFormatter", package: "locationformatter"),
                 .product(name: "KeychainAccess", package: "KeychainAccess")
             ],
