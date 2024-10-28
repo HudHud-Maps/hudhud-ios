@@ -166,7 +166,7 @@ public struct HudHudPOI: POIServiceProtocol {
 
             // MARK: Computed Properties
 
-            public var displayValue: String {
+            public var displayValue: LocalizedStringKey {
                 switch self {
                 case .sunday: return "Sunday"
                 case .monday: return "Monday"
