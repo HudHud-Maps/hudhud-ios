@@ -16,14 +16,14 @@ then
 	then
 		../.tools/release-notes linear move-tickets --api-key $LINEAR_API_KEY --team "iOS"
 		git tag TestFlight/Internal/$VERSION\($CI_BUILD_NUMBER\)
+		git push --tags "https://${GIT_AUTH}@github.com/HudHud-Maps/hudhud-ios.git"
 	fi
 	
 	if [[ $CI_WORKFLOW = 'External TestFlight' ]]
 	then
 		../.tools/release-notes linear move-tickets --api-key $LINEAR_API_KEY --team "iOS" --column "Available on TestFlight" --destination "Done"
 		git tag TestFlight/External/$VERSION\($CI_BUILD_NUMBER\)
+		git push --tags "https://${GIT_AUTH}@github.com/HudHud-Maps/hudhud-ios.git"
 	fi
-	
-	git push --tags "https://${GIT_AUTH}@github.com/HudHud-Maps/hudhud-ios.git"
-	
+		
 fi
