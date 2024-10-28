@@ -17,8 +17,6 @@ struct NavigationSheetView: View {
     @ObservedObject var routingStore: RoutingStore
     var sheetStore: SheetStore
 
-    @Environment(\.dismiss) private var dismiss
-
     // MARK: Content
 
     var body: some View {
@@ -29,8 +27,8 @@ struct NavigationSheetView: View {
                     .cornerRadius(10)
                 Spacer()
                 Button(action: {
-                    self.routingStore.endTrip()
-                    self.dismiss()
+                    self.routingStore.cancelCurrentRoutePlan()
+                    self.sheetStore.popSheet()
                 }, label: {
                     ZStack {
                         Circle()
@@ -50,7 +48,7 @@ struct NavigationSheetView: View {
             .frame(height: 20)
             .padding(.horizontal)
             .padding(.top, 30)
-            if let route = self.routingStore.potentialRoute, let waypoints = self.routingStore.waypoints {
+            if let route = self.routingStore.selectedRoute, let waypoints = self.routingStore.waypoints {
                 ABCRouteConfigurationView(routeConfigurations: waypoints, sheetStore: self.sheetStore, routingStore: self.routingStore)
                 DirectionsSummaryView(
                     directionPreviewData: DirectionPreviewData(
@@ -58,8 +56,8 @@ struct NavigationSheetView: View {
                         distance: route.distance,
                         typeOfRoute: "Fastest"
                     ), go: {
-                        self.routingStore.navigatingRoute = route
-                        self.sheetStore.reset()
+                        self.routingStore.startNavigation()
+                        self.sheetStore.popToRoot()
                     }
                 )
                 .padding([.horizontal, .bottom])

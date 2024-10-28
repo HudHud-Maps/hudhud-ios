@@ -23,7 +23,7 @@ struct HudHudApp: App {
     @State var mapStore: MapStore
 
     private let searchStore: SearchViewStore
-    private let sheetStore: SheetStore
+    @State private var sheetStore: SheetStore
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
 
@@ -45,13 +45,13 @@ struct HudHudApp: App {
     // MARK: Lifecycle
 
     init() {
-        let sheetStore = SheetStore()
+        let sheetStore = SheetStore(emptySheetType: .search)
         self.sheetStore = sheetStore
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
         let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: mapStore)
-        self.mapViewStore = MapViewStore(mapStore: mapStore, routingStore: routingStore, sheetStore: sheetStore)
+        self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
         self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
         self.mapStore = mapStore
 

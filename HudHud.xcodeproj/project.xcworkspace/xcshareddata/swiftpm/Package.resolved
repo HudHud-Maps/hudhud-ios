@@ -15,7 +15,7 @@
       "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
         "branch" : "annotations",
-        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
+        "revision" : "8890bee3d6d9da030c2a94650757c5ca67cda19a"
       }
     },
     {
@@ -84,7 +84,7 @@
     {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke",
+      "location" : "https://github.com/kean/Nuke.git",
       "state" : {
         "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
         "version" : "12.8.0"
@@ -118,15 +118,6 @@
       }
     },
     {
-      "identity" : "semaphore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/Semaphore",
-      "state" : {
-        "revision" : "2543679282aa6f6c8ecf2138acd613ed20790bc2",
-        "version" : "0.1.0"
-      }
-    },
-    {
       "identity" : "sfsafesymbols",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/SFSafeSymbols/SFSafeSymbols.git",
@@ -140,8 +131,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sanzaru/SimpleToast",
       "state" : {
-        "revision" : "217c9c38dead686e05896fb3dd652880adedfedf",
-        "version" : "0.9.0"
+        "revision" : "99330cceeea6a9068d40ccbe27efb75d240098ef",
+        "version" : "0.10.1"
       }
     },
     {
@@ -267,7 +258,7 @@
       "location" : "https://github.com/engali94/swiftui-dsl.git",
       "state" : {
         "branch" : "main",
-        "revision" : "4246f6e4196950d5a51ec17eb5dee7b3c20228e3"
+        "revision" : "9f941bb12850cebacc6fa6fc74eeabda9ba6de39"
       }
     },
     {
