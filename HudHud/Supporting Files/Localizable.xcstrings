@@ -161,7 +161,7 @@
 
     },
     "Close" : {
-      "comment" : "Accessibility label instead of x\naccesibility label instead of x",
+      "comment" : "accesibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

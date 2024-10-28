@@ -166,15 +166,15 @@ public struct HudHudPOI: POIServiceProtocol {
 
             // MARK: Computed Properties
 
-            public var displayValue: LocalizedStringKey {
+            public var displayValue: String {
                 switch self {
-                case .sunday: return "Sunday"
-                case .monday: return "Monday"
-                case .tuesday: return "Tuesday"
-                case .wednesday: return "Wednesday"
-                case .thursday: return "Thursday"
-                case .friday: return "Friday"
-                case .saturday: return "Saturday"
+                case .sunday: return NSLocalizedString("Sunday", bundle: .module, comment: "Sunday")
+                case .monday: return NSLocalizedString("Monday", bundle: .module, comment: "Monday")
+                case .tuesday: return NSLocalizedString("Tuesday", bundle: .module, comment: "Tuesday")
+                case .wednesday: return NSLocalizedString("Wednesday", bundle: .module, comment: "Wednesday")
+                case .thursday: return NSLocalizedString("Thursday", bundle: .module, comment: "Thursday")
+                case .friday: return NSLocalizedString("Friday", bundle: .module, comment: "Friday")
+                case .saturday: return NSLocalizedString("Saturday", bundle: .module, comment: "Saturday")
                 }
             }
         }

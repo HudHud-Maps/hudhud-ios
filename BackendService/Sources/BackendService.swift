@@ -306,6 +306,7 @@ public extension ResolvedItem {
                                       rating: 4,
                                       ratingsCount: 56,
                                       isOpen: true,
+                                      openingHours: exampleOpeningHours,
                                       mediaURLs: .previewMediaURLs,
                                       priceRange: 2,
                                       isWheelchairAccessible: true)
@@ -364,6 +365,10 @@ public extension ResolvedItem {
                                               subtitle: "Work",
                                               type: .hudhud,
                                               coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))
+
+    static let exampleOpeningHours: [HudHudPOI.OpeningHours] = HudHudPOI.OpeningHours.WeekDay.allCases.map {
+        HudHudPOI.OpeningHours(day: $0, hours: [HudHudPOI.OpeningHours.TimeRange(start: 10, end: 22)])
+    }
 }
 
 public extension DisplayableRow {

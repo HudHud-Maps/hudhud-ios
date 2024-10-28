@@ -1,0 +1,83 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Friday" : {
+      "comment" : "Friday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الجمعة"
+          }
+        }
+      }
+    },
+    "Monday" : {
+      "comment" : "Monday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاثنين"
+          }
+        }
+      }
+    },
+    "Saturday" : {
+      "comment" : "Saturday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السبت"
+          }
+        }
+      }
+    },
+    "Sunday" : {
+      "comment" : "Sunday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاحد"
+          }
+        }
+      }
+    },
+    "Thursday" : {
+      "comment" : "Thursday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الخميس"
+          }
+        }
+      }
+    },
+    "Tuesday" : {
+      "comment" : "Tuesday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الثلاثاء"
+          }
+        }
+      }
+    },
+    "Wednesday" : {
+      "comment" : "Wednesday",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاربعاء"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
