@@ -8,6 +8,7 @@
 
 import BackendService
 import CoreLocation
+import NukeUI
 import SwiftUI
 
 // MARK: - POIMediaView
@@ -26,18 +27,20 @@ struct POIMediaView: View {
         ScrollView(.horizontal) {
             HStack {
                 ForEach(self.mediaURLs, id: \.self) { mediaURL in
-                    AsyncImage(url: mediaURL) { image in
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .scaledToFill()
-                            .frame(width: 96, height: 96)
-                    } placeholder: {
-                        ProgressView()
-                            .progressViewStyle(.automatic)
-                            .frame(width: 96, height: 96)
-                            .background(.secondary)
-                            .cornerRadius(10)
+                    LazyImage(url: mediaURL) { state in
+                        if let image = state.image {
+                            image
+                                .resizable()
+                                .scaledToFit()
+                                .scaledToFill()
+                                .frame(width: 96, height: 96)
+                        } else {
+                            ProgressView()
+                                .progressViewStyle(.automatic)
+                                .frame(width: 96, height: 96)
+                                .background(.secondary)
+                                .cornerRadius(10)
+                        }
                     }
                     .background(.secondary)
                     .cornerRadius(10)
@@ -76,30 +79,35 @@ struct FullPageImage: View {
         NavigationStack {
             ZStack {
                 // blur background
-                AsyncImage(url: self.mediaURL) { image in
-                    image
-                        .resizable()
-                        .blur(radius: 20, opaque: true)
-                        .overlay(Color.black.opacity(0.6))
-                        .ignoresSafeArea()
-                } placeholder: {
-                    ProgressView()
-                        .progressViewStyle(.automatic)
+                LazyImage(url: self.mediaURL) { state in
+                    if let image = state.image {
+                        image
+                            .resizable()
+                            .blur(radius: 20, opaque: true)
+                            .overlay(Color.black.opacity(0.6))
+                            .ignoresSafeArea()
+                    } else {
+                        ProgressView()
+                            .progressViewStyle(.automatic)
+                    }
                 }
 
                 // Main content
-                VStack {
+                VStack(spacing: 0.0) {
                     TabView(selection: self.$mediaURL) {
                         ForEach(self.mediaURLs, id: \.self) { mediaURL in
                             VStack(spacing: 0.0) {
-                                AsyncImage(url: mediaURL) { image in
-                                    image
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                } placeholder: {
-                                    ProgressView()
-                                        .progressViewStyle(.automatic)
+                                LazyImage(url: self.mediaURL) { state in
+                                    if let image = state.image {
+                                        image
+                                            .resizable()
+                                            .scaledToFit()
+                                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                            .clipped()
+                                    } else {
+                                        ProgressView()
+                                            .progressViewStyle(.automatic)
+                                    }
                                 }
                                 .tag(mediaURL)
 
@@ -109,35 +117,36 @@ struct FullPageImage: View {
                     }
                     .tabViewStyle(.page(indexDisplayMode: .never))
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
-
-                    VStack {
-                        HStack {
-                            if self.isBackendReady {
-                                Image(systemSymbol: .personCircleFill)
-                                    .font(.largeTitle)
-                                    .foregroundColor(.white)
-                                VStack(alignment: .leading) {
-                                    Text("Patrick")
-                                        .font(.subheadline)
+                    .overlay(alignment: .bottom) {
+                        VStack {
+                            HStack {
+                                if self.isBackendReady {
+                                    Image(systemSymbol: .personCircleFill)
+                                        .font(.largeTitle)
                                         .foregroundColor(.white)
-                                        .padding(.top, 8)
-                                    Text("12 September 2024")
-                                        .font(.caption)
-                                        .foregroundColor(.gray)
+                                    VStack(alignment: .leading) {
+                                        Text("Patrick")
+                                            .font(.subheadline)
+                                            .foregroundColor(.white)
+                                            .padding(.top, 8)
+                                        Text("12 September 2024")
+                                            .font(.caption)
+                                            .foregroundColor(.gray)
+                                    }
                                 }
-                            }
-                            Spacer()
-                            Button {
-                                self.actionSheetShown = true
-                            } label: {
-                                Image(systemSymbol: .ellipsis)
-                                    .font(.title)
-                                    .foregroundColor(.white)
+                                Spacer()
+                                Button {
+                                    self.actionSheetShown = true
+                                } label: {
+                                    Image(systemSymbol: .ellipsis)
+                                        .font(.title)
+                                        .foregroundColor(.white)
+                                        .shadow(color: .black.opacity(0.1), radius: 5)
+                                }
                             }
                         }
                         .padding()
                     }
-                    .frame(maxWidth: .infinity, alignment: .bottom)
                 }
 
                 .toolbar {
@@ -148,6 +157,7 @@ struct FullPageImage: View {
                             Text("Close")
                                 .hudhudFont()
                                 .tint(.white)
+                                .shadow(color: .black.opacity(0.5), radius: 3, x: -2)
                         }
                     }
 
