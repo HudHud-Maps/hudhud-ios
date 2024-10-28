@@ -13,6 +13,9 @@
     "(%lld)" : {
 
     },
+    "@" : {
+
+    },
     "%.1f" : {
 
     },
@@ -55,10 +58,10 @@
     "•" : {
 
     },
-    "+" : {
+    "• %@" : {
 
     },
-    "About" : {
+    "+" : {
 
     },
     "action" : {
@@ -92,6 +95,9 @@
 
     },
     "Apply" : {
+
+    },
+    "Back" : {
 
     },
     "Bad Traffic Data" : {
@@ -259,9 +265,6 @@
     "Go Back" : {
 
     },
-    "Heading: %@" : {
-      "comment" : "street view"
-    },
     "Help improve HudHud maps." : {
 
     },
@@ -381,22 +384,19 @@
     "Open" : {
 
     },
-    "Overview" : {
-
-    },
     "Personal Information" : {
 
     },
     "Photos" : {
 
     },
-    "Pitch: %@" : {
-      "comment" : "street view"
-    },
     "Please enable your location to get directions" : {
 
     },
     "Price" : {
+
+    },
+    "Quality" : {
 
     },
     "Rating" : {
@@ -422,7 +422,7 @@
 
     },
     "Reviews %lld" : {
-    
+
     },
     "Routing Configuration" : {
 
@@ -451,9 +451,6 @@
         }
       }
     },
-    "Select a Tab" : {
-
-    },
     "Select Type" : {
 
     },
@@ -466,13 +463,13 @@
     "Show more" : {
 
     },
-    "Similar Places" : {
-
-    },
     "Simulate Ride during Navigation" : {
 
     },
     "Simulation" : {
+
+    },
+    "Size:" : {
 
     },
     "Sort By" : {
@@ -490,16 +487,16 @@
         }
       }
     },
+    "StreetView Quality" : {
+
+    },
     "Suggestions" : {
 
     },
     "Touch Visualizer" : {
 
     },
-    "Try a different destination or check for connectivity issues." : {
-
-    },
-    "Unknown" : {
+    "Unit Testing in progress" : {
 
     },
     "Use SF Symbols for POIs on map" : {
@@ -515,6 +512,9 @@
 
     },
     "Verify" : {
+
+    },
+    "Visualize taps in screen recordings to help understand your bug reports" : {
 
     },
     "walk" : {
@@ -540,6 +540,9 @@
           }
         }
       }
+    },
+    "WEBP has a maximum limit of %@ pixels, image will look pixelated as its divided by a fractional number" : {
+
     },
     "Work" : {
       "extractionState" : "stale",

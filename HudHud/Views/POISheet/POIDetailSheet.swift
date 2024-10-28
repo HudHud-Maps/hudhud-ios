@@ -21,7 +21,8 @@ struct POIDetailSheet: View {
 
     // MARK: Properties
 
-    let item: ResolvedItem
+    @State var pointOfInterestStore: PointOfInterestStore
+
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
@@ -29,9 +30,9 @@ struct POIDetailSheet: View {
     let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
     @State var selectedTab = "Overview"
     @Namespace var animation
-    @State var showTabView: Bool = false
+    @State var showTabView: Bool = true
 
-    @State var routes: [RouteModel]?
+    @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
 
@@ -48,7 +49,7 @@ struct POIDetailSheet: View {
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
-        return (self.item.subtitle ?? self.item.coordinate.formatted()).count > maxCharacters
+        return (self.pointOfInterestStore.pointOfInterest.subtitle ?? self.pointOfInterestStore.pointOfInterest.coordinate.formatted()).count > maxCharacters
     }
 
     private var currentWeekday: HudHudPOI.OpeningHours.WeekDay {
@@ -59,13 +60,13 @@ struct POIDetailSheet: View {
     // MARK: Lifecycle
 
     init(
-        item: ResolvedItem,
+        pointOfInterestStore: PointOfInterestStore,
         routingStore: RoutingStore,
         didDenyLocationPermission: Bool,
         onStart: @escaping ([Route]?) -> Void,
         onDismiss: @escaping () -> Void
     ) {
-        self.item = item
+        self.pointOfInterestStore = pointOfInterestStore
         self.onStart = onStart
         self.onDismiss = onDismiss
         self.routingStore = routingStore
@@ -80,7 +81,7 @@ struct POIDetailSheet: View {
         VStack(alignment: .leading) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 0.0) {
-                    Text(self.item.title)
+                    Text(self.pointOfInterestStore.pointOfInterest.title)
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(2)
@@ -116,39 +117,23 @@ struct POIDetailSheet: View {
                 .tint(.secondary)
                 .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
             }
-            .padding([.top, .leading, .trailing], 20)
+            .padding([.top, .leading, .trailing], 15)
 
-            if self.showTabView {
-                self.tabView
-                switch self.selectedTab {
-                case "Overview":
-                    POIOverviewView(poiData: POISheetStore(item: self.item))
-                case "Reviews":
-                    Text("Reviews")
-                case "Photos":
-                    POIMediaView(mediaURLs: self.item.mediaURLs)
-                case "Similar Places":
-                    Text("Similar Places")
-                case "About":
-                    Text("About")
-                default:
-                    Text("Select a Tab")
-                }
-            }
+            self.tabView
             ScrollView {
-                POIOverviewView(poiData: POISheetStore(item: self.item))
-                POIMediaView(mediaURLs: self.item.mediaURLs)
+                POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest))
+                POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
+                    .padding(.bottom, 100)
             }
-            //                Spacer()
         }
-//            .padding(.bottom, 100)
+
         .overlay(alignment: .bottom) {
             if let route = routes?.first {
                 VStack(spacing: 0) {
                     Rectangle() // Top divider
                         .fill(Color.black.opacity(0.025))
                         .frame(height: 3)
-                    POIBottomToolbar(item: self.item, duration: self.formatter.formatDuration(duration: route.route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes?.map(\.route))
+                    POIBottomToolbar(item: self.pointOfInterestStore.pointOfInterest, duration: self.formatter.formatDuration(duration: route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes)
                         .padding(.bottom)
                         .padding(.vertical, 7)
                         .padding(.horizontal, 20)
@@ -168,12 +153,10 @@ struct POIDetailSheet: View {
             Text("Please enable your location to get directions")
         }
         .task {
-            await self.calculateRoute(for: self.item)
+            await self.calculateRoute(for: self.pointOfInterestStore.pointOfInterest)
         }
-        .onChange(of: self.item) { _, newItem in
-            Task {
-                await self.calculateRoute(for: newItem)
-            }
+        .onAppear {
+            self.pointOfInterestStore.reApplyThePointOfInterestToTheMapIfNeeded()
         }
     }
 
@@ -199,7 +182,7 @@ struct POIDetailSheet: View {
                                     .frame(height: 3)
                             }
                         }
-                        .padding(10)
+                        .padding(.horizontal, 10)
                         .onTapGesture {
                             withAnimation(.easeOut) {
                                 self.selectedTab = tab
@@ -223,7 +206,7 @@ struct POIDetailSheet: View {
 
     private var categoryView: some View {
         Group {
-            if let category = self.item.category {
+            if let category = pointOfInterestStore.pointOfInterest.category {
                 HStack {
                     Text(category)
                         .hudhudFont(.footnote)
@@ -231,7 +214,7 @@ struct POIDetailSheet: View {
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
 
-                    if let subCategory = item.subCategory {
+                    if let subCategory = self.pointOfInterestStore.pointOfInterest.subCategory {
                         Text("•")
                             .hudhudFont(.footnote)
                             .foregroundStyle(Color.Colors.General._02Grey)
@@ -249,7 +232,7 @@ struct POIDetailSheet: View {
 
     private var ratingView: some View {
         Group {
-            if let rating = self.item.rating {
+            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
                 HStack(spacing: 1) {
                     Text("\(rating, specifier: "%.1f")")
                         .hudhudFont(.headline)
@@ -265,7 +248,7 @@ struct POIDetailSheet: View {
                         .hudhudFont(.caption2)
                         .foregroundStyle(Color.Colors.General._02Grey)
 
-                    Text("(\(self.item.ratingsCount ?? 0))")
+                    Text("(\(self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0))")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                 }
@@ -279,7 +262,7 @@ struct POIDetailSheet: View {
 
     private var priceRangeView: some View {
         Group {
-            if let priceRangeValue = self.item.priceRange,
+            if let priceRangeValue = self.pointOfInterestStore.pointOfInterest.priceRange,
                let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue) {
                 HStack {
                     Text("•")
@@ -295,7 +278,7 @@ struct POIDetailSheet: View {
 
     private var accessibilityView: some View {
         Group {
-            if let wheelchairAccessible = self.item.isWheelchairAccessible, wheelchairAccessible {
+            if let wheelchairAccessible = self.pointOfInterestStore.pointOfInterest.isWheelchairAccessible, wheelchairAccessible {
                 HStack {
                     Text("•")
                         .hudhudFont(.caption2)
@@ -310,8 +293,8 @@ struct POIDetailSheet: View {
 
     private var openStatusView: some View {
         Group {
-            if let isOpen = self.item.isOpen,
-               let openingHoursToday = self.item.openingHours?.first(where: { $0.day == currentWeekday }) {
+            if let isOpen = self.pointOfInterestStore.pointOfInterest.isOpen,
+               let openingHoursToday = self.pointOfInterestStore.pointOfInterest.openingHours?.first(where: { $0.day == currentWeekday }) {
                 HStack {
                     Text("\(isOpen ? "Open" : "Closed") until \(self.nextAvailableTime(isOpen: isOpen, hours: openingHoursToday.hours))")
                         .hudhudFont(.subheadline)
@@ -328,7 +311,7 @@ struct POIDetailSheet: View {
                     Image(systemSymbol: .carFill)
                         .hudhudFont(.caption2)
                         .foregroundStyle(Color.Colors.General._02Grey)
-                    Text("\(self.formatter.formatDuration(duration: route.route.duration)) (\(self.formatter.formatDistance(distance: route.route.distance)))")
+                    Text("\(self.formatter.formatDuration(duration: route.duration)) (\(self.formatter.formatDistance(distance: route.distance)))")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
@@ -340,7 +323,7 @@ struct POIDetailSheet: View {
 
     private var openiningHoursView: some View {
         Group {
-            if let openingHoursList = item.openingHours {
+            if let openingHoursList = self.pointOfInterestStore.pointOfInterest.openingHours {
                 ForEach(HudHudPOI.OpeningHours.WeekDay.allCases, id: \.self) { day in
                     HStack {
                         Text("\(day.displayValue)")
@@ -396,8 +379,6 @@ private extension POIDetailSheet {
         do {
             let routes = try await self.routingStore.calculateRoutes(for: item)
             self.routes = routes
-            self.routingStore.routes = routes // TODO: Improve it
-            self.routingStore.selectRoute(withId: routes.last?.id ?? 0)
         } catch let error as URLError {
             if error.code == .cancelled {
                 // ignore cancelled errors
@@ -416,7 +397,6 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    searchViewStore.mapStore.select(.artwork)
     return ContentView(
         searchStore: searchViewStore,
         mapViewStore: .storeSetUpForPreviewing,

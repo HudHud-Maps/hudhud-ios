@@ -34,12 +34,14 @@ struct MapActionHandler {
     // MARK: Properties
 
     private let mapStore: MapStore
+    private let sheetStore: SheetStore
     private let hudhudResolver = HudHudPOI()
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore) {
+    init(mapStore: MapStore, sheetStore: SheetStore) {
         self.mapStore = mapStore
+        self.sheetStore = sheetStore
     }
 
     // MARK: Functions
@@ -47,9 +49,6 @@ struct MapActionHandler {
     // MARK: - Internal
 
     func didTapOnMap(containing features: [any MLNFeature]) -> Bool {
-        if self.mapStore.displayableItems.count == 1 {
-            self.mapStore.displayableItems = []
-        }
         guard let item = extractItemTapped(from: features) else {
             return false
         }
@@ -61,18 +60,14 @@ struct MapActionHandler {
 
             if let poi {
                 Logger.mapInteraction.debug("setting poi")
-                self.mapStore.select(poi)
+                self.sheetStore.show(.pointOfInterest(poi))
             } else {
                 Logger.mapInteraction.warning("User tapped a feature but it's not a ResolvedItem")
             }
         case let .mapElement(item):
-            Task {
-                await self.mapStore.resolve(item)
-            }
-        case let .streetViewScene(sceneID):
-            Task {
-                await self.mapStore.loadStreetViewScene(id: sceneID)
-            }
+            self.sheetStore.show(.pointOfInterest(item))
+        case .streetViewScene:
+            break
         }
         return true
     }
@@ -98,8 +93,8 @@ private extension MapActionHandler {
     func extractItem(from feature: any MLNFeature) -> ResolvedItem? {
         guard let feature = feature as? MLNPointFeature,
               let id = feature.attribute(forKey: "id") as? Int,
-              (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) as? String != nil,
-              (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) as? String != nil else { return nil }
+              (feature.attribute(forKey: "name_ar") ?? feature.attribute(forKey: "name_en")) is String,
+              (feature.attribute(forKey: "description_ar") ?? feature.attribute(forKey: "description_en")) is String else { return nil }
 
         let colorString = feature.attribute(forKey: "ios_category_icon_color") as? String
 

@@ -28,7 +28,7 @@ public extension UIApplication {
         #endif
     }
 
-    private nonisolated static var isSimulator: Bool {
+    nonisolated static var isSimulator: Bool {
         #if targetEnvironment(simulator)
             return true
         #else
