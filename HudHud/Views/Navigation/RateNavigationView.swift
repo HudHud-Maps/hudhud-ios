@@ -93,7 +93,7 @@ struct RateNavigationView: View {
                         .contentShape(Circle())
                     })
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                    .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
                 }
             }
             .edgesIgnoringSafeArea(.vertical)

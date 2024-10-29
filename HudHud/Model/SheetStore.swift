@@ -114,6 +114,7 @@ final class SheetStore {
 
 extension SheetStore: Previewable {
     static let storeSetUpForPreviewing = SheetStore(emptySheetType: .search)
+    static let storeSetUpForPreviewingPOI = SheetStore(emptySheetType: .pointOfInterest(.ketchup))
 }
 
 // MARK: - Detent
