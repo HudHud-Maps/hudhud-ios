@@ -26,8 +26,9 @@ enum RoutingError: Error {
     enum NetworkError {
         case invalidResponseType
         case invalidMimeType
-        case serverError(statusCode: Int)
-        case unexpectedResponse(message: String?)
+        case serverError(statusCode: Int, message: String?)
+        case clientError(statusCode: Int, message: String?)
+        case unexpectedStatus(statusCode: Int, message: String?)
     }
 
     enum ParsingError {
@@ -64,10 +65,12 @@ extension RoutingError: LocalizedError {
                 return "Invalid response type from routing server"
             case .invalidMimeType:
                 return "Invalid response format from routing server"
-            case let .serverError(code):
-                return "Server error occurred (Status \(code))"
-            case let .unexpectedResponse(message):
-                return "Unexpected response: \(message ?? "Unknown error")"
+            case let .serverError(code, message):
+                return "Server error occurred (Status \(code)): \(message ?? "No details available")"
+            case let .clientError(code, message):
+                return "Client error occurred (Status \(code)): \(message ?? "No details available")"
+            case let .unexpectedStatus(code, message):
+                return "Unexpected response status (Status \(code)): \(message ?? "No details available")"
             }
         case let .parsing(error):
             switch error {

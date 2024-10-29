@@ -10,14 +10,6 @@ import CoreLocation
 import FerrostarCoreFFI
 import Foundation
 
-// MARK: - RoutePlannerError
-
-enum RoutePlannerError: Error {
-    case invalidInput
-    case routeNotFound
-    case networkError(Error)
-}
-
 // MARK: - RoutePlanner
 
 final class RoutePlanner {
@@ -36,7 +28,7 @@ final class RoutePlanner {
 
     func planRoutes(from start: Waypoint, to end: Waypoint, waypoints: [Waypoint] = []) async throws -> [Route] {
         guard start.coordinate.clLocationCoordinate2D.isValid, end.coordinate.clLocationCoordinate2D.isValid else {
-            throw RoutePlannerError.invalidInput
+            throw RoutingError.routing(.invalidInput(message: "Invalid input coordinates."))
         }
 
         return try await self.routingService.calculateRoute(from: start, to: end, passingBy: waypoints)

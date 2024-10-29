@@ -44,7 +44,7 @@ struct RoutingOptions {
     var overview: Overview = .full
     var steps: Bool = true
     var continueStraight: Bool = true
-    var annotations: Set<Annotation> = [.congestion, .distance]
+    var annotations: Set<Annotation> = [.congestion, .distance, .speed]
     var language: String = Locale.preferredLanguages.first ?? "en-US"
     var roundaboutExits: Bool = true
     var voiceInstructions: Bool = true

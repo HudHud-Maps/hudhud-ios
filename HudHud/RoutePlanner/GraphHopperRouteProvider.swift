@@ -60,7 +60,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         Logger.routing.debug("Requesting route from \(url)")
 
         let (data, response) = try await URLSession.shared.data(from: url)
-        try self.validateResponse(response)
+        try self.validateResponse(response, data: data)
 
         let json = try parseJSON(from: data)
         try handleAPIStatus(from: json)
@@ -81,7 +81,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         return url
     }
 
-    private func validateResponse(_ response: URLResponse) throws {
+    private func validateResponse(_ response: URLResponse, data: Data) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw RoutingError.network(.invalidResponseType)
         }
@@ -90,11 +90,16 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
             throw RoutingError.network(.invalidMimeType)
         }
 
-        guard (200 ... 299).contains(httpResponse.statusCode) else {
-            if (500 ... 599).contains(httpResponse.statusCode) {
-                throw RoutingError.network(.serverError(statusCode: httpResponse.statusCode))
-            } else {
-                throw RoutingError.network(.unexpectedResponse(message: "Status code: \(httpResponse.statusCode)"))
+        if !(200 ... 299).contains(httpResponse.statusCode) {
+            let apiMessage = (try? self.parseJSON(from: data)["message"] as? String) ?? "No message provided"
+
+            switch httpResponse.statusCode {
+            case 400 ... 499:
+                throw RoutingError.network(.clientError(statusCode: httpResponse.statusCode, message: apiMessage))
+            case 500 ... 599:
+                throw RoutingError.network(.serverError(statusCode: httpResponse.statusCode, message: apiMessage))
+            default:
+                throw RoutingError.network(.unexpectedStatus(statusCode: httpResponse.statusCode, message: apiMessage))
             }
         }
     }
