@@ -27,9 +27,7 @@ struct DebugMenuView: View {
             Form {
                 self.routingSection
                 self.baseURLSection
-                NavigationLink(destination: ConsoleView()) {
-                    Text("Network Logger")
-                }
+                self.networkDebuggerButton
                 self.simulationSection
                 self.touchesSection
                 self.sfsymbolsSection
@@ -72,6 +70,12 @@ struct DebugMenuView: View {
                         self.debugSettings.baseURL = newValue
                     }
                 }
+        }
+    }
+
+    var networkDebuggerButton: some View {
+        NavigationLink(destination: ConsoleView()) {
+            Text("Network Logger")
         }
     }
 
