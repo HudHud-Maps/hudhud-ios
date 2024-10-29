@@ -17,15 +17,9 @@ import SwiftUI
 
 public struct RegistrationService {
 
-    // MARK: Properties
-
-    private let transport: ClientTransport
-
     // MARK: Lifecycle
 
-    public init(transport: ClientTransport) {
-        self.transport = transport
-    }
+    public init() {}
 
     // MARK: Functions
 
@@ -36,7 +30,7 @@ public struct RegistrationService {
         let headers = Operations.login.Input.Headers(
             Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"
         )
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).login(headers: headers, body: body)
+        let response = try await Client.makeClient(using: baseURL).login(headers: headers, body: body)
 
         switch response {
         case let .created(okResponse):
@@ -69,7 +63,7 @@ public struct RegistrationService {
         let verifyOTPRequest = Components.Schemas.VerifyOTPRequest(otp: otp)
         let body = Operations.verifyOTP.Input.Body.json(verifyOTPRequest)
 
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).verifyOTP(path: path, headers: header, body: body)
+        let response = try await Client.makeClient(using: baseURL).verifyOTP(path: path, headers: header, body: body)
 
         switch response {
         case let .ok(message):
@@ -108,7 +102,7 @@ public struct RegistrationService {
 
     public func resendOTP(loginId: String, baseURL: String) async throws -> RegistrationResponse {
         let path = Operations.resendOTP.Input.Path(id: loginId)
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).resendOTP(path: path)
+        let response = try await Client.makeClient(using: baseURL).resendOTP(path: path)
 
         switch response {
         case let .ok(created):

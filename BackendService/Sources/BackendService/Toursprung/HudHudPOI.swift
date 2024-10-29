@@ -213,10 +213,6 @@ public struct HudHudPOI: POIServiceProtocol {
 
     public static var serviceName = "HudHud"
 
-    // MARK: Properties
-
-    private let transport: ClientTransport
-
     // MARK: Computed Properties
 
     private var currentLanguage: String {
@@ -225,14 +221,12 @@ public struct HudHudPOI: POIServiceProtocol {
 
     // MARK: Lifecycle
 
-    public init(transport: ClientTransport) {
-        self.transport = transport
-    }
+    public init() {}
 
     // MARK: Functions
 
     public func lookup(id: String, prediction _: Any, baseURL: String) async throws -> [ResolvedItem] {
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
+        let response = try await Client.makeClient(using: baseURL).getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -276,7 +270,7 @@ public struct HudHudPOI: POIServiceProtocol {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: self.currentLanguage))
+        let response = try await Client.makeClient(using: baseURL).getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -340,7 +334,7 @@ public struct HudHudPOI: POIServiceProtocol {
             query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
         }
 
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).listPois(
+        let response = try await Client.makeClient(using: baseURL).listPois(
             query: query,
             headers: .init(Accept_hyphen_Language: self.currentLanguage)
         )

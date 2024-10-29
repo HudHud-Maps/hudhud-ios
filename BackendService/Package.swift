@@ -38,7 +38,8 @@ let package = Package(
                 .product(name: "SFSafeSymbols", package: "SFSafeSymbols"),
                 .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
                 .product(name: "LocationFormatter", package: "locationformatter"),
-                .product(name: "KeychainAccess", package: "KeychainAccess")
+                .product(name: "KeychainAccess", package: "KeychainAccess"),
+                "APIClient"
             ],
             plugins: [
                 .plugin(name: "OpenAPIGenerator", package: "swift-openapi-generator")

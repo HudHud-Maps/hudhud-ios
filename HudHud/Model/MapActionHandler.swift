@@ -35,7 +35,7 @@ struct MapActionHandler {
 
     private let mapStore: MapStore
     private let sheetStore: SheetStore
-    private let hudhudResolver = HudHudPOI(transport: Network.transport)
+    private let hudhudResolver = HudHudPOI()
 
     // MARK: Lifecycle
 

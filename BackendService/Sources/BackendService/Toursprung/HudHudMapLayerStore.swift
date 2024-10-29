@@ -21,18 +21,14 @@ public class HudHudMapLayerStore: ObservableObject {
     @Published public var hudhudMapLayers: [HudHudMapLayer]?
     @Published public var lastError: Error?
 
-    private let transport: ClientTransport
-
     // MARK: Lifecycle
 
-    public init(transport: ClientTransport) {
-        self.transport = transport
-    }
+    public init() {}
 
     // MARK: Functions
 
     public func getMaplayers(baseURL: String) async throws -> [HudHudMapLayer] {
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).listMapStyles()
+        let response = try await Client.makeClient(using: baseURL).listMapStyles()
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

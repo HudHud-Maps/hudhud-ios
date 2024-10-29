@@ -31,7 +31,7 @@ final class StreetViewStore {
     var isLoading: Bool = false
     var progress: Float = 0
     var mapStore: MapStore
-    var streetViewClient = StreetViewClient(transport: Network.transport)
+    var streetViewClient = StreetViewClient()
     var cachedScenes = [Int: StreetViewScene]()
 
     // MARK: Computed Properties
@@ -48,7 +48,7 @@ final class StreetViewStore {
 
     // MARK: Lifecycle
 
-    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false, mapStore: MapStore, streetViewClient: StreetViewClient = StreetViewClient(transport: Network.transport), cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
+    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false, mapStore: MapStore, streetViewClient: StreetViewClient = StreetViewClient(), cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
         self.streetViewScene = streetViewScene
         self.nearestStreetViewScene = nearestStreetViewScene
         self.fullScreenStreetView = fullScreenStreetView

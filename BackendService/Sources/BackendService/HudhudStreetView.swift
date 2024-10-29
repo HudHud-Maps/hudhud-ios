@@ -47,22 +47,16 @@ public extension StreetViewScene {
 
 public struct StreetViewClient {
 
-    // MARK: Properties
-
-    private let transport: ClientTransport
-
     // MARK: Lifecycle
 
-    public init(transport: ClientTransport) {
-        self.transport = transport
-    }
+    public init() {}
 
     // MARK: Functions
 
     public func getStreetView(lat: Double, lon: Double, baseURL: String) async throws -> StreetViewScene? {
         let query = Operations.getStreetViewImageSceneNearBy.Input.Query(lat: lat, lon: lon)
         let input = Operations.getStreetViewImageSceneNearBy.Input(query: query)
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).getStreetViewImageSceneNearBy(input)
+        let response = try await Client.makeClient(using: baseURL).getStreetViewImageSceneNearBy(input)
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -97,7 +91,7 @@ public struct StreetViewClient {
     }
 
     public func getStreetViewScene(id: Int, baseURL: String) async throws -> StreetViewScene? {
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
+        let response = try await Client.makeClient(using: baseURL).getStreetViewScene(path: Operations.getStreetViewScene.Input.Path(id: id))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -134,7 +128,7 @@ public struct StreetViewClient {
     }
 
     public func getStreetViewSceneBBox(box: [Double]) async throws -> StreetViewScene? {
-        let client = Client.makeClient(using: "https://api.dev.hudhud.sa", transport: self.transport) // swiftlint:disable:this force_unwrapping
+        let client = Client.makeClient(using: "https://api.dev.hudhud.sa") // swiftlint:disable:this force_unwrapping
 
         let bboxString = box.compactMap { $0 }.map { String($0) }.joined(separator: ",")
         let query = Operations.getStreetViewSceneBBox.Input.Query(bbox: bboxString)

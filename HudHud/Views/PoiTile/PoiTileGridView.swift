@@ -65,7 +65,7 @@ struct PoiTileGridView: View {
                             ratingsCount: 25,
                             trendingImage: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")
 
-    let trendingStroe = TrendingStore(transport: Network.transport)
+    let trendingStroe = TrendingStore()
     trendingStroe.trendingPOIs = [poi, poi1]
     return PoiTileGridView(trendingPOIs: trendingStroe)
 }

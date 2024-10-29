@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import APIClient
 import BackendService
 import FerrostarCore
 import FerrostarCoreFFI
@@ -42,7 +43,7 @@ struct HudHudGraphHopperRouteProvider: CustomRouteProvider {
         }
 
         Logger.routing.debug("Requesting route from \(url)")
-        let answer: (data: Data, response: URLResponse) = try await Network.urlSession.data(from: url)
+        let answer: (data: Data, response: URLResponse) = try await APIClient.urlSession.data(from: url)
 
         guard answer.response.mimeType == "application/json" else {
             throw ToursprungError.invalidResponse(message: "MIME Type not matching application/json")

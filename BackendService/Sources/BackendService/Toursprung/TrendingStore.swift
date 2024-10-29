@@ -20,18 +20,14 @@ public class TrendingStore: ObservableObject {
     @Published public var trendingPOIs: [ResolvedItem]?
     @Published public var lastError: Error?
 
-    private let transport: ClientTransport
-
     // MARK: Lifecycle
 
-    public init(transport: ClientTransport) {
-        self.transport = transport
-    }
+    public init() {}
 
     // MARK: Functions
 
     public func getTrendingPOIs(page _: Int, limit _: Int, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
-        let response = try await Client.makeClient(using: baseURL, transport: self.transport).listTrendingPois(
+        let response = try await Client.makeClient(using: baseURL).listTrendingPois(
             query: .init(lat: coordinates?.latitude, lon: coordinates?.longitude),
             headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
         )
