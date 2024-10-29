@@ -29,13 +29,13 @@ then
 	fi
 fi
 
-if [[ $CI_WORKFLOW = 'External TestFlight' ]]
+if [[ $CI_WORKFLOW = 'Public TestFlight' ]]
 then
 	
 	if [[ -n $CI_APP_STORE_SIGNED_APP_PATH ]]; # checks if there is an AppStore signed archive after running xcodebuild
 	then
 		
-		echo "Running External TestFlight"
+		echo "Running Public TestFlight"
 		echo "moving tickets to 'Done' column"
 		../.tools/release-notes linear move-tickets --api-key $LINEAR_API_KEY --team "iOS" --column "Available on TestFlight" --destination "Done"
 		
