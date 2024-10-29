@@ -27,7 +27,7 @@ struct RoutingOptions {
     enum Annotation: String, CaseIterable {
         case duration
         case distance
-        case speed
+        case speed = "maxspeed"
         case congestion
     }
 
