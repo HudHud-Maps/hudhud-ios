@@ -12,34 +12,17 @@ import OSLog
 import SwiftUI
 
 struct MapLayersView: View {
-    @Environment(\.dismiss) private var dismiss
-    @ObservedObject var mapStore: MapStore
+
+    // MARK: Properties
+
+    var mapStore: MapStore
     var sheetStore: SheetStore
     var hudhudMapLayerStore: HudHudMapLayerStore
 
+    // MARK: Content
+
     var body: some View {
-        VStack(alignment: .center, spacing: 15) {
-            HStack(alignment: .center) {
-                if self.hudhudMapLayerStore.hudhudMapLayers != nil {
-                    Spacer()
-                    Text("Layers")
-                        .hudhudFont(.headline)
-                        .foregroundStyle(Color.Colors.General._01Black)
-                } else {
-                    Text("")
-                        .padding(.top, 30)
-                }
-                Spacer()
-                Button {
-                    self.sheetStore.popSheet()
-                    self.dismiss()
-                } label: {
-                    Image(systemSymbol: .xmark)
-                        .foregroundColor(Color.Colors.General._02Grey)
-                }
-            }
-            .padding(.horizontal, 15)
-            .padding(.top, 5)
+        NavigationStack {
             VStack(alignment: .leading, spacing: 10) {
                 HStack {
                     if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
@@ -63,6 +46,16 @@ struct MapLayersView: View {
                     }
                 }
             }
+            .navigationTitle("Layers")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                trailing: Button {
+                    self.sheetStore.popSheet()
+                } label: {
+                    Image(systemSymbol: .xmark)
+                        .foregroundColor(Color.Colors.General._02Grey)
+                }
+            )
         }
     }
 
@@ -136,7 +129,7 @@ struct MapLayersView: View {
 
 #Preview {
     let hudhudMapLayerStore = HudHudMapLayerStore()
-    return MapLayersView(
+    MapLayersView(
         mapStore: .storeSetUpForPreviewing,
         sheetStore: .storeSetUpForPreviewing,
         hudhudMapLayerStore: hudhudMapLayerStore

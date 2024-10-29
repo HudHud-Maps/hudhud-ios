@@ -20,7 +20,7 @@ struct SearchSheet: View {
 
     // MARK: Properties
 
-    @ObservedObject var mapStore: MapStore
+    var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
     @ObservedObject var trendingStore: TrendingStore
     @Bindable var sheetStore: SheetStore
@@ -62,7 +62,7 @@ struct SearchSheet: View {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
                                     Button {
-                                        self.searchStore.searchText = ""
+                                        self.searchStore.cancelSearch()
                                     } label: {
                                         Image(systemSymbol: .multiplyCircleFill)
                                             .foregroundColor(.gray)
@@ -117,7 +117,7 @@ struct SearchSheet: View {
             .padding(.horizontal)
             .padding(.top)
             // Show the filter UI if the search view is displaying an item that was fetched from a category.
-            if let firstItem = self.mapStore.displayableItems.first,
+            if let firstItem = self.searchStore.searchResults.first,
                case .categoryItem = firstItem {
                 MainFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
                     .padding(.horizontal)
@@ -138,16 +138,16 @@ struct SearchSheet: View {
             } else {
                 List {
                     if !self.searchStore.searchText.isEmpty {
-                        ForEach(self.mapStore.displayableItems) { item in
+                        ForEach(self.searchStore.searchResults) { item in
                             switch item {
                             case let .categoryItem(item):
-                                Button(action: {
-                                    self.mapStore.select(item, shouldFocusCamera: true)
-                                }, label: {
+                                Button {
+                                    self.sheetStore.show(.pointOfInterest(item))
+                                } label: {
                                     SearchResultView(item: item) {
-                                        self.mapStore.select(item, shouldFocusCamera: true)
+                                        self.sheetStore.show(.pointOfInterest(item))
                                     }
-                                })
+                                }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
@@ -155,12 +155,12 @@ struct SearchSheet: View {
                                     Task {
                                         self.searchIsFocused = false
                                         await self.searchStore.didSelect(item)
-                                        if let resolvedItem = mapStore.selectedItem {
+                                        if let resolvedItem = self.mapStore.selectedItem.value {
                                             self.storeRecent(item: resolvedItem)
                                         }
                                         switch self.searchStore.searchType {
                                         case let .returnPOILocation(completion):
-                                            if let selectedItem = self.mapStore.selectedItem {
+                                            if let selectedItem = self.mapStore.selectedItem.value {
                                                 completion?(.waypoint(selectedItem))
                                                 self.dismiss()
                                             }
@@ -190,7 +190,7 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(sheetStore: self.sheetStore, searchStore: self.searchStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore)
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)
@@ -235,6 +235,9 @@ struct SearchSheet: View {
                 }),
                 secondaryButton: .default(Text("OK"))
             )
+        }
+        .onAppear {
+            self.searchStore.applySearchResultsOnMapIfNeeded()
         }
     }
 
@@ -293,5 +296,5 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+    SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

@@ -7,9 +7,9 @@
 //
 
 import BackendService
+import Combine
 import Foundation
 import NavigationTransition
-import Semaphore
 import SwiftUI
 
 // MARK: - SheetStore
@@ -19,200 +19,198 @@ import SwiftUI
 /// * the selected detent
 /// * the allowed detent
 /// * the sheet's visibility
-@MainActor
+
 @Observable
+@MainActor
 final class SheetStore {
 
     // MARK: Properties
 
-    // MARK: - Public Properties
+    let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
+    var isShown = CurrentValueSubject<Bool, Never>(true)
+    var safeAreaInsets = EdgeInsets()
 
-    var isShown: Bool = true
+    private(set) var sheetHeight: CGFloat = 0
 
-    // MARK: - Private Properties
+    private var sheets: [SheetData] = []
 
-    private var _sheets: [SheetViewData] = []
-    private var newSheetSelectedDetent: PresentationDetent?
-
-    private let semaphore = AsyncSemaphore(value: 1)
-
-    private let defaultAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private let defaultSelectedDetent: PresentationDetent = .third
-    private var emptySheetAllowedDetents: Set<PresentationDetent> = [.small, .third, .large]
-    private var emptySheetSelectedDetent: PresentationDetent = .third
+    private let emptySheetData: SheetData
+    private var updateSheetHeightSubscription: AnyCancellable?
 
     // MARK: Computed Properties
 
-    var currentSheet: SheetViewData? { self._sheets.last }
-
-    var sheets: [SheetViewData] {
-        get { self._sheets }
-        set { Task { await self.updateSheets(newValue) } }
-    }
-
-    var selectedDetent: PresentationDetent {
-        get {
-            self.newSheetSelectedDetent ?? self.currentSheet?.selectedDetent ?? self.emptySheetSelectedDetent
+    var rawSheetheight: CGFloat = 0 {
+        didSet {
+            self.sheetHeight = self.computeSheetHeight()
         }
-        set { self.updateSelectedDetent(newValue) }
     }
 
-    var allowedDetents: Set<PresentationDetent> {
+    var currentSheet: SheetData {
+        self.sheets.last ?? self.emptySheetData
+    }
+
+    var selectedDetent: Detent {
         get {
-            var detents = self.currentSheet?.allowedDetents ?? self.emptySheetAllowedDetents
-            if let newSheetSelectedDetent {
-                detents.insert(newSheetSelectedDetent)
-            }
-            return detents
+            self.currentSheet.detentData.value.selectedDetent
         }
-        set { self.updateAllowedDetents(newValue) }
+        set {
+            self.currentSheet.detentData.value.selectedDetent = newValue
+        }
     }
 
-    var transition: AnyNavigationTransition {
-        self.currentSheet?.viewData.transition ?? .fade(.cross)
+    // MARK: Lifecycle
+
+    init(emptySheetType: SheetType) {
+        self.emptySheetData = SheetData(
+            sheetType: emptySheetType,
+            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
+        )
+        self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
+            guard let self else { return }
+            self.sheetHeight = self.computeSheetHeight()
+        }
     }
 
     // MARK: Functions
 
-    // MARK: - Public Methods
-
-    func pushSheet(_ sheet: SheetViewData) {
-        self.sheets.append(sheet)
+    func start() {
+        self.navigationCommands.send(.show(self.emptySheetData))
     }
 
-    @discardableResult
-    func popSheet() -> SheetViewData? {
-        self.sheets.popLast()
+    func show(_ sheetType: SheetType) {
+        let detentCurrentValueSubject = CurrentValueSubject<DetentData, Never>(sheetType.initialDetentData)
+        let sheetData = SheetData(sheetType: sheetType, detentData: detentCurrentValueSubject)
+        self.sheets.append(sheetData)
+        self.navigationCommands.send(.show(sheetData))
     }
 
-    func reset() {
-        self.emptySheetAllowedDetents = self.defaultAllowedDetents
-        self.emptySheetSelectedDetent = self.defaultSelectedDetent
-        self.sheets.removeAll()
-    }
-
-    // MARK: - Private Methods
-
-    private func updateSheets(_ newSheets: [SheetViewData]) async {
-        await self.semaphore.wait()
-        defer { semaphore.signal() }
-        guard self._sheets.count != newSheets.count else {
-            self._sheets = newSheets
+    func popSheet() {
+        guard !self.sheets.isEmpty else {
             return
         }
-        self.newSheetSelectedDetent = newSheets.last?.selectedDetent ?? self.emptySheetSelectedDetent
-        try? await Task.sleep(nanoseconds: 100 * NSEC_PER_MSEC)
-        self._sheets = newSheets
-        self.newSheetSelectedDetent = nil
+        _ = self.sheets.popLast()
+        self.navigationCommands.send(.pop(destinationSheetData: self.currentSheet))
     }
 
-    private func updateSelectedDetent(_ newValue: PresentationDetent) {
-        if let lastIndex = self._sheets.indices.last {
-            self._sheets[lastIndex].selectedDetent = newValue
+    func popToRoot() {
+        guard !self.sheets.isEmpty else {
+            return
+        }
+        self.sheets = []
+        self.navigationCommands.send(.popToRoot(rootSheetData: self.emptySheetData))
+    }
+
+    private func computeSheetHeight() -> CGFloat {
+        if self.isShown.value {
+            self.rawSheetheight - self.safeAreaInsets.bottom
         } else {
-            self.emptySheetSelectedDetent = newValue
+            0
         }
     }
 
-    private func updateAllowedDetents(_ newValue: Set<PresentationDetent>) {
-        if let lastIndex = self._sheets.indices.last {
-            self._sheets[lastIndex].allowedDetents = newValue
-        } else {
-            self.emptySheetAllowedDetents = newValue
-        }
-    }
 }
 
 // MARK: - Previewable
 
 extension SheetStore: Previewable {
-    static let storeSetUpForPreviewing = SheetStore()
+    static let storeSetUpForPreviewing = SheetStore(emptySheetType: .search)
+    static let storeSetUpForPreviewingPOI = SheetStore(emptySheetType: .pointOfInterest(.ketchup))
 }
 
-// MARK: - SheetViewData
+// MARK: - Detent
 
-struct SheetViewData: Hashable {
+enum Detent: Hashable {
+    case large
+    case medium
+    case fraction(CGFloat)
+    case height(CGFloat)
 
-    // MARK: Nested Types
+    // MARK: Computed Properties
 
-    enum ViewData: Hashable {
-        case mapStyle
-        case debugView
-        case navigationAddSearchView
-        case favorites
-        case navigationPreview
-        case pointOfInterest(ResolvedItem)
-        case favoritesViewMore
-        case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
-
-        // MARK: Computed Properties
-
-        /// the allowed detents when the page is first presented, it can be changed later
-        var initialAllowedDetents: Set<PresentationDetent> {
-            switch self {
-            case .mapStyle:
-                [.medium]
-            case .debugView:
-                [.large]
-            case .navigationAddSearchView:
-                [.large]
-            case .favorites:
-                [.large]
-            case .navigationPreview:
-                [.height(150), .nearHalf]
-            case .pointOfInterest:
-                [.height(340)]
-            case .favoritesViewMore:
-                [.large]
-            case .editFavoritesForm:
-                [.large]
-            }
-        }
-
-        /// the selected detent when the page is first presented, it can be changed later
-        var initialSelectedDetent: PresentationDetent {
-            switch self {
-            case .mapStyle:
-                .medium
-            case .debugView:
-                .large
-            case .navigationAddSearchView:
-                .large
-            case .favorites:
-                .large
-            case .navigationPreview:
-                .nearHalf
-            case .pointOfInterest:
-                .height(340)
-            case .favoritesViewMore:
-                .large
-            case .editFavoritesForm:
-                .large
-            }
-        }
-
-        var transition: AnyNavigationTransition {
-            switch self {
-            case .editFavoritesForm:
-                .default
-            default:
-                .fade(.cross)
-            }
+    var resolver: (any UISheetPresentationControllerDetentResolutionContext) -> CGFloat? {
+        switch self {
+        case .large: return { context in UISheetPresentationController.Detent.large().resolvedValue(in: context) }
+        case .medium: return { context in UISheetPresentationController.Detent.medium().resolvedValue(in: context) }
+        case let .fraction(fraction): return { context in context.maximumDetentValue * fraction }
+        case let .height(height): return { _ in height }
         }
     }
 
-    // MARK: Properties
-
-    let viewData: ViewData
-
-    var selectedDetent: PresentationDetent
-    var allowedDetents: Set<PresentationDetent>
-
-    // MARK: Lifecycle
-
-    init(viewData: ViewData) {
-        self.viewData = viewData
-        self.selectedDetent = viewData.initialSelectedDetent
-        self.allowedDetents = viewData.initialAllowedDetents
+    var uiKitDetent: UISheetPresentationController.Detent {
+        .custom(identifier: self.identifier, resolver: self.resolver)
     }
+
+    var identifier: UISheetPresentationController.Detent.Identifier {
+        UISheetPresentationController.Detent.Identifier(rawValue: "\(self.hashValue)")
+    }
+}
+
+// MARK: - NavigationCommand
+
+enum NavigationCommand {
+    case show(SheetData)
+    case pop(destinationSheetData: SheetData)
+    case popToRoot(rootSheetData: SheetData)
+}
+
+// MARK: - SheetType
+
+enum SheetType: Hashable {
+    case search
+    case mapStyle
+    case debugView
+    case navigationAddSearchView
+    case favorites
+    case navigationPreview
+    case pointOfInterest(ResolvedItem)
+    case favoritesViewMore
+    case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
+
+    // MARK: Computed Properties
+
+    var initialDetentData: DetentData {
+        switch self {
+        case .search:
+            DetentData(selectedDetent: .third, allowedDetents: [.small, .third, .large])
+        case .mapStyle:
+            DetentData(selectedDetent: .medium, allowedDetents: [.medium])
+        case .debugView:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .navigationAddSearchView:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .favorites:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .navigationPreview:
+            DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
+        case .pointOfInterest:
+            DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+        case .favoritesViewMore:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .editFavoritesForm:
+            DetentData(selectedDetent: .large, allowedDetents: [.large])
+        }
+    }
+
+    var transition: AnyNavigationTransition {
+        switch self {
+        case .favoritesViewMore, .editFavoritesForm, .favorites:
+            .default
+        default:
+            .fade(.cross)
+        }
+    }
+}
+
+// MARK: - SheetData
+
+struct SheetData {
+    let sheetType: SheetType
+    let detentData: CurrentValueSubject<DetentData, Never>
+}
+
+// MARK: - DetentData
+
+struct DetentData: Hashable {
+    var selectedDetent: Detent
+    let allowedDetents: [Detent]
 }

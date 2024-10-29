@@ -59,16 +59,16 @@ struct RecentSearchResultsView: View {
                 Spacer()
                 if self.searchType == .favorites {
                     Button("+") {
-                        self.sheetStore.pushSheet(SheetViewData(viewData: .editFavoritesForm(item: item)))
+                        self.sheetStore.show(.editFavoritesForm(item: item))
                     }
                     .foregroundStyle(Color(.label))
                 }
             }
             .onTapGesture {
-                self.searchStore.mapStore.clearListAndSelect(item)
+                self.sheetStore.show(.pointOfInterest(item))
                 switch self.searchType {
                 case let .returnPOILocation(completion):
-                    if let selectedItem = self.searchStore.mapStore.selectedItem {
+                    if let selectedItem = self.searchStore.mapStore.selectedItem.value {
                         completion?(.waypoint(selectedItem))
                         self.dismiss()
                     }
@@ -89,7 +89,7 @@ struct RecentSearchResultsView: View {
         RecentSearchResultsView(
             searchStore: .storeSetUpForPreviewing,
             searchType: .favorites,
-            sheetStore: SheetStore()
+            sheetStore: SheetStore(emptySheetType: .search)
         )
     }
 }
@@ -111,10 +111,10 @@ struct EditFavoritesFormViewPreview: PreviewProvider {
             RecentSearchResultsView(
                 searchStore: .storeSetUpForPreviewing,
                 searchType: .favorites,
-                sheetStore: SheetStore()
+                sheetStore: .storeSetUpForPreviewing
             )
             .navigationDestination(isPresented: .constant(true)) {
-                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore)
+                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore, sheetStore: .storeSetUpForPreviewing)
             }
         }
         .previewDisplayName("EditFavoritesFormView")

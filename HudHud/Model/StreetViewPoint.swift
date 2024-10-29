@@ -13,14 +13,14 @@ import MapLibre
 // MARK: - StreetViewPoint
 
 struct StreetViewPoint: Equatable {
-    let location: CLLocationCoordinate2D
-    var heading: CGFloat
+    let coordinates: CLLocationCoordinate2D
+    var heading: Float
 }
 
 extension StreetViewPoint {
 
     var feature: MLNPointFeature {
-        MLNPointFeature(coordinate: self.location) { feature in
+        MLNPointFeature(coordinate: self.coordinates) { feature in
             feature.attributes["heading"] = self.heading
         }
     }
