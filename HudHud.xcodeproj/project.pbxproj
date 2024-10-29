@@ -12,21 +12,18 @@
 		061CE591783C48AD3128B361 /* TrafficChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 557A9FF81C4443860134AE6F /* TrafficChartView.swift */; };
 		084218394FED84B4D341E953 /* HudhudSegmentedPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A48038A71580732C5D1A40BE /* HudhudSegmentedPicker.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
-		0CB17C9D2CD0DF7200952B99 /* GraphHopperRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17C9C2CD0DF7200952B99 /* GraphHopperRouteProvider.swift */; };
-		0CB17C9F2CD0DFA200952B99 /* RoutingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17C9E2CD0DFA200952B99 /* RoutingOptions.swift */; };
-		0CB17CA32CD0DFD900952B99 /* RoutePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */; };
-		0CB17CA52CD0DFED00952B99 /* RoutingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA42CD0DFED00952B99 /* RoutingService.swift */; };
-		0CB17CAA2CD0F31300952B99 /* RoutingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA92CD0F31300952B99 /* RoutingError.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
 		1FEAEDF47C48844D38FA2DDA /* ErrorBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BC0CD049F0701039A8C59F /* ErrorBannerView.swift */; };
+		24FBFCC204FF1B7CB79B07A0 /* RoutingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4750497D924A8292FD08AFE5 /* RoutingOptions.swift */; };
 		2670A068B017EEE420D01F3B /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C08918AE951B4460365873D /* UIColor.swift */; };
 		28B76BD4868024F1EA8666DB /* PlusJakartaSans-ExtraBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 48CEA7AF61F08D98C5D3236B /* PlusJakartaSans-ExtraBold.ttf */; };
 		3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */; };
 		33589DA0974EBF761082DF6B /* POIDetailSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */; };
 		341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */; };
+		36B7BE394346AF2007B98765 /* POIBottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F8FD84B6474700AA5587E93 /* POIBottomToolbar.swift */; };
 		379DDC2776272FE04C0B570A /* POIOverviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2183BECFE15DBC861312F863 /* POIOverviewView.swift */; };
 		3B651D907EB42F44B10A53DF /* MapActionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41386D7314539DB91E42D41A /* MapActionHandler.swift */; };
 		3B7DE37142CA90D9D758F17F /* ReviewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560FB0692E775D98BCE08526 /* ReviewStore.swift */; };
@@ -49,12 +46,12 @@
 		59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */ = {isa = PBXBuildFile; productRef = 2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */; };
 		59A290082C43CA0000780307 /* POIMediaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A290072C43CA0000780307 /* POIMediaView.swift */; };
 		59B8A1DE2C60C38400A12F5E /* MapViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */; };
-		59E7D3E12CB67D790063E9F1 /* POIBottomToolbar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59E7D3E02CB67D790063E9F1 /* POIBottomToolbar.swift */; };
 		59EFD4E32C7604A100BA8B41 /* FavoritesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */; };
 		5A98AAF31A00AC74AC3C999C /* Loading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0042DF164855E7AE12B8EDE8 /* Loading.swift */; };
 		5B11693ACCDF9D47295E69D5 /* PlusJakartaSans-LightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AE23A9341E9D6EB978CE8819 /* PlusJakartaSans-LightItalic.ttf */; };
 		5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */; };
 		5E4B24E475601905AB732509 /* MapViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFAD0D9D6E6CF3DB56712229 /* MapViewStore.swift */; };
+		5F35F323AAC31009B28D09FB /* RoutePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24FF2895ADD6ECD1BA827350 /* RoutePlanner.swift */; };
 		655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */; };
 		6AF78ED7ED7EC546C088EFA1 /* StreetViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71EE1F0888626374B153C98F /* StreetViewStore.swift */; };
 		6B2D2368E0DF949BF4A268AF /* RatingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8C59CFE21231A32F7879238 /* RatingStore.swift */; };
@@ -72,10 +69,12 @@
 		82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32589FE734D110C815A6168A /* LoggerSettings.swift */; };
 		854A602E692EA22AC381F9CA /* FavoritesItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64B93F731419F3A3A1A2869D /* FavoritesItem.swift */; };
 		85A3DD5E244053F718972B14 /* UIImage+resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14EFC3A7AE83BA96C32EEB4E /* UIImage+resize.swift */; };
+		85D13162D2CB7204898CEA33 /* RoutingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88947171BFE509625D4DA9F8 /* RoutingService.swift */; };
 		86C436C3B961CBEF7F3C50A7 /* XCTestCase+Additions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930C5C4AFBCBE90A662DA243 /* XCTestCase+Additions.swift */; };
 		8772D320100D18E50D612E2A /* RatingSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6520133F3B3D646990CE7856 /* RatingSectionView.swift */; };
 		8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */; };
 		8C2807D362FD49761D07A6DA /* OTPVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */; };
+		8CF4FC9E1B350427D1B71D50 /* GraphHopperRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582B0B08354F147FFABC9A2D /* GraphHopperRouteProvider.swift */; };
 		907F1F7E2BD4F95100B4993E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 907F1F7D2BD4F95100B4993E /* Localizable.xcstrings */; };
 		90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */; };
 		90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */; };
@@ -83,12 +82,9 @@
 		90CBC72B2BD79D4C00F98199 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 90CBC72A2BD79D4C00F98199 /* InfoPlist.xcstrings */; };
 		980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */; };
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
-		9E0026082CCF8F74006DD54A /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0026072CCF8F74006DD54A /* PulseUI */; };
-		9E0026102CD0D3C7006DD54A /* APIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00260F2CD0D3C7006DD54A /* APIClient */; };
 		9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0552CCE69FC00F67DC5 /* FerrostarCore */; };
 		9E82F0582CCE69FC00F67DC5 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */; };
 		9E82F05A2CCE69FC00F67DC5 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */; };
-		9E82F05F2CCE766A00F67DC5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F75C4E4220C498F691DF33 /* MoreFiltersView.swift */; };
 		9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */; };
 		9EE17AEF2CC79EC800316799 /* SheetContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */; };
@@ -152,6 +148,7 @@
 		D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */; };
 		DD7976DCF72FA010BE526906 /* FilterStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E918AD2DA0F42670B5F7ED6F /* FilterStore.swift */; };
 		DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417081C775FE86E29A6F3437 /* SafariWebView.swift */; };
+		DDEC8465C37065C668023229 /* RoutingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D8871B2DF8DEF76E4302624 /* RoutingError.swift */; };
 		E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1AA649499B45083187E8811 /* SFSymbolSpriteSheet.swift */; };
 		E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D888B551A37E903ADC0F10AE /* FavoriteCategoriesButton.swift */; };
 		EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF5CD1A84202EA24D32C7953 /* PadSheetView.swift */; };
@@ -195,11 +192,7 @@
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
 		068C2923E00182040CFB46FB /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
-		0CB17C9C2CD0DF7200952B99 /* GraphHopperRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphHopperRouteProvider.swift; sourceTree = "<group>"; };
-		0CB17C9E2CD0DFA200952B99 /* RoutingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingOptions.swift; sourceTree = "<group>"; };
-		0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanner.swift; sourceTree = "<group>"; };
-		0CB17CA42CD0DFED00952B99 /* RoutingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingService.swift; sourceTree = "<group>"; };
-		0CB17CA92CD0F31300952B99 /* RoutingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingError.swift; sourceTree = "<group>"; };
+		0D8871B2DF8DEF76E4302624 /* RoutingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingError.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		14EFC3A7AE83BA96C32EEB4E /* UIImage+resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+resize.swift"; sourceTree = "<group>"; };
@@ -209,6 +202,7 @@
 		1E69A6191475F5E54A62147D /* DirectionModeButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModeButton.swift; sourceTree = "<group>"; };
 		2183BECFE15DBC861312F863 /* POIOverviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIOverviewView.swift; sourceTree = "<group>"; };
 		23B89F8CB73BB12A3A557AB0 /* MapButtonsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsView.swift; sourceTree = "<group>"; };
+		24FF2895ADD6ECD1BA827350 /* RoutePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanner.swift; sourceTree = "<group>"; };
 		25BABFA49366F559068D48E7 /* PhotoSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSectionView.swift; sourceTree = "<group>"; };
 		2AB3AC400749ABE16FDEC195 /* LocationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoView.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
@@ -221,6 +215,7 @@
 		45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapSourceIdentifier.swift; sourceTree = "<group>"; };
 		471792857EA42AFB7D348134 /* PlusJakartaSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-SemiBold.ttf"; sourceTree = "<group>"; };
 		47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentLocationButton.swift; sourceTree = "<group>"; };
+		4750497D924A8292FD08AFE5 /* RoutingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingOptions.swift; sourceTree = "<group>"; };
 		48CEA7AF61F08D98C5D3236B /* PlusJakartaSans-ExtraBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-ExtraBold.ttf"; sourceTree = "<group>"; };
 		4ACA6ACB09147ADC89262D11 /* DateFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatter.swift; sourceTree = "<group>"; };
 		4B15EB5A88EA360C3403F58C /* SearchViewStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewStore.swift; sourceTree = "<group>"; };
@@ -230,6 +225,7 @@
 		560FB0692E775D98BCE08526 /* ReviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStore.swift; sourceTree = "<group>"; };
 		56265CBDEA22D04649BE38DE /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
 		5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStore.swift; sourceTree = "<group>"; };
+		582B0B08354F147FFABC9A2D /* GraphHopperRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphHopperRouteProvider.swift; sourceTree = "<group>"; };
 		591002222C7DC9AB00CF4707 /* FloatingLabelTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FloatingLabelTextField.swift; sourceTree = "<group>"; };
 		591002242C7DCB6600CF4707 /* UserLoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLoginView.swift; sourceTree = "<group>"; };
 		591002282C7F260A00CF4707 /* LoginStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginStore.swift; sourceTree = "<group>"; };
@@ -241,7 +237,6 @@
 		594C487A2C0E5F9400756633 /* FavoriteItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteItemView.swift; sourceTree = "<group>"; };
 		59A290072C43CA0000780307 /* POIMediaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIMediaView.swift; sourceTree = "<group>"; };
 		59B8A1DD2C60C38400A12F5E /* MapViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewContainer.swift; sourceTree = "<group>"; };
-		59E7D3E02CB67D790063E9F1 /* POIBottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIBottomToolbar.swift; sourceTree = "<group>"; };
 		59EFD4E22C7604A100BA8B41 /* FavoritesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesStore.swift; sourceTree = "<group>"; };
 		64B93F731419F3A3A1A2869D /* FavoritesItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesItem.swift; sourceTree = "<group>"; };
 		6520133F3B3D646990CE7856 /* RatingSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingSectionView.swift; sourceTree = "<group>"; };
@@ -252,11 +247,12 @@
 		71EE1F0888626374B153C98F /* StreetViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewStore.swift; sourceTree = "<group>"; };
 		734FB0DF376C6B77950814C5 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
-		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
+		759B7FEF0394ACDE7E904B12 /* GithubActions.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GithubActions.xctestplan; sourceTree = "<group>"; };
 		7A230BDAC75F2EAFD87603F6 /* IBMPlexSansArabic-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansArabic-Regular.ttf"; sourceTree = "<group>"; };
 		7C08918AE951B4460365873D /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetStore.swift; sourceTree = "<group>"; };
 		7E21300E9BF61F5A403DE2CE /* MapStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapStore.swift; sourceTree = "<group>"; };
+		88947171BFE509625D4DA9F8 /* RoutingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingService.swift; sourceTree = "<group>"; };
 		8B629EDAD64E6EFF641F2427 /* PlusJakartaSans-SemiBoldItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-SemiBoldItalic.ttf"; sourceTree = "<group>"; };
 		907F1F7D2BD4F95100B4993E /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSectionView.swift; sourceTree = "<group>"; };
@@ -271,6 +267,7 @@
 		9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointOfInterestStore.swift; sourceTree = "<group>"; };
 		9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetContainerViewController.swift; sourceTree = "<group>"; };
 		9EF7276C2CC6576B00B15A8D /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
+		9F8FD84B6474700AA5587E93 /* POIBottomToolbar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = POIBottomToolbar.swift; sourceTree = "<group>"; };
 		A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PadSheetGesture.swift; sourceTree = "<group>"; };
 		A48038A71580732C5D1A40BE /* HudhudSegmentedPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudhudSegmentedPicker.swift; sourceTree = "<group>"; };
 		A4C5915AEE9DC1AB9FB1C354 /* ObservedChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservedChild.swift; sourceTree = "<group>"; };
@@ -330,7 +327,7 @@
 		DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolStyleLayer.swift; sourceTree = "<group>"; };
 		DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
 		DFF0BD7A0C66491FE324FAD4 /* MapContentLayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContentLayers.swift; sourceTree = "<group>"; };
-		E046BE7B50B5A99CC510EF49 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		E046BE7B50B5A99CC510EF49 /* XcodeCloud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = XcodeCloud.xctestplan; sourceTree = "<group>"; };
 		E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
 		E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Italic.ttf"; sourceTree = "<group>"; };
 		E918AD2DA0F42670B5F7ED6F /* FilterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStore.swift; sourceTree = "<group>"; };
@@ -352,11 +349,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				CBC7C7C62CB2932600210404 /* iPhoneNumberField in Frameworks */,
-				9E0026102CD0D3C7006DD54A /* APIClient in Frameworks */,
 				59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */,
 				9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */,
 				9E82F05A2CCE69FC00F67DC5 /* FerrostarSwiftUI in Frameworks */,
-				9E0026082CCF8F74006DD54A /* PulseUI in Frameworks */,
 				CD3BCAD32CB6E402001F8CFD /* TokensEnumGenerator in Frameworks */,
 				59A28FFE2C3EC9B800780307 /* BetterSafariView in Frameworks */,
 				F22401782C58D61B008865AE /* SwiftUIPanoramaViewer in Frameworks */,
@@ -369,7 +364,6 @@
 				9E82F0582CCE69FC00F67DC5 /* FerrostarMapLibreUI in Frameworks */,
 				CB7033BB2C9300610006681E /* TypographyKit in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
-				9E82F05F2CCE766A00F67DC5 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,18 +404,6 @@
 				7A230BDAC75F2EAFD87603F6 /* IBMPlexSansArabic-Regular.ttf */,
 			);
 			path = Fonts;
-			sourceTree = "<group>";
-		};
-		0CB17C9A2CD0DF6A00952B99 /* RoutePlanner */ = {
-			isa = PBXGroup;
-			children = (
-				0CB17C9C2CD0DF7200952B99 /* GraphHopperRouteProvider.swift */,
-				0CB17C9E2CD0DFA200952B99 /* RoutingOptions.swift */,
-				0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */,
-				0CB17CA42CD0DFED00952B99 /* RoutingService.swift */,
-				0CB17CA92CD0F31300952B99 /* RoutingError.swift */,
-			);
-			path = RoutePlanner;
 			sourceTree = "<group>";
 		};
 		14EB9DF8741B47192AE67646 /* CategoriesBanner */ = {
@@ -470,6 +452,18 @@
 			path = PadSheet;
 			sourceTree = "<group>";
 		};
+		61717056B7A2095F2F6F66DA /* RoutePlanner */ = {
+			isa = PBXGroup;
+			children = (
+				582B0B08354F147FFABC9A2D /* GraphHopperRouteProvider.swift */,
+				4750497D924A8292FD08AFE5 /* RoutingOptions.swift */,
+				24FF2895ADD6ECD1BA827350 /* RoutePlanner.swift */,
+				88947171BFE509625D4DA9F8 /* RoutingService.swift */,
+				0D8871B2DF8DEF76E4302624 /* RoutingError.swift */,
+			);
+			path = RoutePlanner;
+			sourceTree = "<group>";
+		};
 		99E435A00BB464A6561C2838 /* MapButtons */ = {
 			isa = PBXGroup;
 			children = (
@@ -482,23 +476,15 @@
 		AA1E80A95AFCDC7507E3B613 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
-				AFE1EC882CC10E3800A9A5C4 /* Max Speed */,
 				90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */,
 				90CBC0482B8362E3009ADD79 /* DirectionPreviewData.swift */,
 				CB494DB82BC1078B00B67A22 /* NavigationSheetView.swift */,
 				5936D87E2BF09A2600A258BE /* DebugStore.swift */,
 				5936D8802BF09A4D00A258BE /* DebugMenuView.swift */,
 				DD1DAD5D70546BFCA560FDF9 /* RateNavigationView.swift */,
+				B85DED0A6AA54543C1556E66 /* Max Speed */,
 			);
 			path = Navigation;
-			sourceTree = "<group>";
-		};
-		AC276CFCF1456B56097AA04B /* Ferrostar */ = {
-			isa = PBXGroup;
-			children = (
-				B2FFC66ACC4C503CD6A270F0 /* NavigationDelegate.swift */,
-			);
-			path = Ferrostar;
 			sourceTree = "<group>";
 		};
 		AC313C27FE655AA88C1E9F69 /* Model */ = {
@@ -521,14 +507,6 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		AFE1EC882CC10E3800A9A5C4 /* Max Speed */ = {
-			isa = PBXGroup;
-			children = (
-				AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */,
-			);
-			path = "Max Speed";
-			sourceTree = "<group>";
-		};
 		B545C86A2B8A71F09D3636EB /* POISearchView */ = {
 			isa = PBXGroup;
 			children = (
@@ -546,6 +524,14 @@
 				EC517036BCB7FDB633991439 /* CongestionsExtractor.swift */,
 			);
 			path = TrafficCongestions;
+			sourceTree = "<group>";
+		};
+		B85DED0A6AA54543C1556E66 /* Max Speed */ = {
+			isa = PBXGroup;
+			children = (
+				AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */,
+			);
+			path = "Max Speed";
 			sourceTree = "<group>";
 		};
 		C6D996C1678AD61E7F7D0A3E /* Protocols */ = {
@@ -598,8 +584,8 @@
 				CDAE05612B681263003E5196 /* HudHudUITests */,
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
-				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
-				E046BE7B50B5A99CC510EF49 /* CI.xctestplan */,
+				759B7FEF0394ACDE7E904B12 /* GithubActions.xctestplan */,
+				E046BE7B50B5A99CC510EF49 /* XcodeCloud.xctestplan */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;
@@ -617,7 +603,6 @@
 		CDAE05462B681261003E5196 /* HudHud */ = {
 			isa = PBXGroup;
 			children = (
-				0CB17C9A2CD0DF6A00952B99 /* RoutePlanner */,
 				CB396FFE2B7C1C7300CF9D59 /* UIStyle */,
 				CDAE054D2B681263003E5196 /* Preview Content */,
 				D14C3F8A5C428C7F0A18A65A /* Views */,
@@ -627,7 +612,8 @@
 				1AC466BF59F2D9323F5D3955 /* Classes */,
 				B613EB14BDC54B6907DD2448 /* TrafficCongestions */,
 				CEE6FEDF51ECC34C5B325747 /* Common */,
-				AC276CFCF1456B56097AA04B /* Ferrostar */,
+				61717056B7A2095F2F6F66DA /* RoutePlanner */,
+				E11266D367B6FFDC1E1C9864 /* Ferrostar */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
@@ -741,7 +727,7 @@
 				007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */,
 				B843D9721C0EDA86EEFB1ED0 /* POISheetButtonStyle.swift */,
 				59A290072C43CA0000780307 /* POIMediaView.swift */,
-				59E7D3E02CB67D790063E9F1 /* POIBottomToolbar.swift */,
+				9F8FD84B6474700AA5587E93 /* POIBottomToolbar.swift */,
 			);
 			path = POISheet;
 			sourceTree = "<group>";
@@ -764,6 +750,14 @@
 				2AB3AC400749ABE16FDEC195 /* LocationInfoView.swift */,
 			);
 			path = MapScreen;
+			sourceTree = "<group>";
+		};
+		E11266D367B6FFDC1E1C9864 /* Ferrostar */ = {
+			isa = PBXGroup;
+			children = (
+				B2FFC66ACC4C503CD6A270F0 /* NavigationDelegate.swift */,
+			);
+			path = Ferrostar;
 			sourceTree = "<group>";
 		};
 		EA1DDF0CC8C6FE9D396004B2 /* MapLayers */ = {
@@ -884,8 +878,8 @@
 				9E82F0552CCE69FC00F67DC5 /* FerrostarCore */,
 				9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */,
 				9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */,
-				9E0026072CCF8F74006DD54A /* PulseUI */,
-				9E00260F2CD0D3C7006DD54A /* APIClient */,
+				E26E4285768772482A3EE553 /* PulseUI */,
+				13BBDACFCBF0023DD01B7FA6 /* APIClient */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -975,7 +969,7 @@
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */,
-				9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */,
+				F55DC008148665D6245FC71F /* XCRemoteSwiftPackageReference "Pulse" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1098,11 +1092,9 @@
 				5936D8812BF09A4D00A258BE /* DebugMenuView.swift in Sources */,
 				CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */,
 				CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */,
-				0CB17CA32CD0DFD900952B99 /* RoutePlanner.swift in Sources */,
 				854A602E692EA22AC381F9CA /* FavoritesItem.swift in Sources */,
 				9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */,
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
-				0CB17CA52CD0DFED00952B99 /* RoutingService.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
 				AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */,
@@ -1119,7 +1111,6 @@
 				C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */,
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
 				9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */,
-				59E7D3E12CB67D790063E9F1 /* POIBottomToolbar.swift in Sources */,
 				A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */,
 				3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */,
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
@@ -1147,7 +1138,6 @@
 				A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */,
 				151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */,
 				9EE17AEF2CC79EC800316799 /* SheetContainerViewController.swift in Sources */,
-				0CB17CAA2CD0F31300952B99 /* RoutingError.swift in Sources */,
 				2670A068B017EEE420D01F3B /* UIColor.swift in Sources */,
 				E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */,
 				980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */,
@@ -1171,9 +1161,7 @@
 				4B8F4787E005F2E229702FFA /* PhotoSectionView.swift in Sources */,
 				3B7DE37142CA90D9D758F17F /* ReviewStore.swift in Sources */,
 				4B1698D40C4CEDABD1EE663B /* ReviewsListView.swift in Sources */,
-				0CB17C9D2CD0DF7200952B99 /* GraphHopperRouteProvider.swift in Sources */,
 				A202FCE4BB36037C8A0A8C19 /* MainEntryPoint.swift in Sources */,
-				0CB17C9F2CD0DFA200952B99 /* RoutingOptions.swift in Sources */,
 				6AF78ED7ED7EC546C088EFA1 /* StreetViewStore.swift in Sources */,
 				AD75580E7D076A61A8A64A84 /* DeviceSupport.swift in Sources */,
 				85A3DD5E244053F718972B14 /* UIImage+resize.swift in Sources */,
@@ -1182,6 +1170,12 @@
 				B8C5DB417592CB8DBC88E140 /* MapContentLayers.swift in Sources */,
 				1FEAEDF47C48844D38FA2DDA /* ErrorBannerView.swift in Sources */,
 				F5849780EA881614D3ECB0D1 /* LocationInfoView.swift in Sources */,
+				5F35F323AAC31009B28D09FB /* RoutePlanner.swift in Sources */,
+				85D13162D2CB7204898CEA33 /* RoutingService.swift in Sources */,
+				36B7BE394346AF2007B98765 /* POIBottomToolbar.swift in Sources */,
+				DDEC8465C37065C668023229 /* RoutingError.swift in Sources */,
+				8CF4FC9E1B350427D1B71D50 /* GraphHopperRouteProvider.swift in Sources */,
+				24FBFCC204FF1B7CB79B07A0 /* RoutingOptions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1584,14 +1578,6 @@
 				kind = branch;
 			};
 		};
-		9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/kean/Pulse";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.1.2;
-			};
-		};
 		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
@@ -1606,6 +1592,14 @@
 			requirement = {
 				branch = main;
 				kind = branch;
+			};
+		};
+		BF1B9C25791F3351F0FDF1E4 /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.2;
 			};
 		};
 		CB7033B92C9300610006681E /* XCRemoteSwiftPackageReference "TypographyKit" */ = {
@@ -1672,6 +1666,14 @@
 				kind = branch;
 			};
 		};
+		F55DC008148665D6245FC71F /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.2;
+			};
+		};
 		FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
@@ -1683,19 +1685,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		13BBDACFCBF0023DD01B7FA6 /* APIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = APIClient;
+		};
 		2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
 			productName = TouchVisualizer;
-		};
-		9E0026072CCF8F74006DD54A /* PulseUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */;
-			productName = PulseUI;
-		};
-		9E00260F2CD0D3C7006DD54A /* APIClient */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = APIClient;
 		};
 		9E82F0552CCE69FC00F67DC5 /* FerrostarCore */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1767,6 +1764,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
 			productName = NavigationTransitions;
+		};
+		E26E4285768772482A3EE553 /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BF1B9C25791F3351F0FDF1E4 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
 		};
 		F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */ = {
 			isa = XCSwiftPackageProductDependency;
