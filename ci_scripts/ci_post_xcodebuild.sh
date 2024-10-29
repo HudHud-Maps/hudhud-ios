@@ -1,16 +1,13 @@
 #!/bin/sh
 set -euo pipefail
 
-#env
-#
-#if [ ${CI_XCODEBUILD_EXIT_CODE} != 0 ]
-#then
-#	exit 1
-#fi
-pwd
-ls -al
+if [ ${CI_XCODEBUILD_EXIT_CODE} != 0 ]
+then
+	exit 1
+fi
 
 VERSION=$(cat ../HudHud.xcodeproj/project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
+echo "Build Version: " $VERSION
 
 if [[ $CI_WORKFLOW = 'Internal TestFlight' ]]
 then
