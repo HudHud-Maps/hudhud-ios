@@ -10,7 +10,7 @@ let package = Package(
         .iOS(.v16)
     ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
+        .library(name: "APIClient", targets: ["APIClient"]),
         .library(
             name: "BackendService",
             targets: ["BackendService"]
@@ -21,11 +21,17 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-openapi-generator", exact: "1.3.1"),
         .package(url: "https://github.com/apple/swift-openapi-runtime", from: "1.0.0"),
         .package(url: "https://github.com/salishseasoftware/LocationFormatter.git", from: "1.1.0"),
-        .package(url: "https://github.com/kishikawakatsumi/KeychainAccess.git", from: "4.2.2")
+        .package(url: "https://github.com/kishikawakatsumi/KeychainAccess.git", from: "4.2.2"),
+        .package(url: "https://github.com/kean/Pulse.git", from: "5.1.2")
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
+        .target(
+            name: "APIClient",
+            dependencies: [
+                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+                .product(name: "Pulse", package: "Pulse")
+            ]
+        ),
         .target(
             name: "BackendService",
             dependencies: [
