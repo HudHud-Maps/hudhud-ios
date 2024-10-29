@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+env
 
 if [ ${CI_XCODEBUILD_EXIT_CODE} != 0 ]
 then
