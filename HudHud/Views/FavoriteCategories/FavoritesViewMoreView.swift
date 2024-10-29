@@ -29,91 +29,89 @@ struct FavoritesViewMoreView: View {
     // MARK: Content
 
     var body: some View {
-        VStack(alignment: .leading) {
-            VStack {
-                switch self.searchStore.searchType {
-                case .returnPOILocation, .favorites:
-                    Button("Cancel") {
-                        self.dismiss()
+        NavigationStack {
+            VStack(alignment: .leading) {
+                VStack {
+                    switch self.searchStore.searchType {
+                    case .returnPOILocation, .favorites:
+                        Button("Cancel") {
+                            self.dismiss()
+                        }
+                        .foregroundColor(.gray)
+                        .padding(.trailing)
+                    case .selectPOI, .categories:
+                        EmptyView()
                     }
-                    .foregroundColor(.gray)
-                    .padding(.trailing)
-                case .selectPOI, .categories:
-                    EmptyView()
                 }
-            }
-            .background(.thickMaterial)
-            .cornerRadius(12)
+                .background(.thickMaterial)
+                .cornerRadius(12)
 
-            Section { // show my favorites
-                ForEach(self.favoritesStore.favoritesItems) { favorite in
-                    if favorite.item != nil {
-                        HStack {
-                            FavoriteItemView(favorite: favorite)
-                            Spacer()
-                            Button {
-                                self.actionSheetShown = true
-                                self.clickedFavorite = favorite
-                            } label: {
-                                Text("...")
-                                    .foregroundStyle(Color(UIColor.label))
+                Section { // show my favorites
+                    ForEach(self.favoritesStore.favoritesItems) { favorite in
+                        if favorite.item != nil {
+                            HStack {
+                                FavoriteItemView(favorite: favorite)
+                                Spacer()
+                                Button {
+                                    self.actionSheetShown = true
+                                    self.clickedFavorite = favorite
+                                } label: {
+                                    Text("...")
+                                        .foregroundStyle(Color(UIColor.label))
+                                }
                             }
                         }
                     }
-                }
-                .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                    Button("Edit") {
-                        self.sheetStore.pushSheet(
-                            SheetViewData(
-                                viewData: .editFavoritesForm(
-                                    item: self.clickedFavorite.item ?? .starbucks,
-                                    favoriteItem: self.clickedFavorite
-                                )
-                            )
-                        )
-                    }
-                    Button("Delete", role: .destructive) {
-                        self.favoritesStore.deleteFavorite(self.clickedFavorite)
+                    .confirmationDialog("action", isPresented: self.$actionSheetShown) {
+                        Button("Edit") {
+                            guard let item = self.clickedFavorite.item else { return }
+                            self.sheetStore.show(.editFavoritesForm(
+                                item: item,
+                                favoriteItem: self.clickedFavorite
+                            ))
+                        }
+                        Button("Delete", role: .destructive) {
+                            self.favoritesStore.deleteFavorite(self.clickedFavorite)
+                        }
                     }
                 }
-            }
 
-            Section("Suggestions") {
-                RecentSearchResultsView(
-                    searchStore: self.searchStore,
-                    searchType: .favorites,
-                    sheetStore: self.sheetStore
-                )
+                Section("Suggestions") {
+                    RecentSearchResultsView(
+                        searchStore: self.searchStore,
+                        searchType: .favorites,
+                        sheetStore: self.sheetStore
+                    )
+                    Spacer()
+                }
                 Spacer()
             }
-            Spacer()
-        }
-        .padding(.horizontal)
-        .padding(.top)
-        .navigationTitle("Favorites")
-        .navigationBarTitleDisplayMode(.inline)
-        .navigationBarItems(
-            trailing: Button {
-                self.searchSheetShown = true
-            } label: {
-                Image(systemSymbol: .plus)
-            }
-        )
-
-        .sheet(isPresented: self.$searchSheetShown) {
-            self.searchSheetView()
-        }
-        .onChange(of: self.searchSheetShown) {
-            self.sheetStore.pushSheet(SheetViewData(viewData: .favorites))
+            .padding(.horizontal)
+            .padding(.top)
+            .navigationTitle("Favorites")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarItems(
+                leading: Button {
+                    self.sheetStore.popSheet()
+                } label: {
+                    Image(systemSymbol: .arrowBackward)
+                },
+                trailing: Button {
+                    self.sheetStore.show(.favorites)
+                } label: {
+                    Image(systemSymbol: .plus)
+                }
+            )
         }
     }
 
     func searchSheetView() -> some View {
-        let freshMapStore = MapStore(motionViewModel: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
         let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+        let freshSheetStore = SheetStore(emptySheetType: .search)
         let freshSearchViewStore = SearchViewStore(
             mapStore: freshMapStore,
-            sheetStore: SheetStore(),
+            sheetStore: freshSheetStore,
             routingStore: freshRoutingStore,
             filterStore: FilterStore(),
             mode: self.searchStore.mode
@@ -123,7 +121,7 @@ struct FavoritesViewMoreView: View {
             mapStore: freshMapStore,
             searchStore: freshSearchViewStore,
             trendingStore: TrendingStore(),
-            sheetStore: self.sheetStore,
+            sheetStore: freshSheetStore,
             filterStore: FilterStore()
         )
     }

@@ -37,6 +37,6 @@ struct SearchSectionView<Content: View>: View {
 
 #Preview {
     SearchSectionView(title: "Favorites") {
-        FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing)
+        FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing)
     }
 }

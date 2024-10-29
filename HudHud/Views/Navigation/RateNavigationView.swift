@@ -69,7 +69,11 @@ struct RateNavigationView: View {
             }
             .padding(.top)
             .onAppear { // if smaller screen = bigger sheet to fit content
-                self.sheetStore.allowedDetents = (self.smallScreen ? [.nearHalf] : [.small, .third])
+                self.sheetStore.currentSheet.detentData.value = if self.smallScreen {
+                    DetentData(selectedDetent: .nearHalf, allowedDetents: [.nearHalf])
+                } else {
+                    DetentData(selectedDetent: .third, allowedDetents: [.small, .third])
+                }
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -89,7 +93,7 @@ struct RateNavigationView: View {
                         .contentShape(Circle())
                     })
                     .buttonStyle(PlainButtonStyle())
-                    .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                    .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
                 }
             }
             .edgesIgnoringSafeArea(.vertical)

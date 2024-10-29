@@ -13,11 +13,24 @@
     "(%lld)" : {
 
     },
+    "@" : {
+
+    },
     "%.1f" : {
 
     },
     "%@" : {
       "comment" : "distance • type of route\nduration"
+    },
+    "%@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
     },
     "%@ %@" : {
       "localizations" : {
@@ -29,12 +42,12 @@
         }
       }
     },
-    "%lld of %lld" : {
+    "%@ until %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "%1$lld of %2$lld"
+            "value" : "%1$@ until %2$@"
           }
         }
       }
@@ -43,6 +56,9 @@
 
     },
     "•" : {
+
+    },
+    "• %@" : {
 
     },
     "+" : {
@@ -84,6 +100,9 @@
     "Apply" : {
 
     },
+    "Back" : {
+
+    },
     "Bad Traffic Data" : {
       "comment" : "for traffic chart"
     },
@@ -118,6 +137,7 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -144,7 +164,7 @@
 
     },
     "Close" : {
-      "comment" : "accesibility label instead of x",
+      "comment" : "Accessibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -190,13 +210,7 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
-    "Distance" : {
-
-    },
     "Done" : {
-
-    },
-    "Duration" : {
 
     },
     "Edit" : {
@@ -254,9 +268,6 @@
     "Go Back" : {
 
     },
-    "Heading: %@" : {
-      "comment" : "street view"
-    },
     "Help improve HudHud maps." : {
 
     },
@@ -270,9 +281,6 @@
           }
         }
       }
-    },
-    "Hours" : {
-
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
@@ -346,9 +354,6 @@
         }
       }
     },
-    "N / A" : {
-
-    },
     "Name" : {
 
     },
@@ -364,7 +369,7 @@
     "No Map Layers Available" : {
 
     },
-    "No Ratings" : {
+    "No ratings" : {
 
     },
     "No Results" : {
@@ -391,25 +396,16 @@
     "Photos" : {
 
     },
-    "Pitch: %@" : {
-      "comment" : "street view"
-    },
     "Please enable your location to get directions" : {
 
     },
     "Price" : {
 
     },
+    "Quality" : {
+
+    },
     "Rating" : {
-
-    },
-    "Ratings" : {
-
-    },
-    "Read Less" : {
-
-    },
-    "Read More" : {
 
     },
     "Recents" : {
@@ -479,6 +475,9 @@
     "Simulation" : {
 
     },
+    "Size:" : {
+
+    },
     "Sort By" : {
 
     },
@@ -494,13 +493,16 @@
         }
       }
     },
+    "StreetView Quality" : {
+
+    },
     "Suggestions" : {
 
     },
     "Touch Visualizer" : {
 
     },
-    "Unknown" : {
+    "Unit Testing in progress" : {
 
     },
     "Use SF Symbols for POIs on map" : {
@@ -516,6 +518,9 @@
 
     },
     "Verify" : {
+
+    },
+    "Visualize taps in screen recordings to help understand your bug reports" : {
 
     },
     "walk" : {
@@ -541,6 +546,9 @@
           }
         }
       }
+    },
+    "WEBP has a maximum limit of %@ pixels, image will look pixelated as its divided by a fractional number" : {
+
     },
     "Work" : {
       "extractionState" : "stale",
