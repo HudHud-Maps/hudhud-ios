@@ -6,6 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import APIClient
+import BackendService
 import FerrostarCore
 import FerrostarCoreFFI
 import Foundation

@@ -10,7 +10,7 @@
 import CoreLocation
 import Foundation
 import MapKit
-import OpenAPIURLSession
+import OpenAPIRuntime
 import SwiftUI
 
 public class TrendingStore: ObservableObject {
@@ -27,15 +27,7 @@ public class TrendingStore: ObservableObject {
     // MARK: Functions
 
     public func getTrendingPOIs(page _: Int, limit _: Int, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
-        let urlSessionConfiguration = URLSessionConfiguration.default
-        urlSessionConfiguration.waitsForConnectivity = true
-        urlSessionConfiguration.timeoutIntervalForResource = 60 // seconds
-
-        let urlSession = URLSession(configuration: urlSessionConfiguration)
-        let transportConfiguration = URLSessionTransport.Configuration(session: urlSession)
-        let transport = URLSessionTransport(configuration: transportConfiguration)
-
-        let response = try await Client.makeClient(using: baseURL, transport: transport).listTrendingPois(
+        let response = try await Client.makeClient(using: baseURL).listTrendingPois(
             query: .init(lat: coordinates?.latitude, lon: coordinates?.longitude),
             headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
         )

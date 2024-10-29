@@ -7,20 +7,27 @@
 //
 
 import CoreLocation
+import PulseUI
 import SwiftUI
 
 // MARK: - DebugMenuView
 
 struct DebugMenuView: View {
-    @Environment(\.dismiss) private var dismiss
+
+    // MARK: Properties
+
     @ObservedObject var debugSettings: DebugStore
     @ObservedObject var touchManager = TouchManager.shared
+    let sheetStore: SheetStore
+
+    // MARK: Content
 
     var body: some View {
         NavigationStack {
             Form {
                 self.routingSection
                 self.baseURLSection
+                self.networkDebuggerButton
                 self.simulationSection
                 self.touchesSection
                 self.sfsymbolsSection
@@ -36,7 +43,7 @@ struct DebugMenuView: View {
                 }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") {
-                        self.dismiss()
+                        self.sheetStore.popSheet()
                     }
                 }
             }
@@ -63,6 +70,12 @@ struct DebugMenuView: View {
                         self.debugSettings.baseURL = newValue
                     }
                 }
+        }
+    }
+
+    var networkDebuggerButton: some View {
+        NavigationLink(destination: ConsoleView()) {
+            Text("Network Logger")
         }
     }
 
@@ -141,7 +154,7 @@ struct DebugMenuView: View {
 #Preview {
     @Previewable @StateObject var debugSettings = DebugStore()
 
-    return DebugMenuView(debugSettings: debugSettings)
+    return DebugMenuView(debugSettings: debugSettings, sheetStore: .storeSetUpForPreviewing)
 }
 
 func optionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T> {
