@@ -240,7 +240,7 @@
 		71EE1F0888626374B153C98F /* StreetViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StreetViewStore.swift; sourceTree = "<group>"; };
 		734FB0DF376C6B77950814C5 /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
 		738863728E0FF75FAD8D9B0F /* MapButtonsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapButtonsData.swift; sourceTree = "<group>"; };
-		759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = HudHud.xctestplan; sourceTree = "<group>"; };
+		759B7FEF0394ACDE7E904B12 /* GithubActions.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = GithubActions.xctestplan; sourceTree = "<group>"; };
 		7A230BDAC75F2EAFD87603F6 /* IBMPlexSansArabic-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "IBMPlexSansArabic-Regular.ttf"; sourceTree = "<group>"; };
 		7C08918AE951B4460365873D /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetStore.swift; sourceTree = "<group>"; };
@@ -319,7 +319,7 @@
 		DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolStyleLayer.swift; sourceTree = "<group>"; };
 		DF6A440B8E1A4D088A7F38BF /* SearchSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchSheet.swift; sourceTree = "<group>"; };
 		DFF0BD7A0C66491FE324FAD4 /* MapContentLayers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapContentLayers.swift; sourceTree = "<group>"; };
-		E046BE7B50B5A99CC510EF49 /* CI.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = CI.xctestplan; sourceTree = "<group>"; };
+		E046BE7B50B5A99CC510EF49 /* XcodeCloud.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = XcodeCloud.xctestplan; sourceTree = "<group>"; };
 		E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionModePickerData.swift; sourceTree = "<group>"; };
 		E5CCC5FD00AF8DE2003DB293 /* PlusJakartaSans-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Italic.ttf"; sourceTree = "<group>"; };
 		E918AD2DA0F42670B5F7ED6F /* FilterStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterStore.swift; sourceTree = "<group>"; };
@@ -573,8 +573,8 @@
 				CDAE05612B681263003E5196 /* HudHudUITests */,
 				CDAE05452B681261003E5196 /* Products */,
 				CDAE05832B691564003E5196 /* Frameworks */,
-				759B7FEF0394ACDE7E904B12 /* HudHud.xctestplan */,
-				E046BE7B50B5A99CC510EF49 /* CI.xctestplan */,
+				759B7FEF0394ACDE7E904B12 /* GithubActions.xctestplan */,
+				E046BE7B50B5A99CC510EF49 /* XcodeCloud.xctestplan */,
 			);
 			sourceTree = "<group>";
 			usesTabs = 0;

@@ -25,6 +25,14 @@
           {
             "name" : "SizeCalculatorTests"
           }
+        ],
+        "xctestClasses" : [
+          {
+            "name" : "CalculateTests"
+          },
+          {
+            "name" : "HudHudTests"
+          }
         ]
       },
       "target" : {
