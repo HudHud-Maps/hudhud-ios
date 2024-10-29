@@ -1,86 +1,8 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
-    "" : {
-
-    },
-    " %@" : {
-
-    },
-    "..." : {
-
-    },
-    "(%lld)" : {
-
-    },
-    "@" : {
-
-    },
-    "%.1f" : {
-
-    },
-    "%@" : {
-      "comment" : "distance • type of route\nduration"
-    },
-    "%@ (%@)" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ (%2$@)"
-          }
-        }
-      }
-    },
-    "%@ %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ %2$@"
-          }
-        }
-      }
-    },
-    "%@ until %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$@ until %2$@"
-          }
-        }
-      }
-    },
-    "%lld of %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld of %2$lld"
-          }
-        }
-      }
-    },
-    "%lld Ratings" : {
-
-    },
-    "•" : {
-
-    },
-    "• %@" : {
-
-    },
-    "+" : {
-
-    },
-    "12 September 2024" : {
-
-    },
-    "action" : {
-
-    },
     "Add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -92,6 +14,7 @@
     },
     "Add Location" : {
       "comment" : "To Add a new stop",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -101,25 +24,8 @@
         }
       }
     },
-    "Add Type" : {
-
-    },
-    "Already Logged In" : {
-
-    },
-    "Apply" : {
-
-    },
-    "Back" : {
-
-    },
-    "Bad Traffic Data" : {
-      "comment" : "for traffic chart"
-    },
-    "Base URL" : {
-
-    },
     "bicycle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -130,6 +36,7 @@
       }
     },
     "bus" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -138,12 +45,6 @@
           }
         }
       }
-    },
-    "By Date" : {
-
-    },
-    "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
-
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
@@ -157,10 +58,8 @@
         }
       }
     },
-    "Cancel" : {
-
-    },
     "car" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -170,11 +69,9 @@
         }
       }
     },
-    "Claim this business" : {
-
-    },
     "Close" : {
       "comment" : "Accessibility label instead of x",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -183,27 +80,6 @@
           }
         }
       }
-    },
-    "Closed" : {
-
-    },
-    "Create Account" : {
-
-    },
-    "Customers Rating" : {
-
-    },
-    "Debug Menu" : {
-
-    },
-    "Delete" : {
-
-    },
-    "description" : {
-
-    },
-    "Didn't Get the Code?" : {
-
     },
     "Direction" : {
       "comment" : "navigation sheet header",
@@ -217,28 +93,8 @@
         }
       }
     },
-    "Directions" : {
-      "comment" : "navigation sheet header"
-    },
-    "Done" : {
-
-    },
-    "Edit" : {
-
-    },
-    "Enable location in permissions" : {
-
-    },
-    "Enable Touch Visualizer" : {
-
-    },
-    "Enter your phone number or email" : {
-
-    },
-    "Enter your Verification Code" : {
-
-    },
     "Fastest" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -249,6 +105,7 @@
       }
     },
     "Favorites" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -258,14 +115,9 @@
         }
       }
     },
-    "Filters" : {
-
-    },
-    "From %@" : {
-
-    },
     "Go" : {
       "comment" : "start navigation",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -275,10 +127,7 @@
         }
       }
     },
-    "Go Back" : {
-
-    },
-    "Help improve HudHud maps." : {
+    "hi" : {
 
     },
     "Home" : {
@@ -292,19 +141,8 @@
         }
       }
     },
-    "Hours Range" : {
-      "comment" : "traffic chart view, Hours range x axes"
-    },
-    "How was the navigation on this trip?" : {
-
-    },
-    "How was your experience?" : {
-
-    },
-    "km/h" : {
-
-    },
     "Layers" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -313,12 +151,6 @@
           }
         }
       }
-    },
-    "Location Needed" : {
-
-    },
-    "Log Out" : {
-
     },
     "Map Details" : {
       "extractionState" : "stale",
@@ -343,6 +175,7 @@
       }
     },
     "metro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -364,64 +197,8 @@
         }
       }
     },
-    "Name" : {
-
-    },
-    "Nearby Trending" : {
-
-    },
-    "Network Logger" : {
-
-    },
-    "Next" : {
-
-    },
-    "No Content To be Shown Here." : {
-
-    },
-    "No Map Layers Available" : {
-
-    },
-    "No ratings" : {
-
-    },
-    "No Results" : {
-
-    },
-    "Note: Changing the URL requires restarting the app for the changes to take effect." : {
-
-    },
-    "Occupancy Range" : {
-      "comment" : "traffic chart view, Occupancy Range y axes"
-    },
-    "OK" : {
-
-    },
-    "Open" : {
-
-    },
-    "Patrick" : {
-
-    },
-    "Personal Information" : {
-
-    },
-    "Photos" : {
-
-    },
-    "Please enable your location to get directions" : {
-
-    },
-    "Price" : {
-
-    },
-    "Quality" : {
-
-    },
-    "Rating" : {
-
-    },
     "Recents" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -430,24 +207,6 @@
           }
         }
       }
-    },
-    "Report" : {
-
-    },
-    "Resend Code %@" : {
-
-    },
-    "Reset" : {
-
-    },
-    "Reviews %lld" : {
-
-    },
-    "Routing Configuration" : {
-
-    },
-    "Routing URL" : {
-
     },
     "School" : {
       "extractionState" : "stale",
@@ -461,6 +220,7 @@
       }
     },
     "Search" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -469,30 +229,6 @@
           }
         }
       }
-    },
-    "Select Type" : {
-
-    },
-    "SF Symbols on Map" : {
-
-    },
-    "Share" : {
-
-    },
-    "Show more" : {
-
-    },
-    "Simulate Ride during Navigation" : {
-
-    },
-    "Simulation" : {
-
-    },
-    "Size:" : {
-
-    },
-    "Sort By" : {
-
     },
     "Start" : {
       "comment" : "get the navigation route",
@@ -506,37 +242,8 @@
         }
       }
     },
-    "StreetView Quality" : {
-
-    },
-    "Suggestions" : {
-
-    },
-    "Touch Visualizer" : {
-
-    },
-    "Unit Testing in progress" : {
-
-    },
-    "Use SF Symbols for POIs on map" : {
-
-    },
-    "UseFul" : {
-
-    },
-    "Useful (%lld)" : {
-
-    },
-    "Verification code sent to the %@ below:" : {
-
-    },
-    "Verify" : {
-
-    },
-    "Visualize taps in screen recordings to help understand your bug reports" : {
-
-    },
     "walk" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -545,9 +252,6 @@
           }
         }
       }
-    },
-    "We are currently working on the UI and this feature is a work in progress." : {
-
     },
     "Web" : {
       "extractionState" : "stale",
@@ -560,9 +264,6 @@
         }
       }
     },
-    "WEBP has a maximum limit of %@ pixels, image will look pixelated as its divided by a fractional number" : {
-
-    },
     "Work" : {
       "extractionState" : "stale",
       "localizations" : {
@@ -573,12 +274,6 @@
           }
         }
       }
-    },
-    "Work Schedule" : {
-
-    },
-    "You Have Arrived" : {
-
     }
   },
   "version" : "1.0"
