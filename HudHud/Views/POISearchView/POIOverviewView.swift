@@ -260,6 +260,5 @@ struct ShowMoreButtonView: View {
 }
 
 #Preview {
-    @Previewable @State var openingHoursExpanded = false
-    POIOverviewView(poiData: POISheetStore(item: .artwork, openingHoursExpanded: $openingHoursExpanded))
+    POIOverviewView(poiData: POISheetStore(item: .artwork))
 }

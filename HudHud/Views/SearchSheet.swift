@@ -141,13 +141,13 @@ struct SearchSheet: View {
                         ForEach(self.searchStore.searchResults) { item in
                             switch item {
                             case let .categoryItem(item):
-                                Button(action: {
+                                Button {
                                     self.sheetStore.show(.pointOfInterest(item))
-                                }, label: {
+                                } label: {
                                     SearchResultView(item: item) {
                                         self.sheetStore.show(.pointOfInterest(item))
                                     }
-                                })
+                                }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:

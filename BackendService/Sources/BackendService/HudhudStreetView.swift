@@ -8,7 +8,7 @@
 
 import CoreLocation
 import Foundation
-import OpenAPIURLSession
+import OpenAPIRuntime
 import SFSafeSymbols
 
 // MARK: - StreetViewItem
@@ -127,8 +127,8 @@ public struct StreetViewClient {
         }
     }
 
-    public func getStreetViewSceneBBox(box: [Double]) async throws -> StreetViewScene? {
-        let client = Client(serverURL: URL(string: "https://api.dev.hudhud.sa")!, transport: URLSessionTransport()) // swiftlint:disable:this force_unwrapping
+    public func getStreetViewSceneBBox(box: [Double], baseURL: String) async throws -> StreetViewScene? {
+        let client = Client.makeClient(using: baseURL)
 
         let bboxString = box.compactMap { $0 }.map { String($0) }.joined(separator: ",")
         let query = Operations.getStreetViewSceneBBox.Input.Query(bbox: bboxString)

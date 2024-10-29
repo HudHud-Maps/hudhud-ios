@@ -15,17 +15,17 @@ import XCTest
 final class CalculateTests: XCTestCase {
 
     func testCalculateValidCoordinatesReturnsRouteWithSteps() async throws {
-        let hudhudGraphhopper = HudHudGraphHopperRouteProvider(host: "gh.map.dev.hudhud.sa")
+        let routePlanner = RoutePlanner(routingService: GraphHopperRouteProvider())
 
         // When
         let startCoordinate = CLLocationCoordinate2D(latitude: 24.6875, longitude: 46.6845) //  Alfaisaliah Tower, Riyadh
         let endCoordinate = CLLocationCoordinate2D(latitude: 24.7311, longitude: 46.6701) // Kingdom Tower, Riyadh
 
-        // Create route options with valid waypoints
-        let waypoints = [Waypoint(coordinate: startCoordinate), Waypoint(coordinate: endCoordinate)]
-
         // Perform route calculation
-        let routes = try await hudhudGraphhopper.getRoutes(waypoints: waypoints)
+        let routes = try await routePlanner.planRoutes(
+            from: Waypoint(coordinate: startCoordinate),
+            to: Waypoint(coordinate: endCoordinate)
+        )
 
         // Then
         XCTAssertGreaterThan(routes.count, 0)

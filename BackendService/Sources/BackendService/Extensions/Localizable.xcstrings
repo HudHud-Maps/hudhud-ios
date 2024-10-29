@@ -1,0 +1,89 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "Closed" : {
+      "comment" : "When outside of opening hours, we display 'closed'"
+    },
+    "Friday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الجمعة"
+          }
+        }
+      }
+    },
+    "Monday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاثنين"
+          }
+        }
+      }
+    },
+    "Saturday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "السبت"
+          }
+        }
+      }
+    },
+    "Sunday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاحد"
+          }
+        }
+      }
+    },
+    "Thursday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الخميس"
+          }
+        }
+      }
+    },
+    "Tuesday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الثلاثاء"
+          }
+        }
+      }
+    },
+    "Unknown" : {
+      "comment" : "When opening hours are missing, we display 'unknown'"
+    },
+    "Wednesday" : {
+      "comment" : "Weekday for opening hours table",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الاربعاء"
+          }
+        }
+      }
+    }
+  },
+  "version" : "1.0"
+}
