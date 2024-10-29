@@ -168,13 +168,13 @@ public struct HudHudPOI: POIServiceProtocol {
 
             public var displayValue: String {
                 switch self {
-                case .sunday: return NSLocalizedString("Sunday", bundle: .module, comment: "Sunday")
-                case .monday: return NSLocalizedString("Monday", bundle: .module, comment: "Monday")
-                case .tuesday: return NSLocalizedString("Tuesday", bundle: .module, comment: "Tuesday")
-                case .wednesday: return NSLocalizedString("Wednesday", bundle: .module, comment: "Wednesday")
-                case .thursday: return NSLocalizedString("Thursday", bundle: .module, comment: "Thursday")
-                case .friday: return NSLocalizedString("Friday", bundle: .module, comment: "Friday")
-                case .saturday: return NSLocalizedString("Saturday", bundle: .module, comment: "Saturday")
+                case .sunday: return NSLocalizedString("Sunday", bundle: .module, comment: "Weekday for opening hours table")
+                case .monday: return NSLocalizedString("Monday", bundle: .module, comment: "Weekday for opening hours table")
+                case .tuesday: return NSLocalizedString("Tuesday", bundle: .module, comment: "Weekday for opening hours table")
+                case .wednesday: return NSLocalizedString("Wednesday", bundle: .module, comment: "Weekday for opening hours table")
+                case .thursday: return NSLocalizedString("Thursday", bundle: .module, comment: "Weekday for opening hours table")
+                case .friday: return NSLocalizedString("Friday", bundle: .module, comment: "Weekday for opening hours table")
+                case .saturday: return NSLocalizedString("Saturday", bundle: .module, comment: "Weekday for opening hours table")
                 }
             }
         }
@@ -189,23 +189,30 @@ public struct HudHudPOI: POIServiceProtocol {
             // MARK: Computed Properties
 
             public var displayValue: String {
-                guard self.start != 0 || self.end != 0 else { return "Closed" }
-                return "\(self.formatHour(self.start)) - \(self.formatHour(self.end))"
+                guard self.start != 0 || self.end != 0 else {
+                    return NSLocalizedString("Closed", bundle: .module, comment: "When outside of opening hours, we display 'closed'")
+                }
+
+                guard let start = self.formatHour(self.start),
+                      let end = self.formatHour(self.end) else {
+                    return NSLocalizedString("Unknown", bundle: .module, comment: "When opening hours are missing, we display 'unknown'")
+                }
+
+                return "\(start) - \(end))"
             }
 
             // MARK: Functions
 
-            private func formatHour(_ hour: Int) -> String {
+            private func formatHour(_ hour: Int) -> String? {
                 var components = DateComponents()
                 components.hour = hour
                 let calendar = Calendar.current
                 if let date = calendar.date(from: components) {
                     let formatter = DateFormatter()
-                    formatter.dateFormat = "h a" // 12-hour format with AM/PM
+                    formatter.dateFormat = "h:mm a" // 12-hour format with AM/PM
                     return formatter.string(from: date)
-                } else {
-                    return "Invalid Time"
                 }
+                return nil
             }
         }
 

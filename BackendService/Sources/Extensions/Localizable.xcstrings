@@ -1,8 +1,11 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "Closed" : {
+      "comment" : "When outside of opening hours, we display 'closed'"
+    },
     "Friday" : {
-      "comment" : "Friday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -13,7 +16,7 @@
       }
     },
     "Monday" : {
-      "comment" : "Monday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -24,7 +27,7 @@
       }
     },
     "Saturday" : {
-      "comment" : "Saturday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -35,7 +38,7 @@
       }
     },
     "Sunday" : {
-      "comment" : "Sunday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -46,7 +49,7 @@
       }
     },
     "Thursday" : {
-      "comment" : "Thursday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -57,7 +60,7 @@
       }
     },
     "Tuesday" : {
-      "comment" : "Tuesday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -67,8 +70,11 @@
         }
       }
     },
+    "Unknown" : {
+      "comment" : "When opening hours are missing, we display 'unknown'"
+    },
     "Wednesday" : {
-      "comment" : "Wednesday",
+      "comment" : "Weekday for opening hours table",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
