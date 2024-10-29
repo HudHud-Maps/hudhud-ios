@@ -1,5 +1,5 @@
 //
-//  CameraManager.swift
+//  CameraStore.swift
 //  HudHud
 //
 //  Created by Fatima Aljaber on 23/10/2024.
@@ -11,10 +11,10 @@ import Foundation
 import SwiftUI
 import UIKit
 
-// MARK: - CameraManager
+// MARK: - CameraStore
 
 @Observable
-final class CameraManager: NSObject {
+final class CameraStore {
 
     // MARK: Properties
 
@@ -25,8 +25,7 @@ final class CameraManager: NSObject {
 
     // MARK: Lifecycle
 
-    override init() {
-        super.init()
+    init() {
         self.checkCameraPermission()
     }
 
@@ -38,7 +37,8 @@ final class CameraManager: NSObject {
         case .authorized:
             self.isCameraPermissionGranted = true
         case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { granted in
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                guard let self else { return }
                 DispatchQueue.main.async {
                     self.isCameraPermissionGranted = granted
                 }
@@ -65,7 +65,7 @@ struct AccessCameraView: UIViewControllerRepresentable {
 
     // MARK: Properties
 
-    @Binding var selectedImage: UIImage?
+    var cameraStore: CameraStore
     @Environment(\.presentationMode) var isPresented
 
     // MARK: Functions
@@ -81,7 +81,7 @@ struct AccessCameraView: UIViewControllerRepresentable {
     func updateUIViewController(_: UIImagePickerController, context _: Context) {}
 
     func makeCoordinator() -> Coordinator {
-        return Coordinator(picker: self)
+        return Coordinator(cameraStore: self.cameraStore, presentationMode: self.isPresented)
     }
 }
 
@@ -91,23 +91,25 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
 
     // MARK: Properties
 
-    var picker: AccessCameraView
+    var cameraStore: CameraStore
+    var presentationMode: Binding<PresentationMode>
 
     // MARK: Lifecycle
 
-    init(picker: AccessCameraView) {
-        self.picker = picker
+    init(cameraStore: CameraStore, presentationMode: Binding<PresentationMode>) {
+        self.cameraStore = cameraStore
+        self.presentationMode = presentationMode
     }
 
     // MARK: Functions
 
     func imagePickerController(_: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         guard let selectedImage = info[.originalImage] as? UIImage else { return }
-        self.picker.selectedImage = selectedImage
-        self.picker.isPresented.wrappedValue.dismiss()
+        self.cameraStore.capturedImage = selectedImage
+        self.presentationMode.wrappedValue.dismiss()
     }
 
     func imagePickerControllerDidCancel(_: UIImagePickerController) {
-        self.picker.isPresented.wrappedValue.dismiss()
+        self.presentationMode.wrappedValue.dismiss()
     }
 }

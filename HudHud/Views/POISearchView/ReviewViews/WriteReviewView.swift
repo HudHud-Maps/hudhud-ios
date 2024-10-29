@@ -17,9 +17,11 @@ struct WriteReviewView: View {
 
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
-    @State private var cameraManager = CameraManager()
+    @State private var cameraStore = CameraStore()
+    @State var textEditorHeight: CGFloat = 128
     let item: ResolvedItem
     var store: RatingStore
+    let sheetStore: SheetStore
 
     var body: some View {
         VStack {
@@ -42,7 +44,7 @@ struct WriteReviewView: View {
 
             Spacer()
             self.closeButton(backgroundColor: Color.Colors.General._03LightGrey, size: 30) {
-                self.dismiss()
+                self.sheetStore.popSheet()
             }
         }
         .padding()
@@ -65,9 +67,9 @@ struct WriteReviewView: View {
                     .padding(.top, 8)
             }
             .padding(16)
-            .frame(width: 369, alignment: .topLeading)
             .background(Color.Colors.General._05WhiteBackground)
             .cornerRadius(12)
+            .padding(.horizontal, 16)
         }
     }
 
@@ -79,31 +81,30 @@ struct WriteReviewView: View {
                 .padding(.vertical, 16)
                 .hudhudFontStyle(.labelMedium)
 
-            ZStack(alignment: .topLeading) {
-                TextEditor(text: Binding(
-                    get: { self.store.state.reviewText.isEmpty ? self.store.state.placeholderString : self.store.state.reviewText },
-                    set: { self.store.reduce(action: .updateReviewText($0)) }
-                ))
-                .foregroundStyle(self.store.state.reviewText.isEmpty ? Color.Colors.General._02Grey : Color.Colors.General._01Black)
-                .hudhudFontStyle(.paragraphMedium)
-                .focused(self.$isFocused)
-                .padding([.top, .leading], 8)
-                .toolbar {
-                    ToolbarItemGroup(placement: .keyboard) {
-                        Spacer()
-                        Button("Done") {
-                            self.isFocused = false
-                        }
-                    }
-                }
-                .onTapGesture {
-                    self.store.reduce(action: .removePlaceHolder)
-                }
-            }
+            TextEditor(text: Binding(
+                get: { self.store.state.reviewText.isEmpty ? self.store.state.placeholderString : self.store.state.reviewText },
+                set: { self.store.reduce(action: .updateReviewText($0)) }
+            ))
+            .frame(height: 128)
+            .foregroundStyle(self.store.state.reviewText.isEmpty ? Color.Colors.General._02Grey : Color.Colors.General._01Black)
+            .hudhudFontStyle(.paragraphMedium)
+            .focused(self.$isFocused)
+            .padding([.top, .leading], 8)
             .background(Color.Colors.General._05WhiteBackground)
             .cornerRadius(12)
-            .frame(width: 369, height: 128)
+            .toolbar {
+                ToolbarItemGroup(placement: .keyboard) {
+                    Spacer()
+                    Button("Done") {
+                        self.isFocused = false
+                    }
+                }
+            }
+            .onTapGesture {
+                self.store.reduce(action: .removePlaceHolder)
+            }
         }
+        .padding(.horizontal)
     }
 
     // MARK: - Photo & Video Section
@@ -116,27 +117,27 @@ struct WriteReviewView: View {
 
             HStack(spacing: 12) {
                 Button {
-                    self.cameraManager.openCamera()
+                    self.cameraStore.openCamera()
                 } label: {
                     VStack {
                         Image(.addCameraPhoto)
                             .resizable()
                             .frame(width: 25, height: 25)
                     }
-                    .frame(width: 72, height: 72)
+                    .padding(24)
                     .background(Color.Colors.General._05WhiteBackground)
                     .cornerRadius(10)
                 }
-                .fullScreenCover(isPresented: self.$cameraManager.isShowingCamera) {
-                    AccessCameraView(selectedImage: self.$cameraManager.capturedImage)
+                .fullScreenCover(isPresented: self.$cameraStore.isShowingCamera) {
+                    AccessCameraView(cameraStore: self.cameraStore)
                         .background(.black)
                         .onDisappear {
-                            if let image = cameraManager.capturedImage {
+                            if let image = cameraStore.capturedImage {
                                 self.store.addImagesFromCamera(newImage: image)
                             }
                         }
                 }
-                .alert(isPresented: self.$cameraManager.showAlert) {
+                .alert(isPresented: self.$cameraStore.showAlert) {
                     Alert(
                         title: Text("Camera Access Required"),
                         message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
@@ -156,7 +157,7 @@ struct WriteReviewView: View {
                             .resizable()
                             .frame(width: 25, height: 25)
                     }
-                    .frame(width: 72, height: 72)
+                    .padding(24)
                     .background(Color.Colors.General._05WhiteBackground)
                     .cornerRadius(10)
                 }
@@ -214,7 +215,6 @@ struct WriteReviewView: View {
                     .frame(width: size, height: size)
 
                 Image(.closeIcon)
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
                     .foregroundStyle(Color.Colors.General._01Black)
             }
             .padding(4)
@@ -226,5 +226,5 @@ struct WriteReviewView: View {
 }
 
 #Preview {
-    WriteReviewView(item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0))
+    WriteReviewView(item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0), sheetStore: SheetStore())
 }
