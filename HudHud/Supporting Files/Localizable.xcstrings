@@ -22,12 +22,32 @@
     "%@" : {
       "comment" : "distance • type of route\nduration"
     },
+    "%@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
     "%@ %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ until %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ until %2$@"
           }
         }
       }
@@ -114,6 +134,7 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -140,7 +161,7 @@
 
     },
     "Close" : {
-      "comment" : "accesibility label instead of x",
+      "comment" : "Accessibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -186,13 +207,7 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
-    "Distance" : {
-
-    },
     "Done" : {
-
-    },
-    "Duration" : {
 
     },
     "Edit" : {
@@ -263,9 +278,6 @@
           }
         }
       }
-    },
-    "Hours" : {
-
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
@@ -339,9 +351,6 @@
         }
       }
     },
-    "N / A" : {
-
-    },
     "Name" : {
 
     },
@@ -357,7 +366,7 @@
     "No Map Layers Available" : {
 
     },
-    "No Ratings" : {
+    "No ratings" : {
 
     },
     "No Results" : {
@@ -391,15 +400,6 @@
 
     },
     "Rating" : {
-
-    },
-    "Ratings" : {
-
-    },
-    "Read Less" : {
-
-    },
-    "Read More" : {
 
     },
     "Recents" : {
@@ -497,9 +497,6 @@
 
     },
     "Unit Testing in progress" : {
-
-    },
-    "Unknown" : {
 
     },
     "Use SF Symbols for POIs on map" : {

@@ -157,6 +157,94 @@ public struct HudHudPOI: POIServiceProtocol {
 
     // MARK: Nested Types
 
+    public struct OpeningHours: Codable, Equatable {
+
+        // MARK: Nested Types
+
+        public enum WeekDay: String, CaseIterable, Codable {
+            case sunday, monday, tuesday, wednesday, thursday, friday, saturday
+
+            // MARK: Computed Properties
+
+            public var displayValue: String {
+                switch self {
+                case .sunday: return NSLocalizedString("Sunday", bundle: .module, comment: "Weekday for opening hours table")
+                case .monday: return NSLocalizedString("Monday", bundle: .module, comment: "Weekday for opening hours table")
+                case .tuesday: return NSLocalizedString("Tuesday", bundle: .module, comment: "Weekday for opening hours table")
+                case .wednesday: return NSLocalizedString("Wednesday", bundle: .module, comment: "Weekday for opening hours table")
+                case .thursday: return NSLocalizedString("Thursday", bundle: .module, comment: "Weekday for opening hours table")
+                case .friday: return NSLocalizedString("Friday", bundle: .module, comment: "Weekday for opening hours table")
+                case .saturday: return NSLocalizedString("Saturday", bundle: .module, comment: "Weekday for opening hours table")
+                }
+            }
+        }
+
+        public struct TimeRange: Codable, Equatable {
+
+            // MARK: Properties
+
+            public var start: Int
+            public var end: Int
+
+            // MARK: Computed Properties
+
+            public var displayValue: String {
+                guard self.start != 0 || self.end != 0 else {
+                    return NSLocalizedString("Closed", bundle: .module, comment: "When outside of opening hours, we display 'closed'")
+                }
+
+                guard let start = self.formatHour(self.start),
+                      let end = self.formatHour(self.end) else {
+                    return NSLocalizedString("Unknown", bundle: .module, comment: "When opening hours are missing, we display 'unknown'")
+                }
+
+                return "\(start) - \(end))"
+            }
+
+            // MARK: Functions
+
+            private func formatHour(_ hour: Int) -> String? {
+                var components = DateComponents()
+                components.hour = hour
+                let calendar = Calendar.current
+                if let date = calendar.date(from: components) {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "h:mm a" // 12-hour format with AM/PM
+                    return formatter.string(from: date)
+                }
+                return nil
+            }
+        }
+
+        // MARK: Properties
+
+        public var day: WeekDay
+        public var hours: [TimeRange]
+
+        // MARK: Computed Properties
+
+        var backendValue: Components.Schemas.OpeningHours {
+            var backendOpeningHours = Components.Schemas.OpeningHours()
+            let timeRanges = self.hours.map {
+                Components.Schemas.OpeningRange(end: $0.end, start: $0.start)
+            }
+
+            // Assign the time ranges based on the current day
+            switch self.day {
+            case .sunday: backendOpeningHours.sunday = timeRanges
+            case .monday: backendOpeningHours.monday = timeRanges
+            case .tuesday: backendOpeningHours.tuesday = timeRanges
+            case .wednesday: backendOpeningHours.wednesday = timeRanges
+            case .thursday: backendOpeningHours.thursday = timeRanges
+            case .friday: backendOpeningHours.friday = timeRanges
+            case .saturday: backendOpeningHours.saturday = timeRanges
+            }
+
+            return backendOpeningHours
+        }
+
+    }
+
     public enum PriceRange: Int {
         case cheap = 1
         case medium = 2
@@ -237,6 +325,18 @@ public struct HudHudPOI: POIServiceProtocol {
                     nil
                 }
                 let mediaURLsList = jsonResponse.data.value1.media_urls?.compactMap { URL(string: $0.url) }
+                let backendOpeningHours = jsonResponse.data.value1.opening_hours
+
+                let openingHoursList: [OpeningHours] = OpeningHours.WeekDay.allCases.compactMap { day -> OpeningHours? in
+                    let dayHours: [Components.Schemas.OpeningRange]? = backendOpeningHours?[keyPath: self.keyPathForDay(day)]
+
+                    guard let hours = dayHours else { return nil }
+
+                    let timeRanges: [OpeningHours.TimeRange] = hours.map { OpeningHours.TimeRange(start: $0.start ?? 0, end: $0.end ?? 0) }
+
+                    return OpeningHours(day: day, hours: timeRanges)
+                }
+
                 return [ResolvedItem(id: jsonResponse.data.value1.id,
                                      title: jsonResponse.data.value1.name,
                                      subtitle: jsonResponse.data.value1.address,
@@ -250,7 +350,9 @@ public struct HudHudPOI: POIServiceProtocol {
                                      rating: jsonResponse.data.value1.rating,
                                      ratingsCount: jsonResponse.data.value1.ratings_count,
                                      isOpen: jsonResponse.data.value1.is_open,
-                                     mediaURLs: mediaURLsList ?? [])]
+                                     openingHours: openingHoursList,
+                                     mediaURLs: mediaURLsList ?? [],
+                                     priceRange: jsonResponse.data.value1.price_range)]
             }
         case .notFound:
             throw HudHudClientError.poiIDNotFound
@@ -345,7 +447,6 @@ public struct HudHudPOI: POIServiceProtocol {
             return body.data.map { item -> ResolvedItem in
                 let caseInsensitiveCategory = item.category.lowercased()
                 let resolvedPriceRange = PriceRange(rawValue: item.price_range ?? 0)
-
                 return ResolvedItem(
                     id: item.id,
                     title: item.name,
@@ -385,6 +486,19 @@ public struct HudHudPOI: POIServiceProtocol {
     public func lookup(id: String, baseURL: String) async throws -> ResolvedItem? {
         try await self.lookup(id: id, prediction: (), baseURL: baseURL).first
     }
+
+    func keyPathForDay(_ day: OpeningHours.WeekDay) -> KeyPath<Components.Schemas.OpeningHours, [Components.Schemas.OpeningRange]?> {
+        switch day {
+        case .sunday: return \.sunday
+        case .monday: return \.monday
+        case .tuesday: return \.tuesday
+        case .wednesday: return \.wednesday
+        case .thursday: return \.thursday
+        case .friday: return \.friday
+        case .saturday: return \.saturday
+        }
+    }
+
 }
 
 // MARK: - SystemColor

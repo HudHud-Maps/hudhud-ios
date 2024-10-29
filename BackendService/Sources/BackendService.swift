@@ -183,6 +183,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var symbol: SFSymbol
     public var systemColor: SystemColor
     public var category: String?
+    public var subCategory: String?
     public let type: PredictionResult
     public var coordinate: CLLocationCoordinate2D
     public var phone: String?
@@ -190,11 +191,13 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public var rating: Double?
     public var ratingsCount: Int?
     public var isOpen: Bool?
+    public let openingHours: [HudHudPOI.OpeningHours]?
     public var trendingImage: String?
     public var mediaURLs: [URL]
     public let distance: Double?
     public let driveDuration: Double?
     public let priceRange: Int?
+    public let isWheelchairAccessible: Bool?
 
     // MARK: Computed Properties
 
@@ -208,11 +211,12 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, isWheelchairAccessible: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
         self.category = category
+        self.subCategory = subCategory
         self.symbol = symbol
         self.type = type
         self.coordinate = coordinate
@@ -221,12 +225,14 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.rating = rating
         self.ratingsCount = ratingsCount
         self.isOpen = isOpen
+        self.openingHours = openingHours
         self.trendingImage = trendingImage
         self.mediaURLs = mediaURLs
         self.systemColor = color
         self.distance = distance
         self.driveDuration = driveDuration
         self.priceRange = priceRange
+        self.isWheelchairAccessible = isWheelchairAccessible
     }
 
     // MARK: Functions
@@ -292,13 +298,18 @@ public extension ResolvedItem {
                                       title: "Ketch up",
                                       subtitle: "Bluewaters Island - off Jumeirah Beach Residence",
                                       category: "Restaurant",
+                                      subCategory: "International",
                                       type: .hudhud,
                                       coordinate: CLLocationCoordinate2D(latitude: 24.723583614203136, longitude: 46.633232873031076),
                                       phone: "0503539560",
                                       website: URL(string: "https://hudhud.sa"),
                                       rating: 4,
                                       ratingsCount: 56,
-                                      mediaURLs: .previewMediaURLs)
+                                      isOpen: true,
+                                      openingHours: exampleOpeningHours,
+                                      mediaURLs: .previewMediaURLs,
+                                      priceRange: 2,
+                                      isWheelchairAccessible: true)
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
                                         title: "Starbucks",
@@ -354,6 +365,10 @@ public extension ResolvedItem {
                                               subtitle: "Work",
                                               type: .hudhud,
                                               coordinate: CLLocationCoordinate2D(latitude: 24.7192284, longitude: 46.6468331))
+
+    static let exampleOpeningHours: [HudHudPOI.OpeningHours] = HudHudPOI.OpeningHours.WeekDay.allCases.map {
+        HudHudPOI.OpeningHours(day: $0, hours: [HudHudPOI.OpeningHours.TimeRange(start: 10, end: 22)])
+    }
 }
 
 public extension DisplayableRow {
