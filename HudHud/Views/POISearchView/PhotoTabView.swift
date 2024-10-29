@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import NukeUI
 import SwiftUI
 
 struct PhotoTabView: View {
@@ -23,10 +24,10 @@ struct PhotoTabView: View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
                 PhotosView(items: self.item.mediaURLs, id: \.self, spacing: 5) { url in
-                    AsyncImage(url: url) { phase in
-                        switch phase {
-                        case let .success(image):
-                            ZStack(alignment: .bottomTrailing) {
+                    LazyImage(url: url) { state in
+                        ZStack(alignment: .bottomTrailing) {
+                            if let image = state.image {
+                                // Display the loaded image
                                 image
                                     .resizable()
                                     .onTapGesture {
@@ -39,16 +40,14 @@ struct PhotoTabView: View {
                                     .background(Color.Colors.General._01Black.opacity(0.5))
                                     .foregroundColor(Color.Colors.General._05WhiteBackground)
                                     .clipShape(.rect(topLeadingRadius: 8))
+                            } else if state.isLoading {
+                                ProgressView()
+                                    .cornerRadius(7.0)
+                                    .progressViewStyle(.automatic)
+                                    .frame(width: 96, height: 96)
+                            } else {
+                                Color.gray
                             }
-                        case .failure:
-                            Color.gray
-                        case .empty:
-                            ProgressView()
-                                .cornerRadius(7.0)
-                                .progressViewStyle(.automatic)
-                                .frame(width: 96, height: 96)
-                        @unknown default:
-                            Color.gray
                         }
                     }
                 }
