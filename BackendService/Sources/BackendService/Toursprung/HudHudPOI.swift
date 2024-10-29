@@ -9,7 +9,7 @@
 
 import CoreLocation
 import Foundation
-import OpenAPIURLSession
+import OpenAPIRuntime
 import SFSafeSymbols
 import SwiftUI
 

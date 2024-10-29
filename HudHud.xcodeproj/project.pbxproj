@@ -80,9 +80,12 @@
 		90CBC72B2BD79D4C00F98199 /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 90CBC72A2BD79D4C00F98199 /* InfoPlist.xcstrings */; };
 		980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5714CCC7088C4B2E6E2A3A2B /* UserLocationStore.swift */; };
 		9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C402287045B111EE9DE49203 /* ABCRouteConfigurationData.swift */; };
+		9E0026082CCF8F74006DD54A /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0026072CCF8F74006DD54A /* PulseUI */; };
+		9E0026102CD0D3C7006DD54A /* APIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00260F2CD0D3C7006DD54A /* APIClient */; };
 		9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0552CCE69FC00F67DC5 /* FerrostarCore */; };
 		9E82F0582CCE69FC00F67DC5 /* FerrostarMapLibreUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */; };
 		9E82F05A2CCE69FC00F67DC5 /* FerrostarSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */; };
+		9E82F05F2CCE766A00F67DC5 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
 		9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69F75C4E4220C498F691DF33 /* MoreFiltersView.swift */; };
 		9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */; };
 		9EE17AEF2CC79EC800316799 /* SheetContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */; };
@@ -343,9 +346,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CBC7C7C62CB2932600210404 /* iPhoneNumberField in Frameworks */,
+				9E0026102CD0D3C7006DD54A /* APIClient in Frameworks */,
 				59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */,
 				9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */,
 				9E82F05A2CCE69FC00F67DC5 /* FerrostarSwiftUI in Frameworks */,
+				9E0026082CCF8F74006DD54A /* PulseUI in Frameworks */,
 				CD3BCAD32CB6E402001F8CFD /* TokensEnumGenerator in Frameworks */,
 				59A28FFE2C3EC9B800780307 /* BetterSafariView in Frameworks */,
 				F22401782C58D61B008865AE /* SwiftUIPanoramaViewer in Frameworks */,
@@ -358,6 +363,7 @@
 				9E82F0582CCE69FC00F67DC5 /* FerrostarMapLibreUI in Frameworks */,
 				CB7033BB2C9300610006681E /* TypographyKit in Frameworks */,
 				CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */,
+				9E82F05F2CCE766A00F67DC5 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -860,6 +866,8 @@
 				9E82F0552CCE69FC00F67DC5 /* FerrostarCore */,
 				9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */,
 				9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */,
+				9E0026072CCF8F74006DD54A /* PulseUI */,
+				9E00260F2CD0D3C7006DD54A /* APIClient */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -949,6 +957,7 @@
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */,
+				9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1554,6 +1563,14 @@
 				kind = branch;
 			};
 		};
+		9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/kean/Pulse";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.2;
+			};
+		};
 		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
@@ -1649,6 +1666,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
 			productName = TouchVisualizer;
+		};
+		9E0026072CCF8F74006DD54A /* PulseUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */;
+			productName = PulseUI;
+		};
+		9E00260F2CD0D3C7006DD54A /* APIClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = APIClient;
 		};
 		9E82F0552CCE69FC00F67DC5 /* FerrostarCore */ = {
 			isa = XCSwiftPackageProductDependency;
