@@ -16,6 +16,7 @@
 		0CB17C9F2CD0DFA200952B99 /* RoutingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17C9E2CD0DFA200952B99 /* RoutingOptions.swift */; };
 		0CB17CA32CD0DFD900952B99 /* RoutePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */; };
 		0CB17CA52CD0DFED00952B99 /* RoutingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA42CD0DFED00952B99 /* RoutingService.swift */; };
+		0CB17CAA2CD0F31300952B99 /* RoutingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA92CD0F31300952B99 /* RoutingError.swift */; };
 		10C072489BAB06C11A07D601 /* MapViewCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56265CBDEA22D04649BE38DE /* MapViewCamera.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
@@ -198,6 +199,7 @@
 		0CB17C9E2CD0DFA200952B99 /* RoutingOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingOptions.swift; sourceTree = "<group>"; };
 		0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanner.swift; sourceTree = "<group>"; };
 		0CB17CA42CD0DFED00952B99 /* RoutingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingService.swift; sourceTree = "<group>"; };
+		0CB17CA92CD0F31300952B99 /* RoutingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingError.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
 		14EFC3A7AE83BA96C32EEB4E /* UIImage+resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+resize.swift"; sourceTree = "<group>"; };
@@ -417,6 +419,7 @@
 				0CB17C9E2CD0DFA200952B99 /* RoutingOptions.swift */,
 				0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */,
 				0CB17CA42CD0DFED00952B99 /* RoutingService.swift */,
+				0CB17CA92CD0F31300952B99 /* RoutingError.swift */,
 			);
 			path = RoutePlanner;
 			sourceTree = "<group>";
@@ -1144,6 +1147,7 @@
 				A33C619BB682DE8B3AE4D895 /* Locale+isArabic.swift in Sources */,
 				151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */,
 				9EE17AEF2CC79EC800316799 /* SheetContainerViewController.swift in Sources */,
+				0CB17CAA2CD0F31300952B99 /* RoutingError.swift in Sources */,
 				2670A068B017EEE420D01F3B /* UIColor.swift in Sources */,
 				E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */,
 				980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */,

@@ -17,6 +17,18 @@ import OSLog
 
 struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
 
+    // MARK: Properties
+
+    private let osrmParser: any RouteResponseParser
+
+    // MARK: Lifecycle
+
+    init(polylinePrecision: UInt32 = 6) {
+        self.osrmParser = createOsrmResponseParser(polylinePrecision: polylinePrecision)
+    }
+
+    // MARK: Functions
+
     func getRoutes(
         userLocation: FerrostarCoreFFI.UserLocation,
         waypoints: [FerrostarCoreFFI.Waypoint]
@@ -42,19 +54,18 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
     ) async throws -> [Route] {
         let allWaypoints = [start] + waypoints + [end]
         let stops = allWaypoints.map { "\($0.coordinate.lng),\($0.coordinate.lat)" }.joined(separator: ";")
+
         let url = try buildURL(for: stops)
+
         Logger.routing.debug("Requesting route from \(url)")
 
         let (data, response) = try await URLSession.shared.data(from: url)
-
         try self.validateResponse(response)
 
         let json = try parseJSON(from: data)
         try handleAPIStatus(from: json)
 
-        let osrmParser = createOsrmResponseParser(polylinePrecision: 6)
-        let parsedRoutes = try osrmParser.parseResponse(response: data)
-        return parsedRoutes
+        return try self.osrmParser.parseResponse(response: data)
     }
 
     private func buildURL(for stops: String) throws -> URL {
@@ -65,172 +76,59 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         components.queryItems = RoutingOptions().queryItems
 
         guard let url = components.url else {
-            throw ToursprungError.invalidUrl(message: "Couldn't create url from URLComponents")
+            throw RoutingError.configuration(.invalidURL(message: "Couldn't create url from URLComponents"))
         }
         return url
     }
 
     private func validateResponse(_ response: URLResponse) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
-            throw ToursprungError.invalidResponse(message: "Unexpected response type")
+            throw RoutingError.network(.invalidResponseType)
         }
 
         guard httpResponse.mimeType == "application/json" else {
-            throw ToursprungError.invalidResponse(message: "MIME Type not matching application/json")
+            throw RoutingError.network(.invalidMimeType)
         }
 
         guard (200 ... 299).contains(httpResponse.statusCode) else {
             if (500 ... 599).contains(httpResponse.statusCode) {
-                throw ToursprungError.invalidResponse(message: "Server error HTTP status code: \(httpResponse.statusCode)")
+                throw RoutingError.network(.serverError(statusCode: httpResponse.statusCode))
             } else {
-                throw ToursprungError.invalidResponse(message: "Server error occurred")
+                throw RoutingError.network(.unexpectedResponse(message: "Status code: \(httpResponse.statusCode)"))
             }
         }
     }
 
     private func parseJSON(from data: Data) throws -> [String: Any] {
         guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
-            throw ToursprungError.invalidResponse(message: "Invalid JSON format")
+            throw RoutingError.parsing(.invalidJSON)
         }
         return json
     }
 
     private func handleAPIStatus(from json: [String: Any]) throws {
-        if let apiStatusCode = json["code"] as? String,
-           let apiMessage = json["message"] as? String {
-            try self.handleApiError(statusCode: apiStatusCode, message: apiMessage)
+        guard let apiStatusCode = json["code"] as? String,
+              let apiMessage = json["message"] as? String else {
+            return
         }
-    }
 
-    private func handleApiError(statusCode: String, message: String) throws {
-        switch statusCode {
+        switch apiStatusCode {
         case "Ok":
             return
         case "InvalidInput":
-            throw ToursprungError.invalidInput(message: message)
+            throw RoutingError.routing(.invalidInput(message: apiMessage))
         case "Not Authorized - No Token", "Not Authorized - Invalid Token":
-            throw ToursprungError.notAuthorized(message: message)
+            throw RoutingError.routing(.unauthorized(message: apiMessage))
         case "Forbidden":
-            throw ToursprungError.forbidden(message: message)
+            throw RoutingError.routing(.forbidden(message: apiMessage))
         case "ProfileNotFound":
-            throw ToursprungError.profileNotFound(message: message)
+            throw RoutingError.routing(.profileNotFound(message: apiMessage))
         case "NoSegment":
-            throw ToursprungError.noSegment(message: message)
+            throw RoutingError.routing(.noSegment(message: apiMessage))
         case "NoRoute":
-            throw ToursprungError.noRoute(message: message)
+            throw RoutingError.routing(.noRoute(message: apiMessage))
         default:
-            throw ToursprungError.invalidResponse(message: "Unknown API error: \(statusCode) - \(message)")
+            throw RoutingError.routing(.unknown(code: apiStatusCode, message: apiMessage))
         }
-    }
-}
-
-// MARK: - ToursprungError
-
-enum ToursprungError: LocalizedError, Equatable {
-    case invalidUrl(message: String?)
-    case invalidResponse(message: String?)
-    case noRoute(message: String?)
-    case noSegment(message: String?)
-    case forbidden(message: String?)
-    case invalidInput(message: String?)
-    case profileNotFound(message: String?)
-    case notAuthorized(message: String?)
-
-    // MARK: Computed Properties
-
-    public var errorDescription: String? {
-        switch self {
-        case let .invalidUrl(message):
-            return errorDescription(message: message, defaultMessage: "Calculating route failed")
-        case let .invalidResponse(message):
-            return errorDescription(message: message, defaultMessage: "Calculating route failed")
-        case let .noRoute(message):
-            return errorDescription(message: message, defaultMessage: "No route found.")
-        case let .noSegment(message):
-            return errorDescription(message: message, defaultMessage: "No segment found.")
-        case let .forbidden(message):
-            return errorDescription(message: message, defaultMessage: "Forbidden access.")
-        case let .invalidInput(message):
-            return errorDescription(message: message, defaultMessage: "Invalid input.")
-        case let .profileNotFound(message: message):
-            return errorDescription(message: message, defaultMessage: "ProfileNotFound")
-        case let .notAuthorized(message: message):
-            return errorDescription(message: message, defaultMessage: "NotAuthorized")
-        }
-    }
-
-    public var failureReason: String? {
-        switch self {
-        case let .invalidUrl(message):
-            return self.errorDescription(message: message, defaultMessage: "Calculating route failed because url can't be created")
-        case let .invalidResponse(message):
-            return self.errorDescription(message: message, defaultMessage: "Hudhud responded with invalid route")
-        case let .noRoute(message):
-            return self.errorDescription(message: message, defaultMessage: "No route found.")
-        case let .noSegment(message):
-            return self.errorDescription(message: message, defaultMessage: "No segment found.")
-        case let .forbidden(message):
-            return self.errorDescription(message: message, defaultMessage: "Forbidden access.")
-        case let .invalidInput(message):
-            return self.errorDescription(message: message, defaultMessage: "Invalid input.")
-        case let .profileNotFound(message: message):
-            return self.errorDescription(message: message, defaultMessage: "Profile Not Found")
-        case let .notAuthorized(message: message):
-            return self.errorDescription(message: message, defaultMessage: "Not Authorized")
-        }
-    }
-
-    public var recoverySuggestion: String? {
-        switch self {
-        case .invalidUrl:
-            return "Retry with another destination"
-        case .invalidResponse:
-            return "Update the app or retry with another destination"
-        case .noRoute:
-            return "Retry with another destination"
-        case .noSegment:
-            return "Retry with another destination"
-        case .forbidden:
-            return "Forbidden access."
-        case .invalidInput:
-            return "Invalid input."
-        case .profileNotFound:
-            return "Profile Not Found"
-        case .notAuthorized:
-            return "Not Authorized"
-        }
-    }
-
-    public var helpAnchor: String? {
-        switch self {
-        case .invalidUrl:
-            return "Search for another location and start navigation to there"
-        case .invalidResponse:
-            return "Go to the AppStore and download the newest version of the App. Alternatively search for another location and start navigation to there."
-        case .noRoute:
-            return "Search for another location and start navigation to there"
-        case .noSegment:
-            return "Search for another location and start navigation to there"
-        case .forbidden:
-            return "Forbidden access"
-        case .invalidInput:
-            return "Invalid input"
-        case .profileNotFound:
-            return "Profile Not Found"
-        case .notAuthorized:
-            return "Not Authorized"
-        }
-    }
-
-    // MARK: Functions
-
-    // MARK: - Private
-
-    private func errorDescription(message: String?, defaultMessage: String) -> String {
-        var description = defaultMessage
-        if let message {
-            description += " \(message)"
-        }
-        return description
     }
 }
