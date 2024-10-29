@@ -8,8 +8,9 @@ set -euo pipefail
 #	exit 1
 #fi
 pwd
+ls -al
 
-VERSION=$(cat ./HudHud.xcodeproj/project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
+VERSION=$(cat ../HudHud.xcodeproj/project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
 
 if [[ $CI_WORKFLOW = 'Internal TestFlight' ]]
 then
