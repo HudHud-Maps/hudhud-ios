@@ -90,7 +90,7 @@ struct POIOverviewView: View {
             .hudhudFont(size: 15, fontWeight: .regular)
 
             // if tab == overview
-            if self.selectedTab == "Overview" {
+            if self.selectedTab != "About" {
                 Divider()
                     .background(Color.Colors.General._04GreyForLines)
 
