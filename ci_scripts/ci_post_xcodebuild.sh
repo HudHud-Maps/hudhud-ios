@@ -7,8 +7,7 @@ then
 	exit 1
 fi
 
-
-VERSION=$(cat ../${CI_PRODUCT}.xcodeproj/project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
+VERSION=$(cat ./project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
 
 if [[ $CI_WORKFLOW = 'Internal TestFlight' ]]
 then
