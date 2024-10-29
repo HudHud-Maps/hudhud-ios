@@ -43,7 +43,7 @@ struct NavigationSheetView: View {
                     .contentShape(Circle())
                 })
                 .tint(.secondary)
-                .accessibilityLabel(Text("Close", comment: "accesibility label instead of x"))
+                .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
             }
             .frame(height: 20)
             .padding(.horizontal)
