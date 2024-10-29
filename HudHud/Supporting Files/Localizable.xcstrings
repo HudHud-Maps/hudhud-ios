@@ -1,0 +1,585 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "" : {
+
+    },
+    " %@" : {
+
+    },
+    "..." : {
+
+    },
+    "(%lld)" : {
+
+    },
+    "@" : {
+
+    },
+    "%.1f" : {
+
+    },
+    "%@" : {
+      "comment" : "distance • type of route\nduration"
+    },
+    "%@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
+    "%@ %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ until %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ until %2$@"
+          }
+        }
+      }
+    },
+    "%lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld"
+          }
+        }
+      }
+    },
+    "%lld Ratings" : {
+
+    },
+    "•" : {
+
+    },
+    "• %@" : {
+
+    },
+    "+" : {
+
+    },
+    "12 September 2024" : {
+
+    },
+    "action" : {
+
+    },
+    "Add" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة"
+          }
+        }
+      }
+    },
+    "Add Location" : {
+      "comment" : "To Add a new stop",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إضافة موقع"
+          }
+        }
+      }
+    },
+    "Add Type" : {
+
+    },
+    "Already Logged In" : {
+
+    },
+    "Apply" : {
+
+    },
+    "Back" : {
+
+    },
+    "Bad Traffic Data" : {
+      "comment" : "for traffic chart"
+    },
+    "Base URL" : {
+
+    },
+    "bicycle" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "دراجة"
+          }
+        }
+      }
+    },
+    "bus" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "باص"
+          }
+        }
+      }
+    },
+    "By Date" : {
+
+    },
+    "By entering and tapping Next, you agree to \n the Terms of Service & Privacy Policy." : {
+
+    },
+    "Call" : {
+      "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مكالمة"
+          }
+        }
+      }
+    },
+    "Cancel" : {
+
+    },
+    "car" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "سيارة"
+          }
+        }
+      }
+    },
+    "Claim this business" : {
+
+    },
+    "Close" : {
+      "comment" : "Accessibility label instead of x",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إغلاق"
+          }
+        }
+      }
+    },
+    "Closed" : {
+
+    },
+    "Create Account" : {
+
+    },
+    "Customers Rating" : {
+
+    },
+    "Debug Menu" : {
+
+    },
+    "Delete" : {
+
+    },
+    "description" : {
+
+    },
+    "Didn't Get the Code?" : {
+
+    },
+    "Direction" : {
+      "comment" : "navigation sheet header",
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إتجاهات"
+          }
+        }
+      }
+    },
+    "Directions" : {
+      "comment" : "navigation sheet header"
+    },
+    "Done" : {
+
+    },
+    "Edit" : {
+
+    },
+    "Enable location in permissions" : {
+
+    },
+    "Enable Touch Visualizer" : {
+
+    },
+    "Enter your phone number or email" : {
+
+    },
+    "Enter your Verification Code" : {
+
+    },
+    "Fastest" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "اسرع"
+          }
+        }
+      }
+    },
+    "Favorites" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المفضلة"
+          }
+        }
+      }
+    },
+    "Filters" : {
+
+    },
+    "From %@" : {
+
+    },
+    "Go" : {
+      "comment" : "start navigation",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بدء"
+          }
+        }
+      }
+    },
+    "Go Back" : {
+
+    },
+    "Help improve HudHud maps." : {
+
+    },
+    "Home" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المنزل"
+          }
+        }
+      }
+    },
+    "Hours Range" : {
+      "comment" : "traffic chart view, Hours range x axes"
+    },
+    "How was the navigation on this trip?" : {
+
+    },
+    "How was your experience?" : {
+
+    },
+    "km/h" : {
+
+    },
+    "Layers" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "طبقات"
+          }
+        }
+      }
+    },
+    "Location Needed" : {
+
+    },
+    "Log Out" : {
+
+    },
+    "Map Details" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "تفاصيل الخريطة"
+          }
+        }
+      }
+    },
+    "Map Type" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "نوع الخريطة"
+          }
+        }
+      }
+    },
+    "metro" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "قطار"
+          }
+        }
+      }
+    },
+    "More" : {
+      "comment" : "on poi detail sheet to see more info",
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أكثر"
+          }
+        }
+      }
+    },
+    "Name" : {
+
+    },
+    "Nearby Trending" : {
+
+    },
+    "Network Logger" : {
+
+    },
+    "Next" : {
+
+    },
+    "No Content To be Shown Here." : {
+
+    },
+    "No Map Layers Available" : {
+
+    },
+    "No ratings" : {
+
+    },
+    "No Results" : {
+
+    },
+    "Note: Changing the URL requires restarting the app for the changes to take effect." : {
+
+    },
+    "Occupancy Range" : {
+      "comment" : "traffic chart view, Occupancy Range y axes"
+    },
+    "OK" : {
+
+    },
+    "Open" : {
+
+    },
+    "Patrick" : {
+
+    },
+    "Personal Information" : {
+
+    },
+    "Photos" : {
+
+    },
+    "Please enable your location to get directions" : {
+
+    },
+    "Price" : {
+
+    },
+    "Quality" : {
+
+    },
+    "Rating" : {
+
+    },
+    "Recents" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الأحدث"
+          }
+        }
+      }
+    },
+    "Report" : {
+
+    },
+    "Resend Code %@" : {
+
+    },
+    "Reset" : {
+
+    },
+    "Reviews %lld" : {
+
+    },
+    "Routing Configuration" : {
+
+    },
+    "Routing URL" : {
+
+    },
+    "School" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "المدرسة"
+          }
+        }
+      }
+    },
+    "Search" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "بحث"
+          }
+        }
+      }
+    },
+    "Select Type" : {
+
+    },
+    "SF Symbols on Map" : {
+
+    },
+    "Share" : {
+
+    },
+    "Show more" : {
+
+    },
+    "Simulate Ride during Navigation" : {
+
+    },
+    "Simulation" : {
+
+    },
+    "Size:" : {
+
+    },
+    "Sort By" : {
+
+    },
+    "Start" : {
+      "comment" : "get the navigation route",
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "إتجاهات"
+          }
+        }
+      }
+    },
+    "StreetView Quality" : {
+
+    },
+    "Suggestions" : {
+
+    },
+    "Touch Visualizer" : {
+
+    },
+    "Unit Testing in progress" : {
+
+    },
+    "Use SF Symbols for POIs on map" : {
+
+    },
+    "UseFul" : {
+
+    },
+    "Useful (%lld)" : {
+
+    },
+    "Verification code sent to the %@ below:" : {
+
+    },
+    "Verify" : {
+
+    },
+    "Visualize taps in screen recordings to help understand your bug reports" : {
+
+    },
+    "walk" : {
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "مشي"
+          }
+        }
+      }
+    },
+    "We are currently working on the UI and this feature is a work in progress." : {
+
+    },
+    "Web" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "الموقع"
+          }
+        }
+      }
+    },
+    "WEBP has a maximum limit of %@ pixels, image will look pixelated as its divided by a fractional number" : {
+
+    },
+    "Work" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "العمل"
+          }
+        }
+      }
+    },
+    "Work Schedule" : {
+
+    },
+    "You Have Arrived" : {
+
+    }
+  },
+  "version" : "1.0"
+}

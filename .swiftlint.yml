@@ -1,26 +1,33 @@
 # Disabled rules
 disabled_rules:
   - nesting
-
+  - trailing_whitespace
+  - line_length
+  - unneeded_synthesized_initializer
+  - file_length
+  - function_body_length
+  - closure_parameter_position
+  - type_body_length
 # Optional Rules
 opt_in_rules:
   - empty_count
   - file_header
   - force_unwrapping
 
+excluded: 
+  - Carthage
+  - BackendService
+  - StyleDictionary
+  - build
+  - POIService/.build
+
 # Customised rules
 force_try:
   severity: warning
 force_unwrapping:
   severity: warning
-line_length:
-  warning: 150
-  ignores_function_declarations: true
-  ignores_comments: true
-  ignores_interpolated_strings: true
-  ignores_urls: true
-file_length:
-  warning: 500
+identifier_name:
+  min_length: 0
 empty_count:
   severity: warning
 cyclomatic_complexity:
@@ -31,7 +38,7 @@ file_header:
                     \/\/  SWIFTLINT_CURRENT_FILENAME
                     \/\/  .*?
                     \/\/
-                    \/\/  Created by .*? on \d{1,2}\.\d{1,2}\.\d{2}\.
+                    \/\/  Created by .*? on \d{1,2}\.|/\d{1,2}\.|/\d{2,4}\.
                     \/\/  Copyright © \d{4} HudHud\. All rights reserved\.
                     \/\/
 custom_rules:
@@ -44,3 +51,28 @@ custom_rules:
       - identifier
     message: "Use assertionFailure() instead"
     severity: error
+  sf_safe_symbol:
+    name: "Safe SFSymbol"
+    message: "Use `SFSafeSymbols` via `systemSymbol` parameters for type safety."
+    regex: "(Image\\(systemName:)|(NSImage\\(symbolName:)|(Label[^,]+?,\\s*systemImage:)|(UIApplicationShortcutIcon\\(systemImageName:)"
+    severity: warning
+  sf_symbol_init:
+    name: "SFSymbol init"
+    message: "SFSymbol(rawValue:) usage is discouraged as it removes type safety. Please try to pass SFSymbol around instead of a String."
+    regex: "(SFSymbol\\(rawValue:)|(\\(systemSymbol: .init\\(rawValue:)"
+    severity: warning
+  init_usage:
+    name: "init() usage"
+    message: "Avoid using .init() as reviewer looses context especially in github without syntax Highlighting"
+    regex: "(?<!self|super)\\.init\\("
+    severity: warning
+  location_usage:
+    name: "Location() usage"
+    message: "Use Location.forSingleRequestUsage or similar, using one Location() object through the whole app allows us to use things like .lastLocation"
+    regex: "\\bLocation\\(\\)"
+    severity: warning
+  print_usage:
+    name: "print usage"
+    message: "Import OSLog and use one of the logging options available in HudHud/Extensions/LoggerSettings.swift instead of print"
+    regex: '\bprint\s*\('
+    severity: warning
