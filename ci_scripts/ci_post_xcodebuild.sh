@@ -7,6 +7,7 @@ set -euo pipefail
 #then
 #	exit 1
 #fi
+pwd
 
 VERSION=$(cat ./HudHud.xcodeproj/project.pbxproj | grep -m1 'MARKETING_VERSION' | cut -d'=' -f2 | tr -d ';' | tr -d ' ')
 
