@@ -41,8 +41,8 @@ struct RoutePlannerView: View {
             switch self.routePlannerStore.state {
             case .initialLoading, .errorFetchignRoute, .locationNotEnabled:
                 ProgressView()
-            case let .loaded(plan):
-                RoutePlanView(destinations: plan.waypoints)
+            case .loaded:
+                RoutePlanView(routePlannderStore: self.routePlannerStore)
             }
         }
         .onAppear {
@@ -57,14 +57,17 @@ struct RoutePlanView: View {
 
     // MARK: Properties
 
-    let destinations: [RouteWaypoint]
+    let routePlannderStore: RoutePlannerStore
 
     // MARK: Content
 
     var body: some View {
         VStack(alignment: .locationIconCenterAlignment) {
-            ForEach(self.destinations, id: \.self) { destination in
+            ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
                 RoutePlannerRow(destination: destination)
+            }
+            AddMoreRoute {
+                self.routePlannderStore.addNewRoute()
             }
         }
     }
@@ -149,6 +152,46 @@ struct DestinationImage: View {
                 .background(
                     item.color.mask(Circle())
                 )
+        }
+    }
+}
+
+// MARK: - AddMoreRoute
+
+struct AddMoreRoute: View {
+
+    // MARK: Properties
+
+    let onClick: () -> Void
+
+    // MARK: Content
+
+    var body: some View {
+        Button(action: self.onClick) {
+            VStack(alignment: .locationIconCenterAlignment) {
+                Label {
+                    HStack {
+                        Text("Add Stop")
+                            .hudhudFontStyle(.labelMedium)
+                            .foregroundStyle(Color(.secondaryLabel))
+                        Spacer()
+                    }
+                } icon: {
+                    Image(.addStopIcon)
+                        .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                }
+                Label {
+                    Rectangle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: .infinity, height: 1)
+                } icon: {
+                    Circle()
+                        .fill(.white)
+                        .frame(width: 4)
+                        .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                }
+            }
+            .padding([.leading, .trailing])
         }
     }
 }

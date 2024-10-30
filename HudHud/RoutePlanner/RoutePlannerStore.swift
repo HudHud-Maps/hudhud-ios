@@ -56,6 +56,11 @@ final class RoutePlannerStore {
         )
     }
 
+    func addNewRoute() {
+        fatalError("show the add route page here")
+        self.sheetStore.show(.debugView)
+    }
+
     private func fetchRoutePlan() async {
         guard let userLocation = await self.userLocationStore.location(allowCached: false) else {
             self.state = .locationNotEnabled
@@ -105,6 +110,17 @@ enum RoutePlanningState: Hashable {
     case locationNotEnabled
     case errorFetchignRoute
     case loaded(plan: RoutePlan)
+
+    // MARK: Computed Properties
+
+    var destinations: [RouteWaypoint] {
+        switch self {
+        case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
+            []
+        case let .loaded(plan):
+            plan.waypoints
+        }
+    }
 }
 
 // MARK: - RoutePlan
