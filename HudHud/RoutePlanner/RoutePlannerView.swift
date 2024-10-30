@@ -20,7 +20,8 @@ struct RoutePlannerView: View {
 
     var body: some View {
         VStack {
-            Text("Hello, World!")
+            RoutePlannerRow()
+            RoutePlannerRow()
         }
     }
 }
@@ -29,10 +30,49 @@ struct RoutePlannerView: View {
 
 struct RoutePlannerRow: View {
     var body: some View {
-        HStack {
-            Text("Hello, World!")
+        VStack(alignment: .locationIconCenterAlignment, spacing: 6) {
+            Label {
+                HStack {
+                    Text("Current Location")
+                        .hudhudFontStyle(.labelMedium)
+                        .foregroundStyle(Color.Colors.General._01Black)
+                    Spacer()
+                }
+            } icon: {
+                Image(systemSymbol: .locationFill)
+                    .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+            }
+            Label {
+                Rectangle()
+                    .fill(Color.black.opacity(0.1))
+                    .frame(width: .infinity, height: 1)
+            } icon: {
+                VStack(spacing: 4) {
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                }
+                .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+            }
+            .padding(.leading)
         }
     }
+}
+
+private extension HorizontalAlignment {
+    private enum LocationIconCenterAlignment: AlignmentID {
+        static func defaultValue(in context: ViewDimensions) -> CGFloat {
+            context[HorizontalAlignment.center]
+        }
+    }
+
+    static let locationIconCenterAlignment = HorizontalAlignment(LocationIconCenterAlignment.self)
 }
 
 #Preview {

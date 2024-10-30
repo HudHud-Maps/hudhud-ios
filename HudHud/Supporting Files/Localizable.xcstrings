@@ -190,6 +190,9 @@
     "Create Account" : {
 
     },
+    "Current Location" : {
+
+    },
     "Customers Rating" : {
 
     },
@@ -279,9 +282,6 @@
       }
     },
     "Go Back" : {
-
-    },
-    "Hello, World!" : {
 
     },
     "Help improve HudHud maps." : {
