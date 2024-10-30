@@ -32,6 +32,7 @@ struct DebugMenuView: View {
                 self.touchesSection
                 self.sfsymbolsSection
                 self.streetViewQualitySection
+                self.routePlannerSection
             }
             .navigationTitle("Debug Menu")
             .toolbar {
@@ -146,6 +147,14 @@ struct DebugMenuView: View {
                     Text("WEBP has a maximum limit of \(CGSize(width: 5500, height: 2750).formatted()) pixels, image will look pixelated as its divided by a fractional number")
                         .gridCellColumns(6)
                 }
+            }
+        }
+    }
+
+    var routePlannerSection: some View {
+        Section(header: Text("Route Planner")) {
+            Toggle(isOn: self.$debugSettings.enableNewRoutePlanner) {
+                Text("Enable new Route Planner design")
             }
         }
     }

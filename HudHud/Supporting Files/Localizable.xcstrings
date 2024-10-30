@@ -229,6 +229,9 @@
     "Enable location in permissions" : {
 
     },
+    "Enable new Route Planner design" : {
+
+    },
     "Enable Touch Visualizer" : {
 
     },
@@ -276,6 +279,9 @@
       }
     },
     "Go Back" : {
+
+    },
+    "Hello, World!" : {
 
     },
     "Help improve HudHud maps." : {
@@ -441,6 +447,9 @@
 
     },
     "Reviews %lld" : {
+
+    },
+    "Route Planner" : {
 
     },
     "Routing Configuration" : {

@@ -163,6 +163,7 @@ enum SheetType: Hashable {
     case favorites
     case navigationPreview
     case pointOfInterest(ResolvedItem)
+    case routePlanner
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
 
@@ -184,6 +185,8 @@ enum SheetType: Hashable {
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
             DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+        case .routePlanner:
+            DetentData(selectedDetent: .third, allowedDetents: [.third])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:

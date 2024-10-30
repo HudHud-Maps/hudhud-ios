@@ -159,7 +159,11 @@ struct ContentView: View {
                                     with: routeIfAvailable
                                 )
                                 try await self.notificationManager.requestAuthorization()
-                                self.sheetStore.show(.navigationPreview)
+                                if self.debugStore.enableNewRoutePlanner {
+                                    self.sheetStore.show(.routePlanner)
+                                } else {
+                                    self.sheetStore.show(.navigationPreview)
+                                }
                             } catch {
                                 Logger.routing.error("Error navigating to \(item): \(error)")
                             }
@@ -170,6 +174,8 @@ struct ContentView: View {
                         self.sheetStore.popSheet()
                     }
                     .navigationBarBackButtonHidden()
+                case .routePlanner:
+                    RoutePlannerView(routePlannerStore: RoutePlannerStore())
                 case .favoritesViewMore:
                     FavoritesViewMoreView(
                         searchStore: self.searchViewStore,
