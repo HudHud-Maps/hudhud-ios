@@ -46,6 +46,12 @@ struct RoutePlannerRow: View {
                 Rectangle()
                     .fill(Color.black.opacity(0.1))
                     .frame(width: .infinity, height: 1)
+                    .overlay(alignment: .trailing) {
+                        Image(.swapIcon)
+                            .padding(6)
+                            .background(Circle().fill(Color(red: 242 / 255, green: 242 / 255, blue: 242 / 255)))
+                            .padding(.trailing)
+                    }
             } icon: {
                 VStack(spacing: 4) {
                     Circle()
