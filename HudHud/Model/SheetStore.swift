@@ -155,7 +155,7 @@ enum NavigationCommand {
 
 // MARK: - SheetType
 
-enum SheetType: Hashable {
+enum SheetType {
     case search
     case mapStyle
     case debugView
@@ -163,7 +163,7 @@ enum SheetType: Hashable {
     case favorites
     case navigationPreview
     case pointOfInterest(ResolvedItem)
-    case routePlanner
+    case routePlanner(RoutePlannerStore)
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
 
@@ -186,7 +186,7 @@ enum SheetType: Hashable {
         case .pointOfInterest:
             DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
         case .routePlanner:
-            DetentData(selectedDetent: .third, allowedDetents: [.third])
+            DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:

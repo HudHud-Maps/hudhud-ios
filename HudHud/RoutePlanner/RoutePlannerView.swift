@@ -6,7 +6,25 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import BackendService
 import SwiftUI
+
+// MARK: - RouteWaypoint
+
+struct RouteWaypoint: Hashable {
+
+    // MARK: Nested Types
+
+    enum RouteWaypointType: Hashable {
+        case userLocation
+        case location(ResolvedItem)
+    }
+
+    // MARK: Properties
+
+    let type: RouteWaypointType
+    let title: String
+}
 
 // MARK: - RoutePlannerView
 
@@ -19,9 +37,35 @@ struct RoutePlannerView: View {
     // MARK: Content
 
     var body: some View {
-        VStack {
-            RoutePlannerRow()
-            RoutePlannerRow()
+        Group {
+            switch self.routePlannerStore.state {
+            case .initialLoading, .errorFetchignRoute, .locationNotEnabled:
+                ProgressView()
+            case let .loaded(plan):
+                RoutePlanView(destinations: plan.waypoints)
+            }
+        }
+        .onAppear {
+            self.routePlannerStore.onAppear()
+        }
+    }
+}
+
+// MARK: - RoutePlanView
+
+struct RoutePlanView: View {
+
+    // MARK: Properties
+
+    let destinations: [RouteWaypoint]
+
+    // MARK: Content
+
+    var body: some View {
+        VStack(alignment: .locationIconCenterAlignment) {
+            ForEach(self.destinations, id: \.self) { destination in
+                RoutePlannerRow(destination: destination)
+            }
         }
     }
 }
@@ -29,17 +73,24 @@ struct RoutePlannerView: View {
 // MARK: - RoutePlannerRow
 
 struct RoutePlannerRow: View {
+
+    // MARK: Properties
+
+    let destination: RouteWaypoint
+
+    // MARK: Content
+
     var body: some View {
         VStack(alignment: .locationIconCenterAlignment, spacing: 6) {
             Label {
                 HStack {
-                    Text("Current Location")
+                    Text(self.destination.title)
                         .hudhudFontStyle(.labelMedium)
                         .foregroundStyle(Color.Colors.General._01Black)
                     Spacer()
                 }
             } icon: {
-                Image(systemSymbol: .locationFill)
+                DestinationImage(destinationType: self.destination.type)
                     .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
             }
             Label {
@@ -66,7 +117,38 @@ struct RoutePlannerRow: View {
                 }
                 .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
             }
-            .padding(.leading)
+        }
+        .padding(.leading)
+    }
+}
+
+// MARK: - DestinationImage
+
+struct DestinationImage: View {
+
+    // MARK: Properties
+
+    let destinationType: RouteWaypoint.RouteWaypointType
+
+    // MARK: Content
+
+    var body: some View {
+        switch self.destinationType {
+        case .userLocation:
+            Image(.userPuck)
+        case let .location(item):
+            Image(systemSymbol: item.symbol)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 12, height: 12)
+                .foregroundStyle(.white)
+                .padding(6)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
+                .layoutPriority(1)
+                .background(
+                    item.color.mask(Circle())
+                )
         }
     }
 }

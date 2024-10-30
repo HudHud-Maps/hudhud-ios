@@ -160,7 +160,12 @@ struct ContentView: View {
                                 )
                                 try await self.notificationManager.requestAuthorization()
                                 if self.debugStore.enableNewRoutePlanner {
-                                    self.sheetStore.show(.routePlanner)
+                                    self.sheetStore.show(.routePlanner(RoutePlannerStore(
+                                        sheetStore: self.sheetStore,
+                                        userLocationStore: self.userLocationStore,
+                                        mapStore: self.mapStore,
+                                        destination: item
+                                    )))
                                 } else {
                                     self.sheetStore.show(.navigationPreview)
                                 }
@@ -174,8 +179,8 @@ struct ContentView: View {
                         self.sheetStore.popSheet()
                     }
                     .navigationBarBackButtonHidden()
-                case .routePlanner:
-                    RoutePlannerView(routePlannerStore: RoutePlannerStore())
+                case let .routePlanner(store):
+                    RoutePlannerView(routePlannerStore: store)
                 case .favoritesViewMore:
                     FavoritesViewMoreView(
                         searchStore: self.searchViewStore,
