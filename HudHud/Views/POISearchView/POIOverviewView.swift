@@ -123,7 +123,7 @@ struct POIOverviewView: View {
 
                 // Show more button
                 ShowMoreButtonView {
-//                    self.selectedTab = ""
+                    self.selectedTab = .about
                 }
                 .padding(.horizontal)
             }
