@@ -243,10 +243,11 @@ private extension MapViewContainer {
         if let route = newValue {
             do {
                 try self.routingStore.ferrostarCore.startNavigation(route: route)
-                if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
-                    try configureLocationSimulator(simulated, with: route)
+                if DebugStore().simulateRide {
+                    if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
+                        try configureLocationSimulator(simulated, with: route)
+                    }
                 }
-
                 self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
@@ -257,8 +258,10 @@ private extension MapViewContainer {
             }
         } else {
             stopNavigation()
-            if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
-                simulated.stopUpdating()
+            if DebugStore().simulateRide {
+                if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                    simulated.stopUpdating()
+                }
             }
         }
     }
