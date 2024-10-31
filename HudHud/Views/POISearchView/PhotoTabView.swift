@@ -23,13 +23,16 @@ struct PhotoTabView: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
-                PhotosView(items: self.item.mediaURLs, id: \.self, spacing: 5) { url in
+                PhotosView(items: self.item.mediaURLs, id: \.self, spacing: 5) { url, size in
                     LazyImage(url: url) { state in
                         ZStack(alignment: .bottomTrailing) {
                             if let image = state.image {
                                 // Display the loaded image
                                 image
                                     .resizable()
+                                    .aspectRatio(contentMode: .fill)
+                                    .frame(width: size.width, height: size.height)
+                                    .clipped()
                                     .onTapGesture {
                                         self.selectedMedia = url
                                     }

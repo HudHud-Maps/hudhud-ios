@@ -13,14 +13,14 @@ struct PhotosView<Content, Item, ID>: View where Content: View, ID: Hashable, It
 
     // MARK: Properties
 
-    var content: (Item.Element) -> Content
+    var content: (Item.Element, CGSize) -> Content
     var items: Item
     var id: KeyPath<Item.Element, ID>
     var spacing: CGFloat
 
     // MARK: Lifecycle
 
-    init(items: Item, id: KeyPath<Item.Element, ID>, spacing: CGFloat = 5, @ViewBuilder content: @escaping (Item.Element) -> Content) {
+    init(items: Item, id: KeyPath<Item.Element, ID>, spacing: CGFloat = 5, @ViewBuilder content: @escaping (Item.Element, CGSize) -> Content) {
         self.content = content
         self.items = items
         self.id = id
@@ -46,7 +46,7 @@ struct PhotosView<Content, Item, ID>: View where Content: View, ID: Hashable, It
     // View for the first image, styled differently (Big)
     @ViewBuilder
     func firstImageView(item: Item.Element) -> some View {
-        self.content(item)
+        self.content(item, CGSize(width: UIScreen.main.bounds.size.width, height: 250))
             .frame(height: 250)
     }
 
@@ -57,28 +57,29 @@ struct PhotosView<Content, Item, ID>: View where Content: View, ID: Hashable, It
             let width = proxy.size.width
             let height = (proxy.size.height - self.spacing) / 2
             let columnWidth = (width > 0 ? ((width - (spacing * 2)) / 3) : 0)
+            let bigColumnWidth = width - columnWidth
 
             HStack(alignment: .top, spacing: self.spacing) {
                 // Layout Type 1: One image on the left, and two stacked images on the right
                 if isType1 {
-                    self.safeView(images: images, index: 0)
+                    self.safeView(images: images, index: 0, size: CGSize(width: bigColumnWidth, height: 250))
                     VStack(spacing: self.spacing) {
-                        self.safeView(images: images, index: 1)
+                        self.safeView(images: images, index: 1, size: CGSize(width: columnWidth, height: height))
                             .frame(height: height)
-                        self.safeView(images: images, index: 2)
+                        self.safeView(images: images, index: 2, size: CGSize(width: columnWidth, height: height))
                             .frame(height: height)
                     }
                     .frame(width: columnWidth)
                 } else {
                     // Layout Type 2: Two stacked images on the left, and one image on the right
                     VStack(spacing: self.spacing) {
-                        self.safeView(images: images, index: 0)
+                        self.safeView(images: images, index: 0, size: CGSize(width: columnWidth, height: height))
                             .frame(height: height)
-                        self.safeView(images: images, index: 1)
+                        self.safeView(images: images, index: 1, size: CGSize(width: columnWidth, height: height))
                             .frame(height: height)
                     }
                     .frame(width: columnWidth)
-                    self.safeView(images: images, index: 2)
+                    self.safeView(images: images, index: 2, size: CGSize(width: bigColumnWidth, height: 250))
                 }
             }
         }
@@ -87,9 +88,9 @@ struct PhotosView<Content, Item, ID>: View where Content: View, ID: Hashable, It
 
     // Safe view rendering for items in the row, preventing out-of-bounds access
     @ViewBuilder
-    func safeView(images: [Item.Element], index: Int) -> some View {
+    func safeView(images: [Item.Element], index: Int, size: CGSize) -> some View {
         if images.count > index {
-            self.content(images[index])
+            self.content(images[index], size)
         }
     }
 
