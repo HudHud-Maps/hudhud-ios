@@ -30,6 +30,8 @@ struct RoutePlannerView: View {
         .padding(.vertical)
         .padding(.top)
         .background {
+            /// according to the design the sheet height must match the view's height
+            /// so we compute the height and report it to the sheet to adjust its height
             GeometryReader { geometry in
                 Color.clear.onAppear {
                     self.routePlannerStore.didChangeHeight(to: geometry.size.height)
