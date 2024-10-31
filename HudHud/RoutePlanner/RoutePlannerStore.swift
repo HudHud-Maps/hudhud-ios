@@ -27,7 +27,7 @@ final class RoutePlannerStore {
     private let routePlanner: RoutePlanner = .init(
         routingService: GraphHopperRouteProvider()
     )
-    private var isRoutePlanVisible: Bool = false
+    private let routingStore: RoutingStore
 
     // MARK: Lifecycle
 
@@ -35,12 +35,14 @@ final class RoutePlannerStore {
         sheetStore: SheetStore,
         userLocationStore: UserLocationStore,
         mapStore: MapStore,
+        routingStore: RoutingStore,
         destination: ResolvedItem
     ) {
         self.initialDestination = destination
         self.sheetStore = sheetStore
         self.mapStore = mapStore
         self.userLocationStore = userLocationStore
+        self.routingStore = routingStore
         Task {
             await self.fetchRoutePlan()
         }
@@ -59,6 +61,10 @@ final class RoutePlannerStore {
     func addNewRoute() {
         fatalError("show the add route page here")
         self.sheetStore.show(.debugView)
+    }
+
+    func startNavigation() {
+        self.routingStore.startNavigation()
     }
 
     private func fetchRoutePlan() async {
@@ -138,6 +144,7 @@ extension RoutePlannerStore: Previewable {
         sheetStore: .storeSetUpForPreviewing,
         userLocationStore: .storeSetUpForPreviewing,
         mapStore: .storeSetUpForPreviewing,
+        routingStore: .storeSetUpForPreviewing,
         destination: .artwork
     )
 }

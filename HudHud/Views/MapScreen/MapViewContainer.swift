@@ -306,6 +306,7 @@ private extension MapViewContainer {
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
+        self.sheetStore.popToRoot()
         self.sheetStore.isShown.value = true
 
         if let coordinates = routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {

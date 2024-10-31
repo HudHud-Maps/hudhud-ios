@@ -164,6 +164,7 @@ struct ContentView: View {
                                         sheetStore: self.sheetStore,
                                         userLocationStore: self.userLocationStore,
                                         mapStore: self.mapStore,
+                                        routingStore: self.searchViewStore.routingStore,
                                         destination: item
                                     )))
                                 } else {

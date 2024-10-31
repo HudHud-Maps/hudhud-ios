@@ -62,13 +62,19 @@ struct RoutePlanView: View {
     // MARK: Content
 
     var body: some View {
-        VStack(alignment: .locationIconCenterAlignment) {
-            ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
-                RoutePlannerRow(destination: destination)
+        VStack {
+            VStack(alignment: .locationIconCenterAlignment) {
+                ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
+                    RoutePlannerRow(destination: destination)
+                }
+                AddMoreRoute {
+                    self.routePlannderStore.addNewRoute()
+                }
             }
-            AddMoreRoute {
-                self.routePlannderStore.addNewRoute()
+            StartNavigationButton {
+                self.routePlannderStore.startNavigation()
             }
+            .padding(.horizontal)
         }
     }
 }
@@ -192,6 +198,34 @@ struct AddMoreRoute: View {
                 }
             }
             .padding([.leading, .trailing])
+        }
+    }
+}
+
+// MARK: - StartNavigationButton
+
+struct StartNavigationButton: View {
+
+    // MARK: Properties
+
+    let onClick: () -> Void
+
+    // MARK: Content
+
+    var body: some View {
+        Button(action: self.onClick) {
+            HStack {
+                Spacer()
+                Label("Start Trip", image: .addStopIcon)
+                    .hudhudFontStyle(.labelMedium)
+                    .foregroundStyle(.white)
+                Spacer()
+            }
+            .padding(.vertical)
+            .background(
+                RoundedRectangle(cornerRadius: 50)
+                    .fill(Color.Colors.Road._02DarkGreen)
+            )
         }
     }
 }
