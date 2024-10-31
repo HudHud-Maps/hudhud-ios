@@ -186,7 +186,7 @@
 
     },
     "Close" : {
-      "comment" : "accesibility label instead of x\naccessibility label instead of x",
+      "comment" : "Accessibility label instead of x\naccessibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -430,6 +430,9 @@
     "Price" : {
 
     },
+    "Quality" : {
+
+    },
     "Rate and review" : {
 
     },
@@ -497,11 +500,10 @@
     "Share" : {
 
     },
-
-    "Show Less" : {
-    },
     "Share your experience" : {
 
+    },
+    "Show Less" : {
 
     },
     "Show more" : {
@@ -538,6 +540,7 @@
       }
     },
     "StreetView Quality" : {
+
     },
     "Submit" : {
 

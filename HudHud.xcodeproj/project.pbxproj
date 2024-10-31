@@ -117,6 +117,7 @@
 		CBAFD8132CD3FFBF006244C6 /* ReviewsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBAFD80D2CD3FFBF006244C6 /* ReviewsListView.swift */; };
 		CBAFD8142CD3FFBF006244C6 /* WriteReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBAFD80F2CD3FFBF006244C6 /* WriteReviewView.swift */; };
 		CBAFD8152CD3FFBF006244C6 /* RatingSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBAFD80B2CD3FFBF006244C6 /* RatingSectionView.swift */; };
+		CBAFD8182CD40166006244C6 /* CameraStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CBAFD8172CD40166006244C6 /* CameraStore.swift */; };
 		CBBF2857017E4782EF92382B /* PlusJakartaSans-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6D2856856A5D5158A8D6A42F /* PlusJakartaSans-Regular.ttf */; };
 		CBC7C7C62CB2932600210404 /* iPhoneNumberField in Frameworks */ = {isa = PBXBuildFile; productRef = A9C242CCE05D8DBC345B5D4D /* iPhoneNumberField */; };
 		CBD8C96FFC59CED6E8B74341 /* UIApplication+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC8F58103B51E6B448348C1B /* UIApplication+Environment.swift */; };
@@ -301,6 +302,7 @@
 		CBAFD80D2CD3FFBF006244C6 /* ReviewsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewsListView.swift; sourceTree = "<group>"; };
 		CBAFD80E2CD3FFBF006244C6 /* ReviewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReviewStore.swift; sourceTree = "<group>"; };
 		CBAFD80F2CD3FFBF006244C6 /* WriteReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WriteReviewView.swift; sourceTree = "<group>"; };
+		CBAFD8172CD40166006244C6 /* CameraStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraStore.swift; sourceTree = "<group>"; };
 		CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "toursprung-navigation-sample.json"; sourceTree = "<group>"; };
 		CD2219592BBFF0F300042564 /* Previewable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Previewable.swift; sourceTree = "<group>"; };
 		CD34C5962C0B3CEB006DCDBA /* BackendService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BackendService; sourceTree = "<group>"; };
@@ -424,6 +426,7 @@
 		1AC466BF59F2D9323F5D3955 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				CBAFD8172CD40166006244C6 /* CameraStore.swift */,
 				B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */,
 				174DDE49A3F3BEF6F97C8144 /* TouchManager.swift */,
 				128EEC335247DA2600CF82C6 /* NotificationManager.swift */,
@@ -1147,6 +1150,7 @@
 				48BB3810C869CCA511D61E1D /* TouchManager.swift in Sources */,
 				59A290082C43CA0000780307 /* POIMediaView.swift in Sources */,
 				A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */,
+				CBAFD8182CD40166006244C6 /* CameraStore.swift in Sources */,
 				7BA9280A0CF3479C97AE76AA /* RateNavigationView.swift in Sources */,
 				F0E22ED2CB7B3F4A38771265 /* POISheetButtonStyle.swift in Sources */,
 				5E4B24E475601905AB732509 /* MapViewStore.swift in Sources */,
