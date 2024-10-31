@@ -29,11 +29,11 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <TestPlans>
          <TestPlanReference
-            reference = "container:HudHud.xctestplan"
-            default = "YES">
+            reference = "container:GithubActions.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:CI.xctestplan">
+            reference = "container:XcodeCloud.xctestplan"
+            default = "YES">
          </TestPlanReference>
       </TestPlans>
       <Testables>

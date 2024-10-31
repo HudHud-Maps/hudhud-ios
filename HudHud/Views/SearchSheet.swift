@@ -255,9 +255,9 @@ struct SearchSheet: View {
     private func logOut() {
         do {
             try AuthProvider.shared.delete()
-            print("Logged out")
+            Logger.userRegistration.info("Logged out")
         } catch {
-            print("Error logging out: \(error)")
+            Logger.userRegistration.error("Error logging out: \(error)")
         }
     }
 }
@@ -286,10 +286,11 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
     }
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self) else {
+        guard let data = try? JSONEncoder().encode(self),
+              let result = String(data: data, encoding: .utf8) else {
             return "[]"
         }
-        let result = String(decoding: data, as: UTF8.self)
+
         return result
     }
 }
