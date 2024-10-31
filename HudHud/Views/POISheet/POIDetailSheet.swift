@@ -27,8 +27,7 @@ struct POIDetailSheet: View {
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
 
-    let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
-    @State var selectedTab = "Overview"
+    @State var selectedTab: POIOverviewView.Tab = .overview
     @Namespace var animation
     @State var showTabView: Bool = true
 
@@ -121,7 +120,7 @@ struct POIDetailSheet: View {
 
             self.tabView
             ScrollView {
-                POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest))
+                POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest), selectedTab: self.$selectedTab)
                 POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
                     .padding(.bottom, 100)
             }
@@ -164,9 +163,9 @@ struct POIDetailSheet: View {
         ScrollViewReader { scrollProxy in
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(self.tabItems, id: \.self) { tab in
+                    ForEach(POIOverviewView.Tab.allCases, id: \.self) { tab in
                         VStack {
-                            Text(tab)
+                            Text(tab.description)
                                 .hudhudFont(.subheadline)
                                 .fontWeight(self.selectedTab == tab ? .semibold : .regular)
                                 .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
@@ -397,9 +396,7 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return ContentView(
-        searchStore: searchViewStore,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewingPOI
-    )
+    ContentView(searchStore: searchViewStore,
+                mapViewStore: .storeSetUpForPreviewing,
+                sheetStore: .storeSetUpForPreviewingPOI)
 }

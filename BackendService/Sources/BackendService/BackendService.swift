@@ -197,6 +197,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public let distance: Double?
     public let driveDuration: Double?
     public let priceRange: Int?
+    public let nationalAddress: String?
+    public let floor: String?
     public let isWheelchairAccessible: Bool?
 
     // MARK: Computed Properties
@@ -211,7 +213,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, isWheelchairAccessible: Bool? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, nationalAddress: String? = nil, floor: String? = nil, isWheelchairAccessible: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -232,6 +234,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.distance = distance
         self.driveDuration = driveDuration
         self.priceRange = priceRange
+        self.nationalAddress = nationalAddress
+        self.floor = floor
         self.isWheelchairAccessible = isWheelchairAccessible
     }
 
@@ -305,10 +309,10 @@ public extension ResolvedItem {
                                       website: URL(string: "https://hudhud.sa"),
                                       rating: 4,
                                       ratingsCount: 56,
-                                      isOpen: true,
-                                      openingHours: exampleOpeningHours,
                                       mediaURLs: .previewMediaURLs,
                                       priceRange: 2,
+                                      nationalAddress: "MMPV+123",
+                                      floor: "Floor 3",
                                       isWheelchairAccessible: true)
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
