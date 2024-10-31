@@ -17,11 +17,11 @@ struct POIOverviewView: View {
     // MARK: Nested Types
 
     enum Tab: String, CaseIterable, CustomStringConvertible {
-        case overview = "Overview"
-        case review = "Reviews"
-        case photos = "Photos"
-        case similar = "Similar Places"
-        case about = "About"
+        case overview
+        case review
+        case photos
+        case similar
+        case about
 
         // MARK: Computed Properties
 
