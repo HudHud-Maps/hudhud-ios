@@ -16,6 +16,7 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
 import SwiftUI
+import UIKit
 
 // MARK: - MapViewContainer
 
@@ -264,6 +265,17 @@ private extension MapViewContainer {
     }
 
     func handleTripStateChange(_ oldValue: TripState?, _ newValue: TripState?) {
+        if let newValue {
+            switch newValue {
+            case .idle:
+                UIApplication.shared.isIdleTimerDisabled = false
+            case .navigating:
+                UIApplication.shared.isIdleTimerDisabled = true
+            case .complete:
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+        }
+
         guard let oldValue,
               let newValue,
               case .navigating = oldValue,
@@ -303,6 +315,7 @@ private extension MapViewContainer {
 
 // TODO: - Move it to its own store
 private extension MapViewContainer {
+
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
@@ -312,6 +325,7 @@ private extension MapViewContainer {
             self.resetCamera(to: coordinates)
         }
         self.routingStore.clearRoutes()
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     func resetCamera(to coordinates: GeographicCoordinate) {
