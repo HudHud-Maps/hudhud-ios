@@ -80,9 +80,9 @@ struct MapViewContainer<SheetContentView: View>: View {
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
                 navigationState: self.routingStore.ferrostarCore.state,
-                isMuted: false,
+                isMuted: self.routingStore.isMuted,
                 showZoom: false,
-                onTapMute: {},
+                onTapMute: { self.routingStore.toggleMute() },
                 onTapExit: stopNavigation,
                 makeMapContent: makeMapContent,
                 mapViewModifiers: makeMapViewModifiers
@@ -127,7 +127,7 @@ extension MapViewContainer {
     }
 
     private var speedLimit: Measurement<UnitSpeed>? {
-        self.routingStore.ferrostarCore.annotation?.speedLimit
+        return self.routingStore.ferrostarCore.annotation?.speedLimit
     }
 }
 

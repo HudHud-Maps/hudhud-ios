@@ -110,6 +110,7 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
                 }
             },
             bottomLeading: {
+                self.bottomLeading?()
                 if self.showCentering {
                     NavigationUIButton(action: self.onCenter) {
                         Image(systemName: "location.north.fill")
@@ -118,7 +119,7 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
                             .frame(width: 18, height: 18)
                     }
                     .shadow(radius: 8)
-                } else {
+                } else if self.bottomLeading == nil {
                     Spacer()
                 }
             },

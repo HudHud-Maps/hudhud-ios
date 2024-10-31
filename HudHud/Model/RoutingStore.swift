@@ -55,12 +55,16 @@ final class RoutingStore: ObservableObject {
 
     let locationProvider: LocationProviding
 
-    private let spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
+    @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
     private let navigationDelegate = NavigationDelegate()
 
     // MARK: Computed Properties
+
+    var isMuted: Bool {
+        self.spokenInstructionObserver.isMuted
+    }
 
     var alternativeRoutes: [Route] {
         self.routes.filter {
@@ -129,6 +133,10 @@ final class RoutingStore: ObservableObject {
     }
 
     // MARK: Functions
+
+    func toggleMute() {
+        self.spokenInstructionObserver.toggleMute()
+    }
 
     func startNavigation() {
         self.navigatingRoute = self.selectedRoute

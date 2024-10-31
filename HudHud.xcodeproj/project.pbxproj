@@ -672,6 +672,7 @@
 		0CC00B0A2CD2BC9C00A2D1A8 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				AC276CFCF1456B56097AA04B /* Ferrostar */,
 				0CC00B0C2CD2BCA400A2D1A8 /* UI */,
 				B613EB14BDC54B6907DD2448 /* TrafficCongestions */,
 			);
@@ -891,7 +892,6 @@
 				398DAF9369B1E05633706D37 /* Enums */,
 				1AC466BF59F2D9323F5D3955 /* Classes */,
 				CEE6FEDF51ECC34C5B325747 /* Common */,
-				AC276CFCF1456B56097AA04B /* Ferrostar */,
 			);
 			path = HudHud;
 			sourceTree = "<group>";
