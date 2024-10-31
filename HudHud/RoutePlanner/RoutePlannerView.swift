@@ -63,9 +63,13 @@ struct RoutePlanView: View {
 
     var body: some View {
         VStack {
-            VStack(alignment: .locationIconCenterAlignment) {
+            VStack(alignment: .destinationIconCenterAlignment) {
                 ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
-                    RoutePlannerRow(destination: destination)
+                    RoutePlannerRow(
+                        destination: destination,
+                        onSwap: self.swapActionIfCanSwap(for: destination)
+                    )
+                    .animation(.bouncy, value: destination)
                 }
                 AddMoreRoute {
                     self.routePlannderStore.addNewRoute()
@@ -77,6 +81,21 @@ struct RoutePlanView: View {
             .padding(.horizontal)
         }
     }
+
+    // MARK: Functions
+
+    func swapActionIfCanSwap(for destination: RouteWaypoint) -> (() -> Void)? {
+        if self.routePlannderStore.state.destinations.first == destination,
+           self.routePlannderStore.state.canSwap {
+            {
+                Task {
+                    await self.routePlannderStore.swap()
+                }
+            }
+        } else {
+            nil
+        }
+    }
 }
 
 // MARK: - RoutePlannerRow
@@ -86,11 +105,12 @@ struct RoutePlannerRow: View {
     // MARK: Properties
 
     let destination: RouteWaypoint
+    let onSwap: (() -> Void)?
 
     // MARK: Content
 
     var body: some View {
-        VStack(alignment: .locationIconCenterAlignment, spacing: 6) {
+        VStack(alignment: .destinationIconCenterAlignment, spacing: 6) {
             Label {
                 HStack {
                     Text(self.destination.title)
@@ -100,17 +120,21 @@ struct RoutePlannerRow: View {
                 }
             } icon: {
                 DestinationImage(destinationType: self.destination.type)
-                    .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                    .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
             }
             Label {
                 Rectangle()
                     .fill(Color.black.opacity(0.1))
                     .frame(width: .infinity, height: 1)
                     .overlay(alignment: .trailing) {
-                        Image(.swapIcon)
-                            .padding(6)
-                            .background(Circle().fill(Color(red: 242 / 255, green: 242 / 255, blue: 242 / 255)))
-                            .padding(.trailing)
+                        if let onSwap {
+                            Button(action: onSwap) {
+                                Image(.swapIcon)
+                                    .padding(6)
+                                    .background(Circle().fill(Color(red: 242 / 255, green: 242 / 255, blue: 242 / 255)))
+                                    .padding(.trailing)
+                            }
+                        }
                     }
             } icon: {
                 VStack(spacing: 4) {
@@ -124,7 +148,7 @@ struct RoutePlannerRow: View {
                         .fill(Color.black.opacity(0.1))
                         .frame(width: 4, height: 4)
                 }
-                .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
             }
         }
         .padding(.leading)
@@ -174,7 +198,7 @@ struct AddMoreRoute: View {
 
     var body: some View {
         Button(action: self.onClick) {
-            VStack(alignment: .locationIconCenterAlignment) {
+            VStack(alignment: .destinationIconCenterAlignment) {
                 Label {
                     HStack {
                         Text("Add Stop")
@@ -184,7 +208,7 @@ struct AddMoreRoute: View {
                     }
                 } icon: {
                     Image(.addStopIcon)
-                        .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                        .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                 }
                 Label {
                     Rectangle()
@@ -194,7 +218,7 @@ struct AddMoreRoute: View {
                     Circle()
                         .fill(.white)
                         .frame(width: 4)
-                        .alignmentGuide(.locationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                        .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                 }
             }
             .padding([.leading, .trailing])
@@ -237,7 +261,7 @@ private extension HorizontalAlignment {
         }
     }
 
-    static let locationIconCenterAlignment = HorizontalAlignment(LocationIconCenterAlignment.self)
+    static let destinationIconCenterAlignment = HorizontalAlignment(LocationIconCenterAlignment.self)
 }
 
 #Preview {
