@@ -9,7 +9,6 @@
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
-import FerrostarSwiftUI
 
 // MARK: - CongestionSegment
 

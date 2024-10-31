@@ -1,5 +1,4 @@
 import FerrostarCore
-import FerrostarSwiftUI
 import MapKit
 import MapLibre
 import MapLibreSwiftDSL

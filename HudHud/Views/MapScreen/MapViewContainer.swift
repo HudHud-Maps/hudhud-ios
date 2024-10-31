@@ -9,8 +9,6 @@
 import BackendService
 import FerrostarCore
 import FerrostarCoreFFI
-import FerrostarMapLibreUI
-import FerrostarSwiftUI
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
