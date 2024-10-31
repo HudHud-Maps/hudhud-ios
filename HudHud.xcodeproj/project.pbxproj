@@ -56,6 +56,7 @@
 		73F84F1D2466A9DB8AF62C57 /* PlusJakartaSans-ExtraLightItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 92B7969B0AE81D4DAB16957A /* PlusJakartaSans-ExtraLightItalic.ttf */; };
 		74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF5F0AAEF1A14272DF224AEF /* RecentSearchResultsView.swift */; };
 		75EF8B431A9CE965F993E16A /* CongestionsExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC517036BCB7FDB633991439 /* CongestionsExtractor.swift */; };
+		77FDD97849794A635188947C /* PhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30865BBEE7930CF32B83F850 /* PhotosView.swift */; };
 		78D60A6DAAE2D6B5BBCB1E06 /* PlusJakartaSans-SemiBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8B629EDAD64E6EFF641F2427 /* PlusJakartaSans-SemiBoldItalic.ttf */; };
 		793E758EECDC7A472C3610C1 /* DirectionModeButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E69A6191475F5E54A62147D /* DirectionModeButton.swift */; };
 		79F27CAE0D2E895B98F74A3C /* PlusJakartaSans-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DCB904EE6E9CC9D7EF909FD1 /* PlusJakartaSans-MediumItalic.ttf */; };
@@ -147,6 +148,7 @@
 		CDAE05EC2B6A87B4003E5196 /* SwiftLocation in Frameworks */ = {isa = PBXBuildFile; productRef = CDAE05EB2B6A87B4003E5196 /* SwiftLocation */; };
 		CDCF58432C8EEA6300906959 /* NukeUI in Frameworks */ = {isa = PBXBuildFile; productRef = CDCF58422C8EEA6300906959 /* NukeUI */; };
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
+		CEE834FA2F4E561E312905A9 /* PhotoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A76E1C9FDAFE4F9BF1CD3AB /* PhotoTabView.swift */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
 		D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */; };
 		D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */; };
@@ -196,6 +198,7 @@
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
 		068C2923E00182040CFB46FB /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
+		0A76E1C9FDAFE4F9BF1CD3AB /* PhotoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTabView.swift; sourceTree = "<group>"; };
 		0D8871B2DF8DEF76E4302624 /* RoutingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingError.swift; sourceTree = "<group>"; };
 		128EEC335247DA2600CF82C6 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrafficChartData.swift; sourceTree = "<group>"; };
@@ -209,6 +212,7 @@
 		24FF2895ADD6ECD1BA827350 /* RoutePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanner.swift; sourceTree = "<group>"; };
 		25BABFA49366F559068D48E7 /* PhotoSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSectionView.swift; sourceTree = "<group>"; };
 		2AB3AC400749ABE16FDEC195 /* LocationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoView.swift; sourceTree = "<group>"; };
+		30865BBEE7930CF32B83F850 /* PhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosView.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
@@ -523,6 +527,8 @@
 				FB6F376F14C1845A8F147ABF /* SearchResultView.swift */,
 				2183BECFE15DBC861312F863 /* POIOverviewView.swift */,
 				25BABFA49366F559068D48E7 /* PhotoSectionView.swift */,
+				0A76E1C9FDAFE4F9BF1CD3AB /* PhotoTabView.swift */,
+				30865BBEE7930CF32B83F850 /* PhotosView.swift */,
 			);
 			path = POISearchView;
 			sourceTree = "<group>";
@@ -877,6 +883,7 @@
 				6E75A916776AA6E01F44FC98 /* PBXTargetDependency */,
 				077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */,
 				115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */,
+				5EAB384F6CD96B81136F8A80 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -975,18 +982,18 @@
 			);
 			mainGroup = CDAE053B2B681261003E5196;
 			packageReferences = (
-				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */,
-				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */,
+				CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */,
+				ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */,
 				CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */,
 				6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */,
-				CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */,
-				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */,
-				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */,
-				CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke" */,
+				CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */,
+				CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */,
+				F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer.git" */,
+				CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke.git" */,
 				CB7033B92C9300610006681E /* XCRemoteSwiftPackageReference "TypographyKit" */,
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
-				9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */,
+				9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar.git" */,
 				F55DC008148665D6245FC71F /* XCRemoteSwiftPackageReference "Pulse" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
@@ -1196,6 +1203,8 @@
 				DDEC8465C37065C668023229 /* RoutingError.swift in Sources */,
 				8CF4FC9E1B350427D1B71D50 /* GraphHopperRouteProvider.swift in Sources */,
 				24FBFCC204FF1B7CB79B07A0 /* RoutingOptions.swift in Sources */,
+				CEE834FA2F4E561E312905A9 /* PhotoTabView.swift in Sources */,
+				77FDD97849794A635188947C /* PhotosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1225,6 +1234,9 @@
 			isa = PBXTargetDependency;
 		};
 		115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
+		5EAB384F6CD96B81136F8A80 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		6E75A916776AA6E01F44FC98 /* PBXTargetDependency */ = {
@@ -1590,15 +1602,16 @@
 				minimumVersion = 5.0.0;
 			};
 		};
-		9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+		9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
 			requirement = {
 				branch = annotations;
 				kind = branch;
+				revision = "";
 			};
 		};
-		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
+		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
@@ -1606,7 +1619,7 @@
 				kind = branch;
 			};
 		};
-		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */ = {
+		ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lukepistrol/SwiftLintPlugin.git";
 			requirement = {
@@ -1638,7 +1651,7 @@
 				minimumVersion = 0.8.1;
 			};
 		};
-		CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
+		CD9268CA2C46DEE700E971D4 /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
@@ -1646,7 +1659,7 @@
 				minimumVersion = 0.13.3;
 			};
 		};
-		CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
+		CD9268CB2C46DF2300E971D4 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/lake-of-fire/BetterSafariView2.git";
 			requirement = {
@@ -1654,7 +1667,7 @@
 				kind = branch;
 			};
 		};
-		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */ = {
+		CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hactar/SwiftLocation.git";
 			requirement = {
@@ -1662,7 +1675,7 @@
 				kind = branch;
 			};
 		};
-		CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke" */ = {
+		CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/kean/Nuke.git";
 			requirement = {
@@ -1678,7 +1691,7 @@
 				minimumVersion = 0.10.4;
 			};
 		};
-		F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */ = {
+		F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git";
 			requirement = {
@@ -1694,7 +1707,7 @@
 				minimumVersion = 5.1.2;
 			};
 		};
-		FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */ = {
+		FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/davdroman/swiftui-navigation-transitions.git";
 			requirement = {
@@ -1716,17 +1729,17 @@
 		};
 		9E82F0552CCE69FC00F67DC5 /* FerrostarCore */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */;
+			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar.git" */;
 			productName = FerrostarCore;
 		};
 		9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */;
+			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar.git" */;
 			productName = FerrostarMapLibreUI;
 		};
 		9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */;
+			package = 9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar.git" */;
 			productName = FerrostarSwiftUI;
 		};
 		A9C242CCE05D8DBC345B5D4D /* iPhoneNumberField */ = {
@@ -1736,7 +1749,7 @@
 		};
 		C71C7BD81C2B56D70AB2E23A /* BetterSafariView */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */;
+			package = A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2.git" */;
 			productName = BetterSafariView;
 		};
 		CB7033BA2C9300610006681E /* TypographyKit */ = {
@@ -1772,17 +1785,17 @@
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation" */;
+			package = CDAE05EA2B6A87B4003E5196 /* XCRemoteSwiftPackageReference "SwiftLocation.git" */;
 			productName = SwiftLocation;
 		};
 		CDCF58422C8EEA6300906959 /* NukeUI */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke" */;
+			package = CDCF58412C8EEA6300906959 /* XCRemoteSwiftPackageReference "Nuke.git" */;
 			productName = NukeUI;
 		};
 		E25BA789B8A5B417D47CA3C3 /* NavigationTransitions */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions" */;
+			package = FDC47D806CBD61BCCCF74C2E /* XCRemoteSwiftPackageReference "swiftui-navigation-transitions.git" */;
 			productName = NavigationTransitions;
 		};
 		E26E4285768772482A3EE553 /* PulseUI */ = {
@@ -1792,7 +1805,7 @@
 		};
 		F22401772C58D61B008865AE /* SwiftUIPanoramaViewer */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer" */;
+			package = F22401762C58D61B008865AE /* XCRemoteSwiftPackageReference "SwiftUIPanoramaViewer.git" */;
 			productName = SwiftUIPanoramaViewer;
 		};
 /* End XCSwiftPackageProductDependency section */
