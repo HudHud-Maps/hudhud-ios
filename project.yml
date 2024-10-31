@@ -1,0 +1,177 @@
+name: HudHud
+options:
+  bundleIdPrefix: sa.hudhud
+  deploymentTarget:
+    iOS: 17.0
+  xcodeVersion: "15.0"
+  groupSortPosition: top
+  developmentRegion: en
+  knownRegions:
+    - en
+    - Base
+    - ar
+
+settings:
+  base:
+    SWIFT_VERSION: 5.0
+    TARGETED_DEVICE_FAMILY: "1,2"
+    DEVELOPMENT_TEAM: YN76B7J2LN
+    CODE_SIGN_STYLE: Automatic
+    MARKETING_VERSION: 1.0
+    CURRENT_PROJECT_VERSION: 1
+    GENERATE_INFOPLIST_FILE: YES
+
+packages:
+  BackendService:
+    path: BackendService
+    group: Packages/BackendService
+  TokensEnumGenerator:
+    path: StyleDictionary
+    group: Packages/StyleDictionary
+  SwiftLocation:
+    url: https://github.com/hactar/SwiftLocation.git
+    branch: master
+  SwiftLintPlugin:
+    url: https://github.com/lukepistrol/SwiftLintPlugin.git
+    branch: main
+  SimpleToast:
+    url: https://github.com/sanzaru/SimpleToast
+    exactVersion: 0.10.1
+  TouchVisualizer:
+    url: https://github.com/Patrick-Kladek/TouchVisualizer
+    exactVersion: 5.0.0
+  NavigationTransitions:
+    url: https://github.com/davdroman/swiftui-navigation-transitions.git
+    exactVersion: 0.13.4
+  BetterSafariView:
+    url: https://github.com/lake-of-fire/BetterSafariView2.git
+    branch: main
+  SwiftUIPanoramaViewer:
+    url: https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git
+    branch: hudhud
+  Nuke:
+    url: https://github.com/kean/Nuke.git
+    exactVersion: 12.8.0
+  TypographyKit:
+    url: https://github.com/rwbutler/TypographyKit
+    exactVersion: 5.1.1
+  iPhoneNumberField:
+    url: https://github.com/MojtabaHs/iPhoneNumberField
+    exactVersion: 0.10.4
+  Ferrostar:
+    url: https://github.com/HudHud-Maps/ferrostar.git
+    branch: annotations
+  Pulse:
+    url: https://github.com/kean/Pulse
+    exactVersion: 5.1.2
+
+targets:
+  HudHud:
+    type: application
+    platform: iOS
+    sources:
+      - path: HudHud
+      - path: GeneratedSources
+    resources:
+      - path: HudHud/PreviewContent
+      - path: HudHud/SupportingFiles/Assets.xcassets
+      - path: HudHud/SupportingFiles/Fonts
+      - path: HudHud/SupportingFiles/Localizable.xcstrings
+      - path: HudHud/SupportingFiles/InfoPlist.xcstrings
+    settings:
+      configs:
+        debug:
+          PRODUCT_BUNDLE_IDENTIFIER: sa.hudhud.map
+          INFOPLIST_FILE: HudHud/SupportingFiles/Info.plist
+          ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+          DEVELOPMENT_ASSET_PATHS: "HudHud/PreviewContent"
+          ENABLE_PREVIEWS: YES
+          INFOPLIST_KEY_UIUserInterfaceStyle: Light
+    dependencies:
+      - package: BackendService
+        products:
+          - BackendService
+          - APIClient
+      - package: TokensEnumGenerator
+        products:
+          - TokensEnumGenerator
+        localPackage: StyleDictionary
+      - package: SwiftLocation
+      - package: SimpleToast
+      - package: TouchVisualizer
+      - package: NavigationTransitions
+      - package: BetterSafariView
+      - package: SwiftUIPanoramaViewer
+      - package: Nuke
+        product: NukeUI
+      - package: TypographyKit
+      - package: iPhoneNumberField
+      - package: Ferrostar
+        product: FerrostarCore
+      - package: Ferrostar
+        product: FerrostarMapLibreUI
+      - package: Ferrostar
+        product: FerrostarSwiftUI
+      - package: Pulse
+        product: PulseUI
+    # buildToolPlugins:
+    #   - plugin: TokensEnumGeneratorPlugin
+    #     package: TokensEnumGenerator
+    buildPhases:
+      - name: "Setup custom git hooks"
+        script: |
+          if [ -d ".git/hooks/" ]; then
+            rm -f .git/hooks/pre-commit
+            cp scripts/git-hooks/pre-commit .git/hooks/
+            chmod +x .git/hooks/pre-commit
+          fi
+
+  HudHudTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources: 
+      - path: HudHudTests
+    dependencies:
+      - target: HudHud
+    settings:
+      base:
+        BUNDLE_LOADER: "$(TEST_HOST)"
+        PRODUCT_BUNDLE_IDENTIFIER: sa.hudhud.map.HudHudTests
+
+  HudHudUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: HudHudUITests
+    dependencies:
+      - target: HudHud
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: sa.hudhud.map.HudHudUITests
+        TEST_TARGET_NAME: HudHud
+
+schemes:
+  HudHud:
+    build:
+      targets:
+        HudHud: all
+    run:
+      config: Debug
+      environmentVariables:
+        OS_ACTIVITY_MODE: disable
+      locationScenario: HudHud/Preview Content/Riyadh.gpx
+    test:
+      config: Debug
+      testPlans:
+        - path: GithubActions.xctestplan
+        - path: XcodeCloud.xctestplan
+          default: true
+      targets:
+        - HudHudTests
+        - HudHudUITests
+    profile:
+      config: Release
+    analyze:
+      config: Release
+    archive:
+      config: Release

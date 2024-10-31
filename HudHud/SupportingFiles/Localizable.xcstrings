@@ -10,7 +10,7 @@
     "..." : {
 
     },
-    "(%lld)" : {
+    "(%@)" : {
 
     },
     "@" : {
@@ -42,6 +42,19 @@
         }
       }
     },
+    "%@ of %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ of %2$@"
+          }
+        }
+      }
+    },
+    "%@ Ratings" : {
+
+    },
     "%@ until %@" : {
       "localizations" : {
         "en" : {
@@ -52,35 +65,17 @@
         }
       }
     },
-    "%lld of %lld" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "%1$lld of %2$lld"
-          }
-        }
-      }
-    },
-    "%lld Ratings" : {
-
-    },
     "•" : {
 
     },
     "• %@" : {
 
     },
-    "+" : {
-
-    },
     "12 September 2024" : {
 
     },
-    "action" : {
-
-    },
     "Add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -101,16 +96,10 @@
         }
       }
     },
-    "Add Type" : {
-
-    },
     "Already Logged In" : {
 
     },
     "Apply" : {
-
-    },
-    "Back" : {
 
     },
     "Bad Traffic Data" : {
@@ -120,6 +109,7 @@
 
     },
     "bicycle" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -130,6 +120,7 @@
       }
     },
     "bus" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -161,6 +152,7 @@
 
     },
     "car" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -193,12 +185,6 @@
     "Customers Rating" : {
 
     },
-    "Debug Menu" : {
-
-    },
-    "Delete" : {
-
-    },
     "description" : {
 
     },
@@ -220,13 +206,7 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
-    "Done" : {
-
-    },
     "Edit" : {
-
-    },
-    "Enable location in permissions" : {
 
     },
     "Enable Touch Visualizer" : {
@@ -239,6 +219,7 @@
 
     },
     "Fastest" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -249,6 +230,7 @@
       }
     },
     "Favorites" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -275,9 +257,6 @@
         }
       }
     },
-    "Go Back" : {
-
-    },
     "Help improve HudHud maps." : {
 
     },
@@ -292,19 +271,14 @@
         }
       }
     },
-    "Hours Range" : {
-      "comment" : "traffic chart view, Hours range x axes"
-    },
     "How was the navigation on this trip?" : {
 
     },
     "How was your experience?" : {
 
     },
-    "km/h" : {
-
-    },
     "Layers" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -313,9 +287,6 @@
           }
         }
       }
-    },
-    "Location Needed" : {
-
     },
     "Log Out" : {
 
@@ -343,6 +314,7 @@
       }
     },
     "metro" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -364,12 +336,6 @@
         }
       }
     },
-    "Name" : {
-
-    },
-    "Nearby Trending" : {
-
-    },
     "Network Logger" : {
 
     },
@@ -377,9 +343,6 @@
 
     },
     "No Content To be Shown Here." : {
-
-    },
-    "No Map Layers Available" : {
 
     },
     "No ratings" : {
@@ -390,9 +353,6 @@
     },
     "Note: Changing the URL requires restarting the app for the changes to take effect." : {
 
-    },
-    "Occupancy Range" : {
-      "comment" : "traffic chart view, Occupancy Range y axes"
     },
     "OK" : {
 
@@ -415,13 +375,11 @@
     "Price" : {
 
     },
-    "Quality" : {
-
-    },
     "Rating" : {
 
     },
     "Recents" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -431,22 +389,16 @@
         }
       }
     },
-    "Report" : {
-
-    },
     "Resend Code %@" : {
 
     },
     "Reset" : {
 
     },
-    "Reviews %lld" : {
+    "Reviews %@" : {
 
     },
     "Routing Configuration" : {
-
-    },
-    "Routing URL" : {
 
     },
     "School" : {
@@ -461,6 +413,7 @@
       }
     },
     "Search" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -474,9 +427,6 @@
 
     },
     "SF Symbols on Map" : {
-
-    },
-    "Share" : {
 
     },
     "Show more" : {
@@ -509,9 +459,6 @@
     "StreetView Quality" : {
 
     },
-    "Suggestions" : {
-
-    },
     "Touch Visualizer" : {
 
     },
@@ -519,12 +466,6 @@
 
     },
     "Use SF Symbols for POIs on map" : {
-
-    },
-    "UseFul" : {
-
-    },
-    "Useful (%lld)" : {
 
     },
     "Verification code sent to the %@ below:" : {
@@ -537,6 +478,7 @@
 
     },
     "walk" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {

@@ -9,6 +9,7 @@
 import BackendService
 import CoreLocation
 import SwiftUI
+import TypographyKit
 
 struct POISheetButtonStyle: ButtonStyle {
 
@@ -47,16 +48,16 @@ struct POISheetButtonStyle: ButtonStyle {
     }
 }
 
-#Preview {
-    Button {} label: {}
-        .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
-}
-
-#Preview(traits: .sizeThatFitsLayout) {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return ContentView(
-        searchStore: searchViewStore,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
+// #Preview {
+//    Button {} label: {}
+//        .buttonStyle(POISheetButtonStyle(title: "Call", icon: .phoneFill))
+// }
+//
+// #Preview(traits: .sizeThatFitsLayout) {
+//    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
+//    return ContentView(
+//        searchStore: searchViewStore,
+//        mapViewStore: .storeSetUpForPreviewing,
+//        sheetStore: .storeSetUpForPreviewing
+//    )
+// }

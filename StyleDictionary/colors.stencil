@@ -1,0 +1,19 @@
+// NOTE: Do not edit this auto generataed file. It will be recreated on every build
+//swiftlint:disable:all
+
+import Foundation
+import SwiftUI
+
+extension Color {
+    enum Colors {
+        {% for category, colors in colors %}
+        enum {{ category }} {
+            {% for name, color in colors %}
+            static var {{ color.key }}: Color { Color("{{ color.category }}/{{ color.name }}") }
+            {% endfor %}
+        }
+        {% endfor %}
+    }
+}
+
+//swiftlint:enable:all

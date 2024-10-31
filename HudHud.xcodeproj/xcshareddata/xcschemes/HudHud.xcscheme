@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1540"
+   LastUpgradeVersion = "1500"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CDAE05432B681261003E5196"
+               BlueprintIdentifier = "763A93DAA5262E8CC941D3C6"
                BuildableName = "HudHud.app"
                BlueprintName = "HudHud"
                ReferencedContainer = "container:HudHud.xcodeproj">
@@ -26,40 +27,50 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      onlyGenerateCoverageForSpecifiedTargets = "NO">
       <TestPlans>
          <TestPlanReference
+            default = "YES"
             reference = "container:GithubActions.xctestplan">
          </TestPlanReference>
          <TestPlanReference
-            reference = "container:XcodeCloud.xctestplan"
-            default = "YES">
+            reference = "container:XcodeCloud.xctestplan">
          </TestPlanReference>
       </TestPlans>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "763A93DAA5262E8CC941D3C6"
+            BuildableName = "HudHud.app"
+            BlueprintName = "HudHud"
+            ReferencedContainer = "container:HudHud.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CDAE05532B681263003E5196"
+               BlueprintIdentifier = "8BD98E0897B8ACDCF9534F1C"
                BuildableName = "HudHudTests.xctest"
                BlueprintName = "HudHudTests"
                ReferencedContainer = "container:HudHud.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "CDAE055D2B681263003E5196"
+               BlueprintIdentifier = "AA462F29D0AFE8A26959CADB"
                BuildableName = "HudHudUITests.xctest"
                BlueprintName = "HudHudUITests"
                ReferencedContainer = "container:HudHud.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -75,12 +86,14 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CDAE05432B681261003E5196"
+            BlueprintIdentifier = "763A93DAA5262E8CC941D3C6"
             BuildableName = "HudHud.app"
             BlueprintName = "HudHud"
             ReferencedContainer = "container:HudHud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"
@@ -88,10 +101,6 @@
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
-      <LocationScenarioReference
-         identifier = "../../HudHud/Preview Content/Riyadh.gpx"
-         referenceType = "0">
-      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -103,15 +112,17 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "CDAE05432B681261003E5196"
+            BlueprintIdentifier = "763A93DAA5262E8CC941D3C6"
             BuildableName = "HudHud.app"
             BlueprintName = "HudHud"
             ReferencedContainer = "container:HudHud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "Debug">
+      buildConfiguration = "Release">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"

@@ -13,18 +13,41 @@ import Stencil
 struct GenerateCommand: ParsableCommand {
 	static let configuration: CommandConfiguration = .init(commandName: "generate")
 
-	@Option(help: "")
-	var inputFile: URL
+	@Option(help: "Path to the input JSON file for typography")
+	var inputFile: URL?
 
-	@Option(help: "")
+	@Option(help: "Path to the asset catalog colors")
+	var assetsPath: URL?
+
+	@Option(help: "Type of generation (typography/colors)")
+	var type: String
+
+	@Option(help: "Template file path")
 	var template: URL?
 
-	@Option(help: "Output directory where the generated files are written.")
-	var outputFile: URL = URL(fileURLWithPath: FileManager.default.currentDirectoryPath)
+	@Option(help: "Output file path")
+	var outputFile: URL
 
 	mutating func run() throws {
+		switch type {
+		case "typography":
+			try generateTypography()
+		case "colors":
+			try generateColors()
+		case "all":
+				try generateTypography()
+			
+				try generateColors()
+		
+		default:
+			throw GenerateError.invalidType
+		}
+	}
+
+	private func generateTypography() throws {
+		guard let inputFile = inputFile else { throw GenerateError.missingInput }
 		print("Input: \(inputFile.path)")
-		guard let tokens = try readTokensJSON(at: self.inputFile)["ui-font-text-styles"] as? [String: Any] else {
+		guard let tokens = try readTokensJSON(at: inputFile)["ui-font-text-styles"] as? [String: Any] else {
 			throw GenerateError.wrongFormat
 		}
 
@@ -39,7 +62,21 @@ struct GenerateCommand: ParsableCommand {
 		let enumCode = try generateEnumCode(from: context)
 		print(enumCode)
 
-		try enumCode.write(to: self.outputFile, atomically: true, encoding: .utf8)
+		try enumCode.write(to: outputFile, atomically: true, encoding: .utf8)
+	}
+
+	private func generateColors() throws {
+		guard let assetsPath = assetsPath else { throw GenerateError.missingInput }
+		let colors = try parseColorAssets(at: assetsPath)
+		let context = ["colors": colors]
+		let generated = try generateEnumCode(from: context)
+		
+		try FileManager.default.createDirectory(
+			at: outputFile.deletingLastPathComponent(),
+			withIntermediateDirectories: true
+		)
+		
+		try generated.write(to: outputFile, atomically: true, encoding: .utf8)
 	}
 }
 
@@ -47,6 +84,8 @@ extension GenerateCommand {
 
 	enum GenerateError: Error {
 		case wrongFormat
+		case missingInput
+		case invalidType
 	}
 
 	struct Style {
@@ -65,16 +104,84 @@ extension GenerateCommand {
 
 	// Helper function to generate Swift code from a template and context
 	func generateEnumCode(from context: [String: Any]) throws -> String {
-		if let customTemplate = self.template {
-			let template = try String(contentsOf: customTemplate)
-			let environment = Environment(loader: FileSystemLoader(paths: ["./Resources"]))
-			return try environment.renderTemplate(string: template, context: context)
+		guard let customTemplate = self.template else {
+			throw GenerateError.missingInput
 		}
-
-		let templatePath = "Resources/template.stencil" // Adjust as needed
-		let template = try String(contentsOfFile: templatePath)
-		let environment = Environment(loader: FileSystemLoader(paths: ["./Resources"]))
+		
+		let template = try String(contentsOf: customTemplate)
+		let environment = Environment()
 		return try environment.renderTemplate(string: template, context: context)
+	}
+
+	func parseColorAssets(at url: URL) throws -> [String: Any] {
+		let fileManager = FileManager.default
+		var colorDict: [String: Any] = [:]
+		
+		print("Attempting to read colors from: \(url.path)")
+		
+		guard fileManager.fileExists(atPath: url.path) else {
+			print("Error: Colors directory does not exist at \(url.path)")
+			throw GenerateError.missingInput
+		}
+		
+		let contents = try fileManager.contentsOfDirectory(
+			at: url,
+			includingPropertiesForKeys: nil,
+			options: [.skipsHiddenFiles]
+		)
+		
+		for directory in contents {
+			guard directory.hasDirectoryPath else { continue }
+			let categoryName = directory.lastPathComponent
+			
+			let colorSets = try fileManager.contentsOfDirectory(
+				at: directory,
+				includingPropertiesForKeys: nil,
+				options: [.skipsHiddenFiles]
+			).filter { $0.pathExtension == "colorset" }
+			
+			print("Found \(colorSets.count) colors in \(categoryName)")
+			
+			for colorSet in colorSets {
+				let name = colorSet.deletingPathExtension().lastPathComponent
+				let contentsURL = colorSet.appendingPathComponent("Contents.json")
+				
+				guard fileManager.fileExists(atPath: contentsURL.path) else {
+					print("Warning: Missing Contents.json for color \(name)")
+					continue
+				}
+				
+				print("Processing color: \(categoryName).\(name)")
+				let data = try Data(contentsOf: contentsURL)
+				
+				if let colorInfo = try JSONSerialization.jsonObject(with: data) as? [String: Any] {
+					let cleanName = name
+						.replacingOccurrences(of: " ", with: "")
+						.replacingOccurrences(of: "\\", with: "")
+						.replacingOccurrences(of: "&", with: "And")
+						.replacingOccurrences(of: "(", with: "")
+						.replacingOccurrences(of: ")", with: "")
+
+					let colorName = cleanName.first?.isNumber == true ? "_\(cleanName)" : cleanName
+
+					colorDict[categoryName] = colorDict[categoryName] as? [String: Any] ?? [:]
+					var categoryColors = colorDict[categoryName] as! [String: Any]
+
+					categoryColors[colorName] = [
+						"name": name,  // Keep original name without path
+						"category": categoryName,
+						"key": colorName
+					]
+					colorDict[categoryName] = categoryColors
+				}
+			}
+		}
+		
+		if colorDict.isEmpty {
+			print("Warning: No colors were found in the asset catalog")
+		}
+		
+		return colorDict
 	}
 }
 
