@@ -121,7 +121,7 @@ struct POIDetailSheet: View {
 
             self.tabView
             ScrollView {
-                POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest))
+                POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest), selectedTab: self.$selectedTab)
                 POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
                     .padding(.bottom, 100)
             }
@@ -397,9 +397,7 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    return ContentView(
-        searchStore: searchViewStore,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewingPOI
-    )
+    ContentView(searchStore: searchViewStore,
+                mapViewStore: .storeSetUpForPreviewing,
+                sheetStore: .storeSetUpForPreviewingPOI)
 }

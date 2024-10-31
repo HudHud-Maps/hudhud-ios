@@ -213,12 +213,12 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, nationalAddress: String? = nil, floor: String? = nil, isWheelchairAccessible: Bool? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, nationalAddress: String? = nil, floor: String? = nil, isWheelchairAccessible: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
         self.category = category
-        self.subCategory = self.subCategory
+        self.subCategory = subCategory
         self.symbol = symbol
         self.type = type
         self.coordinate = coordinate
@@ -227,7 +227,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.rating = rating
         self.ratingsCount = ratingsCount
         self.isOpen = isOpen
-        self.openingHours = self.openingHours
+        self.openingHours = openingHours
         self.trendingImage = trendingImage
         self.mediaURLs = mediaURLs
         self.systemColor = color
