@@ -77,6 +77,9 @@
     "12 September 2024" : {
 
     },
+    "About" : {
+      "comment" : "About Tab in POI Details"
+    },
     "action" : {
 
     },
@@ -400,6 +403,9 @@
     "Open" : {
 
     },
+    "Overview" : {
+      "comment" : "Overview Tab in POI Details"
+    },
     "Patrick" : {
 
     },
@@ -407,7 +413,7 @@
 
     },
     "Photos" : {
-
+      "comment" : "Photos Tab in POI Details"
     },
     "Please enable your location to get directions" : {
 
@@ -439,6 +445,9 @@
     },
     "Reset" : {
 
+    },
+    "Reviews" : {
+      "comment" : "Reviews Tab in POI Details"
     },
     "Reviews %lld" : {
 
@@ -487,6 +496,9 @@
     },
     "Show More" : {
 
+    },
+    "Similar Places" : {
+      "comment" : "Similar Places Tab in POI Details"
     },
     "Simulate Ride during Navigation" : {
 
