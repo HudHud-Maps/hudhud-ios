@@ -6,25 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import BackendService
 import SwiftUI
-
-// MARK: - RouteWaypoint
-
-struct RouteWaypoint: Hashable {
-
-    // MARK: Nested Types
-
-    enum RouteWaypointType: Hashable {
-        case userLocation
-        case location(ResolvedItem)
-    }
-
-    // MARK: Properties
-
-    let type: RouteWaypointType
-    let title: String
-}
 
 // MARK: - RoutePlannerView
 
@@ -45,8 +27,14 @@ struct RoutePlannerView: View {
                 RoutePlanView(routePlannderStore: self.routePlannerStore)
             }
         }
-        .onAppear {
-            self.routePlannerStore.onAppear()
+        .padding(.vertical)
+        .padding(.top)
+        .background {
+            GeometryReader { geometry in
+                Color.clear.onAppear {
+                    self.routePlannerStore.didChangeHeight(to: geometry.size.height)
+                }
+            }
         }
     }
 }

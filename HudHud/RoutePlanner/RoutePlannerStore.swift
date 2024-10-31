@@ -50,11 +50,11 @@ final class RoutePlannerStore {
 
     // MARK: Functions
 
-    func onAppear() {
-        guard case .loaded = self.state else { return }
+    func didChangeHeight(to height: CGFloat) {
+        let height: Detent = .height(height)
         self.sheetStore.currentSheet.detentData.value = DetentData(
-            selectedDetent: .third,
-            allowedDetents: [.third]
+            selectedDetent: height,
+            allowedDetents: [height]
         )
     }
 
@@ -130,15 +130,6 @@ final class RoutePlannerStore {
                 selectedRoute: selectedRoute
             )
             self.state = .loaded(plan: plan)
-            switch self.sheetStore.currentSheet.sheetType {
-            case let .routePlanner(store) where store === self:
-                self.sheetStore.currentSheet.detentData.value = DetentData(
-                    selectedDetent: .third,
-                    allowedDetents: [.third]
-                )
-            default:
-                break
-            }
         } catch {
             self.state = .errorFetchignRoute
         }
@@ -178,6 +169,23 @@ enum RoutePlanningState: Hashable {
     var canSwap: Bool {
         self.destinations.count == 2
     }
+}
+
+// MARK: - RouteWaypoint
+
+struct RouteWaypoint: Hashable {
+
+    // MARK: Nested Types
+
+    enum RouteWaypointType: Hashable {
+        case userLocation
+        case location(ResolvedItem)
+    }
+
+    // MARK: Properties
+
+    let type: RouteWaypointType
+    let title: String
 }
 
 // MARK: - RoutePlan
