@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "f23db791d7b6f0329e3c6788d8e4152c24c52b6b",
-        "version" : "6.7.1"
+        "revision" : "0d20ebe79a21d7c1502776815aeaca7c59150f30",
+        "version" : "6.8.0"
       }
     },
     {
@@ -118,21 +118,12 @@
       }
     },
     {
-<<<<<<< HEAD
-      "identity" : "semaphore",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/Semaphore",
-      "state" : {
-        "revision" : "2543679282aa6f6c8ecf2138acd613ed20790bc2",
-        "version" : "0.1.0"
-=======
       "identity" : "pulse",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/kean/Pulse",
       "state" : {
         "revision" : "c102aaa266ac69a26d08ee6861da710283988e3b",
         "version" : "5.1.2"
->>>>>>> d158d307df805c1fa706a68c2da70c6d761891a5
       }
     },
     {
@@ -190,18 +181,6 @@
       }
     },
     {
-<<<<<<< HEAD
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections",
-      "state" : {
-        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
-        "version" : "1.1.4"
-      }
-    },
-    {
-=======
->>>>>>> d158d307df805c1fa706a68c2da70c6d761891a5
       "identity" : "swift-http-types",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-types",
@@ -238,18 +217,6 @@
       }
     },
     {
-<<<<<<< HEAD
-      "identity" : "swift-openapi-urlsession",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-openapi-urlsession",
-      "state" : {
-        "revision" : "9bf4c712ad7989d6a91dbe68748b8829a50837e4",
-        "version" : "1.0.2"
-      }
-    },
-    {
-=======
->>>>>>> d158d307df805c1fa706a68c2da70c6d761891a5
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/swiftlang/swift-syntax.git",
@@ -306,17 +273,10 @@
     {
       "identity" : "swiftuipanoramaviewer",
       "kind" : "remoteSourceControl",
-<<<<<<< HEAD
-      "location" : "https://github.com/azizdev/SwiftUIPanoramaViewer.git",
-      "state" : {
-        "branch" : "main",
-        "revision" : "9efa5c7845d57ef36d24626c8e93d100a46a3ac3"
-=======
       "location" : "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git",
       "state" : {
         "branch" : "hudhud",
         "revision" : "2e5b8e3bd8fc4eb76f857224b6095bd2a6fbe0c7"
->>>>>>> d158d307df805c1fa706a68c2da70c6d761891a5
       }
     },
     {
