@@ -240,7 +240,7 @@ struct StartNavigationButton: View {
         Button(action: self.onClick) {
             HStack {
                 Spacer()
-                Label("Start Trip", image: .addStopIcon)
+                Label("Start Trip", image: .directionsIcon)
                     .hudhudFontStyle(.labelMedium)
                     .foregroundStyle(.white)
                 Spacer()
