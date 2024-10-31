@@ -14,11 +14,38 @@ import SwiftUI
 
 struct POIOverviewView: View {
 
+    // MARK: Nested Types
+
+    enum Tab: String, CaseIterable, CustomStringConvertible {
+        case overview = "Overview"
+        case review = "Reviews"
+        case photos = "Photos"
+        case similar = "Similar Places"
+        case about = "About"
+
+        // MARK: Computed Properties
+
+        var description: String {
+            switch self {
+            case .overview:
+                return NSLocalizedString("Overview", comment: "Overview Tab in POI Details")
+            case .review:
+                return NSLocalizedString("Reviews", comment: "Reviews Tab in POI Details")
+            case .photos:
+                return NSLocalizedString("Photos", comment: "Photos Tab in POI Details")
+            case .similar:
+                return NSLocalizedString("Similar Places", comment: "Similar Places Tab in POI Details")
+            case .about:
+                return NSLocalizedString("About", comment: "About Tab in POI Details")
+            }
+        }
+    }
+
     // MARK: Properties
 
     let poiData: POISheetStore
     @State var viewMore: Bool = false
-    @Binding var selectedTab: String
+    @Binding var selectedTab: Tab
 
     // MARK: Computed Properties
 
@@ -48,14 +75,14 @@ struct POIOverviewView: View {
                 Divider()
                     .background(Color.Colors.General._04GreyForLines)
                 // Floor
-                if let floor = poiData.item.floor, self.selectedTab == "About" {
+                if let floor = self.poiData.item.floor, self.selectedTab == .about {
                     SectionView(sfSymbol: .building2, title: nil, desrciption: floor)
 
                     Divider()
                         .background(Color.Colors.General._04GreyForLines)
                 }
                 // National Address
-                if let nationalAddress = poiData.item.nationalAddress, self.selectedTab == "About" {
+                if let nationalAddress = poiData.item.nationalAddress, self.selectedTab == .about {
                     SectionView(sfSymbol: .building2, title: "National Address", desrciption: nationalAddress)
 
                     Divider()
@@ -64,7 +91,7 @@ struct POIOverviewView: View {
                 }
                 // Price Range
                 if let priceRangeValue = self.poiData.item.priceRange,
-                   let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue), self.selectedTab == "About" {
+                   let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue), self.selectedTab == .about {
                     SectionView(sfSymbol: .dollarsignCircleFill, title: nil, desrciption: priceRange.displayValue)
 
                     Divider()
@@ -90,13 +117,13 @@ struct POIOverviewView: View {
             .hudhudFont(size: 15, fontWeight: .regular)
 
             // if tab == overview
-            if self.selectedTab != "About" {
+            if self.selectedTab != .about {
                 Divider()
                     .background(Color.Colors.General._04GreyForLines)
 
                 // Show more button
                 ShowMoreButtonView {
-                    self.selectedTab = ""
+//                    self.selectedTab = ""
                 }
                 .padding(.horizontal)
             }
@@ -325,11 +352,11 @@ struct ShowMoreButtonView: View {
 }
 
 #Preview {
-    @Previewable @State var overview = "Overview"
+    @Previewable @State var overview: POIOverviewView.Tab = .overview
     POIOverviewView(poiData: POISheetStore(item: .artwork), selectedTab: $overview)
 }
 
 #Preview("About") {
-    @Previewable @State var about = "About"
+    @Previewable @State var about: POIOverviewView.Tab = .about
     POIOverviewView(poiData: POISheetStore(item: .ketchup), selectedTab: $about)
 }

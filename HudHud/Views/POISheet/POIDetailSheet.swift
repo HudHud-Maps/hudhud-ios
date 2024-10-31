@@ -27,8 +27,7 @@ struct POIDetailSheet: View {
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
 
-    let tabItems = ["Overview", "Reviews", "Photos", "Similar Places", "About"]
-    @State var selectedTab = "Overview"
+    @State var selectedTab: POIOverviewView.Tab = .overview
     @Namespace var animation
     @State var showTabView: Bool = true
 
@@ -164,9 +163,9 @@ struct POIDetailSheet: View {
         ScrollViewReader { scrollProxy in
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(self.tabItems, id: \.self) { tab in
+                    ForEach(POIOverviewView.Tab.allCases, id: \.self) { tab in
                         VStack {
-                            Text(tab)
+                            Text(tab.description)
                                 .hudhudFont(.subheadline)
                                 .fontWeight(self.selectedTab == tab ? .semibold : .regular)
                                 .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
