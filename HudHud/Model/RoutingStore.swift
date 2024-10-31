@@ -125,7 +125,8 @@ final class RoutingStore: ObservableObject {
         self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
             customRouteProvider: self.hudHudGraphHopperRouteProvider,
             locationProvider: provider,
-            navigationControllerConfig: config
+            navigationControllerConfig: config,
+            annotation: AnnotationPublisher<ValhallaExtendedOSRMAnnotation>.valhallaExtendedOSRM()
         ))
 
         self.ferrostarCore.delegate = self.navigationDelegate
