@@ -1858,8 +1858,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/stadiamaps/ferrostar.git";
 			requirement = {
-				kind = revision;
-				revision = 4b883ae4571d5a59b122894d2849657eb618db4f;
+				kind = exactVersion;
+				version = 0.20.0;
 			};
 		};
 		6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
