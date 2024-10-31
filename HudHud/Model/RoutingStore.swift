@@ -53,7 +53,6 @@ final class RoutingStore: ObservableObject {
 
     @Published var routes: [Route] = []
 
-    private var provider: LocationProviding
     private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
         isMuted: false)
 
@@ -92,12 +91,14 @@ final class RoutingStore: ObservableObject {
     init(mapStore: MapStore) {
         self.mapStore = mapStore
 
+        let provider: LocationProviding
+
         if DebugStore().simulateRide {
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
             simulated.warpFactor = 3
-            self.provider = simulated
+            provider = simulated
         } else {
-            self.provider = CoreLocationProvider(
+            provider = CoreLocationProvider(
                 activityType: .automotiveNavigation,
                 allowBackgroundLocationUpdates: true
             )
@@ -116,7 +117,7 @@ final class RoutingStore: ObservableObject {
 
         self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
             customRouteProvider: self.hudHudGraphHopperRouteProvider,
-            locationProvider: self.provider,
+            locationProvider: provider,
             navigationControllerConfig: config
         ))
 
@@ -127,17 +128,6 @@ final class RoutingStore: ObservableObject {
     // MARK: Functions
 
     func startNavigation() {
-        if DebugStore().simulateRide {
-            let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 3
-            self.provider = simulated
-        } else {
-            self.provider = CoreLocationProvider(
-                activityType: .automotiveNavigation,
-                allowBackgroundLocationUpdates: true
-            )
-        }
-        self.provider.startUpdating()
         self.navigatingRoute = self.selectedRoute
     }
 
@@ -215,7 +205,6 @@ final class RoutingStore: ObservableObject {
     }
 
     func endTrip() {
-        self.provider.stopUpdating()
         self.ferrostarCore.stopNavigation()
         self.waypoints = nil
         self.potentialRoute = nil

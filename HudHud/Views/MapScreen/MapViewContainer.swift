@@ -248,6 +248,7 @@ private extension MapViewContainer {
                         try configureLocationSimulator(simulated, with: route)
                     }
                 }
+                self.routingStore.ferrostarCore.locationProvider.startUpdating()
                 self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
