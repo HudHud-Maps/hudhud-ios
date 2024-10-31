@@ -16,10 +16,11 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import OSLog
 import SwiftUI
+import UIKit
 
 // MARK: - MapViewContainer
 
-struct MapViewContainer: View {
+struct MapViewContainer<SheetContentView: View>: View {
 
     // MARK: Properties
 
@@ -31,9 +32,11 @@ struct MapViewContainer: View {
     let streetViewStore: StreetViewStore
     let mapViewStore: MapViewStore
 
+    @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
+
     @State private var safeAreaInsets = UIEdgeInsets()
     @State private var didFocusOnUser = false
-    @Binding private var isSheetShown: Bool
+    private var sheetStore: SheetStore
 
     // MARK: Computed Properties
 
@@ -50,8 +53,9 @@ struct MapViewContainer: View {
         userLocationStore: UserLocationStore,
         mapViewStore: MapViewStore,
         routingStore: RoutingStore,
+        sheetStore: SheetStore,
         streetViewStore: StreetViewStore,
-        isSheetShown: Binding<Bool>
+        @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
@@ -60,7 +64,8 @@ struct MapViewContainer: View {
         self.mapViewStore = mapViewStore
         self.streetViewStore = streetViewStore
         self.routingStore = routingStore
-        self._isSheetShown = isSheetShown
+        self.sheetStore = sheetStore
+        self.sheetToView = sheetToView
     }
 
     // MARK: Content
@@ -68,9 +73,14 @@ struct MapViewContainer: View {
     var body: some View {
         return NavigationStack {
             DynamicallyOrientingNavigationView(
+                makeViewController: MapViewController(
+                    sheetStore: self.sheetStore,
+                    styleURL: self.mapStore.mapStyleUrl(),
+                    sheetToView: self.sheetToView
+                ),
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
-                locationProviding: self.routingStore.ferrostarCore.locationProvider,
+                locationProviding: nil,
                 navigationState: self.routingStore.ferrostarCore.state,
                 showZoom: false,
                 onTapExit: stopNavigation,
@@ -156,7 +166,7 @@ private extension MapViewContainer {
         return layers
     }
 
-    func makeMapViewModifiers(content: MapView<MLNMapViewController>, isNavigating: Bool) -> MapView<MLNMapViewController> {
+    func makeMapViewModifiers(content: MapView<MapViewController>, isNavigating: Bool) -> MapView<MapViewController> {
         guard !isNavigating else { return content }
         let allRouteIndices = 0 ..< 5 // max possible routes
         let routeLayers = allRouteIndices.flatMap { index in
@@ -233,12 +243,12 @@ private extension MapViewContainer {
     func handleNavigatingRouteChange(_: Route?, _ newValue: Route?) {
         if let route = newValue {
             do {
-                if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                try self.routingStore.ferrostarCore.startNavigation(route: route)
+                if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
                     try configureLocationSimulator(simulated, with: route)
                 }
 
-                try self.routingStore.ferrostarCore.startNavigation(route: route)
-                self.isSheetShown = false
+                self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                     self.mapStore.camera = .automotiveNavigation()
@@ -255,6 +265,17 @@ private extension MapViewContainer {
     }
 
     func handleTripStateChange(_ oldValue: TripState?, _ newValue: TripState?) {
+        if let newValue {
+            switch newValue {
+            case .idle:
+                UIApplication.shared.isIdleTimerDisabled = false
+            case .navigating:
+                UIApplication.shared.isIdleTimerDisabled = true
+            case .complete:
+                UIApplication.shared.isIdleTimerDisabled = false
+            }
+        }
+
         guard let oldValue,
               let newValue,
               case .navigating = oldValue,
@@ -278,11 +299,13 @@ private extension MapViewContainer {
             coordinate: gesture.coordinate,
             color: .systemRed
         )
-        self.mapStore.select(generatedPOI)
+        self.sheetStore.show(.pointOfInterest(generatedPOI))
     }
 
-    func configureMapViewController(_ mapViewController: MLNMapViewController) {
-        mapViewController.mapView.locationManager = LocationManagerProxy(locationProvider: self.routingStore.ferrostarCore.locationProvider)
+    func configureMapViewController(_ mapViewController: MapViewController) {
+        if self.routingStore.ferrostarCore.simulatedLocationProvider != nil {
+            mapViewController.mapView.locationManager = LocationManagerProxy(locationProvider: self.routingStore.ferrostarCore.locationProvider)
+        }
 
         mapViewController.mapView.compassViewMargins.y = 50
     }
@@ -292,15 +315,17 @@ private extension MapViewContainer {
 
 // TODO: - Move it to its own store
 private extension MapViewContainer {
+
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
-        self.isSheetShown = true
+        self.sheetStore.isShown.value = true
 
         if let coordinates = routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
             self.resetCamera(to: coordinates)
         }
         self.routingStore.clearRoutes()
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     func resetCamera(to coordinates: GeographicCoordinate) {
@@ -320,6 +345,7 @@ private extension MapViewContainer {
 
     func configureLocationSimulator(_ simulated: SimulatedLocationProvider, with route: Route) throws {
         try simulated.setSimulatedRoute(route, resampleDistance: 5)
+        simulated.stopUpdating() // to privent camera jumps when we simulate location at high speeds
         DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             simulated.startUpdating()
         }
@@ -330,5 +356,11 @@ private extension MapViewContainer {
             self.mapStore.displayableItems.isEmpty &&
             self.mapStore.isSFSymbolLayerPresent() &&
             self.mapStore.shouldShowCustomSymbols
+    }
+}
+
+extension FerrostarCore {
+    var simulatedLocationProvider: SimulatedLocationProvider? {
+        self.locationProvider as? SimulatedLocationProvider
     }
 }

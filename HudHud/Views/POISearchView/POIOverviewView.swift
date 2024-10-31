@@ -14,39 +14,101 @@ import SwiftUI
 
 struct POIOverviewView: View {
 
+    // MARK: Nested Types
+
+    enum Tab: String, CaseIterable, CustomStringConvertible {
+        case overview
+        case review
+        case photos
+        case similar
+        case about
+
+        // MARK: Computed Properties
+
+        var description: String {
+            switch self {
+            case .overview:
+                return NSLocalizedString("Overview", comment: "Overview Tab in POI Details")
+            case .review:
+                return NSLocalizedString("Reviews", comment: "Reviews Tab in POI Details")
+            case .photos:
+                return NSLocalizedString("Photos", comment: "Photos Tab in POI Details")
+            case .similar:
+                return NSLocalizedString("Similar Places", comment: "Similar Places Tab in POI Details")
+            case .about:
+                return NSLocalizedString("About", comment: "About Tab in POI Details")
+            }
+        }
+    }
+
     // MARK: Properties
 
     let poiData: POISheetStore
+    @State var viewMore: Bool = false
+    @Binding var selectedTab: Tab
+
+    // MARK: Computed Properties
+
+    private var shouldShowButton: Bool {
+        let maxCharacters = 250
+        return (self.poiData.item.description).count > maxCharacters
+    }
 
     // MARK: Content
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            // Title and Description
-            Text(self.poiData.item.description)
-                .hudhudFont(size: 14, fontWeight: .regular)
-                .padding(.horizontal)
-                .foregroundColor(Color.Colors.General._01Black)
-
+            // Here should be a description not the address
+            SectionView(sfSymbol: nil, title: nil, desrciption: self.poiData.item.description)
+                .lineLimit(self.viewMore ? 30 : 7)
+            if self.shouldShowButton {
+                Button(self.viewMore ? "Show Less" : "Show More") {
+                    self.viewMore.toggle()
+                }
+            }
             Divider()
                 .background(Color.Colors.General._04GreyForLines)
 
             VStack(alignment: .leading, spacing: 15) {
                 // Location Row
-                LocationView(description: self.poiData.item.description)
+                SectionView(sfSymbol: .mappinCircleFill, title: nil, desrciption: self.poiData.item.description)
+                Divider()
+                    .background(Color.Colors.General._04GreyForLines)
+                // Floor
+                if let floor = self.poiData.item.floor, self.selectedTab == .about {
+                    SectionView(sfSymbol: .building2, title: nil, desrciption: floor)
 
-                // Opening hours detial Row
+                    Divider()
+                        .background(Color.Colors.General._04GreyForLines)
+                }
+                // National Address
+                if let nationalAddress = poiData.item.nationalAddress, self.selectedTab == .about {
+                    SectionView(sfSymbol: .building2, title: "National Address", desrciption: nationalAddress)
+
+                    Divider()
+                        .frame(height: 1)
+                        .background(Color.Colors.General._04GreyForLines)
+                }
+                // Price Range
+                if let priceRangeValue = self.poiData.item.priceRange,
+                   let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue), self.selectedTab == .about {
+                    SectionView(sfSymbol: .dollarsignCircleFill, title: nil, desrciption: priceRange.displayValue)
+
+                    Divider()
+                        .background(Color.Colors.General._04GreyForLines)
+                }
+
+                // Opening hours detail Row
                 if let isOpen = poiData.item.isOpen {
                     OpeningHoursView(isOpen: isOpen, data: self.poiData)
                 }
 
-                // Contact detial Row
+                // Contact detail Row
                 if let phone = poiData.item.phone, let website = poiData.item.website?.absoluteString {
                     ContactDetailView(phone: phone, website: website)
+                    Divider()
+                        .background(Color.Colors.General._04GreyForLines)
                 }
-
-                Divider()
-                    .background(Color.Colors.General._04GreyForLines)
 
                 // Claim Button
                 ClaimBusinessButtonView()
@@ -54,32 +116,55 @@ struct POIOverviewView: View {
             }
             .hudhudFont(size: 15, fontWeight: .regular)
 
-            Divider()
-                .background(Color.Colors.General._04GreyForLines)
+            // if tab == overview
+            if self.selectedTab != .about {
+                Divider()
+                    .background(Color.Colors.General._04GreyForLines)
 
-            // Show more button
-            ShowMoreButtonView()
+                // Show more button
+                ShowMoreButtonView {
+                    self.selectedTab = .about
+                }
                 .padding(.horizontal)
+            }
         }
+        .padding(.vertical)
+        .background(.white)
+        .cornerRadius(20)
     }
 }
 
-// MARK: - LocationView
+// MARK: - SectionView
 
-struct LocationView: View {
+struct SectionView: View {
 
     // MARK: Properties
 
-    let description: String
+    let sfSymbol: SFSymbol?
+    let title: String?
+    let desrciption: String
 
     // MARK: Content
 
     var body: some View {
         HStack {
-            Image(systemSymbol: .mappinCircleFill)
-                .foregroundColor(.Colors.General._02Grey)
-            Text(self.description)
-                .foregroundColor(.Colors.General._01Black)
+            // icon
+            if let sfSymbol {
+                Image(systemSymbol: sfSymbol)
+                    .foregroundColor(.Colors.General._02Grey)
+            }
+            // Text
+            VStack(alignment: .leading) {
+                if let title {
+                    Text(title)
+                        .hudhudFont(size: 14, fontWeight: .regular)
+                        .foregroundColor(.Colors.General._02Grey)
+                }
+                Text(self.desrciption)
+                    .hudhudFont(size: 14, fontWeight: .regular)
+                    .foregroundColor(.Colors.General._01Black)
+            }
+            .padding(.leading, 5)
         }
         .padding(.horizontal)
     }
@@ -245,21 +330,33 @@ struct ClaimBusinessButtonView: View {
 // MARK: - ShowMoreButtonView
 
 struct ShowMoreButtonView: View {
+
+    // MARK: Properties
+
+    let action: () -> Void
+
+    // MARK: Content
+
     var body: some View {
-        Button(action: {
-            // Action for show more button
-        }, label: {
+        Button {
+            self.action()
+        } label: {
             Text("Show more")
                 .foregroundColor(.Colors.General._06DarkGreen)
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(Color.Colors.General._03LightGrey)
                 .cornerRadius(100)
-        })
+        }
     }
 }
 
 #Preview {
-    @Previewable @State var openingHoursExpanded = false
-    POIOverviewView(poiData: POISheetStore(item: .artwork, openingHoursExpanded: $openingHoursExpanded))
+    @Previewable @State var overview: POIOverviewView.Tab = .overview
+    POIOverviewView(poiData: POISheetStore(item: .artwork), selectedTab: $overview)
+}
+
+#Preview("About") {
+    @Previewable @State var about: POIOverviewView.Tab = .about
+    POIOverviewView(poiData: POISheetStore(item: .ketchup), selectedTab: $about)
 }

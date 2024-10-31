@@ -62,7 +62,7 @@ struct SearchSheet: View {
                                 Spacer()
                                 if !self.searchStore.searchText.isEmpty {
                                     Button {
-                                        self.searchStore.searchText = ""
+                                        self.searchStore.cancelSearch()
                                     } label: {
                                         Image(systemSymbol: .multiplyCircleFill)
                                             .foregroundColor(.gray)
@@ -117,7 +117,7 @@ struct SearchSheet: View {
             .padding(.horizontal)
             .padding(.top)
             // Show the filter UI if the search view is displaying an item that was fetched from a category.
-            if let firstItem = self.mapStore.displayableItems.first,
+            if let firstItem = self.searchStore.searchResults.first,
                case .categoryItem = firstItem {
                 MainFiltersView(searchStore: self.searchStore, filterStore: self.filterStore)
                     .padding(.horizontal)
@@ -138,16 +138,16 @@ struct SearchSheet: View {
             } else {
                 List {
                     if !self.searchStore.searchText.isEmpty {
-                        ForEach(self.mapStore.displayableItems) { item in
+                        ForEach(self.searchStore.searchResults) { item in
                             switch item {
                             case let .categoryItem(item):
-                                Button(action: {
-                                    self.mapStore.select(item, shouldFocusCamera: true)
-                                }, label: {
+                                Button {
+                                    self.sheetStore.show(.pointOfInterest(item))
+                                } label: {
                                     SearchResultView(item: item) {
-                                        self.mapStore.select(item, shouldFocusCamera: true)
+                                        self.sheetStore.show(.pointOfInterest(item))
                                     }
-                                })
+                                }
                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
@@ -190,7 +190,7 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(sheetStore: self.sheetStore, searchStore: self.searchStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore)
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)
@@ -236,6 +236,9 @@ struct SearchSheet: View {
                 secondaryButton: .default(Text("OK"))
             )
         }
+        .onAppear {
+            self.searchStore.applySearchResultsOnMapIfNeeded()
+        }
     }
 
     // MARK: Functions
@@ -252,9 +255,9 @@ struct SearchSheet: View {
     private func logOut() {
         do {
             try AuthProvider.shared.delete()
-            print("Logged out")
+            Logger.userRegistration.info("Logged out")
         } catch {
-            print("Error logging out: \(error)")
+            Logger.userRegistration.error("Error logging out: \(error)")
         }
     }
 }
@@ -283,15 +286,16 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
     }
 
     public var rawValue: String {
-        guard let data = try? JSONEncoder().encode(self) else {
+        guard let data = try? JSONEncoder().encode(self),
+              let result = String(data: data, encoding: .utf8) else {
             return "[]"
         }
-        let result = String(decoding: data, as: UTF8.self)
+
         return result
     }
 }
 
 #Preview {
     let trendingStroe = TrendingStore()
-    return SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+    SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

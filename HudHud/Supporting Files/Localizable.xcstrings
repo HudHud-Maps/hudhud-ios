@@ -22,12 +22,42 @@
     "%@" : {
       "comment" : "distance • type of route\nduration"
     },
+    "%@ (%@)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ (%2$@)"
+          }
+        }
+      }
+    },
     "%@ %@" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ until %@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ until %2$@"
+          }
+        }
+      }
+    },
+    "%lld of %lld" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$lld of %2$lld"
           }
         }
       }
@@ -43,6 +73,12 @@
     },
     "+" : {
 
+    },
+    "12 September 2024" : {
+
+    },
+    "About" : {
+      "comment" : "About Tab in POI Details"
     },
     "action" : {
 
@@ -75,6 +111,9 @@
 
     },
     "Apply" : {
+
+    },
+    "Back" : {
 
     },
     "Bad Traffic Data" : {
@@ -111,6 +150,7 @@
     },
     "Call" : {
       "comment" : "on poi detail sheet to call the poi",
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -137,7 +177,7 @@
 
     },
     "Close" : {
-      "comment" : "accesibility label instead of x",
+      "comment" : "Accessibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -183,13 +223,7 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
-    "Distance" : {
-
-    },
     "Done" : {
-
-    },
-    "Duration" : {
 
     },
     "Edit" : {
@@ -260,9 +294,6 @@
           }
         }
       }
-    },
-    "Hours" : {
-
     },
     "Hours Range" : {
       "comment" : "traffic chart view, Hours range x axes"
@@ -336,13 +367,13 @@
         }
       }
     },
-    "N / A" : {
-
-    },
     "Name" : {
 
     },
     "Nearby Trending" : {
+
+    },
+    "Network Logger" : {
 
     },
     "Next" : {
@@ -354,7 +385,7 @@
     "No Map Layers Available" : {
 
     },
-    "No Ratings" : {
+    "No ratings" : {
 
     },
     "No Results" : {
@@ -372,11 +403,17 @@
     "Open" : {
 
     },
+    "Overview" : {
+      "comment" : "Overview Tab in POI Details"
+    },
+    "Patrick" : {
+
+    },
     "Personal Information" : {
 
     },
     "Photos" : {
-
+      "comment" : "Photos Tab in POI Details"
     },
     "Please enable your location to get directions" : {
 
@@ -388,15 +425,6 @@
 
     },
     "Rating" : {
-
-    },
-    "Ratings" : {
-
-    },
-    "Read Less" : {
-
-    },
-    "Read More" : {
 
     },
     "Recents" : {
@@ -417,6 +445,9 @@
     },
     "Reset" : {
 
+    },
+    "Reviews" : {
+      "comment" : "Reviews Tab in POI Details"
     },
     "Reviews %lld" : {
 
@@ -457,8 +488,17 @@
     "Share" : {
 
     },
+    "Show Less" : {
+
+    },
     "Show more" : {
 
+    },
+    "Show More" : {
+
+    },
+    "Similar Places" : {
+      "comment" : "Similar Places Tab in POI Details"
     },
     "Simulate Ride during Navigation" : {
 
@@ -494,9 +534,6 @@
 
     },
     "Unit Testing in progress" : {
-
-    },
-    "Unknown" : {
 
     },
     "Use SF Symbols for POIs on map" : {

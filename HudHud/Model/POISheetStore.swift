@@ -42,6 +42,6 @@ struct POISheetStore {
     // MARK: Properties
 
     let item: ResolvedItem
-    @Binding var openingHoursExpanded: Bool
+    @State var openingHoursExpanded: Bool = false
 
 }

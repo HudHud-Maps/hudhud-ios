@@ -15,7 +15,7 @@
       "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
         "branch" : "annotations",
-        "revision" : "b87f92d6819bbc7c211310c7c27c66a58a0f2bae"
+        "revision" : "8890bee3d6d9da030c2a94650757c5ca67cda19a"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "f23db791d7b6f0329e3c6788d8e4152c24c52b6b",
-        "version" : "6.7.1"
+        "revision" : "0d20ebe79a21d7c1502776815aeaca7c59150f30",
+        "version" : "6.8.0"
       }
     },
     {
@@ -84,7 +84,7 @@
     {
       "identity" : "nuke",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kean/Nuke",
+      "location" : "https://github.com/kean/Nuke.git",
       "state" : {
         "revision" : "0ead44350d2737db384908569c012fe67c421e4d",
         "version" : "12.8.0"
@@ -118,12 +118,12 @@
       }
     },
     {
-      "identity" : "semaphore",
+      "identity" : "pulse",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/groue/Semaphore",
+      "location" : "https://github.com/kean/Pulse",
       "state" : {
-        "revision" : "2543679282aa6f6c8ecf2138acd613ed20790bc2",
-        "version" : "0.1.0"
+        "revision" : "c102aaa266ac69a26d08ee6861da710283988e3b",
+        "version" : "5.1.2"
       }
     },
     {
@@ -140,8 +140,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sanzaru/SimpleToast",
       "state" : {
-        "revision" : "217c9c38dead686e05896fb3dd652880adedfedf",
-        "version" : "0.9.0"
+        "revision" : "99330cceeea6a9068d40ccbe27efb75d240098ef",
+        "version" : "0.10.1"
       }
     },
     {
@@ -181,15 +181,6 @@
       }
     },
     {
-      "identity" : "swift-collections",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections",
-      "state" : {
-        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
-        "version" : "1.1.4"
-      }
-    },
-    {
       "identity" : "swift-http-types",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-http-types",
@@ -221,17 +212,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-openapi-runtime",
       "state" : {
-        "revision" : "26e8ae3515d1ff3607e924ac96fc0094775f55e8",
-        "version" : "1.5.0"
-      }
-    },
-    {
-      "identity" : "swift-openapi-urlsession",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-openapi-urlsession",
-      "state" : {
-        "revision" : "9bf4c712ad7989d6a91dbe68748b8829a50837e4",
-        "version" : "1.0.2"
+        "revision" : "daa2fb54fe4a7f5187d7286047d5144c8cb97477",
+        "version" : "1.6.0"
       }
     },
     {
@@ -267,7 +249,7 @@
       "location" : "https://github.com/engali94/swiftui-dsl.git",
       "state" : {
         "branch" : "main",
-        "revision" : "4246f6e4196950d5a51ec17eb5dee7b3c20228e3"
+        "revision" : "9f941bb12850cebacc6fa6fc74eeabda9ba6de39"
       }
     },
     {

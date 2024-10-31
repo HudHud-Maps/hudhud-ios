@@ -7,35 +7,44 @@
 //
 
 import CoreLocation
+import PulseUI
 import SwiftUI
 
 // MARK: - DebugMenuView
 
 struct DebugMenuView: View {
-    @Environment(\.dismiss) private var dismiss
+
+    // MARK: Properties
+
     @ObservedObject var debugSettings: DebugStore
     @ObservedObject var touchManager = TouchManager.shared
+    let sheetStore: SheetStore
+
+    // MARK: Content
 
     var body: some View {
-        Form {
-            self.routingSection
-            self.baseURLSection
-            self.simulationSection
-            self.touchesSection
-            self.sfsymbolsSection
-            self.streetViewQualitySection
-        }
-        .navigationTitle("Debug Menu")
-        .toolbar {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button("Reset") {
-                    self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
-                    self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
-                }
+        NavigationStack {
+            Form {
+                self.routingSection
+                self.baseURLSection
+                self.networkDebuggerButton
+                self.simulationSection
+                self.touchesSection
+                self.sfsymbolsSection
+                self.streetViewQualitySection
             }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button("Done") {
-                    self.dismiss()
+            .navigationTitle("Debug Menu")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Reset") {
+                        self.debugSettings.routingHost = "gh-proxy.map.dev.hudhud.sa"
+                        self.debugSettings.baseURL = "https://api.dev.hudhud.sa"
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Done") {
+                        self.sheetStore.popSheet()
+                    }
                 }
             }
         }
@@ -61,6 +70,12 @@ struct DebugMenuView: View {
                         self.debugSettings.baseURL = newValue
                     }
                 }
+        }
+    }
+
+    var networkDebuggerButton: some View {
+        NavigationLink(destination: ConsoleView()) {
+            Text("Network Logger")
         }
     }
 
@@ -139,7 +154,7 @@ struct DebugMenuView: View {
 #Preview {
     @Previewable @StateObject var debugSettings = DebugStore()
 
-    return DebugMenuView(debugSettings: debugSettings)
+    return DebugMenuView(debugSettings: debugSettings, sheetStore: .storeSetUpForPreviewing)
 }
 
 func optionalBinding<T>(_ binding: Binding<T?>, _ defaultValue: T) -> Binding<T> {

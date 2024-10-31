@@ -47,7 +47,7 @@ final class RoutingStore: ObservableObject {
 
     @Published private(set) var selectedRoute: Route?
 
-    let hudHudGraphHopperRouteProvider = HudHudGraphHopperRouteProvider()
+    let hudHudGraphHopperRouteProvider = GraphHopperRouteProvider()
 
     @ObservedChild private(set) var ferrostarCore: FerrostarCore
 
@@ -117,7 +117,7 @@ final class RoutingStore: ObservableObject {
         )
 
         self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
-            customRouteProvider: HudHudGraphHopperRouteProvider(),
+            customRouteProvider: self.hudHudGraphHopperRouteProvider,
             locationProvider: provider,
             navigationControllerConfig: config
         ))
@@ -132,7 +132,7 @@ final class RoutingStore: ObservableObject {
         self.navigatingRoute = self.selectedRoute
     }
 
-    func reset() {
+    func cancelCurrentRoutePlan() {
         self.routes = []
         self.potentialRoute = nil
         self.navigatingRoute = nil
@@ -149,7 +149,15 @@ final class RoutingStore: ObservableObject {
     }
 
     func calculateRoutes(for waypoints: [Waypoint]) async throws -> [Route] {
-        return try await self.hudHudGraphHopperRouteProvider.getRoutes(waypoints: waypoints)
+        var waypoints = waypoints
+        let firstWaypoint = waypoints.removeFirst()
+        let lastWaypoint = waypoints.removeLast()
+
+        return try await self.hudHudGraphHopperRouteProvider.calculateRoute(
+            from: firstWaypoint,
+            to: lastWaypoint,
+            passingBy: waypoints
+        )
     }
 
     func calculateRoutes(for item: ResolvedItem) async throws -> [Route] {

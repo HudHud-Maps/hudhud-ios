@@ -104,7 +104,7 @@ final class StreetViewStore {
 
     func loadNearestStreetView(minLon: Double, minLat: Double, maxLon: Double, maxLat: Double) async {
         do {
-            self.nearestStreetViewScene = try await self.streetViewClient.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat])
+            self.nearestStreetViewScene = try await self.streetViewClient.getStreetViewSceneBBox(box: [minLon, minLat, maxLon, maxLat], baseURL: DebugStore().baseURL)
             self.errorMsg = nil
         } catch {
             self.nearestStreetViewScene = nil
