@@ -12,10 +12,10 @@
     {
       "identity" : "ferrostar",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/HudHud-Maps/ferrostar.git",
+      "location" : "https://github.com/stadiamaps/ferrostar.git",
       "state" : {
-        "branch" : "annotations",
-        "revision" : "8890bee3d6d9da030c2a94650757c5ca67cda19a"
+        "revision" : "c3e4120b6884547429dcfdec421d6057bd0ccb31",
+        "version" : "0.19.0"
       }
     },
     {
@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "f23db791d7b6f0329e3c6788d8e4152c24c52b6b",
-        "version" : "6.7.1"
+        "revision" : "0d20ebe79a21d7c1502776815aeaca7c59150f30",
+        "version" : "6.8.0"
       }
     },
     {
@@ -246,10 +246,10 @@
     {
       "identity" : "swiftui-dsl",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/engali94/swiftui-dsl.git",
+      "location" : "https://github.com/maplibre/swiftui-dsl",
       "state" : {
-        "branch" : "main",
-        "revision" : "9f941bb12850cebacc6fa6fc74eeabda9ba6de39"
+        "revision" : "a6e079ce382e7860bc9105a05534f967a2f9ef65",
+        "version" : "0.3.1"
       }
     },
     {

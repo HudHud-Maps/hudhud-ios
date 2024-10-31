@@ -53,8 +53,9 @@ final class RoutingStore: ObservableObject {
 
     @Published var routes: [Route] = []
 
-    private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
-        isMuted: false)
+    let locationProvider: LocationProviding
+
+    private let spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
     private let navigationDelegate = NavigationDelegate()
@@ -95,7 +96,7 @@ final class RoutingStore: ObservableObject {
 
         if DebugStore().simulateRide {
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 3
+            simulated.warpFactor = 1
             provider = simulated
         } else {
             provider = CoreLocationProvider(
@@ -105,6 +106,7 @@ final class RoutingStore: ObservableObject {
             provider.startUpdating()
         }
 
+        self.locationProvider = provider
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.
         let config = SwiftNavigationControllerConfig(
