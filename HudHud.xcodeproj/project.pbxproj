@@ -75,6 +75,7 @@
 		8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2F6FA8B7E5054CFBE481D85 /* Formatters.swift */; };
 		8C2807D362FD49761D07A6DA /* OTPVerificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */; };
 		8CF4FC9E1B350427D1B71D50 /* GraphHopperRouteProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582B0B08354F147FFABC9A2D /* GraphHopperRouteProvider.swift */; };
+		8F51B857A44877394570DB9D /* PhotoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CB79F6537AD0F3E8D9A1C4A /* PhotoTabView.swift */; };
 		907F1F7E2BD4F95100B4993E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 907F1F7D2BD4F95100B4993E /* Localizable.xcstrings */; };
 		90B143BC2BA9A2170086FD4B /* SearchSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B143BB2BA9A2170086FD4B /* SearchSectionView.swift */; };
 		90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90CBC0412B83238F009ADD79 /* DirectionsSummaryView.swift */; };
@@ -101,6 +102,7 @@
 		A6D5755DEC1641EBC3E02017 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128EEC335247DA2600CF82C6 /* NotificationManager.swift */; };
 		A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 52F4EE2A05342B512BC9C7C8 /* PlusJakartaSans-Light.ttf */; };
 		AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = A5573D212A6894A83DE373F6 /* PlusJakartaSans-BoldItalic.ttf */; };
+		AC1FF36ACABF47B03AAFC2CB /* PhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B3C3BD2B69DA6330C83749C /* PhotosView.swift */; };
 		AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DE3E451DEAC8B940BD5FD6F /* SheetStore.swift */; };
 		AD75580E7D076A61A8A64A84 /* DeviceSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ACB9C5FC9974E6C1AA9E87D /* DeviceSupport.swift */; };
 		AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFE1EC872CC10E3800A9A5C4 /* SpeedView.swift */; };
@@ -209,6 +211,7 @@
 		24FF2895ADD6ECD1BA827350 /* RoutePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanner.swift; sourceTree = "<group>"; };
 		25BABFA49366F559068D48E7 /* PhotoSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoSectionView.swift; sourceTree = "<group>"; };
 		2AB3AC400749ABE16FDEC195 /* LocationInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInfoView.swift; sourceTree = "<group>"; };
+		2CB79F6537AD0F3E8D9A1C4A /* PhotoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTabView.swift; sourceTree = "<group>"; };
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
@@ -267,6 +270,7 @@
 		92B7969B0AE81D4DAB16957A /* PlusJakartaSans-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
 		930C5C4AFBCBE90A662DA243 /* XCTestCase+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Additions.swift"; sourceTree = "<group>"; };
+		9B3C3BD2B69DA6330C83749C /* PhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosView.swift; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		9E0026172CD220D8006DD54A /* RoutePlannerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlannerView.swift; sourceTree = "<group>"; };
 		9E00261A2CD220E3006DD54A /* RoutePlannerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlannerStore.swift; sourceTree = "<group>"; };
@@ -523,6 +527,8 @@
 				FB6F376F14C1845A8F147ABF /* SearchResultView.swift */,
 				2183BECFE15DBC861312F863 /* POIOverviewView.swift */,
 				25BABFA49366F559068D48E7 /* PhotoSectionView.swift */,
+				2CB79F6537AD0F3E8D9A1C4A /* PhotoTabView.swift */,
+				9B3C3BD2B69DA6330C83749C /* PhotosView.swift */,
 			);
 			path = POISearchView;
 			sourceTree = "<group>";
@@ -869,6 +875,7 @@
 				6E75A916776AA6E01F44FC98 /* PBXTargetDependency */,
 				077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */,
 				115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */,
+				6E7168FC105036E7630B9BA2 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -1188,6 +1195,8 @@
 				DDEC8465C37065C668023229 /* RoutingError.swift in Sources */,
 				8CF4FC9E1B350427D1B71D50 /* GraphHopperRouteProvider.swift in Sources */,
 				24FBFCC204FF1B7CB79B07A0 /* RoutingOptions.swift in Sources */,
+				8F51B857A44877394570DB9D /* PhotoTabView.swift in Sources */,
+				AC1FF36ACABF47B03AAFC2CB /* PhotosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1217,6 +1226,9 @@
 			isa = PBXTargetDependency;
 		};
 		115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
+		6E7168FC105036E7630B9BA2 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		6E75A916776AA6E01F44FC98 /* PBXTargetDependency */ = {
@@ -1588,6 +1600,7 @@
 			requirement = {
 				branch = annotations;
 				kind = branch;
+				revision = "";
 			};
 		};
 		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {
