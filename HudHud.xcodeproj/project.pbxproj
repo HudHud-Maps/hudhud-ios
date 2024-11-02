@@ -58,6 +58,7 @@
 		0CD892CF2CD6BB3000B4B079 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0026072CCF8F74006DD54A /* PulseUI */; };
 		0CD892D02CD6BB3000B4B079 /* APIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00260F2CD0D3C7006DD54A /* APIClient */; };
 		0CD892D32CD6BB9400B4B079 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0CD892D22CD6BB9400B4B079 /* FerrostarCore */; };
+		0D8EB82AAE3E88E75FB58A01 /* PhotoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C439061FA1B5B189687E4F /* PhotoTabView.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
 		1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */ = {isa = PBXBuildFile; fileRef = A206CC92415E012882BA8CD0 /* PadSheetGesture.swift */; };
@@ -145,6 +146,7 @@
 		B8C5DB417592CB8DBC88E140 /* MapContentLayers.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFF0BD7A0C66491FE324FAD4 /* MapContentLayers.swift */; };
 		BCABA8F02A24623F5743C5E2 /* SizeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDECF6DBF2D318A2DCAB347C /* SizeCalculatorTests.swift */; };
 		C3952F3D75F8B5D3FB740D12 /* DirectionModePickerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B25AD07A90CBA08ACF2C1A /* DirectionModePickerData.swift */; };
+		C4E067C4A1106767202799CB /* PhotosView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01484E657455B7DB3569281F /* PhotosView.swift */; };
 		C6E15E332EA9397C549C3AFF /* SearchResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB6F376F14C1845A8F147ABF /* SearchResultView.swift */; };
 		CB396FF62B7C134500CF9D59 /* CategoriesBannerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF52B7C134500CF9D59 /* CategoriesBannerView.swift */; };
 		CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB396FF72B7C1A4900CF9D59 /* CatagoryBannerData.swift */; };
@@ -230,6 +232,7 @@
 /* Begin PBXFileReference section */
 		0042DF164855E7AE12B8EDE8 /* Loading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Loading.swift; sourceTree = "<group>"; };
 		007CF1E6E5E752BA06003788 /* POIDetailSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = POIDetailSheet.swift; sourceTree = "<group>"; };
+		01484E657455B7DB3569281F /* PhotosView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosView.swift; sourceTree = "<group>"; };
 		068C2923E00182040CFB46FB /* MainEntryPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryPoint.swift; sourceTree = "<group>"; };
 		09F597BD739E6120976098F8 /* PlusJakartaSans-Medium.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-Medium.ttf"; sourceTree = "<group>"; };
 		0CB17C9C2CD0DF7200952B99 /* GraphHopperRouteProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphHopperRouteProvider.swift; sourceTree = "<group>"; };
@@ -342,6 +345,7 @@
 		92B7969B0AE81D4DAB16957A /* PlusJakartaSans-ExtraLightItalic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlusJakartaSans-ExtraLightItalic.ttf"; sourceTree = "<group>"; };
 		93059B709F52BCE9588E7AEE /* MapLayerIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLayerIdentifier.swift; sourceTree = "<group>"; };
 		930C5C4AFBCBE90A662DA243 /* XCTestCase+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Additions.swift"; sourceTree = "<group>"; };
+		98C439061FA1B5B189687E4F /* PhotoTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoTabView.swift; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		9ED68F0B2CCD5F3000AA7CE0 /* PointOfInterestStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointOfInterestStore.swift; sourceTree = "<group>"; };
 		9EE17AEE2CC79EC800316799 /* SheetContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetContainerViewController.swift; sourceTree = "<group>"; };
@@ -799,6 +803,8 @@
 				FB6F376F14C1845A8F147ABF /* SearchResultView.swift */,
 				2183BECFE15DBC861312F863 /* POIOverviewView.swift */,
 				25BABFA49366F559068D48E7 /* PhotoSectionView.swift */,
+				98C439061FA1B5B189687E4F /* PhotoTabView.swift */,
+				01484E657455B7DB3569281F /* PhotosView.swift */,
 			);
 			path = POISearchView;
 			sourceTree = "<group>";
@@ -1128,6 +1134,7 @@
 				6E75A916776AA6E01F44FC98 /* PBXTargetDependency */,
 				077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */,
 				115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */,
+				78C4323F9A0E0EF9DFB8B598 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -1483,6 +1490,8 @@
 				B8C5DB417592CB8DBC88E140 /* MapContentLayers.swift in Sources */,
 				1FEAEDF47C48844D38FA2DDA /* ErrorBannerView.swift in Sources */,
 				F5849780EA881614D3ECB0D1 /* LocationInfoView.swift in Sources */,
+				0D8EB82AAE3E88E75FB58A01 /* PhotoTabView.swift in Sources */,
+				C4E067C4A1106767202799CB /* PhotosView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1515,6 +1524,9 @@
 			isa = PBXTargetDependency;
 		};
 		6E75A916776AA6E01F44FC98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+		};
+		78C4323F9A0E0EF9DFB8B598 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
@@ -1869,12 +1881,39 @@
 				minimumVersion = 0.20.0;
 			};
 		};
+		0F9BA875694EC97BBC9B1320 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
+			requirement = {
+				branch = annotations;
+				kind = branch;
+				revision = "";
+			};
+		};
+		2D71CE9F4131B35FB9C0571F /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
+			requirement = {
+				branch = annotations;
+				kind = branch;
+				revision = "";
+			};
+		};
 		6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Patrick-Kladek/TouchVisualizer";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 5.0.0;
+			};
+		};
+		8E54C6DE3C5EF057A251A488 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
+			requirement = {
+				branch = annotations;
+				kind = branch;
+				revision = "";
 			};
 		};
 		971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
@@ -2005,14 +2044,17 @@
 		};
 		9E82F0552CCE69FC00F67DC5 /* FerrostarCore */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 2D71CE9F4131B35FB9C0571F /* XCRemoteSwiftPackageReference "ferrostar" */;
 			productName = FerrostarCore;
 		};
 		9E82F0572CCE69FC00F67DC5 /* FerrostarMapLibreUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 0F9BA875694EC97BBC9B1320 /* XCRemoteSwiftPackageReference "ferrostar" */;
 			productName = FerrostarMapLibreUI;
 		};
 		9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
+			package = 8E54C6DE3C5EF057A251A488 /* XCRemoteSwiftPackageReference "ferrostar" */;
 			productName = FerrostarSwiftUI;
 		};
 		A9C242CCE05D8DBC345B5D4D /* iPhoneNumberField */ = {

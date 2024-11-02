@@ -197,6 +197,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
     public let distance: Double?
     public let driveDuration: Double?
     public let priceRange: Int?
+    public let nationalAddress: String?
+    public let floor: String?
     public let isWheelchairAccessible: Bool?
 
     // MARK: Computed Properties
@@ -211,7 +213,7 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, isWheelchairAccessible: Bool? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, nationalAddress: String? = nil, floor: String? = nil, isWheelchairAccessible: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle
@@ -232,6 +234,8 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
         self.distance = distance
         self.driveDuration = driveDuration
         self.priceRange = priceRange
+        self.nationalAddress = nationalAddress
+        self.floor = floor
         self.isWheelchairAccessible = isWheelchairAccessible
     }
 
@@ -305,10 +309,10 @@ public extension ResolvedItem {
                                       website: URL(string: "https://hudhud.sa"),
                                       rating: 4,
                                       ratingsCount: 56,
-                                      isOpen: true,
-                                      openingHours: exampleOpeningHours,
                                       mediaURLs: .previewMediaURLs,
                                       priceRange: 2,
+                                      nationalAddress: "MMPV+123",
+                                      floor: "Floor 3",
                                       isWheelchairAccessible: true)
 
     static let starbucks = ResolvedItem(id: UUID().uuidString,
@@ -486,10 +490,12 @@ public extension [URL] {
         // swiftlint:disable force_unwrapping
         URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
         URL(string: "https://img.freepik.com/free-photo/seafood-sushi-dish-with-details-simple-black-background_23-2151349421.jpg?t=st=1720950213~exp=1720953813~hmac=f62de410f692c7d4b775f8314723f42038aab9b54498e588739272b9879b4895&w=826")!,
+        URL(string: "https://img.freepik.com/free-photo/seafood-sushi-dish-with-details-simple-black-background_23-2151349421.jpg?t=st=1720950213~exp=1720953813~hmac=f62de410f692c7d4b775f8314723f42038aab9b54498e588739272b9879b4895&w=826")!,
         URL(string: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")!,
         URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
         URL(string: "https://img.freepik.com/free-photo/seafood-sushi-dish-with-details-simple-black-background_23-2151349421.jpg?t=st=1720950213~exp=1720953813~hmac=f62de410f692c7d4b775f8314723f42038aab9b54498e588739272b9879b4895&w=826")!,
         URL(string: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")!,
+        URL(string: "https://img.freepik.com/free-photo/seafood-sushi-dish-with-details-simple-black-background_23-2151349421.jpg?t=st=1720950213~exp=1720953813~hmac=f62de410f692c7d4b775f8314723f42038aab9b54498e588739272b9879b4895&w=826")!,
         URL(string: "https://img.freepik.com/free-photo/side-view-pide-with-ground-meat-cheese-hot-green-pepper-tomato-board_141793-5054.jpg?w=1380&t=st=1708506625~exp=1708507225~hmac=58a53cfdbb7f984c47750f046cbc91e3f90facb67e662c8da4974fe876338cb3")!
     ]
     // swiftlint:enable force_unwrapping
