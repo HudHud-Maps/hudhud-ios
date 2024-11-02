@@ -14,7 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/stadiamaps/ferrostar.git",
       "state" : {
-        "revision" : "4b883ae4571d5a59b122894d2849657eb618db4f"
+        "revision" : "a93b4815f698e028a707804cd89b33954b71bd62",
+        "version" : "0.20.0"
       }
     },
     {
