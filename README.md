@@ -5,6 +5,7 @@ Goal of this repo is to make a simple app that can:
 * Displaying POI information on MapLibre
 * Starting a navigation using MapLibre Navigation
 
+
 ## Setup
 
 - Clone this Repo
@@ -28,6 +29,60 @@ Hotfix branches? [hotfix/]
 Support branches? [support/]
 Version tag prefix? []
 ``` 
+
+
+### Project Setup with HudHud CLI
+
+After setting up git flow, install the HudHud CLI:
+
+```bash
+git clone https://github.com/HudHud-Maps/hudhud-cli.git && cd hudhud-cli && ./install_locally.sh && cd .. && rm -rf hudhud-cli
+```
+
+Then set up your development environment:
+
+```bash
+hudhud dev
+```
+
+This will:
+1. Generate the Xcode project using XcodeGen
+2. Install necessary dependencies
+3. Set up the development environment
+
+When pulling changes that modify the project structure, always run:
+
+```bash
+hudhud dev
+```
+
+to run tests:
+```bash
+hudhud test \
+  --device "iPhone 16 Pro" \
+  --test-plan GithubActions \
+  --derived-data-path ./build \
+  --xcbeautify-renderer github-actions
+```
+
+to regenerate the Xcode project. To learn more about the HudHud CLI, run:
+
+```bash
+hudhud --help
+```
+
+### Running Tests
+
+To run tests using HudHud CLI:
+
+```bash
+hudhud test \
+  --device "iPhone 16 Pro" \
+  --test-plan GithubActions \
+  --derived-data-path ./build \
+  --xcbeautify-renderer github-actions
+```
+
 ### Git Flow
 
 We follow the Git Flow branching model for development. The main branches are:
@@ -58,69 +113,6 @@ git pull
 git checkout nameOfYourBranch
 git merge develop
 ```
-
-Now resolve any merge conflicts by hand or using a merge conflict resolve tool to help you.
-Once resolved, stage any files that need to be changed. Then:
-
-
-```bash
-git commit -am "resolve merge conflicts"
-git push
-```
-
-#### Resolving Project File Merge Conflicts: Kintsugi
-
-There is a nice tool to fix Xcode project merge conflicts: https://github.com/Lightricks/Kintsugi. Installing this on an M1 machine is tricky as the preinstalled Ruby installtion has its quirks.
-
-Add this to your `~/.zprofile`
-
-```bash
-export GEM_HOME="$HOME/.gem"
-path+=("$GEM_HOME/bin")
-export PATH
-```
-
-Then install kintsugi by running
-
-```bash
-gem install kintsugi
-```
-
-To run and resolve conflicts in the project file, run the following command from your hudhud directory
-```bash
-kintsugi HudHud.xcodeproj/project.pbxproj
-```
-
-##### Optional GUI Git Client
-
-If you use only the command line then your setup is finished here.
-If you use a GUI git client (I recommend https://fork.dev) then this will not work as Fork doesn't know where kintsugi is installed. I fixed this by adjusting my global gitconfig in `~/.gitconfig` as follows:
-
-```bash
-[merge "kintsugi"]
-	name = Kintsugi driver
-	driver = export GEM_HOME="$HOME/.gem" && $GEM_HOME/bin/kintsugi driver %O %A %B %P
-```
-
-If everything is seutp correctly this is how it will look when you encounter a merge conflict. Notice how it says `Kintsugi auto-merged HudHud.xcodeproj/project.pbxproj`.
-
-![](.tools/kintsugi-working.png)
-
-```bash
-POST git-upload-pack (339 bytes)
-From https://github.com/HudHud-Maps/hudhud-ios
- * branch            develop    → FETCH_HEAD
- = [up to date]      develop    → origin/develop
-[32mKintsugi auto-merged HudHud.xcodeproj/project.pbxproj[0m
-
-Warning: Trying to add a build file without any file reference to build phase 'FrameworksBuildPhase'
-Auto-merging HudHud.xcodeproj/project.pbxproj
-CONFLICT (modify/delete): HudHud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved deleted in d396af3c1a8f95265ed412e0fa99bfd3cc1603d0 and modified in HEAD.  Version HEAD of HudHud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved left in tree.
-Auto-merging HudHud/Views/ContentView.swift
-CONFLICT (content): Merge conflict in HudHud/Views/ContentView.swift
-Automatic merge failed; fix conflicts and then commit the result.
-```
-
 
 ### Code Style
 

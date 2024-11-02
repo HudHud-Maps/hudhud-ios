@@ -25,9 +25,6 @@ packages:
   BackendService:
     path: BackendService
     group: Packages/BackendService
-  TokensEnumGenerator:
-    path: StyleDictionary
-    group: Packages/StyleDictionary
   SwiftLocation:
     url: https://github.com/hactar/SwiftLocation.git
     branch: master
@@ -92,10 +89,6 @@ targets:
         products:
           - BackendService
           - APIClient
-      - package: TokensEnumGenerator
-        products:
-          - TokensEnumGenerator
-        localPackage: StyleDictionary
       - package: SwiftLocation
       - package: SimpleToast
       - package: TouchVisualizer
@@ -114,9 +107,9 @@ targets:
         product: FerrostarSwiftUI
       - package: Pulse
         product: PulseUI
-    # buildToolPlugins:
-    #   - plugin: TokensEnumGeneratorPlugin
-    #     package: TokensEnumGenerator
+    buildToolPlugins:
+      - plugin: SwiftLintPlugin
+        package: SwiftLintPlugin
     buildPhases:
       - name: "Setup custom git hooks"
         script: |

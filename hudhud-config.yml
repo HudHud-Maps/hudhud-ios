@@ -1,0 +1,31 @@
+# HudHud CLI Configuration
+project:
+  name: HudHud
+  root: .
+  scheme: HudHud
+  bundleId: sa.hudhud.map
+
+paths:
+  assets:
+    colors: HudHud/SupportingFiles/Assets.xcassets/Colors
+    typography: HudHud/SupportingFiles/typography-design-tokens.json
+  templates:
+    colors: HudHud/SupportingFiles/templates/colors.stencil
+    typography: HudHud/SupportingFiles/templates/typography.stencil
+  generated:
+    colors: GeneratedSources/Colors.swift
+    typography: GeneratedSources/TextStyles.swift
+
+build:
+  configuration: Debug
+  platform: iOS
+  sdk: iphoneos
+
+distribution:
+  appstore:
+    teamId: YN76B7J2LN
+    profileName: "HudHud App Store"
+  testflight:
+    groups: 
+      - "HudHud Internal"
+      - "HudHud External"
