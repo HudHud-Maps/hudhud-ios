@@ -90,7 +90,7 @@ struct ContentView: View {
                             self.sheetStore.popToRoot()
                         })
                         .navigationBarBackButtonHidden()
-                case .navigationAddSearchView:
+                case let .navigationAddSearchView(onAddItem):
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
                     let freshSearchViewStore: SearchViewStore = {
@@ -102,9 +102,7 @@ struct ContentView: View {
                             filterStore: self.searchViewStore.filterStore,
                             mode: self.searchViewStore.mode
                         )
-                        tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
-                            routingStore.add(item)
-                        })
+                        tempStore.searchType = .returnPOILocation(completion: onAddItem)
                         return tempStore
                     }()
                     SearchSheet(

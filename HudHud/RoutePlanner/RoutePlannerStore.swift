@@ -59,8 +59,15 @@ final class RoutePlannerStore {
     }
 
     func addNewRoute() {
-        fatalError("show the add route page here")
-        self.sheetStore.show(.debugView)
+        self.sheetStore.show(
+            .navigationAddSearchView { [weak self] newDestination in
+                guard let self else { return }
+                self.state.destinations.append(RouteWaypoint(
+                    type: .location(newDestination),
+                    title: newDestination.title
+                ))
+            }
+        )
     }
 
     func startNavigation() {

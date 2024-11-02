@@ -25,7 +25,6 @@ struct SearchSheet: View {
     @ObservedObject var trendingStore: TrendingStore
     @Bindable var sheetStore: SheetStore
     @ObservedObject var filterStore: FilterStore
-    @Environment(\.dismiss) var dismiss
     @State var loginShown: Bool = false
 
     @State private var showAlert = false
@@ -81,7 +80,7 @@ struct SearchSheet: View {
                     switch self.searchStore.searchType {
                     case .returnPOILocation, .favorites:
                         Button("Cancel") {
-                            self.dismiss()
+                            self.sheetStore.popSheet()
                         }
                         .foregroundColor(.gray)
                         .padding(.trailing)
@@ -160,9 +159,12 @@ struct SearchSheet: View {
                                         }
                                         switch self.searchStore.searchType {
                                         case let .returnPOILocation(completion):
-                                            if let selectedItem = self.mapStore.selectedItem.value {
-                                                completion?(.waypoint(selectedItem))
-                                                self.dismiss()
+                                            switch item {
+                                            case let .categoryItem(resolvedItem), let .resolvedItem(resolvedItem):
+                                                completion(resolvedItem)
+                                                self.sheetStore.popSheet()
+                                            case .category, .predictionItem:
+                                                break
                                             }
                                         case .selectPOI, .categories, .favorites:
                                             break
