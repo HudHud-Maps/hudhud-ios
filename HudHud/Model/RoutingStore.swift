@@ -102,7 +102,6 @@ final class RoutingStore: ObservableObject {
                 activityType: .automotiveNavigation,
                 allowBackgroundLocationUpdates: true
             )
-            provider.startUpdating()
         }
 
         // Configure the navigation session.
