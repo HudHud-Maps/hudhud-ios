@@ -241,14 +241,11 @@ private extension MapViewContainer {
         if let route = newValue {
             do {
                 if DebugStore().simulateRide {
-                    if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
-                        try simulated.setSimulatedRoute(route)
+                    if let simulated = routingStore.simulatedLocationProvider {
+                        try simulated.setSimulatedRoute(route, bias: .left(4))
                     }
                 }
                 try self.routingStore.ferrostarCore.startNavigation(route: route)
-                if let simulated = routingStore.simulatedLocationProvider {
-                    try configureLocationSimulator(simulated, with: route)
-                }
 
                 self.sheetStore.isShown.value = false
 
