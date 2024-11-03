@@ -38,6 +38,7 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
 
     private var navigationState: NavigationState?
     private let userLayers: [StyleLayerDefinition]
+    private let locationManager: HudHudLocationManager
 
     // MARK: Lifecycle
 
@@ -57,6 +58,7 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @escaping @autoclosure () -> T,
+        locationManager: HudHudLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
@@ -68,6 +70,7 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.makeViewController = makeViewController
+        self.locationManager = locationManager
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.isMuted = isMuted
@@ -87,6 +90,7 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
             ZStack {
                 NavigationMapView(
                     makeViewController: self.makeViewController(),
+                    locationManager: self.locationManager,
                     styleURL: self.styleURL,
                     camera: self.$camera,
                     navigationState: self.navigationState,
@@ -143,6 +147,7 @@ public extension LandscapeNavigationView where T == MLNMapViewController {
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
+        locationManager: HudHudLocationManager,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         isMuted: Bool,
@@ -152,6 +157,7 @@ public extension LandscapeNavigationView where T == MLNMapViewController {
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.makeViewController = MLNMapViewController.init
+        self.locationManager = locationManager
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets

@@ -32,7 +32,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
 
     private var navigationState: NavigationState?
 
-    @State private var locationManager = StaticLocationManager(initialLocation: CLLocation())
+    private var locationManager: HudHudLocationManager
 
     // MARK: Computed Properties
 
@@ -52,6 +52,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
+        locationManager: HudHudLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationState: NavigationState?,
@@ -62,6 +63,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         }
     ) {
         self.makeViewController = makeViewController
+        self.locationManager = locationManager
         self.styleURL = styleURL
         _camera = camera
         self.navigationState = navigationState
@@ -112,9 +114,11 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         if case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = navigationState?.tripState,
            // There is no reason to push an update if the coordinate and heading are the same.
            // That's all that gets displayed, so it's all that MapLibre should care about.
-           locationManager.lastLocation.coordinate != userLocation.coordinates
-               .clLocationCoordinate2D || locationManager.lastLocation.course != userLocation.clLocation.course {
-            self.locationManager.lastLocation = userLocation.clLocation
+           locationManager.lastLocation?.coordinate != userLocation.coordinates
+               .clLocationCoordinate2D || locationManager.lastLocation?.course != userLocation.clLocation.course {
+            self.locationManager.useSnappedLocation(userLocation.clLocation)
+        } else {
+            self.locationManager.useRawLocation()
         }
     }
 }
@@ -139,6 +143,7 @@ public extension NavigationMapView where T == MLNMapViewController {
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     init(
         styleURL: URL,
+        locationManager: HudHudLocationManager,
         camera: Binding<MapViewCamera>,
         navigationState: NavigationState?,
         onStyleLoaded: @escaping ((MLNStyle) -> Void),
@@ -148,6 +153,7 @@ public extension NavigationMapView where T == MLNMapViewController {
         }
     ) {
         self.makeViewController = MLNMapViewController.init
+        self.locationManager = locationManager
         self.styleURL = styleURL
         _camera = camera
         self.navigationState = navigationState

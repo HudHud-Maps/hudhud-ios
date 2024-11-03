@@ -43,6 +43,8 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
 
     private let mapViewModifiers: (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T>
 
+    private let locationManager: HudHudLocationManager
+
     // MARK: Lifecycle
 
     /// Create a dynamically orienting navigation view. This view automatically arranges child views for both portrait
@@ -60,6 +62,7 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
+        locationManager: HudHudLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
@@ -75,6 +78,7 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
         }
     ) {
         self.makeViewController = makeViewController
+        self.locationManager = locationManager
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.isMuted = isMuted
@@ -95,6 +99,7 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
             ZStack {
                 NavigationMapView(
                     makeViewController: self.makeViewController(),
+                    locationManager: self.locationManager,
                     styleURL: self.styleURL,
                     camera: self.$camera,
                     navigationState: self.navigationState,
@@ -197,6 +202,7 @@ public extension DynamicallyOrientingNavigationView where T == MLNMapViewControl
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
+        locationManager: HudHudLocationManager,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
@@ -211,6 +217,7 @@ public extension DynamicallyOrientingNavigationView where T == MLNMapViewControl
     ) {
         self.showZoom = showZoom
         self.makeViewController = MLNMapViewController.init
+        self.locationManager = locationManager
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets

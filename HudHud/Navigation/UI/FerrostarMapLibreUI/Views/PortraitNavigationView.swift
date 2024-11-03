@@ -37,6 +37,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
 
     private var navigationState: NavigationState?
     private let userLayers: [StyleLayerDefinition]
+    private let locationManager: HudHudLocationManager
 
     // MARK: Lifecycle
 
@@ -56,6 +57,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
+        locationManager: HudHudLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
@@ -67,6 +69,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.makeViewController = makeViewController
+        self.locationManager = locationManager
         self.styleURL = styleURL
         self._camera = camera
         self.navigationCamera = navigationCamera
@@ -86,6 +89,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
             ZStack {
                 NavigationMapView(
                     makeViewController: self.makeViewController(),
+                    locationManager: self.locationManager,
                     styleURL: self.styleURL,
                     camera: self.$camera,
                     navigationState: self.navigationState,
@@ -144,6 +148,7 @@ public extension PortraitNavigationView where T == MLNMapViewController {
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
+        locationManager: HudHudLocationManager,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
@@ -153,6 +158,7 @@ public extension PortraitNavigationView where T == MLNMapViewController {
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.makeViewController = MLNMapViewController.init
+        self.locationManager = locationManager
         self.styleURL = styleURL
         self.navigationState = navigationState
         self.minimumSafeAreaInsets = minimumSafeAreaInsets

@@ -55,6 +55,8 @@ final class RoutingStore: ObservableObject {
 
     let locationProvider: LocationProviding
 
+    let locationManager: HudHudLocationManager
+
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
@@ -110,6 +112,8 @@ final class RoutingStore: ObservableObject {
         }
 
         self.locationProvider = provider
+        self.locationManager = HudHudLocationManager(locationProvider: provider)
+
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.
         let config = SwiftNavigationControllerConfig(

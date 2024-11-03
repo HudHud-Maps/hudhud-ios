@@ -76,6 +76,7 @@ struct MapViewContainer<SheetContentView: View>: View {
                     styleURL: self.mapStore.mapStyleUrl(),
                     sheetToView: self.sheetToView
                 ),
+                locationManager: self.routingStore.locationManager,
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
                 navigationState: self.routingStore.ferrostarCore.state,
@@ -97,7 +98,7 @@ struct MapViewContainer<SheetContentView: View>: View {
             )
             .gesture(trackingStateGesture)
             .onAppear(perform: handleOnAppear)
-            .onChange(of: self.routingStore.potentialRoute) { oldValue, newValue in
+            .onChange(of: self.routingStore.selectedRoute) { oldValue, newValue in
                 handlePotentialRouteChange(oldValue, newValue)
             }
             .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
@@ -242,10 +243,14 @@ private extension MapViewContainer {
             do {
                 if DebugStore().simulateRide {
                     if let simulated = routingStore.simulatedLocationProvider {
-                        try simulated.setSimulatedRoute(route, bias: .left(4))
+                        try simulated.setSimulatedRoute(route, bias: .left(5))
                     }
                 }
                 try self.routingStore.ferrostarCore.startNavigation(route: route)
+                self.routingStore.simulatedLocationProvider?.stopUpdating()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.routingStore.simulatedLocationProvider?.startUpdating()
+                }
 
                 self.sheetStore.isShown.value = false
 
@@ -303,6 +308,10 @@ private extension MapViewContainer {
 
     func configureMapViewController(_ mapViewController: MapViewController) {
         mapViewController.mapView.compassViewMargins.y = 50
+        if DebugStore().showLocationDiagmosticLogs {
+            let diagnostic = LocationServicesDiagnostic(mapView: mapViewController.mapView)
+            diagnostic.runDiagnostics()
+        }
     }
 }
 

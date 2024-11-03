@@ -17,6 +17,8 @@
 		0CB17CA32CD0DFD900952B99 /* RoutePlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */; };
 		0CB17CA52CD0DFED00952B99 /* RoutingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA42CD0DFED00952B99 /* RoutingService.swift */; };
 		0CB17CAA2CD0F31300952B99 /* RoutingError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB17CA92CD0F31300952B99 /* RoutingError.swift */; };
+		0CB4C18C2CD7A5F00092E9A5 /* DynamicLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB4C18B2CD7A5F00092E9A5 /* DynamicLocationProvider.swift */; };
+		0CB4C18F2CD7A9E10092E9A5 /* LocationServicesDiagnostic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB4C18E2CD7A9E10092E9A5 /* LocationServicesDiagnostic.swift */; };
 		0CC00AD92CD271C300A2D1A8 /* SpeedLimitViewModifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AC12CD271C300A2D1A8 /* SpeedLimitViewModifier.swift */; };
 		0CC00ADA2CD271C300A2D1A8 /* CustomizableNavigatingInnerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00ABE2CD271C300A2D1A8 /* CustomizableNavigatingInnerGridView.swift */; };
 		0CC00ADB2CD271C300A2D1A8 /* DefaultFormatters.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AB42CD271C300A2D1A8 /* DefaultFormatters.swift */; };
@@ -57,7 +59,6 @@
 		0CC00B042CD2751300A2D1A8 /* ValhallaOsrmAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00B032CD2751300A2D1A8 /* ValhallaOsrmAnnotation.swift */; };
 		0CD892CF2CD6BB3000B4B079 /* PulseUI in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0026072CCF8F74006DD54A /* PulseUI */; };
 		0CD892D02CD6BB3000B4B079 /* APIClient in Frameworks */ = {isa = PBXBuildFile; productRef = 9E00260F2CD0D3C7006DD54A /* APIClient */; };
-		0CD892D32CD6BB9400B4B079 /* FerrostarCore in Frameworks */ = {isa = PBXBuildFile; productRef = 0CD892D22CD6BB9400B4B079 /* FerrostarCore */; };
 		0D8EB82AAE3E88E75FB58A01 /* PhotoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98C439061FA1B5B189687E4F /* PhotoTabView.swift */; };
 		151172A51DE446D69311B5B9 /* SymbolStyleLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */; };
 		167C4450C0625DFD58F14626 /* PlusJakartaSans-ExtraBoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5431A460A59E2C3A1591BCB1 /* PlusJakartaSans-ExtraBoldItalic.ttf */; };
@@ -240,6 +241,8 @@
 		0CB17CA22CD0DFD900952B99 /* RoutePlanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanner.swift; sourceTree = "<group>"; };
 		0CB17CA42CD0DFED00952B99 /* RoutingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingService.swift; sourceTree = "<group>"; };
 		0CB17CA92CD0F31300952B99 /* RoutingError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingError.swift; sourceTree = "<group>"; };
+		0CB4C18B2CD7A5F00092E9A5 /* DynamicLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicLocationProvider.swift; sourceTree = "<group>"; };
+		0CB4C18E2CD7A9E10092E9A5 /* LocationServicesDiagnostic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationServicesDiagnostic.swift; sourceTree = "<group>"; };
 		0CC00A9E2CD271C300A2D1A8 /* MapViewCamera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewCamera.swift; sourceTree = "<group>"; };
 		0CC00A9F2CD271C300A2D1A8 /* View+Ferrostar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Ferrostar.swift"; sourceTree = "<group>"; };
 		0CC00AA12CD271C300A2D1A8 /* RouteStyleLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStyleLayer.swift; sourceTree = "<group>"; };
@@ -434,7 +437,6 @@
 				CBC7C7C62CB2932600210404 /* iPhoneNumberField in Frameworks */,
 				59A28FFF2C3EC9B800780307 /* TouchVisualizer in Frameworks */,
 				9E82F0562CCE69FC00F67DC5 /* FerrostarCore in Frameworks */,
-				0CD892D32CD6BB9400B4B079 /* FerrostarCore in Frameworks */,
 				9E82F05A2CCE69FC00F67DC5 /* FerrostarSwiftUI in Frameworks */,
 				CD3BCAD32CB6E402001F8CFD /* TokensEnumGenerator in Frameworks */,
 				59A28FFE2C3EC9B800780307 /* BetterSafariView in Frameworks */,
@@ -500,6 +502,15 @@
 				0CB17CA92CD0F31300952B99 /* RoutingError.swift */,
 			);
 			path = RoutePlanner;
+			sourceTree = "<group>";
+		};
+		0CB4C18A2CD7A5CE0092E9A5 /* Location */ = {
+			isa = PBXGroup;
+			children = (
+				0CB4C18B2CD7A5F00092E9A5 /* DynamicLocationProvider.swift */,
+				0CB4C18E2CD7A9E10092E9A5 /* LocationServicesDiagnostic.swift */,
+			);
+			path = Location;
 			sourceTree = "<group>";
 		};
 		0CC00AA02CD271C300A2D1A8 /* Extensions */ = {
@@ -676,6 +687,7 @@
 		0CC00B0A2CD2BC9C00A2D1A8 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				0CB4C18A2CD7A5CE0092E9A5 /* Location */,
 				AC276CFCF1456B56097AA04B /* Ferrostar */,
 				0CC00B0C2CD2BCA400A2D1A8 /* UI */,
 				B613EB14BDC54B6907DD2448 /* TrafficCongestions */,
@@ -1156,7 +1168,6 @@
 				9E82F0592CCE69FC00F67DC5 /* FerrostarSwiftUI */,
 				9E0026072CCF8F74006DD54A /* PulseUI */,
 				9E00260F2CD0D3C7006DD54A /* APIClient */,
-				0CD892D22CD6BB9400B4B079 /* FerrostarCore */,
 			);
 			productName = HudHud;
 			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
@@ -1246,7 +1257,7 @@
 				EB43147BF4154D2B7CB9F5F8 /* XCRemoteSwiftPackageReference "iPhoneNumberField" */,
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				9E82F0682CCE858100F67DC5 /* XCRemoteSwiftPackageReference "Pulse" */,
-				0CD892D12CD6BB9400B4B079 /* XCRemoteSwiftPackageReference "ferrostar" */,
+				0CB11D9C2CD7B75900F70155 /* XCRemoteSwiftPackageReference "ferrostar" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -1361,6 +1372,7 @@
 				0CC00AE32CD271C300A2D1A8 /* NavigationUIZoomButton.swift in Sources */,
 				0CC00AE42CD271C300A2D1A8 /* ManeuverImageKeys.swift in Sources */,
 				0CC00AE62CD271C300A2D1A8 /* View+Ferrostar.swift in Sources */,
+				0CB4C18C2CD7A5F00092E9A5 /* DynamicLocationProvider.swift in Sources */,
 				0CC00AE72CD271C300A2D1A8 /* TopDrawerView.swift in Sources */,
 				0CC00AE82CD271C300A2D1A8 /* InnerGridView.swift in Sources */,
 				0CC00AE92CD271C300A2D1A8 /* MapViewCamera.swift in Sources */,
@@ -1413,6 +1425,7 @@
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
 				0CB17CA52CD0DFED00952B99 /* RoutingService.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
+				0CB4C18F2CD7A9E10092E9A5 /* LocationServicesDiagnostic.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
 				AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */,
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
@@ -1873,12 +1886,12 @@
 				minimumVersion = 0.10.4;
 			};
 		};
-		0CD892D12CD6BB9400B4B079 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
+		0CB11D9C2CD7B75900F70155 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/stadiamaps/ferrostar.git";
+			repositoryURL = "https://github.com/HudHud-Maps/ferrostar.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.20.0;
+				branch = main;
+				kind = branch;
 			};
 		};
 		0F9BA875694EC97BBC9B1320 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
@@ -1887,7 +1900,6 @@
 			requirement = {
 				branch = annotations;
 				kind = branch;
-				revision = "";
 			};
 		};
 		2D71CE9F4131B35FB9C0571F /* XCRemoteSwiftPackageReference "ferrostar" */ = {
@@ -1896,7 +1908,6 @@
 			requirement = {
 				branch = annotations;
 				kind = branch;
-				revision = "";
 			};
 		};
 		6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
@@ -1913,7 +1924,6 @@
 			requirement = {
 				branch = annotations;
 				kind = branch;
-				revision = "";
 			};
 		};
 		971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
@@ -2023,11 +2033,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		0CD892D22CD6BB9400B4B079 /* FerrostarCore */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 0CD892D12CD6BB9400B4B079 /* XCRemoteSwiftPackageReference "ferrostar" */;
-			productName = FerrostarCore;
-		};
 		2BCB9E16FA05854E56ECFF55 /* TouchVisualizer */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */;
