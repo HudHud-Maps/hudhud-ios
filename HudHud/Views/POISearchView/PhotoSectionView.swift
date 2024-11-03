@@ -7,6 +7,8 @@
 //
 
 import BackendService
+import NukeUI
+import OSLog
 import SwiftUI
 
 struct PhotoSectionView: View {
@@ -15,89 +17,198 @@ struct PhotoSectionView: View {
 
     let item: ResolvedItem
 
+    @State private var selectedMedia: URL?
+
     // MARK: Content
 
     var body: some View {
         VStack(alignment: .leading) {
             Text("Photos")
-                .font(.headline)
+                .hudhudFontStyle(.labelMedium)
                 .foregroundColor(Color.Colors.General._01Black)
-                .padding(.leading)
-            ScrollView(.horizontal) {
-                HStack(alignment: .top, spacing: 10) {
-                    ForEach(0 ..< min(self.item.mediaURLs.count, 6), id: \.self) { index in
-                        if index % 3 == 0 {
-                            VStack(spacing: 10) {
-                                // Small Images
-                                if index < self.item.mediaURLs.count {
-                                    self.imageView(for: self.item.mediaURLs[index], size: CGSize(width: 120, height: 120))
-                                }
-                                if index + 1 < self.item.mediaURLs.count {
-                                    self.imageView(for: self.item.mediaURLs[index + 1], size: CGSize(width: 120, height: 120))
-                                }
-                            }
-                            // Big Image
-                            if index + 2 < self.item.mediaURLs.count {
-                                self.imageView(for: self.item.mediaURLs[index + 2], size: CGSize(width: 175, height: 248))
-                            }
-                        }
-                    }
 
-                    // Buttons for "View All" and "Add Photo"
-                    VStack {
-                        // if the images more than 6 we show view all button
-                        if self.item.mediaURLs.count > 6 {
-                            self.actionButton(title: "View All", imageName: "photoLibrary") {
-                                // Action for View All
-                            }
+            if self.item.mediaURLs.isEmpty {
+                self.noImagesView()
+            } else {
+                ScrollView(.horizontal) {
+                    HStack(alignment: .center, spacing: 10) {
+                        switch self.item.mediaURLs.count {
+                        case 5...:
+                            self.displayFiveImages()
+                        case 4:
+                            self.displayFourImages()
+                        case 3:
+                            self.displayThreeImages()
+                        case 2:
+                            self.displayTwoImages()
+                        case 1:
+                            self.displayOneImage()
+                        default:
+                            EmptyView()
                         }
-                        self.actionButton(title: "Add Photo", imageName: "addPhoto") {
-                            // Action for Add Photo
-                        }
+
+                        self.actionButtonsView()
                     }
                 }
-                .padding()
+                .scrollIndicators(.hidden)
             }
-            .scrollIndicators(.hidden)
+        }
+    }
+
+    // MARK: - Helper Views
+
+    @ViewBuilder
+    private func noImagesView() -> some View {
+        Text("There is no photo added yet! Be the first to add one.")
+            .hudhudFontStyle(.labelXxsmall)
+            .foregroundColor(Color.Colors.General._02Grey)
+
+        HStack {
+            Spacer()
+            self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: true) {
+                // Action for Add Photo
+            }
+            Spacer()
+        }
+        .padding(.vertical, 30)
+    }
+
+    // MARK: - Image Display Functions
+
+    @ViewBuilder
+    private func displayFiveImages() -> some View {
+        VStack(spacing: 10) {
+            self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 120, height: 120))
+
+            self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: CGSize(width: 120, height: 120))
+        }
+
+        self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: CGSize(width: 248, height: 248))
+
+        VStack(spacing: 10) {
+            self.imageView(for: self.item.mediaURLs[3], label: self.item.title, size: CGSize(width: 120, height: 120))
+
+            self.imageView(for: self.item.mediaURLs[4], label: self.item.title, size: CGSize(width: 120, height: 120))
         }
     }
 
     @ViewBuilder
-    private func imageView(for url: URL, size: CGSize) -> some View {
-        AsyncImage(url: url) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(width: size.width, height: size.height)
-                .clipped()
-                .cornerRadius(10)
-        } placeholder: {
-            ProgressView()
-                .progressViewStyle(.automatic)
-                .frame(width: size.width, height: size.height)
-                .background(.secondary)
-                .cornerRadius(7.0)
+    private func displayFourImages() -> some View {
+        VStack(spacing: 10) {
+            HStack(spacing: 10) {
+                self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 120, height: 120))
+                self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: CGSize(width: 120, height: 120))
+            }
+
+            HStack(spacing: 10) {
+                self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: CGSize(width: 120, height: 120))
+                self.imageView(for: self.item.mediaURLs[3], label: self.item.title, size: CGSize(width: 120, height: 120))
+            }
         }
     }
 
     @ViewBuilder
-    private func actionButton(title: String, imageName: String, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            VStack {
+    private func displayThreeImages() -> some View {
+        VStack(spacing: 10) {
+            self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 120, height: 120))
+            self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: CGSize(width: 120, height: 120))
+        }
+        self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: CGSize(width: 175, height: 248))
+    }
+
+    @ViewBuilder
+    private func displayTwoImages() -> some View {
+        ForEach(0 ..< 2, id: \.self) { index in
+            self.imageView(for: self.item.mediaURLs[index], label: self.item.title, size: CGSize(width: 180, height: 248))
+        }
+    }
+
+    @ViewBuilder
+    private func displayOneImage() -> some View {
+        self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 284, height: 248))
+    }
+
+    // MARK: - Action Buttons
+
+    @ViewBuilder
+    private func actionButtonsView() -> some View {
+        VStack(alignment: .center) {
+            if self.item.mediaURLs.count >= 5 {
+                self.actionButton(title: "View All", imageName: "photoLibrary", isSmallButton: true) {
+                    // Action for View All
+                }
+            }
+            self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count > 5 ? true : false) {
+                // Action for add Photo
+            }
+        }
+    }
+
+    // MARK: - Image View
+
+    @ViewBuilder
+    private func imageView(for url: URL, label: String, size: CGSize) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            LazyImage(url: url) { state in
+                ZStack(alignment: .bottomTrailing) {
+                    if let image = state.image {
+                        image
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            .frame(width: size.width, height: size.height)
+                            .clipped()
+                            .cornerRadius(15)
+                            .onTapGesture {
+                                self.selectedMedia = url
+                            }
+                        // Display an image label, styled and positioned at bottom-right
+                        Text(label)
+                            .hudhudFontStyle(.labelSmall)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 4)
+                            .background(Color.Colors.General._01Black.opacity(0.5))
+                            .foregroundColor(Color.Colors.General._05WhiteBackground)
+                            .clipShape(.rect(topLeadingRadius: 8, bottomTrailingRadius: 15))
+                    } else if state.isLoading {
+                        ProgressView()
+                            .progressViewStyle(.automatic)
+                            .frame(width: size.width, height: size.height)
+                            .background(Color.Colors.General._03LightGrey)
+                            .cornerRadius(7.0)
+                    }
+                }
+            }
+        }
+        .sheet(item: self.$selectedMedia) { mediaURL in
+            FullPageImage(
+                mediaURL: mediaURL,
+                mediaURLs: self.item.mediaURLs
+            )
+        }
+    }
+
+    // MARK: - Action Button
+
+    @ViewBuilder
+    private func actionButton(title: String, imageName: String, isSmallButton: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: {
+            action()
+        }, label: {
+            VStack(spacing: 8) {
                 Image(imageName)
                     .resizable()
                     .frame(width: 25, height: 25)
                 Text(title)
-                    .font(.headline)
+                    .hudhudFontStyle(.labelSmall)
                     .foregroundColor(Color.Colors.General._06DarkGreen)
             }
-            .frame(width: 120, height: 120)
+            .frame(width: 120, height: isSmallButton ? 120 : 248)
             .background(Color.Colors.General._11GreenLight)
-            .cornerRadius(10)
-        }
+            .cornerRadius(12)
+        })
     }
 }
 
 #Preview {
-    PhotoSectionView(item: .artwork)
+    PhotoSectionView(item: .artwork).padding(.horizontal)
 }
