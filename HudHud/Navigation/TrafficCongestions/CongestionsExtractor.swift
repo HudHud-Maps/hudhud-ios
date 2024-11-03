@@ -9,7 +9,6 @@
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
-import FerrostarSwiftUI
 
 // MARK: - CongestionSegment
 
@@ -84,9 +83,7 @@ extension Route {
         while currentIndex < geometry.count - 1, remainingDistance > 0 {
             let segmentDistance = geometry[currentIndex]
                 .clLocationCoordinate2D
-                .distance(
-                    to: geometry[currentIndex + 1].clLocationCoordinate2D
-                )
+                .distance(to: geometry[currentIndex + 1].clLocationCoordinate2D)
             if remainingDistance >= segmentDistance {
                 remainingDistance -= segmentDistance
                 currentIndex += 1
