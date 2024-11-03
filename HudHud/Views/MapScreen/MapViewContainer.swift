@@ -243,11 +243,12 @@ private extension MapViewContainer {
     func handleNavigatingRouteChange(_: Route?, _ newValue: Route?) {
         if let route = newValue {
             do {
-                try self.routingStore.ferrostarCore.startNavigation(route: route)
-                if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
-                    try configureLocationSimulator(simulated, with: route)
+                if DebugStore().simulateRide {
+                    if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
+                        try simulated.setSimulatedRoute(route)
+                    }
                 }
-
+                try self.routingStore.ferrostarCore.startNavigation(route: route)
                 self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
@@ -258,8 +259,10 @@ private extension MapViewContainer {
             }
         } else {
             stopNavigation()
-            if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
-                simulated.stopUpdating()
+            if DebugStore().simulateRide {
+                if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
+                    simulated.stopUpdating()
+                }
             }
         }
     }
@@ -340,14 +343,6 @@ private extension MapViewContainer {
         Task {
             try await Task.sleep(nanoseconds: 8 * NSEC_PER_SEC)
             self.errorMessage = nil
-        }
-    }
-
-    func configureLocationSimulator(_ simulated: SimulatedLocationProvider, with route: Route) throws {
-        try simulated.setSimulatedRoute(route, resampleDistance: 5)
-        simulated.stopUpdating() // to privent camera jumps when we simulate location at high speeds
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            simulated.startUpdating()
         }
     }
 
