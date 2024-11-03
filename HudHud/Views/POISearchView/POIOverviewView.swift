@@ -59,7 +59,7 @@ struct POIOverviewView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
             // Here should be a description not the address
-            SectionView(sfSymbol: nil, title: nil, desrciption: self.poiData.item.description)
+            SectionView(description: self.poiData.item.description)
                 .lineLimit(self.viewMore ? 30 : 7)
             if self.shouldShowButton {
                 Button(self.viewMore ? "Show Less" : "Show More") {
@@ -71,19 +71,19 @@ struct POIOverviewView: View {
 
             VStack(alignment: .leading, spacing: 15) {
                 // Location Row
-                SectionView(sfSymbol: .mappinCircleFill, title: nil, desrciption: self.poiData.item.description)
+                SectionView(image: .mapPin, description: self.poiData.item.description)
                 Divider()
                     .background(Color.Colors.General._04GreyForLines)
                 // Floor
                 if let floor = self.poiData.item.floor, self.selectedTab == .about {
-                    SectionView(sfSymbol: .building2, title: nil, desrciption: floor)
+                    SectionView(image: .building, description: floor)
 
                     Divider()
                         .background(Color.Colors.General._04GreyForLines)
                 }
                 // National Address
                 if let nationalAddress = poiData.item.nationalAddress, self.selectedTab == .about {
-                    SectionView(sfSymbol: .building2, title: "National Address", desrciption: nationalAddress)
+                    SectionView(image: .nationalAddress, title: "National Address", description: nationalAddress)
 
                     Divider()
                         .frame(height: 1)
@@ -92,7 +92,7 @@ struct POIOverviewView: View {
                 // Price Range
                 if let priceRangeValue = self.poiData.item.priceRange,
                    let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue), self.selectedTab == .about {
-                    SectionView(sfSymbol: .dollarsignCircleFill, title: nil, desrciption: priceRange.displayValue)
+                    SectionView(sfSymbol: .dollarsignCircleFill, title: nil, description: priceRange.displayValue)
 
                     Divider()
                         .background(Color.Colors.General._04GreyForLines)
@@ -125,7 +125,6 @@ struct POIOverviewView: View {
                 ShowMoreButtonView {
                     self.selectedTab = .about
                 }
-                .padding(.horizontal)
             }
         }
         .padding(.vertical)
@@ -140,9 +139,24 @@ struct SectionView: View {
 
     // MARK: Properties
 
+    let image: ImageResource?
     let sfSymbol: SFSymbol?
     let title: String?
-    let desrciption: String
+    let description: String
+
+    // MARK: Lifecycle
+
+    init(
+        image: ImageResource? = nil,
+        sfSymbol: SFSymbol? = nil,
+        title: String? = nil,
+        description: String
+    ) {
+        self.image = image
+        self.sfSymbol = sfSymbol
+        self.title = title
+        self.description = description
+    }
 
     // MARK: Content
 
@@ -151,7 +165,13 @@ struct SectionView: View {
             // icon
             if let sfSymbol {
                 Image(systemSymbol: sfSymbol)
-                    .foregroundColor(.Colors.General._02Grey)
+                    .font(.title3)
+                    .foregroundStyle(Color.gray.opacity(0.5))
+            }
+            if let image {
+                Image(image)
+                    .font(.title3)
+                    .foregroundStyle(Color.gray.opacity(0.5))
             }
             // Text
             VStack(alignment: .leading) {
@@ -160,7 +180,7 @@ struct SectionView: View {
                         .hudhudFont(size: 14, fontWeight: .regular)
                         .foregroundColor(.Colors.General._02Grey)
                 }
-                Text(self.desrciption)
+                Text(self.description)
                     .hudhudFont(size: 14, fontWeight: .regular)
                     .foregroundColor(.Colors.General._01Black)
             }
@@ -187,13 +207,14 @@ struct OpeningHoursView: View {
         }, label: {
             HStack(alignment: .top) {
                 Image(systemSymbol: .clockFill)
-                    .foregroundColor(.Colors.General._02Grey)
+                    .font(.title3)
+                    .foregroundStyle(Color.gray.opacity(0.6))
                 VStack(alignment: .leading, spacing: 7) {
                     HStack {
                         Text(self.isOpen ? "Open" : "Closed")
-                            .foregroundColor(self.isOpen ? .Colors.General._10GreenMain : .Colors.General._02Grey)
+                            .foregroundColor(self.isOpen ? .Colors.General._06DarkGreen : .Colors.General._02Grey)
                         Image(systemSymbol: self.data.openingHoursExpanded ? .chevronUp : .chevronDown)
-                            .foregroundColor(Color.Colors.General._10GreenMain)
+                            .foregroundColor(Color.Colors.General._06DarkGreen)
                     }
 
                     if self.data.openingHoursExpanded {
@@ -234,7 +255,8 @@ struct ContactDetailView: View {
     var body: some View {
         HStack(alignment: .top) {
             Image(systemSymbol: .exclamationmarkCircleFill)
-                .foregroundColor(.Colors.General._02Grey)
+                .font(.title3)
+                .foregroundStyle(Color.gray.opacity(0.5))
             VStack(alignment: .leading, spacing: 7) {
                 if let phone {
                     Button(action: {
@@ -243,12 +265,13 @@ struct ContactDetailView: View {
                         }
                     }, label: {
                         Text(phone)
-                            .foregroundColor(.Colors.General._10GreenMain)
+                            .foregroundColor(.Colors.General._06DarkGreen)
+                            .padding(.top, 2)
                     })
                 }
                 if let website, let url = URL(string: website) {
                     Link(website, destination: url)
-                        .foregroundColor(.Colors.General._10GreenMain)
+                        .foregroundColor(.Colors.General._06DarkGreen)
 
                     SocialMediaLinksView()
                         .padding(.top, 12)

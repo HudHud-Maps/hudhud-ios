@@ -183,7 +183,7 @@ enum SheetType: Hashable {
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
-            DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+            DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
