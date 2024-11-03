@@ -99,7 +99,9 @@ struct POIDetailSheet: View {
                         }
                         HStack {
                             self.openStatusView
+                                .padding(.vertical, 7)
                             self.routeInformationView
+                                .padding(.vertical, 7)
                         }
                     }
                 }
@@ -126,34 +128,85 @@ struct POIDetailSheet: View {
 
             if self.sheetStore.sheetHeight > 300 {
                 self.tabView
+
                 ScrollView {
                     VStack {
-                        POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest), selectedTab: self.$selectedTab)
+                        // Switch between views based on the selected tab
+                        switch self.selectedTab {
+                        case .overview:
+                            // Show all content in the Overview tab
+                            POIOverviewView(
+                                poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
+                                selectedTab: self.$selectedTab
+                            )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding()
                             .background(Color.Colors.General._05WhiteBackground)
                             .cornerRadius(14)
-                        if let rating = self.pointOfInterestStore.pointOfInterest.rating {
-                            RatingSectionView(store: RatingStore(staticRating: rating, ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0, interactiveRating: 0))
+
+                            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
+                                RatingSectionView(
+                                    store: RatingStore(
+                                        staticRating: rating,
+                                        ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
+                                        interactiveRating: 0
+                                    )
+                                )
                                 .padding()
                                 .background(Color.Colors.General._05WhiteBackground)
                                 .cornerRadius(14)
-                        }
-                        if self.isBackendReady {
-                            ReviewsListView(reviews: Review.listOfReviewsForPreview)
-                                .padding()
-                                .background(Color.Colors.General._05WhiteBackground)
-                                .cornerRadius(14)
-                        }
-                        if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
-                            VStack(alignment: .leading) {
-                                Text("Photos")
-                                POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
                             }
 
+                            if self.isBackendReady {
+                                ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .padding()
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
+                            }
+
+                            if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
+                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest)
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
+                            }
+
+                        case .photos:
+                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest)
+                                .padding(-10)
+
+                        case .review:
+                            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
+                                RatingSectionView(
+                                    store: RatingStore(
+                                        staticRating: rating,
+                                        ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
+                                        interactiveRating: 0
+                                    )
+                                )
+                                .padding()
+                                .background(Color.Colors.General._05WhiteBackground)
+                                .cornerRadius(14)
+                            }
+
+                            if self.isBackendReady {
+                                ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .padding()
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
+                            }
+
+                        case .about:
+                            POIOverviewView(
+                                poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
+                                selectedTab: self.$selectedTab
+                            )
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             .padding()
                             .background(Color.Colors.General._05WhiteBackground)
                             .cornerRadius(14)
+
+                        case .similar:
+                            Text("Similar")
                         }
                     }
                     .padding(10)
@@ -207,7 +260,9 @@ struct POIDetailSheet: View {
         ScrollViewReader { scrollProxy in
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(POIOverviewView.Tab.allCases, id: \.self) { tab in
+                    ForEach(POIOverviewView.Tab.allCases.filter {
+                        $0 != .similar && ($0 != .photos || !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty)
+                    }, id: \.self) { tab in
                         VStack {
                             Text(tab.description)
                                 .hudhudFont(.subheadline)

@@ -22,7 +22,6 @@ struct PhotoSectionView: View {
             Text("Photos")
                 .font(.headline)
                 .foregroundColor(Color.Colors.General._01Black)
-                .padding(.leading)
             ScrollView(.horizontal) {
                 HStack(alignment: .top, spacing: 10) {
                     ForEach(0 ..< min(self.item.mediaURLs.count, 6), id: \.self) { index in
@@ -56,10 +55,10 @@ struct PhotoSectionView: View {
                         }
                     }
                 }
-                .padding()
             }
             .scrollIndicators(.hidden)
         }
+        .padding()
     }
 
     @ViewBuilder
