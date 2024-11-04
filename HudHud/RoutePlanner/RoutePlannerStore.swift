@@ -22,7 +22,7 @@ final class RoutePlannerStore {
 
     var state: RoutePlanningState = .initialLoading
 
-    private let initialDestination: ResolvedItem
+    private let initialDestination: DestinationPointOfInterest
     private let sheetStore: SheetStore
     private let userLocationStore: UserLocationStore
     private let routesPlanMapDrawer: RoutesPlanMapDrawer
@@ -41,7 +41,7 @@ final class RoutePlannerStore {
         mapStore: MapStore,
         routingStore: RoutingStore,
         routesPlanMapDrawer: RoutesPlanMapDrawer,
-        destination: ResolvedItem
+        destination: DestinationPointOfInterest
     ) {
         self.initialDestination = destination
         self.sheetStore = sheetStore
@@ -274,7 +274,7 @@ struct RouteWaypoint: Hashable {
 
     enum RouteWaypointType: Hashable {
         case userLocation(Coordinates)
-        case location(ResolvedItem)
+        case location(DestinationPointOfInterest)
     }
 
     // MARK: Properties
@@ -290,6 +290,8 @@ struct RoutePlan: Hashable {
     var routes: [Route]
     var selectedRoute: Route
 }
+
+typealias DestinationPointOfInterest = ResolvedItem
 
 // MARK: - RoutePlannerStore + Previewable
 
