@@ -19,9 +19,17 @@ import SwiftUI
 
 struct POIDetailSheet: View {
 
+    // MARK: Nested Types
+
+    private enum POISheetViewMetrics {
+        static let compactSheetHeight: CGFloat = UIScreen.main.bounds.height / 6 // 1/6 of the screen height
+        static let expandedSheetHeight: CGFloat = UIScreen.main.bounds.height / 4 // 1/4 of the screen height
+    }
+
     // MARK: Properties
 
     @State var pointOfInterestStore: PointOfInterestStore
+    let sheetStore: SheetStore
 
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
@@ -34,12 +42,13 @@ struct POIDetailSheet: View {
     @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
-
     @ObservedObject var routingStore: RoutingStore
 
     @EnvironmentObject var notificationQueue: NotificationQueue
 
     let formatter = Formatters()
+
+    private let displayPlaceholderReviews = true // we are waiting for the backend to implement reviews
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
@@ -60,12 +69,14 @@ struct POIDetailSheet: View {
 
     init(
         pointOfInterestStore: PointOfInterestStore,
+        sheetStore: SheetStore,
         routingStore: RoutingStore,
         didDenyLocationPermission: Bool,
         onStart: @escaping ([Route]?) -> Void,
         onDismiss: @escaping () -> Void
     ) {
         self.pointOfInterestStore = pointOfInterestStore
+        self.sheetStore = sheetStore
         self.onStart = onStart
         self.onDismiss = onDismiss
         self.routingStore = routingStore
@@ -77,27 +88,30 @@ struct POIDetailSheet: View {
     // MARK: - View
 
     var body: some View {
-        VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 0.0) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 0.0) {
                     Text(self.pointOfInterestStore.pointOfInterest.title)
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
-                        .lineLimit(2)
+                        .lineLimit(self.sheetStore.sheetHeight < 220 ? 1 : 2)
                         .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     self.categoryView
-                    HStack {
-                        self.ratingView
-                        self.priceRangeView
-                        self.accessibilityView
-                    }
-                    HStack {
-                        self.openStatusView
-                        self.routeInformationView
+                    if self.sheetStore.sheetHeight >= POISheetViewMetrics.compactSheetHeight {
+                        HStack(spacing: 0.0) {
+                            self.ratingView
+                            self.priceRangeView
+                            self.accessibilityView
+                        }
+                        HStack(spacing: 0.0) {
+                            self.openStatusView
+                                .padding(.vertical, 7)
+                            self.routeInformationView
+                                .padding(.vertical, 7)
+                        }
                     }
                 }
-
                 // Close Button
                 Button {
                     self.dismiss()
@@ -107,8 +121,9 @@ struct POIDetailSheet: View {
                         Circle()
                             .fill(Color.Colors.General._03LightGrey)
                             .frame(width: 30, height: 30)
-                        Image(.closeIcon)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                        Image(systemSymbol: .xmark)
+                            .font(.system(size: 15, weight: .regular, design: .rounded))
+                            .foregroundStyle(Color.Colors.General._01Black)
                     }
                     .padding(4)
                     .contentShape(Circle())
@@ -118,28 +133,116 @@ struct POIDetailSheet: View {
             }
             .padding([.top, .leading, .trailing], 15)
 
-            self.tabView
-            ScrollView {
-                POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest), selectedTab: self.$selectedTab)
-                POIMediaView(mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
+            if self.sheetStore.sheetHeight > POISheetViewMetrics.expandedSheetHeight {
+                self.tabView
+
+                ScrollView {
+                    VStack {
+                        // Switch between views based on the selected tab
+                        switch self.selectedTab {
+                        case .overview:
+                            // Show all content in the Overview tab
+                            POIOverviewView(
+                                poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
+                                selectedTab: self.$selectedTab
+                            )
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding()
+                            .background(Color.Colors.General._05WhiteBackground)
+                            .cornerRadius(14)
+
+                            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
+                                RatingSectionView(
+                                    store: RatingStore(
+                                        staticRating: rating,
+                                        ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
+                                        interactiveRating: 0
+                                    )
+                                )
+                                .padding()
+                                .background(Color.Colors.General._05WhiteBackground)
+                                .cornerRadius(14)
+                            }
+
+                            if self.displayPlaceholderReviews {
+                                ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
+                            }
+
+                            if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
+                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest)
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
+                            }
+
+                        case .photos:
+                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest)
+                                .padding(-10)
+
+                        case .review:
+                            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
+                                RatingSectionView(
+                                    store: RatingStore(
+                                        staticRating: rating,
+                                        ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
+                                        interactiveRating: 0
+                                    )
+                                )
+                                .padding()
+                                .background(Color.Colors.General._05WhiteBackground)
+                                .cornerRadius(14)
+                            }
+
+                            if self.displayPlaceholderReviews {
+                                ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .padding()
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
+                            }
+
+                        case .about:
+                            POIOverviewView(
+                                poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
+                                selectedTab: self.$selectedTab
+                            )
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .padding()
+                            .background(Color.Colors.General._05WhiteBackground)
+                            .cornerRadius(14)
+
+                        case .similar:
+                            Text("Similar")
+                        }
+                    }
+                    .padding(10)
                     .padding(.bottom, 100)
+                }
+                .background(Color.Colors.General._03LightGrey)
+            }
+            Spacer()
+        }
+        .overlay(alignment: .bottom) {
+            VStack(spacing: 0) {
+                Rectangle() // Top divider
+                    .fill(Color.black.opacity(0.025))
+                    .frame(height: 3)
+
+                POIBottomToolbar(
+                    item: self.pointOfInterestStore.pointOfInterest,
+                    duration: self.routes?.first?.duration != nil ? self.formatter.formatDuration(duration: self.routes?.first?.duration ?? 0) : nil,
+                    onStart: self.onStart,
+                    onDismiss: self.onDismiss,
+                    didDenyLocationPermission: self.didDenyLocationPermission,
+                    routes: self.routes
+                )
+                .padding(.bottom)
+                .padding(.vertical)
+                .padding(.horizontal, 20)
+                .background(Color.white)
             }
         }
-
-        .overlay(alignment: .bottom) {
-            if let route = routes?.first {
-                VStack(spacing: 0) {
-                    Rectangle() // Top divider
-                        .fill(Color.black.opacity(0.025))
-                        .frame(height: 3)
-                    POIBottomToolbar(item: self.pointOfInterestStore.pointOfInterest, duration: self.formatter.formatDuration(duration: route.duration), onStart: self.onStart, onDismiss: self.onDismiss, didDenyLocationPermission: self.didDenyLocationPermission, routes: self.routes)
-                        .padding(.bottom)
-                        .padding(.vertical, 7)
-                        .padding(.horizontal, 20)
-                        .background(Color.white)
-                }
-            }
-        }.ignoresSafeArea()
+        .ignoresSafeArea()
         .alert(
             "Location Needed",
             isPresented: self.$askToEnableLocation
@@ -163,11 +266,13 @@ struct POIDetailSheet: View {
         ScrollViewReader { scrollProxy in
             ScrollView(.horizontal) {
                 HStack {
-                    ForEach(POIOverviewView.Tab.allCases, id: \.self) { tab in
+                    ForEach(POIOverviewView.Tab.allCases.filter {
+                        $0 != .similar && ($0 != .photos || !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty)
+                    }, id: \.self) { tab in
                         VStack {
                             Text(tab.description)
                                 .hudhudFont(.subheadline)
-                                .fontWeight(self.selectedTab == tab ? .semibold : .regular)
+                                .fontWeight(.semibold)
                                 .foregroundStyle(self.selectedTab == tab ? Color.Colors.General._06DarkGreen : Color.Colors.General._01Black)
 
                             if self.selectedTab == tab {
@@ -203,54 +308,44 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var categoryView: some View {
+    private var categoryView: some View { // Category · Subcategory
         Group {
             if let category = pointOfInterestStore.pointOfInterest.category {
-                HStack {
-                    Text(category)
-                        .hudhudFont(.footnote)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    if let subCategory = self.pointOfInterestStore.pointOfInterest.subCategory {
-                        Text("•")
-                            .hudhudFont(.footnote)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                        Text(subCategory)
-                            .hudhudFont(.footnote)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .padding(.vertical, 6)
+                Text("\(category)\(self.pointOfInterestStore.pointOfInterest.subCategory.map { " · \($0)" } ?? "")")
+                    .hudhudFont(.footnote)
+                    .foregroundStyle(Color.Colors.General._02Grey)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.vertical, 6)
             }
         }
     }
 
-    private var ratingView: some View {
+    private var ratingView: some View { // e.g. 4 ***** · (500)
         Group {
-            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
-                HStack(spacing: 1) {
+            if let rating = pointOfInterestStore.pointOfInterest.rating {
+                HStack(spacing: 4) {
+                    // Display rating with one decimal place
                     Text("\(rating, specifier: "%.1f")")
-                        .hudhudFont(.headline)
+                        .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._01Black)
+                        .fontWeight(.semibold)
 
+                    // Star icons
                     ForEach(1 ... 5, id: \.self) { index in
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
-                            .foregroundColor(index <= Int(rating.rounded()) ? .Colors.General._13Orange : .Colors.General._04GreyForLines)
+                            .foregroundColor(index <= Int(rating.rounded()) ? .yellow : .Colors.General._04GreyForLines)
                     }
 
-                    Text("•")
-                        .hudhudFont(.caption2)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-
-                    Text("(\(self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0))")
-                        .hudhudFont(.subheadline)
-                        .foregroundStyle(Color.Colors.General._02Grey)
+                    // Optional ratings count with dot
+                    if let ratingsCount = pointOfInterestStore.pointOfInterest.ratingsCount {
+                        Text(" ·   (\(ratingsCount))")
+                            .hudhudFont(.subheadline)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                    }
                 }
+                .padding(.horizontal, 6)
             } else {
                 Text("No ratings")
                     .hudhudFont(.caption)
@@ -259,35 +354,28 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var priceRangeView: some View {
+    private var priceRangeView: some View { // · $$$
         Group {
-            if let priceRangeValue = self.pointOfInterestStore.pointOfInterest.priceRange,
+            if let priceRangeValue = pointOfInterestStore.pointOfInterest.priceRange,
                let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue) {
-                HStack {
-                    Text("•")
-                        .hudhudFont(.caption2)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                    Text(priceRange.displayValue)
-                        .hudhudFont(.subheadline)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                }
+                Text(" ·   \(priceRange.displayValue)")
+                    .hudhudFont(.subheadline)
+                    .foregroundStyle(Color.Colors.General._02Grey)
             }
         }
     }
 
-    private var accessibilityView: some View {
+    private var accessibilityView: some View { // Wheelchair
         Group {
             if let wheelchairAccessible = self.pointOfInterestStore.pointOfInterest.isWheelchairAccessible, wheelchairAccessible {
                 HStack {
-                    Text("•")
-                        .hudhudFont(.caption2)
-                        .foregroundStyle(Color.Colors.General._02Grey)
+                    Text(" · ")
                     Image(systemSymbol: .figureRoll)
-                        .hudhudFont(.subheadline)
-                        .foregroundStyle(Color.Colors.General._02Grey)
                 }
             }
         }
+        .hudhudFont(.subheadline)
+        .foregroundStyle(Color.Colors.General._02Grey)
     }
 
     private var openStatusView: some View {

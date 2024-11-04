@@ -4,6 +4,18 @@
     "" : {
 
     },
+    " " : {
+
+    },
+    " · " : {
+
+    },
+    " ·   (%lld)" : {
+
+    },
+    " ·   %@" : {
+
+    },
     " %@" : {
 
     },
@@ -48,6 +60,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ until %2$@"
+          }
+        }
+      }
+    },
+    "%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
           }
         }
       }
@@ -449,7 +471,7 @@
     "Reviews" : {
       "comment" : "Reviews Tab in POI Details"
     },
-    "Reviews %lld" : {
+    "Reviews (%lld)" : {
 
     },
     "Routing Configuration" : {
@@ -495,6 +517,9 @@
 
     },
     "Show More" : {
+
+    },
+    "Similar" : {
 
     },
     "Similar Places" : {
