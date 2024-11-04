@@ -14,6 +14,7 @@ import OSLog
 
 // MARK: - HudHudMapLayerStore
 
+@MainActor
 public class HudHudMapLayerStore: ObservableObject {
 
     // MARK: Properties

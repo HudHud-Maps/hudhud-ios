@@ -13,6 +13,7 @@ import MapKit
 import OpenAPIRuntime
 import SwiftUI
 
+@MainActor
 public class TrendingStore: ObservableObject {
 
     // MARK: Properties

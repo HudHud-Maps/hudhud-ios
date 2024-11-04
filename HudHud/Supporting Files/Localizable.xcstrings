@@ -4,6 +4,18 @@
     "" : {
 
     },
+    " " : {
+
+    },
+    " · " : {
+
+    },
+    " ·   (%lld)" : {
+
+    },
+    " ·   %@" : {
+
+    },
     " %@" : {
 
     },
@@ -52,6 +64,16 @@
         }
       }
     },
+    "%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
+          }
+        }
+      }
+    },
     "%lld of %lld" : {
       "localizations" : {
         "en" : {
@@ -76,6 +98,9 @@
     },
     "12 September 2024" : {
 
+    },
+    "About" : {
+      "comment" : "About Tab in POI Details"
     },
     "action" : {
 
@@ -400,6 +425,9 @@
     "Open" : {
 
     },
+    "Overview" : {
+      "comment" : "Overview Tab in POI Details"
+    },
     "Patrick" : {
 
     },
@@ -407,7 +435,7 @@
 
     },
     "Photos" : {
-
+      "comment" : "Photos Tab in POI Details"
     },
     "Please enable your location to get directions" : {
 
@@ -440,7 +468,10 @@
     "Reset" : {
 
     },
-    "Reviews %lld" : {
+    "Reviews" : {
+      "comment" : "Reviews Tab in POI Details"
+    },
+    "Reviews (%lld)" : {
 
     },
     "Routing Configuration" : {
@@ -479,8 +510,20 @@
     "Share" : {
 
     },
+    "Show Less" : {
+
+    },
     "Show more" : {
 
+    },
+    "Show More" : {
+
+    },
+    "Similar" : {
+
+    },
+    "Similar Places" : {
+      "comment" : "Similar Places Tab in POI Details"
     },
     "Simulate Ride during Navigation" : {
 
@@ -579,6 +622,50 @@
     },
     "You Have Arrived" : {
 
+    },
+    "Arrival" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrival"
+          }
+        }
+      }
+    },
+    "Distance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance"
+          }
+        }
+      }
+    },
+    "Duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
+    },
+    "Speed Limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Limit"
+          }
+        }
+      }
     }
   },
   "version" : "1.0"

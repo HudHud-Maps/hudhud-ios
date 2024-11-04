@@ -53,13 +53,20 @@ final class RoutingStore: ObservableObject {
 
     @Published var routes: [Route] = []
 
-    private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
-        isMuted: false)
+    let locationProvider: LocationProviding
+
+    let locationManager: HudHudLocationManager
+
+    @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
     private let navigationDelegate = NavigationDelegate()
 
     // MARK: Computed Properties
+
+    var isMuted: Bool {
+        self.spokenInstructionObserver.isMuted
+    }
 
     var alternativeRoutes: [Route] {
         self.routes.filter {
@@ -95,15 +102,17 @@ final class RoutingStore: ObservableObject {
 
         if DebugStore().simulateRide {
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 3
+            simulated.warpFactor = 1
             provider = simulated
         } else {
             provider = CoreLocationProvider(
                 activityType: .automotiveNavigation,
                 allowBackgroundLocationUpdates: true
             )
-            provider.startUpdating()
         }
+
+        self.locationProvider = provider
+        self.locationManager = HudHudLocationManager(locationProvider: provider)
 
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.
@@ -119,7 +128,8 @@ final class RoutingStore: ObservableObject {
         self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
             customRouteProvider: self.hudHudGraphHopperRouteProvider,
             locationProvider: provider,
-            navigationControllerConfig: config
+            navigationControllerConfig: config,
+            annotation: AnnotationPublisher<ValhallaExtendedOSRMAnnotation>.valhallaExtendedOSRM()
         ))
 
         self.ferrostarCore.delegate = self.navigationDelegate
@@ -127,6 +137,10 @@ final class RoutingStore: ObservableObject {
     }
 
     // MARK: Functions
+
+    func toggleMute() {
+        self.spokenInstructionObserver.toggleMute()
+    }
 
     func startNavigation() {
         self.navigatingRoute = self.selectedRoute
