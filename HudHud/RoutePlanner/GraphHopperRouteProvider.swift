@@ -59,7 +59,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
 
         Logger.routing.debug("Requesting route from \(url)")
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await APIClient.urlSession.data(from: url)
         try self.validateResponse(response, data: data)
 
         let json = try parseJSON(from: data)
