@@ -13,6 +13,14 @@ import SwiftUI
 
 struct PhotoSectionView: View {
 
+    // MARK: Nested Types
+
+    enum ImageSizes {
+        static let small = CGSize(width: 120, height: 120)
+        static let medium = CGSize(width: 175, height: 248)
+        static let large = CGSize(width: 248, height: 248)
+    }
+
     // MARK: Properties
 
     let item: ResolvedItem
@@ -78,17 +86,17 @@ struct PhotoSectionView: View {
     @ViewBuilder
     private func displayFiveImages() -> some View {
         VStack(spacing: 10) {
-            self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 120, height: 120))
+            self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.small)
 
-            self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: CGSize(width: 120, height: 120))
+            self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: ImageSizes.small)
         }
 
-        self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: CGSize(width: 248, height: 248))
+        self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: ImageSizes.large)
 
         VStack(spacing: 10) {
-            self.imageView(for: self.item.mediaURLs[3], label: self.item.title, size: CGSize(width: 120, height: 120))
+            self.imageView(for: self.item.mediaURLs[3], label: self.item.title, size: ImageSizes.small)
 
-            self.imageView(for: self.item.mediaURLs[4], label: self.item.title, size: CGSize(width: 120, height: 120))
+            self.imageView(for: self.item.mediaURLs[4], label: self.item.title, size: ImageSizes.small)
         }
     }
 
@@ -96,13 +104,13 @@ struct PhotoSectionView: View {
     private func displayFourImages() -> some View {
         VStack(spacing: 10) {
             HStack(spacing: 10) {
-                self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 120, height: 120))
-                self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: CGSize(width: 120, height: 120))
+                self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.small)
+                self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: ImageSizes.small)
             }
 
             HStack(spacing: 10) {
-                self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: CGSize(width: 120, height: 120))
-                self.imageView(for: self.item.mediaURLs[3], label: self.item.title, size: CGSize(width: 120, height: 120))
+                self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: ImageSizes.small)
+                self.imageView(for: self.item.mediaURLs[3], label: self.item.title, size: ImageSizes.small)
             }
         }
     }
@@ -110,22 +118,22 @@ struct PhotoSectionView: View {
     @ViewBuilder
     private func displayThreeImages() -> some View {
         VStack(spacing: 10) {
-            self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 120, height: 120))
-            self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: CGSize(width: 120, height: 120))
+            self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.small)
+            self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: ImageSizes.small)
         }
-        self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: CGSize(width: 175, height: 248))
+        self.imageView(for: self.item.mediaURLs[2], label: self.item.title, size: ImageSizes.medium)
     }
 
     @ViewBuilder
     private func displayTwoImages() -> some View {
         ForEach(0 ..< 2, id: \.self) { index in
-            self.imageView(for: self.item.mediaURLs[index], label: self.item.title, size: CGSize(width: 180, height: 248))
+            self.imageView(for: self.item.mediaURLs[index], label: self.item.title, size: ImageSizes.medium)
         }
     }
 
     @ViewBuilder
     private func displayOneImage() -> some View {
-        self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: CGSize(width: 284, height: 248))
+        self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.large)
     }
 
     // MARK: - Action Buttons
@@ -136,10 +144,14 @@ struct PhotoSectionView: View {
             if self.item.mediaURLs.count >= 5 {
                 self.actionButton(title: "View All", imageName: "photoLibrary", isSmallButton: true) {
                     // Action for View All
+                    #warning("Implement action for View All")
+                    assertionFailure("View All action not implemented yet")
                 }
             }
             self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count > 5 ? true : false) {
                 // Action for add Photo
+                #warning("Implement action for add photo")
+                assertionFailure("Add Photo action not implemented yet")
             }
         }
     }
