@@ -115,23 +115,41 @@ struct RoutePlannerRow: View {
 
     var body: some View {
         VStack(alignment: .destinationIconCenterAlignment, spacing: 6) {
-            Label {
-                HStack {
-                    Text(self.destination.title)
-                        .hudhudFontStyle(.labelMedium)
-                        .foregroundStyle(Color.Colors.General._01Black)
-                    if let onDelete {
-                        Button(action: onDelete) {
-                            Image(systemSymbol: .xmark)
-                        }
-                    }
-                    Spacer()
-                }
-            } icon: {
+            HStack {
                 DestinationImage(destinationType: self.destination.type)
                     .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                Text(self.destination.title)
+                    .hudhudFontStyle(.labelMedium)
+                    .foregroundStyle(Color.Colors.General._01Black)
+                Spacer()
+                if let onDelete {
+                    Button {
+                        print("drag and drop")
+                    } label: {
+                        Image(systemSymbol: .line3Horizontal)
+                            .tint(Color.gray)
+                    }
+                    Divider()
+                    Button(action: onDelete) {
+                        Image(systemSymbol: .xmark)
+                            .tint(Color.gray)
+                    }
+                }
             }
-            Label {
+            .padding(.trailing)
+            HStack {
+                VStack(spacing: 4) {
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                }
+                .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                 Rectangle()
                     .fill(Color.black.opacity(0.1))
                     .frame(width: .infinity, height: 1)
@@ -145,19 +163,6 @@ struct RoutePlannerRow: View {
                             }
                         }
                     }
-            } icon: {
-                VStack(spacing: 4) {
-                    Circle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: 4, height: 4)
-                    Circle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: 4, height: 4)
-                    Circle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: 4, height: 4)
-                }
-                .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
             }
         }
         .padding(.leading)
