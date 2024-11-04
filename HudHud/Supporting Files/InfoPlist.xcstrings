@@ -20,7 +20,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "You will be able to take picture and add it"
+            "value" : "Allow access to your camera to capture photos of places you've visited.\nNo photo will be posted publicly without your permission."
           }
         }
       }
@@ -56,7 +56,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "new",
-            "value" : "You will be able to add your photos"
+            "value" : "Add photos and videos from your library to any location on the map.\nNo photo will be posted publicly without your permission."
           }
         }
       }

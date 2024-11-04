@@ -3,9 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>You will be able to add your photos</string>
+	<string>Add photos and videos from your library to any location on the map.
+No photo will be posted publicly without your permission.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>You will be able to take picture and add it</string>
+	<string>Allow access to your camera to capture photos of places you&apos;ve visited.
+No photo will be posted publicly without your permission.</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSMinimumSystemVersion</key>
