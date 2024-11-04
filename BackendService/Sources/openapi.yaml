@@ -1,0 +1,2245 @@
+openapi: 3.0.1
+info:
+  title: Sinbad API
+  description: This API created specially for HudHud iOS and Android apps. Named Sinbad API as a code name.
+  contact:
+    name: Backend Team
+    url: https://app.slack.com/huddle/T06C65MTNUF/C072Y7MDL9L
+  version: "1.0"
+servers:
+  - url: /
+paths:
+  /m/styles:
+    get:
+      tags:
+        - Maps
+      summary: Map styles
+      description: Contains map style urls
+      operationId: listMapStyles
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_MapStyle'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /p:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: List pois (pois search)
+      description: list all POIs
+      operationId: listPois
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User Preferred Language
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          description: Limit
+          schema:
+            type: integer
+        - name: sort_by
+          in: query
+          description: Sorted by
+          schema:
+            type: string
+            enum:
+              - relevance
+              - distance
+        - name: price_range
+          in: query
+          description: Price Range
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
+        - name: rating
+          in: query
+          description: 'Rating '
+          schema:
+            maximum: 5
+            minimum: 0
+            type: number
+            format: double
+        - name: open_at
+          in: query
+          description: Open At in UTC format
+          schema:
+            type: string
+            format: date-time
+        - name: category
+          in: query
+          description: Category
+          schema:
+            type: string
+        - name: text
+          in: query
+          description: Text
+          schema:
+            type: string
+        - name: next_page_token
+          in: query
+          description: Next Page Token
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: Latitude
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          schema:
+            type: number
+            format: double
+        - name: top_rated
+          in: query
+          description: Top Rated
+          schema:
+            type: boolean
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_Poi'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /p/saved:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: List user saved POIs
+      description: List user saved POIs
+      operationId: listUserSavedPOIs
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_Poi'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+  /p/saved/{id}:
+    delete:
+      tags:
+        - Point Of Interests (POIs)
+      summary: Remove a POI from user's saved list
+      description: Remove a POI from user's saved list
+      operationId: removePOIFromSavedList
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of the POI
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-RemovePOIFromSavedListResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+  /p/trending:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: Trending POIs
+      description: list all POIs
+      operationId: listTrendingPois
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: Latitude
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          schema:
+            type: number
+            format: double
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_Poi'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /p/typeahead:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: POIs typeahead search
+      description: Search as you type feature, this endpoint searches POIs that have similar prefix and sends back the auto-completed matching results.
+      operationId: getTypeahead
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: query
+          in: query
+          description: Prefix to search for
+          required: true
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: Latitude
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          schema:
+            type: number
+            format: double
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_TypeaheadItem'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /p/{id}:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: POI details
+      description: POI details
+      operationId: getPoi
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of the POI
+          required: true
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: Latitude
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          schema:
+            type: number
+            format: double
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-Poi'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /p/{id}/save:
+    post:
+      tags:
+        - Point Of Interests (POIs)
+      summary: Save a POI to user's saved list
+      description: Save a POI to user's saved list
+      operationId: addPOIToSavedList
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of the POI
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-AddPOIToSavedListResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+  /sv/nearby:
+    get:
+      tags:
+        - Street View
+      summary: Get nearest Streetview image
+      description: get nearby street view
+      operationId: getNearestStreetViewImage
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude
+          required: true
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-StreetViewImageDetails'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/nearby-bbox:
+    get:
+      tags:
+        - Street View
+      summary: List Nearby Street Images bbox
+      description: List Nearby Street Images bbox
+      operationId: listStreetViewImagesByBoundingBox
+      parameters:
+        - name: bbox
+          in: query
+          description: Bounding Box
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Page
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Page size
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-array_StreetViewImageDetails'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/scene/bbox:
+    get:
+      tags:
+        - Street View
+      summary: Get streetview scene by bounding box
+      description: Get streetview scences bbox
+      operationId: getStreetViewSceneBBox
+      parameters:
+        - name: bbox
+          in: query
+          description: the format is <min_lon>,<min_lat>,<max_lon>,<max_lat> for example 46.5424,24.5708,46.8534,24.8595
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-PanoramicImageScene'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/scene/nearby:
+    get:
+      tags:
+        - Street View
+      summary: Get nearest Street View scene image to a point
+      description: Get nearest Street View scene image to a point
+      operationId: getStreetViewImageSceneNearBy
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude
+          required: true
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-PanoramicImageScene'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/scene/{id}:
+    get:
+      tags:
+        - Street View
+      summary: Get streetview scene by id
+      description: Get streetview scene by id
+      operationId: getStreetViewScene
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-PanoramicImageScene'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/viewer.html:
+    get:
+      tags:
+        - Street View
+      summary: Get view
+      description: Get view
+      operationId: getViewer
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: Latitude
+          required: true
+          schema:
+            type: number
+            format: double
+        - name: lon
+          in: query
+          description: Longitude
+          required: true
+          schema:
+            type: number
+            format: double
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /sv/{id}:
+    get:
+      tags:
+        - Street View
+      summary: Get streetview image by id
+      description: Get view
+      operationId: getStreetViewImage
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-StreetViewImageDetails'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /t/rate:
+    post:
+      tags:
+        - Trips
+      summary: Rate trip
+      description: Rate trip
+      operationId: rateTrip
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      requestBody:
+        description: request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateTripRequest'
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-routes_RateTripOut'
+        "400":
+          description: invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /u/login:
+    post:
+      tags:
+        - Login
+      summary: Submit Login Request
+      description: This endpoint will create a record in the database and send OTP to the user's email or mobile number
+      operationId: login
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: Login request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        "201":
+          description: desc
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-Login'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=invalid_login_identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /u/login/{id}/resend-otp:
+    post:
+      tags:
+        - Login
+      summary: Request to resend OTP
+      description: This endpoint will allow the user to request to resend of the OTP. Login has to be initiated and the time has to be within the CanRequestOTPResendAt time and the OTP was not already been validated.
+      operationId: resendOTP
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of current login returned from /u/login endpoint
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Login Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-ResendOTPResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: code=resource_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "410":
+          description: code=otp_already_verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /u/login/{id}/verify-otp:
+    post:
+      tags:
+        - Login
+      summary: Verify OTP in order to obtain access token
+      description: This endpoint will allow the user to verify the OTP and obtain an access token if the OTP is valid.
+      operationId: verifyOTP
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+        - name: id
+          in: path
+          description: id of current login returned from /u/login endpoint
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Verify OTP request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VerifyOTPRequest'
+        required: true
+      responses:
+        "200":
+          description: Login Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-VerifyOTPResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: code=incorrect_otp
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: code=resource_not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "410":
+          description: code=otp_already_verified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /u/profile:
+    get:
+      tags:
+        - User Profile
+      summary: GetUserProfile
+      description: This endpoint will allow the user to get their profile info and the user will be identified by their access token
+      operationId: getUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: UserProfile Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UserProfile'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+    delete:
+      tags:
+        - User Profile
+      summary: Delete User Profile
+      description: This endpoint will allow the user to delete their profile account and the user will be identified by their access token
+      operationId: deleteUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: No Data should be returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-DeleteUserProfileResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+    patch:
+      tags:
+        - User Profile
+      summary: Edit User Profile
+      description: This endpoint will allow the user to edit their profile and the user will be identified by their access token
+      operationId: editUserProfile
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: edit profile request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditUserProfileRequest'
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-EditUserProfileResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+      x-codegen-request-body-name: request
+  /u/profile/picture:
+    post:
+      tags:
+        - User Profile
+      summary: Edit User Profile
+      description: This endpoint will allow the user to update their profile and the user will be identified by their access token
+      operationId: uploadProfilePicture
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - picture
+              type: object
+              properties:
+                picture:
+                  type: string
+                  description: User Profile Picture should not exceed 5MB
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-UploadProfilePictureResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=profile_picture_format_is_unsupported
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+  /u/refresh-token:
+    post:
+      tags:
+        - Auth
+      summary: Refresh Access Token
+      description: This endpoint will allow the user to refresh their access token by submitting the access token alon with the refresh token
+      operationId: Refresh Access Token
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: edit profile request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/routes.RefreshAccessTokenRequest'
+        required: true
+      responses:
+        "200":
+          description: Response will have empty object in data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-routes_RefreshAccessTokenResponse'
+        "400":
+          description: code=invalid_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "401":
+          description: code=login_session_is_no_longer_active
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "403":
+          description: code=user_is_inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
+      x-codegen-request-body-name: request
+  /v1/metadata:
+    get:
+      tags:
+        - Search
+      summary: Get metadata for search
+      description: Return available filters, amenities and categories.
+      operationId: metadata
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/routes.MetadataResponse'
+  /v1/search:
+    post:
+      tags:
+        - Search
+      summary: Search for any place
+      description: Return places that match provided filters.
+      operationId: search
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: Search request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        "401":
+          description: code=invalid_login_identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=bad_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /v1/{type}/{id}:
+    get:
+      tags:
+        - Search
+      summary: Get a place by its type and ID
+      description: Return the corresponding place.
+      operationId: getPlace
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+        - name: type
+          in: path
+          description: string enums
+          required: true
+          schema:
+            type: string
+            enum:
+              - pois
+              - districts
+              - streets
+        - name: lat
+          in: query
+          description: Latitude
+          schema:
+            type: number
+        - name: lon
+          in: query
+          description: Longitude
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeoJSONFeature'
+        "401":
+          description: code=invalid_login_identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: code=not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AddPOIToSavedListResponse:
+      type: object
+    AndroidCategoryIcon:
+      required:
+        - color
+        - name
+      type: object
+      properties:
+        color:
+          type: string
+        name:
+          type: string
+    DeleteUserProfileResponse:
+      type: object
+    EditUserProfileRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - unspecified
+            - male
+            - female
+        last_name:
+          type: string
+    EditUserProfileResponse:
+      type: object
+    ErrorResponse:
+      required:
+        - message
+        - ok
+      type: object
+      properties:
+        code:
+          type: string
+          description: Code is the Error
+        message:
+          type: string
+          description: Message is a message to be displayed to the user in case of an error in the response
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in ErrorResponse it will always be false
+    GeoJSONFeature:
+      type: object
+      properties:
+        geometry:
+          $ref: '#/components/schemas/routes.GeoJSONGeometry'
+        properties:
+          $ref: '#/components/schemas/routes.Place'
+        type:
+          type: string
+          description: Type is Feature.
+    GeoPoint:
+      required:
+        - lat
+        - lon
+      type: object
+      properties:
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+    IOSCategoryIcon:
+      required:
+        - color
+        - name
+      type: object
+      properties:
+        color:
+          type: string
+          enum:
+            - systemGray
+            - systemGray2
+            - systemGray3
+            - systemGray4
+            - systemGray5
+            - systemGray6
+            - systemRed
+            - systemGreen
+            - systemBlue
+            - systemOrange
+            - systemYellow
+            - systemPink
+            - systemPurple
+            - systemTeal
+            - systemIndigo
+            - systemBrown
+            - systemMint
+            - systemCyan
+        name:
+          type: string
+    Login:
+      type: object
+      properties:
+        can_request_otp_resend_at:
+          type: string
+          description: CanRequestOTPResendAt the time w¬hen the user can request for a resend of the OTP
+          format: date-time
+        id:
+          type: string
+          description: ID the unique identifier for the login every attempt would have a different record with a unique identifier.
+    LoginRequest:
+      required:
+        - login_identity
+      type: object
+      properties:
+        login_identity:
+          type: string
+          description: LoginIdentity the user unique login identity email or mobile
+          example: mashail@hudhud.sa or +966509988765
+    MapStyle:
+      required:
+        - name
+        - style_url
+        - thumbnail_url
+        - type
+      type: object
+      properties:
+        name:
+          type: string
+        style_url:
+          type: string
+        thumbnail_url:
+          type: string
+        type:
+          type: string
+          enum:
+            - map_type
+            - map_details
+    MediaItem:
+      required:
+        - type
+        - url
+      type: object
+      properties:
+        type:
+          type: string
+        url:
+          type: string
+    OpeningHours:
+      type: object
+      properties:
+        friday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        monday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        saturday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        sunday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        thursday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        tuesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+        wednesday:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpeningRange'
+    OpeningRange:
+      type: object
+      properties:
+        end:
+          type: integer
+        start:
+          type: integer
+    PanoramicImageScene:
+      required:
+        - id
+        - name
+        - point
+      type: object
+      properties:
+        base_url:
+          type: string
+        created_at:
+          type: string
+        east_id:
+          type: integer
+        east_name:
+          type: string
+        geom:
+          type: string
+        heading:
+          type: number
+          format: double
+        id:
+          type: integer
+        name:
+          type: string
+        next_id:
+          type: integer
+        next_name:
+          type: string
+        point:
+          $ref: '#/components/schemas/GeoPoint'
+        previous_id:
+          type: integer
+        previous_name:
+          type: string
+        updated_at:
+          type: string
+        west_id:
+          type: integer
+        west_name:
+          type: string
+    Poi:
+      required:
+        - category
+        - coordinates
+        - id
+        - name
+      type: object
+      properties:
+        address:
+          type: string
+        always_open:
+          type: boolean
+        android_category_icon:
+          type: object
+          additionalProperties:
+            type: string
+        category:
+          type: string
+        coordinates:
+          $ref: '#/components/schemas/GeoPoint'
+        description:
+          type: string
+        distance:
+          type: number
+          description: Should this be here or in a DTO struct ? for now it's easier to put it here
+          format: double
+        duration:
+          type: number
+          format: double
+        id:
+          type: string
+        instagram:
+          type: string
+        ios_category_icon:
+          type: object
+          additionalProperties:
+            type: string
+        is_open:
+          type: boolean
+        media_urls:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaItem'
+        name:
+          type: string
+        opening_hours:
+          $ref: '#/components/schemas/OpeningHours'
+        phone_number:
+          type: string
+        price_range:
+          type: integer
+        rating:
+          type: number
+          format: double
+        ratings_count:
+          type: integer
+        trending_image_url:
+          type: string
+        website:
+          type: string
+    RateTripRequest:
+      type: object
+      properties:
+        id:
+          type: integer
+        rating:
+          type: integer
+        timestamp:
+          type: integer
+        trip_info:
+          type: object
+          description: TODO Change the type of TripInfo from map[string]any to any
+    RemovePOIFromSavedListResponse:
+      type: object
+    ResendOTPResponse:
+      type: object
+      properties:
+        can_request_otp_resend_at:
+          type: string
+          description: CanRequestOTPResendAt the time when the user can request for a resend of the OTP
+          format: date-time
+    SearchRequest:
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        cuisines:
+          type: array
+          items:
+            type: string
+        is_open:
+          type: boolean
+        is_trending:
+          type: boolean
+        limit:
+          type: integer
+        location:
+          $ref: '#/components/schemas/GeoPoint'
+        offset:
+          type: integer
+        price_range:
+          type: array
+          items:
+            type: integer
+        q:
+          type: string
+        top_rated:
+          type: boolean
+    SearchResponse:
+      type: object
+      properties:
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoJSONFeature'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        type:
+          type: string
+          description: Type is FeatureCollection.
+    StreetViewImageDetails:
+      required:
+        - id
+        - point
+        - url
+      type: object
+      properties:
+        created_at:
+          type: string
+        distance:
+          type: number
+          format: double
+        geom:
+          type: string
+        heading:
+          type: number
+          format: double
+        id:
+          type: integer
+        metadata:
+          type: string
+        name:
+          type: string
+        point:
+          $ref: '#/components/schemas/GeoPoint'
+        updated_at:
+          type: string
+        url:
+          type: string
+    SuccessResponse-AddPOIToSavedListResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/AddPOIToSavedListResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-DeleteUserProfileResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/DeleteUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-EditUserProfileResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/EditUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-Login:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/Login'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-PanoramicImageScene:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/PanoramicImageScene'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-Poi:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/Poi'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-RemovePOIFromSavedListResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/RemovePOIFromSavedListResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-ResendOTPResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/ResendOTPResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-StreetViewImageDetails:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/StreetViewImageDetails'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UploadProfilePictureResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UploadProfilePictureResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-UserProfile:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/UserProfile'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-VerifyOTPResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/VerifyOTPResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-array_MapStyle:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: array
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          items:
+            $ref: '#/components/schemas/MapStyle'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-array_Poi:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: array
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          items:
+            $ref: '#/components/schemas/Poi'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-array_StreetViewImageDetails:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: array
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          items:
+            $ref: '#/components/schemas/StreetViewImageDetails'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-array_TypeaheadItem:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: array
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          items:
+            $ref: '#/components/schemas/TypeaheadItem'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-routes_RateTripOut:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-routes_RefreshAccessTokenResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/routes.RefreshAccessTokenResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    TypeaheadItem:
+      required:
+        - android_category_icon
+        - ios_category_icon
+        - name
+        - type
+      type: object
+      properties:
+        address:
+          type: string
+        android_category_icon:
+          $ref: '#/components/schemas/AndroidCategoryIcon'
+        category:
+          type: string
+        coordinates:
+          $ref: '#/components/schemas/GeoPoint'
+        id:
+          type: string
+        ios_category_icon:
+          $ref: '#/components/schemas/IOSCategoryIcon'
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - poi
+            - category
+    UploadProfilePictureResponse:
+      type: object
+    UserProfile:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Email is the identity for the user during the login one of Email or MobileNumber has to be present
+        first_name:
+          type: string
+        gender:
+          type: string
+          enum:
+            - unspecified
+            - male
+            - female
+        last_name:
+          type: string
+        mobile:
+          type: string
+          description: MobileNumber is the identity for the user during the login one of Email or MobileNumber has to be present
+        profile_picture_url:
+          type: string
+          format: uri
+        user_id:
+          type: string
+          description: UserID the unique identifier for the user
+    VerifyOTPRequest:
+      type: object
+      properties:
+        otp:
+          type: string
+          description: OTP 6 digit OTP code
+    VerifyOTPResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: |-
+            AccessToken JWT access token is short-lived token that will be issued only if the otp verification was successful.
+            The token will be valid for 1 hour.
+          format: base64
+        expires_at:
+          type: string
+          description: ExpiresAt the time when the access token will expire
+          format: date-time
+        is_user_active:
+          type: boolean
+          description: |-
+            IsUserActive In case it's first login and the OTP was verified successfully
+            the user will be created and will be automatically active only if the waitlist is disabled
+        refresh_token:
+          type: string
+          description: |-
+            RefreshToken JWT refresh token is a long-lived token that will be issued only if the otp verification was successful.
+            The refresh token will be non-expired one
+          format: base64
+    routes.Category:
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            type: string
+        filters:
+          type: array
+          items:
+            type: string
+        key:
+          type: string
+        name_ar:
+          type: string
+        name_en:
+          type: string
+    routes.Filter:
+      type: object
+      properties:
+        filter_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Option'
+        key:
+          type: string
+        name_ar:
+          type: string
+        name_en:
+          type: string
+        type:
+          type: string
+          enum:
+            - toggle
+            - multiple_choice
+            - single_choice
+    routes.GeoJSONGeometry:
+      type: object
+      properties:
+        coordinates:
+          type: array
+          items:
+            type: integer
+        type:
+          type: string
+          enum:
+            - Point
+            - MultiPoint
+            - LineString
+            - MultiLineString
+            - Polygon
+            - MultiPolygon
+            - GeometryCollection
+    routes.Hour:
+      type: object
+      properties:
+        close:
+          type: string
+          description: Close time in 24-hour format (HH:mm)
+        open:
+          type: string
+          description: Open time in 24-hour format (HH:mm)
+    routes.MetadataResponse:
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Filter'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Category'
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Filter'
+    routes.OpeningHours:
+      type: object
+      properties:
+        regular_hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.RegularHour'
+    routes.Option:
+      type: object
+      properties:
+        key:
+          type: string
+        name_ar:
+          type: string
+        name_en:
+          type: string
+    routes.Place:
+      required:
+        - id
+        - name
+        - point
+        - type
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        category_key:
+          type: string
+        description:
+          type: string
+        distance:
+          type: number
+          format: double
+        email:
+          type: string
+        eta:
+          type: integer
+        floorno:
+          type: string
+        full_address:
+          type: string
+        id:
+          type: string
+        instagram:
+          type: string
+        is_open:
+          type: boolean
+        is_trending:
+          type: boolean
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaItem'
+        name:
+          type: string
+        opening_hours:
+          $ref: '#/components/schemas/routes.OpeningHours'
+        phone_number:
+          type: string
+        point:
+          $ref: '#/components/schemas/GeoPoint'
+        price_max:
+          type: integer
+        price_min:
+          type: integer
+        rating:
+          type: number
+        reviews_count:
+          type: integer
+        snapchat:
+          type: string
+        status:
+          type: string
+        subcategory:
+          type: string
+        subcategory_key:
+          type: string
+        tiktok:
+          type: string
+        type:
+          type: string
+          enum:
+            - poi
+            - district
+            - street
+        website:
+          type: string
+        x_link:
+          type: string
+    routes.RefreshAccessTokenRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+          description: RefreshToken the refresh token that was issued with the access token
+          format: base64
+    routes.RefreshAccessTokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: AccessToken the new access token
+          format: base64
+        expires_at:
+          type: string
+          description: ExpiresAt the time when the access token will expire
+          format: date-time
+    routes.RegularHour:
+      type: object
+      properties:
+        day:
+          type: string
+          enum:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+            - الأحد
+            - الإثنين
+            - الثلاثاء
+            - الأربعاء
+            - الخميس
+            - الجمعة
+            - السبت
+        hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Hour'
+  securitySchemes:
+    BearerAuth:
+      type: apiKey
+      description: 'JWT Bearer token for authentication. Example: "Bearer <token>"'
+      name: Authorization
+      in: header
+x-original-swagger-version: "2.0"
