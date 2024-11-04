@@ -159,7 +159,6 @@ struct POIDetailSheet: View {
 
                             if self.isBackendReady {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
-                                    .padding()
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }

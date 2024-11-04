@@ -452,7 +452,7 @@
     "Reviews" : {
       "comment" : "Reviews Tab in POI Details"
     },
-    "Reviews %lld" : {
+    "Reviews (%lld)" : {
 
     },
     "Routing Configuration" : {

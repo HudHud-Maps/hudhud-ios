@@ -20,13 +20,19 @@ struct ReviewsListView: View {
     // MARK: Content
 
     var body: some View {
-        Section(header: ReviewsHeaderView(reviewsCount: self.reviews.count)) {
-            List(self.reviews, id: \.id) { review in
+        VStack(alignment: .leading, spacing: 8) {
+            ReviewsHeaderView(reviewsCount: self.reviews.count)
+            ForEach(self.reviews, id: \.id) { review in
                 ReviewSectionView(review: review)
                     .padding(.vertical, 8)
+                if review.id != self.reviews.last?.id {
+                    Divider()
+                }
             }
-            .listStyle(.plain)
         }
+        .padding()
+        .background(Color.Colors.General._05WhiteBackground)
+        .cornerRadius(14)
     }
 }
 
@@ -42,7 +48,7 @@ struct ReviewsHeaderView: View {
 
     var body: some View {
         HStack {
-            Text("Reviews \(self.reviewsCount)")
+            Text("Reviews (\(self.reviewsCount))")
                 .hudhudFont(.headline)
                 .foregroundColor(.Colors.General._01Black)
             Spacer()
@@ -58,7 +64,6 @@ struct ReviewsHeaderView: View {
                 .foregroundColor(.Colors.General._06DarkGreen)
             }
         }
-        .padding(.horizontal)
     }
 }
 
@@ -108,6 +113,7 @@ struct UserView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(self.review.username)
                     .hudhudFont(.headline)
+                    .foregroundColor(.Colors.General._01Black)
                 Text("From \(self.review.userType)")
                     .hudhudFont(.subheadline)
                     .foregroundColor(.Colors.General._02Grey)
