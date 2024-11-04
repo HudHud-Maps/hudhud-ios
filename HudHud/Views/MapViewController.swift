@@ -35,6 +35,7 @@ final class MapViewController: UIViewController, MapViewHostViewController {
             sheetStore: sheetStore,
             sheetToView: sheetToView
         )
+
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,6 +45,12 @@ final class MapViewController: UIViewController, MapViewHostViewController {
     }
 
     // MARK: Overridden Functions
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.mapView.userTrackingMode = .followWithCourse
+        self.mapView.showsUserLocation = true
+    }
 
     override func loadView() {
         self.view = self.mapView
