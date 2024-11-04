@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/HudHud-Maps/ferrostar.git",
       "state" : {
-        "branch" : "annotations",
-        "revision" : "8890bee3d6d9da030c2a94650757c5ca67cda19a"
+        "branch" : "main",
+        "revision" : "95b5d7c680d399d0c2bce7088301bbb4fe9feede"
       }
     },
     {

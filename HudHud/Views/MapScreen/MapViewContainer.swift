@@ -9,8 +9,6 @@
 import BackendService
 import FerrostarCore
 import FerrostarCoreFFI
-import FerrostarMapLibreUI
-import FerrostarSwiftUI
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -81,11 +79,13 @@ struct MapViewContainer<SheetContentView: View>: View {
                     styleURL: self.mapStore.mapStyleUrl(),
                     sheetToView: self.sheetToView
                 ),
+                locationManager: self.routingStore.locationManager,
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
-                locationProviding: nil,
                 navigationState: self.routingStore.ferrostarCore.state,
+                isMuted: self.routingStore.isMuted,
                 showZoom: false,
+                onTapMute: { self.routingStore.toggleMute() },
                 onTapExit: stopNavigation,
                 makeMapContent: makeMapContent,
                 mapViewModifiers: makeMapViewModifiers
@@ -101,7 +101,7 @@ struct MapViewContainer<SheetContentView: View>: View {
             )
             .gesture(trackingStateGesture)
             .onAppear(perform: handleOnAppear)
-            .onChange(of: self.routingStore.potentialRoute) { oldValue, newValue in
+            .onChange(of: self.routingStore.selectedRoute) { oldValue, newValue in
                 handlePotentialRouteChange(oldValue, newValue)
             }
             .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
@@ -117,22 +117,20 @@ struct MapViewContainer<SheetContentView: View>: View {
 
 extension MapViewContainer {
     private var locationLabel: String {
-        guard let location = searchViewStore.routingStore.ferrostarCore.locationProvider.lastLocation else {
-            return "No location - authed as \(self.routingStore.ferrostarCore.locationProvider.authorizationStatus)"
+        guard let location = searchViewStore.routingStore.locationProvider.lastLocation else {
+            return "No location - authed as \(self.routingStore.locationProvider.authorizationStatus)"
         }
         return "±\(Int(location.horizontalAccuracy))m accuracy"
     }
 
     private var speed: Measurement<UnitSpeed>? {
-        self.routingStore.ferrostarCore.locationProvider.lastLocation?.speed.map {
+        self.routingStore.locationProvider.lastLocation?.speed.map {
             Measurement(value: $0.value, unit: .metersPerSecond)
         }
     }
 
     private var speedLimit: Measurement<UnitSpeed>? {
-        try? self.routingStore.ferrostarCore.state?
-            .currentAnnotation(as: ValhallaOsrmAnnotation.self)?
-            .speedLimit?.measurementValue
+        return self.routingStore.ferrostarCore.annotation?.speedLimit
     }
 }
 
@@ -245,11 +243,16 @@ private extension MapViewContainer {
         if let route = newValue {
             do {
                 if DebugStore().simulateRide {
-                    if let simulated = routingStore.ferrostarCore.simulatedLocationProvider {
-                        try simulated.setSimulatedRoute(route)
+                    if let simulated = routingStore.simulatedLocationProvider {
+                        try simulated.setSimulatedRoute(route, bias: .left(5))
                     }
                 }
                 try self.routingStore.ferrostarCore.startNavigation(route: route)
+                self.routingStore.simulatedLocationProvider?.stopUpdating()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                    self.routingStore.simulatedLocationProvider?.startUpdating()
+                }
+
                 self.sheetStore.isShown.value = false
 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
@@ -260,10 +263,8 @@ private extension MapViewContainer {
             }
         } else {
             stopNavigation()
-            if DebugStore().simulateRide {
-                if let simulated = routingStore.ferrostarCore.locationProvider as? SimulatedLocationProvider {
-                    simulated.stopUpdating()
-                }
+            if let simulated = routingStore.locationProvider as? SimulatedLocationProvider {
+                simulated.stopUpdating()
             }
         }
     }
@@ -307,11 +308,11 @@ private extension MapViewContainer {
     }
 
     func configureMapViewController(_ mapViewController: MapViewController) {
-        if self.routingStore.ferrostarCore.simulatedLocationProvider != nil {
-            mapViewController.mapView.locationManager = LocationManagerProxy(locationProvider: self.routingStore.ferrostarCore.locationProvider)
-        }
-
         mapViewController.mapView.compassViewMargins.y = 50
+        if DebugStore().showLocationDiagmosticLogs {
+            let diagnostic = LocationServicesDiagnostic(mapView: mapViewController.mapView)
+            diagnostic.runDiagnostics()
+        }
     }
 }
 
@@ -326,7 +327,7 @@ private extension MapViewContainer {
         self.sheetStore.popToRoot()
         self.sheetStore.isShown.value = true
 
-        if let coordinates = routingStore.ferrostarCore.locationProvider.lastLocation?.coordinates {
+        if let coordinates = routingStore.locationProvider.lastLocation?.coordinates {
             self.resetCamera(to: coordinates)
         }
         self.routingStore.clearRoutes()
@@ -356,8 +357,63 @@ private extension MapViewContainer {
     }
 }
 
-extension FerrostarCore {
+extension RoutingStore {
     var simulatedLocationProvider: SimulatedLocationProvider? {
         self.locationProvider as? SimulatedLocationProvider
+    }
+}
+
+public extension FerrostarCore {
+
+    var isNavigating: Bool {
+        return self.state?.isNavigating ?? false
+    }
+}
+
+public extension NavigationState {
+    var isNavigating: Bool {
+        if case .navigating = tripState {
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
+public extension Waypoint {
+    init(coordinate: CLLocationCoordinate2D, kind: WaypointKind = .via) {
+        self.init(coordinate: GeographicCoordinate(lat: coordinate.latitude, lng: coordinate.longitude), kind: kind)
+    }
+
+    var cLCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: self.coordinate.lat, longitude: self.coordinate.lng)
+    }
+}
+
+public extension Route {
+    var duration: TimeInterval {
+        // add together all routeStep durations
+        return self.steps.reduce(0) { $0 + $1.duration }
+    }
+}
+
+// MARK: - Route + Identifiable
+
+extension Route: Identifiable {
+    public var id: Int {
+        return self.hashValue
+    }
+
+}
+
+public extension BoundingBox {
+    var mlnCoordinateBounds: MLNCoordinateBounds {
+        return MLNCoordinateBounds(sw: self.sw.clLocationCoordinate2D, ne: self.ne.clLocationCoordinate2D)
+    }
+}
+
+public extension [GeographicCoordinate] {
+    var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
+        return self.map(\.clLocationCoordinate2D)
     }
 }

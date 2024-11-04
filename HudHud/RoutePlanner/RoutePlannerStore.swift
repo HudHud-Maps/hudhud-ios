@@ -81,7 +81,9 @@ final class RoutePlannerStore {
     }
 
     func startNavigation() {
-        self.routingStore.startNavigation()
+        guard let selectedRoute = self.state.selectedRoute else { return }
+        self.routesPlanMapDrawer.clear()
+        self.routingStore.startNavigation(to: selectedRoute)
     }
 
     func swap() async {
@@ -211,6 +213,15 @@ enum RoutePlanningState: Hashable {
             case .errorFetchignRoute, .initialLoading, .locationNotEnabled:
                 break
             }
+        }
+    }
+
+    var selectedRoute: Route? {
+        switch self {
+        case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
+            nil
+        case let .loaded(plan):
+            plan.selectedRoute
         }
     }
 
