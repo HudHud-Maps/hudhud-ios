@@ -92,6 +92,11 @@ final class RoutePlannerStore {
         await self.fetchRoutePlan(for: destinations)
     }
 
+    func remove(_ destination: RouteWaypoint) async {
+        self.state.destinations.removeAll(where: { $0 == destination })
+        await self.fetchRoutePlan(for: self.state.destinations)
+    }
+
     private func fetchRoutePlanForFirstTime() async {
         guard let userLocation = await self.userLocationStore.location(allowCached: false) else {
             self.state = .locationNotEnabled
@@ -211,6 +216,14 @@ enum RoutePlanningState: Hashable {
 
     var canSwap: Bool {
         self.destinations.count == 2
+    }
+
+    var canRemove: Bool {
+        self.destinations.count > 2
+    }
+
+    var canDrag: Bool {
+        self.destinations.count > 2
     }
 }
 

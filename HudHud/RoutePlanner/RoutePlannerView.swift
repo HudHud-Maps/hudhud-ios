@@ -57,7 +57,8 @@ struct RoutePlanView: View {
                 ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
                     RoutePlannerRow(
                         destination: destination,
-                        onSwap: self.swapActionIfCanSwap(for: destination)
+                        onSwap: self.swapActionIfCanSwap(for: destination),
+                        onDelete: self.deleteActionIfCanDelete(for: destination)
                     )
                     .animation(.bouncy, value: destination)
                 }
@@ -86,6 +87,18 @@ struct RoutePlanView: View {
             nil
         }
     }
+
+    func deleteActionIfCanDelete(for destination: RouteWaypoint) -> (() -> Void)? {
+        if self.routePlannderStore.state.canRemove {
+            {
+                Task {
+                    await self.routePlannderStore.remove(destination)
+                }
+            }
+        } else {
+            nil
+        }
+    }
 }
 
 // MARK: - RoutePlannerRow
@@ -96,6 +109,7 @@ struct RoutePlannerRow: View {
 
     let destination: RouteWaypoint
     let onSwap: (() -> Void)?
+    let onDelete: (() -> Void)?
 
     // MARK: Content
 
@@ -106,6 +120,11 @@ struct RoutePlannerRow: View {
                     Text(self.destination.title)
                         .hudhudFontStyle(.labelMedium)
                         .foregroundStyle(Color.Colors.General._01Black)
+                    if let onDelete {
+                        Button(action: onDelete) {
+                            Image(systemSymbol: .xmark)
+                        }
+                    }
                     Spacer()
                 }
             } icon: {
