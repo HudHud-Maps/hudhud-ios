@@ -40,6 +40,7 @@ struct ContentView: View {
 
     @State private var streetViewStore: StreetViewStore
     @State private var sheetSize: CGSize = .zero
+    @State private var routesPlanMapDrawer = RoutesPlanMapDrawer()
 
     @StateObject private var notificationQueue = NotificationQueue()
 
@@ -77,7 +78,8 @@ struct ContentView: View {
                 mapViewStore: self.mapViewStore,
                 routingStore: self.searchViewStore.routingStore,
                 sheetStore: self.sheetStore,
-                streetViewStore: self.streetViewStore
+                streetViewStore: self.streetViewStore,
+                routesPlanMapDrawer: self.routesPlanMapDrawer
             ) { sheetType in
                 switch sheetType {
                 case .mapStyle:
@@ -150,6 +152,17 @@ struct ContentView: View {
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
+                        if self.debugStore.enableNewRoutePlanner {
+                            self.sheetStore.show(.routePlanner(RoutePlannerStore(
+                                sheetStore: self.sheetStore,
+                                userLocationStore: self.userLocationStore,
+                                mapStore: self.mapStore,
+                                routingStore: self.searchViewStore.routingStore,
+                                routesPlanMapDrawer: self.routesPlanMapDrawer,
+                                destination: item
+                            )))
+                            return
+                        }
                         Task {
                             do {
                                 try await self.searchViewStore.routingStore.showRoutes(
@@ -157,17 +170,7 @@ struct ContentView: View {
                                     with: routeIfAvailable
                                 )
                                 try await self.notificationManager.requestAuthorization()
-                                if self.debugStore.enableNewRoutePlanner {
-                                    self.sheetStore.show(.routePlanner(RoutePlannerStore(
-                                        sheetStore: self.sheetStore,
-                                        userLocationStore: self.userLocationStore,
-                                        mapStore: self.mapStore,
-                                        routingStore: self.searchViewStore.routingStore,
-                                        destination: item
-                                    )))
-                                } else {
-                                    self.sheetStore.show(.navigationPreview)
-                                }
+                                self.sheetStore.show(.navigationPreview)
                             } catch {
                                 Logger.routing.error("Error navigating to \(item): \(error)")
                             }
