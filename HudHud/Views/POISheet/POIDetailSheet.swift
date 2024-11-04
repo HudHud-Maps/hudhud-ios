@@ -398,5 +398,6 @@ private extension POIDetailSheet {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
     ContentView(searchStore: searchViewStore,
                 mapViewStore: .storeSetUpForPreviewing,
-                sheetStore: .storeSetUpForPreviewingPOI)
+                sheetStore: .storeSetUpForPreviewingPOI,
+                routesPlanMapDrawer: RoutesPlanMapDrawer())
 }

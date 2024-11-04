@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Combine
 import FerrostarCore
 import FerrostarCoreFFI
 import Foundation
@@ -61,6 +62,8 @@ final class RoutingStore: ObservableObject {
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
     private let navigationDelegate = NavigationDelegate()
+    private let routesPlanMapDrawer: RoutesPlanMapDrawer
+    private var routePlanSubscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
 
@@ -95,8 +98,9 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore) {
+    init(mapStore: MapStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
         self.mapStore = mapStore
+        self.routesPlanMapDrawer = routesPlanMapDrawer
 
         let provider: LocationProviding
 
@@ -134,6 +138,7 @@ final class RoutingStore: ObservableObject {
 
         self.ferrostarCore.delegate = self.navigationDelegate
         self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
+        self.bindRoutePlanActions()
     }
 
     // MARK: Functions
@@ -238,10 +243,43 @@ private extension RoutingStore {
     func reroute(with route: Route) async {
         self.navigatingRoute = route
     }
+
+    func bindRoutePlanActions() {
+        self.routesPlanMapDrawer.routePlanEvents.sink { [weak self] event in
+            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            switch event {
+            case let .didSelectRoute(routeID):
+                if let route = self.routes.first(where: { $0.id == routeID }) {
+                    self.selectedRoute = route
+                }
+            }
+        }
+        .store(in: &self.routePlanSubscriptions)
+        Publishers.CombineLatest(self.$routes, self.$selectedRoute).sink { [weak self] routes, selectedRoute in
+            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            if routes.isEmpty {
+                self.routesPlanMapDrawer.clear()
+            } else if let selectedRoute = selectedRoute ?? routes.first {
+                self.routesPlanMapDrawer.drawRoutes(
+                    routes: routes,
+                    selectedRoute: selectedRoute,
+                    waypoints: (self.waypoints ?? []).map { waypoint in
+                        switch waypoint {
+                        case let .myLocation(waypoint):
+                            RouteWaypoint(type: .userLocation(Coordinates(waypoint.cLCoordinate)), title: "User Location")
+                        case let .waypoint(item):
+                            RouteWaypoint(type: .location(item), title: item.title)
+                        }
+                    }
+                )
+            }
+        }
+        .store(in: &self.routePlanSubscriptions)
+    }
 }
 
 // MARK: - Previewable
 
 extension RoutingStore: Previewable {
-    static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing, routesPlanMapDrawer: RoutesPlanMapDrawer())
 }

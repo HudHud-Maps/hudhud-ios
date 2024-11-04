@@ -40,7 +40,7 @@ struct ContentView: View {
 
     @State private var streetViewStore: StreetViewStore
     @State private var sheetSize: CGSize = .zero
-    @State private var routesPlanMapDrawer = RoutesPlanMapDrawer()
+    private var routesPlanMapDrawer: RoutesPlanMapDrawer
 
     @StateObject private var notificationQueue = NotificationQueue()
 
@@ -54,7 +54,7 @@ struct ContentView: View {
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore) {
+    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
         self.searchViewStore = searchStore
         self.sheetStore = sheetStore
         self.mapStore = searchStore.mapStore
@@ -63,6 +63,7 @@ struct ContentView: View {
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
         self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
+        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.mapViewStore.streetViewStore = self.streetViewStore
     }
 
@@ -96,7 +97,7 @@ struct ContentView: View {
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
                     let freshSearchViewStore: SearchViewStore = {
-                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
                         let tempStore = SearchViewStore(
                             mapStore: freshMapStore,
                             sheetStore: SheetStore(emptySheetType: .search),
@@ -118,7 +119,7 @@ struct ContentView: View {
                 case .favorites:
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
                     let freshSearchViewStore: SearchViewStore = {
                         let tempStore = SearchViewStore(
                             mapStore: freshMapStore,
@@ -424,7 +425,8 @@ private extension MapViewPort {
     ContentView(
         searchStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
@@ -434,7 +436,8 @@ private extension MapViewPort {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
@@ -451,7 +454,8 @@ private extension MapViewPort {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
@@ -501,7 +505,8 @@ extension Binding where Value == Bool {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
