@@ -58,6 +58,10 @@ final class SheetStore {
         }
     }
 
+    var shouldHideMapButtons: Bool {
+        return self.sheetHeight >= UIScreen.main.bounds.height / 2
+    }
+
     // MARK: Lifecycle
 
     init(emptySheetType: SheetType) {

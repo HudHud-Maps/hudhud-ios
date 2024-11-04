@@ -271,11 +271,7 @@ struct ContentView: View {
                             CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
-                    .opacity(
-                        (self.sheetStore.selectedDetent == .nearHalf ||
-                            self.sheetStore.selectedDetent == .height(600) ||
-                            self.sheetStore.selectedDetent == .large) ? 0 : 1
-                    )
+                    .opacity(self.sheetStore.shouldHideMapButtons ? 0 : 1)
                     .padding(.horizontal)
                     .offset(y: -(self.sheetStore.sheetHeight + 8))
                     .animation(.easeInOut(duration: 0.2), value: self.sheetStore.sheetHeight)

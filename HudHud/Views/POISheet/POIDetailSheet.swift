@@ -19,6 +19,13 @@ import SwiftUI
 
 struct POIDetailSheet: View {
 
+    // MARK: Nested Types
+
+    private enum POISheetViewMetrics {
+        static let compactSheetHeight: CGFloat = UIScreen.main.bounds.height / 6 // 1/6 of the screen height
+        static let expandedSheetHeight: CGFloat = UIScreen.main.bounds.height / 4 // 1/4 of the screen height
+    }
+
     // MARK: Properties
 
     @State var pointOfInterestStore: PointOfInterestStore
@@ -35,13 +42,13 @@ struct POIDetailSheet: View {
     @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
-    @State var isBackendReady = false
-
     @ObservedObject var routingStore: RoutingStore
 
     @EnvironmentObject var notificationQueue: NotificationQueue
 
     let formatter = Formatters()
+
+    private let displayPlaceholderReviews = true // we are waiting for the backend to implement reviews
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
@@ -91,13 +98,13 @@ struct POIDetailSheet: View {
                         .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
                     self.categoryView
-                    if self.sheetStore.sheetHeight >= 150 {
-                        HStack {
+                    if self.sheetStore.sheetHeight >= POISheetViewMetrics.compactSheetHeight {
+                        HStack(spacing: 0.0) {
                             self.ratingView
                             self.priceRangeView
                             self.accessibilityView
                         }
-                        HStack {
+                        HStack(spacing: 0.0) {
                             self.openStatusView
                                 .padding(.vertical, 7)
                             self.routeInformationView
@@ -126,7 +133,7 @@ struct POIDetailSheet: View {
             }
             .padding([.top, .leading, .trailing], 15)
 
-            if self.sheetStore.sheetHeight > 300 {
+            if self.sheetStore.sheetHeight > POISheetViewMetrics.expandedSheetHeight {
                 self.tabView
 
                 ScrollView {
@@ -157,7 +164,7 @@ struct POIDetailSheet: View {
                                 .cornerRadius(14)
                             }
 
-                            if self.isBackendReady {
+                            if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
@@ -187,7 +194,7 @@ struct POIDetailSheet: View {
                                 .cornerRadius(14)
                             }
 
-                            if self.isBackendReady {
+                            if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
                                     .padding()
                                     .background(Color.Colors.General._05WhiteBackground)
@@ -304,54 +311,41 @@ struct POIDetailSheet: View {
     private var categoryView: some View { // Category · Subcategory
         Group {
             if let category = pointOfInterestStore.pointOfInterest.category {
-                HStack {
-                    Text(category)
-                        .hudhudFont(.footnote)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                        .lineLimit(2)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    if let subCategory = self.pointOfInterestStore.pointOfInterest.subCategory {
-                        Text(" · ")
-                            .hudhudFont(.caption)
-                            .fontWeight(.bold)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                        Text(subCategory)
-                            .hudhudFont(.footnote)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .lineLimit(2)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-                }
-                .padding(.vertical, 6)
+                Text("\(category)\(self.pointOfInterestStore.pointOfInterest.subCategory.map { " · \($0)" } ?? "")")
+                    .hudhudFont(.footnote)
+                    .foregroundStyle(Color.Colors.General._02Grey)
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.vertical, 6)
             }
         }
     }
 
     private var ratingView: some View { // e.g. 4 ***** · (500)
         Group {
-            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
-                HStack(spacing: 1) {
+            if let rating = pointOfInterestStore.pointOfInterest.rating {
+                HStack(spacing: 4) {
+                    // Display rating with one decimal place
                     Text("\(rating, specifier: "%.1f")")
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .fontWeight(.semibold)
 
+                    // Star icons
                     ForEach(1 ... 5, id: \.self) { index in
                         Image(systemSymbol: .starFill)
                             .font(.footnote)
-                            .foregroundColor(index <= Int(rating.rounded()) ? Color.yellow : .Colors.General._04GreyForLines)
+                            .foregroundColor(index <= Int(rating.rounded()) ? .yellow : .Colors.General._04GreyForLines)
                     }
 
-                    Text(" · ")
-                        .hudhudFont(.caption)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                        .padding(.horizontal, 6)
-                    Text("(\(self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0))")
-                        .hudhudFont(.subheadline)
-                        .foregroundStyle(Color.Colors.General._02Grey)
+                    // Optional ratings count with dot
+                    if let ratingsCount = pointOfInterestStore.pointOfInterest.ratingsCount {
+                        Text(" ·   (\(ratingsCount))")
+                            .hudhudFont(.subheadline)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                    }
                 }
+                .padding(.horizontal, 6)
             } else {
                 Text("No ratings")
                     .hudhudFont(.caption)
@@ -360,19 +354,13 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var priceRangeView: some View { // $$$
+    private var priceRangeView: some View { // · $$$
         Group {
-            if let priceRangeValue = self.pointOfInterestStore.pointOfInterest.priceRange,
+            if let priceRangeValue = pointOfInterestStore.pointOfInterest.priceRange,
                let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue) {
-                HStack {
-                    Text(" · ")
-                        .hudhudFont(.caption)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                    Text(priceRange.displayValue)
-                        .hudhudFont(.subheadline)
-                        .foregroundStyle(Color.Colors.General._02Grey)
-                }
+                Text(" ·   \(priceRange.displayValue)")
+                    .hudhudFont(.subheadline)
+                    .foregroundStyle(Color.Colors.General._02Grey)
             }
         }
     }
@@ -382,15 +370,12 @@ struct POIDetailSheet: View {
             if let wheelchairAccessible = self.pointOfInterestStore.pointOfInterest.isWheelchairAccessible, wheelchairAccessible {
                 HStack {
                     Text(" · ")
-                        .hudhudFont(.caption)
-                        .fontWeight(.bold)
-                        .foregroundStyle(Color.Colors.General._02Grey)
                     Image(systemSymbol: .figureRoll)
-                        .hudhudFont(.subheadline)
-                        .foregroundStyle(Color.Colors.General._02Grey)
                 }
             }
         }
+        .hudhudFont(.subheadline)
+        .foregroundStyle(Color.Colors.General._02Grey)
     }
 
     private var openStatusView: some View {
