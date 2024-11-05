@@ -40,18 +40,18 @@ enum StreetViewQuality: String, CaseIterable, Codable, Hashable, Identifiable {
         return self
     }
 
-    var size: CGSize? {
+    var size: ImageSize? {
         switch self {
         case .original:
             return nil
         case .medium:
-            return CGSize(width: 6752, height: 3376)
+            return ImageSize(width: 6752, height: 3376)
         case .low:
-            return CGSize(width: 6752, height: 3376)
+            return ImageSize(width: 6752, height: 3376)
         case .webp1:
-            return CGSize(width: 5500, height: 2750)
+            return ImageSize(width: 5500, height: 2750)
         case .webp2:
-            return CGSize(width: 5500, height: 2750)
+            return ImageSize(width: 5500, height: 2750)
         }
     }
 
