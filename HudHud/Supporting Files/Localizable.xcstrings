@@ -4,6 +4,15 @@
     "" : {
 
     },
+    " · " : {
+
+    },
+    " ·   (%lld)" : {
+
+    },
+    " ·   %@" : {
+
+    },
     " %@" : {
 
     },
@@ -48,6 +57,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ until %2$@"
+          }
+        }
+      }
+    },
+    "%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
           }
         }
       }
@@ -115,6 +134,17 @@
     },
     "Apply" : {
 
+    },
+    "Arrival" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrival"
+          }
+        }
+      }
     },
     "Back" : {
 
@@ -226,8 +256,30 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
+    "Distance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance"
+          }
+        }
+      }
+    },
     "Done" : {
 
+    },
+    "Duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
     },
     "Edit" : {
 
@@ -455,7 +507,7 @@
     "Reviews" : {
       "comment" : "Reviews Tab in POI Details"
     },
-    "Reviews %lld" : {
+    "Reviews (%lld)" : {
 
     },
     "Route Planner" : {
@@ -506,6 +558,9 @@
     "Show More" : {
 
     },
+    "Similar" : {
+
+    },
     "Similar Places" : {
       "comment" : "Similar Places Tab in POI Details"
     },
@@ -520,6 +575,17 @@
     },
     "Sort By" : {
 
+    },
+    "Speed Limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Limit"
+          }
+        }
+      }
     },
     "Start" : {
       "comment" : "get the navigation route",
@@ -609,50 +675,6 @@
     },
     "You Have Arrived" : {
 
-    },
-    "Arrival" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
-          }
-        }
-      }
-    },
-    "Distance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distance"
-          }
-        }
-      }
-    },
-    "Duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
-    "Speed Limit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed Limit"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

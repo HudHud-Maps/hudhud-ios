@@ -58,6 +58,10 @@ final class SheetStore {
         }
     }
 
+    var shouldHideMapButtons: Bool {
+        return self.sheetHeight >= UIScreen.main.bounds.height / 2
+    }
+
     // MARK: Lifecycle
 
     init(emptySheetType: SheetType) {
@@ -184,7 +188,7 @@ enum SheetType {
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
-            DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+            DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
         case .routePlanner:
             DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
         case .favoritesViewMore:

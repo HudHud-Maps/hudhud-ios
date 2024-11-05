@@ -148,7 +148,7 @@ struct ContentView: View {
                             pointOfInterest: item,
                             mapStore: self.mapStore,
                             sheetStore: self.sheetStore
-                        ),
+                        ), sheetStore: self.sheetStore,
                         routingStore: self.searchViewStore.routingStore,
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
@@ -285,7 +285,7 @@ struct ContentView: View {
                             CurrentLocationButton(mapStore: self.mapStore)
                         }
                     }
-                    .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
+                    .opacity(self.sheetStore.shouldHideMapButtons ? 0 : 1)
                     .padding(.horizontal)
                     .offset(y: -(self.sheetStore.sheetHeight + 8))
                     .animation(.easeInOut(duration: 0.2), value: self.sheetStore.sheetHeight)
