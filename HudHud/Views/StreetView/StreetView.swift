@@ -227,25 +227,29 @@ private extension StreetView {
         guard let url = self.getImageURL(imageName) else { return }
 
         Task {
-            let imageTask = ImagePipeline.shared.imageTask(with: url)
-            for await progress in imageTask.progress {
-                self.store.progress = progress.fraction
-            }
-            var image = try await imageTask.image
+            do {
+                let imageTask = ImagePipeline.shared.imageTask(with: url)
+                for await progress in imageTask.progress {
+                    self.store.progress = progress.fraction
+                }
+                var image = try await imageTask.image
 
-            // Some older devices might crash with full size images
-            // For testing we have the option to request full size images from the server
-            // Once we agree on the right size & quality we will request compatible images
-            // for every device, then we can remove this
-            let targetSize = image.size.clipToMaximumSupportedTextureSize()
-            if image.size.width > targetSize.width || image.size.height > targetSize.height {
-                image = image.resize(targetSize, scale: 1)
-            }
+                // Some older devices might crash with full size images
+                // For testing we have the option to request full size images from the server
+                // Once we agree on the right size & quality we will request compatible images
+                // for every device, then we can remove this
+                let targetSize = image.size.clipToMaximumSupportedTextureSize()
+                if image.size.width > targetSize.width || image.size.height > targetSize.height {
+                    image = image.resize(targetSize, scale: 1)
+                }
 
-            PanoramaManager.shouldUpdateImage = true
-            PanoramaManager.shouldResetCameraAngle = false
-            self.store.svimage = image
-            self.store.isLoading = false
+                PanoramaManager.shouldUpdateImage = true
+                PanoramaManager.shouldResetCameraAngle = false
+                self.store.svimage = image
+                self.store.isLoading = false
+            } catch {
+                self.store.errorMsg = error.localizedDescription
+            }
         }
     }
 }
