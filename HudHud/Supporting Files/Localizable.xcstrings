@@ -4,6 +4,15 @@
     "" : {
 
     },
+    " · " : {
+
+    },
+    " ·   (%lld)" : {
+
+    },
+    " ·   %@" : {
+
+    },
     " %@" : {
 
     },
@@ -48,6 +57,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ until %2$@"
+          }
+        }
+      }
+    },
+    "%@%@" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@%2$@"
           }
         }
       }
@@ -104,7 +123,10 @@
         }
       }
     },
+
     "Add photos and videos" : {
+    },
+    "Add Stop" : {
 
     },
     "Add Type" : {
@@ -115,6 +137,17 @@
     },
     "Apply" : {
 
+    },
+    "Arrival" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrival"
+          }
+        }
+      }
     },
     "Back" : {
 
@@ -232,13 +265,38 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
+    "Distance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance"
+          }
+        }
+      }
+    },
     "Done" : {
 
+    },
+    "Duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
     },
     "Edit" : {
 
     },
     "Enable location in permissions" : {
+
+    },
+    "Enable new Route Planner design" : {
 
     },
     "Enable Touch Visualizer" : {
@@ -461,7 +519,10 @@
     "Reviews" : {
       "comment" : "Reviews Tab in POI Details"
     },
-    "Reviews %lld" : {
+    "Reviews (%lld)" : {
+
+    },
+    "Route Planner" : {
 
     },
     "Routing Configuration" : {
@@ -512,6 +573,9 @@
     "Show More" : {
 
     },
+    "Similar" : {
+
+    },
     "Similar Places" : {
       "comment" : "Similar Places Tab in POI Details"
     },
@@ -527,6 +591,17 @@
     "Sort By" : {
 
     },
+    "Speed Limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Limit"
+          }
+        }
+      }
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -538,6 +613,9 @@
           }
         }
       }
+    },
+    "Start Trip" : {
+
     },
     "StreetView Quality" : {
 
@@ -615,50 +693,6 @@
     },
     "You Have Arrived" : {
 
-    },
-    "Arrival" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
-          }
-        }
-      }
-    },
-    "Distance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distance"
-          }
-        }
-      }
-    },
-    "Duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
-    "Speed Limit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed Limit"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

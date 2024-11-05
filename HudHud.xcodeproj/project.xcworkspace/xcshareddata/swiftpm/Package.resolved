@@ -95,8 +95,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/mattpolzin/OpenAPIKit",
       "state" : {
-        "revision" : "5b5ee49624dda5b3e3b85aff184f44a007862fb7",
-        "version" : "3.3.0"
+        "revision" : "35dd374038497a8118d89300851861fb40c36209",
+        "version" : "3.2.2"
       }
     },
     {
@@ -266,8 +266,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/davdroman/swiftui-navigation-transitions.git",
       "state" : {
-        "revision" : "76ae9c621422a1f38c30a07c8b7636994b669484",
-        "version" : "0.14.0"
+        "revision" : "ad6ecab3f275fd0ff30959150dec0f14a5b7a245",
+        "version" : "0.13.4"
       }
     },
     {

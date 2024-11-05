@@ -22,7 +22,6 @@ struct FavoritesViewMoreView: View {
     @State var actionSheetShown: Bool = false
     @State var searchSheetShown: Bool = false
     @State var clickedFavorite: FavoritesItem = .favoriteForPreview
-    @Environment(\.dismiss) var dismiss
     @ObservedObject var favoritesStore: FavoritesStore
     @StateObject var filterStore = FilterStore()
 
@@ -35,7 +34,7 @@ struct FavoritesViewMoreView: View {
                     switch self.searchStore.searchType {
                     case .returnPOILocation, .favorites:
                         Button("Cancel") {
-                            self.dismiss()
+                            self.sheetStore.popSheet()
                         }
                         .foregroundColor(.gray)
                         .padding(.trailing)
@@ -107,7 +106,7 @@ struct FavoritesViewMoreView: View {
 
     func searchSheetView() -> some View {
         let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
         let freshSheetStore = SheetStore(emptySheetType: .search)
         let freshSearchViewStore = SearchViewStore(
             mapStore: freshMapStore,

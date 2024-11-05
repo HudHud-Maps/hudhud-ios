@@ -29,6 +29,7 @@ struct MapViewContainer<SheetContentView: View>: View {
     @ObservedObject var routingStore: RoutingStore
     let streetViewStore: StreetViewStore
     let mapViewStore: MapViewStore
+    let routesPlanMapDrawer: RoutesPlanMapDrawer
 
     @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
@@ -53,6 +54,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         routingStore: RoutingStore,
         sheetStore: SheetStore,
         streetViewStore: StreetViewStore,
+        routesPlanMapDrawer: RoutesPlanMapDrawer,
         @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
@@ -63,6 +65,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         self.streetViewStore = streetViewStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
+        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.sheetToView = sheetToView
     }
 
@@ -142,13 +145,12 @@ private extension MapViewContainer {
 
         // Routes
         layers += makeAlternativeRouteLayers()
-        if let selectedRoute = routingStore.selectedRoute {
+        if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
             layers += makeSelectedRouteLayers(for: selectedRoute)
         }
 
         // Congestion
-        let allRoutes = self.routingStore.alternativeRoutes + [self.routingStore.selectedRoute].compactMap { $0 }
-        layers += makeCongestionLayers(for: allRoutes)
+        layers += makeCongestionLayers(for: self.routesPlanMapDrawer.routes)
 
         // Custom Symbols
         if shouldShowCustomSymbols {
@@ -183,11 +185,10 @@ private extension MapViewContainer {
             .unsafeMapViewControllerModifier(configureMapViewController)
             .onTapMapGesture(on: tappableLayers) { context, features in
                 if let feature = features.first,
-                   let routeId = feature.attributes["routeId"] as? Int,
-                   let route = routingStore.alternativeRoutes.first(where: { $0.id == routeId }) {
-                    self.routingStore.selectRoute(withId: route.id)
+                   let routeID = feature.attributes["routeId"] as? Int {
+                    self.routesPlanMapDrawer.selectRoute(withID: routeID)
                 } else {
-                    if features.isEmpty, !self.routingStore.routes.isEmpty { return }
+                    if features.isEmpty, !self.routesPlanMapDrawer.routes.isEmpty { return }
                     self.mapViewStore.didTapOnMap(coordinates: context.coordinate, containing: features)
                 }
             }
@@ -323,6 +324,7 @@ private extension MapViewContainer {
     @MainActor
     func stopNavigation() {
         self.searchViewStore.endTrip()
+        self.sheetStore.popToRoot()
         self.sheetStore.isShown.value = true
 
         if let coordinates = routingStore.locationProvider.lastLocation?.coordinates {
