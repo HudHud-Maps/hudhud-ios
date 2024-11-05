@@ -144,14 +144,10 @@ struct PhotoSectionView: View {
             if self.item.mediaURLs.count >= 5 {
                 self.actionButton(title: "View All", imageName: "photoLibrary", isSmallButton: true) {
                     // Action for View All
-                    #warning("Implement action for View All")
-                    assertionFailure("View All action not implemented yet")
                 }
             }
             self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count > 5 ? true : false) {
                 // Action for add Photo
-                #warning("Implement action for add photo")
-                assertionFailure("Add Photo action not implemented yet")
             }
         }
     }
