@@ -26,6 +26,7 @@ struct HudHudApp: App {
     @State private var sheetStore: SheetStore
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
+    @State private var routesPlanMapDrawer: RoutesPlanMapDrawer
 
     // MARK: Computed Properties
 
@@ -34,7 +35,8 @@ struct HudHudApp: App {
             ContentView(
                 searchStore: self.searchStore,
                 mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore
+                sheetStore: self.sheetStore,
+                routesPlanMapDrawer: self.routesPlanMapDrawer
             )
             .onAppear {
                 self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
@@ -47,10 +49,14 @@ struct HudHudApp: App {
     init() {
         let sheetStore = SheetStore(emptySheetType: .search)
         self.sheetStore = sheetStore
+
+        let routesPlanMapDrawer = RoutesPlanMapDrawer()
+        self.routesPlanMapDrawer = routesPlanMapDrawer
+
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
         let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
-        let routingStore = RoutingStore(mapStore: mapStore)
+        let routingStore = RoutingStore(mapStore: mapStore, routesPlanMapDrawer: routesPlanMapDrawer)
         self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
         self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
         self.mapStore = mapStore

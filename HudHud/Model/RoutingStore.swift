@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Combine
 import FerrostarCore
 import FerrostarCoreFFI
 import Foundation
@@ -53,13 +54,22 @@ final class RoutingStore: ObservableObject {
 
     @Published var routes: [Route] = []
 
-    private let spokenInstructionObserver = AVSpeechSpokenInstructionObserver(
-        isMuted: false)
+    let locationProvider: LocationProviding
+
+    let locationManager: HudHudLocationManager
+
+    @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
     private let navigationDelegate = NavigationDelegate()
+    private let routesPlanMapDrawer: RoutesPlanMapDrawer
+    private var routePlanSubscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
+
+    var isMuted: Bool {
+        self.spokenInstructionObserver.isMuted
+    }
 
     var alternativeRoutes: [Route] {
         self.routes.filter {
@@ -88,14 +98,15 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore) {
+    init(mapStore: MapStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
         self.mapStore = mapStore
+        self.routesPlanMapDrawer = routesPlanMapDrawer
 
         let provider: LocationProviding
 
         if DebugStore().simulateRide {
             let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 3
+            simulated.warpFactor = 1
             provider = simulated
         } else {
             provider = CoreLocationProvider(
@@ -103,6 +114,9 @@ final class RoutingStore: ObservableObject {
                 allowBackgroundLocationUpdates: true
             )
         }
+
+        self.locationProvider = provider
+        self.locationManager = HudHudLocationManager(locationProvider: provider)
 
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.
@@ -118,17 +132,27 @@ final class RoutingStore: ObservableObject {
         self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
             customRouteProvider: self.hudHudGraphHopperRouteProvider,
             locationProvider: provider,
-            navigationControllerConfig: config
+            navigationControllerConfig: config,
+            annotation: AnnotationPublisher<ValhallaExtendedOSRMAnnotation>.valhallaExtendedOSRM()
         ))
 
         self.ferrostarCore.delegate = self.navigationDelegate
         self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
+        self.bindRoutePlanActions()
     }
 
     // MARK: Functions
 
+    func toggleMute() {
+        self.spokenInstructionObserver.toggleMute()
+    }
+
     func startNavigation() {
         self.navigatingRoute = self.selectedRoute
+    }
+
+    func startNavigation(to route: Route) {
+        self.navigatingRoute = route
     }
 
     func cancelCurrentRoutePlan() {
@@ -219,10 +243,43 @@ private extension RoutingStore {
     func reroute(with route: Route) async {
         self.navigatingRoute = route
     }
+
+    func bindRoutePlanActions() {
+        self.routesPlanMapDrawer.routePlanEvents.sink { [weak self] event in
+            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            switch event {
+            case let .didSelectRoute(routeID):
+                if let route = self.routes.first(where: { $0.id == routeID }) {
+                    self.selectedRoute = route
+                }
+            }
+        }
+        .store(in: &self.routePlanSubscriptions)
+        Publishers.CombineLatest(self.$routes, self.$selectedRoute).sink { [weak self] routes, selectedRoute in
+            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            if routes.isEmpty {
+                self.routesPlanMapDrawer.clear()
+            } else if let selectedRoute = selectedRoute ?? routes.first {
+                self.routesPlanMapDrawer.drawRoutes(
+                    routes: routes,
+                    selectedRoute: selectedRoute,
+                    waypoints: (self.waypoints ?? []).map { waypoint in
+                        switch waypoint {
+                        case let .myLocation(waypoint):
+                            RouteWaypoint(type: .userLocation(Coordinates(waypoint.cLCoordinate)), title: "User Location")
+                        case let .waypoint(item):
+                            RouteWaypoint(type: .location(item), title: item.title)
+                        }
+                    }
+                )
+            }
+        }
+        .store(in: &self.routePlanSubscriptions)
+    }
 }
 
 // MARK: - Previewable
 
 extension RoutingStore: Previewable {
-    static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = RoutingStore(mapStore: .storeSetUpForPreviewing, routesPlanMapDrawer: RoutesPlanMapDrawer())
 }

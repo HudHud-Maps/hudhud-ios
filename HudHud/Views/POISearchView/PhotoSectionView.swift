@@ -98,6 +98,7 @@ struct PhotoSectionView: View {
 
             self.imageView(for: self.item.mediaURLs[4], label: self.item.title, size: ImageSizes.small)
         }
+        .padding()
     }
 
     @ViewBuilder

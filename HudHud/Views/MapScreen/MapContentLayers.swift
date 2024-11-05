@@ -9,8 +9,6 @@
 import BackendService
 import FerrostarCore
 import FerrostarCoreFFI
-import FerrostarMapLibreUI
-import FerrostarSwiftUI
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -20,7 +18,7 @@ import SwiftUI
 extension MapViewContainer {
     @MapViewContentBuilder
     func makeAlternativeRouteLayers() -> [StyleLayerDefinition] {
-        self.routingStore.alternativeRoutes.enumerated().flatMap { index, route in
+        self.routesPlanMapDrawer.alternativeRoutes.enumerated().flatMap { index, route in
 
             let feature = MLNPolylineFeature(coordinates: route.geometry.clLocationCoordinate2Ds)
             feature.attributes = ["routeId": route.id]
@@ -28,7 +26,7 @@ extension MapViewContainer {
                 feature
             }
 
-            let routePoints = self.routingStore.routePoints
+            let routeStops = self.routesPlanMapDrawer.routeStops
 
             let layers: [StyleLayerDefinition] = [
                 LineStyleLayer(
@@ -57,7 +55,7 @@ extension MapViewContainer {
 
                 CircleStyleLayer(
                     identifier: MapLayerIdentifier.simpleCirclesRoute + "\(route.id)",
-                    source: routePoints
+                    source: routeStops
                 )
                 .radius(16)
                 .color(.systemRed)
@@ -66,7 +64,7 @@ extension MapViewContainer {
 
                 SymbolStyleLayer(
                     identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(route.id)",
-                    source: routePoints
+                    source: routeStops
                 )
                 .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
                 .iconColor(.white)

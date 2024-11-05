@@ -21,6 +21,8 @@ class DebugStore: ObservableObject {
 
     @AppStorage("simulateRide") var simulateRide: Bool = UIApplication.environment == .development
     @AppStorage("streetViewQuality") var streetViewQuality: StreetViewQuality = .original
+    @AppStorage("enableNewRoutePlanner") var enableNewRoutePlanner = false
+    @AppStorage("showLocationDiagmosticLogs") var showLocationDiagmosticLogs: Bool = false
 }
 
 // MARK: - StreetViewQuality
