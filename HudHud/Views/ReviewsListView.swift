@@ -20,13 +20,19 @@ struct ReviewsListView: View {
     // MARK: Content
 
     var body: some View {
-        Section(header: ReviewsHeaderView(reviewsCount: self.reviews.count)) {
-            List(self.reviews, id: \.id) { review in
+        VStack(alignment: .leading, spacing: 8) {
+            ReviewsHeaderView(reviewsCount: self.reviews.count)
+            ForEach(self.reviews, id: \.id) { review in
                 ReviewSectionView(review: review)
                     .padding(.vertical, 8)
+                if review.id != self.reviews.last?.id {
+                    Divider()
+                }
             }
-            .listStyle(.plain)
         }
+        .padding()
+        .background(Color.Colors.General._05WhiteBackground)
+        .cornerRadius(14)
     }
 }
 
@@ -42,7 +48,7 @@ struct ReviewsHeaderView: View {
 
     var body: some View {
         HStack {
-            Text("Reviews \(self.reviewsCount)")
+            Text("Reviews (\(self.reviewsCount))")
                 .hudhudFont(.headline)
                 .foregroundColor(.Colors.General._01Black)
             Spacer()
@@ -58,7 +64,6 @@ struct ReviewsHeaderView: View {
                 .foregroundColor(.Colors.General._06DarkGreen)
             }
         }
-        .padding(.horizontal)
     }
 }
 
@@ -108,6 +113,7 @@ struct UserView: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(self.review.username)
                     .hudhudFont(.headline)
+                    .foregroundColor(.Colors.General._01Black)
                 Text("From \(self.review.userType)")
                     .hudhudFont(.subheadline)
                     .foregroundColor(.Colors.General._02Grey)
@@ -259,42 +265,10 @@ struct BottomBar: View {
     }
 }
 
-// swiftlint:disable force_unwrapping
-#Preview {
-    let review = Review(
-        username: "Ahmad Kamal",
-        userType: "Trip Advisor", userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
-        rating: 4,
-        date: "12 September 2024",
-        reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
-        images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!],
-        isUseful: false,
-        usefulCount: 15
-    )
-    ReviewSectionView(review: review)
+#Preview("Single review") {
+    ReviewSectionView(review: Review.reviewForPreview)
 }
 
-#Preview {
-    let reviews = [Review(
-        username: "Ahmad Kamal",
-        userType: "Trip Advisor", userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
-        rating: 4,
-        date: "12 September 2024",
-        reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
-        images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!],
-        isUseful: false,
-        usefulCount: 15
-    ), Review(
-        username: "Noura Ahmed",
-        userType: "Trip Advisor", userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!,
-        rating: 4,
-        date: "12 September 2024",
-        reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
-        images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!, URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!, URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77")!],
-        isUseful: false,
-        usefulCount: 15
-    )]
-    ReviewsListView(reviews: reviews)
+#Preview("List of reviews") {
+    ReviewsListView(reviews: Review.listOfReviewsForPreview)
 }
-
-// swiftlint:enable force_unwrapping

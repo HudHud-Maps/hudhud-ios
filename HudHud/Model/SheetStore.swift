@@ -58,6 +58,10 @@ final class SheetStore {
         }
     }
 
+    var shouldHideMapButtons: Bool {
+        return self.sheetHeight >= UIScreen.main.bounds.height / 2
+    }
+
     // MARK: Lifecycle
 
     init(emptySheetType: SheetType) {
@@ -155,14 +159,15 @@ enum NavigationCommand {
 
 // MARK: - SheetType
 
-enum SheetType: Hashable {
+enum SheetType {
     case search
     case mapStyle
     case debugView
-    case navigationAddSearchView
+    case navigationAddSearchView((ResolvedItem) -> Void)
     case favorites
     case navigationPreview
     case pointOfInterest(ResolvedItem)
+    case routePlanner(RoutePlannerStore)
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
 
@@ -183,7 +188,9 @@ enum SheetType: Hashable {
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
-            DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+            DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
+        case .routePlanner:
+            DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
