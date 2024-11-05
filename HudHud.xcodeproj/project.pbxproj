@@ -176,6 +176,7 @@
 		CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C3682BBBFF27009C3A1C /* CameraState.swift */; };
 		CD71C36B2BBC0F72009C3A1C /* PresentationDetent.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */; };
 		CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */; };
+		CD79C3A62CDA050F003C060E /* riyadh-pharmacy-route.json in Resources */ = {isa = PBXBuildFile; fileRef = CD79C3A52CDA050F003C060E /* riyadh-pharmacy-route.json */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
@@ -391,6 +392,7 @@
 		CD71C3682BBBFF27009C3A1C /* CameraState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraState.swift; sourceTree = "<group>"; };
 		CD71C36A2BBC0F72009C3A1C /* PresentationDetent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationDetent.swift; sourceTree = "<group>"; };
 		CD71C36C2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
+		CD79C3A52CDA050F003C060E /* riyadh-pharmacy-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "riyadh-pharmacy-route.json"; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -918,6 +920,7 @@
 			isa = PBXGroup;
 			children = (
 				CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */,
+				CD79C3A52CDA050F003C060E /* riyadh-pharmacy-route.json */,
 				CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */,
 				CDAE054E2B681263003E5196 /* Preview Assets.xcassets */,
 			);
@@ -1284,6 +1287,7 @@
 				90CBC72B2BD79D4C00F98199 /* InfoPlist.xcstrings in Resources */,
 				F3D48123732491BBDEC771AF /* PrivacyInfo.xcprivacy in Resources */,
 				0CC00B002CD271C300A2D1A8 /* Directions.xcassets in Resources */,
+				CD79C3A62CDA050F003C060E /* riyadh-pharmacy-route.json in Resources */,
 				F4A353E85F0E0AF34C4240CE /* PlusJakartaSans-ExtraLight.ttf in Resources */,
 				73F84F1D2466A9DB8AF62C57 /* PlusJakartaSans-ExtraLightItalic.ttf in Resources */,
 				AA7A284F8F6608D1842A4011 /* PlusJakartaSans-BoldItalic.ttf in Resources */,

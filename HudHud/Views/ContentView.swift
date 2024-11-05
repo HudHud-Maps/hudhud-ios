@@ -10,6 +10,7 @@ import BackendService
 import BetterSafariView
 import CoreLocation
 import FerrostarCore
+import FerrostarCoreFFI
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -436,48 +437,40 @@ private extension Binding where Value == Bool {
                        sheetStore: .storeSetUpForPreviewing)
 }
 
-// MARK: - ContentView_Previews
+#Preview("NavigationPreview") {
+    let poi = ResolvedItem(id: UUID().uuidString,
+                           title: "Pharmacy",
+                           subtitle: "Al-Olya - Riyadh",
+                           type: .hudhud,
+                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                           phone: "0503539560",
+                           website: URL(string: "https://hudhud.sa"))
 
-// #Preview("NavigationPreview") {
-struct ContentView_Previews: PreviewProvider {
+    let userLocationStore = UserLocationStore(location: .storeSetUpForPreviewing)
+    let mapStore = MapStore(camera: .center(poi.coordinate, zoom: 14), userLocationStore: userLocationStore)
+    let sheetStore = SheetStore(emptySheetType: .pointOfInterest(poi))
+    let mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
+    let routingStore = RoutingStore(mapStore: mapStore)
 
-    static var previews: some View {
-        let poi = ResolvedItem(id: UUID().uuidString,
-                               title: "Pharmacy",
-                               subtitle: "Al-Olya - Riyadh",
-                               type: .hudhud,
-                               coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                               phone: "0503539560",
-                               website: URL(string: "https://hudhud.sa"))
+    let searchViewStore = SearchViewStore(mapStore: mapStore,
+                                          sheetStore: sheetStore,
+                                          routingStore: routingStore,
+                                          filterStore: FilterStore(),
+                                          mode: .preview)
 
-        let userLocationStore = UserLocationStore(location: .storeSetUpForPreviewing)
-        let mapStore = MapStore(camera: .center(poi.coordinate, zoom: 14), userLocationStore: userLocationStore)
-        let sheetStore = SheetStore(emptySheetType: .pointOfInterest(poi))
-        let mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
-        let routingStore = RoutingStore(mapStore: mapStore)
+    let url = Bundle.main.url(forResource: "riyadh-pharmacy-route", withExtension: "json")!
+    let data = try! Data(contentsOf: url)
+    let parser = createOsrmResponseParser(polylinePrecision: 6)
+    let routes = try! parser.parseResponse(response: data)
 
-        let searchViewStore = SearchViewStore(mapStore: mapStore,
-                                              sheetStore: sheetStore,
-                                              routingStore: routingStore,
-                                              filterStore: FilterStore(),
-                                              mode: .preview)
-
-        Task {
-            let routes = try await routingStore.calculateRoutes(for: [
-                .init(coordinate: .riyadh),
-                .init(coordinate: poi.coordinate)
-            ])
-            if let route = routes.first {
-                routingStore.routes = routes
-                routingStore.selectRoute(withId: routes[0].id)
-                print("start route")
-            }
-        }
-
-        return ContentView(searchViewStore: searchViewStore,
-                           mapViewStore: mapViewStore,
-                           sheetStore: sheetStore)
+    if let route = routes.first {
+        routingStore.routes = routes
+        routingStore.selectRoute(withId: routes[0].id)
     }
+
+    return ContentView(searchViewStore: searchViewStore,
+                       mapViewStore: mapViewStore,
+                       sheetStore: sheetStore)
 }
 
 // MARK: - Preview
