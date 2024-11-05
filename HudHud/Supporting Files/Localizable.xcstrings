@@ -4,9 +4,6 @@
     "" : {
 
     },
-    " " : {
-
-    },
     " · " : {
 
     },
@@ -126,6 +123,9 @@
         }
       }
     },
+    "Add Stop" : {
+
+    },
     "Add Type" : {
 
     },
@@ -134,6 +134,17 @@
     },
     "Apply" : {
 
+    },
+    "Arrival" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrival"
+          }
+        }
+      }
     },
     "Back" : {
 
@@ -245,13 +256,38 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
+    "Distance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance"
+          }
+        }
+      }
+    },
     "Done" : {
 
+    },
+    "Duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
     },
     "Edit" : {
 
     },
     "Enable location in permissions" : {
+
+    },
+    "Enable new Route Planner design" : {
 
     },
     "Enable Touch Visualizer" : {
@@ -474,6 +510,9 @@
     "Reviews (%lld)" : {
 
     },
+    "Route Planner" : {
+
+    },
     "Routing Configuration" : {
 
     },
@@ -537,6 +576,17 @@
     "Sort By" : {
 
     },
+    "Speed Limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Limit"
+          }
+        }
+      }
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -548,6 +598,9 @@
           }
         }
       }
+    },
+    "Start Trip" : {
+
     },
     "StreetView Quality" : {
 
@@ -622,50 +675,6 @@
     },
     "You Have Arrived" : {
 
-    },
-    "Arrival" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
-          }
-        }
-      }
-    },
-    "Distance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distance"
-          }
-        }
-      }
-    },
-    "Duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
-    "Speed Limit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed Limit"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

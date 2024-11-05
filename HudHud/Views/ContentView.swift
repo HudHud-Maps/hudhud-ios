@@ -40,6 +40,7 @@ struct ContentView: View {
 
     @State private var streetViewStore: StreetViewStore
     @State private var sheetSize: CGSize = .zero
+    private var routesPlanMapDrawer: RoutesPlanMapDrawer
 
     @StateObject private var notificationQueue = NotificationQueue()
 
@@ -53,7 +54,7 @@ struct ContentView: View {
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore) {
+    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
         self.searchViewStore = searchStore
         self.sheetStore = sheetStore
         self.mapStore = searchStore.mapStore
@@ -62,6 +63,7 @@ struct ContentView: View {
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
         self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
+        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.mapViewStore.streetViewStore = self.streetViewStore
     }
 
@@ -77,7 +79,8 @@ struct ContentView: View {
                 mapViewStore: self.mapViewStore,
                 routingStore: self.searchViewStore.routingStore,
                 sheetStore: self.sheetStore,
-                streetViewStore: self.streetViewStore
+                streetViewStore: self.streetViewStore,
+                routesPlanMapDrawer: self.routesPlanMapDrawer
             ) { sheetType in
                 switch sheetType {
                 case .mapStyle:
@@ -90,11 +93,11 @@ struct ContentView: View {
                             self.sheetStore.popToRoot()
                         })
                         .navigationBarBackButtonHidden()
-                case .navigationAddSearchView:
+                case let .navigationAddSearchView(onAddItem):
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
                     let freshSearchViewStore: SearchViewStore = {
-                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
                         let tempStore = SearchViewStore(
                             mapStore: freshMapStore,
                             sheetStore: SheetStore(emptySheetType: .search),
@@ -102,9 +105,7 @@ struct ContentView: View {
                             filterStore: self.searchViewStore.filterStore,
                             mode: self.searchViewStore.mode
                         )
-                        tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
-                            routingStore.add(item)
-                        })
+                        tempStore.searchType = .returnPOILocation(completion: onAddItem)
                         return tempStore
                     }()
                     SearchSheet(
@@ -118,7 +119,7 @@ struct ContentView: View {
                 case .favorites:
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
                     let freshSearchViewStore: SearchViewStore = {
                         let tempStore = SearchViewStore(
                             mapStore: freshMapStore,
@@ -152,6 +153,17 @@ struct ContentView: View {
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
+                        if self.debugStore.enableNewRoutePlanner {
+                            self.sheetStore.show(.routePlanner(RoutePlannerStore(
+                                sheetStore: self.sheetStore,
+                                userLocationStore: self.userLocationStore,
+                                mapStore: self.mapStore,
+                                routingStore: self.searchViewStore.routingStore,
+                                routesPlanMapDrawer: self.routesPlanMapDrawer,
+                                destination: item
+                            )))
+                            return
+                        }
                         Task {
                             do {
                                 try await self.searchViewStore.routingStore.showRoutes(
@@ -170,6 +182,8 @@ struct ContentView: View {
                         self.sheetStore.popSheet()
                     }
                     .navigationBarBackButtonHidden()
+                case let .routePlanner(store):
+                    RoutePlannerView(routePlannerStore: store)
                 case .favoritesViewMore:
                     FavoritesViewMoreView(
                         searchStore: self.searchViewStore,
@@ -411,7 +425,8 @@ private extension MapViewPort {
     ContentView(
         searchStore: .storeSetUpForPreviewing,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
@@ -421,7 +436,8 @@ private extension MapViewPort {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
@@ -438,7 +454,8 @@ private extension MapViewPort {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
@@ -488,7 +505,8 @@ extension Binding where Value == Bool {
     return ContentView(
         searchStore: store,
         mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
+        sheetStore: .storeSetUpForPreviewing,
+        routesPlanMapDrawer: RoutesPlanMapDrawer()
     )
 }
 
