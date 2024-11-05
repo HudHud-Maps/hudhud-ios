@@ -99,7 +99,18 @@ public extension CLLocationCoordinate2D {
     func formatted() -> String {
         let formatter = LocationCoordinateFormatter()
         formatter.format = .decimalDegrees
-        return formatter.string(from: self) ?? "Invalid Coordinates" // "48.11638° N, 122.74231° W"
+        if let formattedString = formatter.string(from: self) {
+            // Remove directional indicators (N, S, E, W) and the degree symbol (°)
+            let cleanedString = formattedString
+                .replacingOccurrences(of: "N", with: "")
+                .replacingOccurrences(of: "S", with: "")
+                .replacingOccurrences(of: "E", with: "")
+                .replacingOccurrences(of: "W", with: "")
+                .replacingOccurrences(of: "°", with: "")
+                .trimmingCharacters(in: .whitespaces)
+            return cleanedString
+        }
+        return "Invalid Coordinates"
     }
 }
 

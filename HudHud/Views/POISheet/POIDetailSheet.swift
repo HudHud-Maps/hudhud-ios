@@ -95,8 +95,21 @@ struct POIDetailSheet: View {
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(self.sheetStore.sheetHeight < 220 ? 1 : 2)
-                        .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    // if here
+                    if self.pointOfInterestStore.pointOfInterest.title == "Dropped Pin" {
+                        HStack {
+                            Text(self.pointOfInterestStore.pointOfInterest.coordinate.formatted())
+                                .hudhudFont(.subheadline)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                                .multilineTextAlignment(.leading)
+                            Text(" · ")
+                                .hudhudFont(.subheadline)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                            self.routeInformationView
+                        }
+                        .padding(.vertical, 5)
+                    }
                     self.categoryView
                     if self.sheetStore.sheetHeight >= POISheetViewMetrics.compactSheetHeight {
                         HStack(spacing: 0.0) {
@@ -402,7 +415,6 @@ struct POIDetailSheet: View {
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
                 }
             }
         }
