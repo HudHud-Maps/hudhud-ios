@@ -397,7 +397,7 @@ public extension Route {
 
 // MARK: - Route + Identifiable
 
-extension Route: Identifiable {
+extension Route: @retroactive Identifiable {
     public var id: Int {
         return self.hashValue
     }
