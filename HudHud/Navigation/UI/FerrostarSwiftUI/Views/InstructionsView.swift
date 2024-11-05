@@ -140,7 +140,7 @@ public struct InstructionsView: View {
                     GeometryReader { geometry in
                         Color.clear.onAppear {
                             self.sizeWhenNotExpanded = geometry.size
-                        }.onChange(of: geometry.size) { newValue in
+                        }.onChange(of: geometry.size) { _, newValue in
                             self.sizeWhenNotExpanded = newValue
                         }.onDisappear {
                             self.sizeWhenNotExpanded = .zero
