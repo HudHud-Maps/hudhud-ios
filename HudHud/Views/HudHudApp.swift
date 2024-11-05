@@ -31,14 +31,12 @@ struct HudHudApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(
-                searchStore: self.searchStore,
-                mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore
-            )
-            .onAppear {
-                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-            }
+            ContentView(searchViewStore: self.searchStore,
+                        mapViewStore: self.mapViewStore,
+                        sheetStore: self.sheetStore)
+                .onAppear {
+                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+                }
         }
     }
 

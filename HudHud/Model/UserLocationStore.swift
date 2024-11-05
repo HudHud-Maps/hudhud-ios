@@ -63,6 +63,11 @@ final class UserLocationStore: ObservableObject {
         self.monitorPermissionsTask?.cancel()
     }
 
+    private init(previewLocation: CLLocation) {
+        self.location = .storeSetUpForPreviewing
+        self.currentUserLocation = previewLocation
+    }
+
     // MARK: Functions
 
     func location(allowCached: Bool = true) async -> CLLocation? {
@@ -152,7 +157,7 @@ private extension UserLocationStore {
 // MARK: - Previewable
 
 extension UserLocationStore: Previewable {
-    static let storeSetUpForPreviewing = UserLocationStore(location: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = UserLocationStore(previewLocation: .riyadh)
 }
 
 // MARK: - Location + Previewable

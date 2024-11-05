@@ -9,6 +9,7 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
+import FerrostarCore
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -16,6 +17,7 @@ import NavigationTransitions
 import OSLog
 import SFSafeSymbols
 import SimpleToast
+import SwiftLocation
 import SwiftUI
 import TouchVisualizer
 
@@ -53,15 +55,15 @@ struct ContentView: View {
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore) {
-        self.searchViewStore = searchStore
+    init(searchViewStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore) {
+        self.searchViewStore = searchViewStore
         self.sheetStore = sheetStore
-        self.mapStore = searchStore.mapStore
-        self.userLocationStore = searchStore.mapStore.userLocationStore
+        self.mapStore = searchViewStore.mapStore
+        self.userLocationStore = searchViewStore.mapStore.userLocationStore
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
+        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
         self.mapViewStore.streetViewStore = self.streetViewStore
     }
 
@@ -392,57 +394,18 @@ private extension MapViewPort {
         let longitudeSpan = (spanX / 2) / (111_320.0 * cos(latInRad))
 
         // North-west (top-left) coordinate
-        let northWest = CLLocationCoordinate2D(
-            latitude: self.center.latitude + latitudeSpan,
-            longitude: self.center.longitude - longitudeSpan
-        )
+        let northWest = CLLocationCoordinate2D(latitude: self.center.latitude + latitudeSpan,
+                                               longitude: self.center.longitude - longitudeSpan)
 
         // South-east (bottom-right) coordinate
-        let southEast = CLLocationCoordinate2D(
-            latitude: self.center.latitude - latitudeSpan,
-            longitude: self.center.longitude + longitudeSpan
-        )
+        let southEast = CLLocationCoordinate2D(latitude: self.center.latitude - latitudeSpan,
+                                               longitude: self.center.longitude + longitudeSpan)
 
         return (northWest, southEast)
     }
 }
 
-#Preview("Main Map") {
-    ContentView(
-        searchStore: .storeSetUpForPreviewing,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-#Preview("Touch Testing") {
-    let store: SearchViewStore = .storeSetUpForPreviewing
-    store.searchText = "shops"
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-#Preview("NavigationPreview") {
-    let store: SearchViewStore = .storeSetUpForPreviewing
-
-    let poi = ResolvedItem(id: UUID().uuidString,
-                           title: "Pharmacy",
-                           subtitle: "Al-Olya - Riyadh",
-                           type: .hudhud,
-                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                           phone: "0503539560",
-                           website: URL(string: "https://hudhud.sa"))
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-extension Binding where Value == Bool {
+private extension Binding where Value == Bool {
 
     static func && (_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
         return Binding<Bool>(get: { lhs.wrappedValue && rhs.wrappedValue },
@@ -457,9 +420,69 @@ extension Binding where Value == Bool {
     }
 }
 
+// MARK: - Previews
+
+#Preview("Main Map") {
+    ContentView(searchViewStore: .storeSetUpForPreviewing,
+                mapViewStore: .storeSetUpForPreviewing,
+                sheetStore: .storeSetUpForPreviewing)
+}
+
+#Preview("Touch Testing") {
+    let store: SearchViewStore = .storeSetUpForPreviewing
+    store.searchText = "shops"
+    return ContentView(searchViewStore: store,
+                       mapViewStore: .storeSetUpForPreviewing,
+                       sheetStore: .storeSetUpForPreviewing)
+}
+
+// MARK: - ContentView_Previews
+
+// #Preview("NavigationPreview") {
+struct ContentView_Previews: PreviewProvider {
+
+    static var previews: some View {
+        let poi = ResolvedItem(id: UUID().uuidString,
+                               title: "Pharmacy",
+                               subtitle: "Al-Olya - Riyadh",
+                               type: .hudhud,
+                               coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                               phone: "0503539560",
+                               website: URL(string: "https://hudhud.sa"))
+
+        let userLocationStore = UserLocationStore(location: .storeSetUpForPreviewing)
+        let mapStore = MapStore(camera: .center(poi.coordinate, zoom: 14), userLocationStore: userLocationStore)
+        let sheetStore = SheetStore(emptySheetType: .pointOfInterest(poi))
+        let mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
+        let routingStore = RoutingStore(mapStore: mapStore)
+
+        let searchViewStore = SearchViewStore(mapStore: mapStore,
+                                              sheetStore: sheetStore,
+                                              routingStore: routingStore,
+                                              filterStore: FilterStore(),
+                                              mode: .preview)
+
+        Task {
+            let routes = try await routingStore.calculateRoutes(for: [
+                .init(coordinate: .riyadh),
+                .init(coordinate: poi.coordinate)
+            ])
+            if let route = routes.first {
+                routingStore.routes = routes
+                routingStore.selectRoute(withId: routes[0].id)
+                print("start route")
+            }
+        }
+
+        return ContentView(searchViewStore: searchViewStore,
+                           mapViewStore: mapViewStore,
+                           sheetStore: sheetStore)
+    }
+}
+
 // MARK: - Preview
 
-#Preview("Itmes") {
+#Preview("Items") {
     let store: SearchViewStore = .storeSetUpForPreviewing
 
     let poi = ResolvedItem(id: UUID().uuidString,
@@ -485,19 +508,7 @@ extension Binding where Value == Bool {
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-extension MapLayerIdentifier {
-    nonisolated static let tapLayers: Set<String> = [
-        Self.restaurants,
-        Self.shops,
-        Self.simpleCircles,
-        Self.streetView,
-        Self.customPOI
-    ]
+    return ContentView(searchViewStore: store,
+                       mapViewStore: .storeSetUpForPreviewing,
+                       sheetStore: .storeSetUpForPreviewing)
 }

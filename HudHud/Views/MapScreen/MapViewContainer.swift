@@ -415,3 +415,14 @@ public extension [GeographicCoordinate] {
         return self.map(\.clLocationCoordinate2D)
     }
 }
+
+private extension MapLayerIdentifier {
+
+    nonisolated static let tapLayers: Set<String> = [
+        Self.restaurants,
+        Self.shops,
+        Self.simpleCircles,
+        Self.streetView,
+        Self.customPOI
+    ]
+}
