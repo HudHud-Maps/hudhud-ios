@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import PhotosUI
 import SwiftUI
 
 // MARK: - RatingStore
@@ -23,6 +24,10 @@ final class RatingStore {
         var staticRating: Double
         var ratingsCount: Int
         var interactiveRating: Int
+        var selection: [PhotosPickerItem] = []
+        var selectedImages: [UIImage] = []
+        var reviewText = ""
+        var placeholderString = "Write about staff, atmosphere, food taste, drinks, and dishes to help others learn from your experience."
 
         // MARK: Computed Properties
 
@@ -35,6 +40,10 @@ final class RatingStore {
         case setInteractiveRating(Int)
         case updateStaticRating(rating: Double, count: Int)
         case resetInteractiveRating
+        case removeImage(UIImage)
+        case updateReviewText(String)
+        case addImages([PhotosPickerItem])
+        case removePlaceHolder
     }
 
     // MARK: Properties
@@ -64,7 +73,34 @@ final class RatingStore {
 
         case .resetInteractiveRating:
             self.state.interactiveRating = 0
+
+        case let .removeImage(image):
+            self.state.selectedImages.removeAll { $0 == image }
+
+        case let .updateReviewText(text):
+            self.state.reviewText = text
+
+        case let .addImages(images):
+            self.addImages(images)
+
+        case .removePlaceHolder:
+            self.state.placeholderString = ""
         }
+    }
+
+    func addImages(_ images: [PhotosPickerItem]) {
+        Task {
+            for image in images {
+                if let data = try? await image.loadTransferable(type: Data.self),
+                   let uiImage = UIImage(data: data) {
+                    self.state.selectedImages.append(uiImage)
+                }
+            }
+        }
+    }
+
+    func addImagesFromCamera(newImage: UIImage) {
+        self.state.selectedImages.append(newImage)
     }
 }
 
