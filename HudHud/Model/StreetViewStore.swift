@@ -24,6 +24,7 @@ final class StreetViewStore {
     // MARK: Properties
 
     @ObservationIgnored weak var currentImageTask: ImageTask?
+    @ObservationIgnored weak var debugStore: DebugStore
 
     var heading: Float = 0
     var streetViewScene: StreetViewScene?
@@ -209,18 +210,18 @@ final class StreetViewStore {
             URLQueryItem(name: "api_key", value: "34iAPI8sPcOI4eJCSstL9exd159tJJFmsnerjh")
         ]
 
-//        if let format = self.debugStore.streetViewQuality.format {
-//            components.queryItems?.append(URLQueryItem(name: "format", value: format))
-//        }
-//
-//        if let size = self.debugStore.streetViewQuality.size {
-//            let clipped = size.clipToMaximumSupportedTextureSize()
-//            components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
-//            components.queryItems?.append(URLQueryItem(name: "height", value: "\(clipped.height)"))
-//        }
-//        if let quality = self.debugStore.streetViewQuality.quality {
-//            components.queryItems?.append(URLQueryItem(name: "quality", value: "\(quality)"))
-//        }
+        if let format = self.debugStore.streetViewQuality.format {
+            components.queryItems?.append(URLQueryItem(name: "format", value: format))
+        }
+
+        if let size = self.debugStore.streetViewQuality.size {
+            let clipped = size.clipToMaximumSupportedTextureSize()
+            components.queryItems?.append(URLQueryItem(name: "width", value: "\(clipped.width)"))
+            components.queryItems?.append(URLQueryItem(name: "height", value: "\(clipped.height)"))
+        }
+        if let quality = self.debugStore.streetViewQuality.quality {
+            components.queryItems?.append(URLQueryItem(name: "quality", value: "\(quality)"))
+        }
 
         Logger.streetView.debug("Parameters: \(components.queryItems ?? [])")
 
@@ -287,6 +288,6 @@ final class StreetViewStore {
 
 extension StreetViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = StreetViewStore(mapStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = StreetViewStore(mapStore: .storeSetUpForPreviewing, debugStore: DebugStore())
 
 }

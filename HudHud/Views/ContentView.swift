@@ -65,7 +65,7 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
+        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore, debugStore: self.debugStore)
         self.routesPlanMapDrawer = routesPlanMapDrawer
         self.mapViewStore.streetViewStore = self.streetViewStore
     }
