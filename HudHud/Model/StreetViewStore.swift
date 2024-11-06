@@ -24,7 +24,7 @@ final class StreetViewStore {
     // MARK: Properties
 
     @ObservationIgnored weak var currentImageTask: ImageTask?
-    @ObservationIgnored weak var debugStore: DebugStore
+    @ObservationIgnored var debugStore: DebugStore
 
     var heading: Float = 0
     var streetViewScene: StreetViewScene?
@@ -57,13 +57,14 @@ final class StreetViewStore {
 
     // MARK: Lifecycle
 
-    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false, mapStore: MapStore, streetViewClient: StreetViewClient = StreetViewClient(), cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
+    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false, mapStore: MapStore, streetViewClient: StreetViewClient = StreetViewClient(), debugStore: DebugStore = DebugStore(), cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
         self.streetViewScene = streetViewScene
         self.nearestStreetViewScene = nearestStreetViewScene
         self.fullScreenStreetView = fullScreenStreetView
         self.streetViewClient = streetViewClient
         self.cachedScenes = cachedScenes
         self.mapStore = mapStore
+        self.debugStore = debugStore
     }
 
     // MARK: Functions
