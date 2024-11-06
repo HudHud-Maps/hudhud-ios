@@ -183,6 +183,7 @@
 		CDE538CE2BA814BB00D7FFE7 /* SimpleToast in Frameworks */ = {isa = PBXBuildFile; productRef = CD8C5A1F2BA342A5002EBE8A /* SimpleToast */; };
 		CEE834FA2F4E561E312905A9 /* PhotoTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A76E1C9FDAFE4F9BF1CD3AB /* PhotoTabView.swift */; };
 		CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9875641FCB6ADB41C86D659 /* ABCRouteConfigurationView.swift */; };
+		D26B554089B4D04BB7BBC054 /* riyadh-pharmacy-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 38BAF0D5A76151E61EAF4469 /* riyadh-pharmacy-route.json */; };
 		D92570A76E49CBBBE8888854 /* CurrentLocationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47261C3992C3EF31C3C8615D /* CurrentLocationButton.swift */; };
 		D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF5BAF9B54731724CBDCB5 /* MapSourceIdentifier.swift */; };
 		D9AA3F9111249E1E30DF2CFF /* ManeuverInstructionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1138FE23DD822AC2AF53744 /* ManeuverInstructionView.swift */; };
@@ -265,6 +266,7 @@
 		32589FE734D110C815A6168A /* LoggerSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggerSettings.swift; sourceTree = "<group>"; };
 		3517D54449CB0DDD62E7E0BB /* RoutingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingStore.swift; sourceTree = "<group>"; };
 		38A1458661BDED4DB8638E1A /* FavoriteCategoriesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteCategoriesView.swift; sourceTree = "<group>"; };
+		38BAF0D5A76151E61EAF4469 /* riyadh-pharmacy-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "riyadh-pharmacy-route.json"; sourceTree = "<group>"; };
 		399B3BCB097127A460F4081C /* CaseIterable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaseIterable.swift; sourceTree = "<group>"; };
 		3ACB9C5FC9974E6C1AA9E87D /* DeviceSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSupport.swift; sourceTree = "<group>"; };
 		41386D7314539DB91E42D41A /* MapActionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapActionHandler.swift; sourceTree = "<group>"; };
@@ -921,6 +923,7 @@
 				CD1BD9A82B98F0DE00A591BD /* toursprung-navigation-sample.json */,
 				CDAE05EF2B6A8AED003E5196 /* Riyadh.gpx */,
 				CDAE054E2B681263003E5196 /* Preview Assets.xcassets */,
+				38BAF0D5A76151E61EAF4469 /* riyadh-pharmacy-route.json */,
 			);
 			path = "Preview Content";
 			sourceTree = "<group>";
@@ -1326,6 +1329,7 @@
 				A7FC3E1C3AB8E638537CBA5D /* PlusJakartaSans-Light.ttf in Resources */,
 				78D60A6DAAE2D6B5BBCB1E06 /* PlusJakartaSans-SemiBoldItalic.ttf in Resources */,
 				342B07CA567CB45D17DC1189 /* Directions.xcassets in Resources */,
+				D26B554089B4D04BB7BBC054 /* riyadh-pharmacy-route.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
