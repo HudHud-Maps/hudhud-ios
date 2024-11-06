@@ -32,7 +32,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
 
     private var navigationState: NavigationState?
 
-    private var locationManager: HudHudLocationManager
+    private var locationManager: PassthroughLocationManager
 
     // MARK: Computed Properties
 
@@ -52,7 +52,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationState: NavigationState?,
@@ -94,7 +94,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
                                 identifier: "remaining-route-polyline")
             }
 
-            self.updateCameraIfNeeded()
+//            self.updateCameraIfNeeded()
 
             // Overlay any additional user layers.
             self.userLayers
@@ -110,17 +110,17 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
 
     // MARK: Functions
 
-    private func updateCameraIfNeeded() {
-        if case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = navigationState?.tripState,
-           // There is no reason to push an update if the coordinate and heading are the same.
-           // That's all that gets displayed, so it's all that MapLibre should care about.
-           locationManager.lastLocation?.coordinate != userLocation.coordinates
-               .clLocationCoordinate2D || locationManager.lastLocation?.course != userLocation.clLocation.course {
-            self.locationManager.useSnappedLocation(userLocation.clLocation)
-        } else {
-            self.locationManager.useRawLocation()
-        }
-    }
+//    private func updateCameraIfNeeded() {
+//        if case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = navigationState?.tripState,
+//           // There is no reason to push an update if the coordinate and heading are the same.
+//           // That's all that gets displayed, so it's all that MapLibre should care about.
+//           locationManager.lastLocation?.coordinate != userLocation.coordinates
+//               .clLocationCoordinate2D || locationManager.lastLocation?.course != userLocation.clLocation.course {
+//            self.locationManager.useSnappedLocation(userLocation.clLocation)
+//        } else {
+//            self.locationManager.useRawLocation()
+//        }
+//    }
 }
 
 extension MapView {
@@ -143,7 +143,7 @@ public extension NavigationMapView where T == MLNMapViewController {
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     init(
         styleURL: URL,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         camera: Binding<MapViewCamera>,
         navigationState: NavigationState?,
         onStyleLoaded: @escaping ((MLNStyle) -> Void),

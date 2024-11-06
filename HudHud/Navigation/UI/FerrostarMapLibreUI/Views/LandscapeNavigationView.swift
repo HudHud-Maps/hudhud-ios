@@ -38,7 +38,7 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
 
     private var navigationState: NavigationState?
     private let userLayers: [StyleLayerDefinition]
-    private let locationManager: HudHudLocationManager
+    private let locationManager: PassthroughLocationManager
 
     // MARK: Lifecycle
 
@@ -58,7 +58,7 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @escaping @autoclosure () -> T,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
@@ -147,7 +147,7 @@ public extension LandscapeNavigationView where T == MLNMapViewController {
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         isMuted: Bool,

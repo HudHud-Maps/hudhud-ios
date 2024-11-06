@@ -55,7 +55,7 @@ final class RoutingStore: ObservableObject {
 
     let locationProvider: LocationProviding
 
-    let locationManager: HudHudLocationManager
+    let locationManager: PassthroughLocationManager
 
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
@@ -112,7 +112,7 @@ final class RoutingStore: ObservableObject {
         }
 
         self.locationProvider = provider
-        self.locationManager = HudHudLocationManager(locationProvider: provider)
+        self.locationManager = PassthroughLocationManager(authorizationStatus: .authorizedAlways, headingOrientation: .faceDown)
 
         // Configure the navigation session.
         // You have a lot of flexibility here based on your use case.

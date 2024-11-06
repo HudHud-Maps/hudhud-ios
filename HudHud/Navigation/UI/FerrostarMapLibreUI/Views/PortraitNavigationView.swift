@@ -37,7 +37,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
 
     private var navigationState: NavigationState?
     private let userLayers: [StyleLayerDefinition]
-    private let locationManager: HudHudLocationManager
+    private let locationManager: PassthroughLocationManager
 
     // MARK: Lifecycle
 
@@ -57,7 +57,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
@@ -148,7 +148,7 @@ public extension PortraitNavigationView where T == MLNMapViewController {
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),

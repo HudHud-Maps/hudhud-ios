@@ -43,7 +43,7 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
 
     private let mapViewModifiers: (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T>
 
-    private let locationManager: HudHudLocationManager
+    private let locationManager: PassthroughLocationManager
 
     // MARK: Lifecycle
 
@@ -62,7 +62,7 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
@@ -202,7 +202,7 @@ public extension DynamicallyOrientingNavigationView where T == MLNMapViewControl
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
-        locationManager: HudHudLocationManager,
+        locationManager: PassthroughLocationManager,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
         navigationState: NavigationState?,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
