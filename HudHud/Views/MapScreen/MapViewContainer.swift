@@ -425,6 +425,7 @@ private extension MapLayerIdentifier {
         Self.shops,
         Self.simpleCircles,
         Self.streetView,
-        Self.customPOI
+        Self.customPOI,
+        Self.poiLevel1
     ]
 }
