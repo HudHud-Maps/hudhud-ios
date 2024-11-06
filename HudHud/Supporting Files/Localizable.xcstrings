@@ -123,8 +123,11 @@
         }
       }
     },
+    "Add Photo" : {
 
+    },
     "Add photos and videos" : {
+
     },
     "Add Stop" : {
 
@@ -332,6 +335,12 @@
 
     },
     "From %@" : {
+
+    },
+    "From Camera" : {
+
+    },
+    "From Library" : {
 
     },
     "Go" : {

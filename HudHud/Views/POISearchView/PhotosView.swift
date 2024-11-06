@@ -83,7 +83,8 @@ struct PhotosView<Content, Item, ID>: View where Content: View, ID: Hashable, It
                 }
             }
         }
-        .frame(height: 250)
+
+        .frame(width: UIScreen.main.bounds.size.width, height: 250)
     }
 
     // Safe view rendering for items in the row, preventing out-of-bounds access

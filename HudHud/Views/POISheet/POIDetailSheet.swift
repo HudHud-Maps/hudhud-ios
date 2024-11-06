@@ -38,16 +38,17 @@ struct POIDetailSheet: View {
     @State var selectedTab: POIOverviewView.Tab = .overview
     @Namespace var animation
     @State var showTabView: Bool = true
-
     @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
     @ObservedObject var routingStore: RoutingStore
-
     @EnvironmentObject var notificationQueue: NotificationQueue
 
     let formatter = Formatters()
 
+    @State private var selectedMedia: URL?
+    @State private var cameraStore = CameraStore()
+    @State private var photoStore = PhotoStore()
     private let displayPlaceholderReviews = true // we are waiting for the backend to implement reviews
 
     @Environment(\.dismiss) private var dismiss
@@ -135,7 +136,6 @@ struct POIDetailSheet: View {
 
             if self.sheetStore.sheetHeight > POISheetViewMetrics.expandedSheetHeight {
                 self.tabView
-
                 ScrollView {
                     VStack {
                         // Switch between views based on the selected tab
@@ -147,7 +147,6 @@ struct POIDetailSheet: View {
                                 selectedTab: self.$selectedTab
                             )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding()
                             .background(Color.Colors.General._05WhiteBackground)
                             .cornerRadius(14)
 
@@ -159,26 +158,27 @@ struct POIDetailSheet: View {
                                         interactiveRating: 0
                                     )
                                 )
-                                .padding()
+                                .padding(.vertical)
                                 .background(Color.Colors.General._05WhiteBackground)
                                 .cornerRadius(14)
                             }
 
                             if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
 
                             if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
-                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest)
+                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
+                                    .padding(.vertical)
                             }
 
                         case .photos:
-                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest)
-                                .padding(-10)
+                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest, selectedMedia: self.$selectedMedia)
 
                         case .review:
                             if let rating = self.pointOfInterestStore.pointOfInterest.rating {
@@ -189,14 +189,14 @@ struct POIDetailSheet: View {
                                         interactiveRating: 0
                                     )
                                 )
-                                .padding()
+                                .padding(.vertical)
                                 .background(Color.Colors.General._05WhiteBackground)
                                 .cornerRadius(14)
                             }
 
                             if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
-                                    .padding()
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
@@ -207,7 +207,6 @@ struct POIDetailSheet: View {
                                 selectedTab: self.$selectedTab
                             )
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding()
                             .background(Color.Colors.General._05WhiteBackground)
                             .cornerRadius(14)
 
@@ -218,10 +217,49 @@ struct POIDetailSheet: View {
                     .padding(10)
                     .padding(.bottom, 100)
                 }
+                .scrollIndicators(.hidden)
                 .background(Color.Colors.General._03LightGrey)
+                .overlay(alignment: .bottomTrailing) {
+                    if self.selectedTab == .photos {
+                        Button(action: {
+                            self.cameraStore.showAddPhotoConfirmation.toggle()
+                        }, label: {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.Colors.General._06DarkGreen)
+                                    .frame(width: 56, height: 56)
+                                Image(.addPhoto)
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(Color.Colors.General._05WhiteBackground)
+                            }
+                        })
+                        .padding(.bottom, 100)
+                        .padding(.trailing, 16)
+                    }
+                }
+                .sheet(item: self.$selectedMedia) { mediaURL in
+                    FullPageImage(
+                        mediaURL: mediaURL,
+                        mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs
+                    )
+                }
             }
             Spacer()
         }
+        .addPhotoConfirmationDialog(isPresented: self.$cameraStore.showAddPhotoConfirmation, onCameraAction: {
+            self.cameraStore.openCamera()
+        }, onLibraryAction: {
+            self.photoStore.showLibrary.toggle()
+        })
+        .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
+            self.photoStore.addImagesFromCamera(newImage: capturedImage)
+        }
+        .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(
+            get: { self.photoStore.state.selection },
+            set: { self.photoStore.reduce(action: .addImages($0)) }
+        ))
         .overlay(alignment: .bottom) {
             VStack(spacing: 0) {
                 Rectangle() // Top divider

@@ -22,6 +22,7 @@ final class CameraStore {
     var isCameraPermissionGranted = false
     var isShowingCamera = false
     var showAlert = false
+    var showAddPhotoConfirmation = false
 
     // MARK: Lifecycle
 
@@ -111,5 +112,43 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
 
     func imagePickerControllerDidCancel(_: UIImagePickerController) {
         self.presentationMode.wrappedValue.dismiss()
+    }
+}
+
+// MARK: - CameraAccessModifier
+
+struct CameraAccessModifier: ViewModifier {
+
+    // MARK: Properties
+
+    @State var cameraStore: CameraStore
+    let onImageCaptured: (UIImage) -> Void
+
+    // MARK: Content
+
+    func body(content: Content) -> some View {
+        content
+            .fullScreenCover(isPresented: self.$cameraStore.isShowingCamera) {
+                AccessCameraView(cameraStore: self.cameraStore)
+                    .background(.black)
+                    .onDisappear {
+                        if let image = cameraStore.capturedImage {
+                            self.onImageCaptured(image)
+                        }
+                    }
+            }
+            .alert(isPresented: self.$cameraStore.showAlert) {
+                Alert(
+                    title: Text("Camera Access Required"),
+                    message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+    }
+}
+
+extension View {
+    func withCameraAccess(cameraStore: CameraStore, onImageCaptured: @escaping (UIImage) -> Void) -> some View {
+        self.modifier(CameraAccessModifier(cameraStore: cameraStore, onImageCaptured: onImageCaptured))
     }
 }

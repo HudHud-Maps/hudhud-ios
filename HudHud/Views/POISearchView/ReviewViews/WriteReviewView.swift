@@ -127,22 +127,8 @@ struct WriteReviewView: View {
                     .padding(24)
                     .background(Color.Colors.General._05WhiteBackground)
                     .cornerRadius(10)
-                }
-                .fullScreenCover(isPresented: self.$cameraStore.isShowingCamera) {
-                    AccessCameraView(cameraStore: self.cameraStore)
-                        .background(.black)
-                        .onDisappear {
-                            if let image = cameraStore.capturedImage {
-                                self.store.addImagesFromCamera(newImage: image)
-                            }
-                        }
-                }
-                .alert(isPresented: self.$cameraStore.showAlert) {
-                    Alert(
-                        title: Text("Camera Access Required"),
-                        message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
-                        dismissButton: .default(Text("OK"))
-                    )
+                }.withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
+                    self.store.addImagesFromCamera(newImage: capturedImage)
                 }
 
                 PhotosPicker(
