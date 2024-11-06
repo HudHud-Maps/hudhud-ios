@@ -67,7 +67,7 @@ struct RecentSearchResultsView: View {
                 self.sheetStore.show(.pointOfInterest(item))
                 switch self.searchType {
                 case let .returnPOILocation(completion):
-                    if let selectedItem = self.searchStore.mapStore.selectedItem.value {
+                    if self.searchStore.mapStore.selectedItem.value != nil {
                         completion(item)
                         self.sheetStore.popSheet()
                     }

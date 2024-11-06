@@ -399,7 +399,7 @@ public extension Route {
 
 // MARK: - Route + Identifiable
 
-extension Route: Identifiable {
+extension Route: @retroactive Identifiable {
     public var id: Int {
         return self.hashValue
     }
@@ -416,4 +416,15 @@ public extension [GeographicCoordinate] {
     var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
         return self.map(\.clLocationCoordinate2D)
     }
+}
+
+private extension MapLayerIdentifier {
+
+    nonisolated static let tapLayers: Set<String> = [
+        Self.restaurants,
+        Self.shops,
+        Self.simpleCircles,
+        Self.streetView,
+        Self.customPOI
+    ]
 }

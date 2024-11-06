@@ -48,7 +48,7 @@ final class LocationServicesDiagnostic {
 
         print("- Location Services Enabled: \(CLLocationManager.locationServicesEnabled() ? "✅" : "❌")")
 
-        let authStatus = CLLocationManager.authorizationStatus()
+        let authStatus = CLLocationManager().authorizationStatus
         print("- Authorization Status: \(self.authStatusString(authStatus))")
 
         if #available(iOS 14.0, *), let accuracy = self.mapView.locationManager.accuracyAuthorization?() {
