@@ -64,7 +64,7 @@ struct ComplementingSafeAreaView<V: View>: View {
                 parentInsets: self.parentGeometry.safeAreaInsets,
                 minimumInsets: self.minimumInsets
             )
-        }.onChange(of: self.parentGeometry.safeAreaInsets) { newValue in
+        }.onChange(of: self.parentGeometry.safeAreaInsets) { _, newValue in
             self.childInsets = ComplementingSafeAreaView.complement(parentInsets: newValue, minimumInsets: self.minimumInsets)
         }.safeAreaPaddingPolyfill(self.childInsets)
     }
