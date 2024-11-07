@@ -241,7 +241,7 @@ struct ContentView: View {
             .ignoresSafeArea()
             .edgesIgnoringSafeArea(.all)
             .safeAreaInset(edge: .bottom) {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
+                if self.navigationStore.state.isNavigating == true || self.streetViewStore.streetViewScene != nil {
                     // hide interface during navigation and streetview
 
                 } else {
@@ -325,7 +325,7 @@ struct ContentView: View {
             })
 
             VStack {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
+                if self.navigationStore.state.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)

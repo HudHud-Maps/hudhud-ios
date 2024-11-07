@@ -41,11 +41,20 @@ import Foundation
 
 import CoreLocation
 import FerrostarCore
+import UIKit
 
 // MARK: - SpeedCameraAlert
 
 // ui thing
 struct SpeedCameraAlert: Equatable {}
+
+// MARK: - NavigationStore
+
+extension NavigationStore.State {
+    var isNavigating: Bool {
+        status == .navigating
+    }
+}
 
 // MARK: - NavigationStore
 
@@ -72,12 +81,15 @@ final class NavigationStore {
         var speedLimit: Measurement<UnitSpeed>?
         let currentCamera: SpeedCamera?
         let distanceToCamera: Measurement<UnitLength>?
+        var isMuted: Bool = false
+
         // let activeHorizonFeatures: Set<HorizonFeature>
     }
 
     enum Action {
-        case startNavigation(route: Route)
+        case startNavigation
         case stopNavigation
+        case toggleMute
     }
 
     // MARK: Properties
@@ -90,6 +102,10 @@ final class NavigationStore {
     private let routesPlanMapDrawer: RoutesPlanMapDrawer
 
     // MARK: Computed Properties
+
+    var navigationState: NavigationState? {
+        self.navigationEngine.state
+    }
 
     //    private(set) var speedCameraAlert: SpeedCameraAlert?
     //    var currentCamera: SpeedCamera?
@@ -127,28 +143,40 @@ final class NavigationStore {
 
     func execute(_ action: Action) {
         switch action {
-        case let .startNavigation(route):
-            self.satrtNavigation(on: route)
+        case .startNavigation:
+            self.satrtNavigation()
 
         case .stopNavigation:
             self.stopNavigation()
+
+        case .toggleMute:
+            // mute engine
+            self.state.isMuted.toggle()
         }
     }
 
-    func stopNavigation() {
+    private func stopNavigation() {
         self.navigationEngine.stopNavigation()
         self.state.status = .stopped
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    func reportIncorrectCamera(_: SpeedCamera) {}
+    private func reportIncorrectCamera(_: SpeedCamera) {}
 
-    private func satrtNavigation(on route: Route) {
+    private func satrtNavigation() {
+        guard let route = routesPlanMapDrawer.selectedRoute else {
+            print("No route selected")
+            return
+        }
+
         do {
             try self.navigationEngine.startNavigation(route: route)
+            self.decideWhichLocationProviderToUse(route: route)
             self.state.status = .navigating
         } catch {
             self.state.status = .failed
         }
+        UIApplication.shared.isIdleTimerDisabled = true
     }
 
     private func setupSubscriptions() {
@@ -168,6 +196,19 @@ final class NavigationStore {
             }.store(in: &self.cancellables)
     }
 
+    private func decideWhichLocationProviderToUse(route: Route) {
+        if DebugStore().simulateRide {
+            // give a chance to camera movment
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.locationEngine.switchToSimulated(route: route)
+            }
+        } else {
+            self.locationEngine.switchToStandard()
+        }
+    }
+
+    private func handleNavigationStateChange(_: NavigationState) {}
+
     private func handleNavigationEvent(_ event: NavigationEvent) {
         switch event {
         case .navigationStarted:
@@ -175,7 +216,7 @@ final class NavigationStore {
         case .navigationEnded:
             break
         case let .stateChanged(navigationState):
-            break
+            self.handleNavigationStateChange(navigationState)
         case let .routeUpdated(newRoute):
             break
         case let .stepChanged(newStep):

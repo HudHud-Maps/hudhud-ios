@@ -7,12 +7,24 @@
 //
 
 import BackendService
+import Combine
 import FerrostarCore
 import FerrostarCoreFFI
 import Foundation
 import MapLibre
 import MapLibreSwiftDSL
 import OSLog
+
+// MARK: - AppEvents
+
+enum AppEvents {
+    case startNavigation
+    case stopNavigation
+
+    // MARK: Static Properties
+
+    static let publisher = PassthroughSubject<AppEvents, Never>()
+}
 
 // MARK: - RoutingStore
 
@@ -49,24 +61,9 @@ final class RoutingStore: ObservableObject {
 
     let hudHudGraphHopperRouteProvider = GraphHopperRouteProvider()
 
-    @ObservedChild private(set) var ferrostarCore: FerrostarCore
-
     @Published var routes: [Route] = []
 
-    let locationProvider: LocationProviding
-
-    let locationManager: PassthroughLocationManager
-
-    @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
-
-    // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
-    private let navigationDelegate = NavigationDelegate()
-
     // MARK: Computed Properties
-
-    var isMuted: Bool {
-        self.spokenInstructionObserver.isMuted
-    }
 
     var alternativeRoutes: [Route] {
         self.routes.filter {
@@ -74,76 +71,17 @@ final class RoutingStore: ObservableObject {
         }
     }
 
-    var routePoints: ShapeSource {
-        var features: [MLNPointFeature] = []
-        if let waypoints = self.waypoints {
-            for item in waypoints {
-                switch item {
-                case .myLocation:
-                    continue
-                case let .waypoint(poi):
-                    let feature = MLNPointFeature(coordinate: poi.coordinate)
-                    feature.attributes["poi_id"] = poi.id
-                    features.append(feature)
-                }
-            }
-        }
-        return ShapeSource(identifier: MapSourceIdentifier.routePoints) {
-            features
-        }
-    }
-
     // MARK: Lifecycle
 
     init(mapStore: MapStore) {
         self.mapStore = mapStore
-
-        let provider: LocationProviding
-
-        if DebugStore().simulateRide {
-            let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 1
-            provider = simulated
-        } else {
-            provider = CoreLocationProvider(
-                activityType: .automotiveNavigation,
-                allowBackgroundLocationUpdates: true
-            )
-        }
-
-        self.locationProvider = provider
-        self.locationManager = PassthroughLocationManager(authorizationStatus: .authorizedAlways, headingOrientation: .faceDown)
-
-        // Configure the navigation session.
-        // You have a lot of flexibility here based on your use case.
-        let config = SwiftNavigationControllerConfig(
-            stepAdvance: .relativeLineStringDistance(
-                minimumHorizontalAccuracy: 32, automaticAdvanceDistance: 10
-            ),
-            routeDeviationTracking: .staticThreshold(
-                minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20
-            ), snappedLocationCourseFiltering: .snapToRoute
-        )
-
-        self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
-            customRouteProvider: self.hudHudGraphHopperRouteProvider,
-            locationProvider: provider,
-            navigationControllerConfig: config,
-            annotation: AnnotationPublisher<ValhallaExtendedOSRMAnnotation>.valhallaExtendedOSRM()
-        ))
-
-        self.ferrostarCore.delegate = self.navigationDelegate
-        self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
     }
 
     // MARK: Functions
 
-    func toggleMute() {
-        self.spokenInstructionObserver.toggleMute()
-    }
-
     func startNavigation() {
         self.navigatingRoute = self.selectedRoute
+        AppEvents.publisher.send(.startNavigation) // to mitigate the issue until we find a proper solution
     }
 
     func cancelCurrentRoutePlan() {
@@ -151,6 +89,10 @@ final class RoutingStore: ObservableObject {
         self.potentialRoute = nil
         self.navigatingRoute = nil
         self.selectedRoute = nil
+    }
+
+    func clearAlternativeRoutes() {
+        self.routes.removeAll(where: { $0.id != self.selectedRoute?.id })
     }
 
     func clearRoutes() {
@@ -167,11 +109,12 @@ final class RoutingStore: ObservableObject {
         let firstWaypoint = waypoints.removeFirst()
         let lastWaypoint = waypoints.removeLast()
 
-        return try await self.hudHudGraphHopperRouteProvider.calculateRoute(
+        let routes = try await self.hudHudGraphHopperRouteProvider.calculateRoute(
             from: firstWaypoint,
             to: lastWaypoint,
             passingBy: waypoints
         )
+        return routes
     }
 
     func calculateRoutes(for item: ResolvedItem) async throws -> [Route] {
@@ -220,7 +163,7 @@ final class RoutingStore: ObservableObject {
     }
 
     func endTrip() {
-        self.ferrostarCore.stopNavigation()
+        AppEvents.publisher.send(.stopNavigation)
         self.waypoints = nil
         self.potentialRoute = nil
         self.navigatingRoute = nil

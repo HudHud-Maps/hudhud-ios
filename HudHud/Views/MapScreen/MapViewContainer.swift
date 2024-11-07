@@ -82,37 +82,73 @@ struct MapViewContainer<SheetContentView: View>: View {
                     styleURL: self.mapStore.mapStyleUrl(),
                     sheetToView: self.sheetToView
                 ),
-                locationManager: self.routingStore.locationManager,
+                locationManager: self.navigationStore.locationManager,
                 styleURL: self.mapStore.mapStyleUrl(),
                 camera: self.$mapStore.camera,
-                navigationState: self.routingStore.ferrostarCore.state,
-                isMuted: self.routingStore.isMuted,
+                isNavigating: self.navigationStore.state.status == .navigating,
+                isMuted: self.navigationStore.state.isMuted,
                 showZoom: false,
-                onTapMute: { self.routingStore.toggleMute() },
-                onTapExit: stopNavigation,
+                onTapMute: { self.navigationStore.execute(.toggleMute) },
                 makeMapContent: makeMapContent,
                 mapViewModifiers: makeMapViewModifiers
             )
             .innerGrid(
                 topCenter: { ErrorBannerView(errorMessage: self.$errorMessage) },
-                bottomTrailing: { LocationInfoView(isNavigating: self.routingStore.ferrostarCore.isNavigating, label: self.locationLabel) },
+                bottomTrailing: { LocationInfoView(isNavigating: self.navigationStore.state.isNavigating, label: locationLabel) },
                 bottomLeading: {
-                    if self.routingStore.ferrostarCore.isNavigating {
-                        SpeedView(speed: self.speed, speedLimit: self.speedLimit)
+                    if self.navigationStore.state.isNavigating {
+                        SpeedView(speed: self.speed, speedLimit: speedLimit)
                     }
                 }
             )
+            .withNavigationOverlay(.instructions) {
+                if let navigationState = navigationStore.navigationState {
+                    LegacyInstructionsView(navigationState: navigationState)
+                }
+            }
+            .withNavigationOverlay(.tripProgress) {
+                if let navigationState = navigationStore.navigationState,
+                   let progress = navigationState.currentProgress,
+                   navigationState.isNavigating {
+//                    ArrivalView(
+//                        progress: progress,
+//                        onTapExit: self.stopNavigation
+//                    )
+
+                    ActiveTripInfoView(tripProgress: progress) { actions in
+                        switch actions {
+                        case .exitNavigation:
+                            stopNavigation()
+                        default:
+                            break
+                        }
+                    }
+                }
+            }
             .gesture(trackingStateGesture)
             .onAppear(perform: handleOnAppear)
             .onChange(of: self.routingStore.selectedRoute) { oldValue, newValue in
                 handlePotentialRouteChange(oldValue, newValue)
             }
-            .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
-                handleNavigatingRouteChange(oldValue, newValue)
-            }
-            .onChange(of: self.routingStore.ferrostarCore.state?.tripState) { oldValue, newValue in
-                handleTripStateChange(oldValue, newValue)
-            }
+            .onReceive(AppEvents.publisher, perform: { navigationEvent in
+                switch navigationEvent {
+                case .startNavigation:
+                    self.navigationStore.execute(.startNavigation)
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                        self.mapStore.camera = .automotiveNavigation()
+                    }
+                    self.sheetStore.isShown.value = false
+                case .stopNavigation:
+                    self.navigationStore.execute(.stopNavigation)
+                }
+            })
+
+//            .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
+//                handleNavigatingRouteChange(oldValue, newValue)
+//            }
+//            .onChange(of: self.routingStore.ferrostarCore.state?.tripState) { oldValue, newValue in
+//                handleTripStateChange(oldValue, newValue)
+//            }
             .task { handleInitialFocus() }
         }
     }
@@ -120,20 +156,21 @@ struct MapViewContainer<SheetContentView: View>: View {
 
 extension MapViewContainer {
     private var locationLabel: String {
-        guard let location = searchViewStore.routingStore.locationProvider.lastLocation else {
-            return "No location - authed as \(self.routingStore.locationProvider.authorizationStatus)"
+        guard let location = navigationStore.lastKnownLocation else {
+            return "No location - authed as \(self.navigationStore.locationManager.authorizationStatus)"
         }
         return "±\(Int(location.horizontalAccuracy))m accuracy"
     }
 
     private var speed: Measurement<UnitSpeed>? {
-        self.routingStore.locationProvider.lastLocation?.speed.map {
+        self.navigationStore.lastKnownLocation?.userLocation.speed.map {
             Measurement(value: $0.value, unit: .metersPerSecond)
         }
     }
 
     private var speedLimit: Measurement<UnitSpeed>? {
-        return self.routingStore.ferrostarCore.annotation?.speedLimit
+//        return self.routingStore.ferrostarCore.annotation?.speedLimit
+        .kilometersPerHour(44)
     }
 }
 
@@ -142,10 +179,11 @@ extension MapViewContainer {
 private extension MapViewContainer {
 
     func makeMapContent() -> [StyleLayerDefinition] {
-        guard !self.routingStore.ferrostarCore.isNavigating else { return [] }
+        guard !self.navigationStore.state.isNavigating else { return [] }
 
         var layers: [StyleLayerDefinition] = []
 
+        print("shot routes \(self.routesPlanMapDrawer.routes)")
         // Routes
         layers += makeAlternativeRouteLayers()
         if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
@@ -167,6 +205,17 @@ private extension MapViewContainer {
         layers += makeStreetViewLayer()
 
         return layers
+
+//        if let routePolyline = navigationState?.routePolyline {
+//            RouteStyleLayer(polyline: routePolyline,
+//                            identifier: "route-polyline",
+//                            style: TravelledRouteStyle())
+//        }
+//
+//        if let remainingRoutePolyline = navigationState?.remainingRoutePolyline {
+//            RouteStyleLayer(polyline: remainingRoutePolyline,
+//                            identifier: "remaining-route-polyline")
+//        }
     }
 
     func makeMapViewModifiers(content: MapView<MapViewController>, isNavigating: Bool) -> MapView<MapViewController> {
@@ -242,36 +291,6 @@ private extension MapViewContainer {
         self.mapStore.camera = .boundingBox(route.bbox.mlnCoordinateBounds)
     }
 
-    func handleNavigatingRouteChange(_: Route?, _ newValue: Route?) {
-        if let route = newValue {
-            do {
-                if DebugStore().simulateRide {
-                    if let simulated = routingStore.simulatedLocationProvider {
-                        try simulated.setSimulatedRoute(route, bias: .left(5))
-                    }
-                }
-                try self.routingStore.ferrostarCore.startNavigation(route: route)
-                self.routingStore.simulatedLocationProvider?.stopUpdating()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.routingStore.simulatedLocationProvider?.startUpdating()
-                }
-
-                self.sheetStore.isShown.value = false
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.mapStore.camera = .automotiveNavigation()
-                }
-            } catch {
-                Logger.routing.error("Routing Error: \(error)")
-            }
-        } else {
-            stopNavigation()
-            if let simulated = routingStore.locationProvider as? SimulatedLocationProvider {
-                simulated.stopUpdating()
-            }
-        }
-    }
-
     func handleTripStateChange(_ oldValue: TripState?, _ newValue: TripState?) {
         if let newValue {
             switch newValue {
@@ -326,22 +345,22 @@ private extension MapViewContainer {
 
     @MainActor
     func stopNavigation() {
+        self.navigationStore.execute(.stopNavigation)
         self.searchViewStore.endTrip()
         self.sheetStore.popToRoot()
         self.sheetStore.isShown.value = true
 
-        if let coordinates = routingStore.locationProvider.lastLocation?.coordinates {
+        if let coordinates = navigationStore.lastKnownLocation?.coordinate {
             self.resetCamera(to: coordinates)
         }
         self.routingStore.clearRoutes()
-        UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    func resetCamera(to coordinates: GeographicCoordinate) {
+    func resetCamera(to coordinates: CLLocationCoordinate2D) {
         // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
-        self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .fixed(0))
+        self.mapStore.camera = .center(coordinates, zoom: 14, pitch: 0, pitchRange: .fixed(0))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .free)
+            self.mapStore.camera = .center(coordinates, zoom: 14, pitch: 0, pitchRange: .free)
         }
     }
 
@@ -357,29 +376,6 @@ private extension MapViewContainer {
             self.mapStore.displayableItems.isEmpty &&
             self.mapStore.isSFSymbolLayerPresent() &&
             self.mapStore.shouldShowCustomSymbols
-    }
-}
-
-extension RoutingStore {
-    var simulatedLocationProvider: SimulatedLocationProvider? {
-        self.locationProvider as? SimulatedLocationProvider
-    }
-}
-
-public extension FerrostarCore {
-
-    var isNavigating: Bool {
-        return self.state?.isNavigating ?? false
-    }
-}
-
-public extension NavigationState {
-    var isNavigating: Bool {
-        if case .navigating = tripState {
-            return true
-        } else {
-            return false
-        }
     }
 }
 
@@ -420,3 +416,209 @@ public extension [GeographicCoordinate] {
         return self.map(\.clLocationCoordinate2D)
     }
 }
+
+// MARK: - ActiveTripInfoViewAction
+
+enum ActiveTripInfoViewAction {
+    case exitNavigation
+    case switchToRoutePreviewMode
+    case openNavigationSettings
+}
+
+// MARK: - ActiveTripInfoView
+
+struct ActiveTripInfoView: View {
+
+    // MARK: Properties
+
+    let tripProgress: TripProgress
+    let onAction: (ActiveTripInfoViewAction) -> Void
+
+    @State var isExpanded: Bool = false
+
+    // MARK: Content
+
+    var body: some View {
+        VStack(spacing: 0) {
+            RoundedRectangle(cornerRadius: 2)
+                .fill(Color.Colors.General._02Grey.opacity(0.3))
+                .frame(width: 36, height: 4)
+                .padding(.top, 8)
+                .padding(.bottom, 12)
+
+            ProgressView(
+                tripProgress: self.tripProgress,
+                isExpanded: self.isExpanded,
+                onAction: self.onAction
+            )
+            .padding(.horizontal, 16)
+            .padding(.vertical, 12)
+        }
+        .background {
+            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                .fill(.white)
+                .shadow(
+                    color: .black.opacity(0.05),
+                    radius: 8,
+                    x: 0,
+                    y: 4
+                )
+        }
+        .padding(.horizontal, 16)
+    }
+}
+
+// MARK: - ActiveTripInfoView.ProgressView
+
+extension ActiveTripInfoView {
+
+    struct ProgressView: View {
+
+        // MARK: Properties
+
+        let distanceFormatter: Formatter
+        let estimatedArrivalFormatter: Date.FormatStyle
+        let durationFormatter: DateComponentsFormatter
+        let isExpanded: Bool
+        let fromDate: Date = .init()
+
+        private let tripProgress: TripProgress
+        private let onAction: (ActiveTripInfoViewAction) -> Void
+
+        // MARK: Lifecycle
+
+        init(tripProgress: TripProgress, isExpanded: Bool, onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
+            self.tripProgress = tripProgress
+            self.onAction = onAction
+            self.isExpanded = isExpanded
+            self.distanceFormatter = DefaultFormatters.distanceFormatter
+            self.estimatedArrivalFormatter = DefaultFormatters.estimatedArrivalFormat
+            self.durationFormatter = DefaultFormatters.durationFormat
+        }
+
+        // MARK: Content
+
+        var body: some View {
+            HStack {
+                VStack(alignment: .leading) {
+                    if let formattedDuration = durationFormatter.string(from: tripProgress.durationRemaining) {
+                        Text(formattedDuration)
+                            .hudhudFont(.title2)
+                            .fontWeight(.semibold)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                            .multilineTextAlignment(.center)
+                    }
+
+                    HStack(alignment: .center, spacing: 4) {
+                        Text(self.estimatedArrivalFormatter.format(self.tripProgress.estimatedArrival(from: self.fromDate)))
+                            .hudhudFont(.callout)
+                            .fontWeight(.semibold)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                            .multilineTextAlignment(.center)
+
+                        Text("·")
+                            .hudhudFont(.callout)
+                            .fontWeight(.semibold)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                            .multilineTextAlignment(.center)
+
+                        Text(self.distanceFormatter.string(for: self.tripProgress.distanceRemaining) ?? "")
+                            .hudhudFont(.callout)
+                            .fontWeight(.semibold)
+                            .minimumScaleFactor(0.6)
+                            .lineLimit(1)
+                            .foregroundStyle(Color.Colors.General._02Grey)
+                            .multilineTextAlignment(.center)
+                    }
+                }
+
+                Spacer()
+
+                NavigationControls(onAction: self.onAction)
+            }
+        }
+    }
+}
+
+// MARK: - NavigationControls
+
+struct NavigationControls: View {
+
+    // MARK: Properties
+
+    let onAction: (ActiveTripInfoViewAction) -> Void
+
+    // MARK: Content
+
+    var body: some View {
+        HStack(spacing: 16) {
+            RoutePreviewButton {
+                self.onAction(.switchToRoutePreviewMode)
+            }
+
+            FinishButton {
+                self.onAction(.exitNavigation)
+            }
+        }
+    }
+}
+
+// MARK: - RoutePreviewButton
+
+private struct RoutePreviewButton: View {
+
+    // MARK: Properties
+
+    let onTap: () -> Void
+
+    // MARK: Content
+
+    var body: some View {
+        Button(action: {
+            self.onTap()
+        }) {
+            Image(.routePreviewIcon)
+                .frame(width: 56, height: 56)
+                .background(Color.Colors.General._03LightGrey)
+                .clipShape(Circle())
+        }
+        .accessibilityLabel("Preview Route")
+    }
+}
+
+// MARK: - FinishButton
+
+private struct FinishButton: View {
+
+    // MARK: Properties
+
+    let action: () -> Void
+
+    // MARK: Content
+
+    var body: some View {
+        Button(action: {
+            self.action()
+        }) {
+            Text("Finish")
+                .hudhudFont(.callout)
+                .fontWeight(.semibold)
+                .foregroundColor(.black)
+                .padding(.horizontal, 16)
+                .padding(.vertical, 10)
+                .frame(height: 56)
+                .background(Color.Colors.General._03LightGrey)
+                .clipShape(Capsule())
+        }
+    }
+}
+
+#Preview(body: {
+    ActiveTripInfoView(tripProgress: .init(distanceToNextManeuver: 100, distanceRemaining: 1000, durationRemaining: 1500)) { _ in
+    }
+})

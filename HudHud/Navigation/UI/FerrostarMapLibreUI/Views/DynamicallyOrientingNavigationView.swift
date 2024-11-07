@@ -8,7 +8,7 @@ import SwiftUI
 // MARK: - DynamicallyOrientingNavigationView
 
 /// A navigation view that dynamically switches between portrait and landscape orientations.
-public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost {
+public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost, NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -22,6 +22,8 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
 
     public var minimumSafeAreaInsets: EdgeInsets
 
+    @State public var overlayStore = OverlayContentStore()
+
     @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
 
     let styleURL: URL
@@ -32,12 +34,9 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
     let showZoom: Bool
 
     let onTapMute: () -> Void
-    var onTapExit: (() -> Void)?
     let makeViewController: () -> T
 
     @State private var orientation = UIDevice.current.orientation
-
-    private var navigationState: NavigationState?
 
     private let userLayers: () -> [StyleLayerDefinition]
 
@@ -45,33 +44,21 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
 
     private let locationManager: PassthroughLocationManager
 
+    private let isNavigating: Bool
+
     // MARK: Lifecycle
 
-    /// Create a dynamically orienting navigation view. This view automatically arranges child views for both portrait
-    /// and landscape orientations.
-    ///
-    /// - Parameters:
-    ///   - styleURL: The map's style url.
-    ///   - camera: The camera binding that represents the current camera on the map.
-    ///   - navigationCamera: The default navigation camera. This sets the initial camera & is also used when the center
-    ///         on user button it tapped.
-    ///   - navigationState: The current ferrostar navigation state provided by the Ferrostar core.
-    ///   - minimumSafeAreaInsets: The minimum padding to apply from safe edges. See `complementSafeAreaInsets`.
-    ///   - onTapExit: An optional behavior to run when the ArrivalView exit button is tapped. When nil (default) the
-    ///         exit button is hidden.
-    ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
         locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
-        navigationState: NavigationState?,
+        isNavigating: Bool,
         isMuted: Bool,
         showZoom: Bool,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
         onTapMute: @escaping () -> Void,
-        onTapExit: (() -> Void)? = nil,
         @MapViewContentBuilder makeMapContent: @escaping () -> [StyleLayerDefinition] = { [] },
         mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
             transferView
@@ -80,12 +67,11 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
         self.makeViewController = makeViewController
         self.locationManager = locationManager
         self.styleURL = styleURL
-        self.navigationState = navigationState
+        self.isNavigating = isNavigating
         self.isMuted = isMuted
         self.showZoom = showZoom
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
         self.onTapMute = onTapMute
-        self.onTapExit = onTapExit
         self.mapViewModifiers = mapViewModifiers
         self.userLayers = makeMapContent
         self._camera = camera
@@ -102,9 +88,9 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
                     locationManager: self.locationManager,
                     styleURL: self.styleURL,
                     camera: self.$camera,
-                    navigationState: self.navigationState,
+                    isNavigating: self.isNavigating,
                     onStyleLoaded: { _ in
-                        if self.navigationState?.isNavigating == true {
+                        if self.isNavigating {
                             self.camera = self.navigationCamera
                         }
                     },
@@ -119,17 +105,16 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
                 switch self.orientation {
                 case .landscapeLeft, .landscapeRight:
                     LandscapeNavigationOverlayView(
-                        navigationState: self.navigationState,
+                        overlayStore: self.overlayStore,
                         speedLimit: self.speedLimit,
                         isMuted: self.isMuted,
-                        showMute: self.navigationState?.isNavigating == true,
+                        showMute: self.isNavigating == true,
                         onMute: self.onTapMute,
                         showZoom: self.showZoom,
                         onZoomIn: { self.camera.incrementZoom(by: 1) },
                         onZoomOut: { self.camera.incrementZoom(by: -1) },
                         showCentering: !self.camera.isTrackingUserLocationWithCourse,
-                        onCenter: { self.camera = self.navigationCamera },
-                        onTapExit: self.onTapExit
+                        onCenter: { self.camera = self.navigationCamera }
                     )
                     .innerGrid {
                         self.topCenter?()
@@ -142,17 +127,16 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
                     }.complementSafeAreaInsets(parentGeometry: geometry, minimumInsets: self.minimumSafeAreaInsets)
                 default:
                     PortraitNavigationOverlayView(
-                        navigationState: self.navigationState,
+                        overlayStore: self.overlayStore,
                         speedLimit: self.speedLimit,
                         isMuted: self.isMuted,
-                        showMute: self.navigationState?.isNavigating == true,
+                        showMute: self.isNavigating == true,
                         onMute: self.onTapMute,
                         showZoom: self.showZoom,
                         onZoomIn: { self.camera.incrementZoom(by: 1) },
                         onZoomOut: { self.camera.incrementZoom(by: -1) },
                         showCentering: !self.camera.isTrackingUserLocationWithCourse,
-                        onCenter: { self.camera = self.navigationCamera },
-                        onTapExit: self.onTapExit
+                        onCenter: { self.camera = self.navigationCamera }
                     )
                     .innerGrid {
                         self.topCenter?()
@@ -174,39 +158,5 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
         ) { _ in
             self.orientation = UIDevice.current.orientation
         }
-    }
-}
-
-public extension DynamicallyOrientingNavigationView where T == MLNMapViewController {
-
-    init(
-        styleURL: URL,
-        camera: Binding<MapViewCamera>,
-        locationManager: PassthroughLocationManager,
-        navigationCamera: MapViewCamera = .automotiveNavigation(),
-        navigationState: NavigationState?,
-        minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
-        showZoom: Bool,
-        isMuted: Bool,
-        onTapMute: @escaping () -> Void,
-        onTapExit: (() -> Void)? = nil,
-        @MapViewContentBuilder makeMapContent: @escaping () -> [StyleLayerDefinition] = { [] },
-        mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
-            transferView
-        }
-    ) {
-        self.showZoom = showZoom
-        self.makeViewController = MLNMapViewController.init
-        self.locationManager = locationManager
-        self.styleURL = styleURL
-        self.navigationState = navigationState
-        self.minimumSafeAreaInsets = minimumSafeAreaInsets
-        self.onTapExit = onTapExit
-        self.userLayers = makeMapContent
-        self._camera = camera
-        self.navigationCamera = navigationCamera
-        self.mapViewModifiers = mapViewModifiers
-        self.isMuted = isMuted
-        self.onTapMute = onTapMute
     }
 }

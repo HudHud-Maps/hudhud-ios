@@ -5,8 +5,10 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import SwiftUI
 
+// MARK: - PortraitNavigationOverlayView
+
 struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableObject>: View,
-CustomizableNavigatingInnerGridView {
+CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -27,21 +29,16 @@ CustomizableNavigatingInnerGridView {
     var showCentering: Bool
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
-
     let showMute: Bool
     let isMuted: Bool
     let onMute: () -> Void
 
-    private let navigationState: NavigationState?
-
-    @State private var isInstructionViewExpanded: Bool = false
-    @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+    var overlayStore: OverlayContentStore
 
     // MARK: Lifecycle
 
     init(
-        navigationState: NavigationState?,
+        overlayStore: OverlayContentStore,
         speedLimit: Measurement<UnitSpeed>? = nil,
         isMuted: Bool,
         showMute: Bool = true,
@@ -50,10 +47,9 @@ CustomizableNavigatingInnerGridView {
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
-        onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil
+        onCenter: @escaping () -> Void = {}
     ) {
-        self.navigationState = navigationState
+        self.overlayStore = overlayStore
         self.speedLimit = speedLimit
         self.isMuted = isMuted
         self.showMute = showMute
@@ -63,7 +59,6 @@ CustomizableNavigatingInnerGridView {
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
-        self.onTapExit = onTapExit
     }
 
     // MARK: Content
@@ -100,20 +95,45 @@ CustomizableNavigatingInnerGridView {
                     self.bottomLeading?()
                 }
 
-                if case .navigating = self.navigationState?.tripState,
-                   let progress = navigationState?.currentProgress {
-                    ArrivalView(
-                        progress: progress,
-                        onTapExit: self.onTapExit
-                    )
+                if let progressView = overlayStore.content[.tripProgress] {
+                    progressView()
                 }
             }
-            .padding(.top, self.instructionsViewSizeWhenNotExpanded.height + 16)
 
-            if case .navigating = self.navigationState?.tripState,
-               let visualInstruction = navigationState?.currentVisualInstruction,
-               let progress = navigationState?.currentProgress,
-               let remainingSteps = navigationState?.remainingSteps {
+            if let instructionsView = overlayStore.content[.instructions] {
+                instructionsView()
+            }
+        }
+    }
+}
+
+// MARK: - LegacyInstructionsView
+
+struct LegacyInstructionsView: View {
+
+    // MARK: Properties
+
+    @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
+    let navigationState: NavigationState
+
+    @State private var isInstructionViewExpanded: Bool = false
+    @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+
+    // MARK: Lifecycle
+
+    init(navigationState: NavigationState) {
+        self.navigationState = navigationState
+    }
+
+    // MARK: Content
+
+    var body: some View {
+        VStack {
+            if let visualInstruction = navigationState.currentVisualInstruction,
+               let progress = navigationState.currentProgress,
+               navigationState.isNavigating {
+                let remainingSteps = self.navigationState.remainingSteps
+
                 InstructionsView(
                     visualInstruction: visualInstruction,
                     distanceFormatter: self.formatterCollection.distanceFormatter,
@@ -123,6 +143,6 @@ CustomizableNavigatingInnerGridView {
                     sizeWhenNotExpanded: self.$instructionsViewSizeWhenNotExpanded
                 )
             }
-        }
+        }.padding(.top, self.instructionsViewSizeWhenNotExpanded.height + 16)
     }
 }

@@ -34,6 +34,8 @@
 		0C4792CE2CDB06D500DFCD4D /* NavigationViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4792CD2CDB06D500DFCD4D /* NavigationViewStore.swift */; };
 		0C4792D12CDB7A3500DFCD4D /* LocationEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4792D02CDB7A3500DFCD4D /* LocationEngineTests.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
+		0CA5EDB52CDD06D30006F2CA /* NavigationOverlayZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */; };
+		0CA5EDB72CDD08120006F2CA /* NavigationOverlayContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */; };
 		0CB11DA62CD8E4A800F70155 /* NavigationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB11DA52CD8E4A800F70155 /* NavigationEngine.swift */; };
 		0CB11DA92CD8E9C200F70155 /* HorizonEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB11DA82CD8E9C200F70155 /* HorizonEngine.swift */; };
 		0CB11DAD2CD9091200F70155 /* LocationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB11DAC2CD9091200F70155 /* LocationEngine.swift */; };
@@ -288,6 +290,8 @@
 		0C4792CA2CDAFB1E00DFCD4D /* FeatureRelevance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRelevance.swift; sourceTree = "<group>"; };
 		0C4792CD2CDB06D500DFCD4D /* NavigationViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewStore.swift; sourceTree = "<group>"; };
 		0C4792D02CDB7A3500DFCD4D /* LocationEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEngineTests.swift; sourceTree = "<group>"; };
+		0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayZone.swift; sourceTree = "<group>"; };
+		0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayContent.swift; sourceTree = "<group>"; };
 		0CB11DA52CD8E4A800F70155 /* NavigationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEngine.swift; sourceTree = "<group>"; };
 		0CB11DA82CD8E9C200F70155 /* HorizonEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizonEngine.swift; sourceTree = "<group>"; };
 		0CB11DAC2CD9091200F70155 /* LocationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEngine.swift; sourceTree = "<group>"; };
@@ -1128,6 +1132,8 @@
 		D2DC9AE6A6A9B0FC1099A367 /* ViewModifiers */ = {
 			isa = PBXGroup;
 			children = (
+				0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */,
+				0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */,
 				7BA5042B788688BFA363D840 /* CustomizableNavigatingInnerGridView.swift */,
 				CFE165FBF97A39FB166D2982 /* FormatterCollectionViewModifier.swift */,
 				EFF40CC411A217E044030CFD /* NavigationUIThemeViewModifier.swift */,
@@ -1553,6 +1559,7 @@
 				FB007D5D865AD359A22A793A /* SearchViewStore.swift in Sources */,
 				0C4792A12CD96E6000DFCD4D /* CameraDirection.swift in Sources */,
 				5910022F2C84787A00CF4707 /* PersonalInformationScreenView.swift in Sources */,
+				0CA5EDB52CDD06D30006F2CA /* NavigationOverlayZone.swift in Sources */,
 				0C4792BA2CDAF33800DFCD4D /* HorizionEvent.swift in Sources */,
 				0C4792A72CD96ED400DFCD4D /* SpeedCameraState.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
@@ -1595,6 +1602,7 @@
 				EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */,
 				1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */,
 				DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */,
+				0CA5EDB72CDD08120006F2CA /* NavigationOverlayContent.swift in Sources */,
 				0C4792C12CDAF40900DFCD4D /* Direction.swift in Sources */,
 				D95229F7DD838754EBE1CEC4 /* MapSourceIdentifier.swift in Sources */,
 				8839330A439E52AEA9D018D5 /* Formatters.swift in Sources */,

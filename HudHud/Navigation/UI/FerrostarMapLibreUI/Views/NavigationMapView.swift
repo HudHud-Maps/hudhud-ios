@@ -30,14 +30,14 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
 
     // TODO: Configurable camera and user "puck" rotation modes
 
-    private var navigationState: NavigationState?
+    private var isNavigating: Bool
 
     private var locationManager: PassthroughLocationManager
 
     // MARK: Computed Properties
 
     private var effectiveMapViewContentInset: UIEdgeInsets {
-        return self.navigationState?.isNavigating == true ? self.mapViewContentInset : .zero
+        return self.isNavigating == true ? self.mapViewContentInset : .zero
     }
 
     // MARK: Lifecycle
@@ -55,7 +55,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
-        navigationState: NavigationState?,
+        isNavigating: Bool,
         onStyleLoaded: @escaping ((MLNStyle) -> Void),
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] },
         mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
@@ -66,7 +66,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         self.locationManager = locationManager
         self.styleURL = styleURL
         _camera = camera
-        self.navigationState = navigationState
+        self.isNavigating = isNavigating
         self.onStyleLoaded = onStyleLoaded
         self.userLayers = makeMapContent()
         self.mapViewModifiers = mapViewModifiers
@@ -81,22 +81,6 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
             camera: self.$camera,
             locationManager: self.locationManager
         ) {
-            // TODO: Create logic and style for route previews. Unless ferrostarCore will handle this internally.
-
-            if let routePolyline = navigationState?.routePolyline {
-                RouteStyleLayer(polyline: routePolyline,
-                                identifier: "route-polyline",
-                                style: TravelledRouteStyle())
-            }
-
-            if let remainingRoutePolyline = navigationState?.remainingRoutePolyline {
-                RouteStyleLayer(polyline: remainingRoutePolyline,
-                                identifier: "remaining-route-polyline")
-            }
-
-//            self.updateCameraIfNeeded()
-
-            // Overlay any additional user layers.
             self.userLayers
         }
         .mapViewContentInset(self.effectiveMapViewContentInset)
@@ -104,23 +88,9 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
             // No controls
         }
         .onStyleLoaded(self.onStyleLoaded)
-        .applyTransform(transform: self.mapViewModifiers, isNavigating: self.navigationState?.isNavigating == true)
+        .applyTransform(transform: self.mapViewModifiers, isNavigating: self.isNavigating)
         .ignoresSafeArea(.all)
     }
-
-    // MARK: Functions
-
-//    private func updateCameraIfNeeded() {
-//        if case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = navigationState?.tripState,
-//           // There is no reason to push an update if the coordinate and heading are the same.
-//           // That's all that gets displayed, so it's all that MapLibre should care about.
-//           locationManager.lastLocation?.coordinate != userLocation.coordinates
-//               .clLocationCoordinate2D || locationManager.lastLocation?.course != userLocation.clLocation.course {
-//            self.locationManager.useSnappedLocation(userLocation.clLocation)
-//        } else {
-//            self.locationManager.useRawLocation()
-//        }
-//    }
 }
 
 extension MapView {
@@ -131,51 +101,3 @@ extension MapView {
         transform(self, isNavigating)
     }
 }
-
-public extension NavigationMapView where T == MLNMapViewController {
-    /// Initialize a map view tuned for turn by turn navigation.
-    ///
-    /// - Parameters:
-    ///   - styleURL: The map's style url.
-    ///   - camera: The camera binding that represents the current camera on the map.
-    ///   - navigationState: The current ferrostar navigation state provided by ferrostar core.
-    ///   - onStyleLoaded: The map's style has loaded and the camera can be manipulated (e.g. to user tracking).
-    ///   - makeMapContent: Custom maplibre symbols to display on the map view.
-    init(
-        styleURL: URL,
-        locationManager: PassthroughLocationManager,
-        camera: Binding<MapViewCamera>,
-        navigationState: NavigationState?,
-        onStyleLoaded: @escaping ((MLNStyle) -> Void),
-        @MapViewContentBuilder _ makeMapContent: () -> [StyleLayerDefinition] = { [] },
-        mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
-            transferView
-        }
-    ) {
-        self.makeViewController = MLNMapViewController.init
-        self.locationManager = locationManager
-        self.styleURL = styleURL
-        _camera = camera
-        self.navigationState = navigationState
-        self.onStyleLoaded = onStyleLoaded
-        self.userLayers = makeMapContent()
-        self.mapViewModifiers = mapViewModifiers
-    }
-}
-
-//
-// #Preview("Navigation Map View") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return NavigationMapView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        onStyleLoaded: { _ in }
-//    )
-// }

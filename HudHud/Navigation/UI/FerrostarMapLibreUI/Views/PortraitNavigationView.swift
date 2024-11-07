@@ -8,7 +8,7 @@ import SwiftUI
 // MARK: - PortraitNavigationView
 
 /// A portrait orientation navigation view that includes the InstructionsView at the top.
-public struct PortraitNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost {
+public struct PortraitNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost, NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -22,6 +22,8 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
 
     public var minimumSafeAreaInsets: EdgeInsets
 
+    public var overlayStore: OverlayContentStore
+
     @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
 
     let styleURL: URL
@@ -33,6 +35,8 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
     let onTapMute: () -> Void
     var onTapExit: (() -> Void)?
 
+    let isNavigating: Bool
+
     // TODO: Configurable camera and user "puck" rotation modes
 
     private var navigationState: NavigationState?
@@ -41,27 +45,14 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
 
     // MARK: Lifecycle
 
-    /// Create a portrait navigation view. This view is optimized for display on a portrait screen where the
-    /// instructions and arrival view are on the top and bottom of the screen.
-    /// The user puck and route are optimized for the center of the screen.
-    ///
-    /// - Parameters:
-    ///   - styleURL: The map's style url.
-    ///   - camera: The camera binding that represents the current camera on the map.
-    ///   - navigationCamera: The default navigation camera. This sets the initial camera & is also used when the center
-    ///                       on user button it tapped.
-    ///   - navigationState: The current ferrostar navigation state provided by the Ferrostar core.
-    ///   - minimumSafeAreaInsets: The minimum padding to apply from safe edges. See `complementSafeAreaInsets`.
-    ///   - onTapExit: An optional behavior to run when the ArrivalView exit button is tapped. When nil (default) the
-    ///             exit button is hidden.
-    ///   - makeMapContent: Custom maplibre symbols to display on the map view.
     public init(
         makeViewController: @autoclosure @escaping () -> T,
+        overlayStore: OverlayContentStore,
         locationManager: PassthroughLocationManager,
         styleURL: URL,
         camera: Binding<MapViewCamera>,
         navigationCamera: MapViewCamera = .automotiveNavigation(),
-        navigationState: NavigationState?,
+        isNavigating: Bool,
         isMuted: Bool,
         minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
         onTapMute: @escaping () -> Void,
@@ -69,11 +60,12 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
         @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
     ) {
         self.makeViewController = makeViewController
+        self.overlayStore = overlayStore
         self.locationManager = locationManager
         self.styleURL = styleURL
         self._camera = camera
         self.navigationCamera = navigationCamera
-        self.navigationState = navigationState
+        self.isNavigating = isNavigating
         self.isMuted = isMuted
         self.minimumSafeAreaInsets = minimumSafeAreaInsets
         self.onTapMute = onTapMute
@@ -92,7 +84,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
                     locationManager: self.locationManager,
                     styleURL: self.styleURL,
                     camera: self.$camera,
-                    navigationState: self.navigationState,
+                    isNavigating: self.isNavigating,
                     onStyleLoaded: { _ in
                         self.camera = self.navigationCamera
                     }
@@ -102,7 +94,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
                 .navigationMapViewContentInset(.portrait(within: geometry))
 
                 PortraitNavigationOverlayView(
-                    navigationState: self.navigationState,
+                    overlayStore: self.overlayStore,
                     speedLimit: self.speedLimit,
                     isMuted: self.isMuted,
                     showMute: true,
@@ -111,8 +103,7 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
                     onZoomIn: { self.camera.incrementZoom(by: 1) },
                     onZoomOut: { self.camera.incrementZoom(by: -1) },
                     showCentering: !self.camera.isTrackingUserLocationWithCourse,
-                    onCenter: { self.camera = self.navigationCamera },
-                    onTapExit: self.onTapExit
+                    onCenter: { self.camera = self.navigationCamera }
                 )
                 .innerGrid {
                     self.topCenter?()
@@ -129,88 +120,3 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
         }
     }
 }
-
-public extension PortraitNavigationView where T == MLNMapViewController {
-    /// Create a portrait navigation view. This view is optimized for display on a portrait screen where the
-    /// instructions and arrival view are on the top and bottom of the screen.
-    /// The user puck and route are optimized for the center of the screen.
-    ///
-    /// - Parameters:
-    ///   - styleURL: The map's style url.
-    ///   - camera: The camera binding that represents the current camera on the map.
-    ///   - navigationCamera: The default navigation camera. This sets the initial camera & is also used when the center
-    /// on user button it tapped.
-    ///   - navigationState: The current ferrostar navigation state provided by the Ferrostar core.
-    ///   - minimumSafeAreaInsets: The minimum padding to apply from safe edges. See `complementSafeAreaInsets`.
-    ///   - onTapExit: An optional behavior to run when the ArrivalView exit button is tapped. When nil (default) the
-    /// exit button is hidden.
-    ///   - makeMapContent: Custom maplibre symbols to display on the map view.
-    init(
-        styleURL: URL,
-        camera: Binding<MapViewCamera>,
-        locationManager: PassthroughLocationManager,
-        navigationCamera: MapViewCamera = .automotiveNavigation(),
-        navigationState: NavigationState?,
-        minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
-        isMuted: Bool,
-        onTapMute: @escaping () -> Void,
-        onTapExit: (() -> Void)? = nil,
-        @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
-    ) {
-        self.makeViewController = MLNMapViewController.init
-        self.locationManager = locationManager
-        self.styleURL = styleURL
-        self.navigationState = navigationState
-        self.minimumSafeAreaInsets = minimumSafeAreaInsets
-        self.onTapExit = onTapExit
-        self.onTapMute = onTapMute
-        self.isMuted = isMuted
-        self.userLayers = makeMapContent()
-        _camera = camera
-        self.navigationCamera = navigationCamera
-    }
-}
-
-// #Preview("Portrait Navigation View (Imperial)") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .imperial
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return PortraitNavigationView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }
-//
-// #Preview("Portrait Navigation View (Metric)") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .metric
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return PortraitNavigationView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }

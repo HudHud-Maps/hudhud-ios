@@ -5,11 +5,9 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import SwiftUI
 
-struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView {
+struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     // MARK: Properties
-
-    @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
 
     var topCenter: (() -> AnyView)?
     var topTrailing: (() -> AnyView)?
@@ -26,20 +24,16 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
     var showCentering: Bool
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
-
     let showMute: Bool
     let isMuted: Bool
     let onMute: () -> Void
 
-    private let navigationState: NavigationState?
-
-    @State private var isInstructionViewExpanded: Bool = false
+    var overlayStore: OverlayContentStore
 
     // MARK: Lifecycle
 
     init(
-        navigationState: NavigationState?,
+        overlayStore: OverlayContentStore,
         speedLimit: Measurement<UnitSpeed>? = nil,
         isMuted: Bool,
         showMute: Bool = true,
@@ -48,10 +42,9 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
-        onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil
+        onCenter: @escaping () -> Void = {}
     ) {
-        self.navigationState = navigationState
+        self.overlayStore = overlayStore
         self.speedLimit = speedLimit
         self.isMuted = isMuted
         self.onMute = onMute
@@ -61,7 +54,6 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
-        self.onTapExit = onTapExit
     }
 
     // MARK: Content
@@ -71,25 +63,13 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
             ZStack(alignment: .top) {
                 VStack {
                     Spacer()
-                    if case .navigating = self.navigationState?.tripState,
-                       let progress = navigationState?.currentProgress {
-                        ArrivalView(
-                            progress: progress,
-                            onTapExit: self.onTapExit
-                        )
+                    if let progressView = overlayStore.content[.tripProgress] {
+                        progressView()
                     }
                 }
-                if case .navigating = self.navigationState?.tripState,
-                   let visualInstruction = navigationState?.currentVisualInstruction,
-                   let progress = navigationState?.currentProgress,
-                   let remainingSteps = navigationState?.remainingSteps {
-                    InstructionsView(
-                        visualInstruction: visualInstruction,
-                        distanceFormatter: self.formatterCollection.distanceFormatter,
-                        distanceToNextManeuver: progress.distanceToNextManeuver,
-                        remainingSteps: remainingSteps,
-                        isExpanded: self.$isInstructionViewExpanded
-                    )
+
+                if let instrcutionsView = overlayStore.content[.instructions] {
+                    instrcutionsView()
                 }
             }
 

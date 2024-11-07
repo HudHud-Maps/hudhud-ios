@@ -16,6 +16,8 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
     public var bottomTrailing: (() -> AnyView)?
     public var bottomLeading: (() -> AnyView)?
 
+    public var overlayContent: [NavigationOverlayZone: () -> AnyView] = [:]
+
     @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
 
     var speedLimit: Measurement<UnitSpeed>?

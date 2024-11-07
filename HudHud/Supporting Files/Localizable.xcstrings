@@ -10,6 +10,9 @@
     "..." : {
 
     },
+    "·" : {
+
+    },
     "(%lld)" : {
 
     },
@@ -38,6 +41,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ in %lld m" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ in %2$lld m"
           }
         }
       }
@@ -115,6 +128,17 @@
     },
     "Apply" : {
 
+    },
+    "Arrival" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrival"
+          }
+        }
+      }
     },
     "Back" : {
 
@@ -226,8 +250,30 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
+    "Distance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance"
+          }
+        }
+      }
+    },
     "Done" : {
 
+    },
+    "Duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
     },
     "Edit" : {
 
@@ -268,6 +314,9 @@
       }
     },
     "Filters" : {
+
+    },
+    "Finish" : {
 
     },
     "From %@" : {
@@ -424,6 +473,9 @@
     "Please enable your location to get directions" : {
 
     },
+    "Preview Route" : {
+
+    },
     "Price" : {
 
     },
@@ -521,6 +573,17 @@
     "Sort By" : {
 
     },
+    "Speed Limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Limit"
+          }
+        }
+      }
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -609,50 +672,6 @@
     },
     "You Have Arrived" : {
 
-    },
-    "Arrival" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
-          }
-        }
-      }
-    },
-    "Distance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distance"
-          }
-        }
-      }
-    },
-    "Duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
-    "Speed Limit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed Limit"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"
