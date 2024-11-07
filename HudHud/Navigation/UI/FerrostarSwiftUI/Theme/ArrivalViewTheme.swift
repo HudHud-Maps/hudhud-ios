@@ -51,7 +51,7 @@ public struct DefaultArrivalViewTheme: ArrivalViewTheme {
     public var measurementFont: Font = .title2.bold()
     public var secondaryColor: Color = .secondary
     public var secondaryFont: Font = .subheadline
-    public var backgroundColor: Color = .init(.systemBackground)
+    public var backgroundColor = Color(.systemBackground)
 
     // MARK: Lifecycle
 

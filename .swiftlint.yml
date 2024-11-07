@@ -22,6 +22,9 @@ excluded:
   - POIService/.build
 
 # Customised rules
+type_name:
+  max_length:
+    warning: 42
 force_try:
   severity: warning
 force_unwrapping:

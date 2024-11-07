@@ -19,8 +19,6 @@ public struct DefaultIconographyManeuverInstructionView: View {
 
     // MARK: Properties
 
-    // swiftlint:disable:this type_name
-
     private let text: String
     private let maneuverType: ManeuverType?
     private let maneuverModifier: ManeuverModifier?

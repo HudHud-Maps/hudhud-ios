@@ -41,7 +41,7 @@ public struct DefaultInstructionRowTheme: InstructionRowTheme, Equatable, Hashab
     public var instructionColor: Color = .secondary
     public var instructionFont: Font = .title2
     public var iconTintColor: Color = .primary
-    public var backgroundColor: Color = .init(.systemBackground)
+    public var backgroundColor = Color(.systemBackground)
 
     // MARK: Lifecycle
 
@@ -61,7 +61,7 @@ public struct DefaultSecondaryInstructionRowTheme: InstructionRowTheme, Equatabl
     public var instructionColor: Color = .secondary
     public var instructionFont: Font = .subheadline
     public var iconTintColor: Color = .primary
-    public var backgroundColor: Color = .init(.secondarySystemBackground)
+    public var backgroundColor = Color(.secondarySystemBackground)
 
     // MARK: Lifecycle
 
