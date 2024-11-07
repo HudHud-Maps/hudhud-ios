@@ -1,3 +1,11 @@
+//
+//  ManeuverInstructionView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import CoreLocation
 import FerrostarCoreFFI
 import MapKit
@@ -82,7 +90,7 @@ public struct ManeuverInstructionView<ManeuverView: View>: View {
             distanceFormatter: MKDistanceFormatter(),
             distanceToNextManeuver: 24140.16
         ) {
-            Image(systemName: "car.circle.fill")
+            Image(systemSymbol: .carCircleFill)
                 .symbolRenderingMode(.multicolor)
                 .resizable()
                 .scaledToFit()

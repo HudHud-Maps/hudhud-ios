@@ -118,10 +118,13 @@ struct StarInteractionView: View {
                 .padding(.trailing)
         }
     }
+}
 
-    // MARK: Functions
+// MARK: - Private
 
-    private func navigateToRateAndReview() {
+private extension StarInteractionView {
+
+    func navigateToRateAndReview() {
         Logger.navigationPath.info("Navigate to rate and review page")
     }
 }

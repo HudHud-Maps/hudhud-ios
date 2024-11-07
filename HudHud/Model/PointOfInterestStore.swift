@@ -2,12 +2,14 @@
 //  PointOfInterestStore.swift
 //  HudHud
 //
-//  Created by Naif Alrashed on 23/04/1446 AH.
-//  Copyright © 1446 AH HudHud. All rights reserved.
+//  Created by Naif Alrashed on 26/10/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import BackendService
 import Foundation
+
+// MARK: - PointOfInterestStore
 
 @Observable
 @MainActor
@@ -41,12 +43,15 @@ final class PointOfInterestStore {
     func goToDirections() {
         self.sheetStore.show(.navigationPreview)
     }
+}
 
-    private func refreshPointOfInterest() async {
-        guard var detailedPointOfInterest = try? await hudhudResolver.lookup(
-            id: self.pointOfInterest.id,
-            baseURL: DebugStore().baseURL
-        ) else { return }
+// MARK: - Private
+
+private extension PointOfInterestStore {
+
+    func refreshPointOfInterest() async {
+        guard var detailedPointOfInterest = try? await hudhudResolver.lookup(id: self.pointOfInterest.id,
+                                                                             baseURL: DebugStore().baseURL) else { return }
         detailedPointOfInterest.systemColor = self.pointOfInterest.systemColor
         detailedPointOfInterest.symbol = self.pointOfInterest.symbol
         self.pointOfInterest = detailedPointOfInterest
