@@ -266,7 +266,8 @@ struct ContentView: View {
                                 ]
                             )
 
-                            if let item = self.streetViewStore.nearestStreetViewScene {
+                            if (self.mapStore.mapViewPort?.zoom ?? 0) > 10,
+                               let item = self.streetViewStore.nearestStreetViewScene {
                                 Button {
                                     self.streetViewStore.streetViewScene = item
                                     self.streetViewStore.zoomToStreetViewLocation()
