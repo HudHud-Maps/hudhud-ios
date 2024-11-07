@@ -28,18 +28,28 @@ struct POIMediaView: View {
             HStack {
                 ForEach(self.mediaURLs, id: \.self) { mediaURL in
                     LazyImage(url: mediaURL) { state in
-                        if let image = state.image {
-                            image
-                                .resizable()
-                                .scaledToFit()
-                                .scaledToFill()
-                                .frame(width: 96, height: 96)
-                        } else {
-                            ProgressView()
-                                .progressViewStyle(.automatic)
-                                .frame(width: 96, height: 96)
-                                .background(.secondary)
-                                .cornerRadius(10)
+                        ZStack(alignment: .bottomTrailing) {
+                            if let image = state.image {
+                                image
+                                    .resizable()
+                                    .scaledToFit()
+                                    .scaledToFill()
+                                    .frame(width: 96, height: 96)
+
+                                Text("label")
+                                    .hudhudFontStyle(.labelSmall)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 4)
+                                    .background(Color.Colors.General._01Black.opacity(0.5))
+                                    .foregroundColor(Color.Colors.General._05WhiteBackground)
+                                    .clipShape(.rect(topLeadingRadius: 8, bottomTrailingRadius: 15))
+                            } else {
+                                ProgressView()
+                                    .progressViewStyle(.automatic)
+                                    .frame(width: 96, height: 96)
+                                    .background(.secondary)
+                                    .cornerRadius(10)
+                            }
                         }
                     }
                     .background(.secondary)

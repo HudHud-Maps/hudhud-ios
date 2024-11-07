@@ -35,6 +35,8 @@ struct ContentView: View {
     @StateObject var favoritesStore = FavoritesStore()
     @StateObject var notificationManager = NotificationManager()
 
+    @State var resolvedItem: [URL]? = nil
+
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
     private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
@@ -183,8 +185,12 @@ struct ContentView: View {
                         self.searchViewStore.mapStore
                             .clearItems(clearResults: false)
                         self.sheetStore.popSheet()
+                        self.resolvedItem = nil
                     }
                     .navigationBarBackButtonHidden()
+                    .task {
+                        self.resolvedItem = item.mediaURLs
+                    }
                 case let .routePlanner(store):
                     RoutePlannerView(routePlannerStore: store)
                 case .favoritesViewMore:
@@ -234,6 +240,13 @@ struct ContentView: View {
                 if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
                     // hide interface during navigation and streetview
 
+                } else if let media = self.resolvedItem, /* resolvedItem?.mediaURLs.isEmpty == false, */ self.resolvedItem != nil {
+                    HStack(alignment: .bottom) {
+                        POIMediaView(mediaURLs: media)
+                            .shadow(radius: 10)
+                    }
+                    .offset(y: -(self.sheetStore.sheetHeight + 8))
+                    .animation(.easeInOut(duration: 0.2), value: self.sheetStore.sheetHeight)
                 } else {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
