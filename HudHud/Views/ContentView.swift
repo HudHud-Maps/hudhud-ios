@@ -59,7 +59,12 @@ struct ContentView: View {
     // MARK: Lifecycle
 
     @MainActor
-    init(searchViewStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
+    init(
+        searchViewStore: SearchViewStore,
+        mapViewStore: MapViewStore,
+        sheetStore: SheetStore,
+        routesPlanMapDrawer: RoutesPlanMapDrawer
+    ) {
         self.searchViewStore = searchViewStore
         self.sheetStore = sheetStore
         self.mapStore = searchViewStore.mapStore
@@ -67,19 +72,14 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
-
-        let tempRoutesPlanMapDrawer = RoutesPlanMapDrawer()
+        self.routesPlanMapDrawer = routesPlanMapDrawer
+        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
 
         self.navigationStore = NavigationStore(
             navigationEngine: NavigationEngine(configuration: .default),
             locationEngine: LocationEngine(),
-            routesPlanMapDrawer: tempRoutesPlanMapDrawer
+            routesPlanMapDrawer: routesPlanMapDrawer
         )
-
-        self._routesPlanMapDrawer = State(initialValue: tempRoutesPlanMapDrawer)
-
-        self.mapViewStore.streetViewStore = self.streetViewStore
     }
 
     // MARK: Content
@@ -96,8 +96,6 @@ struct ContentView: View {
                 routingStore: self.searchViewStore.routingStore,
                 sheetStore: self.sheetStore,
                 streetViewStore: self.streetViewStore,
-                routesPlanMapDrawer: self.routesPlanMapDrawer streetViewStore: self.streetViewStore,
-
                 routesPlanMapDrawer: self.routesPlanMapDrawer
             ) { sheetType in
                 switch sheetType {

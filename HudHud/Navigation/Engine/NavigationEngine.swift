@@ -99,6 +99,7 @@ final class NavigationEngine {
     func stopNavigation() {
         self.ferrostarCore.stopNavigation()
         self.activeRoute = nil
+        self.state = nil
         self.eventsSubject.send(.navigationEnded)
     }
 

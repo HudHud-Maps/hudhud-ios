@@ -23,7 +23,6 @@ class DebugStore: ObservableObject {
     @AppStorage("streetViewQuality") var streetViewQuality: StreetViewQuality = .original
     @AppStorage("enableNewRoutePlanner") var enableNewRoutePlanner = false
     @AppStorage("showLocationDiagmosticLogs") var showLocationDiagmosticLogs: Bool = false
-    @AppStorage("enableNewRoutePlanner") var enableNewRoutePlanner = false
 }
 
 // MARK: - StreetViewQuality

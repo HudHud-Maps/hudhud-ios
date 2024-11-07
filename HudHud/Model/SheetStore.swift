@@ -166,7 +166,7 @@ enum SheetType {
     case search
     case mapStyle
     case debugView
-    case navigationAddSearchView((ResolvedItem) -> Void)((ResolvedItem) -> Void)
+    case navigationAddSearchView((ResolvedItem) -> Void)
     case favorites
     case navigationPreview
     case pointOfInterest(ResolvedItem)

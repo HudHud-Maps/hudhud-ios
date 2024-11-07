@@ -136,17 +136,8 @@
         }
       }
     },
-    "Add Stop" : {
-
-    },
-
     "Add photos and videos" : {
-    },
-    "Add Stop" : {
 
-    },
-
-    "Add photos and videos" : {
     },
     "Add Stop" : {
 
@@ -159,17 +150,6 @@
     },
     "Apply" : {
 
-    },
-    "Arrival" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
-          }
-        }
-      }
     },
     "Arrival" : {
       "extractionState" : "manual",
@@ -309,30 +289,8 @@
         }
       }
     },
-    "Distance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distance"
-          }
-        }
-      }
-    },
     "Done" : {
 
-    },
-    "Duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
     },
     "Duration" : {
       "extractionState" : "manual",
@@ -349,9 +307,6 @@
 
     },
     "Enable location in permissions" : {
-
-    },
-    "Enable new Route Planner design" : {
 
     },
     "Enable new Route Planner design" : {
@@ -587,10 +542,6 @@
 
     },
     "Route Planner" : {
-    "Reviews %lld" : {
-
-    },
-    "Route Planner" : {
 
     },
     "Routing Configuration" : {
@@ -670,17 +621,6 @@
         }
       }
     },
-    "Speed Limit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed Limit"
-          }
-        }
-      }
-    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -692,9 +632,6 @@
           }
         }
       }
-    },
-    "Start Trip" : {
-
     },
     "Start Trip" : {
 

@@ -69,7 +69,6 @@ struct MapViewContainer<SheetContentView: View>: View {
         self.routingStore = routingStore
         self.sheetStore = sheetStore
         self.routesPlanMapDrawer = routesPlanMapDrawer
-        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.sheetToView = sheetToView
     }
 
@@ -103,7 +102,7 @@ struct MapViewContainer<SheetContentView: View>: View {
                 }
             )
             .withNavigationOverlay(.instructions) {
-                if let navigationState = navigationStore.navigationState {
+                if let navigationState = navigationStore.navigationState, navigationState.isNavigating {
                     LegacyInstructionsView(navigationState: navigationState)
                 }
             }
@@ -111,11 +110,6 @@ struct MapViewContainer<SheetContentView: View>: View {
                 if let navigationState = navigationStore.navigationState,
                    let progress = navigationState.currentProgress,
                    navigationState.isNavigating {
-//                    ArrivalView(
-//                        progress: progress,
-//                        onTapExit: self.stopNavigation
-//                    )
-
                     ActiveTripInfoView(tripProgress: progress) { actions in
                         switch actions {
                         case .exitNavigation:
@@ -187,7 +181,6 @@ private extension MapViewContainer {
         print("shot routes \(self.routesPlanMapDrawer.routes)")
         // Routes
         layers += makeAlternativeRouteLayers()
-        if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
         if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
             layers += makeSelectedRouteLayers(for: selectedRoute)
         }
