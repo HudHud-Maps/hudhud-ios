@@ -152,13 +152,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				CDA78F622CDCE2AA004AF06C /* PBXTargetDependency */,
 				CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */,
-				6E75A916776AA6E01F44FC98 /* PBXTargetDependency */,
-				077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */,
-				115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */,
-				5EAB384F6CD96B81136F8A80 /* PBXTargetDependency */,
-				B0D31E953D3B98CBFDCDD58E /* PBXTargetDependency */,
-				42641727E216EFF75B9B1066 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				CD3398202CDA38400059ECC1 /* HudHud */,
@@ -365,27 +360,13 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		42641727E216EFF75B9B1066 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		5EAB384F6CD96B81136F8A80 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		6E75A916776AA6E01F44FC98 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		B0D31E953D3B98CBFDCDD58E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = CD3BCADA2CB6F1B8001F8CFD /* TokensEnumGeneratorPlugin */;
+		};
+		CDA78F622CDCE2AA004AF06C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CDA78F612CDCE2AA004AF06C /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -918,6 +899,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */;
 			productName = SimpleToast;
+		};
+		CDA78F612CDCE2AA004AF06C /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
