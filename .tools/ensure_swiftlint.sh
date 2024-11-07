@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if grep -q 'productName = "plugin:SwiftLint";' ../HudHud.xcodeproj/project.pbxproj; then
+if grep -q 'productName = "plugin:SwiftLint";' HudHud.xcodeproj/project.pbxproj; then
 	echo "✅ SwiftLint part of build pipeline"
 else
 	echo "SwiftLint is not part of the build pipeline."
