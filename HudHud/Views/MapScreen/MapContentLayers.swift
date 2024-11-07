@@ -16,6 +16,7 @@ import OSLog
 import SwiftUI
 
 extension MapViewContainer {
+
     @MapViewContentBuilder
     func makeAlternativeRouteLayers() -> [StyleLayerDefinition] {
         self.routesPlanMapDrawer.alternativeRoutes.enumerated().flatMap { index, route in
@@ -206,8 +207,13 @@ extension MapViewContainer {
                 .iconRotation(featurePropertyNamed: "heading")
         ]
     }
+}
 
-    private func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
+// MARK: - Private
+
+private extension MapViewContainer {
+
+    func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
         ShapeSource(identifier: "congestion-\(level)-\(id)") {
             segments.filter { $0.level == level }.map { segment in
                 MLNPolylineFeature(coordinates: segment.geometry)
@@ -215,7 +221,7 @@ extension MapViewContainer {
         }
     }
 
-    private func congestionLayer(for level: String, source: ShapeSource, index: Int) -> LineStyleLayer {
+    func congestionLayer(for level: String, source: ShapeSource, index: Int) -> LineStyleLayer {
         LineStyleLayer(identifier: MapLayerIdentifier.congestion(level, index: index), source: source)
             .lineCap(.round)
             .lineJoin(.round)
@@ -233,7 +239,7 @@ extension MapViewContainer {
             )
     }
 
-    private func colorForCongestionLevel(_ level: String) -> UIColor {
+    func colorForCongestionLevel(_ level: String) -> UIColor {
         switch level {
         case "unknown": return .gray
         case "low": return .green

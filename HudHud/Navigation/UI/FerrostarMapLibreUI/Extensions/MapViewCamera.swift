@@ -1,3 +1,11 @@
+//
+//  MapViewCamera.swift
+//  HudHud
+//
+//  Created by Patrick Kladek on 12.05.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import Foundation
 import MapLibreSwiftUI
 

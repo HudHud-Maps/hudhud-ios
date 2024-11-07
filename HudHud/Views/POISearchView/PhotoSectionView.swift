@@ -11,6 +11,8 @@ import NukeUI
 import OSLog
 import SwiftUI
 
+// MARK: - PhotoSectionView
+
 struct PhotoSectionView: View {
 
     // MARK: Nested Types
@@ -62,11 +64,14 @@ struct PhotoSectionView: View {
             }
         }
     }
+}
 
-    // MARK: - Helper Views
+// MARK: - Private
+
+private extension PhotoSectionView {
 
     @ViewBuilder
-    private func noImagesView() -> some View {
+    func noImagesView() -> some View {
         Text("There is no photo added yet! Be the first to add one.")
             .hudhudFontStyle(.labelXxsmall)
             .foregroundColor(Color.Colors.General._02Grey)
@@ -84,7 +89,7 @@ struct PhotoSectionView: View {
     // MARK: - Image Display Functions
 
     @ViewBuilder
-    private func displayFiveImages() -> some View {
+    func displayFiveImages() -> some View {
         VStack(spacing: 10) {
             self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.small)
 
@@ -102,7 +107,7 @@ struct PhotoSectionView: View {
     }
 
     @ViewBuilder
-    private func displayFourImages() -> some View {
+    func displayFourImages() -> some View {
         VStack(spacing: 10) {
             HStack(spacing: 10) {
                 self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.small)
@@ -117,7 +122,7 @@ struct PhotoSectionView: View {
     }
 
     @ViewBuilder
-    private func displayThreeImages() -> some View {
+    func displayThreeImages() -> some View {
         VStack(spacing: 10) {
             self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.small)
             self.imageView(for: self.item.mediaURLs[1], label: self.item.title, size: ImageSizes.small)
@@ -126,21 +131,21 @@ struct PhotoSectionView: View {
     }
 
     @ViewBuilder
-    private func displayTwoImages() -> some View {
+    func displayTwoImages() -> some View {
         ForEach(0 ..< 2, id: \.self) { index in
             self.imageView(for: self.item.mediaURLs[index], label: self.item.title, size: ImageSizes.medium)
         }
     }
 
     @ViewBuilder
-    private func displayOneImage() -> some View {
+    func displayOneImage() -> some View {
         self.imageView(for: self.item.mediaURLs[0], label: self.item.title, size: ImageSizes.large)
     }
 
     // MARK: - Action Buttons
 
     @ViewBuilder
-    private func actionButtonsView() -> some View {
+    func actionButtonsView() -> some View {
         VStack(alignment: .center) {
             if self.item.mediaURLs.count >= 5 {
                 self.actionButton(title: "View All", imageName: "photoLibrary", isSmallButton: true) {
@@ -156,7 +161,7 @@ struct PhotoSectionView: View {
     // MARK: - Image View
 
     @ViewBuilder
-    private func imageView(for url: URL, label: String, size: CGSize) -> some View {
+    func imageView(for url: URL, label: String, size: CGSize) -> some View {
         ZStack(alignment: .bottomTrailing) {
             LazyImage(url: url) { state in
                 ZStack(alignment: .bottomTrailing) {
@@ -199,7 +204,7 @@ struct PhotoSectionView: View {
     // MARK: - Action Button
 
     @ViewBuilder
-    private func actionButton(title: String, imageName: String, isSmallButton: Bool, action: @escaping () -> Void) -> some View {
+    func actionButton(title: String, imageName: String, isSmallButton: Bool, action: @escaping () -> Void) -> some View {
         Button(action: {
             action()
         }, label: {

@@ -9,6 +9,8 @@
 import OSLog
 import SwiftUI
 
+// MARK: - MapButtonsView
+
 struct MapButtonsView: View {
 
     // MARK: Properties
@@ -35,11 +37,14 @@ struct MapButtonsView: View {
         .shadow(color: .black.opacity(0.1), radius: 10, y: 4)
         .fixedSize()
     }
+}
 
-    // MARK: - Private
+// MARK: - Private
+
+private extension MapButtonsView {
 
     @ViewBuilder
-    private func iconView(for style: MapButtonData.IconStyle) -> some View {
+    func iconView(for style: MapButtonData.IconStyle) -> some View {
         switch style {
         case let .icon(symbol):
             Image(systemSymbol: symbol).font(.title2)

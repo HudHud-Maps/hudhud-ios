@@ -1,3 +1,11 @@
+//
+//  RouteStyleLayer.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -36,7 +44,7 @@ public struct TravelledRouteStyle: RouteStyle {
     // MARK: Properties
 
     public var color: UIColor = .systemGray
-    public var casingColor: UIColor? = nil
+    public var casingColor: UIColor?
     public let lineCap: LineCap = .round
     public let lineJoin: LineJoin = .round
 

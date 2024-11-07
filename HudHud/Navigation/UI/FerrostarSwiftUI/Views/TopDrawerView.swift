@@ -1,3 +1,11 @@
+//
+//  TopDrawerView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 // MARK: - TopDrawerView
@@ -128,7 +136,7 @@ private struct Handle: View {
         HStack {
             Spacer()
             if self.isExpanded {
-                Image(systemName: "chevron.up")
+                Image(systemSymbol: .chevronUp)
                     .font(.system(size: 32, weight: .bold))
                     .foregroundColor(self.foregroundColor)
                     .padding(.bottom, 16)

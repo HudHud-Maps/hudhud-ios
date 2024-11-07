@@ -20,8 +20,7 @@ import SwiftUI
 /// * the allowed detent
 /// * the sheet's visibility
 
-@Observable
-@MainActor
+@Observable @MainActor
 final class SheetStore {
 
     // MARK: Properties
@@ -103,15 +102,19 @@ final class SheetStore {
         self.sheets = []
         self.navigationCommands.send(.popToRoot(rootSheetData: self.emptySheetData))
     }
+}
 
-    private func computeSheetHeight() -> CGFloat {
+// MARK: - Private
+
+private extension SheetStore {
+
+    func computeSheetHeight() -> CGFloat {
         if self.isShown.value {
             self.rawSheetheight - self.safeAreaInsets.bottom
         } else {
             0
         }
     }
-
 }
 
 // MARK: - Previewable

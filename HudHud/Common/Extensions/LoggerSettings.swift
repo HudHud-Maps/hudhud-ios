@@ -26,4 +26,5 @@ extension Logger {
     static let streetViewScene = Logger(subsystem: subsystem, category: "streetViewScene")
     static let panoramaView = Logger(subsystem: subsystem, category: "panoramaView")
     static let userRegistration = Logger(subsystem: subsystem, category: "userRegistration")
+    static let diagnostics = Logger(subsystem: subsystem, category: "Diagnostics")
 }
