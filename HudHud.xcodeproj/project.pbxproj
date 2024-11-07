@@ -1168,13 +1168,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				CDA78D192CDCA603004AF06C /* PBXTargetDependency */,
 				CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */,
-				6E75A916776AA6E01F44FC98 /* PBXTargetDependency */,
-				077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */,
-				115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */,
-				78C4323F9A0E0EF9DFB8B598 /* PBXTargetDependency */,
-				808C32E658A32AA6B6C8392A /* PBXTargetDependency */,
-				234EAF4A43FF18EE0899E255 /* PBXTargetDependency */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -1564,27 +1559,13 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		234EAF4A43FF18EE0899E255 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		6E75A916776AA6E01F44FC98 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		78C4323F9A0E0EF9DFB8B598 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		808C32E658A32AA6B6C8392A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = CD3BCADA2CB6F1B8001F8CFD /* TokensEnumGeneratorPlugin */;
+		};
+		CDA78D192CDCA603004AF06C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = CDA78D182CDCA603004AF06C /* SwiftLint */;
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1932,7 +1913,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-				revision = "";
 			};
 		};
 		0F9BA875694EC97BBC9B1320 /* XCRemoteSwiftPackageReference "ferrostar" */ = {
@@ -1941,7 +1921,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-				revision = "";
 			};
 		};
 		2D71CE9F4131B35FB9C0571F /* XCRemoteSwiftPackageReference "ferrostar" */ = {
@@ -1950,7 +1929,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-				revision = "";
 			};
 		};
 		6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
@@ -1967,7 +1945,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-				revision = "";
 			};
 		};
 		971D7A9A25B296FFCA9B0409 /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
@@ -2146,6 +2123,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = CD8C5A1E2BA342A5002EBE8A /* XCRemoteSwiftPackageReference "SimpleToast" */;
 			productName = SimpleToast;
+		};
+		CDA78D182CDCA603004AF06C /* SwiftLint */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = ABFE8D4C28D074EE746DCBA3 /* XCRemoteSwiftPackageReference "SwiftLintPlugin" */;
+			productName = "plugin:SwiftLint";
 		};
 		CDAE05EB2B6A87B4003E5196 /* SwiftLocation */ = {
 			isa = XCSwiftPackageProductDependency;
