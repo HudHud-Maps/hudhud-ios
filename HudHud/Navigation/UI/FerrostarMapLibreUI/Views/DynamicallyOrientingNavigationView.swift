@@ -174,31 +174,11 @@ public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: 
         ) { _ in
             self.orientation = UIDevice.current.orientation
         }
-
-//        .onChange(of: navigationState) { value in
-//                  speedLimit = calculateSpeedLimit?(value)
-//              }
     }
 }
 
 public extension DynamicallyOrientingNavigationView where T == MLNMapViewController {
-    /// Create a dynamically orienting navigation view. This view automatically arranges child views for both portait
-    /// and landscape orientations.
-    ///
-    /// - Parameters:
-    ///   - styleURL: The map's style url.
-    ///   - camera: The camera binding that represents the current camera on the map.
-    ///   - navigationCamera: The default navigation camera. This sets the initial camera & is also used when the center
-    /// on user button it tapped.
-    ///   - navigationState: The current ferrostar navigation state provided by the Ferrostar core.
-    ///   - minimumSafeAreaInsets: The minimum padding to apply from safe edges. See `complementSafeAreaInsets`.
-    ///   - onTapExit: An optional behavior to run when the ArrivalView exit button is tapped. When nil (default) the
-    /// exit button is hidden.
-    ///   - makeMapContent: Custom maplibre layers to display on the map view.
-    ///   - mapViewModifiers: An optional closure that allows you to apply custom view and map modifiers to the `MapView`. The closure
-    ///     takes the `MapView` instance and provides a Boolean indicating if navigation is active, and returns an `AnyView`. Use this to attach onMapTapGesture and other view modifiers to the underlying MapView and customize when the modifiers are applied using
-    ///       the isNavigating modifier.
-    ///     By default, it returns the unmodified `MapView`.
+
     init(
         styleURL: URL,
         camera: Binding<MapViewCamera>,
@@ -230,46 +210,3 @@ public extension DynamicallyOrientingNavigationView where T == MLNMapViewControl
         self.onTapMute = onTapMute
     }
 }
-
-// #Preview("Portrait Navigation View (Imperial)") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .imperial
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return DynamicallyOrientingNavigationView<MLNMapViewController>(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }
-//
-// #Preview("Portrait Navigation View (Metric)") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .metric
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return DynamicallyOrientingNavigationView<MLNMapViewController>(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }

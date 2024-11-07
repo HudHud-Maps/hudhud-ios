@@ -51,6 +51,8 @@ struct ContentView: View {
 
     @Bindable private var sheetStore: SheetStore
 
+    @State private var navigationStore: NavigationStore
+
     // MARK: Lifecycle
 
     @MainActor
@@ -63,6 +65,17 @@ struct ContentView: View {
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
         self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
+
+        let tempRoutesPlanMapDrawer = RoutesPlanMapDrawer()
+
+        self.navigationStore = NavigationStore(
+            navigationEngine: NavigationEngine(configuration: .default),
+            locationEngine: LocationEngine(),
+            routesPlanMapDrawer: tempRoutesPlanMapDrawer
+        )
+
+        self._routesPlanMapDrawer = State(initialValue: tempRoutesPlanMapDrawer)
+
         self.mapViewStore.streetViewStore = self.streetViewStore
     }
 
@@ -72,6 +85,7 @@ struct ContentView: View {
         ZStack {
             MapViewContainer(
                 mapStore: self.mapStore,
+                navigationStore: self.navigationStore,
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,

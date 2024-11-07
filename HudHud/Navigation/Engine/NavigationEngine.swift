@@ -26,6 +26,7 @@ enum NavigationEvent {
     case stateChanged(NavigationState)
     case routeUpdated(Route)
     case stepChanged(RouteStep)
+    case speedLimitChanged(Measurement<UnitSpeed>?)
     case snappedLocationUpdated(CLLocation)
     case error(NavigationError)
 }
@@ -47,10 +48,16 @@ final class NavigationEngine {
     private let locationEngine: LocationEngine
     private var cancellables: Set<AnyCancellable> = []
 
+    private let horizonEngine: HorizonEngine
+
     // MARK: Computed Properties
 
     var events: AnyPublisher<NavigationEvent, Never> {
         self.eventsSubject.eraseToAnyPublisher()
+    }
+
+    var horizonEvents: AnyPublisher<HorizionEvent, Never> {
+        self.horizonEngine.events.eraseToAnyPublisher()
     }
 
     private(set) var state: NavigationState? {
@@ -62,13 +69,12 @@ final class NavigationEngine {
 
     // MARK: Lifecycle
 
-    // MARK: - Initialization
-
     init(configuration: NavigationConfig) {
         self.navigationDelegate = NavigationDelegate()
         self.annotationPublisher = .valhallaExtendedOSRM()
         self.spokenInstructionObserver = .initAVSpeechSynthesizer(isMuted: false)
         self.locationEngine = configuration.locationEngine
+        self.horizonEngine = HorizonEngine(configuration: configuration)
 
         self.ferrostarCore = FerrostarCore(
             customRouteProvider: configuration.routeProvider,
@@ -83,8 +89,6 @@ final class NavigationEngine {
     }
 
     // MARK: Functions
-
-    // MARK: - Public Methods
 
     func startNavigation(route: Route) throws {
         self.activeRoute = route
@@ -125,7 +129,6 @@ final class NavigationEngine {
 
         let newMode: LocationMode = shouldUseSnappedLocation ? .snapped : .raw
 
-        // return new mode if it's different from current
         return newMode != currentMode ? newMode : nil
     }
 
@@ -144,6 +147,12 @@ final class NavigationEngine {
                 self.state = newState
             }
             .store(in: &self.cancellables)
+
+        self.annotationPublisher
+            .$speedLimit
+            .sink { [weak self] sppedLimit in
+                self?.eventsSubject.send(.speedLimitChanged(sppedLimit))
+            }.store(in: &self.cancellables)
     }
 
     private func observeLocationEngineState() {

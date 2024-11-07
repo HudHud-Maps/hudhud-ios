@@ -30,6 +30,7 @@ struct MapViewContainer<SheetContentView: View>: View {
     let streetViewStore: StreetViewStore
     let mapViewStore: MapViewStore
     let routesPlanMapDrawer: RoutesPlanMapDrawer
+    let navigationStore: NavigationStore
 
     @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
@@ -47,6 +48,7 @@ struct MapViewContainer<SheetContentView: View>: View {
 
     init(
         mapStore: MapStore,
+        navigationStore: NavigationStore,
         debugStore: DebugStore,
         searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
@@ -58,6 +60,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
     ) {
         self.mapStore = mapStore
+        self.navigationStore = navigationStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
