@@ -2,8 +2,8 @@
 //  PointOfInterestStore.swift
 //  HudHud
 //
-//  Created by Naif Alrashed on 23/04/1446 AH.
-//  Copyright © 1446 AH HudHud. All rights reserved.
+//  Created by Naif Alrashed on 26/10/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
 //
 
 import BackendService

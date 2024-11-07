@@ -1,3 +1,11 @@
+//
+//  PortraitNavigationView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -32,8 +40,6 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
     let isMuted: Bool
     let onTapMute: () -> Void
     var onTapExit: (() -> Void)?
-
-    // TODO: Configurable camera and user "puck" rotation modes
 
     private var navigationState: NavigationState?
     private let userLayers: [StyleLayerDefinition]
@@ -95,10 +101,10 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
                     navigationState: self.navigationState,
                     onStyleLoaded: { _ in
                         self.camera = self.navigationCamera
+                    }, makeMapContent: {
+                        self.userLayers
                     }
-                ) {
-                    self.userLayers
-                }
+                )
                 .navigationMapViewContentInset(.portrait(within: geometry))
 
                 PortraitNavigationOverlayView(
@@ -170,47 +176,3 @@ public extension PortraitNavigationView where T == MLNMapViewController {
         self.navigationCamera = navigationCamera
     }
 }
-
-// #Preview("Portrait Navigation View (Imperial)") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .imperial
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return PortraitNavigationView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }
-//
-// #Preview("Portrait Navigation View (Metric)") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .metric
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return PortraitNavigationView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }

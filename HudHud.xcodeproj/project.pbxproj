@@ -53,7 +53,7 @@
 		0CC00AFA2CD271C300A2D1A8 /* ArrivalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AD32CD271C300A2D1A8 /* ArrivalView.swift */; };
 		0CC00AFB2CD271C300A2D1A8 /* PortraitNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AAC2CD271C300A2D1A8 /* PortraitNavigationView.swift */; };
 		0CC00AFD2CD271C300A2D1A8 /* NavigatingInnerGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AC92CD271C300A2D1A8 /* NavigatingInnerGridView.swift */; };
-		0CC00AFE2CD271C300A2D1A8 /* MapLibre Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AAE2CD271C300A2D1A8 /* MapLibre Extensions.swift */; };
+		0CC00AFE2CD271C300A2D1A8 /* MapLibreExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AAE2CD271C300A2D1A8 /* MapLibreExtensions.swift */; };
 		0CC00AFF2CD271C300A2D1A8 /* NavigationMapViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00AAB2CD271C300A2D1A8 /* NavigationMapViewModifiers.swift */; };
 		0CC00B002CD271C300A2D1A8 /* Directions.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0CC00AB72CD271C300A2D1A8 /* Directions.xcassets */; };
 		0CC00B042CD2751300A2D1A8 /* ValhallaOsrmAnnotation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CC00B032CD2751300A2D1A8 /* ValhallaOsrmAnnotation.swift */; };
@@ -261,7 +261,7 @@
 		0CC00AAA2CD271C300A2D1A8 /* NavigationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapView.swift; sourceTree = "<group>"; };
 		0CC00AAB2CD271C300A2D1A8 /* NavigationMapViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapViewModifiers.swift; sourceTree = "<group>"; };
 		0CC00AAC2CD271C300A2D1A8 /* PortraitNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitNavigationView.swift; sourceTree = "<group>"; };
-		0CC00AAE2CD271C300A2D1A8 /* MapLibre Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapLibre Extensions.swift"; sourceTree = "<group>"; };
+		0CC00AAE2CD271C300A2D1A8 /* MapLibreExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapLibreExtensions.swift; sourceTree = "<group>"; };
 		0CC00AB02CD271C300A2D1A8 /* ManeuverImageKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManeuverImageKeys.swift; sourceTree = "<group>"; };
 		0CC00AB22CD271C300A2D1A8 /* FormatterCollection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatterCollection.swift; sourceTree = "<group>"; };
 		0CC00AB42CD271C300A2D1A8 /* DefaultFormatters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultFormatters.swift; sourceTree = "<group>"; };
@@ -582,7 +582,7 @@
 				0CC00AA22CD271C300A2D1A8 /* Layers */,
 				0CC00AA42CD271C300A2D1A8 /* Models */,
 				0CC00AAD2CD271C300A2D1A8 /* Views */,
-				0CC00AAE2CD271C300A2D1A8 /* MapLibre Extensions.swift */,
+				0CC00AAE2CD271C300A2D1A8 /* MapLibreExtensions.swift */,
 			);
 			path = FerrostarMapLibreUI;
 			sourceTree = "<group>";
@@ -1419,7 +1419,7 @@
 				0CC00AFA2CD271C300A2D1A8 /* ArrivalView.swift in Sources */,
 				0CC00AFB2CD271C300A2D1A8 /* PortraitNavigationView.swift in Sources */,
 				0CC00AFD2CD271C300A2D1A8 /* NavigatingInnerGridView.swift in Sources */,
-				0CC00AFE2CD271C300A2D1A8 /* MapLibre Extensions.swift in Sources */,
+				0CC00AFE2CD271C300A2D1A8 /* MapLibreExtensions.swift in Sources */,
 				0CC00AFF2CD271C300A2D1A8 /* NavigationMapViewModifiers.swift in Sources */,
 				CD71C36D2BBC0F84009C3A1C /* CLLocationCoordinate2D.swift in Sources */,
 				594C48792C0DBBA900756633 /* EditFavoritesFormView.swift in Sources */,

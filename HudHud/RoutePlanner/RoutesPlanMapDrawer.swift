@@ -25,7 +25,7 @@ final class RoutesPlanMapDrawer {
     // MARK: Properties
 
     private(set) var routes: [Route] = []
-    private(set) var routeStops: ShapeSource = .init(identifier: MapSourceIdentifier.routePoints) {}
+    private(set) var routeStops = ShapeSource(identifier: MapSourceIdentifier.routePoints) {}
 
     private(set) var alternativeRoutes: [Route] = []
     private(set) var selectedRoute: Route?

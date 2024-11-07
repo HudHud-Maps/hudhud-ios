@@ -1,3 +1,11 @@
+//
+//  DefaultIconographyManeuverInstructionView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import CoreLocation
 import FerrostarCoreFFI
 import MapKit
@@ -10,6 +18,8 @@ import SwiftUI
 public struct DefaultIconographyManeuverInstructionView: View {
 
     // MARK: Properties
+
+    // swiftlint:disable:this type_name
 
     private let text: String
     private let maneuverType: ManeuverType?

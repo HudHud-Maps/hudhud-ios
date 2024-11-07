@@ -1,3 +1,11 @@
+//
+//  NavigationMapView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -28,10 +36,7 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
 
     @Binding var camera: MapViewCamera
 
-    // TODO: Configurable camera and user "puck" rotation modes
-
     private var navigationState: NavigationState?
-
     private var locationManager: HudHudLocationManager
 
     // MARK: Computed Properties
@@ -75,14 +80,10 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     // MARK: Content
 
     public var body: some View {
-        MapView(
-            makeViewController: self.makeViewController(),
-            styleURL: self.styleURL,
-            camera: self.$camera,
-            locationManager: self.locationManager
-        ) {
-            // TODO: Create logic and style for route previews. Unless ferrostarCore will handle this internally.
-
+        MapView(makeViewController: self.makeViewController(),
+                styleURL: self.styleURL,
+                camera: self.$camera,
+                locationManager: self.locationManager) {
             if let routePolyline = navigationState?.routePolyline {
                 RouteStyleLayer(polyline: routePolyline,
                                 identifier: "route-polyline",
@@ -162,20 +163,3 @@ public extension NavigationMapView where T == MLNMapViewController {
         self.mapViewModifiers = mapViewModifiers
     }
 }
-
-//
-// #Preview("Navigation Map View") {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return NavigationMapView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        onStyleLoaded: { _ in }
-//    )
-// }

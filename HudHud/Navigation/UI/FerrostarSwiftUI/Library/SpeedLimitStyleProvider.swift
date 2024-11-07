@@ -1,3 +1,11 @@
+//
+//  SpeedLimitStyleProvider.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import Foundation
 
 // MARK: - SpeedLimitStyleProviding
@@ -9,7 +17,6 @@ protocol SpeedLimitStyleProviding {
 
 // MARK: - USSpeedLimitStyleProvider
 
-// TODO: Create a location based Provider using:
 // MUTCD Signage Regions: https://en.wikipedia.org/wiki/Manual_on_Uniform_Traffic_Control_Devices
 //    US, Canada, Mexico, Belize, Argentina, Bolivia, Brazil, Colombia, Equador, Guyana
 //    Paraguay, Peru, Venezuela, Austrialia, Thailand.

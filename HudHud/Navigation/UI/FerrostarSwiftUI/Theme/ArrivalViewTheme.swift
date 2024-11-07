@@ -1,3 +1,11 @@
+//
+//  ArrivalViewTheme.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 // MARK: - ArrivalViewStyle
