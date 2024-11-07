@@ -96,13 +96,12 @@ struct POIDetailSheet: View {
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(self.sheetStore.sheetHeight < 220 ? 1 : 2)
                         .frame(maxWidth: .infinity, alignment: .leading)
-                    // if here
                     if self.pointOfInterestStore.pointOfInterest.title == "Dropped Pin" {
                         HStack {
                             Text(self.pointOfInterestStore.pointOfInterest.coordinate.formatted())
                                 .hudhudFont(.subheadline)
                                 .foregroundStyle(Color.Colors.General._02Grey)
-                                .multilineTextAlignment(.leading)
+                                .lineLimit(1)
                             Text(" · ")
                                 .hudhudFont(.subheadline)
                                 .foregroundStyle(Color.Colors.General._02Grey)

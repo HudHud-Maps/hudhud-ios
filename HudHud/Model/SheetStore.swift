@@ -171,15 +171,6 @@ enum SheetType {
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
 
-    // MARK: Nested Types
-
-    private enum POISheetHeights {
-        static let compact: CGFloat = 140
-        static let normal: CGFloat = 190
-        static let expanded: CGFloat = 600
-
-    }
-
     // MARK: Computed Properties
 
     var initialDetentData: DetentData {
@@ -197,7 +188,7 @@ enum SheetType {
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
-            DetentData(selectedDetent: .height(POISheetHeights.normal), allowedDetents: [.height(POISheetHeights.compact), .height(POISheetHeights.normal), .height(POISheetHeights.expanded), .large])
+            DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
         case .routePlanner:
             DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
         case .favoritesViewMore:
