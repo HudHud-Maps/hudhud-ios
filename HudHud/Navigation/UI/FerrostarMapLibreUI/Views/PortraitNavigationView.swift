@@ -1,3 +1,11 @@
+//
+//  PortraitNavigationView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -87,10 +95,10 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
                     isNavigating: self.isNavigating,
                     onStyleLoaded: { _ in
                         self.camera = self.navigationCamera
+                    }, makeMapContent: {
+                        self.userLayers
                     }
-                ) {
-                    self.userLayers
-                }
+                )
                 .navigationMapViewContentInset(.portrait(within: geometry))
 
                 PortraitNavigationOverlayView(

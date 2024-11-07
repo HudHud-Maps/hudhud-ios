@@ -14,35 +14,30 @@ import Foundation
 
 // MARK: - RoutePlannerStore
 
-@Observable
-@MainActor
+@Observable @MainActor
 final class RoutePlannerStore {
 
     // MARK: Properties
 
     var state: RoutePlanningState = .initialLoading
 
-    private let initialDestination: ResolvedItem
+    private let initialDestination: DestinationPointOfInterest
     private let sheetStore: SheetStore
     private let userLocationStore: UserLocationStore
     private let routesPlanMapDrawer: RoutesPlanMapDrawer
     private let mapStore: MapStore
-    private let routePlanner = RoutePlanner(
-        routingService: GraphHopperRouteProvider()
-    )
+    private let routePlanner = RoutePlanner(routingService: GraphHopperRouteProvider())
     private let routingStore: RoutingStore
     private var routeMapEventSubscription: AnyCancellable?
 
     // MARK: Lifecycle
 
-    init(
-        sheetStore: SheetStore,
-        userLocationStore: UserLocationStore,
-        mapStore: MapStore,
-        routingStore: RoutingStore,
-        routesPlanMapDrawer: RoutesPlanMapDrawer,
-        destination: ResolvedItem
-    ) {
+    init(sheetStore: SheetStore,
+         userLocationStore: UserLocationStore,
+         mapStore: MapStore,
+         routingStore: RoutingStore,
+         routesPlanMapDrawer: RoutesPlanMapDrawer,
+         destination: DestinationPointOfInterest) {
         self.initialDestination = destination
         self.sheetStore = sheetStore
         self.mapStore = mapStore
@@ -81,7 +76,9 @@ final class RoutePlannerStore {
     }
 
     func startNavigation() {
-        self.routingStore.startNavigation()
+        guard let selectedRoute = self.state.selectedRoute else { return }
+        self.routesPlanMapDrawer.clear()
+        self.routingStore.startNavigation(to: selectedRoute)
     }
 
     func swap() async {
@@ -92,7 +89,17 @@ final class RoutePlannerStore {
         await self.fetchRoutePlan(for: destinations)
     }
 
-    private func fetchRoutePlanForFirstTime() async {
+    func remove(_ destination: RouteWaypoint) async {
+        self.state.destinations.removeAll(where: { $0 == destination })
+        await self.fetchRoutePlan(for: self.state.destinations)
+    }
+}
+
+// MARK: - Private
+
+private extension RoutePlannerStore {
+
+    func fetchRoutePlanForFirstTime() async {
         guard let userLocation = await self.userLocationStore.location(allowCached: false) else {
             self.state = .locationNotEnabled
             return
@@ -113,7 +120,7 @@ final class RoutePlannerStore {
         await self.fetchRoutePlan(for: initialDestinations)
     }
 
-    private func fetchRoutePlan(for destinations: [RouteWaypoint]) async {
+    func fetchRoutePlan(for destinations: [RouteWaypoint]) async {
         guard destinations.count > 1 else {
             self.state = .errorFetchignRoute
             return
@@ -156,7 +163,7 @@ final class RoutePlannerStore {
         }
     }
 
-    private func drawRoutes(in plan: RoutePlan) {
+    func drawRoutes(in plan: RoutePlan) {
         self.routesPlanMapDrawer.drawRoutes(
             routes: plan.routes,
             selectedRoute: plan.selectedRoute,
@@ -164,7 +171,7 @@ final class RoutePlannerStore {
         )
     }
 
-    private func bindMapEvents() {
+    func bindMapEvents() {
         self.routeMapEventSubscription = self.routesPlanMapDrawer.routePlanEvents.sink { [weak self] event in
             guard let self else { return }
             switch event {
@@ -180,102 +187,14 @@ final class RoutePlannerStore {
     }
 }
 
-// MARK: - RoutePlanningState
-
-enum RoutePlanningState: Hashable {
-    case initialLoading
-    case locationNotEnabled
-    case errorFetchignRoute
-    case loaded(plan: RoutePlan)
-
-    // MARK: Computed Properties
-
-    var destinations: [RouteWaypoint] {
-        get {
-            switch self {
-            case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
-                []
-            case let .loaded(plan):
-                plan.waypoints
-            }
-        }
-        set {
-            switch self {
-            case let .loaded(plan):
-                self = .loaded(plan: RoutePlan(waypoints: newValue, routes: plan.routes, selectedRoute: plan.selectedRoute))
-            case .errorFetchignRoute, .initialLoading, .locationNotEnabled:
-                break
-            }
-        }
-    }
-
-    var canSwap: Bool {
-        self.destinations.count == 2
-    }
-}
-
-// MARK: - Coordinates
-
-struct Coordinates: Hashable {
-
-    // MARK: Properties
-
-    let latitude: Double
-    let longitude: Double
-
-    // MARK: Computed Properties
-
-    var clLocationCoordinate2D: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
-    }
-
-    // MARK: Lifecycle
-
-    init(latitude: Double, longitude: Double) {
-        self.latitude = latitude
-        self.longitude = longitude
-    }
-
-    init(_ coordinate: CLLocationCoordinate2D) {
-        self.latitude = coordinate.latitude
-        self.longitude = coordinate.longitude
-    }
-}
-
-// MARK: - RouteWaypoint
-
-struct RouteWaypoint: Hashable {
-
-    // MARK: Nested Types
-
-    enum RouteWaypointType: Hashable {
-        case userLocation(Coordinates)
-        case location(ResolvedItem)
-    }
-
-    // MARK: Properties
-
-    let type: RouteWaypointType
-    let title: String
-}
-
-// MARK: - RoutePlan
-
-struct RoutePlan: Hashable {
-    var waypoints: [RouteWaypoint]
-    var routes: [Route]
-    var selectedRoute: Route
-}
-
-// MARK: - RoutePlannerStore + Previewable
+// MARK: - Previewable
 
 extension RoutePlannerStore: Previewable {
-    static let storeSetUpForPreviewing = RoutePlannerStore(
-        sheetStore: .storeSetUpForPreviewing,
-        userLocationStore: .storeSetUpForPreviewing,
-        mapStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
-        routesPlanMapDrawer: RoutesPlanMapDrawer(),
-        destination: .artwork
-    )
+
+    static let storeSetUpForPreviewing = RoutePlannerStore(sheetStore: .storeSetUpForPreviewing,
+                                                           userLocationStore: .storeSetUpForPreviewing,
+                                                           mapStore: .storeSetUpForPreviewing,
+                                                           routingStore: .storeSetUpForPreviewing,
+                                                           routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                                                           destination: .artwork)
 }

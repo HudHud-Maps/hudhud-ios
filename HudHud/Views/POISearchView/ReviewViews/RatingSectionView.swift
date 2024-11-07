@@ -89,7 +89,7 @@ struct StarInteractionView: View {
             ForEach(1 ... 5, id: \.self) { index in
                 Image(index <= self.store.state.interactiveRating ? .starOn : .starEmpty)
                     .resizable()
-                    .frame(width: 50, height: 50)
+                    .frame(width: 40, height: 40)
                     .onTapGesture {
                         withAnimation {
                             self.store.reduce(action: .setInteractiveRating(index))
@@ -118,10 +118,13 @@ struct StarInteractionView: View {
                 .padding(.trailing)
         }
     }
+}
 
-    // MARK: Functions
+// MARK: - Private
 
-    private func navigateToRateAndReview() {
+private extension StarInteractionView {
+
+    func navigateToRateAndReview() {
         Logger.navigationPath.info("Navigate to rate and review page")
     }
 }

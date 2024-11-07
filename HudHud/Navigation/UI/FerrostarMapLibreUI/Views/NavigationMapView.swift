@@ -1,3 +1,11 @@
+//
+//  NavigationMapView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -27,8 +35,6 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     // MARK: Camera Settings
 
     @Binding var camera: MapViewCamera
-
-    // TODO: Configurable camera and user "puck" rotation modes
 
     private var isNavigating: Bool
 
@@ -94,10 +100,9 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
 }
 
 extension MapView {
+
     @ViewBuilder
-    func applyTransform(
-        transform: (Self, Bool) -> some View, isNavigating: Bool
-    ) -> some View {
+    func applyTransform(transform: (Self, Bool) -> some View, isNavigating: Bool) -> some View {
         transform(self, isNavigating)
     }
 }

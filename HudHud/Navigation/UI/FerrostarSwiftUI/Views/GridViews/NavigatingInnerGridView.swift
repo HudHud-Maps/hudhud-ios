@@ -1,3 +1,11 @@
+//
+//  NavigatingInnerGridView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import SwiftUI
 
@@ -115,7 +123,7 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
                 self.bottomLeading?()
                 if self.showCentering {
                     NavigationUIButton(action: self.onCenter) {
-                        Image(systemName: "location.north.fill")
+                        Image(systemSymbol: .locationNorthFill)
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                             .frame(width: 18, height: 18)
@@ -141,7 +149,7 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
             .frame(height: 128)
 
         NavigatingInnerGridView(
-            speedLimit: .init(value: 55, unit: .milesPerHour),
+            speedLimit: Measurement(value: 55, unit: .milesPerHour),
             isMuted: true,
             showMute: true,
             onMute: {}

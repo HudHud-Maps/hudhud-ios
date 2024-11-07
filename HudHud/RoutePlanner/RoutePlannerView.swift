@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftUI
 
 // MARK: - RoutePlannerView
@@ -57,7 +58,8 @@ struct RoutePlanView: View {
                 ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
                     RoutePlannerRow(
                         destination: destination,
-                        onSwap: self.swapActionIfCanSwap(for: destination)
+                        onSwap: self.swapActionIfCanSwap(for: destination),
+                        onDelete: self.deleteActionIfCanDelete(for: destination)
                     )
                     .animation(.bouncy, value: destination)
                 }
@@ -86,6 +88,18 @@ struct RoutePlanView: View {
             nil
         }
     }
+
+    func deleteActionIfCanDelete(for destination: RouteWaypoint) -> (() -> Void)? {
+        if self.routePlannderStore.state.canRemove {
+            {
+                Task {
+                    await self.routePlannderStore.remove(destination)
+                }
+            }
+        } else {
+            nil
+        }
+    }
 }
 
 // MARK: - RoutePlannerRow
@@ -96,23 +110,47 @@ struct RoutePlannerRow: View {
 
     let destination: RouteWaypoint
     let onSwap: (() -> Void)?
+    let onDelete: (() -> Void)?
 
     // MARK: Content
 
     var body: some View {
         VStack(alignment: .destinationIconCenterAlignment, spacing: 6) {
-            Label {
-                HStack {
-                    Text(self.destination.title)
-                        .hudhudFontStyle(.labelMedium)
-                        .foregroundStyle(Color.Colors.General._01Black)
-                    Spacer()
-                }
-            } icon: {
+            HStack {
                 DestinationImage(destinationType: self.destination.type)
                     .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                Text(self.destination.title)
+                    .hudhudFontStyle(.labelMedium)
+                    .foregroundStyle(Color.Colors.General._01Black)
+                Spacer()
+                if let onDelete {
+                    Button {
+                        Logger.navigationPath.notice("drag and drop")
+                    } label: {
+                        Image(systemSymbol: .line3Horizontal)
+                            .tint(Color.gray)
+                    }
+                    Divider()
+                    Button(action: onDelete) {
+                        Image(systemSymbol: .xmark)
+                            .tint(Color.gray)
+                    }
+                }
             }
-            Label {
+            .padding(.trailing)
+            HStack {
+                VStack(spacing: 4) {
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                    Circle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: 4, height: 4)
+                }
+                .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                 Rectangle()
                     .fill(Color.black.opacity(0.1))
                     .frame(width: .infinity, height: 1)
@@ -126,19 +164,6 @@ struct RoutePlannerRow: View {
                             }
                         }
                     }
-            } icon: {
-                VStack(spacing: 4) {
-                    Circle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: 4, height: 4)
-                    Circle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: 4, height: 4)
-                    Circle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: 4, height: 4)
-                }
-                .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
             }
         }
         .padding(.leading)

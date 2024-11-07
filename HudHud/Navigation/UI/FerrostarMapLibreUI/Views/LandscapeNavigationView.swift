@@ -1,3 +1,11 @@
+//
+//  LandscapeNavigationView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -81,10 +89,10 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
                     isNavigating: self.isNavigating,
                     onStyleLoaded: { _ in
                         self.camera = self.navigationCamera
+                    }, makeMapContent: {
+                        self.userLayers
                     }
-                ) {
-                    self.userLayers
-                }
+                )
                 .navigationMapViewContentInset(.landscape(within: geometry))
 
                 LandscapeNavigationOverlayView(

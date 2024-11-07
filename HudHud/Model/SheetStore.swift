@@ -20,8 +20,7 @@ import SwiftUI
 /// * the allowed detent
 /// * the sheet's visibility
 
-@Observable
-@MainActor
+@Observable @MainActor
 final class SheetStore {
 
     // MARK: Properties
@@ -56,6 +55,10 @@ final class SheetStore {
         set {
             self.currentSheet.detentData.value.selectedDetent = newValue
         }
+    }
+
+    var shouldHideMapButtons: Bool {
+        return self.sheetHeight >= UIScreen.main.bounds.height / 2
     }
 
     // MARK: Lifecycle
@@ -99,15 +102,19 @@ final class SheetStore {
         self.sheets = []
         self.navigationCommands.send(.popToRoot(rootSheetData: self.emptySheetData))
     }
+}
 
-    private func computeSheetHeight() -> CGFloat {
+// MARK: - Private
+
+private extension SheetStore {
+
+    func computeSheetHeight() -> CGFloat {
         if self.isShown.value {
             self.rawSheetheight - self.safeAreaInsets.bottom
         } else {
             0
         }
     }
-
 }
 
 // MARK: - Previewable
@@ -159,7 +166,7 @@ enum SheetType {
     case search
     case mapStyle
     case debugView
-    case navigationAddSearchView((ResolvedItem) -> Void)
+    case navigationAddSearchView((ResolvedItem) -> Void)((ResolvedItem) -> Void)
     case favorites
     case navigationPreview
     case pointOfInterest(ResolvedItem)
@@ -184,7 +191,7 @@ enum SheetType {
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
-            DetentData(selectedDetent: .height(340), allowedDetents: [.height(340)])
+            DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
         case .routePlanner:
             DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
         case .favoritesViewMore:

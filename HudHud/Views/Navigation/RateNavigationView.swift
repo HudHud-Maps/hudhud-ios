@@ -9,6 +9,8 @@
 import OSLog
 import SwiftUI
 
+// MARK: - RateNavigationView
+
 struct RateNavigationView: View {
 
     let faces: [ImageResource] = [
@@ -99,10 +101,13 @@ struct RateNavigationView: View {
             .edgesIgnoringSafeArea(.vertical)
         }
     }
+}
 
-    // MARK: - Private
+// MARK: - Private
 
-    private func selectFace(_ face: Int) {
+private extension RateNavigationView {
+
+    func selectFace(_ face: Int) {
         self.animate.toggle()
         self.currentTask?.cancel()
         self.selecteFace = face
@@ -118,7 +123,6 @@ struct RateNavigationView: View {
             }
         }
     }
-
 }
 
 #Preview {

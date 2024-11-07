@@ -69,6 +69,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         self.routingStore = routingStore
         self.sheetStore = sheetStore
         self.routesPlanMapDrawer = routesPlanMapDrawer
+        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.sheetToView = sheetToView
     }
 
@@ -187,6 +188,7 @@ private extension MapViewContainer {
         // Routes
         layers += makeAlternativeRouteLayers()
         if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
+        if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
             layers += makeSelectedRouteLayers(for: selectedRoute)
         }
 
@@ -267,7 +269,6 @@ private extension MapViewContainer {
 
 // MARK: - Event Handlers
 
-// TODO: - Move it to its own store
 private extension MapViewContainer {
     var trackingStateGesture: some Gesture {
         DragGesture()
@@ -340,7 +341,6 @@ private extension MapViewContainer {
 
 // MARK: - Helper Functions
 
-// TODO: - Move it to its own store
 private extension MapViewContainer {
 
     @MainActor
@@ -398,7 +398,7 @@ public extension Route {
 
 // MARK: - Route + Identifiable
 
-extension Route: Identifiable {
+extension Route: @retroactive Identifiable {
     public var id: Int {
         return self.hashValue
     }
@@ -415,6 +415,18 @@ public extension [GeographicCoordinate] {
     var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
         return self.map(\.clLocationCoordinate2D)
     }
+}
+
+private extension MapLayerIdentifier {
+
+    nonisolated static let tapLayers: Set<String> = [
+        Self.restaurants,
+        Self.shops,
+        Self.simpleCircles,
+        Self.streetView,
+        Self.customPOI,
+        Self.poiLevel1
+    ]
 }
 
 // MARK: - ActiveTripInfoViewAction

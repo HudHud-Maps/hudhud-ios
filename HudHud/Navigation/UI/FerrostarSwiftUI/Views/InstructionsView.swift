@@ -1,3 +1,11 @@
+//
+//  InstructionsView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
@@ -140,7 +148,7 @@ public struct InstructionsView: View {
                     GeometryReader { geometry in
                         Color.clear.onAppear {
                             self.sizeWhenNotExpanded = geometry.size
-                        }.onChange(of: geometry.size) { newValue in
+                        }.onChange(of: geometry.size) { _, newValue in
                             self.sizeWhenNotExpanded = newValue
                         }.onDisappear {
                             self.sizeWhenNotExpanded = .zero

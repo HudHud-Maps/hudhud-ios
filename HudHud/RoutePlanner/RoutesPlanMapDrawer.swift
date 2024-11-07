@@ -18,14 +18,13 @@ import MapLibreSwiftDSL
 /// * draw the destinations
 /// * draw the routes
 /// * provide call back from the map like selected an alternative route
-@Observable
-@MainActor
+@Observable @MainActor
 final class RoutesPlanMapDrawer {
 
     // MARK: Properties
 
     private(set) var routes: [Route] = []
-    private(set) var routeStops: ShapeSource = .init(identifier: MapSourceIdentifier.routePoints) {}
+    private(set) var routeStops = ShapeSource(identifier: MapSourceIdentifier.routePoints) {}
 
     private(set) var alternativeRoutes: [Route] = []
     private(set) var selectedRoute: Route?
@@ -41,11 +40,7 @@ final class RoutesPlanMapDrawer {
 
     // MARK: Functions
 
-    func drawRoutes(
-        routes: [Route],
-        selectedRoute: Route,
-        waypoints: [RouteWaypoint]
-    ) {
+    func drawRoutes(routes: [Route], selectedRoute: Route, waypoints: [RouteWaypoint]) {
         let alternativeRoutes = routes.filter { $0.id != selectedRoute.id }
 
         self.alternativeRoutes = alternativeRoutes
@@ -65,10 +60,13 @@ final class RoutesPlanMapDrawer {
     func selectRoute(withID id: Int) {
         self._routePlanEvents.send(.didSelectRoute(routeID: id))
     }
+}
 
-    private func buildRouteStopsShapeSource(
-        from stops: [RouteWaypoint]
-    ) -> ShapeSource {
+// MARK: - Private
+
+private extension RoutesPlanMapDrawer {
+
+    func buildRouteStopsShapeSource(from stops: [RouteWaypoint]) -> ShapeSource {
         let stopFeatures: [MLNPointFeature] = stops.compactMap { stop in
             switch stop.type {
             case .userLocation:
