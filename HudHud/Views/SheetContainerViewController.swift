@@ -27,10 +27,8 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
 
     // MARK: Lifecycle
 
-    init(
-        sheetStore: SheetStore,
-        sheetToView: @escaping (SheetType) -> Content
-    ) {
+    init(sheetStore: SheetStore,
+         sheetToView: @escaping (SheetType) -> Content) {
         self.sheetStore = sheetStore
         self.sheetToView = sheetToView
         super.init(nibName: nil, bundle: nil)
@@ -98,8 +96,13 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
             .first(where: { $0.identifier == selectedDetentIdentifier }) else { return }
         currentDetentPublisher.value.selectedDetent = selectedDetent
     }
+}
 
-    private func show(_ sheet: SheetData) {
+// MARK: - Private
+
+private extension SheetContainerViewController {
+
+    func show(_ sheet: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
             return
@@ -113,7 +116,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         self.observeChanges(in: sheet.detentData, andApplyIn: sheetPresentationController)
     }
 
-    private func pop(destinationSheetData: SheetData) {
+    func pop(destinationSheetData: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
             return
@@ -126,7 +129,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         self.observeChanges(in: destinationSheetData.detentData, andApplyIn: sheetPresentationController)
     }
 
-    private func popToRoot(rootSheetData: SheetData) {
+    func popToRoot(rootSheetData: SheetData) {
         guard let sheetPresentationController else {
             assertionFailure("expected to have a sheet presentation controller")
             return
@@ -139,7 +142,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         self.observeChanges(in: rootSheetData.detentData, andApplyIn: sheetPresentationController)
     }
 
-    private func observeChanges(in detentPublisher: CurrentValueSubject<DetentData, Never>, andApplyIn sheetPresentationController: UISheetPresentationController) {
+    func observeChanges(in detentPublisher: CurrentValueSubject<DetentData, Never>, andApplyIn sheetPresentationController: UISheetPresentationController) {
         self.currentDetentPublisher = detentPublisher
         self.sheetSubscription = detentPublisher.dropFirst().removeDuplicates().sink { [weak self] detentData in
             guard let self, !self.isDetentUpdatingFromUI else { return }
@@ -149,7 +152,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         }
     }
 
-    private func updateDetents(with detentData: DetentData, in sheetPresentationController: UISheetPresentationController) {
+    func updateDetents(with detentData: DetentData, in sheetPresentationController: UISheetPresentationController) {
         sheetPresentationController.detents = detentData.allowedDetents.map(\.uiKitDetent)
         sheetPresentationController.selectedDetentIdentifier = detentData.selectedDetent.identifier
         let currentScreenHeight = UIScreen.main.bounds.height
@@ -162,7 +165,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
         sheetPresentationController.largestUndimmedDetentIdentifier = largestDetent?.identifier
     }
 
-    private func buildSheet(for sheetType: SheetType) -> UIViewController {
+    func buildSheet(for sheetType: SheetType) -> UIViewController {
         let view = self.sheetToView(sheetType)
         let viewController = UIHostingController(rootView: view)
         return viewController

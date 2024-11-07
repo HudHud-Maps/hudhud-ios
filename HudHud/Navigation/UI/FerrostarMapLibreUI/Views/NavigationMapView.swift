@@ -55,18 +55,16 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     ///   - navigationState: The current ferrostar navigation state provided by ferrostar core.
     ///   - onStyleLoaded: The map's style has loaded and the camera can be manipulated (e.g. to user tracking).
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
-    public init(
-        makeViewController: @autoclosure @escaping () -> T,
-        locationManager: HudHudLocationManager,
-        styleURL: URL,
-        camera: Binding<MapViewCamera>,
-        navigationState: NavigationState?,
-        onStyleLoaded: @escaping ((MLNStyle) -> Void),
-        @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] },
-        mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
-            transferView
-        }
-    ) {
+    public init(makeViewController: @autoclosure @escaping () -> T,
+                locationManager: HudHudLocationManager,
+                styleURL: URL,
+                camera: Binding<MapViewCamera>,
+                navigationState: NavigationState?,
+                onStyleLoaded: @escaping ((MLNStyle) -> Void),
+                @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] },
+                mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
+                    transferView
+                }) {
         self.makeViewController = makeViewController
         self.locationManager = locationManager
         self.styleURL = styleURL
@@ -108,10 +106,49 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         .applyTransform(transform: self.mapViewModifiers, isNavigating: self.navigationState?.isNavigating == true)
         .ignoresSafeArea(.all)
     }
+}
 
-    // MARK: Functions
+extension MapView {
 
-    private func updateCameraIfNeeded() {
+    @ViewBuilder
+    func applyTransform(transform: (Self, Bool) -> some View, isNavigating: Bool) -> some View {
+        transform(self, isNavigating)
+    }
+}
+
+public extension NavigationMapView where T == MLNMapViewController {
+
+    /// Initialize a map view tuned for turn by turn navigation.
+    ///
+    /// - Parameters:
+    ///   - styleURL: The map's style url.
+    ///   - camera: The camera binding that represents the current camera on the map.
+    ///   - navigationState: The current ferrostar navigation state provided by ferrostar core.
+    ///   - onStyleLoaded: The map's style has loaded and the camera can be manipulated (e.g. to user tracking).
+    ///   - makeMapContent: Custom maplibre symbols to display on the map view.
+    init(styleURL: URL,
+         locationManager: HudHudLocationManager,
+         camera: Binding<MapViewCamera>,
+         navigationState: NavigationState?,
+         onStyleLoaded: @escaping ((MLNStyle) -> Void),
+         @MapViewContentBuilder _ makeMapContent: () -> [StyleLayerDefinition] = { [] },
+         mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
+             transferView
+         }) {
+        self.makeViewController = MLNMapViewController.init
+        self.locationManager = locationManager
+        self.styleURL = styleURL
+        _camera = camera
+        self.navigationState = navigationState
+        self.onStyleLoaded = onStyleLoaded
+        self.userLayers = makeMapContent()
+        self.mapViewModifiers = mapViewModifiers
+    }
+}
+
+private extension NavigationMapView {
+
+    func updateCameraIfNeeded() {
         if case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = navigationState?.tripState,
            // There is no reason to push an update if the coordinate and heading are the same.
            // That's all that gets displayed, so it's all that MapLibre should care about.
@@ -121,45 +158,5 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         } else {
             self.locationManager.useRawLocation()
         }
-    }
-}
-
-extension MapView {
-    @ViewBuilder
-    func applyTransform(
-        transform: (Self, Bool) -> some View, isNavigating: Bool
-    ) -> some View {
-        transform(self, isNavigating)
-    }
-}
-
-public extension NavigationMapView where T == MLNMapViewController {
-    /// Initialize a map view tuned for turn by turn navigation.
-    ///
-    /// - Parameters:
-    ///   - styleURL: The map's style url.
-    ///   - camera: The camera binding that represents the current camera on the map.
-    ///   - navigationState: The current ferrostar navigation state provided by ferrostar core.
-    ///   - onStyleLoaded: The map's style has loaded and the camera can be manipulated (e.g. to user tracking).
-    ///   - makeMapContent: Custom maplibre symbols to display on the map view.
-    init(
-        styleURL: URL,
-        locationManager: HudHudLocationManager,
-        camera: Binding<MapViewCamera>,
-        navigationState: NavigationState?,
-        onStyleLoaded: @escaping ((MLNStyle) -> Void),
-        @MapViewContentBuilder _ makeMapContent: () -> [StyleLayerDefinition] = { [] },
-        mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
-            transferView
-        }
-    ) {
-        self.makeViewController = MLNMapViewController.init
-        self.locationManager = locationManager
-        self.styleURL = styleURL
-        _camera = camera
-        self.navigationState = navigationState
-        self.onStyleLoaded = onStyleLoaded
-        self.userLayers = makeMapContent()
-        self.mapViewModifiers = mapViewModifiers
     }
 }

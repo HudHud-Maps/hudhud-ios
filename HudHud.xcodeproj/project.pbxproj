@@ -182,6 +182,13 @@
 		CD79C3A62CDA050F003C060E /* riyadh-pharmacy-route.json in Resources */ = {isa = PBXBuildFile; fileRef = CD79C3A52CDA050F003C060E /* riyadh-pharmacy-route.json */; };
 		CD85CB2E2BB4651B00C99774 /* Averageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD85CB2D2BB4651B00C99774 /* Averageable.swift */; };
 		CD8C5A222BA36194002EBE8A /* NotificationBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */; };
+		CDA78D7B2CDCC583004AF06C /* Coordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D7A2CDCC583004AF06C /* Coordinates.swift */; };
+		CDA78D7D2CDCC594004AF06C /* RouteWaypoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D7C2CDCC594004AF06C /* RouteWaypoint.swift */; };
+		CDA78D7F2CDCC5A2004AF06C /* RoutePlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D7E2CDCC5A2004AF06C /* RoutePlan.swift */; };
+		CDA78D842CDCC60D004AF06C /* RoutePlanningState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D832CDCC60D004AF06C /* RoutePlanningState.swift */; };
+		CDA78D8A2CDCC767004AF06C /* CustomOTPTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D892CDCC767004AF06C /* CustomOTPTextField.swift */; };
+		CDA78D8D2CDCC77E004AF06C /* CustomOTPTextFieldRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D8C2CDCC77E004AF06C /* CustomOTPTextFieldRepresentable.swift */; };
+		CDA78D902CDCC93F004AF06C /* LengthFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDA78D8F2CDCC93F004AF06C /* LengthFormatter.swift */; };
 		CDAE05482B681261003E5196 /* HudHudApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05472B681261003E5196 /* HudHudApp.swift */; };
 		CDAE054A2B681261003E5196 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CDAE05492B681261003E5196 /* ContentView.swift */; };
 		CDAE054C2B681263003E5196 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CDAE054B2B681263003E5196 /* Assets.xcassets */; };
@@ -405,6 +412,13 @@
 		CD79C3A52CDA050F003C060E /* riyadh-pharmacy-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "riyadh-pharmacy-route.json"; sourceTree = "<group>"; };
 		CD85CB2D2BB4651B00C99774 /* Averageable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Averageable.swift; sourceTree = "<group>"; };
 		CD8C5A212BA36194002EBE8A /* NotificationBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationBanner.swift; sourceTree = "<group>"; };
+		CDA78D7A2CDCC583004AF06C /* Coordinates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinates.swift; sourceTree = "<group>"; };
+		CDA78D7C2CDCC594004AF06C /* RouteWaypoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteWaypoint.swift; sourceTree = "<group>"; };
+		CDA78D7E2CDCC5A2004AF06C /* RoutePlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlan.swift; sourceTree = "<group>"; };
+		CDA78D832CDCC60D004AF06C /* RoutePlanningState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutePlanningState.swift; sourceTree = "<group>"; };
+		CDA78D892CDCC767004AF06C /* CustomOTPTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomOTPTextField.swift; sourceTree = "<group>"; };
+		CDA78D8C2CDCC77E004AF06C /* CustomOTPTextFieldRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomOTPTextFieldRepresentable.swift; sourceTree = "<group>"; };
+		CDA78D8F2CDCC93F004AF06C /* LengthFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LengthFormatter.swift; sourceTree = "<group>"; };
 		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05472B681261003E5196 /* HudHudApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudHudApp.swift; sourceTree = "<group>"; };
 		CDAE05492B681261003E5196 /* ContentView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -514,6 +528,10 @@
 				0CB17CA92CD0F31300952B99 /* RoutingError.swift */,
 				09FB173FA70A7BD670CD4C21 /* RoutePlannerView.swift */,
 				321842C00B4FA397D66A6C83 /* RoutePlannerStore.swift */,
+				CDA78D832CDCC60D004AF06C /* RoutePlanningState.swift */,
+				CDA78D7E2CDCC5A2004AF06C /* RoutePlan.swift */,
+				CDA78D7C2CDCC594004AF06C /* RouteWaypoint.swift */,
+				CDA78D7A2CDCC583004AF06C /* Coordinates.swift */,
 				76415EDE5D2A940DC7519EC9 /* RoutesPlanMapDrawer.swift */,
 			);
 			path = RoutePlanner;
@@ -1089,6 +1107,8 @@
 				591002242C7DCB6600CF4707 /* UserLoginView.swift */,
 				C37D25A6C111013A65F4D0B7 /* OTPVerificationView.swift */,
 				BB19F96EDAC250D332C1A2FC /* OTPFieldView.swift */,
+				CDA78D8C2CDCC77E004AF06C /* CustomOTPTextFieldRepresentable.swift */,
+				CDA78D892CDCC767004AF06C /* CustomOTPTextField.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -1149,6 +1169,7 @@
 				DE7DB1C7607714070BA14E44 /* SymbolStyleLayer.swift */,
 				7C08918AE951B4460365873D /* UIColor.swift */,
 				14EFC3A7AE83BA96C32EEB4E /* UIImage+resize.swift */,
+				CDA78D8F2CDCC93F004AF06C /* LengthFormatter.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1373,6 +1394,7 @@
 			files = (
 				90CBC0422B832390009ADD79 /* DirectionsSummaryView.swift in Sources */,
 				CB3970382B85E87300CF9D59 /* PoiTileView.swift in Sources */,
+				CDA78D902CDCC93F004AF06C /* LengthFormatter.swift in Sources */,
 				CD71C3692BBBFF27009C3A1C /* CameraState.swift in Sources */,
 				CB3970412B85EE8300CF9D59 /* PoiTileGridView.swift in Sources */,
 				CB396FF82B7C1A4900CF9D59 /* CatagoryBannerData.swift in Sources */,
@@ -1385,6 +1407,7 @@
 				59B8A1DE2C60C38400A12F5E /* MapViewContainer.swift in Sources */,
 				0CC00AD92CD271C300A2D1A8 /* SpeedLimitViewModifier.swift in Sources */,
 				0CC00ADA2CD271C300A2D1A8 /* CustomizableNavigatingInnerGridView.swift in Sources */,
+				CDA78D8D2CDCC77E004AF06C /* CustomOTPTextFieldRepresentable.swift in Sources */,
 				0CC00ADB2CD271C300A2D1A8 /* DefaultFormatters.swift in Sources */,
 				0CC00ADC2CD271C300A2D1A8 /* FormatterCollection.swift in Sources */,
 				0CC00ADD2CD271C300A2D1A8 /* PortraitNavigationOverlayView.swift in Sources */,
@@ -1447,6 +1470,7 @@
 				854A602E692EA22AC381F9CA /* FavoritesItem.swift in Sources */,
 				9ED68F0C2CCD5F3000AA7CE0 /* PointOfInterestStore.swift in Sources */,
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
+				CDA78D7F2CDCC5A2004AF06C /* RoutePlan.swift in Sources */,
 				0CB17CA52CD0DFED00952B99 /* RoutingService.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				0CB4C18F2CD7A9E10092E9A5 /* LocationServicesDiagnostic.swift in Sources */,
@@ -1497,19 +1521,23 @@
 				E4C712C8E7F65209B5FE9B73 /* SFSymbolSpriteSheet.swift in Sources */,
 				980A90483A812CC84F867D2D /* UserLocationStore.swift in Sources */,
 				8C2807D362FD49761D07A6DA /* OTPVerificationView.swift in Sources */,
+				CDA78D7D2CDCC594004AF06C /* RouteWaypoint.swift in Sources */,
 				F9EB502B38BDE095F842C7D8 /* OTPVerificationStore.swift in Sources */,
 				7E0FCBD36F248D3870E23EA9 /* RoutingStore.swift in Sources */,
 				3B651D907EB42F44B10A53DF /* MapActionHandler.swift in Sources */,
 				C6E15E332EA9397C549C3AFF /* SearchResultView.swift in Sources */,
 				5A98AAF31A00AC74AC3C999C /* Loading.swift in Sources */,
+				CDA78D842CDCC60D004AF06C /* RoutePlanningState.swift in Sources */,
 				084218394FED84B4D341E953 /* HudhudSegmentedPicker.swift in Sources */,
 				DD7976DCF72FA010BE526906 /* FilterStore.swift in Sources */,
 				9EB809526E931163DFADD19D /* MoreFiltersView.swift in Sources */,
 				EDF32E0E88A8260CDD42AFE2 /* OTPFieldView.swift in Sources */,
+				CDA78D8A2CDCC767004AF06C /* CustomOTPTextField.swift in Sources */,
 				AC35F3952447B7EF23858F59 /* SheetStore.swift in Sources */,
 				6E0F91ECD4821BAB4DB6897E /* POISheetStore.swift in Sources */,
 				379DDC2776272FE04C0B570A /* POIOverviewView.swift in Sources */,
 				75EF8B431A9CE965F993E16A /* CongestionsExtractor.swift in Sources */,
+				CDA78D7B2CDCC583004AF06C /* Coordinates.swift in Sources */,
 				017CB492E6448DA1E1C9C215 /* CongestionSegment.swift in Sources */,
 				8772D320100D18E50D612E2A /* RatingSectionView.swift in Sources */,
 				6B2D2368E0DF949BF4A268AF /* RatingStore.swift in Sources */,

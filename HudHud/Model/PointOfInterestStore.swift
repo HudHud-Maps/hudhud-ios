@@ -9,6 +9,8 @@
 import BackendService
 import Foundation
 
+// MARK: - PointOfInterestStore
+
 @Observable
 @MainActor
 final class PointOfInterestStore {
@@ -41,12 +43,15 @@ final class PointOfInterestStore {
     func goToDirections() {
         self.sheetStore.show(.navigationPreview)
     }
+}
 
-    private func refreshPointOfInterest() async {
-        guard var detailedPointOfInterest = try? await hudhudResolver.lookup(
-            id: self.pointOfInterest.id,
-            baseURL: DebugStore().baseURL
-        ) else { return }
+// MARK: - Private
+
+private extension PointOfInterestStore {
+
+    func refreshPointOfInterest() async {
+        guard var detailedPointOfInterest = try? await hudhudResolver.lookup(id: self.pointOfInterest.id,
+                                                                             baseURL: DebugStore().baseURL) else { return }
         detailedPointOfInterest.systemColor = self.pointOfInterest.systemColor
         detailedPointOfInterest.symbol = self.pointOfInterest.symbol
         self.pointOfInterest = detailedPointOfInterest

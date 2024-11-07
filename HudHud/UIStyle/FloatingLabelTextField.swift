@@ -104,10 +104,13 @@ struct FloatingLabelInputField: View {
         .padding(.top, 8)
         .animation(.easeInOut, value: self.isFocused || !self.getTextField().isEmpty)
     }
+}
 
-    // MARK: Functions
+// MARK: - Private
 
-    private func getTextField() -> String {
+private extension FloatingLabelInputField {
+
+    func getTextField() -> String {
         switch self.inputType {
         case let .phone(phone: phone):
             return phone.wrappedValue

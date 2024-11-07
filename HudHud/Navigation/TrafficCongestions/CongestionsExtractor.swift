@@ -13,6 +13,7 @@ import FerrostarCoreFFI
 // MARK: - CongestionSegment
 
 extension Route {
+
     var annotations: [ValhallaOsrmAnnotation] {
         let decoder = JSONDecoder()
 
@@ -27,9 +28,6 @@ extension Route {
                 }
             }
     }
-}
-
-extension Route {
 
     func extractCongestionSegments() -> [CongestionSegment] {
         var mergedSegments: [CongestionSegment] = []
@@ -75,8 +73,13 @@ extension Route {
         }
         return mergedSegments
     }
+}
 
-    private func findEndIndex(startingFrom startIndex: Int, distance: Double) -> Int {
+// MARK: - Private
+
+private extension Route {
+
+    func findEndIndex(startingFrom startIndex: Int, distance: Double) -> Int {
         var remainingDistance = distance
         var currentIndex = startIndex
 

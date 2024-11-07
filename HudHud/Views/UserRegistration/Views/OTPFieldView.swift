@@ -25,12 +25,6 @@ struct OTPFieldView: View {
 
     private let numberOfFields: Int = 6
 
-    // MARK: Computed Properties
-
-    private var allFieldsFilled: Bool {
-        self.pins.allSatisfy { !$0.isEmpty }
-    }
-
     // MARK: Lifecycle
 
     init(otp: Binding<String>, isValid: Binding<Bool>) {
@@ -91,8 +85,17 @@ struct OTPFieldView: View {
             }
         }
     }
+}
 
-    private func bottomBorder(for index: Int) -> some View {
+// MARK: - Private
+
+private extension OTPFieldView {
+
+    var allFieldsFilled: Bool {
+        self.pins.allSatisfy { !$0.isEmpty }
+    }
+
+    func bottomBorder(for index: Int) -> some View {
         var color: Color {
             if !self.isValid, self.hasBeenInvalidated {
                 return Color.Colors.General._12Red
@@ -109,9 +112,7 @@ struct OTPFieldView: View {
             .padding(.top, 8)
     }
 
-    // MARK: Functions
-
-    private func handlePasteOrAutofill(_ text: String) {
+    func handlePasteOrAutofill(_ text: String) {
         let otpDigits = text.filter(\.isNumber).prefix(self.numberOfFields)
 
         if otpDigits.count == self.numberOfFields {
@@ -123,192 +124,10 @@ struct OTPFieldView: View {
         }
     }
 
-    private func updateOTP() {
+    func updateOTP() {
         self.otp = self.pins.joined()
         if self.otp.isEmpty {
             self.hasBeenInvalidated = false
         }
-    }
-}
-
-// MARK: - CustomOTPTextFieldRepresentable
-
-struct CustomOTPTextFieldRepresentable: UIViewRepresentable {
-
-    // MARK: Nested Types
-
-    final class Coordinator: NSObject, UITextFieldDelegate {
-
-        // MARK: Properties
-
-        var parent: CustomOTPTextFieldRepresentable
-
-        // MARK: Lifecycle
-
-        init(_ parent: CustomOTPTextFieldRepresentable) {
-            self.parent = parent
-        }
-
-        // MARK: Functions
-
-        func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-            let currentText = textField.text ?? ""
-            let updatedText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            self.parent.text = String(updatedText.prefix(1))
-            return false
-        }
-
-        @objc func handleTap(_ gesture: UITapGestureRecognizer) {
-            if self.parent.isLastField, self.parent.allFieldsFilled {
-                (gesture.view as? UITextField)?.becomeFirstResponder()
-            }
-        }
-    }
-
-    // MARK: Properties
-
-    @Binding var text: String
-    @Binding var isFocused: Bool
-    var onBackspace: () -> Void
-    var onPasteOrAutofill: (String) -> Void
-    var isLastField: Bool
-    var allFieldsFilled: Bool
-
-    // MARK: Functions
-
-    func makeUIView(context: Context) -> CustomOTPTextField {
-        let textField = CustomOTPTextField()
-        textField.delegate = context.coordinator
-        textField.textAlignment = .center
-        textField.keyboardType = .numberPad
-        textField.font = .hudhudFont(.title3)
-        textField.textColor = .black
-        textField.onBackspace = self.onBackspace
-        textField.isLastField = self.isLastField
-        textField.onPasteOrAutofill = self.onPasteOrAutofill
-        textField.textContentType = .oneTimeCode
-
-        let tapGesture = UITapGestureRecognizer(target: context.coordinator, action: #selector(Coordinator.handleTap(_:)))
-        textField.addGestureRecognizer(tapGesture)
-
-        return textField
-    }
-
-    func updateUIView(_ uiView: CustomOTPTextField, context _: Context) {
-        uiView.text = self.text
-        uiView.allFieldsFilled = self.allFieldsFilled
-        if self.isFocused {
-            uiView.becomeFirstResponder()
-        } else {
-            uiView.resignFirstResponder()
-        }
-    }
-
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
-    }
-}
-
-// MARK: - CustomOTPTextField
-
-final class CustomOTPTextField: UITextField {
-
-    // MARK: Overridden Properties
-
-    override var selectedTextRange: UITextRange? {
-        get {
-            if self.isLastField, self.allFieldsFilled {
-                return super.selectedTextRange
-            }
-            return nil
-        }
-        set {
-            if self.isLastField, self.allFieldsFilled {
-                super.selectedTextRange = newValue
-            }
-        }
-    }
-
-    // MARK: Properties
-
-    var onBackspace: (() -> Void)?
-    var onPasteOrAutofill: ((String) -> Void)?
-    var isLastField: Bool = false
-    var allFieldsFilled: Bool = false
-
-    // MARK: Overridden Functions
-
-    override func deleteBackward() {
-        if let onBackspace, text?.isEmpty ?? true {
-            onBackspace()
-        }
-        super.deleteBackward()
-    }
-
-    override func canPerformAction(_ action: Selector, withSender _: Any?) -> Bool {
-        if action == #selector(UIResponderStandardEditActions.paste(_:)) {
-            return true
-        }
-        if self.isLastField, self.allFieldsFilled {
-            return action == #selector(UIResponderStandardEditActions.copy(_:))
-        }
-        return false
-    }
-
-    override func paste(_: Any?) {
-        if let pasteboardString = UIPasteboard.general.string {
-            self.onPasteOrAutofill?(pasteboardString)
-        }
-    }
-
-    override func insertText(_ text: String) {
-        if text.count > 1 {
-            self.onPasteOrAutofill?(text)
-        } else {
-            super.insertText(text)
-        }
-    }
-
-    override func closestPosition(to point: CGPoint) -> UITextPosition? {
-        if self.isLastField, self.allFieldsFilled {
-            return super.closestPosition(to: point)
-        }
-        return endOfDocument
-    }
-
-    override func caretRect(for position: UITextPosition) -> CGRect {
-        if self.isLastField, self.allFieldsFilled {
-            return super.caretRect(for: position)
-        }
-        return .zero
-    }
-
-    override func selectionRects(for range: UITextRange) -> [UITextSelectionRect] {
-        if self.isLastField, self.allFieldsFilled {
-            return super.selectionRects(for: range)
-        }
-        return []
-    }
-
-    override func position(from position: UITextPosition, offset: Int) -> UITextPosition? {
-        if self.isLastField, self.allFieldsFilled {
-            return super.position(from: position, offset: offset)
-        }
-        return endOfDocument
-    }
-
-    override func position(from position: UITextPosition, in direction: UITextLayoutDirection, offset: Int) -> UITextPosition? {
-        if self.isLastField, self.allFieldsFilled {
-            return super.position(from: position, in: direction, offset: offset)
-        }
-        return endOfDocument
-    }
-
-    override func textRange(from fromPosition: UITextPosition, to toPosition: UITextPosition) -> UITextRange? {
-        if self.isLastField, self.allFieldsFilled {
-            return super.textRange(from: fromPosition, to: toPosition)
-        }
-        let endPosition = self.position(from: endOfDocument, offset: 0) ?? endOfDocument
-        return super.textRange(from: endPosition, to: endPosition)
     }
 }

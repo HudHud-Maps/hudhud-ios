@@ -12,6 +12,8 @@ import MapLibreSwiftUI
 import SwiftUI
 import UIKit
 
+// MARK: - MapViewController
+
 final class MapViewController: UIViewController, MapViewHostViewController {
 
     // MARK: Properties
@@ -24,11 +26,9 @@ final class MapViewController: UIViewController, MapViewHostViewController {
 
     // MARK: Lifecycle
 
-    init(
-        sheetStore: SheetStore,
-        styleURL: URL,
-        sheetToView: @escaping (SheetType) -> some View
-    ) {
+    init(sheetStore: SheetStore,
+         styleURL: URL,
+         sheetToView: @escaping (SheetType) -> some View) {
         self.mapView = MLNMapView(frame: .zero, styleURL: styleURL)
         self.sheetStore = sheetStore
         self.sheetViewController = SheetContainerViewController(
@@ -65,10 +65,15 @@ final class MapViewController: UIViewController, MapViewHostViewController {
             }
         }
     }
+}
+
+// MARK: - Private
+
+private extension MapViewController {
 
     // MARK: Functions
 
-    private func handleSheetChange() {
+    func handleSheetChange() {
         if self.sheetStore.isShown.value, self.presentedViewController == nil {
             self.present(self.sheetViewController, animated: true)
         } else if !self.sheetStore.isShown.value, self.presentedViewController != nil {

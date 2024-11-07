@@ -101,9 +101,14 @@ struct RatingView: View {
             self.starView(for: self.ratingStore.state.staticRating)
         }
     }
+}
+
+// MARK: - Private
+
+private extension RatingView {
 
     @ViewBuilder
-    private func starView(for rating: Double) -> some View {
+    func starView(for rating: Double) -> some View {
         HStack(spacing: 4) {
             ForEach(1 ... 5, id: \.self) { index in
                 Image(rating < Double(index) ? .starOff : .starOn)
@@ -112,14 +117,6 @@ struct RatingView: View {
             }
         }
     }
-}
-
-extension LengthFormatter {
-    static let distance: LengthFormatter = {
-        let formatter = LengthFormatter()
-        formatter.unitStyle = .short
-        return formatter
-    }()
 }
 
 #Preview {
