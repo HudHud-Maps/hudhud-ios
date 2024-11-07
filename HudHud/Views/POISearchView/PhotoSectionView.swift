@@ -238,6 +238,6 @@ struct PhotoSectionView: View {
 #Preview {
     @Previewable @State var about: POIOverviewView.Tab = .about
 
-    PhotoSectionView(item: .artwork,
+    PhotoSectionView(item: .ketchup,
                      selectedTab: $about, photoStore: .init(), cameraStore: .init())
 }
