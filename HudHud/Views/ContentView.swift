@@ -266,7 +266,8 @@ struct ContentView: View {
                                 ]
                             )
 
-                            if let item = self.streetViewStore.nearestStreetViewScene {
+                            if (self.mapStore.mapViewPort?.zoom ?? 0) > 10,
+                               let item = self.streetViewStore.nearestStreetViewScene {
                                 Button {
                                     self.streetViewStore.streetViewScene = item
                                     self.streetViewStore.zoomToStreetViewLocation()
@@ -475,10 +476,10 @@ private extension Binding where Value == Bool {
                                           filterStore: FilterStore(),
                                           mode: .preview)
 
-    let url = Bundle.main.url(forResource: "riyadh-pharmacy-route", withExtension: "json")!
-    let data = try! Data(contentsOf: url)
+    let url = Bundle.main.url(forResource: "riyadh-pharmacy-route", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+    let data = try! Data(contentsOf: url) // swiftlint:disable:this force_try
     let parser = createOsrmResponseParser(polylinePrecision: 6)
-    let routes = try! parser.parseResponse(response: data)
+    let routes = try! parser.parseResponse(response: data) // swiftlint:disable:this force_try
 
     if let route = routes.first {
         routingStore.routes = routes

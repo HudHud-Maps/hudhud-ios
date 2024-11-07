@@ -74,8 +74,13 @@ final class FavoritesStore: ObservableObject {
             self.saveFavorites()
         }
     }
+}
 
-    private func handleNewItem(of newItem: FavoritesItem) {
+// MARK: - Private
+
+private extension FavoritesStore {
+
+    func handleNewItem(of newItem: FavoritesItem) {
         if let existingTypeIndex = favoritesItems.firstIndex(where: { $0.type == newItem.type }), isUpdatableType(newItem.type) {
             self.updateItem(at: existingTypeIndex, with: newItem)
         } else {
@@ -83,16 +88,14 @@ final class FavoritesStore: ObservableObject {
         }
     }
 
-    private func moveData(from index: Int, toType newType: String) {
+    func moveData(from index: Int, toType newType: String) {
         if let targetIndex = favoritesItems.firstIndex(where: { $0.type == newType }) {
             self.updateItem(at: targetIndex, with: self.favoritesItems[index])
             self.clearItem(at: index)
         }
     }
 
-    // MARK: - Private
-
-    private func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?, type: String) -> FavoritesItem {
+    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?, type: String) -> FavoritesItem {
         return FavoritesItem(
             id: UUID(),
             title: title,
@@ -103,7 +106,7 @@ final class FavoritesStore: ObservableObject {
         )
     }
 
-    private func updateExistingItem(at index: Int, with newItem: FavoritesItem) {
+    func updateExistingItem(at index: Int, with newItem: FavoritesItem) {
         if self.favoritesItems[index].type != newItem.type, self.isUpdatableType(self.favoritesItems[index].type) {
             self.moveData(from: index, toType: newItem.type)
         } else {
@@ -111,21 +114,22 @@ final class FavoritesStore: ObservableObject {
         }
     }
 
-    private func updateItem(at index: Int, with newItem: FavoritesItem) {
+    func updateItem(at index: Int, with newItem: FavoritesItem) {
         self.favoritesItems[index].title = newItem.title
         self.favoritesItems[index].item = newItem.item
         self.favoritesItems[index].description = newItem.description
     }
 
-    private func clearItem(at index: Int) {
+    func clearItem(at index: Int) {
         self.favoritesItems[index].title = ""
         self.favoritesItems[index].item = nil
         self.favoritesItems[index].description = nil
     }
 
-    private func isUpdatableType(_ type: String) -> Bool {
+    func isUpdatableType(_ type: String) -> Bool {
         return ["Home", "School", "Work"].contains(type)
     }
+
 }
 
 // MARK: - Previewable

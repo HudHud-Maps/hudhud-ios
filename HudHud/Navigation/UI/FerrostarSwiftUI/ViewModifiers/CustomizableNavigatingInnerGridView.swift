@@ -1,8 +1,15 @@
+//
+//  CustomizableNavigatingInnerGridView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 // MARK: - CustomizableNavigatingInnerGridView
 
-// TODO: Extend this with the more mundane visibility properties too (ex: show/hide controls)
 public protocol CustomizableNavigatingInnerGridView where Self: View {
     var topCenter: (() -> AnyView)? { get set }
     var topTrailing: (() -> AnyView)? { get set }

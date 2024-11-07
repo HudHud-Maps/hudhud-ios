@@ -1,3 +1,11 @@
+//
+//  View+Ferrostar.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 extension View {
@@ -54,7 +62,7 @@ struct ComplementingSafeAreaView<V: View>: View {
     var minimumInsets: EdgeInsets
 
     @State
-    var childInsets: EdgeInsets = .init()
+    var childInsets = EdgeInsets()
 
     // MARK: Content
 
@@ -79,5 +87,4 @@ struct ComplementingSafeAreaView<V: View>: View {
         innerInsets.trailing = max(0, minimumInsets.trailing - parentInsets.trailing)
         return innerInsets
     }
-
 }

@@ -215,7 +215,6 @@ private extension MapViewContainer {
 
 // MARK: - Event Handlers
 
-// TODO: - Move it to its own store
 private extension MapViewContainer {
     var trackingStateGesture: some Gesture {
         DragGesture()
@@ -318,7 +317,6 @@ private extension MapViewContainer {
 
 // MARK: - Helper Functions
 
-// TODO: - Move it to its own store
 private extension MapViewContainer {
 
     @MainActor
@@ -425,6 +423,7 @@ private extension MapLayerIdentifier {
         Self.shops,
         Self.simpleCircles,
         Self.streetView,
-        Self.customPOI
+        Self.customPOI,
+        Self.poiLevel1
     ]
 }
