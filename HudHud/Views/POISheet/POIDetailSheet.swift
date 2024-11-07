@@ -171,7 +171,7 @@ struct POIDetailSheet: View {
                             }
 
                             if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
-                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab)
+                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab, photoStore: self.photoStore, cameraStore: self.cameraStore)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                                     .padding(.vertical)
@@ -179,6 +179,7 @@ struct POIDetailSheet: View {
 
                         case .photos:
                             PhotoTabView(item: self.pointOfInterestStore.pointOfInterest, selectedMedia: self.$selectedMedia)
+                                .padding(-10)
 
                         case .review:
                             if let rating = self.pointOfInterestStore.pointOfInterest.rating {
@@ -251,10 +252,10 @@ struct POIDetailSheet: View {
         .addPhotoConfirmationDialog(isPresented: self.$cameraStore.showAddPhotoConfirmation, onCameraAction: {
             self.cameraStore.openCamera()
         }, onLibraryAction: {
-            self.photoStore.showLibrary.toggle()
+            self.photoStore.openLibrary()
         })
         .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
-            self.photoStore.addImagesFromCamera(newImage: capturedImage)
+            self.photoStore.reduce(action: .addImageFromCamera(capturedImage))
         }
         .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(
             get: { self.photoStore.state.selection },

@@ -24,40 +24,40 @@ final class CameraStore {
     var showAlert = false
     var showAddPhotoConfirmation = false
 
-    // MARK: Lifecycle
-
-    init() {
-        self.checkCameraPermission()
-    }
-
     // MARK: Functions
-
-    // Request camera permissions
-    func checkCameraPermission() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            self.isCameraPermissionGranted = true
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    self.isCameraPermissionGranted = granted
-                }
-            }
-        case .denied, .restricted:
-            self.isCameraPermissionGranted = false
-        @unknown default:
-            break
-        }
-    }
 
     func openCamera() {
         if self.isCameraPermissionGranted {
             self.isShowingCamera = true
         } else {
-            self.showAlert = true
+            self.checkCameraPermission { granted in
+                if granted {
+                    self.isShowingCamera = true
+                } else {
+                    self.showAlert = true
+                }
+            }
         }
     }
+
+    // Request camera permissions
+    private func checkCameraPermission(completion: @escaping (Bool) -> Void) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            completion(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    completion(granted)
+                }
+            }
+        case .denied, .restricted:
+            completion(false)
+        @unknown default:
+            break
+        }
+    }
+
 }
 
 // MARK: - AccessCameraView
@@ -121,7 +121,7 @@ struct CameraAccessModifier: ViewModifier {
 
     // MARK: Properties
 
-    @State var cameraStore: CameraStore
+    @Bindable var cameraStore: CameraStore
     let onImageCaptured: (UIImage) -> Void
 
     // MARK: Content

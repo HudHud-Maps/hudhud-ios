@@ -17,8 +17,8 @@ struct WriteReviewView: View {
 
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
-    @State private var cameraStore = CameraStore()
     @State var textEditorHeight: CGFloat = 128
+    var cameraStore: CameraStore
     let item: ResolvedItem
     var store: RatingStore
     let sheetStore: SheetStore
@@ -212,5 +212,5 @@ struct WriteReviewView: View {
 }
 
 #Preview {
-    WriteReviewView(item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0), sheetStore: SheetStore(emptySheetType: .search))
+    WriteReviewView(cameraStore: .init(), item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0), sheetStore: SheetStore(emptySheetType: .search))
 }

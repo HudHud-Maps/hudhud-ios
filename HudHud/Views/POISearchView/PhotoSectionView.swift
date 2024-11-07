@@ -27,8 +27,8 @@ struct PhotoSectionView: View {
 
     @State private var selectedMedia: URL?
     @Binding var selectedTab: POIOverviewView.Tab
-    @State private var cameraStore = CameraStore()
-    @State private var photoStore = PhotoStore()
+    @Bindable var photoStore: PhotoStore
+    @Bindable var cameraStore: CameraStore
 
     // MARK: Content
 
@@ -67,10 +67,10 @@ struct PhotoSectionView: View {
             .addPhotoConfirmationDialog(isPresented: self.$cameraStore.showAddPhotoConfirmation, onCameraAction: {
                 self.cameraStore.openCamera()
             }, onLibraryAction: {
-                self.photoStore.showLibrary.toggle()
+                self.photoStore.openLibrary()
             })
             .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
-                self.photoStore.addImagesFromCamera(newImage: capturedImage)
+                self.photoStore.reduce(action: .addImageFromCamera(capturedImage))
             }
             .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(
                 get: { self.photoStore.state.selection },
@@ -239,5 +239,5 @@ struct PhotoSectionView: View {
     @Previewable @State var about: POIOverviewView.Tab = .about
 
     PhotoSectionView(item: .artwork,
-                     selectedTab: $about)
+                     selectedTab: $about, photoStore: .init(), cameraStore: .init())
 }

@@ -40,28 +40,11 @@ final class PhotoStore {
         self.state = State()
     }
 
-    // MARK: Content
-
-    func openPhotosPicker() -> some View {
-        PhotosPicker(
-            selection: Binding(
-                get: { self.state.selection },
-                set: { self.reduce(action: .addImages($0)) }
-            ),
-            matching: .images
-        ) {
-            VStack {
-                Image(.addPhotoLibrary)
-                    .resizable()
-                    .frame(width: 25, height: 25)
-            }
-            .padding(24)
-            .background(Color.Colors.General._05WhiteBackground)
-            .cornerRadius(10)
-        }
-    }
-
     // MARK: Functions
+
+    func openLibrary() {
+        self.showLibrary = true
+    }
 
     func reduce(action: Action) {
         switch action {
@@ -79,7 +62,7 @@ final class PhotoStore {
         }
     }
 
-    func addImages(_ images: [PhotosPickerItem]) {
+    private func addImages(_ images: [PhotosPickerItem]) {
         Task {
             for image in images {
                 if let data = try? await image.loadTransferable(type: Data.self),
@@ -90,7 +73,7 @@ final class PhotoStore {
         }
     }
 
-    func addImagesFromCamera(newImage: UIImage) {
+    private func addImagesFromCamera(newImage: UIImage) {
         self.state.selectedImages.append(newImage)
     }
 }
