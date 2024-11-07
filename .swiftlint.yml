@@ -79,3 +79,10 @@ custom_rules:
     message: "Import OSLog and use one of the logging options available in HudHud/Extensions/LoggerSettings.swift instead of print"
     regex: '\bprint\s*\('
     severity: warning
+  private_function_usage:
+    included: ".*\\.swift"
+    name: "private function usage"
+    regex: '\bprivate\s+func\b'
+    message: "Create a private extension of this class below"
+    severity: warning
+    
