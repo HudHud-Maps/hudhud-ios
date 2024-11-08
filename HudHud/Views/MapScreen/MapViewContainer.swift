@@ -92,15 +92,6 @@ struct MapViewContainer<SheetContentView: View>: View {
                 makeMapContent: makeMapContent,
                 mapViewModifiers: makeMapViewModifiers
             )
-            .innerGrid(
-                topCenter: { ErrorBannerView(errorMessage: self.$errorMessage) },
-                bottomTrailing: { LocationInfoView(isNavigating: self.navigationStore.state.isNavigating, label: locationLabel) },
-                bottomLeading: {
-                    if self.navigationStore.state.isNavigating {
-                        SpeedView(speed: self.speed, speedLimit: speedLimit)
-                    }
-                }
-            )
             .withNavigationOverlay(.instructions) {
                 if let navigationState = navigationStore.navigationState, navigationState.isNavigating {
                     LegacyInstructionsView(navigationState: navigationState)
@@ -120,6 +111,15 @@ struct MapViewContainer<SheetContentView: View>: View {
                     }
                 }
             }
+            .innerGrid(
+                topCenter: { ErrorBannerView(errorMessage: self.$errorMessage) },
+                bottomTrailing: { LocationInfoView(isNavigating: self.navigationStore.state.isNavigating, label: locationLabel) },
+                bottomLeading: {
+                    if self.navigationStore.state.isNavigating {
+                        SpeedView(speed: self.speed, speedLimit: speedLimit)
+                    }
+                }
+            )
             .gesture(trackingStateGesture)
             .onAppear(perform: handleOnAppear)
             .onChange(of: self.routingStore.selectedRoute) { oldValue, newValue in
@@ -138,12 +138,12 @@ struct MapViewContainer<SheetContentView: View>: View {
                 }
             })
 
-//            .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
-//                handleNavigatingRouteChange(oldValue, newValue)
-//            }
-//            .onChange(of: self.routingStore.ferrostarCore.state?.tripState) { oldValue, newValue in
-//                handleTripStateChange(oldValue, newValue)
-//            }
+            //            .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
+            //                handleNavigatingRouteChange(oldValue, newValue)
+            //            }
+            //            .onChange(of: self.routingStore.ferrostarCore.state?.tripState) { oldValue, newValue in
+            //                handleTripStateChange(oldValue, newValue)
+            //            }
             .task { handleInitialFocus() }
         }
     }
@@ -164,8 +164,7 @@ extension MapViewContainer {
     }
 
     private var speedLimit: Measurement<UnitSpeed>? {
-//        return self.routingStore.ferrostarCore.annotation?.speedLimit
-        .kilometersPerHour(44)
+        self.navigationStore.state.speedLimit
     }
 }
 
@@ -174,11 +173,12 @@ extension MapViewContainer {
 private extension MapViewContainer {
 
     func makeMapContent() -> [StyleLayerDefinition] {
-        guard !self.navigationStore.state.isNavigating else { return [] }
+        guard !self.navigationStore.state.isNavigating else {
+            return self.makeNavigationConent()
+        }
 
         var layers: [StyleLayerDefinition] = []
 
-        print("shot routes \(self.routesPlanMapDrawer.routes)")
         // Routes
         layers += makeAlternativeRouteLayers()
         if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
@@ -200,17 +200,34 @@ private extension MapViewContainer {
         layers += makeStreetViewLayer()
 
         return layers
+    }
 
-//        if let routePolyline = navigationState?.routePolyline {
-//            RouteStyleLayer(polyline: routePolyline,
-//                            identifier: "route-polyline",
-//                            style: TravelledRouteStyle())
-//        }
-//
-//        if let remainingRoutePolyline = navigationState?.remainingRoutePolyline {
-//            RouteStyleLayer(polyline: remainingRoutePolyline,
-//                            identifier: "remaining-route-polyline")
-//        }
+    func makeNavigationConent() -> [StyleLayerDefinition] {
+        guard self.navigationStore.state.isNavigating else { return [] }
+
+        var layers: [StyleLayerDefinition] = []
+
+        if let routePolyline = navigationStore.navigationState?.routePolyline {
+            layers += RouteStyleLayer(
+                polyline: routePolyline,
+                identifier: "route-polyline",
+                style: TravelledRouteStyle()
+            )
+            .layers
+        }
+
+        if let remainingRoutePolyline = navigationStore.navigationState?.remainingRoutePolyline {
+            layers += RouteStyleLayer(
+                polyline: remainingRoutePolyline,
+                identifier: "remaining-route-polyline"
+            ).layers
+        }
+
+        if let selctedRoute = routesPlanMapDrawer.selectedRoute {
+            layers += makeCongestionLayers(for: [selctedRoute])
+        }
+
+        return layers
     }
 
     func makeMapViewModifiers(content: MapView<MapViewController>, isNavigating: Bool) -> MapView<MapViewController> {
@@ -441,9 +458,53 @@ struct ActiveTripInfoView: View {
 
     @State var isExpanded: Bool = false
 
+    @State private var dragOffset: CGFloat = 0
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
     // MARK: Content
 
     var body: some View {
+        ZStack(alignment: .bottom) {
+            self.content()
+                .background {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(.white)
+                        .shadow(
+                            color: .black.opacity(0.05),
+                            radius: 8,
+                            x: 0,
+                            y: 4
+                        )
+                        .ignoresSafeArea()
+                }
+                .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: self.isExpanded)
+                .gesture(
+                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                        .onChanged { value in
+                            withAnimation(.interactiveSpring()) {
+                                self.dragOffset = value.translation.height
+                            }
+                        }
+                        .onEnded { value in
+                            withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+                                let translation = value.translation.height
+                                let velocity = value.predictedEndLocation.y - value.location.y
+
+                                if abs(velocity) > 100 {
+                                    self.isExpanded = velocity < 0
+                                } else if abs(translation) > 30 {
+                                    self.isExpanded = translation < 0
+                                }
+
+                                self.dragOffset = 0
+                            }
+                        }
+                )
+        }
+    }
+
+    @ViewBuilder
+    private func content() -> some View {
         VStack(spacing: 0) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color.Colors.General._02Grey.opacity(0.3))
@@ -458,18 +519,8 @@ struct ActiveTripInfoView: View {
             )
             .padding(.horizontal, 16)
             .padding(.vertical, 12)
+            .padding(.bottom, self.safeAreaInsets.bottom)
         }
-        .background {
-            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                .fill(.white)
-                .shadow(
-                    color: .black.opacity(0.05),
-                    radius: 8,
-                    x: 0,
-                    y: 4
-                )
-        }
-        .padding(.horizontal, 16)
     }
 }
 
@@ -504,47 +555,52 @@ extension ActiveTripInfoView {
         // MARK: Content
 
         var body: some View {
-            HStack {
-                VStack(alignment: .leading) {
-                    if let formattedDuration = durationFormatter.string(from: tripProgress.durationRemaining) {
-                        Text(formattedDuration)
-                            .hudhudFont(.title2)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .multilineTextAlignment(.center)
+            VStack {
+                HStack {
+                    VStack(alignment: .leading) {
+                        if let formattedDuration = durationFormatter.string(from: tripProgress.durationRemaining) {
+                            Text(formattedDuration)
+                                .hudhudFont(.title2)
+                                .fontWeight(.semibold)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .multilineTextAlignment(.center)
+                        }
+
+                        HStack(alignment: .center, spacing: 4) {
+                            Text(self.estimatedArrivalFormatter.format(self.tripProgress.estimatedArrival(from: self.fromDate)))
+                                .hudhudFont(.callout)
+                                .fontWeight(.semibold)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                                .multilineTextAlignment(.center)
+
+                            Text("·")
+                                .hudhudFont(.callout)
+                                .fontWeight(.semibold)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                                .multilineTextAlignment(.center)
+
+                            Text(self.distanceFormatter.string(for: self.tripProgress.distanceRemaining) ?? "")
+                                .hudhudFont(.callout)
+                                .fontWeight(.semibold)
+                                .minimumScaleFactor(0.6)
+                                .lineLimit(1)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                                .multilineTextAlignment(.center)
+                        }
                     }
 
-                    HStack(alignment: .center, spacing: 4) {
-                        Text(self.estimatedArrivalFormatter.format(self.tripProgress.estimatedArrival(from: self.fromDate)))
-                            .hudhudFont(.callout)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .multilineTextAlignment(.center)
+                    Spacer()
 
-                        Text("·")
-                            .hudhudFont(.callout)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .multilineTextAlignment(.center)
-
-                        Text(self.distanceFormatter.string(for: self.tripProgress.distanceRemaining) ?? "")
-                            .hudhudFont(.callout)
-                            .fontWeight(.semibold)
-                            .minimumScaleFactor(0.6)
-                            .lineLimit(1)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .multilineTextAlignment(.center)
-                    }
+                    NavigationControls(onAction: self.onAction)
                 }
-
-                Spacer()
-
-                NavigationControls(onAction: self.onAction)
+                if self.isExpanded {
+                    NavigationSettingsRow()
+                }
             }
         }
     }
@@ -620,6 +676,40 @@ private struct FinishButton: View {
                 .background(Color.Colors.General._03LightGrey)
                 .clipShape(Capsule())
         }
+    }
+}
+
+// MARK: - NavigationSettingsRow
+
+struct NavigationSettingsRow: View {
+    var body: some View {
+        NavigationLink(destination: NavigationSettingsView()) {
+            HStack {
+                Image(.navigationSettingsGear)
+//                    .foregroundColor(.gray)
+
+                Text("Navigation Settings")
+                    .hudhudFont(.callout)
+                    .fontWeight(.semibold)
+                    .foregroundColor(Color(red: 40 / 255, green: 40 / 255, blue: 40 / 255))
+
+                Spacer()
+            }
+            .padding(.vertical, 12)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .background(Color(.systemBackground))
+    }
+}
+
+// MARK: - NavigationSettingsView
+
+struct NavigationSettingsView: View {
+    var body: some View {
+        List {
+            Text("Navigation Settings Content")
+        }
+        .navigationTitle("Navigation Settings")
     }
 }
 

@@ -48,6 +48,7 @@ final class NavigationEngine {
     private let locationEngine: LocationEngine
     private var cancellables: Set<AnyCancellable> = []
 
+    private let configuration: NavigationConfig
     private let horizonEngine: HorizonEngine
 
     // MARK: Computed Properties
@@ -70,6 +71,7 @@ final class NavigationEngine {
     // MARK: Lifecycle
 
     init(configuration: NavigationConfig) {
+        self.configuration = configuration
         self.navigationDelegate = NavigationDelegate()
         self.annotationPublisher = .valhallaExtendedOSRM()
         self.spokenInstructionObserver = .initAVSpeechSynthesizer(isMuted: false)
@@ -92,7 +94,8 @@ final class NavigationEngine {
 
     func startNavigation(route: Route) throws {
         self.activeRoute = route
-        try self.ferrostarCore.startNavigation(route: route)
+        try! self.ferrostarCore.startNavigation(route: route)
+        self.locationEngine.swithcMode(to: .snapped)
         self.eventsSubject.send(.navigationStarted)
     }
 
@@ -101,6 +104,7 @@ final class NavigationEngine {
         self.activeRoute = nil
         self.state = nil
         self.eventsSubject.send(.navigationEnded)
+        self.locationEngine.swithcMode(to: .raw)
     }
 
     func toggleMute() {
@@ -108,10 +112,6 @@ final class NavigationEngine {
     }
 
     private func onStateChange(_ newState: NavigationState) {
-        if let newLocationMode = decideWhichLocationModeToUse(from: newState) {
-            self.locationEngine.swithcMode(to: newLocationMode)
-        }
-
         if let snappedLocation = newState.tripState.navigationInfo?.location {
             self.useSnappedLocation(snappedLocation.clLocation)
         }
@@ -124,15 +124,6 @@ final class NavigationEngine {
         self.eventsSubject.send(.snappedLocationUpdated(newLocation))
     }
 
-    private func decideWhichLocationModeToUse(from newState: NavigationState) -> LocationMode? {
-        let currentMode = self.locationEngine.currentMode
-        let shouldUseSnappedLocation = newState.isNavigating
-
-        let newMode: LocationMode = shouldUseSnappedLocation ? .snapped : .raw
-
-        return newMode != currentMode ? newMode : nil
-    }
-
     private func setupFerrostarCore() {
         self.ferrostarCore.delegate = self.navigationDelegate
         self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
@@ -140,7 +131,8 @@ final class NavigationEngine {
     }
 
     private func observeFerrostarState() {
-        self.ferrostarCore.objectWillChange
+        self.ferrostarCore
+            .objectWillChange
             .receive(on: DispatchQueue.main)
             .sink { [weak self] _ in
                 guard let self,
@@ -159,7 +151,9 @@ final class NavigationEngine {
     private func observeLocationEngineState() {
         self.locationEngine.events
             .receive(on: DispatchQueue.main)
-            .sink { [weak self] _ in
+            .removeDuplicates()
+            .sink { [weak self] event in
+                self?.handleLocationEngineEvents(event)
             }
             .store(in: &self.cancellables)
     }
@@ -168,10 +162,17 @@ final class NavigationEngine {
         switch newEvent {
         case .locationUpdated:
             break
-        case .modeChanged:
-            break
-        case .providerChanged:
-            break // switch the navigation stuff
+        case let .modeChanged(newMode):
+            print("Location engine mode changed to \(newMode)")
+        case let .providerChanged(newType):
+            print("Location engine mode changed to \(newType)")
+            self.ferrostarCore = FerrostarCore(
+                customRouteProvider: self.configuration.routeProvider,
+                locationProvider: self.locationEngine.locationProvider,
+                navigationControllerConfig: self.configuration.toFerrostarConfig(),
+                annotation: self.annotationPublisher
+            )
+            self.setupFerrostarCore()
         }
     }
 }

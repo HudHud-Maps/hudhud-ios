@@ -89,12 +89,14 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
         ) {
             self.userLayers
         }
+
         .mapViewContentInset(self.effectiveMapViewContentInset)
         .mapControls {
             // No controls
         }
         .onStyleLoaded(self.onStyleLoaded)
         .applyTransform(transform: self.mapViewModifiers, isNavigating: self.isNavigating)
+        .padding(.bottom, self.isNavigating ? 120 : 0) // Add padding only during navigation
         .ignoresSafeArea(.all)
     }
 }

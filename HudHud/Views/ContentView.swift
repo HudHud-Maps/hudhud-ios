@@ -63,7 +63,8 @@ struct ContentView: View {
         searchViewStore: SearchViewStore,
         mapViewStore: MapViewStore,
         sheetStore: SheetStore,
-        routesPlanMapDrawer: RoutesPlanMapDrawer
+        routesPlanMapDrawer: RoutesPlanMapDrawer,
+        navigationStore: NavigationStore
     ) {
         self.searchViewStore = searchViewStore
         self.sheetStore = sheetStore
@@ -74,12 +75,9 @@ struct ContentView: View {
         self.mapViewStore = mapViewStore
         self.routesPlanMapDrawer = routesPlanMapDrawer
         self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
+        self.navigationStore = navigationStore
 
-        self.navigationStore = NavigationStore(
-            navigationEngine: NavigationEngine(configuration: .default),
-            locationEngine: LocationEngine(),
-            routesPlanMapDrawer: routesPlanMapDrawer
-        )
+        print("Initialized ContentView")
     }
 
     // MARK: Content
@@ -455,7 +453,8 @@ private extension Binding where Value == Bool {
     ContentView(searchViewStore: .storeSetUpForPreviewing,
                 mapViewStore: .storeSetUpForPreviewing,
                 sheetStore: .storeSetUpForPreviewing,
-                routesPlanMapDrawer: RoutesPlanMapDrawer())
+                routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                navigationStore: .storeSetUpForPreviewing)
 }
 
 #Preview("Touch Testing") {
@@ -464,7 +463,8 @@ private extension Binding where Value == Bool {
     return ContentView(searchViewStore: store,
                        mapViewStore: .storeSetUpForPreviewing,
                        sheetStore: .storeSetUpForPreviewing,
-                       routesPlanMapDrawer: RoutesPlanMapDrawer())
+                       routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                       navigationStore: .storeSetUpForPreviewing)
 }
 
 #Preview("NavigationPreview") {
@@ -502,7 +502,8 @@ private extension Binding where Value == Bool {
     return ContentView(searchViewStore: searchViewStore,
                        mapViewStore: mapViewStore,
                        sheetStore: sheetStore,
-                       routesPlanMapDrawer: routesPlanMapDrawer)
+                       routesPlanMapDrawer: routesPlanMapDrawer,
+                       navigationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Preview
@@ -536,5 +537,14 @@ private extension Binding where Value == Bool {
     return ContentView(searchViewStore: store,
                        mapViewStore: .storeSetUpForPreviewing,
                        sheetStore: .storeSetUpForPreviewing,
-                       routesPlanMapDrawer: RoutesPlanMapDrawer())
+                       routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                       navigationStore: .storeSetUpForPreviewing)
+}
+
+// MARK: - NavigationStore + Previewable
+
+extension NavigationStore: Previewable {
+    static var storeSetUpForPreviewing: NavigationStore {
+        .init(navigationEngine: .init(configuration: .default), locationEngine: .init(), routesPlanMapDrawer: .init())
+    }
 }

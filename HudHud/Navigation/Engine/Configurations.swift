@@ -19,11 +19,11 @@ struct NavigationConfig {
 
     static let `default` = NavigationConfig(
         routeProvider: GraphHopperRouteProvider(),
-        locationEngine: LocationEngine(),
+        locationEngine: AppDpendencies.locationEngine,
         stepAdvanceConfig: .default,
         deviationConfig: .default,
         courseFiltering: .snapToRoute,
-        horizonScanRange: .init(value: 5, unit: .kilometers),
+        horizonScanRange: .init(value: 1.5, unit: .kilometers),
         horizonUpdateInterval: 10,
         featureAlertConfig: .default
     )

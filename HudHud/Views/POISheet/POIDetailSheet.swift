@@ -473,13 +473,3 @@ private extension POIDetailSheet {
         }
     }
 }
-
-// MARK: - Preview
-
-#Preview(traits: .sizeThatFitsLayout) {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    ContentView(searchViewStore: searchViewStore,
-                mapViewStore: .storeSetUpForPreviewing,
-                sheetStore: .storeSetUpForPreviewingPOI,
-                routesPlanMapDrawer: RoutesPlanMapDrawer())
-}

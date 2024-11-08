@@ -21,13 +21,25 @@ final class LocationEngine {
 
     private(set) var locationProvider: LocationProviding
     private(set) var locationManager: PassthroughLocationManager
-    private(set) var currentMode: LocationMode = .raw
-    private(set) var currentType: LocationProviderType
 
     private let eventsSubject = PassthroughSubject<LocationEngineEvent, Never>()
     private var cancellables = Set<AnyCancellable>()
 
     // MARK: Computed Properties
+
+    private(set) var currentMode: LocationMode = .raw {
+        didSet {
+            guard self.currentMode != oldValue else { return }
+            self.eventsSubject.send(.modeChanged(self.currentMode))
+        }
+    }
+
+    private(set) var currentType: LocationProviderType {
+        didSet {
+            guard self.currentType != oldValue else { return }
+            self.eventsSubject.send(.providerChanged(self.currentType))
+        }
+    }
 
     var events: AnyPublisher<LocationEngineEvent, Never> {
         self.eventsSubject.eraseToAnyPublisher()
@@ -45,8 +57,9 @@ final class LocationEngine {
 
     // MARK: -
 
-    init(type: LocationProviderType = .standard) {
+    init(type: LocationProviderType = DebugStore().simulateRide == true ? .simulated : .standard) {
         self.currentType = type
+
         let provider = type.provider
         self.locationProvider = provider
         self.locationManager = PassthroughLocationManager(authorizationStatus: provider.authorizationStatus, headingOrientation: .portrait)
@@ -55,26 +68,26 @@ final class LocationEngine {
 
     // MARK: Functions
 
-    // MARK: - Public Methods
-
     func switchToSimulated(route: Route) {
-        guard self.currentType != .simulated else { return }
-        let provider = SimulatedLocationProvider()
-        self.updateProvider(.simulated, newProvider: provider)
+        guard let provider = locationProvider as? SimulatedLocationProvider else {
+            let provider = SimulatedLocationProvider()
+            provider.warpFactor = 4
+            self.updateProvider(.simulated, newProvider: provider)
+            try? provider.setSimulatedRoute(route, bias: .left(5))
+            return
+        }
         try? provider.setSimulatedRoute(route, bias: .left(5))
-        provider.startUpdating()
     }
 
     func switchToStandard() {
         guard self.currentType != .standard else { return }
         let provider = CoreLocationProvider(activityType: .automotiveNavigation, allowBackgroundLocationUpdates: true)
-        self.updateProvider(.standard, newProvider: provider)
         provider.startUpdating()
+        self.updateProvider(.standard, newProvider: provider)
     }
 
     func swithcMode(to mode: LocationMode) {
         self.currentMode = mode
-        self.eventsSubject.send(.modeChanged(mode))
     }
 
     func update(withSnaplocation location: CLLocation) {
@@ -101,7 +114,7 @@ final class LocationEngine {
         self.locationProvider = newProvider
 
         self.setupSubscriptions()
-        self.eventsSubject.send(.providerChanged(type))
+        self.locationProvider.startUpdating()
     }
 
     private func setupSubscriptions() {

@@ -150,7 +150,7 @@ final class NavigationStore {
             self.stopNavigation()
 
         case .toggleMute:
-            // mute engine
+            self.navigationEngine.toggleMute()
             self.state.isMuted.toggle()
         }
     }
@@ -170,9 +170,10 @@ final class NavigationStore {
         }
 
         do {
-            try self.navigationEngine.startNavigation(route: route)
-            self.decideWhichLocationProviderToUse(route: route)
-            self.state.status = .navigating
+            try self.decideWhichLocationProviderToUse(route: route) {
+                try self.navigationEngine.startNavigation(route: route)
+                self.state.status = .navigating
+            }
         } catch {
             self.state.status = .failed
         }
@@ -196,14 +197,18 @@ final class NavigationStore {
             }.store(in: &self.cancellables)
     }
 
-    private func decideWhichLocationProviderToUse(route: Route) {
+    private func decideWhichLocationProviderToUse(route: Route, action: () throws -> Void) rethrows {
         if DebugStore().simulateRide {
             // give a chance to camera movment
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                self.locationEngine.switchToSimulated(route: route)
+            self.locationEngine.switchToSimulated(route: route)
+            try action()
+            self.locationEngine.locationProvider.stopUpdating()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.locationEngine.locationProvider.startUpdating()
             }
         } else {
             self.locationEngine.switchToStandard()
+            try action()
         }
     }
 

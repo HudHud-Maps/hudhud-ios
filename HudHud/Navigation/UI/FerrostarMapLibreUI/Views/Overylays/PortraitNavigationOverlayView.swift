@@ -43,6 +43,10 @@ CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     var overlayStore: OverlayContentStore
 
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+    @State private var instrcutionViewHeight: CGFloat = 140
+
     // MARK: Lifecycle
 
     init(
@@ -75,6 +79,7 @@ CustomizableNavigatingInnerGridView, NavigationOverlayContent {
         ZStack(alignment: .top) {
             VStack {
                 Spacer()
+                    .frame(height: self.instrcutionViewHeight + self.safeAreaInsets.top)
 
                 // The inner content is displayed vertically full screen
                 // when both the visualInstructions and progress are nil.
@@ -102,6 +107,7 @@ CustomizableNavigatingInnerGridView, NavigationOverlayContent {
                 } bottomLeading: {
                     self.bottomLeading?()
                 }
+                .padding(.horizontal, 16)
 
                 if let progressView = overlayStore.content[.tripProgress] {
                     progressView()
@@ -112,6 +118,7 @@ CustomizableNavigatingInnerGridView, NavigationOverlayContent {
                 instructionsView()
             }
         }
+        .ignoresSafeArea(.all)
     }
 }
 
@@ -126,6 +133,7 @@ struct LegacyInstructionsView: View {
 
     @State private var isInstructionViewExpanded: Bool = false
     @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
 
     // MARK: Lifecycle
 
@@ -151,6 +159,6 @@ struct LegacyInstructionsView: View {
                     sizeWhenNotExpanded: self.$instructionsViewSizeWhenNotExpanded
                 )
             }
-        }.padding(.top, self.instructionsViewSizeWhenNotExpanded.height + 16)
+        }
     }
 }

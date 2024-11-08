@@ -36,6 +36,7 @@
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
 		0CA5EDB52CDD06D30006F2CA /* NavigationOverlayZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */; };
 		0CA5EDB72CDD08120006F2CA /* NavigationOverlayContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */; };
+		0CA5EDBB2CDD67280006F2CA /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */; };
 		0CB11DA62CD8E4A800F70155 /* NavigationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB11DA52CD8E4A800F70155 /* NavigationEngine.swift */; };
 		0CB11DA92CD8E9C200F70155 /* HorizonEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB11DA82CD8E9C200F70155 /* HorizonEngine.swift */; };
 		0CB11DAD2CD9091200F70155 /* LocationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CB11DAC2CD9091200F70155 /* LocationEngine.swift */; };
@@ -303,6 +304,7 @@
 		0C4792D02CDB7A3500DFCD4D /* LocationEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEngineTests.swift; sourceTree = "<group>"; };
 		0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayZone.swift; sourceTree = "<group>"; };
 		0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayContent.swift; sourceTree = "<group>"; };
+		0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		0CB11DA52CD8E4A800F70155 /* NavigationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEngine.swift; sourceTree = "<group>"; };
 		0CB11DA82CD8E9C200F70155 /* HorizonEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HorizonEngine.swift; sourceTree = "<group>"; };
 		0CB11DAC2CD9091200F70155 /* LocationEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEngine.swift; sourceTree = "<group>"; };
@@ -1335,6 +1337,7 @@
 				14EFC3A7AE83BA96C32EEB4E /* UIImage+resize.swift */,
 				0C4792AE2CDA4A6A00DFCD4D /* Measurement+Extensions.swift */,
 				1712BCE5DD79B97A44CC6A05 /* LengthFormatter.swift */,
+				0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1595,6 +1598,7 @@
 				0C4792A12CD96E6000DFCD4D /* CameraDirection.swift in Sources */,
 				5910022F2C84787A00CF4707 /* PersonalInformationScreenView.swift in Sources */,
 				0CA5EDB52CDD06D30006F2CA /* NavigationOverlayZone.swift in Sources */,
+				0CA5EDBB2CDD67280006F2CA /* View+Extensions.swift in Sources */,
 				0C4792BA2CDAF33800DFCD4D /* HorizionEvent.swift in Sources */,
 				0C4792A72CD96ED400DFCD4D /* SpeedCameraState.swift in Sources */,
 				81DBA484103DCC5F3F5BF435 /* CaseIterable.swift in Sources */,
@@ -1783,19 +1787,7 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		077FC3EFC9988C5FBAA123D1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		115D19CF85957E9CB3CEAE9E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		6E7168FC105036E7630B9BA2 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
 		8901798B9586A659D2EFC8E0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-		};
-		8F4D2452C8860E586E2BA4DE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
