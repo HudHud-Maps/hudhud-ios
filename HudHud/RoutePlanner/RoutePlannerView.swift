@@ -19,24 +19,11 @@ struct RoutePlannerView: View {
     // MARK: Content
 
     var body: some View {
-        Group {
-            switch self.routePlannerStore.state {
-            case .initialLoading, .errorFetchignRoute, .locationNotEnabled:
-                ProgressView()
-            case .loaded:
-                RoutePlanView(routePlannderStore: self.routePlannerStore)
-            }
-        }
-        .padding(.vertical)
-        .padding(.top)
-        .background {
-            /// according to the design the sheet height must match the view's height
-            /// so we compute the height and report it to the sheet to adjust its height
-            GeometryReader { geometry in
-                Color.clear.onAppear {
-                    self.routePlannerStore.didChangeHeight(to: geometry.size.height)
-                }
-            }
+        switch self.routePlannerStore.state {
+        case .initialLoading, .errorFetchignRoute, .locationNotEnabled:
+            ProgressView()
+        case .loaded:
+            RoutePlanView(routePlannderStore: self.routePlannerStore)
         }
     }
 }
@@ -53,24 +40,48 @@ struct RoutePlanView: View {
 
     var body: some View {
         VStack {
-            VStack(alignment: .destinationIconCenterAlignment) {
-                ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
-                    RoutePlannerRow(
-                        destination: destination,
-                        onSwap: self.swapActionIfCanSwap(for: destination),
-                        onDelete: self.deleteActionIfCanDelete(for: destination)
-                    )
-                    .animation(.bouncy, value: destination)
-                }
-                AddMoreRoute {
-                    self.routePlannderStore.addNewRoute()
+            RoundedRectangle(cornerRadius: 2)
+                .fill(Color.Colors.General._02Grey)
+                .frame(width: 36, height: 5)
+            List {
+                Section {
+                    ForEach(self.routePlannderStore.state.destinations) { destination in
+                        VStack(alignment: .destinationIconCenterAlignment, spacing: .zero) {
+                            RoutePlannerRow(
+                                destination: destination,
+                                onSwap: self.swapActionIfCanSwap(for: destination),
+                                onDelete: self.deleteActionIfCanDelete(for: destination)
+                            )
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(.init(top: 0, leading: 0, bottom: 6, trailing: 0))
+                    }
+                    .onMove { fromOffsets, toOffset in
+                        Task {
+                            await self.routePlannderStore.moveDestinations(
+                                fromOffsets: fromOffsets,
+                                toOffset: toOffset
+                            )
+                        }
+                    }
+                    .moveDisabled(!self.routePlannderStore.state.canMove)
+                    VStack(alignment: .destinationIconCenterAlignment, spacing: .zero) {
+                        AddMoreRoute {
+                            self.routePlannderStore.addNewRoute()
+                        }
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
             }
+            .scrollIndicators(.hidden)
+            .listStyle(.plain)
             StartNavigationButton {
                 self.routePlannderStore.startNavigation()
             }
             .padding(.horizontal)
         }
+        .padding(.top)
     }
 
     // MARK: Functions
@@ -213,30 +224,43 @@ struct AddMoreRoute: View {
     var body: some View {
         Button(action: self.onClick) {
             VStack(alignment: .destinationIconCenterAlignment) {
-                Label {
+                HStack {
+                    Image(.addStopIcon)
+                        .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                     HStack {
                         Text("Add Stop")
                             .hudhudFontStyle(.labelMedium)
                             .foregroundStyle(Color(.secondaryLabel))
                         Spacer()
                     }
-                } icon: {
-                    Image(.addStopIcon)
-                        .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                 }
-                Label {
-                    Rectangle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: .infinity, height: 1)
-                } icon: {
+                HStack {
                     Circle()
                         .fill(.white)
                         .frame(width: 4)
                         .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                    Rectangle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: .infinity, height: 1)
                 }
             }
-            .padding([.leading, .trailing])
+            .padding(.horizontal)
         }
+    }
+}
+
+// MARK: - HeightPreferenceKey
+
+struct HeightPreferenceKey: PreferenceKey {
+
+    // MARK: Static Properties
+
+    static var defaultValue: CGFloat = 0
+
+    // MARK: Static Functions
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

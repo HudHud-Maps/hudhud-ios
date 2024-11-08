@@ -20,7 +20,7 @@ final class RoutePlannerStore {
 
     // MARK: Properties
 
-    var state: RoutePlanningState = .initialLoading
+    private(set) var state: RoutePlanningState = .initialLoading
 
     private let initialDestination: DestinationPointOfInterest
     private let sheetStore: SheetStore
@@ -32,6 +32,7 @@ final class RoutePlannerStore {
     )
     private let routingStore: RoutingStore
     private var routeMapEventSubscription: AnyCancellable?
+    private let rowHeight: CGFloat = 56 + 6
 
     // MARK: Lifecycle
 
@@ -57,14 +58,6 @@ final class RoutePlannerStore {
 
     // MARK: Functions
 
-    func didChangeHeight(to height: CGFloat) {
-        let height: Detent = .height(height)
-        self.sheetStore.currentSheet.detentData.value = DetentData(
-            selectedDetent: height,
-            allowedDetents: [height]
-        )
-    }
-
     func addNewRoute() {
         self.sheetStore.show(
             .navigationAddSearchView { [weak self] newDestination in
@@ -73,6 +66,7 @@ final class RoutePlannerStore {
                     type: .location(newDestination),
                     title: newDestination.title
                 ))
+                self.updateHeight()
                 Task {
                     await self.fetchRoutePlan(for: self.state.destinations)
                 }
@@ -96,7 +90,32 @@ final class RoutePlannerStore {
 
     func remove(_ destination: RouteWaypoint) async {
         self.state.destinations.removeAll(where: { $0 == destination })
+        self.updateHeight()
         await self.fetchRoutePlan(for: self.state.destinations)
+    }
+
+    func moveDestinations(fromOffsets: IndexSet, toOffset: Int) async {
+        guard self.state.canMove else { return }
+        self.state.destinations.move(fromOffsets: fromOffsets, toOffset: toOffset)
+        await self.fetchRoutePlan(for: self.state.destinations)
+    }
+
+    private func updateHeight() {
+        let height: CGFloat
+        switch self.state {
+        case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
+            height = 60
+        case let .loaded(plan):
+            let buttonHeight: CGFloat = 56
+            let listHeight = CGFloat(plan.waypoints.count) * self.rowHeight
+            let addStopHeight = self.rowHeight
+            let padding: CGFloat = 16
+            height = buttonHeight + listHeight + addStopHeight + padding
+        }
+        self.sheetStore.currentSheet.detentData.value = DetentData(
+            selectedDetent: .height(height),
+            allowedDetents: [.height(height)]
+        )
     }
 
     private func fetchRoutePlanForFirstTime() async {
@@ -125,6 +144,7 @@ final class RoutePlannerStore {
             self.state = .errorFetchignRoute
             return
         }
+        defer { self.updateHeight() }
         var waypoints = destinations.map { destination in
             let location = switch destination.type {
             case let .location(destinationItem):
@@ -158,6 +178,7 @@ final class RoutePlannerStore {
             )
             self.state = .loaded(plan: plan)
             self.drawRoutes(in: plan)
+            self.updateHeight()
         } catch {
             self.state = .errorFetchignRoute
         }
@@ -233,7 +254,7 @@ enum RoutePlanningState: Hashable {
         self.destinations.count > 2
     }
 
-    var canDrag: Bool {
+    var canMove: Bool {
         self.destinations.count > 2
     }
 }
@@ -268,7 +289,7 @@ struct Coordinates: Hashable {
 
 // MARK: - RouteWaypoint
 
-struct RouteWaypoint: Hashable {
+struct RouteWaypoint: Hashable, Identifiable {
 
     // MARK: Nested Types
 
@@ -279,6 +300,7 @@ struct RouteWaypoint: Hashable {
 
     // MARK: Properties
 
+    let id = UUID()
     let type: RouteWaypointType
     let title: String
 }

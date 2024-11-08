@@ -1924,7 +1924,6 @@
 			requirement = {
 				branch = main;
 				kind = branch;
-				revision = "";
 			};
 		};
 		A5E51DCD7F8B5D4D62E40BB8 /* XCRemoteSwiftPackageReference "BetterSafariView2" */ = {

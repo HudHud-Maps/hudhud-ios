@@ -151,23 +151,21 @@ struct SearchSheet: View {
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
                                 Button {
+                                    if case let .returnPOILocation(completion) = self.searchStore.searchType {
+                                        switch item {
+                                        case let .categoryItem(resolvedItem), let .resolvedItem(resolvedItem):
+                                            completion(resolvedItem)
+                                            self.sheetStore.popSheet()
+                                            return
+                                        case .category, .predictionItem:
+                                            break
+                                        }
+                                    }
                                     Task {
                                         self.searchIsFocused = false
                                         await self.searchStore.didSelect(item)
                                         if let resolvedItem = self.mapStore.selectedItem.value {
                                             self.storeRecent(item: resolvedItem)
-                                        }
-                                        switch self.searchStore.searchType {
-                                        case let .returnPOILocation(completion):
-                                            switch item {
-                                            case let .categoryItem(resolvedItem), let .resolvedItem(resolvedItem):
-                                                completion(resolvedItem)
-                                                self.sheetStore.popSheet()
-                                            case .category, .predictionItem:
-                                                break
-                                            }
-                                        case .selectPOI, .categories, .favorites:
-                                            break
                                         }
                                     }
                                 } label: {
