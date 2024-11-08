@@ -35,6 +35,9 @@ enum MapLayerIdentifier {
     static let routePrefix = "route"
     static let congestionPrefix = "congestion"
 
+    // the new POI layer identifier
+    static let poiLevel1 = "poi-level-1"
+
     // MARK: Static Functions
 
     static func routeInner(_ index: Int) -> String { "\(self.routePrefix)-inner-\(index)" }

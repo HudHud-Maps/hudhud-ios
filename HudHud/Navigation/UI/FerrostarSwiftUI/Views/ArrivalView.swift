@@ -1,3 +1,11 @@
+//
+//  ArrivalView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import FerrostarCoreFFI
 import MapKit
@@ -101,7 +109,7 @@ public struct ArrivalView: View {
                 Button {
                     onTapExit()
                 } label: {
-                    Image(systemName: "xmark")
+                    Image(systemSymbol: .xmark)
                         .foregroundColor(self.theme.measurementColor)
                 }
                 .padding()
@@ -154,7 +162,7 @@ public struct ArrivalView: View {
             ),
             theme: informationalTheme
         )
-        .environment(\.locale, .init(identifier: "de_DE"))
+        .environment(\.locale, Locale(identifier: "de_DE"))
 
         ArrivalView(
             progress: TripProgress(
@@ -206,7 +214,7 @@ public struct ArrivalView: View {
             theme: informationalTheme,
             onTapExit: {}
         )
-        .environment(\.locale, .init(identifier: "de_DE"))
+        .environment(\.locale, Locale(identifier: "de_DE"))
 
         ArrivalView(
             progress: TripProgress(

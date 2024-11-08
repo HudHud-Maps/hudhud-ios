@@ -123,6 +123,9 @@
         }
       }
     },
+
+    "Add photos and videos" : {
+    },
     "Add Stop" : {
 
     },
@@ -193,6 +196,12 @@
         }
       }
     },
+    "Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera" : {
+
+    },
+    "Camera Access Required" : {
+
+    },
     "Cancel" : {
 
     },
@@ -210,7 +219,7 @@
 
     },
     "Close" : {
-      "comment" : "Accessibility label instead of x",
+      "comment" : "Accessibility label instead of x\naccessibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -482,6 +491,9 @@
     "Quality" : {
 
     },
+    "Rate and review" : {
+
+    },
     "Rating" : {
 
     },
@@ -549,6 +561,9 @@
     "Share" : {
 
     },
+    "Share your experience" : {
+
+    },
     "Show Less" : {
 
     },
@@ -605,7 +620,13 @@
     "StreetView Quality" : {
 
     },
+    "Submit" : {
+
+    },
     "Suggestions" : {
+
+    },
+    "There is no photo added yet! Be the first to add one." : {
 
     },
     "Touch Visualizer" : {

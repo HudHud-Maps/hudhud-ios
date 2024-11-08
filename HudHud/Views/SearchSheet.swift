@@ -248,21 +248,10 @@ struct SearchSheet: View {
             self.searchStore.storeInRecent(item)
         }
     }
-
-    // MARK: - Internal
-
-    // Log out function
-    private func logOut() {
-        do {
-            try AuthProvider.shared.delete()
-            Logger.userRegistration.info("Logged out")
-        } catch {
-            Logger.userRegistration.error("Error logging out: \(error)")
-        }
-    }
 }
 
 extension SearchSheet {
+
     static var fakeData = [
         SearchResultItemView(item: SearchResultItem(DisplayableRow.starbucks), searchText: nil),
         SearchResultItemView(item: SearchResultItem(DisplayableRow.ketchup), searchText: nil),
@@ -273,9 +262,24 @@ extension SearchSheet {
     ]
 }
 
+// MARK: - Private
+
+private extension SearchSheet {
+
+    func logOut() {
+        do {
+            try AuthProvider.shared.delete()
+            Logger.userRegistration.info("Logged out")
+        } catch {
+            Logger.userRegistration.error("Error logging out: \(error)")
+        }
+    }
+}
+
 // MARK: - RawRepresentable + RawRepresentable
 
 extension [ResolvedItem]: @retroactive RawRepresentable {
+
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
               let result = try? JSONDecoder()

@@ -12,6 +12,8 @@ import Foundation
 import KeychainAccess
 import OSLog
 
+// MARK: - OTPVerificationStore
+
 @Observable
 final class OTPVerificationStore {
 
@@ -28,7 +30,6 @@ final class OTPVerificationStore {
     var isValid: Bool = true
 
     private var registrationService = RegistrationService()
-
     private var timeRemaining: Int = 60
     private var duration: Date
 
@@ -125,8 +126,13 @@ final class OTPVerificationStore {
             Logger.userRegistration.info("error resending otp")
         }
     }
+}
 
-    private func resetValidity() {
+// MARK: - Private
+
+private extension OTPVerificationStore {
+
+    func resetValidity() {
         if !self.isValid, !self.isCodeComplete {
             self.isValid = false
             self.errorMessage = nil

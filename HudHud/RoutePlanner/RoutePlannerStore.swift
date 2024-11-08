@@ -99,8 +99,10 @@ final class RoutePlannerStore {
         self.state.destinations.move(fromOffsets: fromOffsets, toOffset: toOffset)
         await self.fetchRoutePlan(for: self.state.destinations)
     }
+}
 
-    private func updateHeight() {
+private extension RoutePlannerStore {
+    func updateHeight() {
         let height: CGFloat
         switch self.state {
         case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
@@ -118,7 +120,7 @@ final class RoutePlannerStore {
         )
     }
 
-    private func fetchRoutePlanForFirstTime() async {
+    func fetchRoutePlanForFirstTime() async {
         guard let userLocation = await self.userLocationStore.location(allowCached: false) else {
             self.state = .locationNotEnabled
             return
@@ -139,7 +141,7 @@ final class RoutePlannerStore {
         await self.fetchRoutePlan(for: initialDestinations)
     }
 
-    private func fetchRoutePlan(for destinations: [RouteWaypoint]) async {
+    func fetchRoutePlan(for destinations: [RouteWaypoint]) async {
         guard destinations.count > 1 else {
             self.state = .errorFetchignRoute
             return
@@ -184,7 +186,7 @@ final class RoutePlannerStore {
         }
     }
 
-    private func drawRoutes(in plan: RoutePlan) {
+    func drawRoutes(in plan: RoutePlan) {
         self.routesPlanMapDrawer.drawRoutes(
             routes: plan.routes,
             selectedRoute: plan.selectedRoute,
@@ -192,7 +194,7 @@ final class RoutePlannerStore {
         )
     }
 
-    private func bindMapEvents() {
+    func bindMapEvents() {
         self.routeMapEventSubscription = self.routesPlanMapDrawer.routePlanEvents.sink { [weak self] event in
             guard let self else { return }
             switch event {
@@ -208,114 +210,7 @@ final class RoutePlannerStore {
     }
 }
 
-// MARK: - RoutePlanningState
-
-enum RoutePlanningState: Hashable {
-    case initialLoading
-    case locationNotEnabled
-    case errorFetchignRoute
-    case loaded(plan: RoutePlan)
-
-    // MARK: Computed Properties
-
-    var destinations: [RouteWaypoint] {
-        get {
-            switch self {
-            case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
-                []
-            case let .loaded(plan):
-                plan.waypoints
-            }
-        }
-        set {
-            switch self {
-            case let .loaded(plan):
-                self = .loaded(plan: RoutePlan(waypoints: newValue, routes: plan.routes, selectedRoute: plan.selectedRoute))
-            case .errorFetchignRoute, .initialLoading, .locationNotEnabled:
-                break
-            }
-        }
-    }
-
-    var selectedRoute: Route? {
-        switch self {
-        case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
-            nil
-        case let .loaded(plan):
-            plan.selectedRoute
-        }
-    }
-
-    var canSwap: Bool {
-        self.destinations.count == 2
-    }
-
-    var canRemove: Bool {
-        self.destinations.count > 2
-    }
-
-    var canMove: Bool {
-        self.destinations.count > 2
-    }
-}
-
-// MARK: - Coordinates
-
-struct Coordinates: Hashable {
-
-    // MARK: Properties
-
-    let latitude: Double
-    let longitude: Double
-
-    // MARK: Computed Properties
-
-    var clLocationCoordinate2D: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: self.latitude, longitude: self.longitude)
-    }
-
-    // MARK: Lifecycle
-
-    init(latitude: Double, longitude: Double) {
-        self.latitude = latitude
-        self.longitude = longitude
-    }
-
-    init(_ coordinate: CLLocationCoordinate2D) {
-        self.latitude = coordinate.latitude
-        self.longitude = coordinate.longitude
-    }
-}
-
-// MARK: - RouteWaypoint
-
-struct RouteWaypoint: Hashable, Identifiable {
-
-    // MARK: Nested Types
-
-    enum RouteWaypointType: Hashable {
-        case userLocation(Coordinates)
-        case location(DestinationPointOfInterest)
-    }
-
-    // MARK: Properties
-
-    let id = UUID()
-    let type: RouteWaypointType
-    let title: String
-}
-
-// MARK: - RoutePlan
-
-struct RoutePlan: Hashable {
-    var waypoints: [RouteWaypoint]
-    var routes: [Route]
-    var selectedRoute: Route
-}
-
-typealias DestinationPointOfInterest = ResolvedItem
-
-// MARK: - RoutePlannerStore + Previewable
+// MARK: - Previewable
 
 extension RoutePlannerStore: Previewable {
     static let storeSetUpForPreviewing = RoutePlannerStore(

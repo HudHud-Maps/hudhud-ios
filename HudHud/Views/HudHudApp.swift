@@ -6,8 +6,10 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import APIClient
 import Nuke
 import OSLog
+import Pulse
 import SwiftLocation
 import SwiftUI
 import TypographyKit
@@ -32,15 +34,13 @@ struct HudHudApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(
-                searchStore: self.searchStore,
-                mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore,
-                routesPlanMapDrawer: self.routesPlanMapDrawer
-            )
-            .onAppear {
-                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-            }
+            ContentView(searchViewStore: self.searchStore,
+                        mapViewStore: self.mapViewStore,
+                        sheetStore: self.sheetStore,
+                        routesPlanMapDrawer: self.routesPlanMapDrawer)
+                .onAppear {
+                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+                }
         }
     }
 
@@ -74,6 +74,8 @@ struct HudHudApp: App {
             configuration.urlCache = diskCache
             return configuration
         }())
+
+        dataLoader.delegate = URLSessionProxyDelegate()
 
         // Configure the pipeline with the custom DataLoader and cache
         let pipeline = ImagePipeline {

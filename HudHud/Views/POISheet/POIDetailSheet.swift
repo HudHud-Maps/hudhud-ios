@@ -67,14 +67,12 @@ struct POIDetailSheet: View {
 
     // MARK: Lifecycle
 
-    init(
-        pointOfInterestStore: PointOfInterestStore,
-        sheetStore: SheetStore,
-        routingStore: RoutingStore,
-        didDenyLocationPermission: Bool,
-        onStart: @escaping ([Route]?) -> Void,
-        onDismiss: @escaping () -> Void
-    ) {
+    init(pointOfInterestStore: PointOfInterestStore,
+         sheetStore: SheetStore,
+         routingStore: RoutingStore,
+         didDenyLocationPermission: Bool,
+         onStart: @escaping ([Route]?) -> Void,
+         onDismiss: @escaping () -> Void) {
         self.pointOfInterestStore = pointOfInterestStore
         self.sheetStore = sheetStore
         self.onStart = onStart
@@ -84,8 +82,6 @@ struct POIDetailSheet: View {
     }
 
     // MARK: Content
-
-    // MARK: - View
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0.0) {
@@ -308,7 +304,13 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var categoryView: some View { // Category · Subcategory
+}
+
+// MARK: - Private
+
+private extension POIDetailSheet {
+
+    var categoryView: some View { // Category · Subcategory
         Group {
             if let category = pointOfInterestStore.pointOfInterest.category {
                 Text("\(category)\(self.pointOfInterestStore.pointOfInterest.subCategory.map { " · \($0)" } ?? "")")
@@ -321,7 +323,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var ratingView: some View { // e.g. 4 ***** · (500)
+    var ratingView: some View { // e.g. 4 ***** · (500)
         Group {
             if let rating = pointOfInterestStore.pointOfInterest.rating {
                 HStack(spacing: 4) {
@@ -354,7 +356,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var priceRangeView: some View { // · $$$
+    var priceRangeView: some View { // · $$$
         Group {
             if let priceRangeValue = pointOfInterestStore.pointOfInterest.priceRange,
                let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue) {
@@ -365,7 +367,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var accessibilityView: some View { // Wheelchair
+    var accessibilityView: some View { // Wheelchair
         Group {
             if let wheelchairAccessible = self.pointOfInterestStore.pointOfInterest.isWheelchairAccessible, wheelchairAccessible {
                 HStack {
@@ -378,7 +380,7 @@ struct POIDetailSheet: View {
         .foregroundStyle(Color.Colors.General._02Grey)
     }
 
-    private var openStatusView: some View {
+    var openStatusView: some View {
         Group {
             if let isOpen = self.pointOfInterestStore.pointOfInterest.isOpen,
                let openingHoursToday = self.pointOfInterestStore.pointOfInterest.openingHours?.first(where: { $0.day == currentWeekday }) {
@@ -391,7 +393,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var routeInformationView: some View {
+    var routeInformationView: some View {
         Group {
             if let route = routes?.first {
                 HStack {
@@ -408,7 +410,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var openiningHoursView: some View {
+    var openiningHoursView: some View {
         Group {
             if let openingHoursList = self.pointOfInterestStore.pointOfInterest.openingHours {
                 ForEach(HudHudPOI.OpeningHours.WeekDay.allCases, id: \.self) { day in
@@ -431,9 +433,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    // MARK: Functions
-
-    private func nextAvailableTime(isOpen: Bool, hours: [HudHudPOI.OpeningHours.TimeRange]) -> String {
+    func nextAvailableTime(isOpen: Bool, hours: [HudHudPOI.OpeningHours.TimeRange]) -> String {
         let nextTime = isOpen ? hours.last?.end : hours.first?.start
         if let nextHour = nextTime {
             return self.formatHour(nextHour)
@@ -442,7 +442,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private func formatHour(_ hour: Int) -> String {
+    func formatHour(_ hour: Int) -> String {
         var components = DateComponents()
         components.hour = hour
         let calendar = Calendar.current
@@ -455,12 +455,6 @@ struct POIDetailSheet: View {
             return "Invalid Time"
         }
     }
-
-}
-
-// MARK: - Private
-
-private extension POIDetailSheet {
 
     func calculateRoute(for item: ResolvedItem) async {
         do {
@@ -484,7 +478,7 @@ private extension POIDetailSheet {
 
 #Preview(traits: .sizeThatFitsLayout) {
     let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    ContentView(searchStore: searchViewStore,
+    ContentView(searchViewStore: searchViewStore,
                 mapViewStore: .storeSetUpForPreviewing,
                 sheetStore: .storeSetUpForPreviewingPOI,
                 routesPlanMapDrawer: RoutesPlanMapDrawer())

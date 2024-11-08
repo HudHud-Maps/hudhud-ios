@@ -54,7 +54,7 @@ struct RoutePlanView: View {
                             )
                         }
                         .listRowSeparator(.hidden)
-                        .listRowInsets(.init(top: 0, leading: 0, bottom: 6, trailing: 0))
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 6, trailing: 0))
                     }
                     .onMove { fromOffsets, toOffset in
                         Task {
@@ -71,7 +71,7 @@ struct RoutePlanView: View {
                         }
                     }
                     .listRowSeparator(.hidden)
-                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
             }
             .scrollIndicators(.hidden)
