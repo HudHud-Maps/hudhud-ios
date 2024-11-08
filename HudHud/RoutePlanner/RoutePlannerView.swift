@@ -134,12 +134,8 @@ struct RoutePlannerRow: View {
                     .foregroundStyle(Color.Colors.General._01Black)
                 Spacer()
                 if let onDelete {
-                    Button {
-                        print("drag and drop")
-                    } label: {
-                        Image(systemSymbol: .line3Horizontal)
-                            .tint(Color.gray)
-                    }
+                    Image(systemSymbol: .line3Horizontal)
+                        .tint(Color.gray)
                     Divider()
                     Button(action: onDelete) {
                         Image(systemSymbol: .xmark)
