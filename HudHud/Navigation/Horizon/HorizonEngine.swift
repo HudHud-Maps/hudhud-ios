@@ -158,7 +158,7 @@ final class HorizonEngine {
     ) -> Bool {
         let change = abs(oldDistance.value - newDistance.value)
         let roundedChange = round(change * 10) / 10
-        return roundedChange >= 10
+        return roundedChange >= LocationConstants.significantDistanceChange
     }
 }
 
@@ -192,7 +192,19 @@ enum RouteFeatureExtractor {
 }
 
 extension Route {
-    static var mockIncidents: [TrafficIncident] = []
+    static var mockIncidents: [TrafficIncident] = [
+        //        .init(
+//            id: "test-incident",
+//            type: .accident,
+//            severity: .moderate,
+//            location: midLocation,
+//            description: "",
+//            startTime: Date(),
+//            endTime: nil,
+//            length: .kilometers(1.5),
+//            delayInSeconds: 600
+//        )
+    ]
     static var mockSpeedCameras: [SpeedCamera] = []
 
     var incidents: [TrafficIncident] {
@@ -200,7 +212,56 @@ extension Route {
     }
 
     var speedCameras: [SpeedCamera] {
-        Self.mockSpeedCameras
+        if !Self.mockSpeedCameras.isEmpty { return Self.mockSpeedCameras }
+        else {
+            // Find the point at 1.2 km along the route
+            let targetDistance = 1200.0 // 1.2 km in meters
+            var currentDistance = 0.0
+            var targetIndex = 0
+
+            for i in 0 ..< (geometry.count - 1) {
+                let point1 = geometry[i].clLocationCoordinate2D
+                let point2 = geometry[i + 1].clLocationCoordinate2D
+
+                let location1 = CLLocation(latitude: point1.latitude, longitude: point1.longitude)
+                let location2 = CLLocation(latitude: point2.latitude, longitude: point2.longitude)
+
+                let segmentDistance = location1.distance(from: location2)
+
+                if currentDistance + segmentDistance >= targetDistance {
+                    let remainingDistance = targetDistance - currentDistance
+                    let fraction = remainingDistance / segmentDistance
+
+                    let targetLat = point1.latitude + (point2.latitude - point1.latitude) * fraction
+                    let targetLon = point1.longitude + (point2.longitude - point1.longitude) * fraction
+
+                    return [
+                        .init(
+                            id: "test-camera",
+                            speedLimit: .kilometersPerHour(120),
+                            type: .fixed,
+                            direction: .forward,
+                            captureRange: .kilometers(2),
+                            location: CLLocationCoordinate2D(latitude: targetLat, longitude: targetLon)
+                        )
+                    ]
+                }
+
+                currentDistance += segmentDistance
+            }
+
+            // Fallback to first point if route is shorter than 1.2 km
+            return [
+                .init(
+                    id: "test-camera",
+                    speedLimit: .kilometersPerHour(120),
+                    type: .fixed,
+                    direction: .forward,
+                    captureRange: .kilometers(2),
+                    location: geometry.first?.clLocationCoordinate2D ?? CLLocationCoordinate2D()
+                )
+            ]
+        }
     }
 }
 

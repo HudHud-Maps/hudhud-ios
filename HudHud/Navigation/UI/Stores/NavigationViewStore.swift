@@ -7,48 +7,10 @@
 //
 
 import Combine
-import Foundation
-
-// @MainActor
-// final class SpeedCameraStore: ObservableObject {
-//    @Published private(set) var activeCamera: SpeedCamera?
-//    @Published private(set) var upcomingCameras: [SpeedCamera] = []
-//
-//    private var cancellables = Set<AnyCancellable>()
-//    private let navigationEngine: NavigationEngine
-//
-//    init(navigationEngine: NavigationEngine) {
-//        self.navigationEngine = navigationEngine
-//
-//        // Subscribe to navigation events
-//        navigationEngine.navigationPublisher
-//            .compactMap { event -> SpeedCamera? in
-//                if case .horizonEvent(.speedCamera(let camera)) = event {
-//                    return camera
-//                }
-//                return nil
-//            }
-//            .sink { [weak self] camera in
-//                self?.handleSpeedCamera(camera)
-//            }
-//            .store(in: &cancellables)
-//    }
-//
-//    func reportIncorrectCamera(_ camera: SpeedCamera) async {
-//        // Handle incorrect camera report
-//    }
-// }
-
 import CoreLocation
 import FerrostarCore
+import Foundation
 import UIKit
-
-// MARK: - SpeedCameraAlert
-
-// ui thing
-struct SpeedCameraAlert: Equatable {}
-
-// MARK: - NavigationStore
 
 extension NavigationStore.State {
     var isNavigating: Bool {
@@ -71,7 +33,8 @@ final class NavigationStore {
         enum Status {
             case idle
             case navigating
-            case stopped
+            case cancelled
+            case arrived
             case failed
         }
 
@@ -79,11 +42,10 @@ final class NavigationStore {
 
         var status: Status
         var speedLimit: Measurement<UnitSpeed>?
-        let currentCamera: SpeedCamera?
-        let distanceToCamera: Measurement<UnitLength>?
-        var isMuted: Bool = false
+        var navigationAlert: NavigationAlert?
 
-        // let activeHorizonFeatures: Set<HorizonFeature>
+        var isMuted: Bool = false
+        var tripProgress: TripProgress?
     }
 
     enum Action {
@@ -94,7 +56,7 @@ final class NavigationStore {
 
     // MARK: Properties
 
-    var state: State = .init(status: .idle, currentCamera: nil, distanceToCamera: nil)
+    var state: State = .init(status: .idle)
 
     private var cancellables = Set<AnyCancellable>()
     private let navigationEngine: NavigationEngine
@@ -104,16 +66,6 @@ final class NavigationStore {
     // MARK: Computed Properties
 
     var navigationState: NavigationState? {
-        self.navigationEngine.state
-    }
-
-    //    private(set) var speedCameraAlert: SpeedCameraAlert?
-    //    var currentCamera: SpeedCamera?
-    //    var distanceToCamera: Measurement<UnitLength>?
-    //    var isApproachingCamera: Bool = false
-    //    private(set) var activeHorizonFeatures: Set<HorizonFeature> = []
-
-    var currentState: NavigationState? {
         self.navigationEngine.state
     }
 
@@ -156,8 +108,18 @@ final class NavigationStore {
     }
 
     private func stopNavigation() {
+        // capture state before stopping
+        let isNavigating = self.state.status == .navigating
+        let hasArrived = self.navigationState?.tripState.isComplete ?? false
         self.navigationEngine.stopNavigation()
-        self.state.status = .stopped
+        if isNavigating {
+            self.state.status = .cancelled
+        }
+
+        if hasArrived {
+            self.state.status = .arrived
+        }
+        self.state.navigationAlert = nil
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
@@ -212,7 +174,17 @@ final class NavigationStore {
         }
     }
 
-    private func handleNavigationStateChange(_: NavigationState) {}
+    private func handleNavigationStateChange(_ newState: NavigationState) {
+        self.state.tripProgress = newState.tripState.currentProgress
+        switch newState.tripState {
+        case .idle:
+            self.state.status = .idle
+        case .navigating:
+            self.state.status = .navigating
+        case .complete:
+            self.state.status = .arrived
+        }
+    }
 
     private func handleNavigationEvent(_ event: NavigationEvent) {
         switch event {
@@ -235,16 +207,42 @@ final class NavigationStore {
         }
     }
 
-    private func handleHorizonEvent(_: HorizionEvent) {}
-}
+    private func handleHorizonEvent(_ event: HorizionEvent) {
+        switch event {
+        case let .approachingSpeedCamera(camera, distance):
+            let speedCamAlertDistance = SpeedCameraAlertConfig.default.initialAlertDistance
+            let progress = (1 - (distance.meters / speedCamAlertDistance.meters)) * 100
+            let clampedProgress = max(0, min(100, progress))
+            self.state.navigationAlert = NavigationAlert(
+                id: camera.id,
+                progress: clampedProgress,
+                alertType: .speedCamera(camera),
+                alertDistance: Int(distance.meters)
+            )
+        case let .passedSpeedCamera(camera):
+            self.state.navigationAlert = nil
 
-// struct SpeedCameraMapLayer: StyleLayerDefinition {
-//    let camera: SpeedCamera
+//            if state.navigationAlert?.id == camera.id {
 //
-//    var layerProperties: [String: Any] {
-//    }
-//
-//    var source: SourceDefinition {
-//    }
-// }
-//
+//            }
+        case let .approachingTrafficIncident(incident, distance):
+            let incidentAlertDistance = TrafficIncidentAlertConfig.default.initialAlertDistance
+            let progress = (1 - (distance.meters / incidentAlertDistance.meters)) * 100
+            let clampedProgress = max(0, min(100, progress))
+            self.state.navigationAlert = NavigationAlert(
+                id: incident.id,
+                progress: clampedProgress,
+                alertType: .carAccident(incident),
+                alertDistance: Int(distance.meters)
+            )
+        case let .passedTrafficIncident(incident):
+            if self.state.navigationAlert?.id == incident.id {
+                self.state.navigationAlert = nil
+            }
+        case let .enteredSpeedZone(limit):
+            break
+        case .exitedSpeedZone:
+            break
+        }
+    }
+}

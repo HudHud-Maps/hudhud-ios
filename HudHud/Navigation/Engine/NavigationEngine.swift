@@ -97,6 +97,7 @@ final class NavigationEngine {
         try! self.ferrostarCore.startNavigation(route: route)
         self.locationEngine.swithcMode(to: .snapped)
         self.eventsSubject.send(.navigationStarted)
+        self.horizonEngine.startMonitoring(route: route)
     }
 
     func stopNavigation() {
@@ -105,6 +106,7 @@ final class NavigationEngine {
         self.state = nil
         self.eventsSubject.send(.navigationEnded)
         self.locationEngine.swithcMode(to: .raw)
+        self.horizonEngine.stopMonitoring()
     }
 
     func toggleMute() {
@@ -114,8 +116,8 @@ final class NavigationEngine {
     private func onStateChange(_ newState: NavigationState) {
         if let snappedLocation = newState.tripState.navigationInfo?.location {
             self.useSnappedLocation(snappedLocation.clLocation)
+            self.horizonEngine.processLocation(snappedLocation.clLocation)
         }
-
         self.eventsSubject.send(.stateChanged(newState))
     }
 

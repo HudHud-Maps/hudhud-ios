@@ -10,20 +10,22 @@ import SwiftUI
 
 // MARK: - AlertInfo
 
-struct AlertInfo {
+import CoreLocation
+
+// MARK: - NavigationAlert
+
+struct NavigationAlert: Equatable {
+    let id: String
     let progress: CGFloat
-    let duration: String
-    let time: String
-    let distance: String
     let alertType: AlertType
     let alertDistance: Int
 }
 
 // MARK: - AlertType
 
-enum AlertType {
-    case speedCamera
-    case carAccident
+enum AlertType: Equatable {
+    case speedCamera(SpeedCamera)
+    case carAccident(TrafficIncident)
 
     // MARK: Computed Properties
 
@@ -37,7 +39,14 @@ enum AlertType {
     var color: Color {
         switch self {
         case .speedCamera: return .red
-        case .carAccident: return .orange
+        case .carAccident: return .red
+        }
+    }
+
+    var title: String {
+        switch self {
+        case .speedCamera: return "Speed Camera"
+        case .carAccident: return "Car Accident"
         }
     }
 }
@@ -48,36 +57,67 @@ struct AlertView: View {
 
     // MARK: Properties
 
-    let info: AlertInfo
+    let info: NavigationAlert
+    let distanceFormatter: Formatter
+    let estimatedArrivalFormatter: Date.FormatStyle
+    let durationFormatter: DateComponentsFormatter
+    let isExpanded: Bool
+    let fromDate: Date = .init()
+
+    private let tripProgress: TripProgress
+    private let onAction: (ActiveTripInfoViewAction) -> Void
+
+    // MARK: Lifecycle
+
+    init(
+        tripProgress: TripProgress,
+        info: NavigationAlert,
+        isExpanded: Bool,
+        onAction: @escaping (ActiveTripInfoViewAction) -> Void
+    ) {
+        self.tripProgress = tripProgress
+        self.info = info
+        self.onAction = onAction
+        self.isExpanded = isExpanded
+        self.distanceFormatter = DefaultFormatters.distanceFormatter
+        self.estimatedArrivalFormatter = DefaultFormatters.estimatedArrivalFormat
+        self.durationFormatter = DefaultFormatters.durationFormat
+    }
 
     // MARK: Content
 
     var body: some View {
         VStack(spacing: 0) {
-            Capsule()
-                .fill(Color.gray.opacity(0.2))
-                .frame(width: 36, height: 4)
-                .padding(.top, 12)
+            HStack(spacing: 12) {
+                if let formattedDuration = durationFormatter.string(from: tripProgress.durationRemaining) {
+                    Text(formattedDuration)
+                }
 
-            HStack(spacing: 4) {
-                Text(self.info.duration)
-                Text("•")
-                Text(self.info.time)
-                Text("•")
-                Text(self.info.distance)
+                Text("·")
+
+                Text(self.estimatedArrivalFormatter.format(self.tripProgress.estimatedArrival(from: self.fromDate)))
+
+                Text("·")
+
+                Text(self.distanceFormatter.string(for: self.tripProgress.distanceRemaining) ?? "")
             }
-            .foregroundColor(Color.gray)
-            .font(.system(size: 17))
+            .hudhudFont(.body)
+            .fontWeight(.semibold)
+            .lineLimit(1)
+            .foregroundStyle(Color.Colors.General._02Grey)
+            .multilineTextAlignment(.center)
             .padding(.top, 16)
 
             GeometryReader { geometry in
                 Rectangle()
                     .fill(self.info.alertType.color)
-                    .frame(width: geometry.size.width * self.info.progress)
+                    .frame(width: geometry.size.width * (self.info.progress / 100))
                     .frame(height: 2)
             }
             .frame(height: 2)
             .padding(.top, 16)
+
+            Divider()
 
             HStack(spacing: 12) {
                 Image(systemName: self.info.alertType.icon)
@@ -87,13 +127,27 @@ struct AlertView: View {
                     .background(self.info.alertType.color)
                     .cornerRadius(8)
 
-                Text("\(self.info.alertType == .speedCamera ? "Speed camera" : "Car accident") in \(self.info.alertDistance) m")
-                    .font(.system(size: 20, weight: .regular))
-
+                Text("\(self.info.alertType.title) in \(self.info.alertDistance) m")
+                    .hudhudFont(.title3)
+                    .fontWeight(.semibold)
+                    .padding(8)
                 Spacer()
             }
             .padding(.horizontal, 16)
             .padding(.top, 16)
+
+            if self.isExpanded {
+                VStack {
+                    Divider()
+
+                    NavigationControls(onAction: self.onAction)
+
+                    Divider()
+
+                    NavigationSettingsRow()
+                }
+                .padding(.top, 8)
+            }
         }
         .background(Color.white)
         .cornerRadius(24)

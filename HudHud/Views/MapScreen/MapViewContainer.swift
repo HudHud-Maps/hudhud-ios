@@ -98,10 +98,12 @@ struct MapViewContainer<SheetContentView: View>: View {
                 }
             }
             .withNavigationOverlay(.tripProgress) {
-                if let navigationState = navigationStore.navigationState,
-                   let progress = navigationState.currentProgress,
-                   navigationState.isNavigating {
-                    ActiveTripInfoView(tripProgress: progress) { actions in
+                if let progress = navigationStore.state.tripProgress,
+                   navigationStore.state.isNavigating {
+                    ActiveTripInfoView(
+                        tripProgress: progress,
+                        navigationAlert: self.navigationStore.state.navigationAlert
+                    ) { actions in
                         switch actions {
                         case .exitNavigation:
                             stopNavigation()
@@ -137,13 +139,15 @@ struct MapViewContainer<SheetContentView: View>: View {
                     self.navigationStore.execute(.stopNavigation)
                 }
             })
+            .onChange(of: self.navigationStore.state) { _, newValue in
+                switch newValue.status {
+                case .idle, .navigating:
+                    break
+                case .cancelled, .arrived, .failed:
+                    stopNavigation()
+                }
+            }
 
-            //            .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
-            //                handleNavigatingRouteChange(oldValue, newValue)
-            //            }
-            //            .onChange(of: self.routingStore.ferrostarCore.state?.tripState) { oldValue, newValue in
-            //                handleTripStateChange(oldValue, newValue)
-            //            }
             .task { handleInitialFocus() }
         }
     }
@@ -302,25 +306,6 @@ private extension MapViewContainer {
         self.mapStore.camera = .boundingBox(route.bbox.mlnCoordinateBounds)
     }
 
-    func handleTripStateChange(_ oldValue: TripState?, _ newValue: TripState?) {
-        if let newValue {
-            switch newValue {
-            case .idle:
-                UIApplication.shared.isIdleTimerDisabled = false
-            case .navigating:
-                UIApplication.shared.isIdleTimerDisabled = true
-            case .complete:
-                UIApplication.shared.isIdleTimerDisabled = false
-            }
-        }
-
-        guard let oldValue,
-              let newValue,
-              case .navigating = oldValue,
-              newValue == .complete else { return }
-        stopNavigation()
-    }
-
     @MainActor
     func handleInitialFocus() {
         guard !self.didFocusOnUser else { return }
@@ -454,6 +439,8 @@ struct ActiveTripInfoView: View {
     // MARK: Properties
 
     let tripProgress: TripProgress
+    let navigationAlert: NavigationAlert?
+
     let onAction: (ActiveTripInfoViewAction) -> Void
 
     @State var isExpanded: Bool = false
@@ -511,15 +498,26 @@ struct ActiveTripInfoView: View {
                 .frame(width: 36, height: 4)
                 .padding(.top, 8)
                 .padding(.bottom, 12)
-
-            ProgressView(
-                tripProgress: self.tripProgress,
-                isExpanded: self.isExpanded,
-                onAction: self.onAction
-            )
-            .padding(.horizontal, 16)
-            .padding(.vertical, 12)
-            .padding(.bottom, self.safeAreaInsets.bottom)
+            if let navigationAlert {
+                AlertView(
+                    tripProgress: self.tripProgress,
+                    info: navigationAlert,
+                    isExpanded: self.isExpanded,
+                    onAction: self.onAction
+                )
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .padding(.bottom, self.safeAreaInsets.bottom)
+            } else {
+                ProgressView(
+                    tripProgress: self.tripProgress,
+                    isExpanded: self.isExpanded,
+                    onAction: self.onAction
+                )
+                .padding(.horizontal, 16)
+                .padding(.vertical, 12)
+                .padding(.bottom, self.safeAreaInsets.bottom)
+            }
         }
     }
 }
@@ -562,7 +560,6 @@ extension ActiveTripInfoView {
                             Text(formattedDuration)
                                 .hudhudFont(.title2)
                                 .fontWeight(.semibold)
-                                .minimumScaleFactor(0.6)
                                 .lineLimit(1)
                                 .multilineTextAlignment(.center)
                         }
@@ -571,7 +568,6 @@ extension ActiveTripInfoView {
                             Text(self.estimatedArrivalFormatter.format(self.tripProgress.estimatedArrival(from: self.fromDate)))
                                 .hudhudFont(.callout)
                                 .fontWeight(.semibold)
-                                .minimumScaleFactor(0.6)
                                 .lineLimit(1)
                                 .foregroundStyle(Color.Colors.General._02Grey)
                                 .multilineTextAlignment(.center)
@@ -579,7 +575,6 @@ extension ActiveTripInfoView {
                             Text("·")
                                 .hudhudFont(.callout)
                                 .fontWeight(.semibold)
-                                .minimumScaleFactor(0.6)
                                 .lineLimit(1)
                                 .foregroundStyle(Color.Colors.General._02Grey)
                                 .multilineTextAlignment(.center)
@@ -587,7 +582,7 @@ extension ActiveTripInfoView {
                             Text(self.distanceFormatter.string(for: self.tripProgress.distanceRemaining) ?? "")
                                 .hudhudFont(.callout)
                                 .fontWeight(.semibold)
-                                .minimumScaleFactor(0.6)
+//                                .minimumScaleFactor(0.6)
                                 .lineLimit(1)
                                 .foregroundStyle(Color.Colors.General._02Grey)
                                 .multilineTextAlignment(.center)
@@ -599,6 +594,7 @@ extension ActiveTripInfoView {
                     NavigationControls(onAction: self.onAction)
                 }
                 if self.isExpanded {
+                    Divider()
                     NavigationSettingsRow()
                 }
             }
@@ -713,7 +709,28 @@ struct NavigationSettingsView: View {
     }
 }
 
-#Preview(body: {
-    ActiveTripInfoView(tripProgress: .init(distanceToNextManeuver: 100, distanceRemaining: 1000, durationRemaining: 1500)) { _ in
-    }
-})
+#Preview(
+    body: {
+        let id = UUID().uuidString
+        ActiveTripInfoView(
+            tripProgress: .init(
+                distanceToNextManeuver: 100,
+                distanceRemaining: 1000,
+                durationRemaining: 1500
+            ),
+            navigationAlert: NavigationAlert(
+                id: id,
+                progress: 10,
+                alertType: .speedCamera(
+                    .init(id: id,
+                          speedLimit: .kilometersPerHour(120),
+                          type: .fixed,
+                          direction: .forward,
+                          captureRange: .kilometers(20),
+                          location: .riyadh)
+                ),
+                alertDistance: 900
+            )
+        ) { _ in
+        }
+    })
