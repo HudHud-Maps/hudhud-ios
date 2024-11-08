@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+// MARK: - MainFiltersView
+
 struct MainFiltersView: View {
 
     // MARK: Properties
@@ -37,8 +39,13 @@ struct MainFiltersView: View {
                 .presentationDragIndicator(.visible)
         }
     }
+}
 
-    private func filterButton(title: String, filter: FilterStore.FilterType) -> some View {
+// MARK: - Private
+
+private extension MainFiltersView {
+
+    func filterButton(title: String, filter: FilterStore.FilterType) -> some View {
         Button {
             self.filterStore.applyFilters(filter)
         } label: {

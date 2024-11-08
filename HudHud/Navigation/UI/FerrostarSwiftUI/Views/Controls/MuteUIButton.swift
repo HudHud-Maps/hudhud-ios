@@ -1,3 +1,11 @@
+//
+//  MuteUIButton.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import FerrostarCoreFFI
 import SwiftUI
@@ -20,7 +28,7 @@ public struct MuteUIButton: View {
 
     public var body: some View {
         Button(action: self.action) {
-            Image(systemName: self.isMuted ? "speaker.slash.fill" : "speaker.2.fill")
+            Image(systemSymbol: self.isMuted ? .speakerSlashFill : .speakerWave2Fill)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 18, height: 18)

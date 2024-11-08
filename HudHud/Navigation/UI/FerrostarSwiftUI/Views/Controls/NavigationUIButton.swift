@@ -1,3 +1,11 @@
+//
+//  NavigationUIButton.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 // MARK: - NavigationUIButtonStyle
@@ -57,7 +65,7 @@ public struct NavigationUIButton<Label: View>: View {
 #Preview {
     VStack {
         NavigationUIButton {} label: {
-            Image(systemName: "location")
+            Image(systemSymbol: .location)
         }
 
         NavigationUIButton {} label: {

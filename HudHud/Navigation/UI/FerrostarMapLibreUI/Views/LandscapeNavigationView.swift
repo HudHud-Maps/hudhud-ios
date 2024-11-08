@@ -1,3 +1,11 @@
+//
+//  LandscapeNavigationView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -96,10 +104,10 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
                     navigationState: self.navigationState,
                     onStyleLoaded: { _ in
                         self.camera = self.navigationCamera
+                    }, makeMapContent: {
+                        self.userLayers
                     }
-                ) {
-                    self.userLayers
-                }
+                )
                 .navigationMapViewContentInset(.landscape(within: geometry))
 
                 LandscapeNavigationOverlayView(
@@ -169,50 +177,3 @@ public extension LandscapeNavigationView where T == MLNMapViewController {
         self.onTapMute = onTapMute
     }
 }
-
-//
-// @available(iOS 17, *)
-// #Preview("Landscape Navigation View (Imperial)", traits: .landscapeLeft) {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .imperial
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return LandscapeNavigationView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }
-//
-// @available(iOS 17, *)
-// #Preview("Landscape Navigation View (Metric)", traits: .landscapeLeft) {
-//    // TODO: Make map URL configurable but gitignored
-//    let state = NavigationState.modifiedPedestrianExample(droppingNWaypoints: 4)
-//
-//    let formatter = MKDistanceFormatter()
-//    formatter.locale = Locale(identifier: "en-US")
-//    formatter.units = .metric
-//
-//    guard case let .navigating(_, snappedUserLocation: userLocation, _, _, _, _, _, _, _) = state.tripState else {
-//        return EmptyView()
-//    }
-//
-//    return LandscapeNavigationView(
-//        styleURL: URL(string: "https://demotiles.maplibre.org/style.json")!,
-//        camera: .constant(.center(userLocation.clLocation.coordinate, zoom: 12)),
-//        navigationState: state,
-//        isMuted: true,
-//        onTapMute: {}
-//    )
-//    .navigationFormatterCollection(FoundationFormatterCollection(distanceFormatter: formatter))
-// }

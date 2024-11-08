@@ -1,3 +1,11 @@
+//
+//  View+Ferrostar.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 extension View {
@@ -54,7 +62,7 @@ struct ComplementingSafeAreaView<V: View>: View {
     var minimumInsets: EdgeInsets
 
     @State
-    var childInsets: EdgeInsets = .init()
+    var childInsets = EdgeInsets()
 
     // MARK: Content
 
@@ -64,7 +72,7 @@ struct ComplementingSafeAreaView<V: View>: View {
                 parentInsets: self.parentGeometry.safeAreaInsets,
                 minimumInsets: self.minimumInsets
             )
-        }.onChange(of: self.parentGeometry.safeAreaInsets) { newValue in
+        }.onChange(of: self.parentGeometry.safeAreaInsets) { _, newValue in
             self.childInsets = ComplementingSafeAreaView.complement(parentInsets: newValue, minimumInsets: self.minimumInsets)
         }.safeAreaPaddingPolyfill(self.childInsets)
     }
@@ -79,5 +87,4 @@ struct ComplementingSafeAreaView<V: View>: View {
         innerInsets.trailing = max(0, minimumInsets.trailing - parentInsets.trailing)
         return innerInsets
     }
-
 }

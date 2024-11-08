@@ -6,6 +6,7 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import OSLog
 import SwiftUI
 
 // MARK: - RoutePlannerView
@@ -124,7 +125,7 @@ struct RoutePlannerRow: View {
                 Spacer()
                 if let onDelete {
                     Button {
-                        print("drag and drop")
+                        Logger.navigationPath.notice("drag and drop")
                     } label: {
                         Image(systemSymbol: .line3Horizontal)
                             .tint(Color.gray)
