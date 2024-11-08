@@ -9,6 +9,15 @@
 import CoreLocation
 import Foundation
 
+extension CLLocation {
+    static func coordinate(_ coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance = 0) -> CLLocation {
+        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 1, verticalAccuracy: 1, timestamp: .now)
+    }
+
+    static let riyadh: CLLocation = .coordinate(.riyadh, altitude: 600)
+    static let jeddah: CLLocation = .coordinate(.jeddah, altitude: 12)
+}
+
 extension CLLocationCoordinate2D {
     static let zero = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     static let riyadh = CLLocationCoordinate2D(latitude: 24.65333, longitude: 46.71526)

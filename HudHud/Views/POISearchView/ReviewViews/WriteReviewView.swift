@@ -13,6 +13,8 @@ import SwiftUI
 import TypographyKit
 import UIKit
 
+// MARK: - WriteReviewView
+
 struct WriteReviewView: View {
 
     @Environment(\.dismiss) private var dismiss
@@ -201,11 +203,14 @@ struct WriteReviewView: View {
         )
         .padding(.horizontal)
     }
+}
 
-    // MARK: - Helper Views
+// MARK: - Private
+
+private extension WriteReviewView {
 
     @ViewBuilder
-    private func closeButton(backgroundColor: Color, size: CGFloat, action: @escaping () -> Void) -> some View {
+    func closeButton(backgroundColor: Color, size: CGFloat, action: @escaping () -> Void) -> some View {
         Button(action: {
             action()
         }, label: {

@@ -8,6 +8,9 @@
 
 import CoreLocation
 import MapLibre
+import OSLog
+
+// MARK: - LocationServicesDiagnostic
 
 final class LocationServicesDiagnostic {
 
@@ -32,54 +35,57 @@ final class LocationServicesDiagnostic {
 
         self.checkLocationUpdates()
     }
+}
 
-    private func checkInfoPlistPermissions() {
-        print("📍 Checking Info.plist permissions...")
+private extension LocationServicesDiagnostic {
+
+    func checkInfoPlistPermissions() {
+        Logger.diagnostics.notice("📍 Checking Info.plist permissions...")
 
         let whenInUse = Bundle.main.object(forInfoDictionaryKey: "NSLocationWhenInUseUsageDescription") != nil
         let always = Bundle.main.object(forInfoDictionaryKey: "NSLocationAlwaysUsageDescription") != nil
 
-        print("- When In Use Permission String: \(whenInUse ? "✅" : "❌")")
-        print("- Always Permission String: \(always ? "✅" : "❌")")
+        Logger.diagnostics.notice("- When In Use Permission String: \(whenInUse ? "✅" : "❌")")
+        Logger.diagnostics.notice("- Always Permission String: \(always ? "✅" : "❌")")
     }
 
-    private func checkLocationServicesStatus() {
-        print("\n📍 Checking Location Services Status...")
+    func checkLocationServicesStatus() {
+        Logger.diagnostics.notice("\n📍 Checking Location Services Status...")
 
-        print("- Location Services Enabled: \(CLLocationManager.locationServicesEnabled() ? "✅" : "❌")")
+        Logger.diagnostics.notice("- Location Services Enabled: \(CLLocationManager.locationServicesEnabled() ? "✅" : "❌")")
 
-        let authStatus = CLLocationManager.authorizationStatus()
-        print("- Authorization Status: \(self.authStatusString(authStatus))")
+        let authStatus = CLLocationManager().authorizationStatus
+        Logger.diagnostics.notice("- Authorization Status: \(self.authStatusString(authStatus))")
 
         if #available(iOS 14.0, *), let accuracy = self.mapView.locationManager.accuracyAuthorization?() {
-            print("- Accuracy Authorization: \(accuracyString(accuracy))")
+            Logger.diagnostics.notice("- Accuracy Authorization: \(self.accuracyString(accuracy))")
         }
     }
 
-    private func checkMapViewConfiguration() {
-        print("\n📍 Checking MapView Configuration...")
+    func checkMapViewConfiguration() {
+        Logger.diagnostics.notice("\n📍 Checking MapView Configuration...")
 
-        print("- showsUserLocation: \(self.mapView.showsUserLocation ? "✅" : "❌")")
-        print("- userLocationVisible: \(self.mapView.isUserLocationVisible ? "✅" : "❌")")
-        print("- User Location Valid: \(CLLocationCoordinate2DIsValid(self.mapView.userLocation?.coordinate ?? kCLLocationCoordinate2DInvalid) ? "✅" : "❌")")
-        print("- Tracking Mode: \(self.trackingModeString(self.mapView.userTrackingMode))")
+        Logger.diagnostics.notice("- showsUserLocation: \(self.mapView.showsUserLocation ? "✅" : "❌")")
+        Logger.diagnostics.notice("- userLocationVisible: \(self.mapView.isUserLocationVisible ? "✅" : "❌")")
+        Logger.diagnostics.notice("- User Location Valid: \(CLLocationCoordinate2DIsValid(self.mapView.userLocation?.coordinate ?? kCLLocationCoordinate2DInvalid) ? "✅" : "❌")")
+        Logger.diagnostics.notice("- Tracking Mode: \(self.trackingModeString(self.mapView.userTrackingMode))")
     }
 
-    private func checkLocationUpdates() {
-        print("\n📍 Checking Location Updates...")
+    func checkLocationUpdates() {
+        Logger.diagnostics.notice("\n📍 Checking Location Updates...")
 
         if let location = mapView.userLocation?.location {
-            print("- Last Location: ✅")
-            print("  Coordinate: \(location.coordinate.latitude), \(location.coordinate.longitude)")
-            print("  Accuracy: \(location.horizontalAccuracy)m")
-            print("  Timestamp: \(location.timestamp)")
+            Logger.diagnostics.notice("- Last Location: ✅")
+            Logger.diagnostics.notice("  Coordinate: \(location.coordinate.latitude), \(location.coordinate.longitude)")
+            Logger.diagnostics.notice("  Accuracy: \(location.horizontalAccuracy)m")
+            Logger.diagnostics.notice("  Timestamp: \(location.timestamp)")
         } else {
-            print("- Last Location: ❌ No location updates received")
+            Logger.diagnostics.notice("- Last Location: ❌ No location updates received")
         }
     }
 
     // Helper functions to convert enums to strings
-    private func authStatusString(_ status: CLAuthorizationStatus) -> String {
+    func authStatusString(_ status: CLAuthorizationStatus) -> String {
         switch status {
         case .authorizedWhenInUse: return "✅ Authorized When In Use"
         case .authorizedAlways: return "✅ Authorized Always"
@@ -91,7 +97,7 @@ final class LocationServicesDiagnostic {
     }
 
     @available(iOS 14.0, *)
-    private func accuracyString(_ accuracy: CLAccuracyAuthorization) -> String {
+    func accuracyString(_ accuracy: CLAccuracyAuthorization) -> String {
         switch accuracy {
         case .fullAccuracy: return "✅ Full Accuracy"
         case .reducedAccuracy: return "⚠️ Reduced Accuracy"
@@ -99,7 +105,7 @@ final class LocationServicesDiagnostic {
         }
     }
 
-    private func trackingModeString(_ mode: MLNUserTrackingMode) -> String {
+    func trackingModeString(_ mode: MLNUserTrackingMode) -> String {
         switch mode {
         case .none: return "None"
         case .follow: return "Follow"

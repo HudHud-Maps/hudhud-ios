@@ -9,6 +9,8 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
+import FerrostarCore
+import FerrostarCoreFFI
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -16,6 +18,7 @@ import NavigationTransitions
 import OSLog
 import SFSafeSymbols
 import SimpleToast
+import SwiftLocation
 import SwiftUI
 import TouchVisualizer
 
@@ -54,15 +57,15 @@ struct ContentView: View {
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
-        self.searchViewStore = searchStore
+    init(searchViewStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
+        self.searchViewStore = searchViewStore
         self.sheetStore = sheetStore
-        self.mapStore = searchStore.mapStore
-        self.userLocationStore = searchStore.mapStore.userLocationStore
+        self.mapStore = searchViewStore.mapStore
+        self.userLocationStore = searchViewStore.mapStore.userLocationStore
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
+        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
         self.routesPlanMapDrawer = routesPlanMapDrawer
         self.mapViewStore.streetViewStore = self.streetViewStore
     }
@@ -263,7 +266,8 @@ struct ContentView: View {
                                 ]
                             )
 
-                            if let item = self.streetViewStore.nearestStreetViewScene {
+                            if (self.mapStore.mapViewPort?.zoom ?? 0) > 10,
+                               let item = self.streetViewStore.nearestStreetViewScene {
                                 Button {
                                     self.streetViewStore.streetViewScene = item
                                     self.streetViewStore.zoomToStreetViewLocation()
@@ -406,60 +410,18 @@ private extension MapViewPort {
         let longitudeSpan = (spanX / 2) / (111_320.0 * cos(latInRad))
 
         // North-west (top-left) coordinate
-        let northWest = CLLocationCoordinate2D(
-            latitude: self.center.latitude + latitudeSpan,
-            longitude: self.center.longitude - longitudeSpan
-        )
+        let northWest = CLLocationCoordinate2D(latitude: self.center.latitude + latitudeSpan,
+                                               longitude: self.center.longitude - longitudeSpan)
 
         // South-east (bottom-right) coordinate
-        let southEast = CLLocationCoordinate2D(
-            latitude: self.center.latitude - latitudeSpan,
-            longitude: self.center.longitude + longitudeSpan
-        )
+        let southEast = CLLocationCoordinate2D(latitude: self.center.latitude - latitudeSpan,
+                                               longitude: self.center.longitude + longitudeSpan)
 
         return (northWest, southEast)
     }
 }
 
-#Preview("Main Map") {
-    ContentView(
-        searchStore: .storeSetUpForPreviewing,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        routesPlanMapDrawer: RoutesPlanMapDrawer()
-    )
-}
-
-#Preview("Touch Testing") {
-    let store: SearchViewStore = .storeSetUpForPreviewing
-    store.searchText = "shops"
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        routesPlanMapDrawer: RoutesPlanMapDrawer()
-    )
-}
-
-#Preview("NavigationPreview") {
-    let store: SearchViewStore = .storeSetUpForPreviewing
-
-    let poi = ResolvedItem(id: UUID().uuidString,
-                           title: "Pharmacy",
-                           subtitle: "Al-Olya - Riyadh",
-                           type: .hudhud,
-                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                           phone: "0503539560",
-                           website: URL(string: "https://hudhud.sa"))
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        routesPlanMapDrawer: RoutesPlanMapDrawer()
-    )
-}
-
-extension Binding where Value == Bool {
+private extension Binding where Value == Bool {
 
     static func && (_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
         return Binding<Bool>(get: { lhs.wrappedValue && rhs.wrappedValue },
@@ -474,9 +436,65 @@ extension Binding where Value == Bool {
     }
 }
 
+// MARK: - Previews
+
+#Preview("Main Map") {
+    ContentView(searchViewStore: .storeSetUpForPreviewing,
+                mapViewStore: .storeSetUpForPreviewing,
+                sheetStore: .storeSetUpForPreviewing,
+                routesPlanMapDrawer: RoutesPlanMapDrawer())
+}
+
+#Preview("Touch Testing") {
+    let store: SearchViewStore = .storeSetUpForPreviewing
+    store.searchText = "shops"
+    return ContentView(searchViewStore: store,
+                       mapViewStore: .storeSetUpForPreviewing,
+                       sheetStore: .storeSetUpForPreviewing,
+                       routesPlanMapDrawer: RoutesPlanMapDrawer())
+}
+
+#Preview("NavigationPreview") {
+    let poi = ResolvedItem(id: UUID().uuidString,
+                           title: "Pharmacy",
+                           subtitle: "Al-Olya - Riyadh",
+                           type: .hudhud,
+                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                           phone: "0503539560",
+                           website: URL(string: "https://hudhud.sa"))
+
+    let userLocationStore = UserLocationStore(location: .storeSetUpForPreviewing)
+    let mapStore = MapStore(camera: .center(poi.coordinate, zoom: 14), userLocationStore: userLocationStore)
+    let sheetStore = SheetStore(emptySheetType: .pointOfInterest(poi))
+    let mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
+    let routesPlanMapDrawer = RoutesPlanMapDrawer()
+    let routingStore = RoutingStore(mapStore: mapStore, routesPlanMapDrawer: routesPlanMapDrawer)
+
+    let searchViewStore = SearchViewStore(mapStore: mapStore,
+                                          sheetStore: sheetStore,
+                                          routingStore: routingStore,
+                                          filterStore: FilterStore(),
+                                          mode: .preview)
+
+    let url = Bundle.main.url(forResource: "riyadh-pharmacy-route", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+    let data = try! Data(contentsOf: url) // swiftlint:disable:this force_try
+    let parser = createOsrmResponseParser(polylinePrecision: 6)
+    let routes = try! parser.parseResponse(response: data) // swiftlint:disable:this force_try
+
+    if let route = routes.first {
+        routingStore.routes = routes
+        routingStore.selectRoute(withId: route.id)
+    }
+
+    return ContentView(searchViewStore: searchViewStore,
+                       mapViewStore: mapViewStore,
+                       sheetStore: sheetStore,
+                       routesPlanMapDrawer: routesPlanMapDrawer)
+}
+
 // MARK: - Preview
 
-#Preview("Itmes") {
+#Preview("Items") {
     let store: SearchViewStore = .storeSetUpForPreviewing
 
     let poi = ResolvedItem(id: UUID().uuidString,
@@ -502,20 +520,8 @@ extension Binding where Value == Bool {
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        routesPlanMapDrawer: RoutesPlanMapDrawer()
-    )
-}
-
-extension MapLayerIdentifier {
-    nonisolated static let tapLayers: Set<String> = [
-        Self.restaurants,
-        Self.shops,
-        Self.simpleCircles,
-        Self.streetView,
-        Self.customPOI
-    ]
+    return ContentView(searchViewStore: store,
+                       mapViewStore: .storeSetUpForPreviewing,
+                       sheetStore: .storeSetUpForPreviewing,
+                       routesPlanMapDrawer: RoutesPlanMapDrawer())
 }

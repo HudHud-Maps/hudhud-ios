@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+// MARK: - DirectionModePickerView
+
 struct DirectionModePickerView: View {
 
     // MARK: Properties
@@ -36,12 +38,13 @@ struct DirectionModePickerView: View {
             }
         }
     }
+}
 
-    // MARK: Functions
+// MARK: - Private
 
-    // MARK: - Private
+private extension DirectionModePickerView {
 
-    private func switchMode(mode: DirectionModePickerData) {
+    func switchMode(mode: DirectionModePickerData) {
         withAnimation(.easeInOut) {
             self.selectedRoute = mode
         }
