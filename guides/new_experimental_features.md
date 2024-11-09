@@ -122,4 +122,25 @@ struct MapView: View {
 }
 ```
 
+## Removing Feature Flags
+
+When a feature is stable and ready for production, follow these steps to remove the feature flag:
+
+1. Remove the feature from `ExperimentalFeature.swift`:
+
+```swift
+enum ExperimentalFeature: String, CaseIterable, Identifiable {
+    case newUserInterface = "New UI"
+    case yourNewFeature = "Feature Name"
+}
+```
+
+
+2. The Swift compiler will show errors for all usages of the removed feature flag. Follow the compiler errors to:
+   - Remove `@Feature` property wrappers and the feature flag declaration
+   - Remove `.experimental()` view modifiers
+   - Make the feature's code permanent
+
+
+
 That's it! Remember to remove feature flags once features are stable and ready for production.
