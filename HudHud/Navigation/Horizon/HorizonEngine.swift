@@ -67,6 +67,11 @@ final class HorizonEngine {
         self.processingQueue.async { [weak self] in
             guard let self else { return }
 
+            NavigationLogger.beginFrame("Location Update: (\(location.coordinate.latitude), \(location.coordinate.longitude))")
+            defer { NavigationLogger.endFrame() }
+
+            NavigationLogger.log("Bearing: \(location.course)°")
+
             let scanResult = self.scanner.scan(
                 features: self.routeFeatures,
                 at: location.coordinate,
@@ -77,78 +82,108 @@ final class HorizonEngine {
         }
     }
 
-    private func processFeatures(_ result: ScanResult, at location: CLLocation) {
-        print("\nProcessing features at location: \(location.coordinate)")
+    private func processFeatures(_ result: ScanResult, at _: CLLocation) {
+        NavigationLogger.beginScope("Process Features")
+        defer { NavigationLogger.endScope() }
 
-        for feature in result.detectedFeatures {
-            let state = ActiveFeatureState(
-                feature: feature,
-                firstDetectedAt: Date(),
-                lastDistance: .init(value: 0, unit: .meters),
-                hasAlerted: false
-            )
-            self.activeFeatures[feature.id] = state
+        // Process newly detected features
+        if !result.detectedFeatures.isEmpty {
+            NavigationLogger.beginScope("New Detections")
+            for feature in result.detectedFeatures {
+                NavigationLogger.log("Detected: \(feature.id) (\(feature.type))")
+                let state = ActiveFeatureState(
+                    feature: feature,
+                    firstDetectedAt: Date(),
+                    lastDistance: .init(value: 0, unit: .meters),
+                    hasAlerted: false
+                )
+                self.activeFeatures[feature.id] = state
+            }
+            NavigationLogger.endScope()
         }
 
-        for featureDistance in result.approachingFeatures {
-            guard var state = activeFeatures[featureDistance.feature.id] else { continue }
+        // Process approaching features
+        if !result.approachingFeatures.isEmpty {
+            NavigationLogger.beginScope("Approaching Features")
+            for featureDistance in result.approachingFeatures {
+                NavigationLogger.beginScope("Feature: \(featureDistance.feature.id)")
 
-            let distanceChange = abs(state.lastDistance.value - featureDistance.distance.value)
-            let significantChange = self.isDistanceChangeSignificant(state.lastDistance, featureDistance.distance)
-            print("Distance change for feature \(featureDistance.feature.id): \(distanceChange)m")
-            print("Is change significant? \(significantChange)")
-
-            switch featureDistance.feature.type {
-            case let .speedCamera(camera):
-                print("Processing speed camera: \(camera.id)")
-                print("Previous distance: \(state.lastDistance.value)m")
-                print("Current distance: \(featureDistance.distance.value)m")
-                print("Distance change: \(distanceChange)m")
-                print("Has alerted before? \(state.hasAlerted)")
-
-                if !state.hasAlerted {
-                    print("Sending initial alert")
-                    self.eventsSubject.send(.approachingSpeedCamera(camera, distance: featureDistance.distance))
-                    state.hasAlerted = true
-                } else if significantChange {
-                    print("Sending distance update")
-                    self.eventsSubject.send(.approachingSpeedCamera(camera, distance: featureDistance.distance))
-                } else {
-                    print("Change not significant enough for update")
+                guard var state = activeFeatures[featureDistance.feature.id] else {
+                    NavigationLogger.log("State not found", level: .error)
+                    NavigationLogger.endScope()
+                    continue
                 }
 
-            case let .trafficIncident(incident):
-                if !state.hasAlerted {
-                    self.eventsSubject.send(.approachingTrafficIncident(incident, distance: featureDistance.distance))
-                    state.hasAlerted = true
-                } else if significantChange {
-                    self.eventsSubject.send(.approachingTrafficIncident(incident, distance: featureDistance.distance))
+                let distanceChange = abs(state.lastDistance.value - featureDistance.distance.value)
+                let significantChange = self.isDistanceChangeSignificant(state.lastDistance, featureDistance.distance)
+
+                NavigationLogger.log("Previous Distance: \(state.lastDistance.value)m")
+                NavigationLogger.log("Current Distance: \(featureDistance.distance.value)m")
+                NavigationLogger.log("Change: \(distanceChange)m")
+                NavigationLogger.log("Significant: \(significantChange)")
+                NavigationLogger.log("Previously Alerted: \(state.hasAlerted)")
+
+                switch featureDistance.feature.type {
+                case let .speedCamera(camera):
+                    NavigationLogger.beginScope("Speed Camera Processing")
+                    if !state.hasAlerted {
+                        NavigationLogger.log("Sending initial alert")
+                        self.eventsSubject.send(.approachingSpeedCamera(camera, distance: featureDistance.distance))
+                        state.hasAlerted = true
+                    } else if significantChange {
+                        NavigationLogger.log("Sending distance update")
+                        self.eventsSubject.send(.approachingSpeedCamera(camera, distance: featureDistance.distance))
+                    } else {
+                        NavigationLogger.log("No update needed")
+                    }
+                    NavigationLogger.endScope()
+
+                case let .trafficIncident(incident):
+                    NavigationLogger.beginScope("Traffic Incident Processing")
+                    if !state.hasAlerted || significantChange {
+                        NavigationLogger.log("Sending alert/update")
+                        self.eventsSubject.send(.approachingTrafficIncident(incident, distance: featureDistance.distance))
+                        state.hasAlerted = true
+                    }
+                    NavigationLogger.endScope()
+
+                case let .speedZone(zone):
+                    NavigationLogger.beginScope("Speed Zone Processing")
+                    if !state.hasAlerted {
+                        NavigationLogger.log("Sending entry alert")
+                        self.eventsSubject.send(.enteredSpeedZone(limit: zone.limit))
+                        state.hasAlerted = true
+                    }
+                    NavigationLogger.endScope()
                 }
 
-            case let .speedZone(zone):
-                // speed zones dont need distance updates just entry/exit events
-                if !state.hasAlerted {
-                    self.eventsSubject.send(.enteredSpeedZone(limit: zone.limit))
-                    state.hasAlerted = true
-                }
+                state.lastDistance = featureDistance.distance
+                self.activeFeatures[featureDistance.feature.id] = state
+                NavigationLogger.endScope()
             }
-
-            state.hasAlerted = true
-            state.lastDistance = featureDistance.distance
-            self.activeFeatures[featureDistance.feature.id] = state
+            NavigationLogger.endScope()
         }
 
-        for feature in result.exitedFeatures {
-            self.activeFeatures.removeValue(forKey: feature.id)
+        // Process exited features
+        if !result.exitedFeatures.isEmpty {
+            NavigationLogger.beginScope("Exited Features")
+            for feature in result.exitedFeatures {
+                NavigationLogger.log("Feature \(feature.id) exited")
+                self.activeFeatures.removeValue(forKey: feature.id)
 
-            switch feature.type {
-            case let .speedCamera(camera):
-                self.eventsSubject.send(.passedSpeedCamera(camera))
-            case let .trafficIncident(incident):
-                self.eventsSubject.send(.passedTrafficIncident(incident))
-            case .speedZone:
-                self.eventsSubject.send(.exitedSpeedZone)
+                switch feature.type {
+                case let .speedCamera(camera):
+                    NavigationLogger.log("Sending speed camera passed event")
+                    self.eventsSubject.send(.passedSpeedCamera(camera))
+                case let .trafficIncident(incident):
+                    NavigationLogger.log("Sending incident passed event")
+                    self.eventsSubject.send(.passedTrafficIncident(incident))
+                case .speedZone:
+                    NavigationLogger.log("Sending speed zone exit event")
+                    self.eventsSubject.send(.exitedSpeedZone)
+                }
             }
+            NavigationLogger.endScope()
         }
     }
 

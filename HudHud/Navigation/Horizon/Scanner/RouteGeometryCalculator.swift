@@ -83,9 +83,9 @@ final class RouteGeometryCalculator {
     ) -> CLLocationDistance {
         let userPosition = self.findPosition(for: userLocation)
         let featurePosition = self.findPosition(for: featureLocation)
-
-        print("User position - index: \(userPosition.index), distance: \(userPosition.projectedDistance)")
-        print("Feature position - index: \(featurePosition.index), distance: \(featurePosition.projectedDistance)")
+//
+//        print("User position - index: \(userPosition.index), distance: \(userPosition.projectedDistance)")
+//        print("Feature position - index: \(featurePosition.index), distance: \(featurePosition.projectedDistance)")
 
         if featurePosition.isBefore(userPosition) {
             print("Feature is behind user on route")
