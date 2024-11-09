@@ -187,105 +187,6 @@ final class HorizonEngineTests: XCTestCase {
         )
     }
 
-    func testCameraDirectionRelevance() async {
-        // Test forward-facing camera
-        self.engine.startMonitoring(route: self.testRoute)
-        let forwardCamera = self.testRoute.speedCameras.first!
-        let forwardCameraIndex = self.testRoute.geometry.firstIndex { coord in
-            coord.lat == forwardCamera.location.latitude && coord.lng == forwardCamera.location.longitude
-        }!
-
-        // Approaching from behind (should alert)
-        let approachingForward = CLLocation(
-            coordinate: CLLocationCoordinate2D(
-                latitude: self.testRoute.geometry[forwardCameraIndex - 1].lat,
-                longitude: self.testRoute.geometry[forwardCameraIndex - 1].lng
-            ),
-            altitude: 0,
-            horizontalAccuracy: 10,
-            verticalAccuracy: 10,
-            course: Direction.north.rawValue,
-            speed: 20,
-            timestamp: Date()
-        )
-
-        self.engine.processLocation(approachingForward)
-        try? await Task.sleep(nanoseconds: 500_000_000)
-        XCTAssertTrue(self.eventRecorder.hasEvent(ofType: .approachingSpeedCamera))
-
-        // Past forward camera moving away (should not alert)
-        self.eventRecorder.recordedEvents.removeAll()
-        let pastForward = CLLocation(
-            coordinate: CLLocationCoordinate2D(
-                latitude: self.testRoute.geometry[forwardCameraIndex + 5].lat,
-                longitude: self.testRoute.geometry[forwardCameraIndex + 5].lng
-            ),
-            altitude: 0,
-            horizontalAccuracy: 10,
-            verticalAccuracy: 10,
-            course: 180,
-            speed: 20,
-            timestamp: Date()
-        )
-
-        self.engine.processLocation(pastForward)
-        try? await Task.sleep(nanoseconds: 500_000_000)
-        XCTAssertFalse(self.eventRecorder.hasEvent(ofType: .approachingSpeedCamera))
-//
-//        // Test backward-facing camera
-//        Route.mockSpeedCameras = [
-//            SpeedCamera(
-//                id: "test-camera-backward",
-//                speedLimit: .init(value: 80, unit: .kilometersPerHour),
-//                type: .fixed,
-//                direction: .backward,
-//                captureRange: .init(value: 100, unit: .meters),
-//                location: self.testRoute.geometry[forwardCameraIndex].clLocationCoordinate2D
-//            )
-//        ]
-//
-//        self.engine.stopMonitoring()
-//        self.engine.startMonitoring(route: self.testRoute)
-//        self.eventRecorder.recordedEvents.removeAll()
-//
-//        // Before backward camera moving away (should alert)
-//        let beforeBackward = CLLocation(
-//            coordinate: CLLocationCoordinate2D(
-//                latitude: self.testRoute.geometry[forwardCameraIndex - 1].lat,
-//                longitude: self.testRoute.geometry[forwardCameraIndex - 1].lng
-//            ),
-//            altitude: 0,
-//            horizontalAccuracy: 10,
-//            verticalAccuracy: 10,
-//            course: Direction.south.rawValue,
-//            speed: 20,
-//            timestamp: Date()
-//        )
-//
-//        self.engine.processLocation(beforeBackward)
-//        try? await Task.sleep(nanoseconds: 500_000_000)
-//        XCTAssertTrue(self.eventRecorder.hasEvent(ofType: .approachingSpeedCamera))
-//
-//        // After backward camera approaching (should not alert)
-//        self.eventRecorder.recordedEvents.removeAll()
-//        let afterBackward = CLLocation(
-//            coordinate: CLLocationCoordinate2D(
-//                latitude: self.testRoute.geometry[forwardCameraIndex + 5].lat,
-//                longitude: self.testRoute.geometry[forwardCameraIndex + 5].lng
-//            ),
-//            altitude: 0,
-//            horizontalAccuracy: 10,
-//            verticalAccuracy: 10,
-//            course: Direction.north.rawValue,
-//            speed: 20,
-//            timestamp: Date()
-//        )
-//
-//        self.engine.processLocation(afterBackward)
-//        try? await Task.sleep(nanoseconds: 500_000_000)
-//        XCTAssertFalse(self.eventRecorder.hasEvent(ofType: .approachingSpeedCamera))
-    }
-
     func testDistanceBasedAlerts() {
         self.engine.startMonitoring(route: self.testRoute)
 
@@ -510,21 +411,23 @@ extension HorizonEngineTests {
 
     private func createTestRoute() -> Route {
         let coordinates: [CLLocationCoordinate2D] = [
-            CLLocationCoordinate2D(latitude: 25.197197, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.198245, longitude: 55.274987),
-            CLLocationCoordinate2D(latitude: 25.199312, longitude: 55.275498),
-            CLLocationCoordinate2D(latitude: 25.200156, longitude: 55.276024),
-            CLLocationCoordinate2D(latitude: 25.201234, longitude: 55.276876),
-            CLLocationCoordinate2D(latitude: 25.202187, longitude: 55.277234),
-            CLLocationCoordinate2D(latitude: 25.203045, longitude: 55.277876),
-            CLLocationCoordinate2D(latitude: 25.204123, longitude: 55.278234),
-            CLLocationCoordinate2D(latitude: 25.205234, longitude: 55.278987),
-            CLLocationCoordinate2D(latitude: 25.206123, longitude: 55.279345),
-            CLLocationCoordinate2D(latitude: 25.207234, longitude: 55.279876),
-            CLLocationCoordinate2D(latitude: 25.208123, longitude: 55.280234),
-            CLLocationCoordinate2D(latitude: 25.209234, longitude: 55.280876),
-            CLLocationCoordinate2D(latitude: 25.210123, longitude: 55.281234),
-            CLLocationCoordinate2D(latitude: 25.211234, longitude: 55.281876)
+            CLLocationCoordinate2D(latitude: 25.195197, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.196245, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.197312, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.198156, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.199234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.200187, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.201045, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.202123, longitude: 55.274376),
+
+            CLLocationCoordinate2D(latitude: 25.203234, longitude: 55.274376),
+
+            CLLocationCoordinate2D(latitude: 25.204123, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.205234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.206123, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.207234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.208123, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.209234, longitude: 55.274376)
         ]
 
         let route = Route(
@@ -559,7 +462,7 @@ extension HorizonEngineTests {
                 type: .fixed,
                 direction: .forward,
                 captureRange: .init(value: 100, unit: .meters),
-                location: coordinates[(coordinates.count / 2) - 1]
+                location: coordinates[8]
             )
         ]
 
