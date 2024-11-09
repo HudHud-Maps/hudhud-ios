@@ -11,6 +11,7 @@ import FerrostarCore
 import FerrostarCoreFFI
 import ferrostarFFI
 import Foundation
+import MapLibre
 
 public typealias TripState = FerrostarCoreFFI.TripState
 public typealias RouteStep = FerrostarCoreFFI.RouteStep
@@ -164,5 +165,43 @@ extension TripState {
         if let info = navigationInfo {
             handler(info)
         }
+    }
+}
+
+public extension Waypoint {
+    init(coordinate: CLLocationCoordinate2D, kind: WaypointKind = .via) {
+        self.init(coordinate: GeographicCoordinate(lat: coordinate.latitude, lng: coordinate.longitude), kind: kind)
+    }
+
+    var cLCoordinate: CLLocationCoordinate2D {
+        CLLocationCoordinate2D(latitude: self.coordinate.lat, longitude: self.coordinate.lng)
+    }
+}
+
+public extension Route {
+    var duration: TimeInterval {
+        // add together all routeStep durations
+        return self.steps.reduce(0) { $0 + $1.duration }
+    }
+}
+
+// MARK: - Route + Identifiable
+
+extension Route: @retroactive Identifiable {
+    public var id: Int {
+        return self.hashValue
+    }
+
+}
+
+public extension BoundingBox {
+    var mlnCoordinateBounds: MLNCoordinateBounds {
+        return MLNCoordinateBounds(sw: self.sw.clLocationCoordinate2D, ne: self.ne.clLocationCoordinate2D)
+    }
+}
+
+public extension [GeographicCoordinate] {
+    var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
+        return self.map(\.clLocationCoordinate2D)
     }
 }

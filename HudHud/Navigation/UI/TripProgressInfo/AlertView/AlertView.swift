@@ -76,11 +76,11 @@ struct AlertView: View {
             Divider()
 
             HStack(spacing: 12) {
-                Image(systemName: self.info.alertType.icon)
+                self.info.alertType.icon
                     .foregroundColor(.white)
                     .font(.system(size: 20))
                     .frame(width: 40, height: 40)
-                    .background(self.info.alertType.color)
+//                    .background(self.info.alertType.color)
                     .cornerRadius(8)
 
                 Text("\(self.info.alertType.title) in \(self.info.alertDistance) m")
@@ -117,7 +117,7 @@ struct AlertView: View {
 #Preview(
     body: {
         let id = UUID().uuidString
-        ActiveTripInfoView(
+        TripInfoContianerView(
             tripProgress: .init(
                 distanceToNextManeuver: 100,
                 distanceRemaining: 1000,

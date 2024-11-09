@@ -100,7 +100,7 @@ struct MapViewContainer<SheetContentView: View>: View {
             .withNavigationOverlay(.tripProgress) {
                 if let progress = navigationStore.state.tripProgress,
                    navigationStore.state.isNavigating {
-                    ActiveTripInfoView(
+                    TripInfoContianerView(
                         tripProgress: progress,
                         navigationAlert: self.navigationStore.state.navigationAlert
                     ) { actions in
@@ -239,11 +239,11 @@ private extension MapViewContainer {
             layers += [
                 SymbolStyleLayer(
                     identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
-                    source: ShapeSource(identifier: "speedCamera") {
+                    source: ShapeSource(identifier: "alert") {
                         MLNPointFeature(coordinate: alert.alertType.coordinate)
                     }
                 )
-                .iconImage(UIImage(resource: .speedCam120))
+                .iconImage(alert.alertType.mapIcon)
 //                .iconColor(.red)
             ]
         }
@@ -390,44 +390,6 @@ private extension MapViewContainer {
     }
 }
 
-public extension Waypoint {
-    init(coordinate: CLLocationCoordinate2D, kind: WaypointKind = .via) {
-        self.init(coordinate: GeographicCoordinate(lat: coordinate.latitude, lng: coordinate.longitude), kind: kind)
-    }
-
-    var cLCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: self.coordinate.lat, longitude: self.coordinate.lng)
-    }
-}
-
-public extension Route {
-    var duration: TimeInterval {
-        // add together all routeStep durations
-        return self.steps.reduce(0) { $0 + $1.duration }
-    }
-}
-
-// MARK: - Route + Identifiable
-
-extension Route: @retroactive Identifiable {
-    public var id: Int {
-        return self.hashValue
-    }
-
-}
-
-public extension BoundingBox {
-    var mlnCoordinateBounds: MLNCoordinateBounds {
-        return MLNCoordinateBounds(sw: self.sw.clLocationCoordinate2D, ne: self.ne.clLocationCoordinate2D)
-    }
-}
-
-public extension [GeographicCoordinate] {
-    var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
-        return self.map(\.clLocationCoordinate2D)
-    }
-}
-
 private extension MapLayerIdentifier {
 
     nonisolated static let tapLayers: Set<String> = [
@@ -438,182 +400,4 @@ private extension MapLayerIdentifier {
         Self.customPOI,
         Self.poiLevel1
     ]
-}
-
-// MARK: - ActiveTripInfoViewAction
-
-enum ActiveTripInfoViewAction {
-    case exitNavigation
-    case switchToRoutePreviewMode
-    case openNavigationSettings
-}
-
-// MARK: - ActiveTripInfoView
-
-struct ActiveTripInfoView: View {
-
-    // MARK: Properties
-
-    let tripProgress: TripProgress
-    let navigationAlert: NavigationAlert?
-
-    let onAction: (ActiveTripInfoViewAction) -> Void
-
-    @State var isExpanded: Bool = false
-
-    @State private var dragOffset: CGFloat = 0
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
-
-    // MARK: Content
-
-    var body: some View {
-        ZStack(alignment: .bottom) {
-            self.content()
-                .background {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(.white)
-                        .shadow(
-                            color: .black.opacity(0.05),
-                            radius: 8,
-                            x: 0,
-                            y: 4
-                        )
-                        .ignoresSafeArea()
-                }
-                .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: self.isExpanded)
-                .gesture(
-                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
-                        .onChanged { value in
-                            withAnimation(.interactiveSpring()) {
-                                self.dragOffset = value.translation.height
-                            }
-                        }
-                        .onEnded { value in
-                            withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
-                                let translation = value.translation.height
-                                let velocity = value.predictedEndLocation.y - value.location.y
-
-                                if abs(velocity) > 100 {
-                                    self.isExpanded = velocity < 0
-                                } else if abs(translation) > 30 {
-                                    self.isExpanded = translation < 0
-                                }
-
-                                self.dragOffset = 0
-                            }
-                        }
-                )
-        }
-    }
-
-    @ViewBuilder
-    private func content() -> some View {
-        VStack(spacing: 0) {
-            RoundedRectangle(cornerRadius: 2)
-                .fill(Color.Colors.General._02Grey.opacity(0.3))
-                .frame(width: 36, height: 4)
-                .padding(.top, 8)
-                .padding(.bottom, 12)
-            if let navigationAlert {
-                AlertView(
-                    tripProgress: self.tripProgress,
-                    info: navigationAlert,
-                    isExpanded: self.isExpanded,
-                    onAction: self.onAction
-                )
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .padding(.bottom, self.safeAreaInsets.bottom)
-            } else {
-                ProgressView(
-                    tripProgress: self.tripProgress,
-                    isExpanded: self.isExpanded,
-                    onAction: self.onAction
-                )
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .padding(.bottom, self.safeAreaInsets.bottom)
-            }
-        }
-    }
-}
-
-// MARK: - ActiveTripInfoView.ProgressView
-
-extension ActiveTripInfoView {
-
-    struct ProgressView: View {
-
-        // MARK: Properties
-
-        let distanceFormatter: Formatter
-        let estimatedArrivalFormatter: Date.FormatStyle
-        let durationFormatter: DateComponentsFormatter
-        let isExpanded: Bool
-        let fromDate: Date = .init()
-
-        private let tripProgress: TripProgress
-        private let onAction: (ActiveTripInfoViewAction) -> Void
-
-        // MARK: Lifecycle
-
-        init(tripProgress: TripProgress, isExpanded: Bool, onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
-            self.tripProgress = tripProgress
-            self.onAction = onAction
-            self.isExpanded = isExpanded
-            self.distanceFormatter = DefaultFormatters.distanceFormatter
-            self.estimatedArrivalFormatter = DefaultFormatters.estimatedArrivalFormat
-            self.durationFormatter = DefaultFormatters.durationFormat
-        }
-
-        // MARK: Content
-
-        var body: some View {
-            VStack {
-                HStack {
-                    VStack(alignment: .leading) {
-                        if let formattedDuration = durationFormatter.string(from: tripProgress.durationRemaining) {
-                            Text(formattedDuration)
-                                .hudhudFont(.title2)
-                                .fontWeight(.semibold)
-                                .lineLimit(1)
-                                .multilineTextAlignment(.center)
-                        }
-
-                        HStack(alignment: .center, spacing: 4) {
-                            Text(self.estimatedArrivalFormatter.format(self.tripProgress.estimatedArrival(from: self.fromDate)))
-                                .hudhudFont(.callout)
-                                .fontWeight(.semibold)
-                                .lineLimit(1)
-                                .foregroundStyle(Color.Colors.General._02Grey)
-                                .multilineTextAlignment(.center)
-
-                            Text("·")
-                                .hudhudFont(.callout)
-                                .fontWeight(.semibold)
-                                .lineLimit(1)
-                                .foregroundStyle(Color.Colors.General._02Grey)
-                                .multilineTextAlignment(.center)
-
-                            Text(self.distanceFormatter.string(for: self.tripProgress.distanceRemaining) ?? "")
-                                .hudhudFont(.callout)
-                                .fontWeight(.semibold)
-//                                .minimumScaleFactor(0.6)
-                                .lineLimit(1)
-                                .foregroundStyle(Color.Colors.General._02Grey)
-                                .multilineTextAlignment(.center)
-                        }
-                    }
-
-                    Spacer()
-
-                    NavigationControls(isCompact: true, onAction: self.onAction)
-                }
-                if self.isExpanded {
-                    Divider()
-                    NavigationSettingsRow()
-                }
-            }
-        }
-    }
 }

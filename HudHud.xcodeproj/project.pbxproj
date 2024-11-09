@@ -39,6 +39,8 @@
 		0C9A53592CDF27B700988B68 /* NavigationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A53582CDF27B700988B68 /* NavigationSettingsView.swift */; };
 		0C9A535C2CDF27FD00988B68 /* NavigationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A535B2CDF27FD00988B68 /* NavigationAlert.swift */; };
 		0C9A53602CDF288800988B68 /* TripAlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A535F2CDF288800988B68 /* TripAlertType.swift */; };
+		0C9A53632CDF2C7A00988B68 /* TripProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A53622CDF2C7A00988B68 /* TripProgressView.swift */; };
+		0C9A53662CDF2CD300988B68 /* TripInfoContianerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A53652CDF2CD300988B68 /* TripInfoContianerView.swift */; };
 		0CA5EDB52CDD06D30006F2CA /* NavigationOverlayZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */; };
 		0CA5EDB72CDD08120006F2CA /* NavigationOverlayContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */; };
 		0CA5EDBB2CDD67280006F2CA /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */; };
@@ -312,6 +314,8 @@
 		0C9A53582CDF27B700988B68 /* NavigationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSettingsView.swift; sourceTree = "<group>"; };
 		0C9A535B2CDF27FD00988B68 /* NavigationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAlert.swift; sourceTree = "<group>"; };
 		0C9A535F2CDF288800988B68 /* TripAlertType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripAlertType.swift; sourceTree = "<group>"; };
+		0C9A53622CDF2C7A00988B68 /* TripProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripProgressView.swift; sourceTree = "<group>"; };
+		0C9A53652CDF2CD300988B68 /* TripInfoContianerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripInfoContianerView.swift; sourceTree = "<group>"; };
 		0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayZone.swift; sourceTree = "<group>"; };
 		0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayContent.swift; sourceTree = "<group>"; };
 		0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
@@ -673,6 +677,8 @@
 		0C9A53522CDF275300988B68 /* TripProgressInfo */ = {
 			isa = PBXGroup;
 			children = (
+				0C9A53652CDF2CD300988B68 /* TripInfoContianerView.swift */,
+				0C9A53622CDF2C7A00988B68 /* TripProgressView.swift */,
 				0C9A53562CDF279200988B68 /* NavigationSettingsRow.swift */,
 				0C9A535A2CDF27F200988B68 /* Models */,
 				0C9A53542CDF277900988B68 /* NavigationControls.swift */,
@@ -1654,6 +1660,7 @@
 				3176C3DEBD8E241371957C1B /* FavoriteCategoriesView.swift in Sources */,
 				E9E5140ACC8FF24A0BCAD5E7 /* FavoriteCategoriesButton.swift in Sources */,
 				825C6676E341DD543C305950 /* MapStore.swift in Sources */,
+				0C9A53662CDF2CD300988B68 /* TripInfoContianerView.swift in Sources */,
 				AFE1EC892CC10E3800A9A5C4 /* SpeedView.swift in Sources */,
 				5E2EF96C66B7E02BAB956569 /* MapButtonsView.swift in Sources */,
 				341E4B6C4684A6B24700C609 /* MapButtonsData.swift in Sources */,
@@ -1760,6 +1767,7 @@
 				28BBF7B1E7522E5AA04C4400 /* NavigationUIButton.swift in Sources */,
 				07889465C47C7B4B6EAEF2A6 /* LandscapeNavigationOverlayView.swift in Sources */,
 				AAE3F0FA81BFE4D4A19EC213 /* InstructionsView.swift in Sources */,
+				0C9A53632CDF2C7A00988B68 /* TripProgressView.swift in Sources */,
 				0C4792CE2CDB06D500DFCD4D /* NavigationViewStore.swift in Sources */,
 				63377E150DA3E8FE23449372 /* NavigationUIZoomButton.swift in Sources */,
 				2C94F5F7084F45B104256639 /* ManeuverImageKeys.swift in Sources */,

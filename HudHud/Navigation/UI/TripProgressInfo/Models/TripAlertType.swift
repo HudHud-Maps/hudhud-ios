@@ -9,16 +9,18 @@
 import CoreLocation
 import SwiftUI
 
+// MARK: - TripAlertType
+
 enum TripAlertType: Equatable {
     case speedCamera(SpeedCamera)
     case carAccident(TrafficIncident)
 
     // MARK: Computed Properties
 
-    var icon: String {
+    var icon: Image {
         switch self {
-        case .speedCamera: return "camera.fill"
-        case .carAccident: return "car.fill"
+        case .speedCamera: return Image(systemSymbol: .camera)
+        case .carAccident: return Image(.carAccidentWithoutBg)
         }
     }
 
@@ -42,4 +44,25 @@ enum TripAlertType: Equatable {
         case let .carAccident(trafficIncident): return trafficIncident.location
         }
     }
+
+    var mapIcon: UIImage {
+        switch self {
+        case let .speedCamera(camera):
+            return camera.icon
+        case .carAccident:
+            return UIImage(resource: .carAccident)
+        }
+    }
+}
+
+extension SpeedCamera {
+    var icon: UIImage {
+        switch self.type {
+        case .fixed, .mobile, .averageSpeed, .combined:
+            return UIImage(resource: .speedCam120)
+        case .redLight:
+            return UIImage(resource: .redLighSpeedCamera)
+        }
+    }
+
 }
