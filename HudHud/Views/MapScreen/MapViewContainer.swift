@@ -107,6 +107,10 @@ struct MapViewContainer<SheetContentView: View>: View {
                         switch actions {
                         case .exitNavigation:
                             stopNavigation()
+                        case .switchToRoutePreviewMode:
+                            if let selectedRoute = routesPlanMapDrawer.selectedRoute {
+                                self.mapStore.camera = .boundingBox(selectedRoute.bbox.mlnCoordinateBounds)
+                            }
                         default:
                             break
                         }
@@ -231,6 +235,18 @@ private extension MapViewContainer {
             layers += makeCongestionLayers(for: [selctedRoute])
         }
 
+        if let alert = navigationStore.state.navigationAlert {
+            layers += [
+                SymbolStyleLayer(
+                    identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
+                    source: ShapeSource(identifier: "speedCamera") {
+                        MLNPointFeature(coordinate: alert.alertType.coordinate)
+                    }
+                )
+                .iconImage(UIImage(resource: .speedCam120))
+//                .iconColor(.red)
+            ]
+        }
         return layers
     }
 
@@ -591,7 +607,7 @@ extension ActiveTripInfoView {
 
                     Spacer()
 
-                    NavigationControls(onAction: self.onAction)
+                    NavigationControls(isCompact: true, onAction: self.onAction)
                 }
                 if self.isExpanded {
                     Divider()
@@ -601,136 +617,3 @@ extension ActiveTripInfoView {
         }
     }
 }
-
-// MARK: - NavigationControls
-
-struct NavigationControls: View {
-
-    // MARK: Properties
-
-    let onAction: (ActiveTripInfoViewAction) -> Void
-
-    // MARK: Content
-
-    var body: some View {
-        HStack(spacing: 16) {
-            RoutePreviewButton {
-                self.onAction(.switchToRoutePreviewMode)
-            }
-
-            FinishButton {
-                self.onAction(.exitNavigation)
-            }
-        }
-    }
-}
-
-// MARK: - RoutePreviewButton
-
-private struct RoutePreviewButton: View {
-
-    // MARK: Properties
-
-    let onTap: () -> Void
-
-    // MARK: Content
-
-    var body: some View {
-        Button(action: {
-            self.onTap()
-        }) {
-            Image(.routePreviewIcon)
-                .frame(width: 56, height: 56)
-                .background(Color.Colors.General._03LightGrey)
-                .clipShape(Circle())
-        }
-        .accessibilityLabel("Preview Route")
-    }
-}
-
-// MARK: - FinishButton
-
-private struct FinishButton: View {
-
-    // MARK: Properties
-
-    let action: () -> Void
-
-    // MARK: Content
-
-    var body: some View {
-        Button(action: {
-            self.action()
-        }) {
-            Text("Finish")
-                .hudhudFont(.callout)
-                .fontWeight(.semibold)
-                .foregroundColor(.black)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 10)
-                .frame(height: 56)
-                .background(Color.Colors.General._03LightGrey)
-                .clipShape(Capsule())
-        }
-    }
-}
-
-// MARK: - NavigationSettingsRow
-
-struct NavigationSettingsRow: View {
-    var body: some View {
-        NavigationLink(destination: NavigationSettingsView()) {
-            HStack {
-                Image(.navigationSettingsGear)
-//                    .foregroundColor(.gray)
-
-                Text("Navigation Settings")
-                    .hudhudFont(.callout)
-                    .fontWeight(.semibold)
-                    .foregroundColor(Color(red: 40 / 255, green: 40 / 255, blue: 40 / 255))
-
-                Spacer()
-            }
-            .padding(.vertical, 12)
-        }
-        .buttonStyle(PlainButtonStyle())
-        .background(Color(.systemBackground))
-    }
-}
-
-// MARK: - NavigationSettingsView
-
-struct NavigationSettingsView: View {
-    var body: some View {
-        List {
-            Text("Navigation Settings Content")
-        }
-        .navigationTitle("Navigation Settings")
-    }
-}
-
-#Preview(
-    body: {
-        let id = UUID().uuidString
-        ActiveTripInfoView(
-            tripProgress: .init(
-                distanceToNextManeuver: 100,
-                distanceRemaining: 1000,
-                durationRemaining: 1500
-            ),
-            navigationAlert: NavigationAlert(
-                id: id,
-                progress: 10,
-                alertType: .speedCamera(
-                    .init(id: id,
-                          speedLimit: .kilometersPerHour(120),
-                          type: .fixed,
-                          direction: .forward,
-                          captureRange: .kilometers(20),
-                          location: .riyadh)
-                ),
-                alertDistance: 900
-            )
-        ) { _ in
-        }
-    })

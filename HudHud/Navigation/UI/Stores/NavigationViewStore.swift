@@ -10,6 +10,7 @@ import Combine
 import CoreLocation
 import FerrostarCore
 import Foundation
+import SwiftUI
 import UIKit
 
 extension NavigationStore.State {
@@ -213,12 +214,14 @@ final class NavigationStore {
             let speedCamAlertDistance = SpeedCameraAlertConfig.default.initialAlertDistance
             let progress = (1 - (distance.meters / speedCamAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
-            self.state.navigationAlert = NavigationAlert(
-                id: camera.id,
-                progress: clampedProgress,
-                alertType: .speedCamera(camera),
-                alertDistance: Int(distance.meters)
-            )
+            withAnimation(.easeInOut(duration: 0.15)) {
+                self.state.navigationAlert = NavigationAlert(
+                    id: camera.id,
+                    progress: clampedProgress,
+                    alertType: .speedCamera(camera),
+                    alertDistance: Int(distance.meters)
+                )
+            }
         case let .passedSpeedCamera(camera):
             self.state.navigationAlert = nil
 

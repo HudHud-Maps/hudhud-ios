@@ -6,52 +6,8 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import SwiftUI
-
-// MARK: - AlertInfo
-
 import CoreLocation
-
-// MARK: - NavigationAlert
-
-struct NavigationAlert: Equatable {
-    let id: String
-    let progress: CGFloat
-    let alertType: AlertType
-    let alertDistance: Int
-}
-
-// MARK: - AlertType
-
-enum AlertType: Equatable {
-    case speedCamera(SpeedCamera)
-    case carAccident(TrafficIncident)
-
-    // MARK: Computed Properties
-
-    var icon: String {
-        switch self {
-        case .speedCamera: return "camera.fill"
-        case .carAccident: return "car.fill"
-        }
-    }
-
-    var color: Color {
-        switch self {
-        case .speedCamera: return .red
-        case .carAccident: return .red
-        }
-    }
-
-    var title: String {
-        switch self {
-        case .speedCamera: return "Speed Camera"
-        case .carAccident: return "Car Accident"
-        }
-    }
-}
-
-// MARK: - AlertView
+import SwiftUI
 
 struct AlertView: View {
 
@@ -140,7 +96,7 @@ struct AlertView: View {
                 VStack {
                     Divider()
 
-                    NavigationControls(onAction: self.onAction)
+                    NavigationControls(isCompact: false, onAction: self.onAction)
 
                     Divider()
 
@@ -153,3 +109,33 @@ struct AlertView: View {
         .cornerRadius(24)
     }
 }
+
+// MARK: - NavigationAlert
+
+// MARK: - AlertType
+
+#Preview(
+    body: {
+        let id = UUID().uuidString
+        ActiveTripInfoView(
+            tripProgress: .init(
+                distanceToNextManeuver: 100,
+                distanceRemaining: 1000,
+                durationRemaining: 1500
+            ),
+            navigationAlert: NavigationAlert(
+                id: id,
+                progress: 10,
+                alertType: .speedCamera(
+                    .init(id: id,
+                          speedLimit: .kilometersPerHour(120),
+                          type: .fixed,
+                          direction: .forward,
+                          captureRange: .kilometers(20),
+                          location: .riyadh)
+                ),
+                alertDistance: 900
+            )
+        ) { _ in
+        }
+    })

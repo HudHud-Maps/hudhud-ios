@@ -28,6 +28,7 @@ final class LocationEngineTests: XCTestCase {
         super.setUp()
         self.sut = LocationEngine()
         self.cancellables = []
+        DebugStore().simulateRide = false
     }
 
     override func tearDown() {
@@ -301,6 +302,7 @@ extension LocationEngineTests {
             speed: Speed(value: speed, accuracy: 1.0)
         )
     }
+
 }
 
 // MARK: - Helpers

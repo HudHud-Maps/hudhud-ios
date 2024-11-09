@@ -144,7 +144,7 @@ private extension LocationProviderType {
     var provider: LocationProviding {
         switch self {
         case .standard: return CoreLocationProvider(activityType: .automotiveNavigation, allowBackgroundLocationUpdates: true)
-        case .simulated: return SimulatedLocationProvider()
+        case .simulated: return SimulatedLocationProvider(coordinate: .riyadh)
         }
     }
 }

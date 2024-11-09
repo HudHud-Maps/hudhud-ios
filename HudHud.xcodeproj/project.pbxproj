@@ -34,6 +34,11 @@
 		0C4792CE2CDB06D500DFCD4D /* NavigationViewStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4792CD2CDB06D500DFCD4D /* NavigationViewStore.swift */; };
 		0C4792D12CDB7A3500DFCD4D /* LocationEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C4792D02CDB7A3500DFCD4D /* LocationEngineTests.swift */; };
 		0C5E645F1BC86109A3EFAB57 /* TrafficChartData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13C782C2E65CCDFE5A422F61 /* TrafficChartData.swift */; };
+		0C9A53552CDF277900988B68 /* NavigationControls.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A53542CDF277900988B68 /* NavigationControls.swift */; };
+		0C9A53572CDF279200988B68 /* NavigationSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A53562CDF279200988B68 /* NavigationSettingsRow.swift */; };
+		0C9A53592CDF27B700988B68 /* NavigationSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A53582CDF27B700988B68 /* NavigationSettingsView.swift */; };
+		0C9A535C2CDF27FD00988B68 /* NavigationAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A535B2CDF27FD00988B68 /* NavigationAlert.swift */; };
+		0C9A53602CDF288800988B68 /* TripAlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9A535F2CDF288800988B68 /* TripAlertType.swift */; };
 		0CA5EDB52CDD06D30006F2CA /* NavigationOverlayZone.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */; };
 		0CA5EDB72CDD08120006F2CA /* NavigationOverlayContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */; };
 		0CA5EDBB2CDD67280006F2CA /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */; };
@@ -302,6 +307,11 @@
 		0C4792CA2CDAFB1E00DFCD4D /* FeatureRelevance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeatureRelevance.swift; sourceTree = "<group>"; };
 		0C4792CD2CDB06D500DFCD4D /* NavigationViewStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewStore.swift; sourceTree = "<group>"; };
 		0C4792D02CDB7A3500DFCD4D /* LocationEngineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationEngineTests.swift; sourceTree = "<group>"; };
+		0C9A53542CDF277900988B68 /* NavigationControls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControls.swift; sourceTree = "<group>"; };
+		0C9A53562CDF279200988B68 /* NavigationSettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSettingsRow.swift; sourceTree = "<group>"; };
+		0C9A53582CDF27B700988B68 /* NavigationSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSettingsView.swift; sourceTree = "<group>"; };
+		0C9A535B2CDF27FD00988B68 /* NavigationAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationAlert.swift; sourceTree = "<group>"; };
+		0C9A535F2CDF288800988B68 /* TripAlertType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripAlertType.swift; sourceTree = "<group>"; };
 		0CA5EDB42CDD06D30006F2CA /* NavigationOverlayZone.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayZone.swift; sourceTree = "<group>"; };
 		0CA5EDB62CDD08120006F2CA /* NavigationOverlayContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationOverlayContent.swift; sourceTree = "<group>"; };
 		0CA5EDBA2CDD67280006F2CA /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
@@ -660,6 +670,34 @@
 			path = Stores;
 			sourceTree = "<group>";
 		};
+		0C9A53522CDF275300988B68 /* TripProgressInfo */ = {
+			isa = PBXGroup;
+			children = (
+				0C9A53562CDF279200988B68 /* NavigationSettingsRow.swift */,
+				0C9A535A2CDF27F200988B68 /* Models */,
+				0C9A53542CDF277900988B68 /* NavigationControls.swift */,
+				0CB8F1C32CDBC0F5003983B4 /* AlertView */,
+			);
+			path = TripProgressInfo;
+			sourceTree = "<group>";
+		};
+		0C9A535A2CDF27F200988B68 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				0C9A535F2CDF288800988B68 /* TripAlertType.swift */,
+				0C9A535B2CDF27FD00988B68 /* NavigationAlert.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		0C9A53612CDF28A400988B68 /* SettingsScreen */ = {
+			isa = PBXGroup;
+			children = (
+				0C9A53582CDF27B700988B68 /* NavigationSettingsView.swift */,
+			);
+			path = SettingsScreen;
+			sourceTree = "<group>";
+		};
 		0CB11DA42CD8CF7A00F70155 /* Engine */ = {
 			isa = PBXGroup;
 			children = (
@@ -901,7 +939,8 @@
 		91E0DA8A6E7712D44983E634 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				0CB8F1C32CDBC0F5003983B4 /* AlertView */,
+				0C9A53612CDF28A400988B68 /* SettingsScreen */,
+				0C9A53522CDF275300988B68 /* TripProgressInfo */,
 				0C4792CC2CDB06C100DFCD4D /* Stores */,
 				54980BAA41768DFA10C0E462 /* FerrostarMapLibreUI */,
 				2E23748E08FE65C3ED26E3E4 /* FerrostarSwiftUI */,
@@ -1633,12 +1672,14 @@
 				CEF9D7EFC36E13981A0E8B2E /* ABCRouteConfigurationView.swift in Sources */,
 				9D9D87FC3C81D241890D0491 /* ABCRouteConfigurationData.swift in Sources */,
 				A2533A5D8F32B5F9B6CF6541 /* View.swift in Sources */,
+				0C9A53552CDF277900988B68 /* NavigationControls.swift in Sources */,
 				0C4792AA2CD96F0000DFCD4D /* TrafficIncident.swift in Sources */,
 				3D9A58AD82B827B7351F7EC9 /* Backport.swift in Sources */,
 				82C62072D045681D48E8E538 /* LoggerSettings.swift in Sources */,
 				74DB84CE3696AE379EEA2F90 /* RecentSearchResultsView.swift in Sources */,
 				655050EE383E8EE14E53ED75 /* MapLayerIdentifier.swift in Sources */,
 				EB9ADA23EE159AB81B8D2952 /* PadSheetView.swift in Sources */,
+				0C9A535C2CDF27FD00988B68 /* NavigationAlert.swift in Sources */,
 				1AC5760E84910AC87B3249EF /* PadSheetGesture.swift in Sources */,
 				DDDAE7DF8EDBDBFA3511DF94 /* SafariWebView.swift in Sources */,
 				0CA5EDB72CDD08120006F2CA /* NavigationOverlayContent.swift in Sources */,
@@ -1675,6 +1716,7 @@
 				3B651D907EB42F44B10A53DF /* MapActionHandler.swift in Sources */,
 				C6E15E332EA9397C549C3AFF /* SearchResultView.swift in Sources */,
 				5A98AAF31A00AC74AC3C999C /* Loading.swift in Sources */,
+				0C9A53602CDF288800988B68 /* TripAlertType.swift in Sources */,
 				084218394FED84B4D341E953 /* HudhudSegmentedPicker.swift in Sources */,
 				0CB11DB52CD9176600F70155 /* Configurations.swift in Sources */,
 				DD7976DCF72FA010BE526906 /* FilterStore.swift in Sources */,
@@ -1724,6 +1766,7 @@
 				631FA576CCBE417869F733F9 /* View+Ferrostar.swift in Sources */,
 				A498485C6F6BFFEF46A8A2D8 /* PassthroughLocationManager.swift in Sources */,
 				7164C20D498FA76535DE852A /* TopDrawerView.swift in Sources */,
+				0C9A53592CDF27B700988B68 /* NavigationSettingsView.swift in Sources */,
 				955444077E79A156C6E07C7B /* InnerGridView.swift in Sources */,
 				250F58AF2709115A98855ED1 /* RouteStyleLayer.swift in Sources */,
 				0CB11DA92CD8E9C200F70155 /* HorizonEngine.swift in Sources */,
@@ -1752,6 +1795,7 @@
 				0C4792C72CDAFAD500DFCD4D /* ScanResult.swift in Sources */,
 				347CCC10459778A5C67299B6 /* LengthFormatter.swift in Sources */,
 				BBEA994AF09A31C12DCA1158 /* CustomOTPTextFieldRepresentable.swift in Sources */,
+				0C9A53572CDF279200988B68 /* NavigationSettingsRow.swift in Sources */,
 				98706A32053AE5BC6D6E3ECA /* MapLibreExtensions.swift in Sources */,
 				33F96D579F57F460C7AA9BAB /* RoutePlan.swift in Sources */,
 				533424E0D4F7495B7123335B /* RouteWaypoint.swift in Sources */,
@@ -1945,7 +1989,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
-				DEVELOPMENT_TEAM = YN76B7J2LN;
+				DEVELOPMENT_TEAM = YDDMUSGGM6;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
@@ -1979,7 +2023,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"HudHud/Preview Content\"";
-				DEVELOPMENT_TEAM = YN76B7J2LN;
+				DEVELOPMENT_TEAM = YDDMUSGGM6;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
