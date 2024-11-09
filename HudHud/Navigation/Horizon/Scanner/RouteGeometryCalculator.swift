@@ -25,7 +25,8 @@ final class RouteGeometryCalculator {
 
     private var geometry: [CLLocationCoordinate2D]
     private var cachedSegments: [RouteSegment] = []
-    private var lastCalculatedDistance: CLLocationDistance?
+    private var lastCalculatedDistances: [String: CLLocationDistance] = [:]
+
     private var previousPosition: RoutePosition?
 
     // MARK: Lifecycle
@@ -40,7 +41,7 @@ final class RouteGeometryCalculator {
     func update(with geometry: [CLLocationCoordinate2D]) {
         self.geometry = geometry
         self.updateSegmentCache()
-        self.lastCalculatedDistance = nil
+        self.lastCalculatedDistances.removeAll()
         self.previousPosition = nil
     }
 
@@ -79,7 +80,8 @@ final class RouteGeometryCalculator {
 
     func calculateDistanceAlongRoute(
         from userLocation: CLLocationCoordinate2D,
-        to featureLocation: CLLocationCoordinate2D
+        to featureLocation: CLLocationCoordinate2D,
+        featureId: String
     ) -> CLLocationDistance {
         let userPosition = self.findPosition(for: userLocation)
         let featurePosition = self.findPosition(for: featureLocation)
@@ -115,14 +117,14 @@ final class RouteGeometryCalculator {
             distance += featurePosition.projectedDistance
         }
 
-        if let lastDistance = lastCalculatedDistance {
+        if let lastDistance = lastCalculatedDistances[featureId] {
             let change = abs(distance - lastDistance)
             if change > 10 {
                 distance = lastDistance + (distance > lastDistance ? 10 : -10)
             }
         }
 
-        self.lastCalculatedDistance = distance
+        self.lastCalculatedDistances[featureId] = distance
         return distance
     }
 

@@ -19,7 +19,7 @@ enum TripAlertType: Equatable {
 
     var icon: Image {
         switch self {
-        case .speedCamera: return Image(systemSymbol: .camera)
+        case .speedCamera: return Image(.speedCamIcon)
         case .carAccident: return Image(.carAccidentWithoutBg)
         }
     }

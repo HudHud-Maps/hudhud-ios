@@ -64,7 +64,7 @@ final class HorizonScanner {
 
             let userPosition = self.routerGeometryCalculator.findPosition(for: location)
             let featurePosition = self.routerGeometryCalculator.findPosition(for: feature.coordinate)
-            let distance = self.calculateRouteDistance(from: location, to: feature.coordinate)
+            let distance = self.calculateRouteDistance(from: location, to: feature.coordinate, featureId: feature.id)
 
             NavigationLogger.log("User Position - index: \(userPosition.index), distance: \(userPosition.projectedDistance)")
             NavigationLogger.log("Feature Position - index: \(featurePosition.index), distance: \(featurePosition.projectedDistance)")
@@ -149,7 +149,8 @@ final class HorizonScanner {
 
     private func calculateRouteDistance(
         from: CLLocationCoordinate2D,
-        to: CLLocationCoordinate2D
+        to: CLLocationCoordinate2D,
+        featureId: String
     ) -> CLLocationDistance {
         NavigationLogger.beginScope("Calculate Route Distance")
         defer { NavigationLogger.endScope() }
@@ -159,7 +160,7 @@ final class HorizonScanner {
 
         if !self.routeGeometry.isEmpty {
             NavigationLogger.log("Using route geometry with \(self.routeGeometry.count) points")
-            let distance = self.routerGeometryCalculator.calculateDistanceAlongRoute(from: from, to: to)
+            let distance = self.routerGeometryCalculator.calculateDistanceAlongRoute(from: from, to: to, featureId: featureId)
             NavigationLogger.log("Route distance: \(distance)m", level: .debug)
             return distance
         }
@@ -189,9 +190,13 @@ final class HorizonScanner {
         switch feature.type {
         case let .speedCamera(camera):
             let currentLocation = self.lastLocation ?? userLocation
-            return self.isCameraRelevant(camera, userLocation: currentLocation, userCourse: userBearing)
-        case .speedZone, .trafficIncident:
-            let distance = self.calculateRouteDistance(from: userLocation, to: feature.coordinate)
+            let distance = self.calculateRouteDistance(from: currentLocation, to: camera.location, featureId: camera.id)
+            return self.isCameraRelevant(camera, userLocation: currentLocation, userCourse: userBearing, distance: distance)
+        case let .speedZone(feature):
+            let distance = self.calculateRouteDistance(from: userLocation, to: feature.location, featureId: feature.id.uuidString)
+            return .relevant(distance: distance)
+        case let .trafficIncident(feature):
+            let distance = self.calculateRouteDistance(from: userLocation, to: feature.location, featureId: feature.id)
             return .relevant(distance: distance)
         }
     }
@@ -199,7 +204,8 @@ final class HorizonScanner {
     private func isCameraRelevant(
         _ camera: SpeedCamera,
         userLocation: CLLocationCoordinate2D,
-        userCourse: CLLocationDirection
+        userCourse: CLLocationDirection,
+        distance: CLLocationDistance
     ) -> FeatureRelevance {
         NavigationLogger.beginScope("Camera Relevance Check")
         defer { NavigationLogger.endScope() }
@@ -210,7 +216,7 @@ final class HorizonScanner {
         NavigationLogger.log("User Location: (\(userLocation.latitude), \(userLocation.longitude))")
         NavigationLogger.log("Camera Location: (\(camera.location.latitude), \(camera.location.longitude))")
 
-        let distance = self.calculateRouteDistance(from: userLocation, to: camera.location)
+//        let distance = self.calculateRouteDistance(from: userLocation, to: camera.location)
 
         switch camera.direction {
         case .forward:

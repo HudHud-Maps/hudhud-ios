@@ -62,26 +62,27 @@ struct AlertView: View {
             .lineLimit(1)
             .foregroundStyle(Color.Colors.General._02Grey)
             .multilineTextAlignment(.center)
-            .padding(.top, 16)
+//            .padding(.top, 16)
 
             GeometryReader { geometry in
                 Rectangle()
                     .fill(self.info.alertType.color)
                     .frame(width: geometry.size.width * (self.info.progress / 100))
-                    .frame(height: 2)
+                    .frame(height: 4)
+                    .animation(.default, value: self.info.progress)
             }
             .frame(height: 2)
             .padding(.top, 16)
 
             Divider()
 
-            HStack(spacing: 12) {
+            HStack(spacing: 8) {
                 self.info.alertType.icon
-                    .foregroundColor(.white)
-                    .font(.system(size: 20))
-                    .frame(width: 40, height: 40)
+//                    .foregroundColor(.white)
+                        .font(.system(size: 20))
+                        .frame(width: 40, height: 40)
 //                    .background(self.info.alertType.color)
-                    .cornerRadius(8)
+                        .cornerRadius(8)
 
                 Text("\(self.info.alertType.title) in \(self.info.alertDistance) m")
                     .hudhudFont(.title3)

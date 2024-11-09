@@ -85,12 +85,11 @@ final class HorizonEngine {
     private func processFeatures(_ result: ScanResult, at _: CLLocation) {
         NavigationLogger.beginScope("Process Features")
         defer { NavigationLogger.endScope() }
+        NavigationLogger.beginScope("New Detections")
 
-        // Process newly detected features
-        if !result.detectedFeatures.isEmpty {
-            NavigationLogger.beginScope("New Detections")
-            for feature in result.detectedFeatures {
-                NavigationLogger.log("Detected: \(feature.id) (\(feature.type))")
+        for feature in result.detectedFeatures {
+            NavigationLogger.log("Detected: \(feature.id) (\(feature.type))")
+            if self.activeFeatures[feature.id] == nil {
                 let state = ActiveFeatureState(
                     feature: feature,
                     firstDetectedAt: Date(),
@@ -102,7 +101,7 @@ final class HorizonEngine {
             NavigationLogger.endScope()
         }
 
-        // Process approaching features
+        // approaching features
         if !result.approachingFeatures.isEmpty {
             NavigationLogger.beginScope("Approaching Features")
             for featureDistance in result.approachingFeatures {
@@ -164,7 +163,7 @@ final class HorizonEngine {
             NavigationLogger.endScope()
         }
 
-        // Process exited features
+        // exited features
         if !result.exitedFeatures.isEmpty {
             NavigationLogger.beginScope("Exited Features")
             for feature in result.exitedFeatures {
@@ -226,102 +225,121 @@ enum RouteFeatureExtractor {
     }
 }
 
+import CoreLocation
+import FerrostarCore
+import FerrostarCoreFFI
+
+// MARK: - MockFeaturePlacer
+
+struct MockFeaturePlacer {
+
+    // MARK: Nested Types
+
+    struct PlacedFeatures {
+        let camera: SpeedCamera?
+        let incident: TrafficIncident?
+    }
+
+    // MARK: Properties
+
+    let geometry: [CLLocationCoordinate2D]
+    let routeLength: Double
+
+    private let minCameraDistance = 1100.0
+    private let maxCameraDistance = 1500.0
+    private let incidentCameraSpacing = 1500.0
+
+    // MARK: Functions
+
+    func placeFeatures() -> PlacedFeatures {
+        let cameraDistance = (minCameraDistance + self.maxCameraDistance) / 2
+        guard let cameraLocation = findLocationAtDistance(cameraDistance) else {
+            return PlacedFeatures(camera: nil, incident: nil)
+        }
+
+        let camera = SpeedCamera(
+            id: "test-camera",
+            speedLimit: .kilometersPerHour(120),
+            type: .fixed,
+            direction: .forward,
+            captureRange: .kilometers(2),
+            location: cameraLocation
+        )
+
+        let incidentDistance = cameraDistance + self.incidentCameraSpacing
+        guard self.routeLength >= incidentDistance,
+              let incidentLocation = findLocationAtDistance(incidentDistance) else {
+            return PlacedFeatures(camera: camera, incident: nil)
+        }
+
+        let incident = TrafficIncident(
+            id: "test-incident",
+            type: .accident,
+            severity: .moderate,
+            location: incidentLocation,
+            description: "",
+            startTime: Date(),
+            endTime: nil,
+            length: .kilometers(1.5),
+            delayInSeconds: 600
+        )
+
+        return PlacedFeatures(camera: camera, incident: incident)
+    }
+
+    private func findLocationAtDistance(_ targetDistance: Double) -> CLLocationCoordinate2D? {
+        var coveredDistance = 0.0
+
+        guard targetDistance <= self.routeLength, targetDistance > 0 else { return nil }
+
+        for i in 0 ..< (self.geometry.count - 1) {
+            let currentPoint = self.geometry[i]
+            let nextPoint = self.geometry[i + 1]
+
+            let current = CLLocation(latitude: currentPoint.latitude, longitude: currentPoint.longitude)
+            let next = CLLocation(latitude: nextPoint.latitude, longitude: nextPoint.longitude)
+
+            let segmentLength = current.distance(from: next)
+
+            if targetDistance <= coveredDistance + segmentLength {
+                let segmentProgress = (targetDistance - coveredDistance) / segmentLength
+
+                let lat = currentPoint.latitude + (nextPoint.latitude - currentPoint.latitude) * segmentProgress
+                let lon = currentPoint.longitude + (nextPoint.longitude - currentPoint.longitude) * segmentProgress
+
+                return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+            }
+
+            coveredDistance += segmentLength
+        }
+
+        return nil
+    }
+}
+
 extension Route {
-    static var mockIncidents: [TrafficIncident] = [
-        //        .init(
-//            id: "test-incident",
-//            type: .accident,
-//            severity: .moderate,
-//            location: midLocation,
-//            description: "",
-//            startTime: Date(),
-//            endTime: nil,
-//            length: .kilometers(1.5),
-//            delayInSeconds: 600
-//        )
-    ]
+    static var mockIncidents: [TrafficIncident] = []
     static var mockSpeedCameras: [SpeedCamera] = []
 
+    private static var _placedFeatures: MockFeaturePlacer.PlacedFeatures?
+
+    private var placedFeatures: MockFeaturePlacer.PlacedFeatures {
+        if let existing = Self._placedFeatures {
+            return existing
+        }
+        let placer = MockFeaturePlacer(geometry: geometry.clLocationCoordinate2Ds, routeLength: self.distance)
+        let features = placer.placeFeatures()
+        Self._placedFeatures = features
+        return features
+    }
+
     var incidents: [TrafficIncident] {
-        Self.mockIncidents
+        if !Self.mockIncidents.isEmpty { return Self.mockIncidents }
+        return self.placedFeatures.incident.map { [$0] } ?? []
     }
 
     var speedCameras: [SpeedCamera] {
         if !Self.mockSpeedCameras.isEmpty { return Self.mockSpeedCameras }
-        else {
-            // Find the point at 1.2 km along the route
-            let targetDistance = 1200.0 // 1.2 km in meters
-            var currentDistance = 0.0
-            var targetIndex = 0
-
-            for i in 0 ..< (geometry.count - 1) {
-                let point1 = geometry[i].clLocationCoordinate2D
-                let point2 = geometry[i + 1].clLocationCoordinate2D
-
-                let location1 = CLLocation(latitude: point1.latitude, longitude: point1.longitude)
-                let location2 = CLLocation(latitude: point2.latitude, longitude: point2.longitude)
-
-                let segmentDistance = location1.distance(from: location2)
-
-                if currentDistance + segmentDistance >= targetDistance {
-                    let remainingDistance = targetDistance - currentDistance
-                    let fraction = remainingDistance / segmentDistance
-
-                    let targetLat = point1.latitude + (point2.latitude - point1.latitude) * fraction
-                    let targetLon = point1.longitude + (point2.longitude - point1.longitude) * fraction
-
-                    return [
-                        .init(
-                            id: "test-camera",
-                            speedLimit: .kilometersPerHour(120),
-                            type: .fixed,
-                            direction: .forward,
-                            captureRange: .kilometers(2),
-                            location: CLLocationCoordinate2D(latitude: targetLat, longitude: targetLon)
-                        )
-                    ]
-                }
-
-                currentDistance += segmentDistance
-            }
-
-            // Fallback to first point if route is shorter than 1.2 km
-            return [
-                .init(
-                    id: "test-camera",
-                    speedLimit: .kilometersPerHour(120),
-                    type: .fixed,
-                    direction: .forward,
-                    captureRange: .kilometers(2),
-                    location: geometry.first?.clLocationCoordinate2D ?? CLLocationCoordinate2D()
-                )
-            ]
-        }
-    }
-}
-
-// MARK: - FeatureTracker
-
-private struct FeatureTracker {
-
-    // MARK: Properties
-
-    var activeFeatures: [String: ActiveFeatureState]
-
-    // MARK: Functions
-
-    mutating func trackFeature(_ feature: HorizonFeature) -> Bool {
-        guard self.activeFeatures[feature.id] == nil else { return false }
-        self.activeFeatures[feature.id] = ActiveFeatureState(
-            feature: feature,
-            firstDetectedAt: Date(),
-            lastDistance: .meters(0),
-            hasAlerted: false
-        )
-        return true
-    }
-
-    mutating func removeFeature(_ feature: HorizonFeature) {
-        self.activeFeatures.removeValue(forKey: feature.id)
+        return self.placedFeatures.camera.map { [$0] } ?? []
     }
 }

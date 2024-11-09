@@ -125,7 +125,7 @@ struct TrafficIncidentAlertConfig {
     // MARK: Static Properties
 
     static let `default` = TrafficIncidentAlertConfig(
-        initialAlertDistance: .init(value: 2, unit: .kilometers),
+        initialAlertDistance: .init(value: 1, unit: .kilometers),
         finalAlertDistance: .init(value: 500, unit: .meters),
         alertRepeatInterval: 45
     )
