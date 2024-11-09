@@ -54,6 +54,8 @@ struct ContentView: View {
 
     @Bindable private var sheetStore: SheetStore
 
+    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
+
     // MARK: Lifecycle
 
     @MainActor
@@ -156,7 +158,7 @@ struct ContentView: View {
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
-                        if self.debugStore.enableNewRoutePlanner {
+                        if self.enableNewRoutePlanner {
                             self.sheetStore.show(.routePlanner(RoutePlannerStore(
                                 sheetStore: self.sheetStore,
                                 userLocationStore: self.userLocationStore,
