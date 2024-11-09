@@ -361,8 +361,8 @@ enum DeviceSupport {
     // MARK: Static Functions
 
     // Based on table from: https://developer.apple.com/metal/Metal-Feature-Set-Tables.pdf
-    static func maxiumSupportedTextureSize() -> CGSize {
-        var maxLength: CGFloat = 4096
+    static func maxiumSupportedTextureSize() -> ImageSize {
+        var maxLength: Int = 4096
 
         guard let device = MTLCreateSystemDefaultDevice() else {
             assertionFailure("Could not create Metal Device")
@@ -378,16 +378,16 @@ enum DeviceSupport {
     }
 }
 
-extension CGSize {
+extension ImageSize {
 
-    func clipToMaximumSupportedTextureSize() -> CGSize {
+    func clipToMaximumSupportedTextureSize() -> ImageSize {
         let deviceLimit = DeviceSupport.maxiumSupportedTextureSize()
         var currentSize = self
 
         // Repeat halving the size until it fits within the device limit
         while currentSize.width > deviceLimit.width || currentSize.height > deviceLimit.height {
             // Halve the size while maintaining the aspect ratio
-            currentSize = CGSize(width: currentSize.width / 2, height: currentSize.height / 2)
+            currentSize = ImageSize(width: currentSize.width / 2, height: currentSize.height / 2)
         }
 
         return currentSize
