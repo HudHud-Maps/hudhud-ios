@@ -371,6 +371,13 @@ private extension SearchViewStore {
             }
             .store(in: &self.cancellables)
     }
+
+    func bindEndTrip() {
+        self.routingStore.didEndNavigation.sink { [weak self] _ in
+            self?.endTrip()
+        }
+        .store(in: &self.cancellables)
+    }
 }
 
 // MARK: - Previewable

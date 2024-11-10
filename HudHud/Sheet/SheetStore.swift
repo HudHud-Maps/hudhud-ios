@@ -28,12 +28,13 @@ final class SheetStore {
     let navigationCommands = PassthroughSubject<NavigationCommand, Never>()
     var isShown = CurrentValueSubject<Bool, Never>(true)
     var safeAreaInsets = EdgeInsets()
-
     private(set) var sheetHeight: CGFloat = 0
+
+    private let makeSheetProvider: (SheetContext) -> any SheetProvider
 
     private var sheets: [SheetData] = []
 
-    private let emptySheetData: SheetData
+    private var emptySheetData: SheetData
     private var updateSheetHeightSubscription: AnyCancellable?
 
     // MARK: Computed Properties
@@ -57,17 +58,16 @@ final class SheetStore {
         }
     }
 
-    var shouldHideMapButtons: Bool {
-        return self.sheetHeight >= UIScreen.main.bounds.height / 2
-    }
-
     // MARK: Lifecycle
 
-    init(emptySheetType: SheetType) {
+    init(emptySheetType: SheetType, makeSheetProvider: @escaping (SheetContext) -> any SheetProvider) {
+        self.makeSheetProvider = makeSheetProvider
         self.emptySheetData = SheetData(
             sheetType: emptySheetType,
-            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
+            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData),
+            sheetProvider: EmptySheetProvider()
         )
+        self.emptySheetData = self.makeSheet(from: emptySheetType)
         self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
             guard let self else { return }
             self.sheetHeight = self.computeSheetHeight()
@@ -81,8 +81,7 @@ final class SheetStore {
     }
 
     func show(_ sheetType: SheetType) {
-        let detentCurrentValueSubject = CurrentValueSubject<DetentData, Never>(sheetType.initialDetentData)
-        let sheetData = SheetData(sheetType: sheetType, detentData: detentCurrentValueSubject)
+        let sheetData = self.makeSheet(from: sheetType)
         self.sheets.append(sheetData)
         self.navigationCommands.send(.show(sheetData))
     }
@@ -108,6 +107,17 @@ final class SheetStore {
 
 private extension SheetStore {
 
+    func makeSheet(from sheetType: SheetType) -> SheetData {
+        let detentCurrentValueSubject = CurrentValueSubject<DetentData, Never>(sheetType.initialDetentData)
+        let context = SheetContext(sheetStore: self, sheetType: sheetType, detentData: detentCurrentValueSubject)
+        let sheetProvider = self.makeSheetProvider(context)
+        return SheetData(
+            sheetType: sheetType,
+            detentData: detentCurrentValueSubject,
+            sheetProvider: sheetProvider
+        )
+    }
+
     func computeSheetHeight() -> CGFloat {
         if self.isShown.value {
             self.rawSheetheight - self.safeAreaInsets.bottom
@@ -120,8 +130,22 @@ private extension SheetStore {
 // MARK: - Previewable
 
 extension SheetStore: Previewable {
-    static let storeSetUpForPreviewing = SheetStore(emptySheetType: .search)
-    static let storeSetUpForPreviewingPOI = SheetStore(emptySheetType: .pointOfInterest(.ketchup))
+    static let storeSetUpForPreviewing = SheetStore(
+        emptySheetType: .search,
+        makeSheetProvider: sheetProviderBuilder(
+            mapStore: .storeSetUpForPreviewing,
+            routingStore: .storeSetUpForPreviewing,
+            streetViewStore: .storeSetUpForPreviewing
+        )
+    )
+    static let storeSetUpForPreviewingPOI = SheetStore(
+        emptySheetType: .pointOfInterest(.ketchup),
+        makeSheetProvider: sheetProviderBuilder(
+            mapStore: .storeSetUpForPreviewing,
+            routingStore: .storeSetUpForPreviewing,
+            streetViewStore: .storeSetUpForPreviewing
+        )
+    )
 }
 
 // MARK: - Detent
@@ -211,11 +235,20 @@ enum SheetType {
     }
 }
 
+// MARK: - SheetContext
+
+struct SheetContext {
+    let sheetStore: SheetStore
+    let sheetType: SheetType
+    let detentData: CurrentValueSubject<DetentData, Never>
+}
+
 // MARK: - SheetData
 
 struct SheetData {
     let sheetType: SheetType
     let detentData: CurrentValueSubject<DetentData, Never>
+    let sheetProvider: any SheetProvider
 }
 
 // MARK: - DetentData

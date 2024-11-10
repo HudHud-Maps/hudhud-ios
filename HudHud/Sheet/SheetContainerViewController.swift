@@ -13,11 +13,10 @@ import UIKit
 
 // MARK: - SheetContainerViewController
 
-final class SheetContainerViewController<Content: View>: UINavigationController, UISheetPresentationControllerDelegate {
+final class SheetContainerViewController: UINavigationController, UISheetPresentationControllerDelegate {
 
     // MARK: Properties
 
-    private let sheetToView: (SheetType) -> Content
     private var sheetSubscription: AnyCancellable?
     private var sheetUpdatesSubscription: AnyCancellable?
     private let sheetStore: SheetStore
@@ -27,10 +26,8 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
 
     // MARK: Lifecycle
 
-    init(sheetStore: SheetStore,
-         sheetToView: @escaping (SheetType) -> Content) {
+    init(sheetStore: SheetStore) {
         self.sheetStore = sheetStore
-        self.sheetToView = sheetToView
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -44,6 +41,7 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = .white
+        self.navigationBar.isHidden = true
         self.sheetUpdatesSubscription = self.sheetStore.navigationCommands.sink { [weak self] navigationCommand in
             switch navigationCommand {
             case let .show(sheetData):
@@ -107,7 +105,8 @@ private extension SheetContainerViewController {
             assertionFailure("expected to have a sheet presentation controller")
             return
         }
-        let viewController = self.buildSheet(for: sheet.sheetType)
+
+        let viewController = self.buildSheet(for: sheet.sheetProvider)
         sheetPresentationController.animateChanges {
             self.updateDetents(with: sheet.detentData.value, in: sheetPresentationController)
             self.setNavigationTransition(sheet.sheetType.transition)
@@ -165,10 +164,10 @@ private extension SheetContainerViewController {
         sheetPresentationController.largestUndimmedDetentIdentifier = largestDetent?.identifier
     }
 
-    func buildSheet(for sheetType: SheetType) -> UIViewController {
-        let view = self.sheetToView(sheetType)
-        let viewController = UIHostingController(rootView: view)
-        return viewController
+    func buildSheet(for sheetProvider: some SheetProvider) -> UIViewController {
+        UIHostingController(
+            rootView: sheetProvider.sheetView
+        )
     }
 }
 

@@ -47,7 +47,6 @@ final class RoutingStore: ObservableObject {
     @Published private(set) var navigatingRoute: Route?
 
     @Published private(set) var selectedRoute: Route?
-
     let hudHudGraphHopperRouteProvider = GraphHopperRouteProvider()
 
     @ObservedChild private(set) var ferrostarCore: FerrostarCore
@@ -58,6 +57,7 @@ final class RoutingStore: ObservableObject {
 
     let locationManager: HudHudLocationManager
 
+    private let didEndNavigationPassthroughSubject = PassthroughSubject<Void, Never>()
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
@@ -66,6 +66,10 @@ final class RoutingStore: ObservableObject {
     private var routePlanSubscriptions: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
+
+    var didEndNavigation: any Publisher<Void, Never> {
+        self.didEndNavigationPassthroughSubject
+    }
 
     var isMuted: Bool {
         self.spokenInstructionObserver.isMuted
@@ -234,6 +238,7 @@ final class RoutingStore: ObservableObject {
         self.potentialRoute = nil
         self.navigatingRoute = nil
         self.mapStore.clearItems()
+        self.didEndNavigationPassthroughSubject.send()
     }
 }
 

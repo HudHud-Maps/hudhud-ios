@@ -18,20 +18,17 @@ import UIKit
 
 // MARK: - MapViewContainer
 
-struct MapViewContainer<SheetContentView: View>: View {
+struct MapViewContainer: View {
 
     // MARK: Properties
 
     @Bindable var mapStore: MapStore
     @ObservedObject var debugStore: DebugStore
-    @ObservedObject var searchViewStore: SearchViewStore
     @ObservedObject var userLocationStore: UserLocationStore
     @ObservedObject var routingStore: RoutingStore
     let streetViewStore: StreetViewStore
-    let mapViewStore: MapViewStore
+    @State var mapViewStore: MapViewStore
     let routesPlanMapDrawer: RoutesPlanMapDrawer
-
-    @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
     @State private var safeAreaInsets = UIEdgeInsets()
     @State private var didFocusOnUser = false
@@ -48,25 +45,20 @@ struct MapViewContainer<SheetContentView: View>: View {
     init(
         mapStore: MapStore,
         debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
         userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore,
         routingStore: RoutingStore,
         sheetStore: SheetStore,
         streetViewStore: StreetViewStore,
-        routesPlanMapDrawer: RoutesPlanMapDrawer,
-        @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
+        routesPlanMapDrawer: RoutesPlanMapDrawer
     ) {
         self.mapStore = mapStore
         self.debugStore = debugStore
-        self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
-        self.mapViewStore = mapViewStore
+        self.mapViewStore = MapViewStore(mapStore: mapStore, streetViewStore: streetViewStore, sheetStore: sheetStore)
         self.streetViewStore = streetViewStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
         self.routesPlanMapDrawer = routesPlanMapDrawer
-        self.sheetToView = sheetToView
     }
 
     // MARK: Content
@@ -76,8 +68,7 @@ struct MapViewContainer<SheetContentView: View>: View {
             DynamicallyOrientingNavigationView(
                 makeViewController: MapViewController(
                     sheetStore: self.sheetStore,
-                    styleURL: self.mapStore.mapStyleUrl(),
-                    sheetToView: self.sheetToView
+                    styleURL: self.mapStore.mapStyleUrl()
                 ),
                 locationManager: self.routingStore.locationManager,
                 styleURL: self.mapStore.mapStyleUrl(),
@@ -117,7 +108,7 @@ struct MapViewContainer<SheetContentView: View>: View {
 
 extension MapViewContainer {
     private var locationLabel: String {
-        guard let location = searchViewStore.routingStore.locationProvider.lastLocation else {
+        guard let location = self.routingStore.locationProvider.lastLocation else {
             return "No location - authed as \(self.routingStore.locationProvider.authorizationStatus)"
         }
         return "±\(Int(location.horizontalAccuracy))m accuracy"
@@ -321,7 +312,7 @@ private extension MapViewContainer {
 
     @MainActor
     func stopNavigation() {
-        self.searchViewStore.endTrip()
+        self.routingStore.endTrip()
         self.sheetStore.popToRoot()
         self.sheetStore.isShown.value = true
 

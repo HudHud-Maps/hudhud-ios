@@ -22,7 +22,7 @@ struct SearchSheet: View {
 
     var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
-    @ObservedObject var trendingStore: TrendingStore
+    @StateObject var trendingStore = TrendingStore()
     @Bindable var sheetStore: SheetStore
     @ObservedObject var filterStore: FilterStore
     @State var loginShown: Bool = false
@@ -36,7 +36,7 @@ struct SearchSheet: View {
     init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore, filterStore: FilterStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
-        self.trendingStore = trendingStore
+        self._trendingStore = StateObject(wrappedValue: trendingStore)
         self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.searchIsFocused = false
