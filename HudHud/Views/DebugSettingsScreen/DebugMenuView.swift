@@ -27,12 +27,12 @@ struct DebugMenuView: View {
             Form {
                 self.routingSection
                 self.baseURLSection
+                self.experimentalFeaturesSection
                 self.networkDebuggerButton
                 self.simulationSection
                 self.touchesSection
                 self.sfsymbolsSection
                 self.streetViewQualitySection
-                self.routePlannerSection
             }
             .navigationTitle("Debug Menu")
             .toolbar {
@@ -151,10 +151,10 @@ struct DebugMenuView: View {
         }
     }
 
-    var routePlannerSection: some View {
-        Section(header: Text("Route Planner")) {
-            Toggle(isOn: self.$debugSettings.enableNewRoutePlanner) {
-                Text("Enable new Route Planner design")
+    var experimentalFeaturesSection: some View {
+        Section(header: Text("Experimental Features")) {
+            NavigationLink(destination: ExperimentalFeaturesView()) {
+                Text("Feature Toggles")
             }
         }
     }

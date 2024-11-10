@@ -58,6 +58,8 @@ final class RoutingStore: ObservableObject {
 
     let locationManager: HudHudLocationManager
 
+    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
+
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
@@ -246,7 +248,7 @@ private extension RoutingStore {
 
     func bindRoutePlanActions() {
         self.routesPlanMapDrawer.routePlanEvents.sink { [weak self] event in
-            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            guard let self, !self.enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
             switch event {
             case let .didSelectRoute(routeID):
                 if let route = self.routes.first(where: { $0.id == routeID }) {
@@ -256,7 +258,7 @@ private extension RoutingStore {
         }
         .store(in: &self.routePlanSubscriptions)
         Publishers.CombineLatest(self.$routes, self.$selectedRoute).sink { [weak self] routes, selectedRoute in
-            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            guard let self, !self.enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
             if routes.isEmpty {
                 self.routesPlanMapDrawer.clear()
             } else if let selectedRoute = selectedRoute ?? routes.first {
