@@ -92,9 +92,10 @@ struct SearchMapOverlay: View {
         }
         .safeAreaInset(edge: .top) {
             if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil {
-                CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
-                    .presentationBackground(.thinMaterial)
-                    .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
+                CategoriesBannerView(
+                    catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData,
+                    searchStore: self.searchViewStore
+                )
             }
         }
         .overlay(alignment: .top) {

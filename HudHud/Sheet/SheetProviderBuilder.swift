@@ -63,6 +63,11 @@ func sheetProviderBuilder(
                 debugStore: debugStore,
                 sheetStore: context.sheetStore
             )
+        case let .navigationAddSearchView(onAddItem):
+            AddPOIToRouteProvider(
+                sheetStore: context.sheetStore,
+                onAddItem: onAddItem
+            )
         default:
             EmptySheetProvider()
         }
@@ -72,33 +77,6 @@ func sheetProviderBuilder(
 // swiftlint:enable function_parameter_count
 
 //                switch sheetType {
-//                case .debugView:
-//                    return DebugMenuView(debugSettings: self.debugStore, sheetStore: self.sheetStore)
-////                        .onDisappear(perform: {
-////                            self.sheetStore.popToRoot()
-////                        })
-//                case let .navigationAddSearchView(onAddItem):
-//                    // Initialize fresh instances of MapStore and SearchViewStore
-//                    let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-//                    let freshSearchViewStore: SearchViewStore = {
-//                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
-//                        let tempStore = SearchViewStore(
-//                            mapStore: freshMapStore,
-//                            sheetStore: SheetStore(emptySheetType: .search),
-//                            routingStore: freshRoutingStore,
-//                            filterStore: self.searchViewStore.filterStore,
-//                            mode: self.searchViewStore.mode
-//                        )
-//                        tempStore.searchType = .returnPOILocation(completion: onAddItem)
-//                        return tempStore
-//                    }()
-//                    return SearchSheet(
-//                        mapStore: freshSearchViewStore.mapStore,
-//                        searchStore: freshSearchViewStore,
-//                        trendingStore: self.trendingStore,
-//                        sheetStore: self.sheetStore,
-//                        filterStore: self.searchViewStore.filterStore
-//                    )
 //                case .favorites:
 //                    // Initialize fresh instances of MapStore and SearchViewStore
 //                    let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
