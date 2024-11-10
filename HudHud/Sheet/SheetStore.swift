@@ -190,6 +190,16 @@ enum NavigationCommand {
     case show(SheetData)
     case pop(destinationSheetData: SheetData)
     case popToRoot(rootSheetData: SheetData)
+
+    // MARK: Computed Properties
+
+    var sheetData: SheetData {
+        switch self {
+        case let .show(sheetData): sheetData
+        case let .pop(destinationSheetData): destinationSheetData
+        case let .popToRoot(rootSheetData): rootSheetData
+        }
+    }
 }
 
 // MARK: - SheetType
