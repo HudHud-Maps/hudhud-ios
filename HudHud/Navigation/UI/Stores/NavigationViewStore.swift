@@ -57,7 +57,7 @@ final class NavigationStore {
 
     // MARK: Properties
 
-    var state: State = .init(status: .idle)
+    var state = State(status: .idle)
 
     private var cancellables = Set<AnyCancellable>()
     private let navigationEngine: NavigationEngine
@@ -97,10 +97,10 @@ final class NavigationStore {
     func execute(_ action: Action) {
         switch action {
         case .startNavigation:
-            self.satrtNavigation()
+            satrtNavigation()
 
         case .stopNavigation:
-            self.stopNavigation()
+            stopNavigation()
 
         case .toggleMute:
             self.navigationEngine.toggleMute()
@@ -201,9 +201,9 @@ private extension NavigationStore {
             break
         case let .speedLimitChanged(speedLimit):
             self.state.speedLimit = speedLimit
-        case let .snappedLocationUpdated(snappedLocation):
+        case .snappedLocationUpdated:
             break
-        case let .error(error):
+        case .error:
             self.state.status = .failed
         }
     }

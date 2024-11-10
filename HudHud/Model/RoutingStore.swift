@@ -63,10 +63,6 @@ final class RoutingStore: ObservableObject {
 
     @Published var routes: [Route] = []
 
-    let locationProvider: LocationProviding
-
-    let locationManager: HudHudLocationManager
-
     @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
 
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)

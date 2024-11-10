@@ -9,7 +9,7 @@
 import Foundation
 import os
 
-typealias Logger = os.Logger // we dont need to import OSLog everyehere in the app
+typealias Logger = os.Logger // we dont need to import OSLog everywhere in the app
 
 extension Logger {
     private static let subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping
