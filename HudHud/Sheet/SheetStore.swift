@@ -138,6 +138,7 @@ extension SheetStore: Previewable {
             mapStore: .storeSetUpForPreviewing,
             routesPlanMapDrawer: RoutesPlanMapDrawer(),
             hudhudMapLayerStore: HudHudMapLayerStore(),
+            favoritesStore: .storeSetUpForPreviewing,
             routingStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
@@ -150,6 +151,7 @@ extension SheetStore: Previewable {
             mapStore: .storeSetUpForPreviewing,
             routesPlanMapDrawer: RoutesPlanMapDrawer(),
             hudhudMapLayerStore: HudHudMapLayerStore(),
+            favoritesStore: .storeSetUpForPreviewing,
             routingStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
@@ -213,7 +215,7 @@ enum SheetType {
     case navigationPreview
     case pointOfInterest(ResolvedItem)
     case routePlanner(RoutePlannerStore)
-    case favoritesViewMore
+    case favoritesViewMore(searchViewStore: SearchViewStore)
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
 
     // MARK: Computed Properties
@@ -274,4 +276,16 @@ struct SheetData {
 struct DetentData: Hashable {
     var selectedDetent: Detent
     let allowedDetents: [Detent]
+}
+
+// MARK: - EmptySheetProvider
+
+private struct EmptySheetProvider: SheetProvider {
+    var sheetView: some View {
+        EmptyView()
+    }
+
+    var mapOverlayView: some View {
+        EmptyView()
+    }
 }

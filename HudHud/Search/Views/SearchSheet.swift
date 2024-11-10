@@ -190,7 +190,9 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(sheetStore: self.sheetStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore) {
+                                    self.sheetStore.show(.favoritesViewMore(searchViewStore: self.searchStore))
+                                }
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)

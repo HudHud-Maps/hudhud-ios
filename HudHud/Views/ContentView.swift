@@ -75,6 +75,9 @@ struct ContentView: View {
         let mapLayerStore = HudHudMapLayerStore()
         self._mapLayerStore = StateObject(wrappedValue: mapLayerStore)
 
+        let favoritesStore = FavoritesStore()
+        self._favoritesStore = StateObject(wrappedValue: favoritesStore)
+
         let sheetStore = SheetStore(
             emptySheetType: .search,
             makeSheetProvider: sheetProviderBuilder(
@@ -83,6 +86,7 @@ struct ContentView: View {
                 mapStore: mapStore,
                 routesPlanMapDrawer: routesPlanMapDrawer,
                 hudhudMapLayerStore: mapLayerStore,
+                favoritesStore: favoritesStore,
                 routingStore: routingStore,
                 streetViewStore: streetViewStore
             )
@@ -168,16 +172,4 @@ private extension Binding where Value == Bool {
 
 #Preview {
     ContentView(userLocationStore: .storeSetUpForPreviewing)
-}
-
-// MARK: - EmptySheetProvider
-
-struct EmptySheetProvider: SheetProvider {
-    var sheetView: some View {
-        EmptyView()
-    }
-
-    var mapOverlayView: some View {
-        EmptyView()
-    }
 }

@@ -17,6 +17,7 @@ func sheetProviderBuilder(
     mapStore: MapStore,
     routesPlanMapDrawer: RoutesPlanMapDrawer,
     hudhudMapLayerStore: HudHudMapLayerStore,
+    favoritesStore: FavoritesStore,
     routingStore: RoutingStore,
     streetViewStore: StreetViewStore
 ) -> (SheetContext) -> any SheetProvider {
@@ -79,38 +80,21 @@ func sheetProviderBuilder(
             RoutePlannerSheetProvider(
                 routePlannerStore: routePlannerStore
             )
-        default:
-            EmptySheetProvider()
+        case let .favoritesViewMore(searchViewStore):
+            FavoritesViewMoreSheetProvider(
+                searchViewStore: searchViewStore,
+                favoritesStore: favoritesStore,
+                sheetStore: context.sheetStore
+            )
+        case let .editFavoritesForm(item, favoriteItem):
+            EditFavoritesFormSheetProvider(
+                favoritesStore: favoritesStore,
+                sheetStore: context.sheetStore,
+                item: item,
+                favoritesItem: favoriteItem
+            )
         }
     }
 }
 
 // swiftlint:enable function_parameter_count
-
-//                switch sheetType {
-//                case .favoritesViewMore:
-//                    return FavoritesViewMoreView(
-//                        searchStore: self.searchViewStore,
-//                        sheetStore: self.sheetStore,
-//                        favoritesStore: self.favoritesStore
-//                    )
-//                case let .editFavoritesForm(
-//                    item: item,
-//                    favoriteItem: favoriteItem
-//                ):
-//                    return EditFavoritesFormView(
-//                        item: item,
-//                        favoritesItem: favoriteItem,
-//                        favoritesStore: self.favoritesStore,
-//                        sheetStore: self.sheetStore
-//                    )
-//                case .search:
-//                    return SearchSheet(
-//                        mapStore: self.mapStore,
-//                        searchStore: self.searchViewStore,
-//                        trendingStore: self.trendingStore,
-//                        sheetStore: self.sheetStore,
-//                        filterStore: self.searchViewStore.filterStore
-//                    )
-//                }
-// }

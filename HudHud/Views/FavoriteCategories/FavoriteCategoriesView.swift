@@ -19,6 +19,7 @@ struct FavoriteCategoriesView: View {
     var sheetStore: SheetStore
 
     @ObservedObject var favoritesStore = FavoritesStore()
+    let onAdd: () -> Void
 
     // MARK: Content
 
@@ -36,11 +37,9 @@ struct FavoriteCategoriesView: View {
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
-                Button("Add") {
-                    self.sheetStore.show(.favoritesViewMore)
-                }
-                .hudhudFont(size: 12, fontWeight: .medium)
-                .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
+                Button("Add", action: self.onAdd)
+                    .hudhudFont(size: 12, fontWeight: .medium)
+                    .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
             }
             Spacer()
         }
@@ -76,7 +75,7 @@ struct FavoriteCategoriesView: View {
                     }
                 }
             }
-            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing)
+            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing) {}
         }
         .padding()
     }
