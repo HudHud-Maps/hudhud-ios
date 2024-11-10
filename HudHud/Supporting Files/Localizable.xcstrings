@@ -19,6 +19,9 @@
     "..." : {
 
     },
+    "·" : {
+
+    },
     "(%lld)" : {
 
     },
@@ -47,6 +50,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ in %lld m" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ in %2$lld m"
           }
         }
       }
@@ -343,6 +356,9 @@
     "Filters" : {
 
     },
+    "Finish" : {
+
+    },
     "From %@" : {
 
     },
@@ -447,6 +463,12 @@
       }
     },
     "Name" : {
+
+    },
+    "Navigation Settings" : {
+
+    },
+    "Navigation Settings Content" : {
 
     },
     "Nearby Trending" : {

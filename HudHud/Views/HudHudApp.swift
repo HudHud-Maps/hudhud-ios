@@ -14,6 +14,13 @@ import SwiftLocation
 import SwiftUI
 import TypographyKit
 
+// MARK: - AppDpendencies
+
+enum AppDpendencies {
+    static let navigationEngine = NavigationEngine(configuration: .default)
+    static let locationEngine = LocationEngine()
+}
+
 // MARK: - HudHudApp
 
 struct HudHudApp: App {
@@ -29,18 +36,22 @@ struct HudHudApp: App {
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
     @State private var routesPlanMapDrawer: RoutesPlanMapDrawer
+    @State private var navigationStore: NavigationStore
 
     // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
-            ContentView(searchViewStore: self.searchStore,
-                        mapViewStore: self.mapViewStore,
-                        sheetStore: self.sheetStore,
-                        routesPlanMapDrawer: self.routesPlanMapDrawer)
-                .onAppear {
-                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-                }
+            ContentView(
+                searchViewStore: self.searchStore,
+                mapViewStore: self.mapViewStore,
+                sheetStore: self.sheetStore,
+                routesPlanMapDrawer: self.routesPlanMapDrawer,
+                navigationStore: self.navigationStore
+            )
+            .onAppear {
+                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+            }
         }
     }
 
@@ -60,6 +71,12 @@ struct HudHudApp: App {
         self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
         self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
         self.mapStore = mapStore
+
+        self.navigationStore = NavigationStore(
+            navigationEngine: AppDpendencies.navigationEngine,
+            locationEngine: AppDpendencies.locationEngine,
+            routesPlanMapDrawer: routesPlanMapDrawer
+        )
 
         // Create a custom URLCache to store images on disk
         let diskCache = URLCache(

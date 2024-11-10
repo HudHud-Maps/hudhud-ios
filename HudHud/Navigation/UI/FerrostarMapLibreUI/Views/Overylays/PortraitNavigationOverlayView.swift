@@ -13,7 +13,10 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import SwiftUI
 
-struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableObject>: View, CustomizableNavigatingInnerGridView {
+// MARK: - PortraitNavigationOverlayView
+
+struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableObject>: View,
+CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -34,21 +37,20 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
     var showCentering: Bool
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
-
     let showMute: Bool
     let isMuted: Bool
     let onMute: () -> Void
 
-    private let navigationState: NavigationState?
+    var overlayStore: OverlayContentStore
 
-    @State private var isInstructionViewExpanded: Bool = false
-    @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+    @State private var instrcutionViewHeight: CGFloat = 140
 
     // MARK: Lifecycle
 
     init(
-        navigationState: NavigationState?,
+        overlayStore: OverlayContentStore,
         speedLimit: Measurement<UnitSpeed>? = nil,
         isMuted: Bool,
         showMute: Bool = true,
@@ -57,10 +59,9 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
         onZoomIn: @escaping () -> Void = {},
         onZoomOut: @escaping () -> Void = {},
         showCentering: Bool = false,
-        onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil
+        onCenter: @escaping () -> Void = {}
     ) {
-        self.navigationState = navigationState
+        self.overlayStore = overlayStore
         self.speedLimit = speedLimit
         self.isMuted = isMuted
         self.showMute = showMute
@@ -70,7 +71,6 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
-        self.onTapExit = onTapExit
     }
 
     // MARK: Content
@@ -79,6 +79,7 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
         ZStack(alignment: .top) {
             VStack {
                 Spacer()
+                    .frame(height: self.instrcutionViewHeight + self.safeAreaInsets.top)
 
                 // The inner content is displayed vertically full screen
                 // when both the visualInstructions and progress are nil.
@@ -106,21 +107,49 @@ struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableOb
                 } bottomLeading: {
                     self.bottomLeading?()
                 }
+                .padding(.horizontal, 16)
 
-                if case .navigating = self.navigationState?.tripState,
-                   let progress = navigationState?.currentProgress {
-                    ArrivalView(
-                        progress: progress,
-                        onTapExit: self.onTapExit
-                    )
+                if let progressView = overlayStore.content[.tripProgress] {
+                    progressView()
                 }
             }
-            .padding(.top, self.instructionsViewSizeWhenNotExpanded.height + 16)
 
-            if case .navigating = self.navigationState?.tripState,
-               let visualInstruction = navigationState?.currentVisualInstruction,
-               let progress = navigationState?.currentProgress,
-               let remainingSteps = navigationState?.remainingSteps {
+            if let instructionsView = overlayStore.content[.instructions] {
+                instructionsView()
+            }
+        }
+        .ignoresSafeArea(.all)
+    }
+}
+
+// MARK: - LegacyInstructionsView
+
+struct LegacyInstructionsView: View {
+
+    // MARK: Properties
+
+    @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
+    let navigationState: NavigationState
+
+    @State private var isInstructionViewExpanded: Bool = false
+    @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+    // MARK: Lifecycle
+
+    init(navigationState: NavigationState) {
+        self.navigationState = navigationState
+    }
+
+    // MARK: Content
+
+    var body: some View {
+        VStack {
+            if let visualInstruction = navigationState.currentVisualInstruction,
+               let progress = navigationState.currentProgress,
+               navigationState.isNavigating {
+                let remainingSteps = self.navigationState.remainingSteps
+
                 InstructionsView(
                     visualInstruction: visualInstruction,
                     distanceFormatter: self.formatterCollection.distanceFormatter,

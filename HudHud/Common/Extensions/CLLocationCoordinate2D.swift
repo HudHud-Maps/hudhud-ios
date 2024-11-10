@@ -36,3 +36,31 @@ extension CLLocationCoordinate2D {
         return from.distance(from: to)
     }
 }
+
+extension CLLocationDirection {
+    func isClose(to direction: CLLocationDirection, tolerance: CLLocationDirection = 45) -> Bool {
+        let diff = abs(self - direction)
+        return diff <= tolerance || diff >= (360 - tolerance)
+    }
+}
+
+extension CLLocationCoordinate2D {
+    func bearing(to coordinate: CLLocationCoordinate2D) -> CLLocationDirection {
+        let lat1 = self.latitude.degreesToRadians
+        let lon1 = self.longitude.degreesToRadians
+        let lat2 = coordinate.latitude.degreesToRadians
+        let lon2 = coordinate.longitude.degreesToRadians
+
+        let dLon = lon2 - lon1
+        let y = sin(dLon) * cos(lat2)
+        let x = cos(lat1) * sin(lat2) - sin(lat1) * cos(lat2) * cos(dLon)
+        let radiansBearing = atan2(y, x)
+
+        return (radiansBearing.radiansToDegrees + 360).truncatingRemainder(dividingBy: 360)
+    }
+}
+
+extension Double {
+    var degreesToRadians: Double { self * .pi / 180 }
+    var radiansToDegrees: Double { self * 180 / .pi }
+}

@@ -56,10 +56,18 @@ struct ContentView: View {
 
     @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
 
+    @State private var navigationStore: NavigationStore
+
     // MARK: Lifecycle
 
     @MainActor
-    init(searchViewStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
+    init(
+        searchViewStore: SearchViewStore,
+        mapViewStore: MapViewStore,
+        sheetStore: SheetStore,
+        routesPlanMapDrawer: RoutesPlanMapDrawer,
+        navigationStore: NavigationStore
+    ) {
         self.searchViewStore = searchViewStore
         self.sheetStore = sheetStore
         self.mapStore = searchViewStore.mapStore
@@ -67,9 +75,9 @@ struct ContentView: View {
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
         self.routesPlanMapDrawer = routesPlanMapDrawer
-        self.mapViewStore.streetViewStore = self.streetViewStore
+        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
+        self.navigationStore = navigationStore
     }
 
     // MARK: Content
@@ -78,6 +86,7 @@ struct ContentView: View {
         ZStack {
             MapViewContainer(
                 mapStore: self.mapStore,
+                navigationStore: self.navigationStore,
                 debugStore: self.debugStore,
                 searchViewStore: self.searchViewStore,
                 userLocationStore: self.userLocationStore,
@@ -233,7 +242,7 @@ struct ContentView: View {
             .ignoresSafeArea()
             .edgesIgnoringSafeArea(.all)
             .safeAreaInset(edge: .bottom) {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
+                if self.navigationStore.state.isNavigating == true || self.streetViewStore.streetViewScene != nil {
                     // hide interface during navigation and streetview
 
                 } else {
@@ -318,7 +327,7 @@ struct ContentView: View {
             })
 
             VStack {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
+                if self.navigationStore.state.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -444,7 +453,8 @@ private extension Binding where Value == Bool {
     ContentView(searchViewStore: .storeSetUpForPreviewing,
                 mapViewStore: .storeSetUpForPreviewing,
                 sheetStore: .storeSetUpForPreviewing,
-                routesPlanMapDrawer: RoutesPlanMapDrawer())
+                routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                navigationStore: .storeSetUpForPreviewing)
 }
 
 #Preview("Touch Testing") {
@@ -453,7 +463,8 @@ private extension Binding where Value == Bool {
     return ContentView(searchViewStore: store,
                        mapViewStore: .storeSetUpForPreviewing,
                        sheetStore: .storeSetUpForPreviewing,
-                       routesPlanMapDrawer: RoutesPlanMapDrawer())
+                       routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                       navigationStore: .storeSetUpForPreviewing)
 }
 
 #Preview("NavigationPreview") {
@@ -491,7 +502,8 @@ private extension Binding where Value == Bool {
     return ContentView(searchViewStore: searchViewStore,
                        mapViewStore: mapViewStore,
                        sheetStore: sheetStore,
-                       routesPlanMapDrawer: routesPlanMapDrawer)
+                       routesPlanMapDrawer: routesPlanMapDrawer,
+                       navigationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Preview
@@ -525,5 +537,18 @@ private extension Binding where Value == Bool {
     return ContentView(searchViewStore: store,
                        mapViewStore: .storeSetUpForPreviewing,
                        sheetStore: .storeSetUpForPreviewing,
-                       routesPlanMapDrawer: RoutesPlanMapDrawer())
+                       routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                       navigationStore: .storeSetUpForPreviewing)
+}
+
+// MARK: - NavigationStore + Previewable
+
+extension NavigationStore: Previewable {
+    static var storeSetUpForPreviewing: NavigationStore {
+        NavigationStore(
+            navigationEngine: NavigationEngine(configuration: .default),
+            locationEngine: LocationEngine(),
+            routesPlanMapDrawer: RoutesPlanMapDrawer()
+        )
+    }
 }
