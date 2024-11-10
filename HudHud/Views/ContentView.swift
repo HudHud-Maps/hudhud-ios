@@ -72,6 +72,9 @@ struct ContentView: View {
         let debugStore = DebugStore()
         self._debugStore = StateObject(wrappedValue: debugStore)
 
+        let mapLayerStore = HudHudMapLayerStore()
+        self._mapLayerStore = StateObject(wrappedValue: mapLayerStore)
+
         let sheetStore = SheetStore(
             emptySheetType: .search,
             makeSheetProvider: sheetProviderBuilder(
@@ -79,6 +82,7 @@ struct ContentView: View {
                 debugStore: debugStore,
                 mapStore: mapStore,
                 routesPlanMapDrawer: routesPlanMapDrawer,
+                hudhudMapLayerStore: mapLayerStore,
                 routingStore: routingStore,
                 streetViewStore: streetViewStore
             )

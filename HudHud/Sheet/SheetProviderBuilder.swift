@@ -16,6 +16,7 @@ func sheetProviderBuilder(
     debugStore: DebugStore,
     mapStore: MapStore,
     routesPlanMapDrawer: RoutesPlanMapDrawer,
+    hudhudMapLayerStore: HudHudMapLayerStore,
     routingStore: RoutingStore,
     streetViewStore: StreetViewStore
 ) -> (SheetContext) -> any SheetProvider {
@@ -50,6 +51,12 @@ func sheetProviderBuilder(
                     routesPlanMapDrawer: routesPlanMapDrawer,
                     destination: pointOfInterest
                 )
+            )
+        case .mapStyle:
+            MapLayersSheetProvider(
+                mapStore: mapStore,
+                sheetStore: context.sheetStore,
+                hudhudMapLayerStore: hudhudMapLayerStore
             )
         default:
             EmptySheetProvider()

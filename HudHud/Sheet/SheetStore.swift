@@ -137,6 +137,7 @@ extension SheetStore: Previewable {
             debugStore: DebugStore(),
             mapStore: .storeSetUpForPreviewing,
             routesPlanMapDrawer: RoutesPlanMapDrawer(),
+            hudhudMapLayerStore: HudHudMapLayerStore(),
             routingStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
@@ -148,6 +149,7 @@ extension SheetStore: Previewable {
             debugStore: DebugStore(),
             mapStore: .storeSetUpForPreviewing,
             routesPlanMapDrawer: RoutesPlanMapDrawer(),
+            hudhudMapLayerStore: HudHudMapLayerStore(),
             routingStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
