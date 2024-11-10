@@ -68,6 +68,13 @@ func sheetProviderBuilder(
                 sheetStore: context.sheetStore,
                 onAddItem: onAddItem
             )
+        case .favorites:
+            FavoritesSheetProvider(sheetStore: context.sheetStore)
+        case .navigationPreview:
+            NavigationPreviewSheetProvider(
+                sheetStore: context.sheetStore,
+                routingStore: routingStore
+            )
         default:
             EmptySheetProvider()
         }
@@ -77,69 +84,6 @@ func sheetProviderBuilder(
 // swiftlint:enable function_parameter_count
 
 //                switch sheetType {
-//                case .favorites:
-//                    // Initialize fresh instances of MapStore and SearchViewStore
-//                    let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-//                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
-//                    let freshSearchViewStore: SearchViewStore = {
-//                        let tempStore = SearchViewStore(
-//                            mapStore: freshMapStore,
-//                            sheetStore: SheetStore(emptySheetType: .search),
-//                            routingStore: freshRoutingStore,
-//                            filterStore: self.searchViewStore.filterStore,
-//                            mode: self.searchViewStore.mode
-//                        )
-//                        tempStore.searchType = .favorites
-//                        return tempStore
-//                    }()
-//                    return SearchSheet(
-//                        mapStore: freshSearchViewStore.mapStore,
-//                        searchStore: freshSearchViewStore,
-//                        trendingStore: self.trendingStore,
-//                        sheetStore: SheetStore(emptySheetType: .search),
-//                        filterStore: self.searchViewStore.filterStore
-//                    )
-//                case .navigationPreview:
-//                    return NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
-//                case let .pointOfInterest(item):
-//                    return POIDetailSheet(
-//                        pointOfInterestStore: PointOfInterestStore(
-//                            pointOfInterest: item,
-//                            mapStore: self.mapStore,
-//                            sheetStore: self.sheetStore
-//                        ), sheetStore: self.sheetStore,
-//                        routingStore: self.searchViewStore.routingStore,
-//                        didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
-//                    ) { routeIfAvailable in
-//                        Logger.searchView.info("Start item \(item)")
-//                        if self.debugStore.enableNewRoutePlanner {
-//                            self.sheetStore.show(.routePlanner(RoutePlannerStore(
-//                                sheetStore: self.sheetStore,
-//                                userLocationStore: self.userLocationStore,
-//                                mapStore: self.mapStore,
-//                                routingStore: self.searchViewStore.routingStore,
-//                                routesPlanMapDrawer: self.routesPlanMapDrawer,
-//                                destination: item
-//                            )))
-//                            return
-//                        }
-//                        Task {
-//                            do {
-//                                try await self.searchViewStore.routingStore.showRoutes(
-//                                    to: item,
-//                                    with: routeIfAvailable
-//                                )
-//                                try await self.notificationManager.requestAuthorization()
-//                                self.sheetStore.show(.navigationPreview)
-//                            } catch {
-//                                Logger.routing.error("Error navigating to \(item): \(error)")
-//                            }
-//                        }
-//                    } onDismiss: {
-//                        self.searchViewStore.mapStore
-//                            .clearItems(clearResults: false)
-//                        self.sheetStore.popSheet()
-//                    }
 //                case let .routePlanner(store):
 //                    return RoutePlannerView(routePlannerStore: store)
 //                case .favoritesViewMore:
