@@ -58,6 +58,11 @@ func sheetProviderBuilder(
                 sheetStore: context.sheetStore,
                 hudhudMapLayerStore: hudhudMapLayerStore
             )
+        case .debugView:
+            DebugMenuSheetProvider(
+                debugStore: debugStore,
+                sheetStore: context.sheetStore
+            )
         default:
             EmptySheetProvider()
         }
@@ -67,8 +72,6 @@ func sheetProviderBuilder(
 // swiftlint:enable function_parameter_count
 
 //                switch sheetType {
-//                case .mapStyle:
-//                    return MapLayersView(mapStore: self.mapStore, sheetStore: self.sheetStore, hudhudMapLayerStore: self.mapLayerStore)
 //                case .debugView:
 //                    return DebugMenuView(debugSettings: self.debugStore, sheetStore: self.sheetStore)
 ////                        .onDisappear(perform: {
