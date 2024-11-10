@@ -75,6 +75,10 @@ func sheetProviderBuilder(
                 sheetStore: context.sheetStore,
                 routingStore: routingStore
             )
+        case let .routePlanner(routePlannerStore):
+            RoutePlannerSheetProvider(
+                routePlannerStore: routePlannerStore
+            )
         default:
             EmptySheetProvider()
         }
@@ -84,8 +88,6 @@ func sheetProviderBuilder(
 // swiftlint:enable function_parameter_count
 
 //                switch sheetType {
-//                case let .routePlanner(store):
-//                    return RoutePlannerView(routePlannerStore: store)
 //                case .favoritesViewMore:
 //                    return FavoritesViewMoreView(
 //                        searchStore: self.searchViewStore,
