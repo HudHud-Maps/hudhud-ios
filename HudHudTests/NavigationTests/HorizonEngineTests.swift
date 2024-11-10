@@ -303,6 +303,24 @@ final class HorizonEngineTests: XCTestCase {
     // MARK: - Helper Setup Methods
 
     private func setupTestEnvironment() {
+        let testFeatureAlertConfig = FeatureAlertConfig(
+            speedCameraConfig: SpeedCameraAlertConfig(
+                initialAlertDistance: .init(value: 2, unit: .kilometers),
+                finalAlertDistance: .init(value: 200, unit: .meters),
+                alertRepeatInterval: 10
+            ),
+            trafficIncidentConfig: TrafficIncidentAlertConfig(
+                initialAlertDistance: .init(value: 2, unit: .kilometers),
+                finalAlertDistance: .init(value: 500, unit: .meters),
+                alertRepeatInterval: 10
+            ),
+            roadworkConfig: RoadworkAlertConfig(
+                initialAlertDistance: .init(value: 3, unit: .kilometers),
+                finalAlertDistance: .init(value: 1, unit: .kilometers),
+                alertRepeatInterval: 10
+            )
+        )
+
         let config = NavigationConfig(
             routeProvider: GraphHopperRouteProvider(),
             locationEngine: LocationEngine(),
@@ -311,7 +329,7 @@ final class HorizonEngineTests: XCTestCase {
             courseFiltering: .snapToRoute,
             horizonScanRange: .init(value: 2, unit: .kilometers),
             horizonUpdateInterval: 10,
-            featureAlertConfig: .default
+            featureAlertConfig: testFeatureAlertConfig
         )
 
         self.engine = HorizonEngine(configuration: config)
@@ -355,7 +373,7 @@ extension HorizonEngineTests {
 
     private func calculateCoordinate(atDistance meters: Double) -> CLLocationCoordinate2D {
         let camera = self.testRoute.speedCameras.first!.location
-        let bearing = 180.0 // approaching the forward-facing camera
+        let bearing = Direction.south.rawValue
         let earthRadius = 6_371_000.0
 
         let lat1 = camera.latitude * .pi / 180
