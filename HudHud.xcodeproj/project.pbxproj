@@ -347,6 +347,7 @@
 				CD3BCAD12CB6E402001F8CFD /* XCLocalSwiftPackageReference "StyleDictionary" */,
 				9E82F0542CCE69FC00F67DC5 /* XCRemoteSwiftPackageReference "ferrostar" */,
 				F55DC008148665D6245FC71F /* XCRemoteSwiftPackageReference "Pulse" */,
+				0C9A735B2CE1470A00988B68 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */,
 			);
 			productRefGroup = CDAE05452B681261003E5196 /* Products */;
 			projectDirPath = "";
@@ -787,6 +788,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.10.4;
+			};
+		};
+		0C9A735B2CE1470A00988B68 /* XCRemoteSwiftPackageReference "maplibre-gl-native-distribution" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/maplibre/maplibre-gl-native-distribution.git";
+			requirement = {
+				kind = exactVersion;
+				version = 6.7.1;
 			};
 		};
 		6AEAC587C5B6E1A1248F7E6D /* XCRemoteSwiftPackageReference "TouchVisualizer" */ = {
