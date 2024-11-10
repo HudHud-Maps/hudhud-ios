@@ -8,6 +8,7 @@
 
 import SwiftUI
 
+@MainActor
 protocol SheetProvider {
     associatedtype SheetView: View
     associatedtype MapOverlayView: View

@@ -29,7 +29,7 @@ struct ContentView: View {
 
     // MARK: Properties
 
-    @StateObject var debugStore = DebugStore()
+    @StateObject var debugStore: DebugStore
     @State var safariURL: URL?
 
     @StateObject var favoritesStore = FavoritesStore()
@@ -69,10 +69,16 @@ struct ContentView: View {
         let streetViewStore = StreetViewStore(mapStore: mapStore)
         self.streetViewStore = streetViewStore
 
+        let debugStore = DebugStore()
+        self._debugStore = StateObject(wrappedValue: debugStore)
+
         let sheetStore = SheetStore(
             emptySheetType: .search,
             makeSheetProvider: sheetProviderBuilder(
+                userLocationStore: userLocationStore,
+                debugStore: debugStore,
                 mapStore: mapStore,
+                routesPlanMapDrawer: routesPlanMapDrawer,
                 routingStore: routingStore,
                 streetViewStore: streetViewStore
             )

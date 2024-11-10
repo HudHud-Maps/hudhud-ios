@@ -133,7 +133,10 @@ extension SheetStore: Previewable {
     static let storeSetUpForPreviewing = SheetStore(
         emptySheetType: .search,
         makeSheetProvider: sheetProviderBuilder(
+            userLocationStore: .storeSetUpForPreviewing,
+            debugStore: DebugStore(),
             mapStore: .storeSetUpForPreviewing,
+            routesPlanMapDrawer: RoutesPlanMapDrawer(),
             routingStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
@@ -141,7 +144,10 @@ extension SheetStore: Previewable {
     static let storeSetUpForPreviewingPOI = SheetStore(
         emptySheetType: .pointOfInterest(.ketchup),
         makeSheetProvider: sheetProviderBuilder(
+            userLocationStore: .storeSetUpForPreviewing,
+            debugStore: DebugStore(),
             mapStore: .storeSetUpForPreviewing,
+            routesPlanMapDrawer: RoutesPlanMapDrawer(),
             routingStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )

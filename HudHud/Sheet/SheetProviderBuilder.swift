@@ -9,9 +9,13 @@
 import BackendService
 import Foundation
 
+// swiftlint:disable function_parameter_count
 @MainActor
 func sheetProviderBuilder(
+    userLocationStore: UserLocationStore,
+    debugStore: DebugStore,
     mapStore: MapStore,
+    routesPlanMapDrawer: RoutesPlanMapDrawer,
     routingStore: RoutingStore,
     streetViewStore: StreetViewStore
 ) -> (SheetContext) -> any SheetProvider {
@@ -30,11 +34,30 @@ func sheetProviderBuilder(
                 streetViewStore: streetViewStore,
                 trendingStore: TrendingStore()
             )
+        case let .pointOfInterest(pointOfInterest):
+            PointOfInterestSheetProvider(
+                pointOfInterest: pointOfInterest,
+                mapStore: mapStore,
+                sheetStore: context.sheetStore,
+                routingStore: routingStore,
+                userLocationStore: userLocationStore,
+                debugStore: debugStore,
+                routePlannerStore: RoutePlannerStore(
+                    sheetStore: context.sheetStore,
+                    userLocationStore: userLocationStore,
+                    mapStore: mapStore,
+                    routingStore: routingStore,
+                    routesPlanMapDrawer: routesPlanMapDrawer,
+                    destination: pointOfInterest
+                )
+            )
         default:
             EmptySheetProvider()
         }
     }
 }
+
+// swiftlint:enable function_parameter_count
 
 //                switch sheetType {
 //                case .mapStyle:
