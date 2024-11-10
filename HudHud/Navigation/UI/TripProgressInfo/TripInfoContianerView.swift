@@ -73,9 +73,12 @@ struct TripInfoContianerView: View {
                 )
         }
     }
+}
+
+private extension TripInfoContianerView {
 
     @ViewBuilder
-    private func content() -> some View {
+    func content() -> some View {
         VStack(spacing: 0) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(Color.Colors.General._02Grey.opacity(0.3))

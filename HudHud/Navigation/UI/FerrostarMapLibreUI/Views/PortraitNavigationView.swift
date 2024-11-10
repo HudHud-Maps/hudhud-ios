@@ -45,8 +45,6 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
 
     let isNavigating: Bool
 
-    // TODO: Configurable camera and user "puck" rotation modes
-
     private var navigationState: NavigationState?
     private let userLayers: [StyleLayerDefinition]
     private let locationManager: PassthroughLocationManager

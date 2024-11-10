@@ -78,10 +78,10 @@ final class HorizonEngineTests: XCTestCase {
         XCTAssertNotNil(self.engine)
     }
 
-    func testStartMonitoring() async {
+    func testStartMonitoring() async throws {
         self.engine.startMonitoring(route: self.testRoute)
 
-        let camera = self.testRoute.speedCameras.first!
+        let camera = try XCTUnwrap(self.testRoute.speedCameras.first)
 
         let approachLocation = CLLocation(
             coordinate: CLLocationCoordinate2D(
@@ -127,10 +127,11 @@ final class HorizonEngineTests: XCTestCase {
 
     // MARK: - Feature Detection Tests
 
-    func testTrafficIncidentDetection() async {
+    func testTrafficIncidentDetection() async throws {
         self.engine.startMonitoring(route: self.testRoute)
 
-        let incidentLocation = self.testRoute.incidents.first!.location
+        let incidentLocation = try XCTUnwrap(testRoute.incidents.first?.location)
+
         let locations = generateApproachLocations(to: incidentLocation)
 
         await processLocationsSequentially(locations)
@@ -139,11 +140,11 @@ final class HorizonEngineTests: XCTestCase {
         XCTAssertTrue(self.eventRecorder.hasEvent(ofType: .passedTrafficIncident))
     }
 
-    func testMultipleFeatureDetection() async {
+    func testMultipleFeatureDetection() async throws {
         self.engine.startMonitoring(route: self.testRoute)
 
-        let camera = self.testRoute.speedCameras.first!
-        let incident = self.testRoute.incidents.first!
+        let camera = try XCTUnwrap(self.testRoute.speedCameras.first)
+        let incident = try XCTUnwrap(self.testRoute.incidents.first)
 
         // to find position on route before both features
         let routeIndex = min(
@@ -188,20 +189,27 @@ final class HorizonEngineTests: XCTestCase {
     }
 
     func testDistanceBasedAlerts() {
-        self.engine.startMonitoring(route: self.testRoute)
-
         let locations = [
-            (distance: 2000.0, shouldAlert: false),
+            (distance: 3000.0, shouldAlert: false),
             (distance: 1500.0, shouldAlert: false),
             (distance: 900.0, shouldAlert: true),
-            (distance: 500.0, shouldAlert: false),
-            (distance: 100.0, shouldAlert: false),
-            (distance: 0.0, shouldAlert: false)
+            (distance: 500.0, shouldAlert: true),
+            (distance: 100.0, shouldAlert: true),
+            (distance: 10, shouldAlert: true)
         ]
 
         for (index, test) in locations.enumerated() {
+            self.engine = nil
+            self.testRoute = nil
+            self.eventRecorder = nil
+            self.setupTestEnvironment()
+
+            self.engine.startMonitoring(route: self.testRoute)
+
+            let coordinate = calculateCoordinate(atDistance: test.distance)
+
             let location = CLLocation(
-                coordinate: calculateCoordinate(atDistance: test.distance),
+                coordinate: coordinate,
                 altitude: 0,
                 horizontalAccuracy: 10,
                 verticalAccuracy: 10,
@@ -209,13 +217,10 @@ final class HorizonEngineTests: XCTestCase {
                 speed: 20,
                 timestamp: Date().addingTimeInterval(Double(index))
             )
-
-            self.eventRecorder.recordedEvents.removeAll()
             self.engine.processLocation(location)
 
             let expectation = XCTestExpectation(description: "Process location")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                print("Events received after processing: \(self.eventRecorder.recordedEvents)")
                 expectation.fulfill()
             }
             wait(for: [expectation], timeout: 1.0)
@@ -224,7 +229,12 @@ final class HorizonEngineTests: XCTestCase {
                 if case .approachingSpeedCamera = event { return true }
                 return false
             }
-            print("Alert detected: \(hasAlert) (Expected: \(test.shouldAlert))")
+
+            XCTAssertEqual(
+                hasAlert,
+                test.shouldAlert,
+                "At distance \(test.distance)m, alert should be \(test.shouldAlert)"
+            )
         }
     }
 
@@ -233,8 +243,8 @@ final class HorizonEngineTests: XCTestCase {
 
         let testLocation = CLLocation(
             coordinate: CLLocationCoordinate2D(
-                latitude: 25.202045,
-                longitude: 55.277876
+                latitude: 25.203045,
+                longitude: 55.274576
             ),
             altitude: 0,
             horizontalAccuracy: 10,
@@ -299,59 +309,17 @@ final class HorizonEngineTests: XCTestCase {
             )
         }
     }
-
-    // MARK: - Helper Setup Methods
-
-    private func setupTestEnvironment() {
-        let testFeatureAlertConfig = FeatureAlertConfig(
-            speedCameraConfig: SpeedCameraAlertConfig(
-                initialAlertDistance: .init(value: 2, unit: .kilometers),
-                finalAlertDistance: .init(value: 200, unit: .meters),
-                alertRepeatInterval: 10
-            ),
-            trafficIncidentConfig: TrafficIncidentAlertConfig(
-                initialAlertDistance: .init(value: 2, unit: .kilometers),
-                finalAlertDistance: .init(value: 500, unit: .meters),
-                alertRepeatInterval: 10
-            ),
-            roadworkConfig: RoadworkAlertConfig(
-                initialAlertDistance: .init(value: 3, unit: .kilometers),
-                finalAlertDistance: .init(value: 1, unit: .kilometers),
-                alertRepeatInterval: 10
-            )
-        )
-
-        let config = NavigationConfig(
-            routeProvider: GraphHopperRouteProvider(),
-            locationEngine: LocationEngine(),
-            stepAdvanceConfig: .default,
-            deviationConfig: .default,
-            courseFiltering: .snapToRoute,
-            horizonScanRange: .init(value: 2, unit: .kilometers),
-            horizonUpdateInterval: 10,
-            featureAlertConfig: testFeatureAlertConfig
-        )
-
-        self.engine = HorizonEngine(configuration: config)
-        self.testRoute = createTestRoute()
-        self.eventRecorder = EventRecorder()
-
-        self.engine.events
-            .sink { [weak eventRecorder] event in
-                eventRecorder?.recordedEvents.append(event)
-            }
-            .store(in: &self.eventRecorder.cancellables)
-    }
 }
 
-extension HorizonEngineTests {
+// swiftlint:disable force_unwrapping
+private extension HorizonEngineTests {
 
-    private func isMonotonicallyDecreasing(_ array: [Double]) -> Bool {
+    func isMonotonicallyDecreasing(_ array: [Double]) -> Bool {
         guard array.count > 1 else { return true }
         return zip(array, array.dropFirst()).allSatisfy(>)
     }
 
-    private func generateDistanceTestLocations(
+    func generateDistanceTestLocations(
         from start: Double,
         to end: Double,
         step: Double
@@ -371,7 +339,7 @@ extension HorizonEngineTests {
         }
     }
 
-    private func calculateCoordinate(atDistance meters: Double) -> CLLocationCoordinate2D {
+    func calculateCoordinate(atDistance meters: Double) -> CLLocationCoordinate2D {
         let camera = self.testRoute.speedCameras.first!.location
         let bearing = Direction.south.rawValue
         let earthRadius = 6_371_000.0
@@ -391,7 +359,7 @@ extension HorizonEngineTests {
         )
     }
 
-    private func generateApproachLocations(to target: CLLocationCoordinate2D) -> [CLLocation] {
+    func generateApproachLocations(to target: CLLocationCoordinate2D) -> [CLLocation] {
         let startLat = target.latitude - 0.01
         let startLon = target.longitude - 0.01
         let endLat = target.latitude + 0.01
@@ -419,7 +387,7 @@ extension HorizonEngineTests {
         }
     }
 
-    private func processLocationsSequentially(_ locations: [CLLocation]) async {
+    func processLocationsSequentially(_ locations: [CLLocation]) async {
         for location in locations {
             self.engine.processLocation(location)
             try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
@@ -427,32 +395,30 @@ extension HorizonEngineTests {
         try? await Task.sleep(nanoseconds: 500_000_000)
     }
 
-    private func createTestRoute() -> Route {
+    func createTestRoute() -> Route {
         let coordinates: [CLLocationCoordinate2D] = [
             CLLocationCoordinate2D(latitude: 25.195197, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.196245, longitude: 55.274376),
             CLLocationCoordinate2D(latitude: 25.197312, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.198156, longitude: 55.274376),
             CLLocationCoordinate2D(latitude: 25.199234, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.200187, longitude: 55.274376),
             CLLocationCoordinate2D(latitude: 25.201045, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.202123, longitude: 55.274376),
-
             CLLocationCoordinate2D(latitude: 25.203234, longitude: 55.274376),
-
-            CLLocationCoordinate2D(latitude: 25.204123, longitude: 55.274376),
             CLLocationCoordinate2D(latitude: 25.205234, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.206123, longitude: 55.274376),
             CLLocationCoordinate2D(latitude: 25.207234, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.208123, longitude: 55.274376),
-            CLLocationCoordinate2D(latitude: 25.209234, longitude: 55.274376)
+            CLLocationCoordinate2D(latitude: 25.209234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.211234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.213234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.215234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.217234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.219234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.221234, longitude: 55.274376),
+            CLLocationCoordinate2D(latitude: 25.223234, longitude: 55.274376)
         ]
 
         let route = Route(
             geometry: coordinates.map { GeographicCoordinate(lat: $0.latitude, lng: $0.longitude) },
             bbox: BoundingBox(
-                sw: .init(lat: coordinates.map(\.latitude).min()!, lng: coordinates.map(\.longitude).min()!),
-                ne: .init(lat: coordinates.map(\.latitude).max()!, lng: coordinates.map(\.longitude).max()!)
+                sw: GeographicCoordinate(lat: coordinates.map(\.latitude).min()!, lng: coordinates.map(\.longitude).min()!),
+                ne: GeographicCoordinate(lat: coordinates.map(\.latitude).max()!, lng: coordinates.map(\.longitude).max()!)
             ),
             distance: 2000,
             waypoints: [],
@@ -468,7 +434,7 @@ extension HorizonEngineTests {
                 description: "Test incident",
                 startTime: Date(),
                 endTime: Date().addingTimeInterval(3600),
-                length: .init(value: 500, unit: .meters),
+                length: .meters(500),
                 delayInSeconds: 300
             )
         ]
@@ -476,14 +442,57 @@ extension HorizonEngineTests {
         Route.mockSpeedCameras = [
             SpeedCamera(
                 id: "test-camera",
-                speedLimit: .init(value: 80, unit: .kilometersPerHour),
+                speedLimit: .kilometersPerHour(80),
                 type: .fixed,
                 direction: .forward,
-                captureRange: .init(value: 100, unit: .meters),
+                captureRange: .meters(100),
                 location: coordinates[8]
             )
         ]
 
         return route
     }
+
+    func setupTestEnvironment() {
+        let testFeatureAlertConfig = FeatureAlertConfig(
+            speedCameraConfig: SpeedCameraAlertConfig(
+                initialAlertDistance: .kilometers(1),
+                finalAlertDistance: .meters(200),
+                alertRepeatInterval: 10
+            ),
+            trafficIncidentConfig: TrafficIncidentAlertConfig(
+                initialAlertDistance: .kilometers(1.5),
+                finalAlertDistance: .meters(200),
+                alertRepeatInterval: 10
+            ),
+            roadworkConfig: RoadworkAlertConfig(
+                initialAlertDistance: .kilometers(3),
+                finalAlertDistance: .kilometers(1),
+                alertRepeatInterval: 10
+            )
+        )
+
+        let config = NavigationConfig(
+            routeProvider: GraphHopperRouteProvider(),
+            locationEngine: LocationEngine(),
+            stepAdvanceConfig: .default,
+            deviationConfig: .default,
+            courseFiltering: .snapToRoute,
+            horizonScanRange: .kilometers(2),
+            horizonUpdateInterval: 10,
+            featureAlertConfig: testFeatureAlertConfig
+        )
+
+        self.engine = HorizonEngine(configuration: config)
+        self.testRoute = self.createTestRoute()
+        self.eventRecorder = EventRecorder()
+
+        self.engine.events
+            .sink { [weak eventRecorder] event in
+                eventRecorder?.recordedEvents.append(event)
+            }
+            .store(in: &self.eventRecorder.cancellables)
+    }
 }
+
+// swiftlint:enable force_unwrapping

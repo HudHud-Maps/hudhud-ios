@@ -92,22 +92,21 @@ final class LocationEngine {
 
     func update(withSnaplocation location: CLLocation) {
         guard self.currentMode == .snapped else {
-            print("Location mode is not set to .snapped, skipping location update")
+            Logger.locationEngine.debug("Location mode is not set to .snapped, skipping location update")
             return
         }
-
         self.update(withLocation: location)
     }
+}
 
-    private func update(withLocation location: CLLocation) {
+private extension LocationEngine {
+    func update(withLocation location: CLLocation) {
         self.locationManager.updateLocation(location)
 
         self.eventsSubject.send(.locationUpdated(location))
     }
 
-    // MARK: - Private Methods
-
-    private func updateProvider(_ type: LocationProviderType, newProvider: LocationProviding) {
+    func updateProvider(_ type: LocationProviderType, newProvider: LocationProviding) {
         self.locationProvider.stopUpdating()
 
         self.currentType = type
@@ -117,7 +116,7 @@ final class LocationEngine {
         self.locationProvider.startUpdating()
     }
 
-    private func setupSubscriptions() {
+    func setupSubscriptions() {
         self.cancellables.removeAll()
 
         let publisher: Published<UserLocation?>.Publisher? = switch self.locationProvider {

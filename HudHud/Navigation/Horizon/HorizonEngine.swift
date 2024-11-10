@@ -81,8 +81,11 @@ final class HorizonEngine {
             self.processFeatures(scanResult, at: location)
         }
     }
+}
 
-    private func processFeatures(_ result: ScanResult, at _: CLLocation) {
+private extension HorizonEngine {
+    // swiftlint:disable:next cyclomatic_complexity
+    func processFeatures(_ result: ScanResult, at _: CLLocation) {
         NavigationLogger.beginScope("Process Features")
         defer { NavigationLogger.endScope() }
         NavigationLogger.beginScope("New Detections")
@@ -93,7 +96,7 @@ final class HorizonEngine {
                 let state = ActiveFeatureState(
                     feature: feature,
                     firstDetectedAt: Date(),
-                    lastDistance: .init(value: 0, unit: .meters),
+                    lastDistance: .meters(0),
                     hasAlerted: false
                 )
                 self.activeFeatures[feature.id] = state
@@ -186,7 +189,7 @@ final class HorizonEngine {
         }
     }
 
-    private func isDistanceChangeSignificant(
+    func isDistanceChangeSignificant(
         _ oldDistance: Measurement<UnitLength>,
         _ newDistance: Measurement<UnitLength>
     ) -> Bool {
@@ -225,9 +228,7 @@ enum RouteFeatureExtractor {
     }
 }
 
-import CoreLocation
 import FerrostarCore
-import FerrostarCoreFFI
 
 // MARK: - MockFeaturePlacer
 
@@ -287,7 +288,7 @@ struct MockFeaturePlacer {
         return PlacedFeatures(camera: camera, incident: incident)
     }
 
-    private func findLocationAtDistance(_ targetDistance: Double, lastDistance: Double? = nil, lastIndex: Int = 0) -> (CLLocationCoordinate2D, Int)? {
+    func findLocationAtDistance(_ targetDistance: Double, lastDistance: Double? = nil, lastIndex: Int = 0) -> (CLLocationCoordinate2D, Int)? {
         var coveredDistance = 0.0
         var startIndex = 0
 

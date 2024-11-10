@@ -29,7 +29,7 @@ final class HorizonScanner {
     private var activeFeatures: [String: HorizonFeature] = [:]
     private var lastLocation: CLLocationCoordinate2D?
     private var routeGeometry: [CLLocationCoordinate2D] = []
-    private let routerGeometryCalculator: RouteGeometryCalculator = .init(geometry: [])
+    private let routerGeometryCalculator = RouteGeometryCalculator(geometry: [])
 
     // MARK: Lifecycle
 
@@ -135,8 +135,10 @@ final class HorizonScanner {
             exitedFeatures: exitedFeatures
         )
     }
+}
 
-    private func isFeaturePassed(
+private extension HorizonScanner {
+    func isFeaturePassed(
         _: HorizonFeature,
         userPosition: RoutePosition,
         featurePosition: RoutePosition,
@@ -147,7 +149,7 @@ final class HorizonScanner {
             distance < LocationConstants.closeProximityThreshold
     }
 
-    private func calculateRouteDistance(
+    func calculateRouteDistance(
         from: CLLocationCoordinate2D,
         to: CLLocationCoordinate2D,
         featureId: String
@@ -171,7 +173,7 @@ final class HorizonScanner {
         return distance
     }
 
-    private func getAlertDistance(for feature: HorizonFeature) -> CLLocationDistance {
+    func getAlertDistance(for feature: HorizonFeature) -> CLLocationDistance {
         switch feature.type {
         case .speedCamera:
             return self.alertConfig.speedCameraConfig.initialAlertDistance.meters
@@ -182,7 +184,7 @@ final class HorizonScanner {
         }
     }
 
-    private func isFeatureRelevant(
+    func isFeatureRelevant(
         _ feature: HorizonFeature,
         userLocation: CLLocationCoordinate2D,
         userBearing: CLLocationDirection
@@ -201,7 +203,7 @@ final class HorizonScanner {
         }
     }
 
-    private func isCameraRelevant(
+    func isCameraRelevant(
         _ camera: SpeedCamera,
         userLocation: CLLocationCoordinate2D,
         userCourse: CLLocationDirection,
@@ -215,8 +217,6 @@ final class HorizonScanner {
         NavigationLogger.log("User Course: \(userCourse)°")
         NavigationLogger.log("User Location: (\(userLocation.latitude), \(userLocation.longitude))")
         NavigationLogger.log("Camera Location: (\(camera.location.latitude), \(camera.location.longitude))")
-
-//        let distance = self.calculateRouteDistance(from: userLocation, to: camera.location)
 
         switch camera.direction {
         case .forward:

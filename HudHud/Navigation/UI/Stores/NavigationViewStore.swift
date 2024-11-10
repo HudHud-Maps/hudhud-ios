@@ -50,7 +50,7 @@ final class NavigationStore {
     }
 
     enum Action {
-        case startNavigation
+        case startNavigation //
         case stopNavigation
         case toggleMute
     }
@@ -107,8 +107,11 @@ final class NavigationStore {
             self.state.isMuted.toggle()
         }
     }
+}
 
-    private func stopNavigation() {
+private extension NavigationStore {
+
+    func stopNavigation() {
         // capture state before stopping
         let isNavigating = self.state.status == .navigating
         let hasArrived = self.navigationState?.tripState.isComplete ?? false
@@ -124,11 +127,8 @@ final class NavigationStore {
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    private func reportIncorrectCamera(_: SpeedCamera) {}
-
-    private func satrtNavigation() {
+    func satrtNavigation() {
         guard let route = routesPlanMapDrawer.selectedRoute else {
-            print("No route selected")
             return
         }
 
@@ -143,7 +143,7 @@ final class NavigationStore {
         UIApplication.shared.isIdleTimerDisabled = true
     }
 
-    private func setupSubscriptions() {
+    func setupSubscriptions() {
         self.navigationEngine
             .events
             .receive(on: DispatchQueue.main)
@@ -160,7 +160,7 @@ final class NavigationStore {
             }.store(in: &self.cancellables)
     }
 
-    private func decideWhichLocationProviderToUse(route: Route, action: () throws -> Void) rethrows {
+    func decideWhichLocationProviderToUse(route: Route, action: () throws -> Void) rethrows {
         if DebugStore().simulateRide {
             // give a chance to camera movment
             self.locationEngine.switchToSimulated(route: route)
@@ -175,7 +175,7 @@ final class NavigationStore {
         }
     }
 
-    private func handleNavigationStateChange(_ newState: NavigationState) {
+    func handleNavigationStateChange(_ newState: NavigationState) {
         self.state.tripProgress = newState.tripState.currentProgress
         switch newState.tripState {
         case .idle:
@@ -187,7 +187,7 @@ final class NavigationStore {
         }
     }
 
-    private func handleNavigationEvent(_ event: NavigationEvent) {
+    func handleNavigationEvent(_ event: NavigationEvent) {
         switch event {
         case .navigationStarted:
             break
@@ -195,20 +195,20 @@ final class NavigationStore {
             break
         case let .stateChanged(navigationState):
             self.handleNavigationStateChange(navigationState)
-        case let .routeUpdated(newRoute):
+        case .routeUpdated:
             break
-        case let .stepChanged(newStep):
+        case .stepChanged:
             break
         case let .speedLimitChanged(speedLimit):
             self.state.speedLimit = speedLimit
         case let .snappedLocationUpdated(snappedLocation):
             break
         case let .error(error):
-            break
+            self.state.status = .failed
         }
     }
 
-    private func handleHorizonEvent(_ event: HorizionEvent) {
+    func handleHorizonEvent(_ event: HorizionEvent) {
         switch event {
         case let .approachingSpeedCamera(camera, distance):
             let speedCamAlertDistance = SpeedCameraAlertConfig.default.initialAlertDistance
@@ -223,11 +223,11 @@ final class NavigationStore {
                 )
             }
         case let .passedSpeedCamera(camera):
-            self.state.navigationAlert = nil
+            if self.state.navigationAlert?.id == camera.id {
+                self.state.navigationAlert = nil
+            }
 
-//            if state.navigationAlert?.id == camera.id {
-//
-//            }
+            self.state.navigationAlert = nil
         case let .approachingTrafficIncident(incident, distance):
             let incidentAlertDistance = TrafficIncidentAlertConfig.default.initialAlertDistance
             let progress = (1 - (distance.meters / incidentAlertDistance.meters)) * 100
@@ -242,7 +242,7 @@ final class NavigationStore {
             if self.state.navigationAlert?.id == incident.id {
                 self.state.navigationAlert = nil
             }
-        case let .enteredSpeedZone(limit):
+        case .enteredSpeedZone:
             break
         case .exitedSpeedZone:
             break

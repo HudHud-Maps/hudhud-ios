@@ -16,7 +16,7 @@ struct TripProgressView: View {
     let estimatedArrivalFormatter: Date.FormatStyle
     let durationFormatter: DateComponentsFormatter
     let isExpanded: Bool
-    let fromDate: Date = .init()
+    let fromDate = Date()
 
     private let tripProgress: TripProgress
     private let onAction: (ActiveTripInfoViewAction) -> Void

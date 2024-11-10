@@ -44,15 +44,14 @@ private struct RoutePreviewButton: View {
     // MARK: Content
 
     var body: some View {
-        Button(action: {
+        Button {
             self.onTap()
-        }) {
+        } label: {
             Image(.routePreviewIcon)
                 .frame(width: 56, height: 56)
                 .background(Color.Colors.General._03LightGrey)
                 .clipShape(Circle())
         }
-        .accessibilityLabel("Preview Route")
     }
 }
 
@@ -69,9 +68,9 @@ private struct FinishButton: View {
     // MARK: Content
 
     var body: some View {
-        Button(action: {
+        Button {
             self.action()
-        }) {
+        } label: {
             Text("Finish")
                 .hudhudFont(.callout)
                 .fontWeight(.semibold)

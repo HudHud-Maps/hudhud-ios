@@ -8,6 +8,7 @@
 
 import Foundation
 
+// swiftlint:disable print_usage
 enum NavigationLogger {
 
     // MARK: Nested Types
@@ -86,3 +87,5 @@ enum NavigationLogger {
         self.log(message, level: .success)
     }
 }
+
+// swiftlint:enable print_usage

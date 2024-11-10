@@ -23,7 +23,7 @@ struct NavigationConfig {
         stepAdvanceConfig: .default,
         deviationConfig: .default,
         courseFiltering: .snapToRoute,
-        horizonScanRange: .init(value: 1.5, unit: .kilometers),
+        horizonScanRange: .kilometers(1.5),
         horizonUpdateInterval: 10,
         featureAlertConfig: .default
     )
@@ -39,6 +39,17 @@ struct NavigationConfig {
     let horizonScanRange: Measurement<UnitLength>
     let horizonUpdateInterval: TimeInterval
     let featureAlertConfig: FeatureAlertConfig
+
+    // MARK: Functions
+
+    func toFerrostarConfig() -> SwiftNavigationControllerConfig {
+        SwiftNavigationControllerConfig(
+            stepAdvance: self.mapStepAdvanceConfig(),
+            routeDeviationTracking: self.mapDeviationConfig(),
+            snappedLocationCourseFiltering: self.courseFiltering
+        )
+    }
+
 }
 
 // MARK: - StepAdvanceConfig
@@ -106,8 +117,8 @@ struct SpeedCameraAlertConfig {
     // MARK: Static Properties
 
     static let `default` = SpeedCameraAlertConfig(
-        initialAlertDistance: .init(value: 1, unit: .kilometers),
-        finalAlertDistance: .init(value: 200, unit: .meters),
+        initialAlertDistance: .kilometers(1),
+        finalAlertDistance: .meters(200),
         alertRepeatInterval: 30
     )
 
@@ -125,8 +136,8 @@ struct TrafficIncidentAlertConfig {
     // MARK: Static Properties
 
     static let `default` = TrafficIncidentAlertConfig(
-        initialAlertDistance: .init(value: 1, unit: .kilometers),
-        finalAlertDistance: .init(value: 500, unit: .meters),
+        initialAlertDistance: .kilometers(1),
+        finalAlertDistance: .meters(500),
         alertRepeatInterval: 45
     )
 
@@ -144,8 +155,8 @@ struct RoadworkAlertConfig {
     // MARK: Static Properties
 
     static let `default` = RoadworkAlertConfig(
-        initialAlertDistance: .init(value: 3, unit: .kilometers),
-        finalAlertDistance: .init(value: 1, unit: .kilometers),
+        initialAlertDistance: .kilometers(3),
+        finalAlertDistance: .kilometers(1),
         alertRepeatInterval: 60
     )
 
@@ -156,16 +167,8 @@ struct RoadworkAlertConfig {
     let alertRepeatInterval: TimeInterval
 }
 
-extension NavigationConfig {
-    func toFerrostarConfig() -> SwiftNavigationControllerConfig {
-        SwiftNavigationControllerConfig(
-            stepAdvance: self.mapStepAdvanceConfig(),
-            routeDeviationTracking: self.mapDeviationConfig(),
-            snappedLocationCourseFiltering: self.courseFiltering
-        )
-    }
-
-    private func mapStepAdvanceConfig() -> StepAdvanceMode {
+private extension NavigationConfig {
+    func mapStepAdvanceConfig() -> StepAdvanceMode {
         switch self.stepAdvanceConfig {
         case .manual:
             return .manual
@@ -182,7 +185,7 @@ extension NavigationConfig {
         }
     }
 
-    private func mapDeviationConfig() -> SwiftRouteDeviationTracking {
+    func mapDeviationConfig() -> SwiftRouteDeviationTracking {
         switch self.deviationConfig {
         case .none:
             return .none
@@ -191,7 +194,7 @@ extension NavigationConfig {
                 minimumHorizontalAccuracy: accuracy,
                 maxAcceptableDeviation: deviation
             )
-        case let .custom(detector):
+        case .custom:
             return .none
         }
     }

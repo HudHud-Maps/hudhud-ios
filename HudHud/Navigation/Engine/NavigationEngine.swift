@@ -94,7 +94,7 @@ final class NavigationEngine {
 
     func startNavigation(route: Route) throws {
         self.activeRoute = route
-        try! self.ferrostarCore.startNavigation(route: route)
+        try self.ferrostarCore.startNavigation(route: route)
         self.locationEngine.swithcMode(to: .snapped)
         self.eventsSubject.send(.navigationStarted)
         self.horizonEngine.startMonitoring(route: route)
@@ -112,8 +112,10 @@ final class NavigationEngine {
     func toggleMute() {
         self.spokenInstructionObserver.toggleMute()
     }
+}
 
-    private func onStateChange(_ newState: NavigationState) {
+private extension NavigationEngine {
+    func onStateChange(_ newState: NavigationState) {
         if let snappedLocation = newState.tripState.navigationInfo?.location {
             self.useSnappedLocation(snappedLocation.clLocation)
             self.horizonEngine.processLocation(snappedLocation.clLocation)
@@ -121,18 +123,18 @@ final class NavigationEngine {
         self.eventsSubject.send(.stateChanged(newState))
     }
 
-    private func useSnappedLocation(_ newLocation: CLLocation) {
+    func useSnappedLocation(_ newLocation: CLLocation) {
         self.locationEngine.update(withSnaplocation: newLocation)
         self.eventsSubject.send(.snappedLocationUpdated(newLocation))
     }
 
-    private func setupFerrostarCore() {
+    func setupFerrostarCore() {
         self.ferrostarCore.delegate = self.navigationDelegate
         self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
         self.ferrostarCore.minimumTimeBeforeRecalculaton = 5
     }
 
-    private func observeFerrostarState() {
+    func observeFerrostarState() {
         self.ferrostarCore
             .objectWillChange
             .receive(on: DispatchQueue.main)
@@ -150,7 +152,7 @@ final class NavigationEngine {
             }.store(in: &self.cancellables)
     }
 
-    private func observeLocationEngineState() {
+    func observeLocationEngineState() {
         self.locationEngine.events
             .receive(on: DispatchQueue.main)
             .removeDuplicates()
@@ -160,14 +162,14 @@ final class NavigationEngine {
             .store(in: &self.cancellables)
     }
 
-    private func handleLocationEngineEvents(_ newEvent: LocationEngineEvent) {
+    func handleLocationEngineEvents(_ newEvent: LocationEngineEvent) {
         switch newEvent {
         case .locationUpdated:
             break
         case let .modeChanged(newMode):
-            print("Location engine mode changed to \(newMode)")
+            Logger.locationEngine.debug("Location engine mode changed to \(String(describing: newMode))")
         case let .providerChanged(newType):
-            print("Location engine mode changed to \(newType)")
+            Logger.locationEngine.debug("Location engine mode changed to \(String(describing: newType))")
             self.ferrostarCore = FerrostarCore(
                 customRouteProvider: self.configuration.routeProvider,
                 locationProvider: self.locationEngine.locationProvider,

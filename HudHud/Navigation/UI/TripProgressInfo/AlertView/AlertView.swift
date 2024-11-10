@@ -18,7 +18,7 @@ struct AlertView: View {
     let estimatedArrivalFormatter: Date.FormatStyle
     let durationFormatter: DateComponentsFormatter
     let isExpanded: Bool
-    let fromDate: Date = .init()
+    let fromDate = Date()
 
     private let tripProgress: TripProgress
     private let onAction: (ActiveTripInfoViewAction) -> Void
@@ -119,7 +119,7 @@ struct AlertView: View {
     body: {
         let id = UUID().uuidString
         TripInfoContianerView(
-            tripProgress: .init(
+            tripProgress: TripProgress(
                 distanceToNextManeuver: 100,
                 distanceRemaining: 1000,
                 durationRemaining: 1500
@@ -128,12 +128,14 @@ struct AlertView: View {
                 id: id,
                 progress: 10,
                 alertType: .speedCamera(
-                    .init(id: id,
-                          speedLimit: .kilometersPerHour(120),
-                          type: .fixed,
-                          direction: .forward,
-                          captureRange: .kilometers(20),
-                          location: .riyadh)
+                    SpeedCamera(
+                        id: id,
+                        speedLimit: .kilometersPerHour(120),
+                        type: .fixed,
+                        direction: .forward,
+                        captureRange: .kilometers(20),
+                        location: .riyadh
+                    )
                 ),
                 alertDistance: 900
             )

@@ -76,8 +76,6 @@ struct ContentView: View {
         self.routesPlanMapDrawer = routesPlanMapDrawer
         self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
         self.navigationStore = navigationStore
-
-        print("Initialized ContentView")
     }
 
     // MARK: Content
@@ -545,6 +543,10 @@ private extension Binding where Value == Bool {
 
 extension NavigationStore: Previewable {
     static var storeSetUpForPreviewing: NavigationStore {
-        .init(navigationEngine: .init(configuration: .default), locationEngine: .init(), routesPlanMapDrawer: .init())
+        NavigationStore(
+            navigationEngine: NavigationEngine(configuration: .default),
+            locationEngine: LocationEngine(),
+            routesPlanMapDrawer: RoutesPlanMapDrawer()
+        )
     }
 }

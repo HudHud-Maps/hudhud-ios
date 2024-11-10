@@ -61,19 +61,19 @@ struct TrafficIncident: Equatable, Identifiable {
 
     var isActive: Bool {
         let now = Date()
-        return now >= self.startTime && (self.endTime == nil || now <= self.endTime!)
+        return now >= self.startTime && (self.endTime == nil || now <= self.endTime ?? Date())
     }
 
     var alertDistance: Measurement<UnitLength> {
         switch self.severity {
         case .severe:
-            return .init(value: 3, unit: .kilometers)
+            return .kilometers(3)
         case .major:
-            return .init(value: 2, unit: .kilometers)
+            return .kilometers(2)
         case .moderate:
-            return .init(value: 1.5, unit: .kilometers)
+            return .kilometers(1.5)
         case .low:
-            return .init(value: 1, unit: .kilometers)
+            return .kilometers(1)
         }
     }
 }

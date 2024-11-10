@@ -126,6 +126,7 @@ final class LocationEngineTests: XCTestCase {
     }
 
     func test_passThroughManager_authorizationStatus() {
+        // swiftlint:disable:next force_cast
         let provider = self.sut.locationProvider as! CoreLocationProvider
         let initialStatus = provider.authorizationStatus
 
@@ -148,8 +149,8 @@ final class LocationEngineTests: XCTestCase {
 
 }
 
-extension LocationEngineTests {
-    private func assertNoLocationUpdate(
+private extension LocationEngineTests {
+    func assertNoLocationUpdate(
         _ description: String,
         timeout: TimeInterval = 0.5,
         file _: StaticString = #file,
@@ -170,7 +171,7 @@ extension LocationEngineTests {
         wait(for: [expectation], timeout: timeout)
     }
 
-    private func assertModeChange(
+    func assertModeChange(
         to expectedMode: LocationMode,
         file: StaticString = #file,
         line: UInt = #line
@@ -186,7 +187,7 @@ extension LocationEngineTests {
         XCTAssertEqual(self.sut.currentMode, expectedMode, file: file, line: line)
     }
 
-    private func assertProviderChange(
+    func assertProviderChange(
         to expectedType: LocationProviderType,
         file: StaticString = #file,
         line: UInt = #line,
@@ -203,7 +204,7 @@ extension LocationEngineTests {
         XCTAssertEqual(self.sut.currentType, expectedType, file: file, line: line)
     }
 
-    private func assertLocationUpdate(
+    func assertLocationUpdate(
         location: UserLocation,
         mode: LocationMode,
         file: StaticString = #file,
@@ -225,7 +226,7 @@ extension LocationEngineTests {
         XCTAssertEqual(self.sut.lastLocation?.coordinate.longitude, location.coordinates.lng, file: file, line: line)
     }
 
-    private func assertPassthroughManagerUpdate(
+    func assertPassthroughManagerUpdate(
         location: UserLocation,
         delegate: MockMLNLocationManagerDelegate,
         file: StaticString = #file,
@@ -252,7 +253,7 @@ extension LocationEngineTests {
         )
     }
 
-    private func assertPublishedEvent(
+    func assertPublishedEvent(
         description: String,
         expectedEventType: LocationEngineEvent,
         timeout: TimeInterval = 1.0,
@@ -274,19 +275,19 @@ extension LocationEngineTests {
         XCTAssertEqual(receivedEvent, expectedEventType, file: file, line: line)
     }
 
-    private func setupMockDelegate() -> MockMLNLocationManagerDelegate {
+    func setupMockDelegate() -> MockMLNLocationManagerDelegate {
         let delegate = MockMLNLocationManagerDelegate()
         self.sut.locationManager.delegate = delegate
         return delegate
     }
 
-    private func simulateRawLocationUpdate(_ location: UserLocation) {
+    func simulateRawLocationUpdate(_ location: UserLocation) {
         if let provider = sut.locationProvider as? CoreLocationProvider {
             provider.locationManager(CLLocationManager(), didUpdateLocations: [location.clLocation])
         }
     }
 
-    private func makeUserLocation(
+    func makeUserLocation(
         lat: Double = 37.7749,
         lng: Double = -122.4194,
         accuracy: Double = 10.0,

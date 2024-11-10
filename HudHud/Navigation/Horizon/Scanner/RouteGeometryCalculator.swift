@@ -8,6 +8,8 @@
 
 import CoreLocation
 
+// MARK: - RouteGeometryCalculator
+
 final class RouteGeometryCalculator {
 
     // MARK: Nested Types
@@ -53,7 +55,7 @@ final class RouteGeometryCalculator {
         let searchStart = max(0, lastPosition.index - 1)
         let searchEnd = min(geometry.count - 2, lastPosition.index + 1)
 
-        var bestPosition: RoutePosition? = nil
+        var bestPosition: RoutePosition?
         var minDistance = Double.infinity
 
         for i in searchStart ... searchEnd {
@@ -85,12 +87,8 @@ final class RouteGeometryCalculator {
     ) -> CLLocationDistance {
         let userPosition = self.findPosition(for: userLocation)
         let featurePosition = self.findPosition(for: featureLocation)
-//
-//        print("User position - index: \(userPosition.index), distance: \(userPosition.projectedDistance)")
-//        print("Feature position - index: \(featurePosition.index), distance: \(featurePosition.projectedDistance)")
 
         if featurePosition.isBefore(userPosition) {
-            print("Feature is behind user on route")
             return .infinity
         }
 
@@ -99,7 +97,6 @@ final class RouteGeometryCalculator {
         if userPosition.index == featurePosition.index {
             let segmentDistance = featurePosition.projectedDistance - userPosition.projectedDistance
             if segmentDistance < 0 {
-                print("Feature is behind user on same segment")
                 return .infinity
             }
             distance = segmentDistance
@@ -142,8 +139,11 @@ final class RouteGeometryCalculator {
 
         return userPosition.isBefore(featurePosition)
     }
+}
 
-    private func findClosestSegment(for point: CLLocationCoordinate2D) -> RoutePosition {
+private extension RouteGeometryCalculator {
+
+    func findClosestSegment(for point: CLLocationCoordinate2D) -> RoutePosition {
         var minDistance = Double.infinity
         var bestPosition = RoutePosition(index: 0, projectedDistance: 0)
 
@@ -164,7 +164,7 @@ final class RouteGeometryCalculator {
 
     // MARK: - Private Methods
 
-    private func updateSegmentCache() {
+    func updateSegmentCache() {
         guard !self.geometry.isEmpty else {
             return
         }
@@ -184,19 +184,19 @@ final class RouteGeometryCalculator {
         }
     }
 
-    private func getUpcomingSegments(from index: Int, count: Int) -> [RouteSegment] {
+    func getUpcomingSegments(from index: Int, count: Int) -> [RouteSegment] {
         guard index < self.cachedSegments.count else { return [] }
         let endIndex = min(index + count, self.cachedSegments.count)
         return Array(self.cachedSegments[index ..< endIndex])
     }
 
-    private func calculateAverageBearing(segments: [RouteSegment]) -> Double {
+    func calculateAverageBearing(segments: [RouteSegment]) -> Double {
         guard !segments.isEmpty else { return 0 }
         let totalBearing = segments.reduce(0.0) { $0 + $1.bearing }
         return totalBearing / Double(segments.count)
     }
 
-    private func distanceToLineSegment(
+    func distanceToLineSegment(
         point: CLLocationCoordinate2D,
         start: CLLocationCoordinate2D,
         end: CLLocationCoordinate2D
@@ -230,7 +230,7 @@ final class RouteGeometryCalculator {
         return (distance, projectedDistance)
     }
 
-    private func dot(
+    func dot(
         _ point: CLLocationCoordinate2D,
         _ start: CLLocationCoordinate2D,
         _ end: CLLocationCoordinate2D
@@ -242,7 +242,7 @@ final class RouteGeometryCalculator {
         return px * ex + py * ey
     }
 
-    private func interpolate(
+    func interpolate(
         start: CLLocationCoordinate2D,
         end: CLLocationCoordinate2D,
         t: Double

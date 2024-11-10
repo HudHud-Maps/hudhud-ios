@@ -25,13 +25,13 @@ struct SpeedCamera: Equatable, Hashable {
     var alertDistance: Measurement<UnitLength> {
         switch self.type {
         case .averageSpeed:
-            return .init(value: 2, unit: .kilometers) // usally 2km for average speed zones. check it with BE
+            return .kilometers(2) // usally 2km for average speed zones. check it with BE
         case .combined:
-            return .init(value: 1.5, unit: .kilometers) // 1.5km for combined cameras
+            return .kilometers(1.5) // 1.5km for combined cameras
         case .redLight:
-            return .init(value: 500, unit: .meters) // 500m for red light cameras
+            return .meters(500) // 500m for red light cameras
         default:
-            return .init(value: 1, unit: .kilometers) // 1km for standard speed cameras
+            return .kilometers(1) // 1km for standard speed cameras
         }
     }
 

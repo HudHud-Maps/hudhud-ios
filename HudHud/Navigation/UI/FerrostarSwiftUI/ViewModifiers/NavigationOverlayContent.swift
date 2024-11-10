@@ -27,7 +27,7 @@ public extension NavigationOverlayContent {
         _ zone: NavigationOverlayZone,
         @ViewBuilder content: @escaping () -> some View
     ) -> Self {
-        var newSelf = self
+        let newSelf = self
         newSelf.overlayStore.content[zone] = { AnyView(content()) }
         return newSelf
     }
