@@ -248,6 +248,9 @@
     "Create Account" : {
 
     },
+    "Current Environment" : {
+
+    },
     "Customers Rating" : {
 
     },
@@ -309,9 +312,6 @@
     "Enable location in permissions" : {
 
     },
-    "Enable new Route Planner design" : {
-
-    },
     "Enable Touch Visualizer" : {
 
     },
@@ -319,6 +319,12 @@
 
     },
     "Enter your Verification Code" : {
+
+    },
+    "Environment" : {
+
+    },
+    "Experimental Features" : {
 
     },
     "Fastest" : {
@@ -340,6 +346,12 @@
           }
         }
       }
+    },
+    "Feature Toggles" : {
+
+    },
+    "Features" : {
+
     },
     "Filters" : {
 
@@ -542,9 +554,6 @@
       "comment" : "Reviews Tab in POI Details"
     },
     "Reviews (%lld)" : {
-
-    },
-    "Route Planner" : {
 
     },
     "Routing Configuration" : {
