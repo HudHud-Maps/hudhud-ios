@@ -253,7 +253,7 @@ struct MockFeaturePlacer {
 
     func placeFeatures() -> PlacedFeatures {
         let cameraDistance = (minCameraDistance + self.maxCameraDistance) / 2
-        guard let cameraLocation = findLocationAtDistance(cameraDistance) else {
+        guard let (cameraLocation, cameraLocationIndex) = findLocationAtDistance(cameraDistance) else {
             return PlacedFeatures(camera: nil, incident: nil)
         }
 
@@ -268,7 +268,7 @@ struct MockFeaturePlacer {
 
         let incidentDistance = cameraDistance + self.incidentCameraSpacing
         guard self.routeLength >= incidentDistance,
-              let incidentLocation = findLocationAtDistance(incidentDistance) else {
+              let (incidentLocation, _) = findLocationAtDistance(incidentDistance, lastDistance: cameraDistance, lastIndex: cameraLocationIndex) else {
             return PlacedFeatures(camera: camera, incident: nil)
         }
 
@@ -287,12 +287,18 @@ struct MockFeaturePlacer {
         return PlacedFeatures(camera: camera, incident: incident)
     }
 
-    private func findLocationAtDistance(_ targetDistance: Double) -> CLLocationCoordinate2D? {
+    private func findLocationAtDistance(_ targetDistance: Double, lastDistance: Double? = nil, lastIndex: Int = 0) -> (CLLocationCoordinate2D, Int)? {
         var coveredDistance = 0.0
+        var startIndex = 0
 
         guard targetDistance <= self.routeLength, targetDistance > 0 else { return nil }
 
-        for i in 0 ..< (self.geometry.count - 1) {
+        if let lastDistance {
+            coveredDistance = lastDistance
+            startIndex = lastIndex
+        }
+
+        for i in startIndex ..< (self.geometry.count - 1) {
             let currentPoint = self.geometry[i]
             let nextPoint = self.geometry[i + 1]
 
@@ -307,7 +313,7 @@ struct MockFeaturePlacer {
                 let lat = currentPoint.latitude + (nextPoint.latitude - currentPoint.latitude) * segmentProgress
                 let lon = currentPoint.longitude + (nextPoint.longitude - currentPoint.longitude) * segmentProgress
 
-                return CLLocationCoordinate2D(latitude: lat, longitude: lon)
+                return (CLLocationCoordinate2D(latitude: lat, longitude: lon), i)
             }
 
             coveredDistance += segmentLength

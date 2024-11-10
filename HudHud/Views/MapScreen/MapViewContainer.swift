@@ -231,10 +231,6 @@ private extension MapViewContainer {
             ).layers
         }
 
-        if let selctedRoute = routesPlanMapDrawer.selectedRoute {
-            layers += makeCongestionLayers(for: [selctedRoute])
-        }
-
         if let alert = navigationStore.state.navigationAlert {
             layers += [
                 SymbolStyleLayer(
@@ -244,7 +240,6 @@ private extension MapViewContainer {
                     }
                 )
                 .iconImage(alert.alertType.mapIcon)
-//                .iconColor(.red)
             ]
         }
         return layers
