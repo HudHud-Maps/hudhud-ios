@@ -51,6 +51,9 @@ final class NavigationEngine {
     private let configuration: NavigationConfig
     private let horizonEngine: HorizonEngine
 
+    @ObservationIgnored
+    @Feature(.safetyCamsAndAlerts) private var enbaleSafetyCamsAndAccidents: Bool
+
     // MARK: Computed Properties
 
     var events: AnyPublisher<NavigationEvent, Never> {
@@ -97,7 +100,9 @@ final class NavigationEngine {
         try self.ferrostarCore.startNavigation(route: route)
         self.locationEngine.swithcMode(to: .snapped)
         self.eventsSubject.send(.navigationStarted)
-        self.horizonEngine.startMonitoring(route: route)
+        if self.enbaleSafetyCamsAndAccidents {
+            self.horizonEngine.startMonitoring(route: route)
+        }
     }
 
     func stopNavigation() {
@@ -106,7 +111,10 @@ final class NavigationEngine {
         self.state = nil
         self.eventsSubject.send(.navigationEnded)
         self.locationEngine.swithcMode(to: .raw)
-        self.horizonEngine.stopMonitoring()
+
+        if self.enbaleSafetyCamsAndAccidents {
+            self.horizonEngine.stopMonitoring()
+        }
     }
 
     func toggleMute() {
