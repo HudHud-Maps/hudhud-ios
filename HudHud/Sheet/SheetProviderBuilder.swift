@@ -25,7 +25,7 @@ func sheetProviderBuilder(
     { context in
         switch context.sheetType {
         case .search:
-            SearchSheetProvider(
+            return SearchSheetProvider(
                 sheetStore: context.sheetStore,
                 searchViewStore: SearchViewStore(
                     mapStore: mapStore,
@@ -38,7 +38,7 @@ func sheetProviderBuilder(
                 navigationStore: navigationStore
             )
         case let .pointOfInterest(pointOfInterest):
-            PointOfInterestSheetProvider(
+            return PointOfInterestSheetProvider(
                 pointOfInterest: pointOfInterest,
                 mapStore: mapStore,
                 sheetStore: context.sheetStore,
@@ -55,40 +55,41 @@ func sheetProviderBuilder(
                 )
             )
         case .mapStyle:
-            MapLayersSheetProvider(
+            return MapLayersSheetProvider(
                 mapStore: mapStore,
                 sheetStore: context.sheetStore,
                 hudhudMapLayerStore: hudhudMapLayerStore
             )
         case .debugView:
-            DebugMenuSheetProvider(
+            return DebugMenuSheetProvider(
                 debugStore: debugStore,
                 sheetStore: context.sheetStore
             )
         case let .navigationAddSearchView(onAddItem):
-            AddPOIToRouteProvider(
+            return AddPOIToRouteProvider(
                 sheetStore: context.sheetStore,
                 onAddItem: onAddItem
             )
         case .favorites:
-            FavoritesSheetProvider(sheetStore: context.sheetStore)
+            return FavoritesSheetProvider(sheetStore: context.sheetStore)
         case .navigationPreview:
-            NavigationPreviewSheetProvider(
+            return NavigationPreviewSheetProvider(
                 sheetStore: context.sheetStore,
                 routingStore: routingStore
             )
         case let .routePlanner(routePlannerStore):
-            RoutePlannerSheetProvider(
+            routePlannerStore.sheetDetentPublisher = context.detentData
+            return RoutePlannerSheetProvider(
                 routePlannerStore: routePlannerStore
             )
         case let .favoritesViewMore(searchViewStore):
-            FavoritesViewMoreSheetProvider(
+            return FavoritesViewMoreSheetProvider(
                 searchViewStore: searchViewStore,
                 favoritesStore: favoritesStore,
                 sheetStore: context.sheetStore
             )
         case let .editFavoritesForm(item, favoriteItem):
-            EditFavoritesFormSheetProvider(
+            return EditFavoritesFormSheetProvider(
                 favoritesStore: favoritesStore,
                 sheetStore: context.sheetStore,
                 item: item,

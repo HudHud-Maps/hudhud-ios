@@ -34,6 +34,14 @@ final class RoutePlannerStore {
     private var routeMapEventSubscription: AnyCancellable?
     private let rowHeight: CGFloat = 56 + 6
 
+    // MARK: Computed Properties
+
+    var sheetDetentPublisher: CurrentValueSubject<DetentData, Never>? {
+        didSet {
+            updateHeight()
+        }
+    }
+
     // MARK: Lifecycle
 
     init(
@@ -114,7 +122,7 @@ private extension RoutePlannerStore {
             let padding: CGFloat = 16
             height = buttonHeight + listHeight + addStopHeight + padding
         }
-        self.sheetStore.currentSheet.detentData.value = DetentData(
+        self.sheetDetentPublisher?.value = DetentData(
             selectedDetent: .height(height),
             allowedDetents: [.height(height)]
         )
