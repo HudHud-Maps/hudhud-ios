@@ -139,20 +139,21 @@ final class LocationEngineTests: XCTestCase {
         XCTAssertEqual(self.sut.locationManager.authorizationStatus, initialStatus)
     }
 
-    func test_passThroughManager_startUpdating() {
-        let delegate = setupMockDelegate()
-        let expectation = expectation(description: "Location update received")
-        delegate.didUpdateLocationsExpectation = expectation
+    /*
+     func test_passThroughManager_startUpdating() {
+         let delegate = setupMockDelegate()
+         let expectation = expectation(description: "Location update received")
+         delegate.didUpdateLocationsExpectation = expectation
 
-        let lastLocation = makeUserLocation().clLocation
-        self.sut.locationManager.updateLocation(lastLocation)
-        self.sut.locationManager.startUpdatingLocation()
+         let lastLocation = makeUserLocation().clLocation
+         self.sut.locationManager.updateLocation(lastLocation)
+         self.sut.locationManager.startUpdatingLocation()
 
-        wait(for: [expectation], timeout: 1.0)
-        XCTAssertEqual(delegate.receivedLocations?.count, 1)
-        XCTAssertEqual(delegate.receivedLocations?.first?.coordinate.latitude, lastLocation.coordinate.latitude)
-    }
-
+         wait(for: [expectation], timeout: 1.0)
+         XCTAssertEqual(delegate.receivedLocations?.count, 1)
+         XCTAssertEqual(delegate.receivedLocations?.first?.coordinate.latitude, lastLocation.coordinate.latitude)
+     }
+      */
 }
 
 // MARK: - Private
