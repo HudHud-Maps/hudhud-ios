@@ -33,14 +33,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		CD0C78572CE1F0E40020EE44 /* PBXContainerItemProxy */ = {
+		CDAE05552B681263003E5196 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CDAE053C2B681261003E5196 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CDAE05432B681261003E5196;
 			remoteInfo = HudHud;
 		};
-		CDAE05552B681263003E5196 /* PBXContainerItemProxy */ = {
+		CDAE055F2B681263003E5196 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = CDAE053C2B681261003E5196 /* Project object */;
 			proxyType = 1;
@@ -72,20 +72,13 @@
 			);
 			target = CDAE05432B681261003E5196 /* HudHud */;
 		};
-		CD0C785C2CE1F1130020EE44 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Extensions/CLLocationCoordinate2D.swift,
-			);
-			target = CDAE055D2B681263003E5196 /* HudHudUITests */;
-		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		0C9A57452CDF31BF00988B68 /* Navigation */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Navigation; sourceTree = "<group>"; };
 		0C9A579A2CDF31E300988B68 /* RoutePlanner */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RoutePlanner; sourceTree = "<group>"; };
 		0C9A57AD2CDF31E300988B68 /* LocationEngine */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = LocationEngine; sourceTree = "<group>"; };
-		0C9A57CD2CDF31E300988B68 /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (CD0C785C2CE1F1130020EE44 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
+		0C9A57CD2CDF31E300988B68 /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
 		0C9A57F22CDF31E300988B68 /* Model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Model; sourceTree = "<group>"; };
 		0C9A58052CDF31E300988B68 /* UIStyle */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UIStyle; sourceTree = "<group>"; };
 		0C9A580D2CDF31E300988B68 /* Enums */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Enums; sourceTree = "<group>"; };
@@ -226,6 +219,7 @@
 			dependencies = (
 				0C9A66072CE0C4DF00988B68 /* PBXTargetDependency */,
 				CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */,
+				8901798B9586A659D2EFC8E0 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				0C9A57452CDF31BF00988B68 /* Navigation */,
@@ -297,7 +291,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				CD0C78582CE1F0E40020EE44 /* PBXTargetDependency */,
+				CDAE05602B681263003E5196 /* PBXTargetDependency */,
 			);
 			name = HudHudUITests;
 			productName = HudHudUITests;
@@ -449,10 +443,8 @@
 			isa = PBXTargetDependency;
 			productRef = 0C9A66062CE0C4DF00988B68 /* SwiftLint */;
 		};
-		CD0C78582CE1F0E40020EE44 /* PBXTargetDependency */ = {
+		8901798B9586A659D2EFC8E0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CDAE05432B681261003E5196 /* HudHud */;
-			targetProxy = CD0C78572CE1F0E40020EE44 /* PBXContainerItemProxy */;
 		};
 		CD3BCADB2CB6F1B8001F8CFD /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -462,6 +454,11 @@
 			isa = PBXTargetDependency;
 			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE05552B681263003E5196 /* PBXContainerItemProxy */;
+		};
+		CDAE05602B681263003E5196 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CDAE05432B681261003E5196 /* HudHud */;
+			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 

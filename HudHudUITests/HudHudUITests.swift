@@ -53,3 +53,17 @@ extension XCUIApplication {
         XCUIApplication.springboard.alerts[contains: "Hudhud"].buttons.element(boundBy: 1).tap()
     }
 }
+
+extension CLLocation {
+
+    static func coordinate(_ coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance = 0) -> CLLocation {
+        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: .now)
+    }
+
+    static let theGarage: CLLocation = .coordinate(.theGarage, altitude: 647)
+}
+
+extension CLLocationCoordinate2D {
+
+    static let theGarage = CLLocationCoordinate2D(latitude: 24.7193306, longitude: 46.6468)
+}

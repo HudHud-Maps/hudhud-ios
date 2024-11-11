@@ -28,9 +28,8 @@ final class LocationEngineTests: XCTestCase {
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
-        self.sut = LocationEngine()
+        self.sut = LocationEngine(type: .standard)
         self.cancellables = []
-        DebugStore().simulateRide = false
     }
 
     override func tearDown() {
@@ -41,15 +40,13 @@ final class LocationEngineTests: XCTestCase {
 
     // MARK: Functions
 
-    /*
-     func test_initialState() {
-         XCTAssertTrue(self.sut.locationProvider is CoreLocationProvider)
-         XCTAssertEqual(self.sut.currentType, .standard)
-         XCTAssertFalse(self.sut.isSimulatingLocation)
-         XCTAssertEqual(self.sut.currentMode, .raw)
-         XCTAssertNil(self.sut.lastLocation)
-     }
-      */
+    func test_initialState() {
+        XCTAssertTrue(self.sut.locationProvider is CoreLocationProvider)
+        XCTAssertEqual(self.sut.currentType, .standard)
+        XCTAssertFalse(self.sut.isSimulatingLocation)
+        XCTAssertEqual(self.sut.currentMode, .raw)
+        XCTAssertNil(self.sut.lastLocation)
+    }
 
     func test_switchMode_emitsCorrectEvent() {
         assertModeChange(to: .snapped)
@@ -113,23 +110,23 @@ final class LocationEngineTests: XCTestCase {
     }
 
     /*
-     func test_snappedLocationUpdate_ignoredInRawMode() {
-         let location = makeUserLocation()
+      func test_snappedLocationUpdate_ignoredInRawMode() {
+          let location = makeUserLocation()
 
-         assertNoLocationUpdate("No location update in raw mode") {
-             self.sut.update(withSnaplocation: location.clLocation)
+          assertNoLocationUpdate("No location update in raw mode") {
+              self.sut.update(withSnaplocation: location.clLocation)
+          }
+      }
+
+     func test_passThroughManager_delegateNotification() {
+         let location = makeUserLocation()
+         let delegate = setupMockDelegate()
+
+         assertPassthroughManagerUpdate(location: location, delegate: delegate) { _ in
+             simulateRawLocationUpdate(location)
          }
      }
       */
-
-    func test_passThroughManager_delegateNotification() {
-        let location = makeUserLocation()
-        let delegate = setupMockDelegate()
-
-        assertPassthroughManagerUpdate(location: location, delegate: delegate) { _ in
-            simulateRawLocationUpdate(location)
-        }
-    }
 
     func test_passThroughManager_authorizationStatus() {
         // swiftlint:disable:next force_cast
@@ -139,21 +136,19 @@ final class LocationEngineTests: XCTestCase {
         XCTAssertEqual(self.sut.locationManager.authorizationStatus, initialStatus)
     }
 
-    /*
-     func test_passThroughManager_startUpdating() {
-         let delegate = setupMockDelegate()
-         let expectation = expectation(description: "Location update received")
-         delegate.didUpdateLocationsExpectation = expectation
+    func test_passThroughManager_startUpdating() {
+        let delegate = setupMockDelegate()
+        let expectation = expectation(description: "Location update received")
+        delegate.didUpdateLocationsExpectation = expectation
 
-         let lastLocation = makeUserLocation().clLocation
-         self.sut.locationManager.updateLocation(lastLocation)
-         self.sut.locationManager.startUpdatingLocation()
+        let lastLocation = makeUserLocation().clLocation
+        self.sut.locationManager.updateLocation(lastLocation)
+        self.sut.locationManager.startUpdatingLocation()
 
-         wait(for: [expectation], timeout: 1.0)
-         XCTAssertEqual(delegate.receivedLocations?.count, 1)
-         XCTAssertEqual(delegate.receivedLocations?.first?.coordinate.latitude, lastLocation.coordinate.latitude)
-     }
-      */
+        wait(for: [expectation], timeout: 1.0)
+        XCTAssertEqual(delegate.receivedLocations?.count, 1)
+        XCTAssertEqual(delegate.receivedLocations?.first?.coordinate.latitude, lastLocation.coordinate.latitude)
+    }
 }
 
 // MARK: - Private
