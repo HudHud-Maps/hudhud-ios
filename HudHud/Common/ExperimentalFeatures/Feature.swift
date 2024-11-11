@@ -7,43 +7,32 @@
 //
 
 import Foundation
+import UIKit
 
 @propertyWrapper
-struct Feature<T> {
+struct Feature {
 
     // MARK: Properties
 
     private let feature: ExperimentalFeature
-    private let defaultValue: T
-    private let allowedEnvironments: Set<AppEnvironment>
+    private let defaultValue: Bool
 
     // MARK: Computed Properties
 
-    var wrappedValue: T {
+    var wrappedValue: Bool {
         get {
             let store = ExperimentalFeatureStore.shared
-            guard self.allowedEnvironments.contains(store.currentEnvironment) else {
-                return self.defaultValue
-            }
-            return store.getValue(for: self.feature) ?? self.defaultValue
+            return store.isEnabled(self.feature)
         }
         set {
-            ExperimentalFeatureStore.shared.setValue(newValue, for: self.feature)
+            ExperimentalFeatureStore.shared.setEnabled(newValue, for: self.feature)
         }
     }
 
     // MARK: Lifecycle
 
-    init(_ feature: ExperimentalFeature,
-         defaultValue: T,
-         allowedIn environments: [AppEnvironment] = [.development, .staging]) {
+    init(_ feature: ExperimentalFeature, defaultValue: Bool = false) {
         self.feature = feature
         self.defaultValue = defaultValue
-        self.allowedEnvironments = Set(environments)
-    }
-
-    init(_ feature: ExperimentalFeature,
-         allowedIn environments: [AppEnvironment] = [.development, .staging]) where T == Bool {
-        self.init(feature, defaultValue: false, allowedIn: environments)
     }
 }

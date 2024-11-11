@@ -55,8 +55,6 @@ final class LocationEngine {
 
     // MARK: Lifecycle
 
-    // MARK: -
-
     init(type: LocationProviderType = DebugStore().simulateRide == true ? .simulated : .standard) {
         self.currentType = type
 
@@ -97,9 +95,13 @@ final class LocationEngine {
         }
         self.update(withLocation: location)
     }
+
 }
 
+// MARK: - Private
+
 private extension LocationEngine {
+
     func update(withLocation location: CLLocation) {
         self.locationManager.updateLocation(location)
 
@@ -140,10 +142,13 @@ private extension LocationEngine {
 }
 
 private extension LocationProviderType {
+
     var provider: LocationProviding {
         switch self {
-        case .standard: return CoreLocationProvider(activityType: .automotiveNavigation, allowBackgroundLocationUpdates: true)
-        case .simulated: return SimulatedLocationProvider(coordinate: .riyadh)
+        case .standard:
+            return CoreLocationProvider(activityType: .automotiveNavigation, allowBackgroundLocationUpdates: true)
+        case .simulated:
+            return SimulatedLocationProvider(coordinate: .theGarage)
         }
     }
 }

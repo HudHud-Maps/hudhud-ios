@@ -54,7 +54,7 @@ struct ContentView: View {
 
     @Bindable private var sheetStore: SheetStore
 
-    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
+    @Feature(.enableNewRoutePlanner) private var enableNewRoutePlanner: Bool
 
     @State private var navigationStore: NavigationStore
 
