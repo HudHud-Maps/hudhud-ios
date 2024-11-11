@@ -10,8 +10,9 @@ import Combine
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
-@testable import HudHud
+import MapLibre
 import XCTest
+@testable import HudHud
 
 // MARK: - LocationEngineTests
 
@@ -26,6 +27,7 @@ final class LocationEngineTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
+        self.continueAfterFailure = false
         self.sut = LocationEngine()
         self.cancellables = []
         DebugStore().simulateRide = false
@@ -149,14 +151,15 @@ final class LocationEngineTests: XCTestCase {
 
 }
 
+// MARK: - Private
+
 private extension LocationEngineTests {
-    func assertNoLocationUpdate(
-        _ description: String,
-        timeout: TimeInterval = 0.5,
-        file _: StaticString = #file,
-        line _: UInt = #line,
-        perform action: () -> Void
-    ) {
+
+    func assertNoLocationUpdate(_ description: String,
+                                timeout: TimeInterval = 0.5,
+                                file _: StaticString = #file,
+                                line _: UInt = #line,
+                                perform action: () -> Void) {
         let expectation = expectation(description: description)
         expectation.isInverted = true
 
@@ -171,54 +174,34 @@ private extension LocationEngineTests {
         wait(for: [expectation], timeout: timeout)
     }
 
-    func assertModeChange(
-        to expectedMode: LocationMode,
-        file: StaticString = #file,
-        line: UInt = #line
-    ) {
-        self.assertPublishedEvent(
-            description: "Mode changed event",
-            expectedEventType: .modeChanged(expectedMode),
-            file: file,
-            line: line
-        ) {
+    func assertModeChange(to expectedMode: LocationMode, file: StaticString = #file, line: UInt = #line) {
+        self.assertPublishedEvent(description: "Mode changed event",
+                                  expectedEventType: .modeChanged(expectedMode),
+                                  file: file,
+                                  line: line) {
             self.sut.swithcMode(to: expectedMode)
         }
         XCTAssertEqual(self.sut.currentMode, expectedMode, file: file, line: line)
     }
 
-    func assertProviderChange(
-        to expectedType: LocationProviderType,
-        file: StaticString = #file,
-        line: UInt = #line,
-        action: () -> Void
-    ) {
-        self.assertPublishedEvent(
-            description: "Provider changed event",
-            expectedEventType: .providerChanged(expectedType),
-            file: file,
-            line: line
-        ) {
+    func assertProviderChange(to expectedType: LocationProviderType, file: StaticString = #file, line: UInt = #line, action: () -> Void) {
+        self.assertPublishedEvent(description: "Provider changed event", expectedEventType: .providerChanged(expectedType), file: file, line: line) {
             action()
         }
         XCTAssertEqual(self.sut.currentType, expectedType, file: file, line: line)
     }
 
-    func assertLocationUpdate(
-        location: UserLocation,
-        mode: LocationMode,
-        file: StaticString = #file,
-        line: UInt = #line,
-        perform update: (UserLocation) -> Void
-    ) {
+    func assertLocationUpdate(location: UserLocation,
+                              mode: LocationMode,
+                              file: StaticString = #file,
+                              line: UInt = #line,
+                              perform update: (UserLocation) -> Void) {
         self.sut.swithcMode(to: mode)
 
-        self.assertPublishedEvent(
-            description: "Location update event",
-            expectedEventType: .locationUpdated(location.clLocation),
-            file: file,
-            line: line
-        ) {
+        self.assertPublishedEvent(description: "Location update event",
+                                  expectedEventType: .locationUpdated(location.clLocation),
+                                  file: file,
+                                  line: line) {
             update(location)
         }
 
@@ -226,41 +209,27 @@ private extension LocationEngineTests {
         XCTAssertEqual(self.sut.lastLocation?.coordinate.longitude, location.coordinates.lng, file: file, line: line)
     }
 
-    func assertPassthroughManagerUpdate(
-        location: UserLocation,
-        delegate: MockMLNLocationManagerDelegate,
-        file: StaticString = #file,
-        line: UInt = #line,
-        perform update: (UserLocation) -> Void
-    ) {
+    func assertPassthroughManagerUpdate(location: UserLocation,
+                                        delegate: MockMLNLocationManagerDelegate,
+                                        file: StaticString = #file,
+                                        line: UInt = #line,
+                                        perform update: (UserLocation) -> Void) {
         let expectation = expectation(description: "Location update received")
         delegate.didUpdateLocationsExpectation = expectation
 
         update(location)
 
         wait(for: [expectation], timeout: 1.0)
-        XCTAssertEqual(
-            delegate.receivedLocations?.first?.coordinate.latitude,
-            location.coordinates.lat,
-            file: file,
-            line: line
-        )
-        XCTAssertEqual(
-            delegate.receivedLocations?.first?.coordinate.longitude,
-            location.coordinates.lng,
-            file: file,
-            line: line
-        )
+        XCTAssertEqual(delegate.receivedLocations?.first?.coordinate.latitude, location.coordinates.lat, file: file, line: line)
+        XCTAssertEqual(delegate.receivedLocations?.first?.coordinate.longitude, location.coordinates.lng, file: file, line: line)
     }
 
-    func assertPublishedEvent(
-        description: String,
-        expectedEventType: LocationEngineEvent,
-        timeout: TimeInterval = 1.0,
-        file: StaticString = #file,
-        line: UInt = #line,
-        action: () -> Void
-    ) {
+    func assertPublishedEvent(description: String,
+                              expectedEventType: LocationEngineEvent,
+                              timeout: TimeInterval = 1.0,
+                              file: StaticString = #file,
+                              line: UInt = #line,
+                              action: () -> Void) {
         let expectation = expectation(description: description)
         var receivedEvent: LocationEngineEvent?
 
@@ -287,63 +256,50 @@ private extension LocationEngineTests {
         }
     }
 
-    func makeUserLocation(
-        lat: Double = 37.7749,
-        lng: Double = -122.4194,
-        accuracy: Double = 10.0,
-        course: Double = 90,
-        speed: Double = 15.0,
-        timestamp: Date = Date(timeIntervalSinceReferenceDate: 0)
-    ) -> UserLocation {
-        UserLocation(
-            coordinates: GeographicCoordinate(lat: lat, lng: lng),
-            horizontalAccuracy: accuracy,
-            courseOverGround: CourseOverGround(degrees: UInt16(course), accuracy: 5),
-            timestamp: timestamp,
-            speed: Speed(value: speed, accuracy: 1.0)
-        )
+    func makeUserLocation(lat: Double = 37.7749,
+                          lng: Double = -122.4194,
+                          accuracy: Double = 10.0,
+                          course: Double = 90,
+                          speed: Double = 15.0,
+                          timestamp: Date = Date(timeIntervalSinceReferenceDate: 0)) -> UserLocation {
+        return UserLocation(coordinates: GeographicCoordinate(lat: lat, lng: lng),
+                            horizontalAccuracy: accuracy,
+                            courseOverGround: CourseOverGround(degrees: UInt16(course), accuracy: 5),
+                            timestamp: timestamp,
+                            speed: Speed(value: speed, accuracy: 1.0))
     }
-
 }
 
 // MARK: - Helpers
 
 extension Route {
+
     static func stub() -> Route {
-        Route(
-            geometry: [
-                GeographicCoordinate(lat: 37.7749, lng: -122.4194),
-                GeographicCoordinate(lat: 37.7739, lng: -122.4312)
-            ],
-            bbox: BoundingBox(
-                sw: GeographicCoordinate(lat: 37.7739, lng: -122.4312),
-                ne: GeographicCoordinate(lat: 37.7749, lng: -122.4194)
-            ),
-            distance: Measurement(value: 1, unit: UnitLength.kilometers).value,
-            waypoints: [
-                Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7749, longitude: -122.4194), kind: .via),
-                Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7739, longitude: -122.4312), kind: .via)
-            ],
-            steps: [
-                RouteStep(
-                    geometry: [
-                        GeographicCoordinate(lat: 37.7749, lng: -122.4194),
-                        GeographicCoordinate(lat: 37.7739, lng: -122.4312)
-                    ],
-                    distance: 1000.0,
-                    duration: 120.0,
-                    roadName: "Test Street",
-                    instruction: "Continue straight",
-                    visualInstructions: [],
-                    spokenInstructions: [],
-                    annotations: nil
-                )
-            ]
-        )
+        let start = GeographicCoordinate(lat: 37.7749, lng: -122.4194)
+        let stop = GeographicCoordinate(lat: 37.7739, lng: -122.4312)
+        let geometry = [start, stop]
+        let bbox = BoundingBox(sw: stop, ne: start)
+        let waypoints = [
+            Waypoint(coordinate: start.clLocationCoordinate2D, kind: .via),
+            Waypoint(coordinate: stop.clLocationCoordinate2D, kind: .via)
+        ]
+
+        return Route(geometry: geometry,
+                     bbox: bbox,
+                     distance: Measurement(value: 1, unit: UnitLength.kilometers).value,
+                     waypoints: waypoints,
+                     steps: [
+                         RouteStep(geometry: geometry,
+                                   distance: 1000.0,
+                                   duration: 120.0,
+                                   roadName: "Test Street",
+                                   instruction: "Continue straight",
+                                   visualInstructions: [],
+                                   spokenInstructions: [],
+                                   annotations: nil)
+                     ])
     }
 }
-
-import MapLibre
 
 // MARK: - MockMLNLocationManagerDelegate
 

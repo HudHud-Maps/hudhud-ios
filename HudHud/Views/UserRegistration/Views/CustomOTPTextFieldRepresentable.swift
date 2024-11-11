@@ -35,7 +35,8 @@ struct CustomOTPTextFieldRepresentable: UIViewRepresentable {
             return false
         }
 
-        @objc func handleTap(_ gesture: UITapGestureRecognizer) {
+        @objc
+        func handleTap(_ gesture: UITapGestureRecognizer) {
             if self.parent.isLastField, self.parent.allFieldsFilled {
                 (gesture.view as? UITextField)?.becomeFirstResponder()
             }
