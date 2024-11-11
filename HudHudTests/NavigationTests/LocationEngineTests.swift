@@ -26,9 +26,8 @@ final class LocationEngineTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        self.sut = LocationEngine()
+        self.sut = LocationEngine(type: .standard)
         self.cancellables = []
-        DebugStore().simulateRide = false
     }
 
     override func tearDown() {
