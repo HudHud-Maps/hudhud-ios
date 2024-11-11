@@ -7,6 +7,7 @@
 //
 
 import SwiftUI
+import UIKit
 
 // MARK: - ExperimentalFeaturesView
 
@@ -30,7 +31,7 @@ struct ExperimentalFeaturesView: View {
 
                 Section("Environment") {
                     Picker("Current Environment", selection: self.$store.currentEnvironment) {
-                        ForEach(AppEnvironment.allCases, id: \.self) { env in
+                        ForEach(UIApplication.Environment.allCases, id: \.self) { env in
                             Text(env.rawValue.capitalized)
                                 .tag(env)
                         }
@@ -63,9 +64,22 @@ struct FeatureToggleRow: View {
     // MARK: Content
 
     var body: some View {
-        Toggle(self.feature.rawValue, isOn: Binding(
+        Toggle(isOn: Binding(
             get: { self.store.isEnabled(self.feature) },
             set: { self.store.setEnabled($0, for: self.feature) }
-        ))
+        ), label: {
+            Text(self.feature.featureDescription.description)
+        })
+        .toggleStyle(EnableableToggleStyle())
+        .enabled(self.feature.isAllowed(for: self.store.currentEnvironment))
+    }
+}
+
+// MARK: - Private
+
+private extension View {
+
+    nonisolated func enabled(_ enabled: Bool) -> some View {
+        self.disabled(enabled == false)
     }
 }

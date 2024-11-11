@@ -63,7 +63,7 @@ final class RoutingStore: ObservableObject {
 
     @Published var routes: [Route] = []
 
-    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
+    @Feature(.enableNewRoutePlanner) private var enableNewRoutePlanner: Bool
 
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
