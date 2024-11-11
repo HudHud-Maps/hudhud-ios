@@ -119,9 +119,21 @@ final class LocationEngineTests: XCTestCase {
         let location = makeUserLocation()
         let delegate = setupMockDelegate()
 
-        assertPassthroughManagerUpdate(location: location, delegate: delegate) { _ in
-            simulateRawLocationUpdate(location)
-        }
+        let expectation = XCTestExpectation(description: "Location update received")
+        delegate.didUpdateLocationsExpectation = expectation
+
+        simulateRawLocationUpdate(location)
+
+        wait(for: [expectation], timeout: 2.0)
+
+        XCTAssertEqual(
+            delegate.receivedLocations?.first?.coordinate.latitude,
+            location.coordinates.lat
+        )
+        XCTAssertEqual(
+            delegate.receivedLocations?.first?.coordinate.longitude,
+            location.coordinates.lng
+        )
     }
 
     func test_passThroughManager_authorizationStatus() {
@@ -151,7 +163,7 @@ final class LocationEngineTests: XCTestCase {
 private extension LocationEngineTests {
     func assertNoLocationUpdate(
         _ description: String,
-        timeout: TimeInterval = 0.5,
+        timeout: TimeInterval = 2,
         file _: StaticString = #file,
         line _: UInt = #line,
         perform action: () -> Void
@@ -281,6 +293,7 @@ private extension LocationEngineTests {
     }
 
     func simulateRawLocationUpdate(_ location: UserLocation) {
+        self.sut.switchToStandard()
         if let provider = sut.locationProvider as? CoreLocationProvider {
             provider.locationManager(CLLocationManager(), didUpdateLocations: [location.clLocation])
         }
