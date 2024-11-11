@@ -33,7 +33,7 @@ public class DefaultFormatters {
     public static var durationFormat: DateComponentsFormatter {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .abbreviated
+        formatter.unitsStyle = .brief
         formatter.zeroFormattingBehavior = .dropAll
         return formatter
     }

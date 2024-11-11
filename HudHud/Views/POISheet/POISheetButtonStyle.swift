@@ -57,5 +57,6 @@ struct POISheetButtonStyle: ButtonStyle {
     ContentView(searchViewStore: searchViewStore,
                 mapViewStore: .storeSetUpForPreviewing,
                 sheetStore: .storeSetUpForPreviewing,
-                routesPlanMapDrawer: RoutesPlanMapDrawer())
+                routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                navigationStore: .storeSetUpForPreviewing)
 }

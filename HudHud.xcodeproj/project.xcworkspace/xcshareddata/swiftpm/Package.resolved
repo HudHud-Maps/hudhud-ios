@@ -59,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/maplibre/maplibre-gl-native-distribution.git",
       "state" : {
-        "revision" : "0d20ebe79a21d7c1502776815aeaca7c59150f30",
-        "version" : "6.8.0"
+        "revision" : "f23db791d7b6f0329e3c6788d8e4152c24c52b6b",
+        "version" : "6.7.1"
       }
     },
     {
@@ -276,7 +276,7 @@
       "location" : "https://github.com/HudHud-Maps/SwiftUIPanoramaViewer.git",
       "state" : {
         "branch" : "hudhud",
-        "revision" : "2e5b8e3bd8fc4eb76f857224b6095bd2a6fbe0c7"
+        "revision" : "0f0539b8a228df8a08567b0a1aea62c9b13a87f0"
       }
     },
     {

@@ -30,6 +30,8 @@ public struct InstructionsView: View {
 
     @Binding private var sizeWhenNotExpanded: CGSize
 
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
     // MARK: Computed Properties
 
     public var expandedContent: AnyView? {
@@ -39,16 +41,14 @@ public struct InstructionsView: View {
         return AnyView(ForEach(Array(self.nextVisualInstructions.enumerated()), id: \.0) { enumerated in
             let (visualInstruction, step): (VisualInstruction, RouteStep) = enumerated.1
             Divider().padding(.leading, 16)
-            DefaultIconographyManeuverInstructionView(
-                text: visualInstruction.primaryContent.text,
-                maneuverType: visualInstruction.primaryContent.maneuverType,
-                maneuverModifier: visualInstruction.primaryContent.maneuverModifier,
-                distanceFormatter: self.distanceFormatter,
-                distanceToNextManeuver: step.distance == 0 ? nil : step.distance,
-                theme: self.primaryRowTheme
-            )
-            .font(.title2.bold())
-            .padding(.horizontal, 16)
+            DefaultIconographyManeuverInstructionView(text: visualInstruction.primaryContent.text,
+                                                      maneuverType: visualInstruction.primaryContent.maneuverType,
+                                                      maneuverModifier: visualInstruction.primaryContent.maneuverModifier,
+                                                      distanceFormatter: self.distanceFormatter,
+                                                      distanceToNextManeuver: step.distance == 0 ? nil : step.distance,
+                                                      theme: self.primaryRowTheme)
+                .font(.title2.bold())
+                .padding(.horizontal, 16)
         })
     }
 
@@ -90,16 +90,14 @@ public struct InstructionsView: View {
     ///   - sizeWhenNotExpanded: The size of the InstructionsView when minimized. You may use this for allocating space
     /// for the instruction view in your layout. This property is automatically updated by the instruction view as its
     /// size changes.
-    public init(
-        visualInstruction: VisualInstruction,
-        distanceFormatter: Formatter = DefaultFormatters.distanceFormatter,
-        distanceToNextManeuver: CLLocationDistance? = nil,
-        remainingSteps: [RouteStep]? = nil,
-        primaryRowTheme: InstructionRowTheme = DefaultInstructionRowTheme(),
-        secondaryRowTheme: InstructionRowTheme = DefaultSecondaryInstructionRowTheme(),
-        isExpanded: Binding<Bool> = .constant(false),
-        sizeWhenNotExpanded: Binding<CGSize> = .constant(.zero)
-    ) {
+    public init(visualInstruction: VisualInstruction,
+                distanceFormatter: Formatter = DefaultFormatters.distanceFormatter,
+                distanceToNextManeuver: CLLocationDistance? = nil,
+                remainingSteps: [RouteStep]? = nil,
+                primaryRowTheme: InstructionRowTheme = DefaultInstructionRowTheme(),
+                secondaryRowTheme: InstructionRowTheme = DefaultSecondaryInstructionRowTheme(),
+                isExpanded: Binding<Bool> = .constant(false),
+                sizeWhenNotExpanded: Binding<CGSize> = .constant(.zero)) {
         self.visualInstruction = visualInstruction
         self.distanceFormatter = distanceFormatter
         self.distanceToNextManeuver = distanceToNextManeuver
@@ -113,51 +111,44 @@ public struct InstructionsView: View {
     // MARK: Content
 
     public var body: some View {
-        TopDrawerView(
-            backgroundColor: self.primaryRowTheme.backgroundColor,
-            isExpanded: self.$isExpanded,
-            persistentContent: {
-                VStack(spacing: 0) {
-                    DefaultIconographyManeuverInstructionView(
-                        text: self.visualInstruction.primaryContent.text,
-                        maneuverType: self.visualInstruction.primaryContent.maneuverType,
-                        maneuverModifier: self.visualInstruction.primaryContent.maneuverModifier,
-                        distanceFormatter: self.distanceFormatter,
-                        distanceToNextManeuver: self.distanceToNextManeuver == 0 ? nil : self.distanceToNextManeuver,
-                        theme: self.primaryRowTheme
-                    )
-                    .font(.title2.bold())
-                    .padding(.horizontal, 16)
-                    .padding(.top, self.verticalPadding)
-                    .padding(.bottom, self.hasSecondary ? 8 : self.verticalPadding)
+        TopDrawerView(backgroundColor: self.primaryRowTheme.backgroundColor,
+                      isExpanded: self.$isExpanded,
+                      persistentContent: {
+                          VStack(spacing: 0) {
+                              DefaultIconographyManeuverInstructionView(text: self.visualInstruction.primaryContent.text,
+                                                                        maneuverType: self.visualInstruction.primaryContent.maneuverType,
+                                                                        maneuverModifier: self.visualInstruction.primaryContent.maneuverModifier,
+                                                                        distanceFormatter: self.distanceFormatter,
+                                                                        distanceToNextManeuver: self.distanceToNextManeuver == 0 ? nil : self
+                                                                            .distanceToNextManeuver,
+                                                                        theme: self.primaryRowTheme)
+                                  .font(.title2.bold())
+                                  .padding(.horizontal, 16)
+                                  .padding(.top, self.safeAreaInsets.top + self.verticalPadding)
+                                  .padding(.bottom, self.hasSecondary ? 8 : self.verticalPadding)
 
-                    if let secondaryContent = visualInstruction.secondaryContent {
-                        DefaultIconographyManeuverInstructionView(
-                            text: secondaryContent.text,
-                            maneuverType: secondaryContent.maneuverType,
-                            maneuverModifier: secondaryContent.maneuverModifier,
-                            distanceFormatter: self.distanceFormatter,
-                            theme: self.secondaryRowTheme
-                        )
-                        .padding(.horizontal, 16)
-                        .padding(.top, 8)
-                        .padding(.bottom, self.verticalPadding)
-                        .background(self.secondaryRowTheme.backgroundColor)
-                    }
-                }.overlay(
-                    GeometryReader { geometry in
-                        Color.clear.onAppear {
-                            self.sizeWhenNotExpanded = geometry.size
-                        }.onChange(of: geometry.size) { _, newValue in
-                            self.sizeWhenNotExpanded = newValue
-                        }.onDisappear {
-                            self.sizeWhenNotExpanded = .zero
-                        }
-                    }
-                )
-            },
-            expandedContent: { self.expandedContent }
-        )
+                              if let secondaryContent = visualInstruction.secondaryContent {
+                                  DefaultIconographyManeuverInstructionView(text: secondaryContent.text,
+                                                                            maneuverType: secondaryContent.maneuverType,
+                                                                            maneuverModifier: secondaryContent.maneuverModifier,
+                                                                            distanceFormatter: self.distanceFormatter,
+                                                                            theme: self.secondaryRowTheme)
+                                      .padding(.horizontal, 16)
+                                      .padding(.top, 8)
+                                      .padding(.bottom, self.verticalPadding)
+                                      .background(self.secondaryRowTheme.backgroundColor)
+                              }
+                          }.overlay(GeometryReader { geometry in
+                              Color.clear.onAppear {
+                                  self.sizeWhenNotExpanded = geometry.size
+                              }.onChange(of: geometry.size) { _, newValue in
+                                  self.sizeWhenNotExpanded = newValue
+                              }.onDisappear {
+                                  self.sizeWhenNotExpanded = .zero
+                              }
+                          })
+                      },
+                      expandedContent: { self.expandedContent })
     }
 }
 
@@ -167,79 +158,51 @@ public struct InstructionsView: View {
     germanFormatter.units = .metric
 
     return VStack(spacing: 16) {
-        InstructionsView(
-            visualInstruction: VisualInstruction(
-                primaryContent: VisualInstructionContent(
-                    text: "Turn right on Something Dr.",
-                    maneuverType: .turn,
-                    maneuverModifier: .right,
-                    roundaboutExitDegrees: nil,
-                    laneInfo: nil
-                ),
-                secondaryContent: VisualInstructionContent(
-                    text: "Merge onto Hwy 123",
-                    maneuverType: .merge,
-                    maneuverModifier: .right,
-                    roundaboutExitDegrees: nil,
-                    laneInfo: nil
-                ),
-                subContent: nil,
-                triggerDistanceBeforeManeuver: 123
-            )
-        )
+        InstructionsView(visualInstruction: VisualInstruction(primaryContent: VisualInstructionContent(text: "Turn right on Something Dr.",
+                                                                                                       maneuverType: .turn,
+                                                                                                       maneuverModifier: .right,
+                                                                                                       roundaboutExitDegrees: nil,
+                                                                                                       laneInfo: nil),
+                                                              secondaryContent: VisualInstructionContent(text: "Merge onto Hwy 123",
+                                                                                                         maneuverType: .merge,
+                                                                                                         maneuverModifier: .right,
+                                                                                                         roundaboutExitDegrees: nil,
+                                                                                                         laneInfo: nil),
+                                                              subContent: nil,
+                                                              triggerDistanceBeforeManeuver: 123))
 
-        InstructionsView(
-            visualInstruction: VisualInstruction(
-                primaryContent: VisualInstructionContent(
-                    text: "Use the second exit to leave the roundabout.",
-                    maneuverType: .rotary,
-                    maneuverModifier: .slightRight,
-                    roundaboutExitDegrees: nil,
-                    laneInfo: nil
-                ),
-                secondaryContent: nil,
-                subContent: nil,
-                triggerDistanceBeforeManeuver: 123
-            )
-        )
+        InstructionsView(visualInstruction: VisualInstruction(primaryContent: VisualInstructionContent(text: "Use the second exit to leave the roundabout.",
+                                                                                                       maneuverType: .rotary,
+                                                                                                       maneuverModifier: .slightRight,
+                                                                                                       roundaboutExitDegrees: nil,
+                                                                                                       laneInfo: nil),
+                                                              secondaryContent: nil,
+                                                              subContent: nil,
+                                                              triggerDistanceBeforeManeuver: 123))
 
-        InstructionsView(
-            visualInstruction: VisualInstruction(
-                primaryContent: VisualInstructionContent(
-                    text: "Links einfädeln.",
-                    maneuverType: .merge,
-                    maneuverModifier: .slightLeft,
-                    roundaboutExitDegrees: nil,
-                    laneInfo: nil
-                ),
-                secondaryContent: nil,
-                subContent: nil,
-                triggerDistanceBeforeManeuver: 123
-            ),
-            distanceFormatter: germanFormatter,
-            distanceToNextManeuver: 1500.0
-        )
+        InstructionsView(visualInstruction: VisualInstruction(primaryContent: VisualInstructionContent(text: "Links einfädeln.",
+                                                                                                       maneuverType: .merge,
+                                                                                                       maneuverModifier: .slightLeft,
+                                                                                                       roundaboutExitDegrees: nil,
+                                                                                                       laneInfo: nil),
+                                                              secondaryContent: nil,
+                                                              subContent: nil,
+                                                              triggerDistanceBeforeManeuver: 123),
+                         distanceFormatter: germanFormatter,
+                         distanceToNextManeuver: 1500.0)
 
-        InstructionsView(
-            visualInstruction: VisualInstruction(
-                primaryContent: VisualInstructionContent(
-                    text: "Turn right on Something Dr.",
-                    maneuverType: .turn,
-                    maneuverModifier: .right,
-                    roundaboutExitDegrees: nil,
-                    laneInfo: nil
-                ),
-                secondaryContent: VisualInstructionContent(
-                    text: "Merge onto Hwy 123",
-                    maneuverType: .merge,
-                    maneuverModifier: .right,
-                    roundaboutExitDegrees: nil,
-                    laneInfo: nil
-                ),
-                subContent: nil,
-                triggerDistanceBeforeManeuver: 123
-            )
-        )
+        InstructionsView(visualInstruction: VisualInstruction(primaryContent: VisualInstructionContent(text: "Turn right on Something Dr.",
+                                                                                                       maneuverType: .turn,
+                                                                                                       maneuverModifier: .right,
+                                                                                                       roundaboutExitDegrees: nil,
+                                                                                                       laneInfo: nil),
+                                                              secondaryContent: VisualInstructionContent(text: "Merge onto Hwy 123",
+                                                                                                         maneuverType: .merge,
+                                                                                                         maneuverModifier: .right,
+                                                                                                         roundaboutExitDegrees: nil,
+                                                                                                         laneInfo: nil),
+                                                              subContent: nil,
+                                                              triggerDistanceBeforeManeuver: 123))
 
         Spacer()
     }
@@ -249,11 +212,9 @@ public struct InstructionsView: View {
 
 #Preview("Many steps") {
     VStack(spacing: 16) {
-        InstructionsView(
-            visualInstruction: VisualInstructionFactory().build(),
-            distanceToNextManeuver: 1500,
-            remainingSteps: RouteStepFactory().buildMany(10)
-        )
+        InstructionsView(visualInstruction: VisualInstructionFactory().build(),
+                         distanceToNextManeuver: 1500,
+                         remainingSteps: RouteStepFactory().buildMany(10))
 
         Spacer()
     }
@@ -263,12 +224,10 @@ public struct InstructionsView: View {
 
 #Preview("Many steps, expanded") {
     VStack(spacing: 16) {
-        InstructionsView(
-            visualInstruction: VisualInstructionFactory().build(),
-            distanceToNextManeuver: 1500,
-            remainingSteps: RouteStepFactory().buildMany(10),
-            isExpanded: .constant(true)
-        )
+        InstructionsView(visualInstruction: VisualInstructionFactory().build(),
+                         distanceToNextManeuver: 1500,
+                         remainingSteps: RouteStepFactory().buildMany(10),
+                         isExpanded: .constant(true))
 
         Spacer()
     }
@@ -278,15 +237,13 @@ public struct InstructionsView: View {
 
 #Preview("Many steps with secondary") {
     VStack(spacing: 16) {
-        InstructionsView(
-            visualInstruction: VisualInstructionFactory().secondaryContent { n in
-                VisualInstructionContentFactory().text { n in
-                    RoadNameFactory().baseName { _ in "Street" }.build(n)
-                }.build(n)
-            }.build(),
-            distanceToNextManeuver: 1500,
-            remainingSteps: RouteStepFactory().buildMany(10)
-        )
+        InstructionsView(visualInstruction: VisualInstructionFactory().secondaryContent { n in
+            VisualInstructionContentFactory().text { n in
+                RoadNameFactory().baseName { _ in "Street" }.build(n)
+            }.build(n)
+        }.build(),
+        distanceToNextManeuver: 1500,
+        remainingSteps: RouteStepFactory().buildMany(10))
 
         Spacer()
     }

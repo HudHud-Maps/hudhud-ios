@@ -34,13 +34,14 @@ struct URLSessionProtocolTransport: ClientTransport {
     ///   - operationID: The identifier of the OpenAPI operation.
     /// - Returns: An HTTP response and its body.
     /// - Throws: If there was an error performing the HTTP request.
-    func send(
-        _ request: HTTPRequest,
-        body _: HTTPBody?,
-        baseURL: URL,
-        operationID _: String
-    ) async throws -> (HTTPResponse, HTTPBody?) {
-        let urlRequest = try URLRequest(request, baseURL: baseURL)
+    func send(_ request: HTTPRequest,
+              body: HTTPBody?,
+              baseURL: URL,
+              operationID _: String) async throws -> (HTTPResponse, HTTPBody?) {
+        var urlRequest = try URLRequest(request, baseURL: baseURL)
+        if let body {
+            urlRequest.httpBody = try await Data(collecting: body, upTo: .max)
+        }
         let (data, response) = try await session.data(for: urlRequest)
         let body = HTTPBody(data, length: HTTPBody.Length(from: response), iterationBehavior: .multiple)
         return try (HTTPResponse(response), body)
@@ -94,11 +95,9 @@ extension URLRequest {
     init(_ request: HTTPRequest, baseURL: URL) throws {
         guard var baseUrlComponents = URLComponents(string: baseURL.absoluteString),
               let requestUrlComponents = URLComponents(string: request.path ?? "") else {
-            throw URLSessionTransportError.invalidRequestURL(
-                path: request.path ?? "<nil>",
-                method: request.method,
-                baseURL: baseURL
-            )
+            throw URLSessionTransportError.invalidRequestURL(path: request.path ?? "<nil>",
+                                                             method: request.method,
+                                                             baseURL: baseURL)
         }
 
         let path = requestUrlComponents.percentEncodedPath

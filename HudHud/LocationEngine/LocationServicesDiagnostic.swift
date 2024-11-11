@@ -67,7 +67,8 @@ private extension LocationServicesDiagnostic {
 
         Logger.diagnostics.notice("- showsUserLocation: \(self.mapView.showsUserLocation ? "✅" : "❌")")
         Logger.diagnostics.notice("- userLocationVisible: \(self.mapView.isUserLocationVisible ? "✅" : "❌")")
-        Logger.diagnostics.notice("- User Location Valid: \(CLLocationCoordinate2DIsValid(self.mapView.userLocation?.coordinate ?? kCLLocationCoordinate2DInvalid) ? "✅" : "❌")")
+        Logger.diagnostics
+            .notice("- User Location Valid: \(CLLocationCoordinate2DIsValid(self.mapView.userLocation?.coordinate ?? kCLLocationCoordinate2DInvalid) ? "✅" : "❌")")
         Logger.diagnostics.notice("- Tracking Mode: \(self.trackingModeString(self.mapView.userTrackingMode))")
     }
 

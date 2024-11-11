@@ -27,12 +27,12 @@ struct DebugMenuView: View {
             Form {
                 self.routingSection
                 self.baseURLSection
+                self.experimentalFeaturesSection
                 self.networkDebuggerButton
                 self.simulationSection
                 self.touchesSection
                 self.sfsymbolsSection
                 self.streetViewQualitySection
-                self.routePlannerSection
             }
             .navigationTitle("Debug Menu")
             .toolbar {
@@ -124,7 +124,7 @@ struct DebugMenuView: View {
                     GridRow {
                         Text("• \(quality.rawValue.localizedCapitalized)")
                             .gridColumnAlignment(.leading)
-                        let size = quality.size ?? CGSize(width: 13504, height: 6752)
+                        let size = quality.size ?? ImageSize(width: 13504, height: 6752)
                         Text(size.formatted())
                             .gridColumnAlignment(.trailing)
                         if let percentage = quality.quality {
@@ -144,17 +144,17 @@ struct DebugMenuView: View {
                 }
                 Spacer()
                 GridRow {
-                    Text("WEBP has a maximum limit of \(CGSize(width: 5500, height: 2750).formatted()) pixels, image will look pixelated as its divided by a fractional number")
+                    Text("WEBP has a maximum limit of \(ImageSize(width: 5500, height: 2750).formatted()) pixels, image will look pixelated as its divided by a fractional number")
                         .gridCellColumns(6)
                 }
             }
         }
     }
 
-    var routePlannerSection: some View {
-        Section(header: Text("Route Planner")) {
-            Toggle(isOn: self.$debugSettings.enableNewRoutePlanner) {
-                Text("Enable new Route Planner design")
+    var experimentalFeaturesSection: some View {
+        Section(header: Text("Experimental Features")) {
+            NavigationLink(destination: ExperimentalFeaturesView()) {
+                Text("Feature Toggles")
             }
         }
     }
@@ -188,11 +188,5 @@ private extension CLLocationDistance {
                 self = result
             }
         }
-    }
-}
-
-extension CGSize {
-    func formatted() -> String {
-        return self.width.formatted() + " x " + self.height.formatted()
     }
 }
