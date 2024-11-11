@@ -6,11 +6,11 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import XCTest
 @testable import BackendService
 @testable import FerrostarCoreFFI
 @testable import HudHud
 @testable import MapLibre
-import XCTest
 
 final class CalculateTests: XCTestCase {
 
@@ -22,10 +22,8 @@ final class CalculateTests: XCTestCase {
         let endCoordinate = CLLocationCoordinate2D(latitude: 24.7311, longitude: 46.6701) // Kingdom Tower, Riyadh
 
         // Perform route calculation
-        let routes = try await routePlanner.planRoutes(
-            from: Waypoint(coordinate: startCoordinate),
-            to: Waypoint(coordinate: endCoordinate)
-        )
+        let routes = try await routePlanner.planRoutes(from: Waypoint(coordinate: startCoordinate),
+                                                       to: Waypoint(coordinate: endCoordinate))
 
         // Then
         XCTAssertGreaterThan(routes.count, 0)
@@ -55,7 +53,8 @@ final class CalculateTests: XCTestCase {
 //            XCTFail("Expected an error but received a result: \(result)") // Fail the test if no error is thrown
 //        } catch let error as RoutingService.ToursprungError {
 //            // Assert that the correct error is thrown with the expected message
-//            let expectedErrorMessage = "Point 0 is out of bounds: 1000.0,2000.0, the bounds are: -180.0,180.0,-85.0511284,82.5254024,-4100.47900390625,8775.1728515625"
+//            let expectedErrorMessage = "Point 0 is out of bounds: 1000.0,2000.0, the bounds are:
+//            -180.0,180.0,-85.0511284,82.5254024,-4100.47900390625,8775.1728515625"
 //            XCTAssertEqual(error, RoutingService.ToursprungError.invalidInput(message: expectedErrorMessage))
 //        } catch {
 //            XCTFail("Unexpected error: \(error)")

@@ -10,23 +10,14 @@ import UIKit
 
 public extension UIApplication {
 
-    enum Environment: String {
+    enum Environment: String, CaseIterable, Codable, Equatable {
+        case simulator
         case development
         case testFlight
         case appStore
-        case simulator
     }
 
     // MARK: - Properties
-
-    private nonisolated static let isTestFlight = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
-    private nonisolated static var isDebug: Bool {
-        #if DEBUG
-            return true
-        #else
-            return false
-        #endif
-    }
 
     nonisolated static var isSimulator: Bool {
         #if targetEnvironment(simulator)
@@ -49,4 +40,25 @@ public extension UIApplication {
             }
         }
     }
+}
+
+extension [UIApplication.Environment] {
+
+    static var upToTestFlight: [UIApplication.Environment] = [.simulator, .development, .testFlight]
+}
+
+// MARK: - Private
+
+private extension UIApplication {
+
+    nonisolated static let isTestFlight = Bundle.main.appStoreReceiptURL?.lastPathComponent == "sandboxReceipt"
+
+    nonisolated static var isDebug: Bool {
+        #if DEBUG
+            return true
+        #else
+            return false
+        #endif
+    }
+
 }
