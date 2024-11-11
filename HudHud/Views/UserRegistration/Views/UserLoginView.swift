@@ -45,7 +45,9 @@ struct UserLoginView: View {
 
                 VStack(alignment: .leading) {
                     // Text field for email or phone number based on user choose
-                    FloatingLabelInputField(placeholder: self.placeholderForInput, inputType: self.loginStore.userInput == .email ? .text(text: self.bindingForInput) : .phone(phone: self.bindingForInput))
+                    FloatingLabelInputField(placeholder: self.placeholderForInput,
+                                            inputType: self.loginStore
+                                                .userInput == .email ? .text(text: self.bindingForInput) : .phone(phone: self.bindingForInput))
                         .textContentType(self.loginStore.userInput == .phone ? .telephoneNumber : .emailAddress)
                         .focused(self.$isFocused)
                         .keyboardType(self.keyboardTypeForInput)
@@ -119,7 +121,11 @@ struct UserLoginView: View {
             .navigationDestination(for: LoginStore.UserRegistrationPath.self) { route in
                 switch route {
                 case let .OTPView(loginIdentity, duration):
-                    OTPVerificationView(loginId: self.loginStore.loginId, loginIdentity: loginIdentity, duration: duration, path: self.$loginStore.path, loginStore: self.loginStore)
+                    OTPVerificationView(loginId: self.loginStore.loginId,
+                                        loginIdentity: loginIdentity,
+                                        duration: duration,
+                                        path: self.$loginStore.path,
+                                        loginStore: self.loginStore)
                         .toolbarRole(.editor)
                 case .personalInfoView:
                     PersonalInformationScreenView(loginStore: self.loginStore, onDismiss: { self.dismiss() })

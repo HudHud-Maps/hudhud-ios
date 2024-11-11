@@ -30,23 +30,22 @@ struct PadSheetGesture<Content: View>: View {
     var body: some View {
         self.subview
             .offset(y: self.sheetSize.height + self.offsetY)
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        self.sheetSize = value.translation
-                    }
-                    .onEnded { _ in
-                        withAnimation(.spring()) {
-                            let snap = self.sheetSize.height + self.offsetY
+            .gesture(DragGesture()
+                .onChanged { value in
+                    self.sheetSize = value.translation
+                }
+                .onEnded { _ in
+                    withAnimation(.spring()) {
+                        let snap = self.sheetSize.height + self.offsetY
 
-                            if snap > self.screenHeight / 2 {
-                                self.offsetY = self.screenHeight - self.screenHeight / 9.5
-                            } else {
-                                self.offsetY = 0
-                            }
-                            self.sheetSize = .zero
+                        if snap > self.screenHeight / 2 {
+                            self.offsetY = self.screenHeight - self.screenHeight / 9.5
+                        } else {
+                            self.offsetY = 0
                         }
-                    })
+                        self.sheetSize = .zero
+                    }
+                })
     }
 
 }

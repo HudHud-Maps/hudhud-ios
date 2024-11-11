@@ -37,11 +37,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         }
 
         let firstWaypoint = Waypoint(coordinate: userLocation.coordinates, kind: .via)
-        return try await self.calculateRoute(
-            from: firstWaypoint,
-            to: lastWaypoint,
-            passingBy: waypoints
-        )
+        return try await self.calculateRoute(from: firstWaypoint, to: lastWaypoint, passingBy: waypoints)
     }
 
     func calculateRoute(from start: Waypoint, to end: Waypoint, passingBy waypoints: [Waypoint]) async throws -> [Route] {

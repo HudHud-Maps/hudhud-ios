@@ -32,9 +32,14 @@ struct EditFavoritesFormView: View {
     @State private var title: String = ""
     @State private var description: String = ""
     @State private var selectedType: String
-    @State private var typeSymbols: [String: SFSymbol] = [FavoritesItem.Types.home: .houseFill, FavoritesItem.Types.work: .bagFill, FavoritesItem.Types.school: .buildingFill]
+    @State private var typeSymbols: [String: SFSymbol] = [
+        FavoritesItem.Types.home: .houseFill,
+        FavoritesItem.Types.work: .bagFill,
+        FavoritesItem.Types.school: .buildingFill
+    ]
     private let sheetStore: SheetStore
-    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
+    // swiftlint:disable:next force_unwrapping
+    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")!
 
     // MARK: Lifecycle
 
@@ -75,10 +80,8 @@ struct EditFavoritesFormView: View {
                     Section(header: Text("description").foregroundStyle(.gray)) {
                         TextEditor(text: self.$description)
                             .frame(minHeight: 100)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 8)
-                                    .stroke(Color.gray, lineWidth: 1)
-                            )
+                            .overlay(RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray, lineWidth: 1))
                             .padding(.vertical)
                     }
 
@@ -120,17 +123,15 @@ struct EditFavoritesFormView: View {
                 }
                 .formStyle(.automatic)
                 .navigationBarTitle("Edit", displayMode: .inline)
-                .navigationBarItems(
-                    leading: Button {
-                        self.sheetStore.popSheet()
-                    } label: {
-                        Label("Back", systemSymbol: .arrowBackward)
-                    },
-                    trailing: Button("Add") {
-                        self.saveChanges()
-                        self.sheetStore.popToRoot()
-                    }
-                )
+                .navigationBarItems(leading: Button {
+                    self.sheetStore.popSheet()
+                } label: {
+                    Label("Back", systemSymbol: .arrowBackward)
+                },
+                trailing: Button("Add") {
+                    self.saveChanges()
+                    self.sheetStore.popToRoot()
+                })
             }
             .onAppear {
                 self.camera = MapViewCamera.center(self.item.coordinate, zoom: 14)
@@ -145,13 +146,11 @@ struct EditFavoritesFormView: View {
 private extension EditFavoritesFormView {
 
     func saveChanges() {
-        self.favoritesStore.saveChanges(
-            title: self.title,
-            tintColor: self.favoritesItem?.tintColor ?? .entertainmentLeisure,
-            item: self.item,
-            description: self.description,
-            selectedType: self.selectedType
-        )
+        self.favoritesStore.saveChanges(title: self.title,
+                                        tintColor: self.favoritesItem?.tintColor ?? .entertainmentLeisure,
+                                        item: self.item,
+                                        description: self.description,
+                                        selectedType: self.selectedType)
     }
 
     func addNewOption() {
@@ -180,7 +179,10 @@ private extension EditFavoritesFormView {
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {
-                EditFavoritesFormView(item: resolvedItem, favoritesItem: favorite, favoritesStore: favoritesStore, sheetStore: .storeSetUpForPreviewing)
+                EditFavoritesFormView(item: resolvedItem,
+                                      favoritesItem: favorite,
+                                      favoritesStore: favoritesStore,
+                                      sheetStore: .storeSetUpForPreviewing)
             }
     }
 }

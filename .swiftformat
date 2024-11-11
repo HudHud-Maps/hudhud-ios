@@ -92,7 +92,7 @@
 --wrapreturntype preserve
 --wrapternary default
 --wraptypealiases preserve
---xcodeindentation enabled
+--xcodeindentation disabled
 --yodaswap always
 --disable redundantReturn,wrapMultilineStatementBraces
 --enable blankLinesBetweenImports,isEmpty,markTypes,organizeDeclarations,wrapEnumCases

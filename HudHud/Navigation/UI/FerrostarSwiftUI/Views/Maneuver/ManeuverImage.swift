@@ -24,8 +24,8 @@ public struct ManeuverImage: View {
             self.maneuverType.stringValue.replacingOccurrences(of: " ", with: "_"),
             self.maneuverModifier?.stringValue.replacingOccurrences(of: " ", with: "_")
         ]
-            .compactMap { $0 }
-            .joined(separator: "_")
+        .compactMap { $0 }
+        .joined(separator: "_")
     }
 
     // MARK: Lifecycle

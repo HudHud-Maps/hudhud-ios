@@ -171,9 +171,27 @@ final class FilterStore: ObservableObject {
     func resetFilters() {
         self.selectedFilters = self.originalFilters
         // Reset individual properties if needed
-        self.sortSelection = self.selectedFilters.compactMap { if case let .sort(value) = $0 { return value } else { return nil } }.first ?? .relevance
-        self.priceSelection = self.selectedFilters.compactMap { if case let .priceRange(value) = $0 { return value } else { return nil } }.first ?? .cheap
-        self.ratingSelection = self.selectedFilters.compactMap { if case let .rating(value) = $0 { return value } else { return nil } }.first ?? .anyRating
+        self.sortSelection = self.selectedFilters.compactMap {
+            if case let .sort(value) = $0 {
+                return value
+            } else {
+                return nil
+            }
+        }.first ?? .relevance
+        self.priceSelection = self.selectedFilters.compactMap {
+            if case let .priceRange(value) = $0 {
+                return value
+            } else {
+                return nil
+            }
+        }.first ?? .cheap
+        self.ratingSelection = self.selectedFilters.compactMap {
+            if case let .rating(value) = $0 {
+                return value
+            } else {
+                return nil
+            }
+        }.first ?? .anyRating
         self.scheduleSelection = FilterType.ScheduleOption.allCases.first { $0.stringValue == "Any" } ?? .any
         self.openNow = self.selectedFilters.contains(.openNow)
         self.topRated = self.selectedFilters.contains(.topRated)

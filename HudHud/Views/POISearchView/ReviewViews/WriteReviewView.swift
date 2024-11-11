@@ -83,28 +83,26 @@ struct WriteReviewView: View {
                 .padding(.vertical, 16)
                 .hudhudFontStyle(.labelMedium)
 
-            TextEditor(text: Binding(
-                get: { self.store.state.reviewText.isEmpty ? self.store.state.placeholderString : self.store.state.reviewText },
-                set: { self.store.reduce(action: .updateReviewText($0)) }
-            ))
-            .frame(height: 128)
-            .foregroundStyle(self.store.state.reviewText.isEmpty ? Color.Colors.General._02Grey : Color.Colors.General._01Black)
-            .hudhudFontStyle(.paragraphMedium)
-            .focused(self.$isFocused)
-            .padding([.top, .leading], 8)
-            .background(Color.Colors.General._05WhiteBackground)
-            .cornerRadius(12)
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Spacer()
-                    Button("Done") {
-                        self.isFocused = false
+            TextEditor(text: Binding(get: { self.store.state.reviewText.isEmpty ? self.store.state.placeholderString : self.store.state.reviewText },
+                                     set: { self.store.reduce(action: .updateReviewText($0)) }))
+                .frame(height: 128)
+                .foregroundStyle(self.store.state.reviewText.isEmpty ? Color.Colors.General._02Grey : Color.Colors.General._01Black)
+                .hudhudFontStyle(.paragraphMedium)
+                .focused(self.$isFocused)
+                .padding([.top, .leading], 8)
+                .background(Color.Colors.General._05WhiteBackground)
+                .cornerRadius(12)
+                .toolbar {
+                    ToolbarItemGroup(placement: .keyboard) {
+                        Spacer()
+                        Button("Done") {
+                            self.isFocused = false
+                        }
                     }
                 }
-            }
-            .onTapGesture {
-                self.store.reduce(action: .removePlaceHolder)
-            }
+                .onTapGesture {
+                    self.store.reduce(action: .removePlaceHolder)
+                }
         }
         .padding(.horizontal)
     }
@@ -140,20 +138,14 @@ struct WriteReviewView: View {
                         }
                 }
                 .alert(isPresented: self.$cameraStore.showAlert) {
-                    Alert(
-                        title: Text("Camera Access Required"),
-                        message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
-                        dismissButton: .default(Text("OK"))
-                    )
+                    Alert(title: Text("Camera Access Required"),
+                          message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
+                          dismissButton: .default(Text("OK")))
                 }
 
-                PhotosPicker(
-                    selection: Binding(
-                        get: { self.store.state.selection },
-                        set: { self.store.reduce(action: .addImages($0)) }
-                    ),
-                    matching: .images
-                ) {
+                PhotosPicker(selection: Binding(get: { self.store.state.selection },
+                                                set: { self.store.reduce(action: .addImages($0)) }),
+                             matching: .images) {
                     VStack {
                         Image(.addPhotoLibrary)
                             .resizable()
@@ -194,13 +186,9 @@ struct WriteReviewView: View {
             Text("Submit")
         }
         .disabled(self.store.state.interactiveRating == 0)
-        .buttonStyle(
-            LargeButtonStyle(
-                isLoading: .constant(false),
-                backgroundColor: Color.Colors.General._06DarkGreen.opacity(self.store.state.interactiveRating == 0 ? 0.5 : 1),
-                foregroundColor: .white
-            )
-        )
+        .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                      backgroundColor: Color.Colors.General._06DarkGreen.opacity(self.store.state.interactiveRating == 0 ? 0.5 : 1),
+                                      foregroundColor: .white))
         .padding(.horizontal)
     }
 }
@@ -231,5 +219,6 @@ private extension WriteReviewView {
 }
 
 #Preview {
-    WriteReviewView(item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0), sheetStore: SheetStore(emptySheetType: .search))
+    WriteReviewView(item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0),
+                    sheetStore: SheetStore(emptySheetType: .search))
 }

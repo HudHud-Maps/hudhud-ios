@@ -32,10 +32,8 @@ struct SearchResultView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack {
                     if let rating = item.rating, let ratingsCount = item.ratingsCount {
-                        RatingView(ratingStore: RatingStore(
-                            staticRating: rating,
-                            ratingsCount: ratingsCount
-                        ))
+                        RatingView(ratingStore: RatingStore(staticRating: rating,
+                                                            ratingsCount: ratingsCount))
                     }
                     if let priceRange = item.priceRange, let priceIcon = HudHudPOI.PriceRange(rawValue: priceRange) {
                         Text("•")

@@ -26,7 +26,8 @@ struct PersonalInformationScreenView: View {
             FloatingLabelInputField(placeholder: "First Name", inputType: .text(text: self.$loginStore.firstName))
             FloatingLabelInputField(placeholder: "Last Name", inputType: .text(text: self.$loginStore.lastName))
             FloatingLabelInputField(placeholder: "Nick", inputType: .text(text: self.$loginStore.nick))
-            FloatingLabelInputField(placeholder: "Gender", inputType: .dropdown(choice: self.$loginStore.gender, options: LoginStore.Gender.allCases.map(\.rawValue)))
+            FloatingLabelInputField(placeholder: "Gender",
+                                    inputType: .dropdown(choice: self.$loginStore.gender, options: LoginStore.Gender.allCases.map(\.rawValue)))
             FloatingLabelInputField(placeholder: "Birthday", inputType: .datePicker(date: self.$loginStore.birthday, dateFormatter: DateFormatter()))
             Spacer()
             Button {

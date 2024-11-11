@@ -196,48 +196,44 @@ private struct BlurView: UIViewRepresentable {
 
 #Preview("floating") {
     VStack {
-        TopDrawerView(
-            backgroundColor: .white,
-            persistentContent: {
-                HStack {
-                    Spacer()
-                    Text("Persistent Content")
-                    Spacer()
-                }.padding()
-            },
-            expandedContent: {
-                HStack {
-                    Spacer()
-                    VStack {
-                        Text("Expanded Content 1")
-                        Text("Expanded Content 2")
-                        Text("Expanded Content 3")
-                        Text("Expanded Content 4")
-                        Text("Expanded Content 5")
-                        Text("Expanded Content 6")
-                    }
-                    Spacer()
-                }
-            }
-        )
-        .padding(.horizontal)
+        TopDrawerView(backgroundColor: .white,
+                      persistentContent: {
+                          HStack {
+                              Spacer()
+                              Text("Persistent Content")
+                              Spacer()
+                          }.padding()
+                      },
+                      expandedContent: {
+                          HStack {
+                              Spacer()
+                              VStack {
+                                  Text("Expanded Content 1")
+                                  Text("Expanded Content 2")
+                                  Text("Expanded Content 3")
+                                  Text("Expanded Content 4")
+                                  Text("Expanded Content 5")
+                                  Text("Expanded Content 6")
+                              }
+                              Spacer()
+                          }
+                      })
+                      .padding(.horizontal)
         Spacer()
     }.background(.green)
 }
 
 #Preview("floating without expanded content") {
     VStack {
-        TopDrawerView(
-            backgroundColor: .white,
-            persistentContent: {
-                HStack {
-                    Spacer()
-                    Text("Persistent Content")
-                    Spacer()
-                }.padding()
-            }
-        )
-        .padding(.horizontal)
+        TopDrawerView(backgroundColor: .white,
+                      persistentContent: {
+                          HStack {
+                              Spacer()
+                              Text("Persistent Content")
+                              Spacer()
+                          }.padding()
+                      })
+                      .padding(.horizontal)
         Spacer()
     }.background(.green)
 }
@@ -245,31 +241,29 @@ private struct BlurView: UIViewRepresentable {
 // Only suitable for non-notched devices
 #Preview("to edge") {
     VStack {
-        TopDrawerView(
-            backgroundColor: .white,
-            persistentContent: {
-                HStack {
-                    Spacer()
-                    Text("Persistent Content")
-                    Spacer()
-                }.padding()
-            },
-            expandedContent: {
-                HStack {
-                    Spacer()
-                    VStack {
-                        Text("Expanded Content 1")
-                        Text("Expanded Content 2")
-                        Text("Expanded Content 3")
-                        Text("Expanded Content 4")
-                        Text("Expanded Content 5")
-                        Text("Expanded Content 6")
-                    }
-                    Spacer()
-                }
-            }
-        )
-        .ignoresSafeArea()
+        TopDrawerView(backgroundColor: .white,
+                      persistentContent: {
+                          HStack {
+                              Spacer()
+                              Text("Persistent Content")
+                              Spacer()
+                          }.padding()
+                      },
+                      expandedContent: {
+                          HStack {
+                              Spacer()
+                              VStack {
+                                  Text("Expanded Content 1")
+                                  Text("Expanded Content 2")
+                                  Text("Expanded Content 3")
+                                  Text("Expanded Content 4")
+                                  Text("Expanded Content 5")
+                                  Text("Expanded Content 6")
+                              }
+                              Spacer()
+                          }
+                      })
+                      .ignoresSafeArea()
         Spacer()
     }.background(.green)
 }

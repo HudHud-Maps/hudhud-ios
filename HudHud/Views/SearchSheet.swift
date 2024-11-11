@@ -56,20 +56,18 @@ struct SearchSheet: View {
                         .focused(self.$searchIsFocused)
                         .padding(.vertical, 10)
                         .autocorrectionDisabled()
-                        .overlay(
-                            HStack {
-                                Spacer()
-                                if !self.searchStore.searchText.isEmpty {
-                                    Button {
-                                        self.searchStore.cancelSearch()
-                                    } label: {
-                                        Image(systemSymbol: .multiplyCircleFill)
-                                            .foregroundColor(.gray)
-                                            .frame(minWidth: 44, minHeight: 44)
-                                    }
+                        .overlay(HStack {
+                            Spacer()
+                            if !self.searchStore.searchText.isEmpty {
+                                Button {
+                                    self.searchStore.cancelSearch()
+                                } label: {
+                                    Image(systemSymbol: .multiplyCircleFill)
+                                        .foregroundColor(.gray)
+                                        .frame(minWidth: 44, minHeight: 44)
                                 }
                             }
-                        )
+                        })
                         .onSubmit {
                             Task {
                                 await self.searchStore.fetch(category: self.searchStore.searchText, enterSearch: true)
@@ -206,11 +204,9 @@ struct SearchSheet: View {
                             .listRowSeparator(.hidden)
                         }
                         SearchSectionView(title: "Recents") {
-                            RecentSearchResultsView(
-                                searchStore: self.searchStore,
-                                searchType: self.searchStore.searchType,
-                                sheetStore: self.sheetStore
-                            )
+                            RecentSearchResultsView(searchStore: self.searchStore,
+                                                    searchType: self.searchStore.searchType,
+                                                    sheetStore: self.sheetStore)
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                         .listRowSeparator(.hidden)
@@ -229,14 +225,12 @@ struct SearchSheet: View {
                 .toolbarRole(.editor)
         }
         .alert(isPresented: self.$showAlert) {
-            Alert(
-                title: Text("Already Logged In"),
-                message: Text("We are currently working on the UI and this feature is a work in progress."),
-                primaryButton: .default(Text("Log Out"), action: {
-                    self.logOut()
-                }),
-                secondaryButton: .default(Text("OK"))
-            )
+            Alert(title: Text("Already Logged In"),
+                  message: Text("We are currently working on the UI and this feature is a work in progress."),
+                  primaryButton: .default(Text("Log Out"), action: {
+                      self.logOut()
+                  }),
+                  secondaryButton: .default(Text("OK")))
         }
         .onAppear {
             self.searchStore.applySearchResultsOnMapIfNeeded()
@@ -285,7 +279,7 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
               let result = try? JSONDecoder()
-                  .decode([ResolvedItem].self, from: data) else {
+              .decode([ResolvedItem].self, from: data) else {
             return nil
         }
         self = result
@@ -303,5 +297,6 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
 
 #Preview {
     let trendingStroe = TrendingStore()
-    SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+    SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe,
+                sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
 }

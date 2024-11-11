@@ -28,11 +28,9 @@ public class DefaultNavigationUITheme: NavigationUITheme {
 
     // MARK: Lifecycle
 
-    public init(
-        primaryInstructionsRow: any InstructionRowTheme = DefaultInstructionRowTheme(),
-        secondaryInstructionsRow: any InstructionRowTheme = DefaultSecondaryInstructionRowTheme(),
-        arrival: any ArrivalViewTheme = DefaultArrivalViewTheme()
-    ) {
+    public init(primaryInstructionsRow: any InstructionRowTheme = DefaultInstructionRowTheme(),
+                secondaryInstructionsRow: any InstructionRowTheme = DefaultSecondaryInstructionRowTheme(),
+                arrival: any ArrivalViewTheme = DefaultArrivalViewTheme()) {
         self.primaryInstructionsRow = primaryInstructionsRow
         self.secondaryInstructionsRow = secondaryInstructionsRow
         self.arrival = arrival

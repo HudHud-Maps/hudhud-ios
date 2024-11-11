@@ -13,7 +13,9 @@ public struct NavigationUIBanner<Label: View>: View {
     // MARK: Nested Types
 
     public enum Severity {
-        case info, error, loading
+        case info
+        case error
+        case loading
     }
 
     // MARK: Properties
@@ -30,11 +32,9 @@ public struct NavigationUIBanner<Label: View>: View {
     ///   - severity: The severity of the banner.
     ///   - backgroundColor: The capsule's background color.
     ///   - label: The label subview.
-    public init(
-        severity: NavigationUIBanner.Severity,
-        backgroundColor: Color = Color(.systemBackground),
-        @ViewBuilder label: () -> Label
-    ) {
+    public init(severity: NavigationUIBanner.Severity,
+                backgroundColor: Color = Color(.systemBackground),
+                @ViewBuilder label: () -> Label) {
         self.severity = severity
         self.backgroundColor = backgroundColor
         self.label = label()
@@ -54,7 +54,8 @@ public struct NavigationUIBanner<Label: View>: View {
         .clipShape(Capsule())
     }
 
-    @ViewBuilder func image(for severity: NavigationUIBanner.Severity) -> some View {
+    @ViewBuilder
+    func image(for severity: NavigationUIBanner.Severity) -> some View {
         switch severity {
         case .info:
             Image(systemSymbol: .infoCircleFill)

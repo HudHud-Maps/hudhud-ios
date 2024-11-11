@@ -24,11 +24,9 @@ struct HudhudSegmentedPicker<ValueType: Hashable>: View {
     var body: some View {
         HStack(spacing: 0) {
             ForEach(self.options, id: \.value) { option in
-                HudhudSegmentedPickerButton(
-                    option: option,
-                    isSelected: self.selected == option.value,
-                    action: { withAnimation { self.selected = option.value } }
-                )
+                HudhudSegmentedPickerButton(option: option, isSelected: self.selected == option.value, action: {
+                    withAnimation { self.selected = option.value }
+                })
                 if self.options.last?.value != option.value {
                     Divider()
                         .frame(maxWidth: 1, maxHeight: self.frameHeight / 2.0)
@@ -112,5 +110,9 @@ struct HudhudSegmentedPickerButton<ValueType: Hashable>: View {
 #Preview {
     @Previewable @State var selection = "1"
     @Previewable @State var options = ["1", "2", "3"]
-    return HudhudSegmentedPicker(selected: $selection, options: [SegmentOption(value: "1", label: .text("1")), SegmentOption(value: "2", label: .text("2")), SegmentOption(value: "3", label: .text("3"))])
+    return HudhudSegmentedPicker(selected: $selection, options: [
+        SegmentOption(value: "1", label: .text("1")),
+        SegmentOption(value: "2", label: .text("2")),
+        SegmentOption(value: "3", label: .text("3"))
+    ])
 }

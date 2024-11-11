@@ -194,10 +194,8 @@ private extension PhotoSectionView {
             }
         }
         .sheet(item: self.$selectedMedia) { mediaURL in
-            FullPageImage(
-                mediaURL: mediaURL,
-                mediaURLs: self.item.mediaURLs
-            )
+            FullPageImage(mediaURL: mediaURL,
+                          mediaURLs: self.item.mediaURLs)
         }
     }
 

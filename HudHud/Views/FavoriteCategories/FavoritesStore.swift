@@ -95,15 +95,14 @@ private extension FavoritesStore {
         }
     }
 
-    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?, type: String) -> FavoritesItem {
-        return FavoritesItem(
-            id: UUID(),
-            title: title,
-            tintColor: tintColor,
-            item: item,
-            description: description,
-            type: type
-        )
+    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?,
+                             type: String) -> FavoritesItem {
+        return FavoritesItem(id: UUID(),
+                             title: title,
+                             tintColor: tintColor,
+                             item: item,
+                             description: description,
+                             type: type)
     }
 
     func updateExistingItem(at index: Int, with newItem: FavoritesItem) {

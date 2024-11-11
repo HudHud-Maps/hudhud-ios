@@ -56,13 +56,11 @@ public class FoundationFormatterCollection: FormatterCollection {
 
     // MARK: Lifecycle
 
-    public init(
-        distanceFormatter: Formatter = DefaultFormatters.distanceFormatter,
-        estimatedArrivalFormatter: Date.FormatStyle = DefaultFormatters.estimatedArrivalFormat,
-        durationFormatter: DateComponentsFormatter = DefaultFormatters.durationFormat,
-        speedValueFormatter: NumberFormatter = DefaultFormatters.speedFormatter,
-        speedWithUnitsFormatter: MeasurementFormatter = DefaultFormatters.speedWithUnitsFormatter
-    ) {
+    public init(distanceFormatter: Formatter = DefaultFormatters.distanceFormatter,
+                estimatedArrivalFormatter: Date.FormatStyle = DefaultFormatters.estimatedArrivalFormat,
+                durationFormatter: DateComponentsFormatter = DefaultFormatters.durationFormat,
+                speedValueFormatter: NumberFormatter = DefaultFormatters.speedFormatter,
+                speedWithUnitsFormatter: MeasurementFormatter = DefaultFormatters.speedWithUnitsFormatter) {
         self.distanceFormatter = distanceFormatter
         self.estimatedArrivalFormatter = estimatedArrivalFormatter
         self.durationFormatter = durationFormatter

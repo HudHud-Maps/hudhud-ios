@@ -81,12 +81,10 @@ final class NavigationEngine {
         self.locationEngine = configuration.locationEngine
         self.horizonEngine = HorizonEngine(configuration: configuration)
 
-        self.ferrostarCore = FerrostarCore(
-            customRouteProvider: configuration.routeProvider,
-            locationProvider: self.locationEngine.locationProvider,
-            navigationControllerConfig: configuration.toFerrostarConfig(),
-            annotation: self.annotationPublisher
-        )
+        self.ferrostarCore = FerrostarCore(customRouteProvider: configuration.routeProvider,
+                                           locationProvider: self.locationEngine.locationProvider,
+                                           navigationControllerConfig: configuration.toFerrostarConfig(),
+                                           annotation: self.annotationPublisher)
 
         self.setupFerrostarCore()
         self.observeFerrostarState()
@@ -178,12 +176,10 @@ private extension NavigationEngine {
             Logger.locationEngine.debug("Location engine mode changed to \(String(describing: newMode))")
         case let .providerChanged(newType):
             Logger.locationEngine.debug("Location engine mode changed to \(String(describing: newType))")
-            self.ferrostarCore = FerrostarCore(
-                customRouteProvider: self.configuration.routeProvider,
-                locationProvider: self.locationEngine.locationProvider,
-                navigationControllerConfig: self.configuration.toFerrostarConfig(),
-                annotation: self.annotationPublisher
-            )
+            self.ferrostarCore = FerrostarCore(customRouteProvider: self.configuration.routeProvider,
+                                               locationProvider: self.locationEngine.locationProvider,
+                                               navigationControllerConfig: self.configuration.toFerrostarConfig(),
+                                               annotation: self.annotationPublisher)
             self.setupFerrostarCore()
         }
     }

@@ -53,10 +53,8 @@ struct POIMediaView: View {
         }
         .scrollIndicators(.hidden)
         .fullScreenCover(item: self.$selectedMedia) { mediaURL in
-            FullPageImage(
-                mediaURL: mediaURL,
-                mediaURLs: self.mediaURLs
-            )
+            FullPageImage(mediaURL: mediaURL,
+                          mediaURLs: self.mediaURLs)
         }
     }
 }

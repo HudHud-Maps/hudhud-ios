@@ -56,12 +56,10 @@ struct RoutePlanView: View {
         VStack {
             VStack(alignment: .destinationIconCenterAlignment) {
                 ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
-                    RoutePlannerRow(
-                        destination: destination,
-                        onSwap: self.swapActionIfCanSwap(for: destination),
-                        onDelete: self.deleteActionIfCanDelete(for: destination)
-                    )
-                    .animation(.bouncy, value: destination)
+                    RoutePlannerRow(destination: destination,
+                                    onSwap: self.swapActionIfCanSwap(for: destination),
+                                    onDelete: self.deleteActionIfCanDelete(for: destination))
+                        .animation(.bouncy, value: destination)
                 }
                 AddMoreRoute {
                     self.routePlannderStore.addNewRoute()
@@ -194,9 +192,7 @@ struct DestinationImage: View {
                 .clipShape(Circle())
                 .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
                 .layoutPriority(1)
-                .background(
-                    item.color.mask(Circle())
-                )
+                .background(item.color.mask(Circle()))
         }
     }
 }
@@ -261,10 +257,8 @@ struct StartNavigationButton: View {
                 Spacer()
             }
             .padding(.vertical)
-            .background(
-                RoundedRectangle(cornerRadius: 50)
-                    .fill(Color.Colors.Road._02DarkGreen)
-            )
+            .background(RoundedRectangle(cornerRadius: 50)
+                .fill(Color.Colors.Road._02DarkGreen))
         }
     }
 }

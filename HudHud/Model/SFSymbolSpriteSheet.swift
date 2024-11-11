@@ -18,7 +18,10 @@ enum SFSymbolSpriteSheet {
     static var defaultMapPin: UIImage = {
         let renderer = UIGraphicsImageRenderer(size: size)
 
-        return Self.createSymbolImageWithCircle(symbolImage: UIImage(systemSymbol: .mappin), backgroundColor: .systemIndigo, renderer: renderer, size: size, internalSize: internalSize)
+        return Self.createSymbolImageWithCircle(symbolImage: UIImage(systemSymbol: .mappin),
+                                                backgroundColor: .systemIndigo,
+                                                renderer: renderer,
+                                                size: size, internalSize: internalSize)
     }()
 
     static let adaptiveColors: [(name: String, color: UIColor)] = [
@@ -100,7 +103,10 @@ enum SFSymbolSpriteSheet {
             let symbolImage = self.rawImage(for: icon)
             for color in self.adaptiveColors {
                 let name = "\(icon)\(color.name)"
-                tempDict[name] = self.createSymbolImageWithCircle(symbolImage: symbolImage, backgroundColor: color.color, renderer: renderer, size: self.size, internalSize: self.internalSize)
+                tempDict[name] = self.createSymbolImageWithCircle(symbolImage: symbolImage,
+                                                                  backgroundColor: color.color,
+                                                                  renderer: renderer,
+                                                                  size: self.size, internalSize: self.internalSize)
             }
         }
 
@@ -109,7 +115,8 @@ enum SFSymbolSpriteSheet {
 
     private static func rawImage(for symbolName: String) -> UIImage {
         let symbolConfiguration = UIImage.SymbolConfiguration(textStyle: .caption1)
-        let symbolImage: UIImage = if let resolvedImage = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration) { // swiftlint:disable:this sf_safe_symbol
+        // swiftlint:disable:next sf_safe_symbol
+        let symbolImage: UIImage = if let resolvedImage = UIImage(systemName: symbolName, withConfiguration: symbolConfiguration) {
             resolvedImage
         } else {
             UIImage(systemSymbol: .mappin, withConfiguration: symbolConfiguration)
@@ -117,7 +124,11 @@ enum SFSymbolSpriteSheet {
         return symbolImage
     }
 
-    private static func createSymbolImageWithCircle(symbolImage: UIImage, backgroundColor: UIColor, renderer: UIGraphicsImageRenderer, size: CGSize, internalSize: CGSize) -> UIImage {
+    private static func createSymbolImageWithCircle(symbolImage: UIImage,
+                                                    backgroundColor: UIColor,
+                                                    renderer: UIGraphicsImageRenderer,
+                                                    size: CGSize,
+                                                    internalSize: CGSize) -> UIImage {
         let image = renderer.image { _ in
             let rect = CGRect(origin: CGPoint(x: 2, y: 2), size: internalSize)
 
@@ -132,12 +143,10 @@ enum SFSymbolSpriteSheet {
             circlePath.stroke()
 
             // Draw SF Symbol in the center
-            let symbolRect = CGRect(
-                x: rect.midX - symbolImage.size.width / 2,
-                y: rect.midY - symbolImage.size.height / 2,
-                width: symbolImage.size.width,
-                height: symbolImage.size.height
-            )
+            let symbolRect = CGRect(x: rect.midX - symbolImage.size.width / 2,
+                                    y: rect.midY - symbolImage.size.height / 2,
+                                    width: symbolImage.size.width,
+                                    height: symbolImage.size.height)
             symbolImage.withTintColor(.white).draw(in: symbolRect)
         }
         return image

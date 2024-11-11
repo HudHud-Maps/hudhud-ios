@@ -51,18 +51,12 @@ extension Route {
             if let current = currentSegment,
                current.level == congestion,
                let lastSegment = current.geometry.last {
-                currentSegment = CongestionSegment(
-                    level: congestion,
-                    geometry: current.geometry + [lastSegment]
-                )
+                currentSegment = CongestionSegment(level: congestion, geometry: current.geometry + [lastSegment])
             } else {
                 if let current = currentSegment {
                     mergedSegments.append(current)
                 }
-                currentSegment = CongestionSegment(
-                    level: congestion,
-                    geometry: segmentGeometry.map(\.clLocationCoordinate2D)
-                )
+                currentSegment = CongestionSegment(level: congestion, geometry: segmentGeometry.map(\.clLocationCoordinate2D))
             }
 
             currentIndex = endIndex

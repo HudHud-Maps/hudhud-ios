@@ -7,8 +7,8 @@
 //
 
 import BackendService
-@testable import HudHud
 import XCTest
+@testable import HudHud
 
 final class HudHudTests: XCTestCase {
 

@@ -21,16 +21,14 @@ struct TrafficChartView: View {
     var body: some View {
         if let trafficRange = chartData.getSpecificTrafficRange {
             Chart(trafficRange) { shape in
-                BarMark(
-                    x: .value(String(localized: "Hours Range", comment: "traffic chart view, Hours range x axes"), shape.hour.lowerBound, unit: .hour),
-                    y: .value(String(localized: "Occupancy Range", comment: "traffic chart view, Occupancy Range y axes"), shape.traffic), width: .automatic
-                )
-                .foregroundStyle(
-                    shape.hour.contains(Date()) == true ? .blue
-                        : Color(
-                            UIColor.secondarySystemFill
-                        )
-                )
+                BarMark(x: .value(String(localized: "Hours Range", comment: "traffic chart view, Hours range x axes"),
+                                  shape.hour.lowerBound,
+                                  unit: .hour),
+                        y: .value(String(localized: "Occupancy Range", comment: "traffic chart view, Occupancy Range y axes"),
+                                  shape.traffic),
+                        width: .automatic)
+                    .foregroundStyle(shape.hour.contains(Date()) == true ? .blue
+                        : Color(UIColor.secondarySystemFill))
             }
             .chartXAxis(content: {
                 AxisMarks(preset: .aligned, values: AxisMarkValues.stride(by: .hour, count: 3)) { _ in

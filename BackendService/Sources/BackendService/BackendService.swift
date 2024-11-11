@@ -213,7 +213,12 @@ public struct ResolvedItem: DisplayableAsRow, Codable, Hashable, CustomStringCon
 
     // MARK: Lifecycle
 
-    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin, type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil, website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil, openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil, driveDuration: Double? = nil, priceRange: Int? = nil, nationalAddress: String? = nil, floor: String? = nil, isWheelchairAccessible: Bool? = nil) {
+    public init(id: String, title: String, subtitle: String?, category: String? = nil, subCategory: String? = nil, symbol: SFSymbol = .pin,
+                type: PredictionResult, coordinate: CLLocationCoordinate2D, color: SystemColor = .systemRed, phone: String? = nil,
+                website: URL? = nil, rating: Double? = nil, ratingsCount: Int? = nil, isOpen: Bool? = nil,
+                openingHours: [HudHudPOI.OpeningHours]? = nil, trendingImage: String? = nil, mediaURLs: [URL] = [], distance: Double? = nil,
+                driveDuration: Double? = nil, priceRange: Int? = nil, nationalAddress: String? = nil, floor: String? = nil,
+                isWheelchairAccessible: Bool? = nil) {
         self.id = id
         self.title = title
         self.subtitle = subtitle

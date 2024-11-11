@@ -48,35 +48,22 @@ struct MoreFiltersView: View {
             .padding(.vertical)
             // Sort By Filter
             Text("Sort By")
-            HudhudSegmentedPicker(
-                selected: self.$filterStore.sortSelection,
-                options: self.filterStore.sortOptions
-            )
-
-            .padding(.bottom)
+            HudhudSegmentedPicker(selected: self.$filterStore.sortSelection, options: self.filterStore.sortOptions)
+                .padding(.bottom)
 
             // Price Filter
             Text("Price")
-            HudhudSegmentedPicker(
-                selected: self.$filterStore.priceSelection,
-                options: self.filterStore.priceOptions
-            )
-            .padding(.bottom)
+            HudhudSegmentedPicker(selected: self.$filterStore.priceSelection, options: self.filterStore.priceOptions)
+                .padding(.bottom)
 
             // Rating Filter
             Text("Rating")
-            HudhudSegmentedPicker(
-                selected: self.$filterStore.ratingSelection,
-                options: self.filterStore.ratingOptions
-            )
-            .padding(.bottom)
+            HudhudSegmentedPicker(selected: self.$filterStore.ratingSelection, options: self.filterStore.ratingOptions)
+                .padding(.bottom)
 
             // Schedule Filter
             Text("Work Schedule")
-            HudhudSegmentedPicker(
-                selected: self.$filterStore.scheduleSelection,
-                options: self.filterStore.scheduleOptions
-            )
+            HudhudSegmentedPicker(selected: self.$filterStore.scheduleSelection, options: self.filterStore.scheduleOptions)
             Spacer()
             Divider().padding(-20)
             Button {

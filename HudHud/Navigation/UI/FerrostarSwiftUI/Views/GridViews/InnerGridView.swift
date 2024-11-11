@@ -8,8 +8,7 @@
 
 import SwiftUI
 
-public struct InnerGridView<
-    TopLeading: View,
+public struct InnerGridView<TopLeading: View,
     TopCenter: View,
     TopTrailing: View,
     MidLeading: View,
@@ -17,8 +16,7 @@ public struct InnerGridView<
     MidTrailing: View,
     BottomLeading: View,
     BottomCenter: View,
-    BottomTrailing: View
->: View {
+    BottomTrailing: View>: View {
 
     // MARK: Properties
 
@@ -54,17 +52,15 @@ public struct InnerGridView<
     ///   - bottomLeading: The bottom left corner view. Defaults to a Spacer()
     ///   - bottomCenter: The bottom center corner view. Defaults to a Spacer()
     ///   - bottomTrailing: The bottom right corner view. Defaults to a Spacer()
-    public init(
-        @ViewBuilder topLeading: @escaping () -> TopLeading = { Spacer() },
-        @ViewBuilder topCenter: @escaping () -> TopCenter = { Spacer() },
-        @ViewBuilder topTrailing: @escaping () -> TopTrailing = { Spacer() },
-        @ViewBuilder midLeading: @escaping () -> MidLeading = { Spacer() },
-        @ViewBuilder midCenter: @escaping () -> MidCenter = { Spacer() },
-        @ViewBuilder midTrailing: @escaping () -> MidTrailing = { Spacer() },
-        @ViewBuilder bottomLeading: @escaping () -> BottomLeading = { Spacer() },
-        @ViewBuilder bottomCenter: @escaping () -> BottomCenter = { Spacer() },
-        @ViewBuilder bottomTrailing: @escaping () -> BottomTrailing = { Spacer() }
-    ) {
+    public init(@ViewBuilder topLeading: @escaping () -> TopLeading = { Spacer() },
+                @ViewBuilder topCenter: @escaping () -> TopCenter = { Spacer() },
+                @ViewBuilder topTrailing: @escaping () -> TopTrailing = { Spacer() },
+                @ViewBuilder midLeading: @escaping () -> MidLeading = { Spacer() },
+                @ViewBuilder midCenter: @escaping () -> MidCenter = { Spacer() },
+                @ViewBuilder midTrailing: @escaping () -> MidTrailing = { Spacer() },
+                @ViewBuilder bottomLeading: @escaping () -> BottomLeading = { Spacer() },
+                @ViewBuilder bottomCenter: @escaping () -> BottomCenter = { Spacer() },
+                @ViewBuilder bottomTrailing: @escaping () -> BottomTrailing = { Spacer() }) {
         self.topLeading = topLeading()
         self.topCenter = topCenter()
         self.topTrailing = topTrailing()
@@ -92,11 +88,9 @@ public struct InnerGridView<
 
                 self.bottomLeading
             }
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity,
-                alignment: .leading
-            )
+            .frame(maxWidth: .infinity,
+                   maxHeight: .infinity,
+                   alignment: .leading)
 
             // Center Column
             VStack(alignment: .center) {
@@ -110,11 +104,9 @@ public struct InnerGridView<
 
                 self.bottomCenter
             }
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity,
-                alignment: .center
-            )
+            .frame(maxWidth: .infinity,
+                   maxHeight: .infinity,
+                   alignment: .center)
 
             // Trailing Column
             VStack(alignment: .trailing) {
@@ -128,67 +120,61 @@ public struct InnerGridView<
 
                 self.bottomTrailing
             }
-            .frame(
-                maxWidth: .infinity,
-                maxHeight: .infinity,
-                alignment: .trailing
-            )
+            .frame(maxWidth: .infinity,
+                   maxHeight: .infinity,
+                   alignment: .trailing)
         }
     }
 }
 
 #Preview("Full Grid") {
-    InnerGridView(
-        topLeading: {
-            Rectangle().frame(width: 64, height: 64)
-                .foregroundColor(.blue)
-        },
-        topCenter: {
-            Rectangle()
-                .foregroundColor(.blue)
-        },
-        topTrailing: {
-            Rectangle().frame(height: 64)
-                .foregroundColor(.blue)
-        },
-        midLeading: {
-            Rectangle().frame(width: 64)
-                .foregroundColor(.red)
-        },
-        midTrailing: {
-            Rectangle()
-                .foregroundColor(.red)
-        },
-        bottomLeading: {
-            Rectangle().frame(width: 64, height: 64)
-                .foregroundColor(.blue)
-        },
-        bottomCenter: {
-            Rectangle()
-                .foregroundColor(.blue)
-        },
-        bottomTrailing: {
-            Rectangle().frame(height: 64)
-                .foregroundColor(.blue)
-        }
-    )
-    .frame(maxWidth: .infinity)
-    .padding()
-    .background(Color.green)
+    InnerGridView(topLeading: {
+                      Rectangle().frame(width: 64, height: 64)
+                          .foregroundColor(.blue)
+                  },
+                  topCenter: {
+                      Rectangle()
+                          .foregroundColor(.blue)
+                  },
+                  topTrailing: {
+                      Rectangle().frame(height: 64)
+                          .foregroundColor(.blue)
+                  },
+                  midLeading: {
+                      Rectangle().frame(width: 64)
+                          .foregroundColor(.red)
+                  },
+                  midTrailing: {
+                      Rectangle()
+                          .foregroundColor(.red)
+                  },
+                  bottomLeading: {
+                      Rectangle().frame(width: 64, height: 64)
+                          .foregroundColor(.blue)
+                  },
+                  bottomCenter: {
+                      Rectangle()
+                          .foregroundColor(.blue)
+                  },
+                  bottomTrailing: {
+                      Rectangle().frame(height: 64)
+                          .foregroundColor(.blue)
+                  })
+                  .frame(maxWidth: .infinity)
+                  .padding()
+                  .background(Color.green)
 }
 
 #Preview("Top Trailing Bottom Leading") {
-    InnerGridView(
-        topTrailing: {
-            Rectangle().frame(width: 64, height: 64)
-                .foregroundColor(.blue)
-        },
-        bottomLeading: {
-            Rectangle().frame(width: 64, height: 64)
-                .foregroundColor(.blue)
-        }
-    )
-    .frame(maxWidth: .infinity)
-    .padding()
-    .background(Color.green)
+    InnerGridView(topTrailing: {
+                      Rectangle().frame(width: 64, height: 64)
+                          .foregroundColor(.blue)
+                  },
+                  bottomLeading: {
+                      Rectangle().frame(width: 64, height: 64)
+                          .foregroundColor(.blue)
+                  })
+                  .frame(maxWidth: .infinity)
+                  .padding()
+                  .background(Color.green)
 }

@@ -57,10 +57,8 @@ struct PhotoTabView: View {
             }
             .scrollIndicators(.hidden)
             .sheet(item: self.$selectedMedia) { mediaURL in
-                FullPageImage(
-                    mediaURL: mediaURL,
-                    mediaURLs: self.item.mediaURLs
-                )
+                FullPageImage(mediaURL: mediaURL,
+                              mediaURLs: self.item.mediaURLs)
             }
             Button(action: {
                 //  add photo

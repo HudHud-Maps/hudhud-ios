@@ -16,7 +16,8 @@ import SwiftUI
 // MARK: - PortraitNavigationView
 
 /// A portrait orientation navigation view that includes the InstructionsView at the top.
-public struct PortraitNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost, NavigationOverlayContent {
+public struct PortraitNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost,
+    NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -51,20 +52,18 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
 
     // MARK: Lifecycle
 
-    public init(
-        makeViewController: @autoclosure @escaping () -> T,
-        overlayStore: OverlayContentStore,
-        locationManager: PassthroughLocationManager,
-        styleURL: URL,
-        camera: Binding<MapViewCamera>,
-        navigationCamera: MapViewCamera = .automotiveNavigation(),
-        isNavigating: Bool,
-        isMuted: Bool,
-        minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
-        onTapMute: @escaping () -> Void,
-        onTapExit: (() -> Void)? = nil,
-        @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
-    ) {
+    public init(makeViewController: @autoclosure @escaping () -> T,
+                overlayStore: OverlayContentStore,
+                locationManager: PassthroughLocationManager,
+                styleURL: URL,
+                camera: Binding<MapViewCamera>,
+                navigationCamera: MapViewCamera = .automotiveNavigation(),
+                isNavigating: Bool,
+                isMuted: Bool,
+                minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+                onTapMute: @escaping () -> Void,
+                onTapExit: (() -> Void)? = nil,
+                @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }) {
         self.makeViewController = makeViewController
         self.overlayStore = overlayStore
         self.locationManager = locationManager
@@ -85,43 +84,39 @@ public struct PortraitNavigationView<T: MapViewHostViewController>: View, Custom
     public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                NavigationMapView(
-                    makeViewController: self.makeViewController(),
-                    locationManager: self.locationManager,
-                    styleURL: self.styleURL,
-                    camera: self.$camera,
-                    isNavigating: self.isNavigating,
-                    onStyleLoaded: { _ in
-                        self.camera = self.navigationCamera
-                    }, makeMapContent: {
-                        self.userLayers
-                    }
-                )
-                .navigationMapViewContentInset(.portrait(within: geometry))
+                NavigationMapView(makeViewController: self.makeViewController(),
+                                  locationManager: self.locationManager,
+                                  styleURL: self.styleURL,
+                                  camera: self.$camera,
+                                  isNavigating: self.isNavigating,
+                                  onStyleLoaded: { _ in
+                                      self.camera = self.navigationCamera
+                                  }, makeMapContent: {
+                                      self.userLayers
+                                  })
+                                  .navigationMapViewContentInset(.portrait(within: geometry))
 
-                PortraitNavigationOverlayView(
-                    overlayStore: self.overlayStore,
-                    speedLimit: self.speedLimit,
-                    isMuted: self.isMuted,
-                    showMute: true,
-                    onMute: self.onTapMute,
-                    showZoom: true,
-                    onZoomIn: { self.camera.incrementZoom(by: 1) },
-                    onZoomOut: { self.camera.incrementZoom(by: -1) },
-                    showCentering: !self.camera.isTrackingUserLocationWithCourse,
-                    onCenter: { self.camera = self.navigationCamera }
-                )
-                .innerGrid {
-                    self.topCenter?()
-                } topTrailing: {
-                    self.topTrailing?()
-                } midLeading: {
-                    self.midLeading?()
-                } bottomTrailing: {
-                    self.bottomTrailing?()
-                } bottomLeading: {
-                    self.bottomLeading?()
-                }.complementSafeAreaInsets(parentGeometry: geometry, minimumInsets: self.minimumSafeAreaInsets)
+                PortraitNavigationOverlayView(overlayStore: self.overlayStore,
+                                              speedLimit: self.speedLimit,
+                                              isMuted: self.isMuted,
+                                              showMute: true,
+                                              onMute: self.onTapMute,
+                                              showZoom: true,
+                                              onZoomIn: { self.camera.incrementZoom(by: 1) },
+                                              onZoomOut: { self.camera.incrementZoom(by: -1) },
+                                              showCentering: !self.camera.isTrackingUserLocationWithCourse,
+                                              onCenter: { self.camera = self.navigationCamera })
+                    .innerGrid {
+                        self.topCenter?()
+                    } topTrailing: {
+                        self.topTrailing?()
+                    } midLeading: {
+                        self.midLeading?()
+                    } bottomTrailing: {
+                        self.bottomTrailing?()
+                    } bottomLeading: {
+                        self.bottomLeading?()
+                    }.complementSafeAreaInsets(parentGeometry: geometry, minimumInsets: self.minimumSafeAreaInsets)
             }
         }
     }

@@ -256,11 +256,11 @@ struct BottomBar: View {
                     .foregroundColor(.Colors.General._02Grey)
             }
             .buttonStyle(.plain)
-                .confirmationDialog("", isPresented: self.$moreButtonPressed) {
-                    Button("Share") {}
-                    Button("Report", role: .destructive) {}
-                    Button("Cancel", role: .cancel) {}
-                }
+            .confirmationDialog("", isPresented: self.$moreButtonPressed) {
+                Button("Share") {}
+                Button("Report", role: .destructive) {}
+                Button("Cancel", role: .cancel) {}
+            }
         }
     }
 }

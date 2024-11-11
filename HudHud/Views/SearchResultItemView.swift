@@ -42,9 +42,7 @@ struct SearchResultItemView: View {
                 .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
                 .layoutPriority(1)
                 .frame(minWidth: .leastNonzeroMagnitude)
-                .background(
-                    self.item.color.mask(Circle())
-                )
+                .background(self.item.color.mask(Circle()))
 
             VStack(alignment: .leading) {
                 Text(self.item.title)
@@ -143,13 +141,9 @@ struct SearchResultItem {
 
 #Preview(traits: .sizeThatFitsLayout) {
     @Previewable @State var searchText: String = ""
-    return SearchResultItemView(
-        item: SearchResultItem(.predictionItem(PredictionItem(
-            id: UUID().uuidString,
-            title: "Starbucks",
-            subtitle: "Coffee",
-            type: .appleResolved
-        ))),
-        searchText: $searchText
-    )
+    return SearchResultItemView(item: SearchResultItem(.predictionItem(PredictionItem(id: UUID().uuidString,
+                                                                                      title: "Starbucks",
+                                                                                      subtitle: "Coffee",
+                                                                                      type: .appleResolved))),
+    searchText: $searchText)
 }

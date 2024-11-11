@@ -28,11 +28,9 @@ public extension SymbolStyleLayer {
             let defaultExpression = NSExpression(forConstantValue: defaultImage.sha256())
 
             // swiftlint:disable force_cast
-            it.iconImageName = NSExpression(
-                forMLNMatchingKey: attributeExpression,
-                in: mappingDictionary as! [NSExpression: NSExpression],
-                default: defaultExpression
-            )
+            it.iconImageName = NSExpression(forMLNMatchingKey: attributeExpression,
+                                            in: mappingDictionary as! [NSExpression: NSExpression],
+                                            default: defaultExpression)
             // swiftlint:enable force_cast
             it.iconImages = mappings.values + [defaultImage]
         }

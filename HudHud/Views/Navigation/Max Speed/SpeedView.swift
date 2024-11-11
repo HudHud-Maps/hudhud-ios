@@ -39,18 +39,15 @@ struct SpeedView: View {
     // MARK: Content
 
     var body: some View {
-        CurrentSpeedView(
-            speed: self.speed,
-            isOverSpeedLimit: self.isOverSpeedLimit
-        )
-        .overlay(alignment: .topTrailing) {
-            if let speedLimit {
-                Circle().fill(.red).frame(width: 10)
-                    .overlay {
-                        SpeedLimitView(speedLimit: speedLimit)
-                    }
+        CurrentSpeedView(speed: self.speed, isOverSpeedLimit: self.isOverSpeedLimit)
+            .overlay(alignment: .topTrailing) {
+                if let speedLimit {
+                    Circle().fill(.red).frame(width: 10)
+                        .overlay {
+                            SpeedLimitView(speedLimit: speedLimit)
+                        }
+                }
             }
-        }
     }
 }
 
@@ -117,17 +114,15 @@ struct SpeedLimitView: View {
     // MARK: Content
 
     var body: some View {
-        Text(
-            distanceFormatter
-                .string(from: self.speedLimit.value as NSNumber) ?? "*****"
-        )
-        .lineLimit(1, reservesSpace: true)
-        .foregroundStyle(Color.Colors.General._17Text)
-        .padding(12)
-        .background(Circle().fill(.white))
-        .padding(3.5)
-        .background(Circle().fill(.red))
-        .frame(minWidth: 100, minHeight: 100)
+        Text(distanceFormatter
+            .string(from: self.speedLimit.value as NSNumber) ?? "*****")
+            .lineLimit(1, reservesSpace: true)
+            .foregroundStyle(Color.Colors.General._17Text)
+            .padding(12)
+            .background(Circle().fill(.white))
+            .padding(3.5)
+            .background(Circle().fill(.red))
+            .frame(minWidth: 100, minHeight: 100)
     }
 }
 
@@ -154,17 +149,11 @@ struct OverSpeedLimitNotificationView: View {
 }
 
 #Preview {
-    SpeedView(
-        speed: Measurement<UnitSpeed>(value: 50, unit: .kilometersPerHour),
-        speedLimit: Measurement<UnitSpeed>(value: 60, unit: .kilometersPerHour)
-    )
-    SpeedView(
-        speed: Measurement<UnitSpeed>(value: 60, unit: .kilometersPerHour),
-        speedLimit: Measurement<UnitSpeed>(value: 50, unit: .kilometersPerHour)
-    )
-    SpeedLimitView(
-        speedLimit: Measurement<UnitSpeed>(value: 120, unit: .kilometersPerHour)
-    )
+    SpeedView(speed: Measurement<UnitSpeed>(value: 50, unit: .kilometersPerHour),
+              speedLimit: Measurement<UnitSpeed>(value: 60, unit: .kilometersPerHour))
+    SpeedView(speed: Measurement<UnitSpeed>(value: 60, unit: .kilometersPerHour),
+              speedLimit: Measurement<UnitSpeed>(value: 50, unit: .kilometersPerHour))
+    SpeedLimitView(speedLimit: Measurement<UnitSpeed>(value: 120, unit: .kilometersPerHour))
 }
 
 private let distanceFormatter: NumberFormatter = {

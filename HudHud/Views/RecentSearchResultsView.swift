@@ -39,9 +39,7 @@ struct RecentSearchResultsView: View {
                     .overlay(Circle().stroke(.tertiary, lineWidth: 0.5))
                     .layoutPriority(1)
                     .frame(minWidth: .leastNonzeroMagnitude)
-                    .background(
-                        item.color.mask(Circle())
-                    )
+                    .background(item.color.mask(Circle()))
 
                 VStack(alignment: .leading) {
                     Text(item.title)
@@ -85,11 +83,9 @@ struct RecentSearchResultsView: View {
 
 #Preview {
     NavigationStack {
-        RecentSearchResultsView(
-            searchStore: .storeSetUpForPreviewing,
-            searchType: .favorites,
-            sheetStore: SheetStore(emptySheetType: .search)
-        )
+        RecentSearchResultsView(searchStore: .storeSetUpForPreviewing,
+                                searchType: .favorites,
+                                sheetStore: SheetStore(emptySheetType: .search))
     }
 }
 
@@ -107,14 +103,13 @@ struct EditFavoritesFormViewPreview: PreviewProvider {
         let favoritesStore = FavoritesStore()
 
         return NavigationStack {
-            RecentSearchResultsView(
-                searchStore: .storeSetUpForPreviewing,
-                searchType: .favorites,
-                sheetStore: .storeSetUpForPreviewing
-            )
-            .navigationDestination(isPresented: .constant(true)) {
-                EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore, sheetStore: .storeSetUpForPreviewing)
-            }
+            RecentSearchResultsView(searchStore: .storeSetUpForPreviewing,
+                                    searchType: .favorites,
+                                    sheetStore: .storeSetUpForPreviewing)
+                .navigationDestination(isPresented: .constant(true)) {
+                    EditFavoritesFormView(item: .artwork, favoritesItem: favoriteItem, favoritesStore: favoritesStore,
+                                          sheetStore: .storeSetUpForPreviewing)
+                }
         }
         .previewDisplayName("EditFavoritesFormView")
     }

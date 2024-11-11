@@ -11,9 +11,5 @@ import FerrostarCoreFFI
 import Foundation
 
 protocol RoutingService {
-    func calculateRoute(
-        from start: Waypoint,
-        to end: Waypoint,
-        passingBy waypoints: [Waypoint]
-    ) async throws -> [Route]
+    func calculateRoute(from start: Waypoint, to end: Waypoint, passingBy waypoints: [Waypoint]) async throws -> [Route]
 }

@@ -27,11 +27,9 @@ struct ObservedChild<T: ObservableObject> {
 
     // MARK: Static Functions
 
-    static subscript<EnclosingSelf: ObservableObject>(
-        _enclosingInstance instance: EnclosingSelf,
-        wrapped _: ReferenceWritableKeyPath<EnclosingSelf, T>,
-        storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
-    ) -> T {
+    static subscript<EnclosingSelf: ObservableObject>(_enclosingInstance instance: EnclosingSelf,
+                                                      wrapped _: ReferenceWritableKeyPath<EnclosingSelf, T>,
+                                                      storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>) -> T {
         get {
             var wrapper = instance[keyPath: storageKeyPath]
 
@@ -52,11 +50,9 @@ struct ObservedChild<T: ObservableObject> {
         }
     }
 
-    static subscript<EnclosingSelf: Observable>(
-        _enclosingObservableInstance instance: EnclosingSelf,
-        wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, T>,
-        storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
-    ) -> T {
+    static subscript<EnclosingSelf: Observable>(_enclosingObservableInstance instance: EnclosingSelf,
+                                                wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, T>,
+                                                storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>) -> T {
         get {
             var wrapper = instance[keyPath: storageKeyPath]
 

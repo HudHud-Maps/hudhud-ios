@@ -48,14 +48,12 @@ struct MapLayersView: View {
             }
             .navigationTitle("Layers")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: Button {
-                    self.sheetStore.popSheet()
-                } label: {
-                    Image(systemSymbol: .xmark)
-                        .foregroundColor(Color.Colors.General._02Grey)
-                }
-            )
+            .navigationBarItems(trailing: Button {
+                self.sheetStore.popSheet()
+            } label: {
+                Image(systemSymbol: .xmark)
+                    .foregroundColor(Color.Colors.General._02Grey)
+            })
         }
     }
 
@@ -111,10 +109,8 @@ struct MapLayersView: View {
                             }
                             .background(Color.Colors.General._03LightGrey)
                             .cornerRadius(12)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
-                            )
+                            .overlay(RoundedRectangle(cornerRadius: 10)
+                                .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2))
                         }
                         Text(layer.name)
                             .hudhudFont(.footnote)
@@ -129,10 +125,8 @@ struct MapLayersView: View {
 
 #Preview {
     let hudhudMapLayerStore = HudHudMapLayerStore()
-    MapLayersView(
-        mapStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        hudhudMapLayerStore: hudhudMapLayerStore
-    )
-    .padding(.horizontal, 20)
+    MapLayersView(mapStore: .storeSetUpForPreviewing,
+                  sheetStore: .storeSetUpForPreviewing,
+                  hudhudMapLayerStore: hudhudMapLayerStore)
+        .padding(.horizontal, 20)
 }

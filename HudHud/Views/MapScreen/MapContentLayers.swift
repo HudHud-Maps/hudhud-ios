@@ -30,45 +30,33 @@ extension MapViewContainer {
             let routeStops = self.routesPlanMapDrawer.routeStops
 
             let layers: [StyleLayerDefinition] = [
-                LineStyleLayer(
-                    identifier: MapLayerIdentifier.routeCasing(index),
-                    source: polylineSource
-                )
-                .lineCap(.round)
-                .lineJoin(.round)
-                .lineColor(.lightGray)
-                .lineWidth(interpolatedBy: .zoomLevel,
-                           curveType: .linear,
-                           parameters: NSExpression(forConstantValue: 1.5),
-                           stops: NSExpression(forConstantValue: [18: 10, 20: 20])),
+                LineStyleLayer(identifier: MapLayerIdentifier.routeCasing(index), source: polylineSource)
+                    .lineCap(.round)
+                    .lineJoin(.round)
+                    .lineColor(.lightGray)
+                    .lineWidth(interpolatedBy: .zoomLevel,
+                               curveType: .linear,
+                               parameters: NSExpression(forConstantValue: 1.5),
+                               stops: NSExpression(forConstantValue: [18: 10, 20: 20])),
 
-                LineStyleLayer(
-                    identifier: MapLayerIdentifier.routeInner(index),
-                    source: polylineSource
-                )
-                .lineCap(.round)
-                .lineJoin(.round)
-                .lineColor(.systemBlue.withAlphaComponent(0.5))
-                .lineWidth(interpolatedBy: .zoomLevel,
-                           curveType: .linear,
-                           parameters: NSExpression(forConstantValue: 1.5),
-                           stops: NSExpression(forConstantValue: [18: 8, 20: 14])),
+                LineStyleLayer(identifier: MapLayerIdentifier.routeInner(index), source: polylineSource)
+                    .lineCap(.round)
+                    .lineJoin(.round)
+                    .lineColor(.systemBlue.withAlphaComponent(0.5))
+                    .lineWidth(interpolatedBy: .zoomLevel,
+                               curveType: .linear,
+                               parameters: NSExpression(forConstantValue: 1.5),
+                               stops: NSExpression(forConstantValue: [18: 8, 20: 14])),
 
-                CircleStyleLayer(
-                    identifier: MapLayerIdentifier.simpleCirclesRoute + "\(route.id)",
-                    source: routeStops
-                )
-                .radius(16)
-                .color(.systemRed)
-                .strokeWidth(2)
-                .strokeColor(.white),
+                CircleStyleLayer(identifier: MapLayerIdentifier.simpleCirclesRoute + "\(route.id)", source: routeStops)
+                    .radius(16)
+                    .color(.systemRed)
+                    .strokeWidth(2)
+                    .strokeColor(.white),
 
-                SymbolStyleLayer(
-                    identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(route.id)",
-                    source: routeStops
-                )
-                .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
-                .iconColor(.white)
+                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "\(route.id)", source: routeStops)
+                    .iconImage(UIImage(systemSymbol: .mappin).withRenderingMode(.alwaysTemplate))
+                    .iconColor(.white)
             ]
 
             return layers
@@ -82,29 +70,23 @@ extension MapViewContainer {
         }
 
         [
-            LineStyleLayer(
-                identifier: "selected-route-casing",
-                source: polylineSource
-            )
-            .lineCap(.round)
-            .lineJoin(.round)
-            .lineColor(.white)
-            .lineWidth(interpolatedBy: .zoomLevel,
-                       curveType: .linear,
-                       parameters: NSExpression(forConstantValue: 1.5),
-                       stops: NSExpression(forConstantValue: [18: 14, 20: 26])),
+            LineStyleLayer(identifier: "selected-route-casing", source: polylineSource)
+                .lineCap(.round)
+                .lineJoin(.round)
+                .lineColor(.white)
+                .lineWidth(interpolatedBy: .zoomLevel,
+                           curveType: .linear,
+                           parameters: NSExpression(forConstantValue: 1.5),
+                           stops: NSExpression(forConstantValue: [18: 14, 20: 26])),
 
-            LineStyleLayer(
-                identifier: "selected-route-inner",
-                source: polylineSource
-            )
-            .lineCap(.round)
-            .lineJoin(.round)
-            .lineColor(.systemBlue)
-            .lineWidth(interpolatedBy: .zoomLevel,
-                       curveType: .linear,
-                       parameters: NSExpression(forConstantValue: 1.5),
-                       stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
+            LineStyleLayer(identifier: "selected-route-inner", source: polylineSource)
+                .lineCap(.round)
+                .lineJoin(.round)
+                .lineColor(.systemBlue)
+                .lineWidth(interpolatedBy: .zoomLevel,
+                           curveType: .linear,
+                           parameters: NSExpression(forConstantValue: 1.5),
+                           stops: NSExpression(forConstantValue: [18: 11, 20: 18]))
         ]
     }
 
@@ -123,25 +105,23 @@ extension MapViewContainer {
     @MapViewContentBuilder
     func makeCustomSymbolLayers() -> [StyleLayerDefinition] {
         [
-            SymbolStyleLayer(
-                identifier: MapLayerIdentifier.customPOI,
-                source: MLNSource(identifier: "hpoi"),
-                sourceLayerIdentifier: "public.poi"
-            )
-            .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
-            .iconAllowsOverlap(false)
-            .text(featurePropertyNamed: "name")
-            .textFontSize(11)
-            .maximumTextWidth(8.0)
-            .textHaloColor(UIColor.white)
-            .textHaloWidth(1.0)
-            .textHaloBlur(0.5)
-            .textAnchor("top")
-            .textColor(expression: SFSymbolSpriteSheet.colorExpression)
-            .textOffset(CGVector(dx: 0, dy: 1.2))
-            .minimumZoomLevel(13.0)
-            .maximumZoomLevel(22.0)
-            .textFontNames(["IBMPlexSansArabic-Regular"])
+            SymbolStyleLayer(identifier: MapLayerIdentifier.customPOI,
+                             source: MLNSource(identifier: "hpoi"),
+                             sourceLayerIdentifier: "public.poi")
+                .iconImage(mappings: SFSymbolSpriteSheet.spriteMapping, default: SFSymbolSpriteSheet.defaultMapPin)
+                .iconAllowsOverlap(false)
+                .text(featurePropertyNamed: "name")
+                .textFontSize(11)
+                .maximumTextWidth(8.0)
+                .textHaloColor(UIColor.white)
+                .textHaloWidth(1.0)
+                .textHaloBlur(0.5)
+                .textAnchor("top")
+                .textColor(expression: SFSymbolSpriteSheet.colorExpression)
+                .textOffset(CGVector(dx: 0, dy: 1.2))
+                .minimumZoomLevel(13.0)
+                .maximumZoomLevel(22.0)
+                .textFontNames(["IBMPlexSansArabic-Regular"])
         ]
     }
 
@@ -226,17 +206,15 @@ private extension MapViewContainer {
             .lineCap(.round)
             .lineJoin(.round)
             .lineColor(self.colorForCongestionLevel(level))
-            .lineWidth(
-                interpolatedBy: .zoomLevel,
-                curveType: .linear,
-                parameters: NSExpression(forConstantValue: 1.5),
-                stops: NSExpression(forConstantValue: [
-                    14: 6,
-                    16: 7,
-                    18: 9,
-                    20: 16
-                ])
-            )
+            .lineWidth(interpolatedBy: .zoomLevel,
+                       curveType: .linear,
+                       parameters: NSExpression(forConstantValue: 1.5),
+                       stops: NSExpression(forConstantValue: [
+                           14: 6,
+                           16: 7,
+                           18: 9,
+                           20: 16
+                       ]))
     }
 
     func colorForCongestionLevel(_ level: String) -> UIColor {

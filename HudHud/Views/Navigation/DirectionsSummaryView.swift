@@ -58,12 +58,6 @@ struct DirectionsSummaryView: View {
 }
 
 #Preview {
-    DirectionsSummaryView(
-        directionPreviewData: DirectionPreviewData(
-            duration: 1200,
-            distance: 4.4,
-            typeOfRoute: "Fastest"
-        ), go: {}
-    )
-    .padding()
+    DirectionsSummaryView(directionPreviewData: DirectionPreviewData(duration: 1200, distance: 4.4, typeOfRoute: "Fastest"), go: {})
+        .padding()
 }

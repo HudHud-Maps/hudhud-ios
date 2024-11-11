@@ -25,9 +25,7 @@ public extension SpeedLimitViewHost {
     ///   - speedLimit: The current speed limit in the desired units to display.
     ///   - speedLimitStyle: The style of the signage (US-MUTCD or Vienna Convention).
     /// - Returns: The modified NavigationView.
-    func navigationSpeedLimit(
-        speedLimit: Measurement<UnitSpeed>?
-    ) -> Self {
+    func navigationSpeedLimit(speedLimit: Measurement<UnitSpeed>?) -> Self {
         var newSelf = self
         newSelf.speedLimit = speedLimit
 //        newSelf.speedLimitStyle = speedLimitStyle

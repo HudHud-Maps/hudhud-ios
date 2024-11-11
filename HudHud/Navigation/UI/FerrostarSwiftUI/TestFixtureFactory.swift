@@ -45,13 +45,11 @@ struct VisualInstructionContentFactory: TestFixtureFactory {
     }
 
     public func build(_ n: Int = 0) -> VisualInstructionContent {
-        VisualInstructionContent(
-            text: self.textBuilder(n),
-            maneuverType: .turn,
-            maneuverModifier: .left,
-            roundaboutExitDegrees: nil,
-            laneInfo: nil
-        )
+        VisualInstructionContent(text: self.textBuilder(n),
+                                 maneuverType: .turn,
+                                 maneuverModifier: .left,
+                                 roundaboutExitDegrees: nil,
+                                 laneInfo: nil)
     }
 }
 
@@ -80,12 +78,10 @@ struct VisualInstructionFactory: TestFixtureFactory {
     }
 
     public func build(_ n: Int = 0) -> VisualInstruction {
-        VisualInstruction(
-            primaryContent: self.primaryContentBuilder(n),
-            secondaryContent: self.secondaryContentBuilder(n),
-            subContent: nil,
-            triggerDistanceBeforeManeuver: 42.0
-        )
+        VisualInstruction(primaryContent: self.primaryContentBuilder(n),
+                          secondaryContent: self.secondaryContentBuilder(n),
+                          subContent: nil,
+                          triggerDistanceBeforeManeuver: 42.0)
     }
 }
 
@@ -105,16 +101,14 @@ struct RouteStepFactory: TestFixtureFactory {
     // MARK: Functions
 
     public func build(_ n: Int = 0) -> RouteStep {
-        RouteStep(
-            geometry: [],
-            distance: 100,
-            duration: 99,
-            roadName: self.roadNameBuilder(n),
-            instruction: "Walk west on \(self.roadNameBuilder(n))",
-            visualInstructions: [self.visualInstructionBuilder(n)],
-            spokenInstructions: [],
-            annotations: nil
-        )
+        RouteStep(geometry: [],
+                  distance: 100,
+                  duration: 99,
+                  roadName: self.roadNameBuilder(n),
+                  instruction: "Walk west on \(self.roadNameBuilder(n))",
+                  visualInstructions: [self.visualInstructionBuilder(n)],
+                  spokenInstructions: [],
+                  annotations: nil)
     }
 }
 

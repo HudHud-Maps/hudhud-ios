@@ -32,10 +32,8 @@ extension View {
     ///    |                                                             |
     ///    +-------------------------------------------------------------+
     /// ```
-    func complementSafeAreaInsets(
-        parentGeometry: GeometryProxy,
-        minimumInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)
-    ) -> some View {
+    func complementSafeAreaInsets(parentGeometry: GeometryProxy,
+                                  minimumInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16)) -> some View {
         ComplementingSafeAreaView(content: self, parentGeometry: parentGeometry, minimumInsets: minimumInsets)
     }
 
@@ -68,10 +66,8 @@ struct ComplementingSafeAreaView<V: View>: View {
 
     var body: some View {
         self.content.onAppear {
-            self.childInsets = ComplementingSafeAreaView.complement(
-                parentInsets: self.parentGeometry.safeAreaInsets,
-                minimumInsets: self.minimumInsets
-            )
+            self.childInsets = ComplementingSafeAreaView.complement(parentInsets: self.parentGeometry.safeAreaInsets,
+                                                                    minimumInsets: self.minimumInsets)
         }.onChange(of: self.parentGeometry.safeAreaInsets) { _, newValue in
             self.childInsets = ComplementingSafeAreaView.complement(parentInsets: newValue, minimumInsets: self.minimumInsets)
         }.safeAreaPaddingPolyfill(self.childInsets)

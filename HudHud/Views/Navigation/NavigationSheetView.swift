@@ -50,17 +50,13 @@ struct NavigationSheetView: View {
             .padding(.top, 30)
             if let route = self.routingStore.selectedRoute, let waypoints = self.routingStore.waypoints {
                 ABCRouteConfigurationView(routeConfigurations: waypoints, sheetStore: self.sheetStore, routingStore: self.routingStore)
-                DirectionsSummaryView(
-                    directionPreviewData: DirectionPreviewData(
-                        duration: route.duration,
-                        distance: route.distance,
-                        typeOfRoute: "Fastest"
-                    ), go: {
+                DirectionsSummaryView(directionPreviewData: DirectionPreviewData(duration: route.duration,
+                                                                                 distance: route.distance,
+                                                                                 typeOfRoute: "Fastest"), go: {
                         self.routingStore.startNavigation()
                         self.sheetStore.popToRoot()
-                    }
-                )
-                .padding([.horizontal, .bottom])
+                    })
+                    .padding([.horizontal, .bottom])
             }
         }
     }

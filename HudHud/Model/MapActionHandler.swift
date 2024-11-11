@@ -98,29 +98,21 @@ private extension MapActionHandler {
 
         let colorString = feature.attribute(forKey: "ios_category_icon_color") as? String
 
-        return ResolvedItem(
-            id: String(id),
-            title: localized(
-                english: feature.attribute(forKey: "name_en") as? String,
-                arabic: feature.attribute(forKey: "name_ar") as? String
-            ),
-            subtitle: localized(
-                english: feature.attribute(forKey: "description_en") as? String,
-                arabic: feature.attribute(forKey: "description_ar") as? String
-            ),
-            category: localized(
-                english: feature.attribute(forKey: "category_en") as? String,
-                arabic: feature.attribute(forKey: "category_ar") as? String
-            ),
-            symbol: self.symbol(from: feature) ?? .pin,
-            type: .hudhud,
-            coordinate: feature.coordinate,
-            color: SystemColor(rawValue: colorString ?? "") ?? .systemRed,
-            phone: feature.attribute(forKey: "phone_number") as? String,
-            website: self.website(from: feature),
-            rating: feature.attribute(forKey: "rating") as? Double,
-            ratingsCount: feature.attribute(forKey: "ratings_count") as? Int
-        )
+        return ResolvedItem(id: String(id),
+                            title: localized(english: feature.attribute(forKey: "name_en") as? String,
+                                             arabic: feature.attribute(forKey: "name_ar") as? String),
+                            subtitle: localized(english: feature.attribute(forKey: "description_en") as? String,
+                                                arabic: feature.attribute(forKey: "description_ar") as? String),
+                            category: localized(english: feature.attribute(forKey: "category_en") as? String,
+                                                arabic: feature.attribute(forKey: "category_ar") as? String),
+                            symbol: self.symbol(from: feature) ?? .pin,
+                            type: .hudhud,
+                            coordinate: feature.coordinate,
+                            color: SystemColor(rawValue: colorString ?? "") ?? .systemRed,
+                            phone: feature.attribute(forKey: "phone_number") as? String,
+                            website: self.website(from: feature),
+                            rating: feature.attribute(forKey: "rating") as? Double,
+                            ratingsCount: feature.attribute(forKey: "ratings_count") as? Int)
     }
 
     func extractStreetViewSceneItem(from feature: any MLNFeature) -> Int? {

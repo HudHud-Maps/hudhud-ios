@@ -67,7 +67,9 @@ private extension LocationServicesDiagnostic {
 
         Logger.diagnostics.notice("- showsUserLocation: \(self.mapView.showsUserLocation ? "✅" : "❌")")
         Logger.diagnostics.notice("- userLocationVisible: \(self.mapView.isUserLocationVisible ? "✅" : "❌")")
-        Logger.diagnostics.notice("- User Location Valid: \(CLLocationCoordinate2DIsValid(self.mapView.userLocation?.coordinate ?? kCLLocationCoordinate2DInvalid) ? "✅" : "❌")")
+
+        let isValid = CLLocationCoordinate2DIsValid(self.mapView.userLocation?.coordinate ?? kCLLocationCoordinate2DInvalid)
+        Logger.diagnostics.notice("- User Location Valid: \(isValid ? "✅" : "❌")")
         Logger.diagnostics.notice("- Tracking Mode: \(self.trackingModeString(self.mapView.userTrackingMode))")
     }
 
@@ -87,31 +89,45 @@ private extension LocationServicesDiagnostic {
     // Helper functions to convert enums to strings
     func authStatusString(_ status: CLAuthorizationStatus) -> String {
         switch status {
-        case .authorizedWhenInUse: return "✅ Authorized When In Use"
-        case .authorizedAlways: return "✅ Authorized Always"
-        case .denied: return "❌ Denied"
-        case .restricted: return "❌ Restricted"
-        case .notDetermined: return "⚠️ Not Determined"
-        @unknown default: return "❓ Unknown"
+        case .authorizedWhenInUse:
+            return "✅ Authorized When In Use"
+        case .authorizedAlways:
+            return "✅ Authorized Always"
+        case .denied:
+            return "❌ Denied"
+        case .restricted:
+            return "❌ Restricted"
+        case .notDetermined:
+            return "⚠️ Not Determined"
+        @unknown default:
+            return "❓ Unknown"
         }
     }
 
     @available(iOS 14.0, *)
     func accuracyString(_ accuracy: CLAccuracyAuthorization) -> String {
         switch accuracy {
-        case .fullAccuracy: return "✅ Full Accuracy"
-        case .reducedAccuracy: return "⚠️ Reduced Accuracy"
-        @unknown default: return "❓ Unknown"
+        case .fullAccuracy:
+            return "✅ Full Accuracy"
+        case .reducedAccuracy:
+            return "⚠️ Reduced Accuracy"
+        @unknown default:
+            return "❓ Unknown"
         }
     }
 
     func trackingModeString(_ mode: MLNUserTrackingMode) -> String {
         switch mode {
-        case .none: return "None"
-        case .follow: return "Follow"
-        case .followWithHeading: return "Follow with Heading"
-        case .followWithCourse: return "Follow with Course"
-        @unknown default: return "Unknown"
+        case .none:
+            return "None"
+        case .follow:
+            return "Follow"
+        case .followWithHeading:
+            return "Follow with Heading"
+        case .followWithCourse:
+            return "Follow with Course"
+        @unknown default:
+            return "Unknown"
         }
     }
 }

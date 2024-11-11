@@ -41,7 +41,10 @@ public class HudHudMapLayerStore: ObservableObject {
                         return nil
                     }
 
-                    return HudHudMapLayer(name: mapStyle.name, styleUrl: styleURL, thumbnailUrl: thumbnailURL, type: .init(BackendValue: mapStyle._type))
+                    return HudHudMapLayer(name: mapStyle.name,
+                                          styleUrl: styleURL,
+                                          thumbnailUrl: thumbnailURL,
+                                          type: .init(BackendValue: mapStyle._type))
                 }
                 return mapLayer
             }
@@ -175,7 +178,6 @@ public struct HudHudMapLayer: Codable, Hashable, RawRepresentable {
         hasher.combine(self.thumbnailUrl)
         hasher.combine(self.type)
     }
-
 }
 
 // swiftlint:enable init_usage

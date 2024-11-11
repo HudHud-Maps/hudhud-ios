@@ -44,17 +44,7 @@ extension TripState {
         // MARK: Lifecycle
 
         init(from tripState: TripState) throws {
-            guard case let .navigating(
-                index,
-                location,
-                steps,
-                waypoints,
-                progress,
-                deviation,
-                visual,
-                spoken,
-                annotations
-            ) = tripState else {
+            guard case let .navigating(index, location, steps, waypoints, progress, deviation, visual, spoken, annotations) = tripState else {
                 throw NavigationError.invalidState
             }
             self.stepIndex = index
