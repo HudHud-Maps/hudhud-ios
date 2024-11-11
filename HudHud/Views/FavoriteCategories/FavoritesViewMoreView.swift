@@ -121,7 +121,8 @@ struct FavoritesViewMoreView: View {
             searchStore: freshSearchViewStore,
             trendingStore: TrendingStore(),
             sheetStore: freshSheetStore,
-            filterStore: FilterStore()
+            filterStore: FilterStore(),
+            favoritesStore: self.favoritesStore
         )
     }
 }

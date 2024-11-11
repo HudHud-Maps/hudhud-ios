@@ -30,7 +30,7 @@ struct POIDetailSheet: View {
 
     @State var pointOfInterestStore: PointOfInterestStore
     let sheetStore: SheetStore
-
+    @ObservedObject var favoritesStore: FavoritesStore
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
@@ -69,6 +69,7 @@ struct POIDetailSheet: View {
 
     init(pointOfInterestStore: PointOfInterestStore,
          sheetStore: SheetStore,
+         favoritesStore: FavoritesStore,
          routingStore: RoutingStore,
          didDenyLocationPermission: Bool,
          onStart: @escaping ([Route]?) -> Void,
@@ -79,6 +80,7 @@ struct POIDetailSheet: View {
         self.onDismiss = onDismiss
         self.routingStore = routingStore
         self.didDenyLocationPermission = didDenyLocationPermission
+        self.favoritesStore = favoritesStore
     }
 
     // MARK: Content
@@ -230,7 +232,8 @@ struct POIDetailSheet: View {
                     onStart: self.onStart,
                     onDismiss: self.onDismiss,
                     didDenyLocationPermission: self.didDenyLocationPermission,
-                    routes: self.routes
+                    routes: self.routes, sheetStore: self.sheetStore,
+                    favoritesStore: self.favoritesStore
                 )
                 .padding(.bottom)
                 .padding(.vertical)
@@ -256,6 +259,15 @@ struct POIDetailSheet: View {
         .onAppear {
             self.pointOfInterestStore.reApplyThePointOfInterestToTheMapIfNeeded()
         }
+        // Displays a simple toast message when user tap save icon to save poi
+        .simpleToast(isPresented: self.$favoritesStore.poisStatusChanged, options: SimpleToastOptions(alignment: .bottom, hideAfter: 2, animation: .easeIn, modifierType: .fade), content: {
+            Label(self.favoritesStore.labelMessage, systemSymbol: .checkmarkCircleFill)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 12)
+                .background(Color.Colors.General._01Black)
+                .foregroundColor(Color.white)
+                .cornerRadius(10)
+        })
     }
 
     var tabView: some View {

@@ -16,13 +16,14 @@ struct POIBottomToolbar: View {
 
     // MARK: Properties
 
-    @ObservedObject var favoritesStore = FavoritesStore()
+    @ObservedObject var favoritesStore: FavoritesStore
     let item: ResolvedItem
     let duration: String?
     let onStart: (([Route]?) -> Void)?
     let onDismiss: (() -> Void)?
     let didDenyLocationPermission: Bool?
     let routes: [Route]?
+    let sheetStore: SheetStore
     @State var askToEnableLocation = false
     let directions: (() -> Void)?
     @Environment(\.openURL) var openURL
@@ -36,7 +37,9 @@ struct POIBottomToolbar: View {
         onStart: (([Route]?) -> Void)?,
         onDismiss: @escaping () -> Void,
         didDenyLocationPermission: Bool?,
-        routes: [Route]?
+        routes: [Route]?,
+        sheetStore: SheetStore,
+        favoritesStore: FavoritesStore
     ) {
         self.item = item
         self.duration = duration
@@ -45,11 +48,15 @@ struct POIBottomToolbar: View {
         self.didDenyLocationPermission = didDenyLocationPermission
         self.routes = routes
         self.directions = nil
+        self.sheetStore = sheetStore
+        self.favoritesStore = favoritesStore
     }
 
     // Secondary initializer with only item and directions (for SearchResultView)
     init(
         item: ResolvedItem,
+        sheetStore: SheetStore,
+        favoritesStore: FavoritesStore,
         directions: @escaping () -> Void
     ) {
         self.item = item
@@ -59,6 +66,8 @@ struct POIBottomToolbar: View {
         self.didDenyLocationPermission = nil
         self.routes = nil
         self.directions = directions
+        self.sheetStore = sheetStore
+        self.favoritesStore = favoritesStore
     }
 
     // MARK: Content
@@ -108,14 +117,19 @@ struct POIBottomToolbar: View {
                     foregroundColor: Color.Colors.General._06DarkGreen,
                     backgroundColor: Color.Colors.General._03LightGrey
                 ) {
-                    self.favoritesStore.isFavorites(item: self.item) ? self.favoritesStore.deleteSavedFavorite(item: self.item)
-                        : self.favoritesStore.saveChanges(
+                    if self.favoritesStore.isFavorites(item: self.item) { self.favoritesStore.deleteSavedFavorite(item: self.item)
+                    } else {
+                        self.favoritesStore.saveChanges(
                             title: self.item.title,
                             tintColor: .personalShopping,
                             item: self.item,
                             description: self.item.description,
                             selectedType: self.item.category ?? "Other"
                         )
+                    }
+                    if self.favoritesStore.showLoginSheet {
+                        self.sheetStore.show(.loginNeeded)
+                    }
                 }
 
                 CategoryIconButton(
@@ -132,7 +146,8 @@ struct POIBottomToolbar: View {
 
                 Spacer()
             }
-        }.scrollDisabled(true)
+        }
+        .scrollDisabled(true)
     }
 }
 
@@ -177,5 +192,5 @@ private struct CategoryIconButton: View {
 }
 
 #Preview {
-    POIBottomToolbar(item: .ketchup) {}
+    POIBottomToolbar(item: .ketchup, sheetStore: .storeSetUpForPreviewing, favoritesStore: FavoritesStore()) {}
 }

@@ -116,7 +116,8 @@ struct ContentView: View {
                         searchStore: freshSearchViewStore,
                         trendingStore: self.trendingStore,
                         sheetStore: self.sheetStore,
-                        filterStore: self.searchViewStore.filterStore
+                        filterStore: self.searchViewStore.filterStore,
+                        favoritesStore: self.favoritesStore
                     )
                     .navigationBarBackButtonHidden()
                 case .favorites:
@@ -139,7 +140,8 @@ struct ContentView: View {
                         searchStore: freshSearchViewStore,
                         trendingStore: self.trendingStore,
                         sheetStore: SheetStore(emptySheetType: .search),
-                        filterStore: self.searchViewStore.filterStore
+                        filterStore: self.searchViewStore.filterStore,
+                        favoritesStore: self.favoritesStore
                     )
                 case .navigationPreview:
                     NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
@@ -152,6 +154,7 @@ struct ContentView: View {
                             mapStore: self.mapStore,
                             sheetStore: self.sheetStore
                         ), sheetStore: self.sheetStore,
+                        favoritesStore: self.favoritesStore,
                         routingStore: self.searchViewStore.routingStore,
                         didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
                     ) { routeIfAvailable in
@@ -209,10 +212,13 @@ struct ContentView: View {
                         searchStore: self.searchViewStore,
                         trendingStore: self.trendingStore,
                         sheetStore: self.sheetStore,
-                        filterStore: self.searchViewStore.filterStore
+                        filterStore: self.searchViewStore.filterStore,
+                        favoritesStore: self.favoritesStore
                     )
                     .background(Color(.Colors.General._05WhiteBackground))
                     .toolbar(.hidden)
+                case .loginNeeded:
+                    LoginToSavePOIView(sheetStore: self.sheetStore)
                 }
             }
             .task {
