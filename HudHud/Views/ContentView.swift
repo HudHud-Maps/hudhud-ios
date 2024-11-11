@@ -84,8 +84,7 @@ struct ContentView: View {
 
         let navigationStore = NavigationStore(
             navigationEngine: AppDpendencies.navigationEngine,
-            locationEngine: AppDpendencies.locationEngine,
-            routesPlanMapDrawer: routesPlanMapDrawer
+            locationEngine: AppDpendencies.locationEngine
         )
         self.navigationStore = navigationStore
 

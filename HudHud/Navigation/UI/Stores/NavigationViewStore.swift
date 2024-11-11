@@ -50,7 +50,7 @@ final class NavigationStore {
     }
 
     enum Action {
-        case startNavigation //
+        case startNavigation(Route)
         case stopNavigation
         case toggleMute
     }
@@ -62,7 +62,6 @@ final class NavigationStore {
     private var cancellables = Set<AnyCancellable>()
     private let navigationEngine: NavigationEngine
     private let locationEngine: LocationEngine
-    private let routesPlanMapDrawer: RoutesPlanMapDrawer
 
     // MARK: Computed Properties
 
@@ -82,13 +81,10 @@ final class NavigationStore {
 
     init(
         navigationEngine: NavigationEngine,
-        locationEngine: LocationEngine,
-        routesPlanMapDrawer: RoutesPlanMapDrawer
-
+        locationEngine: LocationEngine
     ) {
         self.navigationEngine = navigationEngine
         self.locationEngine = locationEngine
-        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.setupSubscriptions()
     }
 
@@ -96,8 +92,8 @@ final class NavigationStore {
 
     func execute(_ action: Action) {
         switch action {
-        case .startNavigation:
-            satrtNavigation()
+        case let .startNavigation(route):
+            satrtNavigation(route)
 
         case .stopNavigation:
             stopNavigation()
@@ -127,11 +123,7 @@ private extension NavigationStore {
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    func satrtNavigation() {
-        guard let route = routesPlanMapDrawer.selectedRoute else {
-            return
-        }
-
+    func satrtNavigation(_ route: Route) {
         do {
             try self.decideWhichLocationProviderToUse(route: route) {
                 try self.navigationEngine.startNavigation(route: route)
@@ -256,8 +248,7 @@ extension NavigationStore: Previewable {
     static var storeSetUpForPreviewing: NavigationStore {
         NavigationStore(
             navigationEngine: NavigationEngine(configuration: .default),
-            locationEngine: LocationEngine(),
-            routesPlanMapDrawer: RoutesPlanMapDrawer()
+            locationEngine: LocationEngine()
         )
     }
 }

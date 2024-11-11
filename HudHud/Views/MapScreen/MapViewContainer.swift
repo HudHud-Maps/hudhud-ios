@@ -124,8 +124,8 @@ struct MapViewContainer: View {
             }
             .onReceive(AppEvents.publisher, perform: { navigationEvent in
                 switch navigationEvent {
-                case .startNavigation:
-                    self.navigationStore.execute(.startNavigation)
+                case let .startNavigation(route):
+                    self.navigationStore.execute(.startNavigation(route))
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
                         self.mapStore.camera = .automotiveNavigation()
                     }

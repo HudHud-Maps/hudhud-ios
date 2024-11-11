@@ -30,7 +30,7 @@ final class RoutePlannerStore {
     private let routePlanner = RoutePlanner(
         routingService: GraphHopperRouteProvider()
     )
-    private let routingStore: RoutingStore
+    private let navigationStore: NavigationStore
     private var routeMapEventSubscription: AnyCancellable?
     private let rowHeight: CGFloat = 56 + 6
 
@@ -40,7 +40,7 @@ final class RoutePlannerStore {
         sheetStore: SheetStore,
         userLocationStore: UserLocationStore,
         mapStore: MapStore,
-        routingStore: RoutingStore,
+        navigationStore: NavigationStore,
         routesPlanMapDrawer: RoutesPlanMapDrawer,
         destination: DestinationPointOfInterest
     ) {
@@ -48,7 +48,7 @@ final class RoutePlannerStore {
         self.sheetStore = sheetStore
         self.mapStore = mapStore
         self.userLocationStore = userLocationStore
-        self.routingStore = routingStore
+        self.navigationStore = navigationStore
         self.routesPlanMapDrawer = routesPlanMapDrawer
         Task {
             await self.fetchRoutePlanForFirstTime()
@@ -77,7 +77,7 @@ final class RoutePlannerStore {
     func startNavigation() {
         guard let selectedRoute = self.state.selectedRoute else { return }
         self.routesPlanMapDrawer.clear()
-        self.routingStore.startNavigation(to: selectedRoute)
+        AppEvents.publisher.send(.startNavigation(selectedRoute))
     }
 
     func swap() async {
@@ -217,7 +217,7 @@ extension RoutePlannerStore: Previewable {
         sheetStore: .storeSetUpForPreviewing,
         userLocationStore: .storeSetUpForPreviewing,
         mapStore: .storeSetUpForPreviewing,
-        routingStore: .storeSetUpForPreviewing,
+        navigationStore: .storeSetUpForPreviewing,
         routesPlanMapDrawer: RoutesPlanMapDrawer(),
         destination: .artwork
     )

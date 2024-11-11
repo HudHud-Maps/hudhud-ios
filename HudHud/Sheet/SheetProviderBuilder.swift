@@ -49,7 +49,7 @@ func sheetProviderBuilder(
                     sheetStore: context.sheetStore,
                     userLocationStore: userLocationStore,
                     mapStore: mapStore,
-                    routingStore: routingStore,
+                    navigationStore: navigationStore,
                     routesPlanMapDrawer: routesPlanMapDrawer,
                     destination: pointOfInterest
                 )
