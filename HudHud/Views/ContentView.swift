@@ -196,6 +196,7 @@ struct ContentView: View {
                         self.sheetStore.popSheet()
                     }
                     .navigationBarBackButtonHidden()
+                    .environmentObject(self.notificationQueue)
                 case let .routePlanner(store):
                     RoutePlannerView(routePlannerStore: store)
                 case .favoritesViewMore:
