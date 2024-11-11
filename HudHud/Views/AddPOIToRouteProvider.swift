@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Combine
 import SwiftUI
 
 struct AddPOIToRouteProvider: SheetProvider {
@@ -14,6 +15,7 @@ struct AddPOIToRouteProvider: SheetProvider {
     // MARK: Properties
 
     let sheetStore: SheetStore
+    let sheetDetentPublisher: CurrentValueSubject<DetentData, Never>
     let onAddItem: (ResolvedItem) -> Void
 
     // MARK: Content
@@ -25,7 +27,8 @@ struct AddPOIToRouteProvider: SheetProvider {
                 mapStore: MapStore(userLocationStore: .storeSetUpForPreviewing),
                 sheetStore: self.sheetStore,
                 filterStore: .shared,
-                mode: .live(provider: .hudhud)
+                mode: .live(provider: .hudhud),
+                sheetDetentPublisher: self.sheetDetentPublisher
             )
             tempStore.searchType = .returnPOILocation(completion: self.onAddItem)
             return tempStore

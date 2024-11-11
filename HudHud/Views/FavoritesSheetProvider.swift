@@ -7,6 +7,7 @@
 //
 
 import BackendService
+import Combine
 import SwiftUI
 
 struct FavoritesSheetProvider: SheetProvider {
@@ -14,6 +15,7 @@ struct FavoritesSheetProvider: SheetProvider {
     // MARK: Properties
 
     let sheetStore: SheetStore
+    let detentPublisher: CurrentValueSubject<DetentData, Never>
 
     // MARK: Content
 
@@ -24,7 +26,8 @@ struct FavoritesSheetProvider: SheetProvider {
                 mapStore: MapStore(userLocationStore: .storeSetUpForPreviewing),
                 sheetStore: self.sheetStore,
                 filterStore: .shared,
-                mode: .live(provider: .hudhud)
+                mode: .live(provider: .hudhud),
+                sheetDetentPublisher: self.detentPublisher
             )
             tempStore.searchType = .favorites
             return tempStore

@@ -78,6 +78,7 @@ final class SearchViewStore: ObservableObject {
     private let sheetStore: SheetStore
     private var task: Task<Void, Error>?
     private var hudhud = HudHudPOI()
+    private let sheetDetentPublisher: CurrentValueSubject<DetentData, Never>
     private var cancellables: Set<AnyCancellable> = []
 
     // MARK: Computed Properties
@@ -95,12 +96,14 @@ final class SearchViewStore: ObservableObject {
         mapStore: MapStore,
         sheetStore: SheetStore,
         filterStore: FilterStore,
-        mode: Mode
+        mode: Mode,
+        sheetDetentPublisher: CurrentValueSubject<DetentData, Never>
     ) {
         self.mapStore = mapStore
         self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.mode = mode
+        self.sheetDetentPublisher = sheetDetentPublisher
 
         self.bindSearchAutoComplete()
         if case .preview = mode {
@@ -191,7 +194,7 @@ final class SearchViewStore: ObservableObject {
             self.searchResults = displayableItems
             if !filteredItems.isEmpty {
                 self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
-                self.sheetStore.currentSheet.detentData.value = DetentData(
+                self.sheetDetentPublisher.value = DetentData(
                     selectedDetent: .third,
                     allowedDetents: [.third, .large]
                 )
@@ -206,7 +209,7 @@ final class SearchViewStore: ObservableObject {
         self.searchText = ""
         self.searchResults = []
         self.mapStore.clearItems()
-        self.sheetStore.currentSheet.detentData.value = DetentData(
+        self.sheetDetentPublisher.value = DetentData(
             selectedDetent: .third,
             allowedDetents: [.small, .third, .large]
         )
@@ -382,5 +385,11 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(
+        mapStore: .storeSetUpForPreviewing,
+        sheetStore: .storeSetUpForPreviewing,
+        filterStore: .storeSetUpForPreviewing,
+        mode: .preview,
+        sheetDetentPublisher: CurrentValueSubject(SheetType.search.initialDetentData)
+    )
 }

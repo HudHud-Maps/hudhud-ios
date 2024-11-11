@@ -31,7 +31,8 @@ func sheetProviderBuilder(
                     mapStore: mapStore,
                     sheetStore: context.sheetStore,
                     filterStore: .shared,
-                    mode: .live(provider: .hudhud)
+                    mode: .live(provider: .hudhud),
+                    sheetDetentPublisher: context.detentData
                 ),
                 streetViewStore: streetViewStore,
                 trendingStore: TrendingStore(),
@@ -68,10 +69,14 @@ func sheetProviderBuilder(
         case let .navigationAddSearchView(onAddItem):
             return AddPOIToRouteProvider(
                 sheetStore: context.sheetStore,
+                sheetDetentPublisher: context.detentData,
                 onAddItem: onAddItem
             )
         case .favorites:
-            return FavoritesSheetProvider(sheetStore: context.sheetStore)
+            return FavoritesSheetProvider(
+                sheetStore: context.sheetStore,
+                detentPublisher: context.detentData
+            )
         case .navigationPreview:
             return NavigationPreviewSheetProvider(
                 sheetStore: context.sheetStore,
