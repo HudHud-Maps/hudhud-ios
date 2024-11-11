@@ -19,6 +19,7 @@ func sheetProviderBuilder(
     hudhudMapLayerStore: HudHudMapLayerStore,
     favoritesStore: FavoritesStore,
     routingStore: RoutingStore,
+    navigationStore: NavigationStore,
     streetViewStore: StreetViewStore
 ) -> (SheetContext) -> any SheetProvider {
     { context in
@@ -29,12 +30,12 @@ func sheetProviderBuilder(
                 searchViewStore: SearchViewStore(
                     mapStore: mapStore,
                     sheetStore: context.sheetStore,
-                    routingStore: routingStore,
                     filterStore: .shared,
                     mode: .live(provider: .hudhud)
                 ),
                 streetViewStore: streetViewStore,
-                trendingStore: TrendingStore()
+                trendingStore: TrendingStore(),
+                navigationStore: navigationStore
             )
         case let .pointOfInterest(pointOfInterest):
             PointOfInterestSheetProvider(

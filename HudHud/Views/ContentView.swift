@@ -53,6 +53,10 @@ struct ContentView: View {
 
     @State private var sheetStore: SheetStore
 
+    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
+
+    @State private var navigationStore: NavigationStore
+
     // MARK: Lifecycle
 
     @MainActor
@@ -78,6 +82,13 @@ struct ContentView: View {
         let favoritesStore = FavoritesStore()
         self._favoritesStore = StateObject(wrappedValue: favoritesStore)
 
+        let navigationStore = NavigationStore(
+            navigationEngine: AppDpendencies.navigationEngine,
+            locationEngine: AppDpendencies.locationEngine,
+            routesPlanMapDrawer: routesPlanMapDrawer
+        )
+        self.navigationStore = navigationStore
+
         let sheetStore = SheetStore(
             emptySheetType: .search,
             makeSheetProvider: sheetProviderBuilder(
@@ -88,6 +99,7 @@ struct ContentView: View {
                 hudhudMapLayerStore: mapLayerStore,
                 favoritesStore: favoritesStore,
                 routingStore: routingStore,
+                navigationStore: navigationStore,
                 streetViewStore: streetViewStore
             )
         )
@@ -102,6 +114,7 @@ struct ContentView: View {
         ZStack {
             MapViewContainer(
                 mapStore: self.mapStore,
+                navigationStore: self.navigationStore,
                 debugStore: self.debugStore,
                 userLocationStore: self.userLocationStore,
                 routingStore: self.routingStore,

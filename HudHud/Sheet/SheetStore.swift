@@ -140,6 +140,7 @@ extension SheetStore: Previewable {
             hudhudMapLayerStore: HudHudMapLayerStore(),
             favoritesStore: .storeSetUpForPreviewing,
             routingStore: .storeSetUpForPreviewing,
+            navigationStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
     )
@@ -153,6 +154,7 @@ extension SheetStore: Previewable {
             hudhudMapLayerStore: HudHudMapLayerStore(),
             favoritesStore: .storeSetUpForPreviewing,
             routingStore: .storeSetUpForPreviewing,
+            navigationStore: .storeSetUpForPreviewing,
             streetViewStore: .storeSetUpForPreviewing
         )
     )

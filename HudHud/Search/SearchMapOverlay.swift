@@ -24,13 +24,14 @@ struct SearchMapOverlay: View {
     @ObservedObject var trendingStore: TrendingStore
     let mapStore: MapStore
     let userLocationStore: UserLocationStore
+    let navigationStore: NavigationStore
 
     // MARK: Content
 
     var body: some View {
         VStack {
             Spacer()
-            if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil {
+            if self.navigationStore.state.isNavigating == false, self.streetViewStore.streetViewScene == nil {
                 HStack(alignment: .bottom) {
                     HStack(alignment: .bottom) {
                         MapButtonsView(
@@ -91,7 +92,7 @@ struct SearchMapOverlay: View {
             }
         }
         .safeAreaInset(edge: .top) {
-            if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil {
+            if self.navigationStore.state.isNavigating == false, self.streetViewStore.streetViewScene == nil {
                 CategoriesBannerView(
                     catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData,
                     searchStore: self.searchViewStore
@@ -193,5 +194,5 @@ private extension MapViewPort {
 }
 
 #Preview {
-    SearchMapOverlay(searchViewStore: .storeSetUpForPreviewing, streetViewStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, trendingStore: TrendingStore(), mapStore: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing)
+    SearchMapOverlay(searchViewStore: .storeSetUpForPreviewing, streetViewStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, trendingStore: TrendingStore(), mapStore: .storeSetUpForPreviewing, userLocationStore: .storeSetUpForPreviewing, navigationStore: .storeSetUpForPreviewing)
 }

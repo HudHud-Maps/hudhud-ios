@@ -15,6 +15,17 @@ import MapLibre
 import MapLibreSwiftDSL
 import OSLog
 
+// MARK: - AppEvents
+
+enum AppEvents {
+    case startNavigation
+    case stopNavigation
+
+    // MARK: Static Properties
+
+    static let publisher = PassthroughSubject<AppEvents, Never>()
+}
+
 // MARK: - RoutingStore
 
 @MainActor
@@ -47,17 +58,13 @@ final class RoutingStore: ObservableObject {
     @Published private(set) var navigatingRoute: Route?
 
     @Published private(set) var selectedRoute: Route?
-    let hudHudGraphHopperRouteProvider = GraphHopperRouteProvider()
 
-    @ObservedChild private(set) var ferrostarCore: FerrostarCore
+    let hudHudGraphHopperRouteProvider = GraphHopperRouteProvider()
 
     @Published var routes: [Route] = []
 
-    let locationProvider: LocationProviding
+    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
 
-    let locationManager: HudHudLocationManager
-
-    private let didEndNavigationPassthroughSubject = PassthroughSubject<Void, Never>()
     @ObservedChild private var spokenInstructionObserver = SpokenInstructionObserver.initAVSpeechSynthesizer(isMuted: false)
 
     // @StateObject var simulatedLocationProvider: SimulatedLocationProvider
@@ -67,36 +74,9 @@ final class RoutingStore: ObservableObject {
 
     // MARK: Computed Properties
 
-    var didEndNavigation: any Publisher<Void, Never> {
-        self.didEndNavigationPassthroughSubject
-    }
-
-    var isMuted: Bool {
-        self.spokenInstructionObserver.isMuted
-    }
-
     var alternativeRoutes: [Route] {
         self.routes.filter {
             $0.id != self.selectedRoute?.id
-        }
-    }
-
-    var routePoints: ShapeSource {
-        var features: [MLNPointFeature] = []
-        if let waypoints = self.waypoints {
-            for item in waypoints {
-                switch item {
-                case .myLocation:
-                    continue
-                case let .waypoint(poi):
-                    let feature = MLNPointFeature(coordinate: poi.coordinate)
-                    feature.attributes["poi_id"] = poi.id
-                    features.append(feature)
-                }
-            }
-        }
-        return ShapeSource(identifier: MapSourceIdentifier.routePoints) {
-            features
         }
     }
 
@@ -105,58 +85,19 @@ final class RoutingStore: ObservableObject {
     init(mapStore: MapStore, routesPlanMapDrawer: RoutesPlanMapDrawer) {
         self.mapStore = mapStore
         self.routesPlanMapDrawer = routesPlanMapDrawer
-
-        let provider: LocationProviding
-
-        if DebugStore().simulateRide {
-            let simulated = SimulatedLocationProvider(coordinate: .riyadh)
-            simulated.warpFactor = 1
-            provider = simulated
-        } else {
-            provider = CoreLocationProvider(
-                activityType: .automotiveNavigation,
-                allowBackgroundLocationUpdates: true
-            )
-        }
-
-        self.locationProvider = provider
-        self.locationManager = HudHudLocationManager(locationProvider: provider)
-
-        // Configure the navigation session.
-        // You have a lot of flexibility here based on your use case.
-        let config = SwiftNavigationControllerConfig(
-            stepAdvance: .relativeLineStringDistance(
-                minimumHorizontalAccuracy: 32, automaticAdvanceDistance: 10
-            ),
-            routeDeviationTracking: .staticThreshold(
-                minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20
-            ), snappedLocationCourseFiltering: .snapToRoute
-        )
-
-        self._ferrostarCore = ObservedChild(wrappedValue: FerrostarCore(
-            customRouteProvider: self.hudHudGraphHopperRouteProvider,
-            locationProvider: provider,
-            navigationControllerConfig: config,
-            annotation: AnnotationPublisher<ValhallaExtendedOSRMAnnotation>.valhallaExtendedOSRM()
-        ))
-
-        self.ferrostarCore.delegate = self.navigationDelegate
-        self.ferrostarCore.spokenInstructionObserver = self.spokenInstructionObserver
         self.bindRoutePlanActions()
     }
 
     // MARK: Functions
 
-    func toggleMute() {
-        self.spokenInstructionObserver.toggleMute()
-    }
-
     func startNavigation() {
         self.navigatingRoute = self.selectedRoute
+        AppEvents.publisher.send(.startNavigation) // to mitigate the issue until we find a proper solution
     }
 
     func startNavigation(to route: Route) {
-        self.navigatingRoute = route
+        self.selectedRoute = route
+        self.startNavigation()
     }
 
     func cancelCurrentRoutePlan() {
@@ -164,6 +105,10 @@ final class RoutingStore: ObservableObject {
         self.potentialRoute = nil
         self.navigatingRoute = nil
         self.selectedRoute = nil
+    }
+
+    func clearAlternativeRoutes() {
+        self.routes.removeAll(where: { $0.id != self.selectedRoute?.id })
     }
 
     func clearRoutes() {
@@ -180,11 +125,12 @@ final class RoutingStore: ObservableObject {
         let firstWaypoint = waypoints.removeFirst()
         let lastWaypoint = waypoints.removeLast()
 
-        return try await self.hudHudGraphHopperRouteProvider.calculateRoute(
+        let routes = try await self.hudHudGraphHopperRouteProvider.calculateRoute(
             from: firstWaypoint,
             to: lastWaypoint,
             passingBy: waypoints
         )
+        return routes
     }
 
     func calculateRoutes(for item: ResolvedItem) async throws -> [Route] {
@@ -233,12 +179,11 @@ final class RoutingStore: ObservableObject {
     }
 
     func endTrip() {
-        self.ferrostarCore.stopNavigation()
+        AppEvents.publisher.send(.stopNavigation)
         self.waypoints = nil
         self.potentialRoute = nil
         self.navigatingRoute = nil
         self.mapStore.clearItems()
-        self.didEndNavigationPassthroughSubject.send()
     }
 }
 
@@ -251,7 +196,7 @@ private extension RoutingStore {
 
     func bindRoutePlanActions() {
         self.routesPlanMapDrawer.routePlanEvents.sink { [weak self] event in
-            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            guard let self, !self.enableNewRoutePlanner else { return }
             switch event {
             case let .didSelectRoute(routeID):
                 if let route = self.routes.first(where: { $0.id == routeID }) {
@@ -261,7 +206,7 @@ private extension RoutingStore {
         }
         .store(in: &self.routePlanSubscriptions)
         Publishers.CombineLatest(self.$routes, self.$selectedRoute).sink { [weak self] routes, selectedRoute in
-            guard let self, !DebugStore().enableNewRoutePlanner, !self.ferrostarCore.isNavigating else { return }
+            guard let self, !self.enableNewRoutePlanner else { return }
             if routes.isEmpty {
                 self.routesPlanMapDrawer.clear()
             } else if let selectedRoute = selectedRoute ?? routes.first {

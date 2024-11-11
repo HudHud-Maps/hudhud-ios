@@ -19,6 +19,9 @@
     "..." : {
 
     },
+    "·" : {
+
+    },
     "(%lld)" : {
 
     },
@@ -47,6 +50,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ in %lld m" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ in %2$lld m"
           }
         }
       }
@@ -123,8 +136,8 @@
         }
       }
     },
-
     "Add photos and videos" : {
+
     },
     "Add Stop" : {
 
@@ -235,6 +248,9 @@
     "Create Account" : {
 
     },
+    "Current Environment" : {
+
+    },
     "Customers Rating" : {
 
     },
@@ -296,9 +312,6 @@
     "Enable location in permissions" : {
 
     },
-    "Enable new Route Planner design" : {
-
-    },
     "Enable Touch Visualizer" : {
 
     },
@@ -306,6 +319,12 @@
 
     },
     "Enter your Verification Code" : {
+
+    },
+    "Environment" : {
+
+    },
+    "Experimental Features" : {
 
     },
     "Fastest" : {
@@ -328,7 +347,16 @@
         }
       }
     },
+    "Feature Toggles" : {
+
+    },
+    "Features" : {
+
+    },
     "Filters" : {
+
+    },
+    "Finish" : {
 
     },
     "From %@" : {
@@ -437,6 +465,12 @@
     "Name" : {
 
     },
+    "Navigation Settings" : {
+
+    },
+    "Navigation Settings Content" : {
+
+    },
     "Nearby Trending" : {
 
     },
@@ -520,9 +554,6 @@
       "comment" : "Reviews Tab in POI Details"
     },
     "Reviews (%lld)" : {
-
-    },
-    "Route Planner" : {
 
     },
     "Routing Configuration" : {

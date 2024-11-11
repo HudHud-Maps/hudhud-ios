@@ -30,6 +30,8 @@ public struct InstructionsView: View {
 
     @Binding private var sizeWhenNotExpanded: CGSize
 
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
     // MARK: Computed Properties
 
     public var expandedContent: AnyView? {
@@ -128,7 +130,7 @@ public struct InstructionsView: View {
                     )
                     .font(.title2.bold())
                     .padding(.horizontal, 16)
-                    .padding(.top, self.verticalPadding)
+                    .padding(.top, self.safeAreaInsets.top + self.verticalPadding)
                     .padding(.bottom, self.hasSecondary ? 8 : self.verticalPadding)
 
                     if let secondaryContent = visualInstruction.secondaryContent {

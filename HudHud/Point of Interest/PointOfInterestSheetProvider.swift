@@ -22,6 +22,8 @@ struct PointOfInterestSheetProvider: SheetProvider {
     let debugStore: DebugStore
     let routePlannerStore: RoutePlannerStore
 
+    @Feature(.enableNewRoutePlanner, defaultValue: false) private var enableNewRoutePlanner: Bool
+
     // MARK: Content
 
     var sheetView: some View {
@@ -36,7 +38,7 @@ struct PointOfInterestSheetProvider: SheetProvider {
             didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
         ) { routeIfAvailable in
             Logger.searchView.info("Start item \(self.pointOfInterest)")
-            if self.debugStore.enableNewRoutePlanner {
+            if self.enableNewRoutePlanner {
                 self.sheetStore.show(.routePlanner(self.routePlannerStore))
                 return
             }

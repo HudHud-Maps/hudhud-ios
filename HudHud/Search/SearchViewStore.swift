@@ -62,7 +62,6 @@ final class SearchViewStore: ObservableObject {
     // MARK: Properties
 
     let mapStore: MapStore
-    let routingStore: RoutingStore
     var apple = ApplePOI()
     var progressViewTimer: Timer?
     var loadingInstance = Loading()
@@ -95,12 +94,10 @@ final class SearchViewStore: ObservableObject {
     init(
         mapStore: MapStore,
         sheetStore: SheetStore,
-        routingStore: RoutingStore,
         filterStore: FilterStore,
         mode: Mode
     ) {
         self.mapStore = mapStore
-        self.routingStore = routingStore
         self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.mode = mode
@@ -257,7 +254,6 @@ final class SearchViewStore: ObservableObject {
     }
 
     func endTrip() {
-        self.routingStore.endTrip()
         self.mapStore.clearItems()
         self.searchText = ""
         self.searchResults = []
@@ -373,10 +369,12 @@ private extension SearchViewStore {
     }
 
     func bindEndTrip() {
-        self.routingStore.didEndNavigation.sink { [weak self] _ in
-            self?.endTrip()
-        }
-        .store(in: &self.cancellables)
+        AppEvents.publisher
+            .filter { $0 == .stopNavigation }
+            .sink { [weak self] _ in
+                self?.endTrip()
+            }
+            .store(in: &self.cancellables)
     }
 }
 
@@ -384,5 +382,5 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
 }

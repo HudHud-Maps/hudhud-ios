@@ -19,13 +19,10 @@ struct FavoritesSheetProvider: SheetProvider {
 
     var sheetView: some View {
         // Initialize fresh instances of MapStore and SearchViewStore
-        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
         let freshSearchViewStore: SearchViewStore = {
             let tempStore = SearchViewStore(
-                mapStore: freshMapStore,
+                mapStore: MapStore(userLocationStore: .storeSetUpForPreviewing),
                 sheetStore: self.sheetStore,
-                routingStore: freshRoutingStore,
                 filterStore: .shared,
                 mode: .live(provider: .hudhud)
             )

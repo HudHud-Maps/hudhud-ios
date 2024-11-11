@@ -17,6 +17,7 @@ struct SearchSheetProvider: SheetProvider {
     let searchViewStore: SearchViewStore
     let streetViewStore: StreetViewStore
     let trendingStore: TrendingStore
+    let navigationStore: NavigationStore
 
     // MARK: Content
 
@@ -37,7 +38,8 @@ struct SearchSheetProvider: SheetProvider {
             sheetStore: self.sheetStore,
             trendingStore: self.trendingStore,
             mapStore: self.searchViewStore.mapStore,
-            userLocationStore: self.searchViewStore.mapStore.userLocationStore
+            userLocationStore: self.searchViewStore.mapStore.userLocationStore,
+            navigationStore: self.navigationStore
         )
     }
 }

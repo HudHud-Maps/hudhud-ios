@@ -14,6 +14,13 @@ import SwiftLocation
 import SwiftUI
 import TypographyKit
 
+// MARK: - AppDpendencies
+
+enum AppDpendencies {
+    static let navigationEngine = NavigationEngine(configuration: .default)
+    static let locationEngine = LocationEngine()
+}
+
 // MARK: - HudHudApp
 
 struct HudHudApp: App {
