@@ -8,7 +8,6 @@
 
 import CoreLocation
 import XCTest
-@testable import HudHud
 
 // MARK: - HudHudUITests
 
