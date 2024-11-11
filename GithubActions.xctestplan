@@ -10,9 +10,6 @@
   ],
   "defaultOptions" : {
     "codeCoverage" : false,
-    "locationScenario" : {
-      "identifier" : "..\/..\/HudHud\/Preview Content\/Riyadh.gpx"
-    },
     "targetForVariableExpansion" : {
       "containerPath" : "container:HudHud.xcodeproj",
       "identifier" : "CDAE05432B681261003E5196",

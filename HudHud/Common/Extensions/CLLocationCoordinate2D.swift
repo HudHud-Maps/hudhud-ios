@@ -10,26 +10,26 @@ import CoreLocation
 import Foundation
 
 extension CLLocation {
+
     static func coordinate(_ coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance = 0) -> CLLocation {
-        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 1, verticalAccuracy: 1, timestamp: .now)
+        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: .now)
     }
 
     static let riyadh: CLLocation = .coordinate(.riyadh, altitude: 600)
+    static let theGarage: CLLocation = .coordinate(.theGarage, altitude: 647)
     static let jeddah: CLLocation = .coordinate(.jeddah, altitude: 12)
 }
 
 extension CLLocationCoordinate2D {
+
     static let zero = CLLocationCoordinate2D(latitude: 0, longitude: 0)
     static let riyadh = CLLocationCoordinate2D(latitude: 24.65333, longitude: 46.71526)
+    static let theGarage = CLLocationCoordinate2D(latitude: 24.7193306, longitude: 46.6468)
     static let jeddah = CLLocationCoordinate2D(latitude: 21.54238, longitude: 39.19797)
-
-    // Used for testing StreetView
-    static let image1 = CLLocationCoordinate2D(latitude: 21.54238, longitude: 39.19797)
-    static let image2 = CLLocationCoordinate2D(latitude: 25, longitude: 46)
-    static let image3 = CLLocationCoordinate2D(latitude: 20, longitude: 40)
 }
 
 extension CLLocationCoordinate2D {
+
     func distance(to other: CLLocationCoordinate2D) -> CLLocationDistance {
         let from = CLLocation(latitude: latitude, longitude: longitude)
         let to = CLLocation(latitude: other.latitude, longitude: other.longitude)
@@ -38,6 +38,7 @@ extension CLLocationCoordinate2D {
 }
 
 extension CLLocationDirection {
+
     func isClose(to direction: CLLocationDirection, tolerance: CLLocationDirection = 45) -> Bool {
         let diff = abs(self - direction)
         return diff <= tolerance || diff >= (360 - tolerance)
@@ -45,6 +46,7 @@ extension CLLocationDirection {
 }
 
 extension CLLocationCoordinate2D {
+
     func bearing(to coordinate: CLLocationCoordinate2D) -> CLLocationDirection {
         let lat1 = self.latitude.degreesToRadians
         let lon1 = self.longitude.degreesToRadians
@@ -61,6 +63,7 @@ extension CLLocationCoordinate2D {
 }
 
 extension Double {
+
     var degreesToRadians: Double { self * .pi / 180 }
     var radiansToDegrees: Double { self * 180 / .pi }
 }
