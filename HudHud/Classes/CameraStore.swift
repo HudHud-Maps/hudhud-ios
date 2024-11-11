@@ -39,9 +39,14 @@ final class CameraStore {
             }
         }
     }
+}
+
+// MARK: - Private
+
+private extension CameraStore {
 
     // Request camera permissions
-    private func checkCameraPermission(completion: @escaping (Bool) -> Void) {
+    func checkCameraPermission(completion: @escaping (Bool) -> Void) {
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             completion(true)
@@ -57,7 +62,6 @@ final class CameraStore {
             break
         }
     }
-
 }
 
 // MARK: - AccessCameraView
@@ -138,11 +142,9 @@ struct CameraAccessModifier: ViewModifier {
                     }
             }
             .alert(isPresented: self.$cameraStore.showAlert) {
-                Alert(
-                    title: Text("Camera Access Required"),
-                    message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
-                    dismissButton: .default(Text("OK"))
-                )
+                Alert(title: Text("Camera Access Required"),
+                      message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
+                      dismissButton: .default(Text("OK")))
             }
     }
 }

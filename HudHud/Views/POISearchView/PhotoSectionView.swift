@@ -74,10 +74,8 @@ struct PhotoSectionView: View {
             .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
                 self.photoStore.reduce(action: .addImageFromCamera(capturedImage))
             }
-            .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(
-                get: { self.photoStore.state.selection },
-                set: { self.photoStore.reduce(action: .addImages($0)) }
-            ))
+            .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(get: { self.photoStore.state.selection },
+                                                                                        set: { self.photoStore.reduce(action: .addImages($0)) }))
     }
 }
 
@@ -211,10 +209,8 @@ private extension PhotoSectionView {
             }
         }
         .sheet(item: self.$selectedMedia) { mediaURL in
-            FullPageImage(
-                mediaURL: mediaURL,
-                mediaURLs: self.item.mediaURLs
-            )
+            FullPageImage(mediaURL: mediaURL,
+                          mediaURLs: self.item.mediaURLs)
         }
     }
 
@@ -244,5 +240,5 @@ private extension PhotoSectionView {
     @Previewable @State var about: POIOverviewView.Tab = .about
 
     PhotoSectionView(item: .ketchup,
-                     selectedTab: $about, photoStore: .init(), cameraStore: .init())
+                     selectedTab: $about, photoStore: PhotoStore(), cameraStore: CameraStore())
 }

@@ -9,6 +9,8 @@
 import PhotosUI
 import SwiftUI
 
+// MARK: - PhotoStore
+
 @Observable
 final class PhotoStore {
 
@@ -61,8 +63,13 @@ final class PhotoStore {
             self.state.selectedImages.removeAll()
         }
     }
+}
 
-    private func addImages(_ images: [PhotosPickerItem]) {
+// MARK: - Private
+
+private extension PhotoStore {
+
+    func addImages(_ images: [PhotosPickerItem]) {
         Task {
             for image in images {
                 if let data = try? await image.loadTransferable(type: Data.self),
@@ -73,7 +80,7 @@ final class PhotoStore {
         }
     }
 
-    private func addImagesFromCamera(newImage: UIImage) {
+    func addImagesFromCamera(newImage: UIImage) {
         self.state.selectedImages.append(newImage)
     }
 }
