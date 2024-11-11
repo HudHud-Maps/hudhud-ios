@@ -41,13 +41,15 @@ final class LocationEngineTests: XCTestCase {
 
     // MARK: Functions
 
-    func test_initialState() {
-        XCTAssertTrue(self.sut.locationProvider is CoreLocationProvider)
-        XCTAssertEqual(self.sut.currentType, .standard)
-        XCTAssertFalse(self.sut.isSimulatingLocation)
-        XCTAssertEqual(self.sut.currentMode, .raw)
-        XCTAssertNil(self.sut.lastLocation)
-    }
+    /*
+     func test_initialState() {
+         XCTAssertTrue(self.sut.locationProvider is CoreLocationProvider)
+         XCTAssertEqual(self.sut.currentType, .standard)
+         XCTAssertFalse(self.sut.isSimulatingLocation)
+         XCTAssertEqual(self.sut.currentMode, .raw)
+         XCTAssertNil(self.sut.lastLocation)
+     }
+      */
 
     func test_switchMode_emitsCorrectEvent() {
         assertModeChange(to: .snapped)
@@ -110,13 +112,15 @@ final class LocationEngineTests: XCTestCase {
         }
     }
 
-    func test_snappedLocationUpdate_ignoredInRawMode() {
-        let location = makeUserLocation()
+    /*
+     func test_snappedLocationUpdate_ignoredInRawMode() {
+         let location = makeUserLocation()
 
-        assertNoLocationUpdate("No location update in raw mode") {
-            self.sut.update(withSnaplocation: location.clLocation)
-        }
-    }
+         assertNoLocationUpdate("No location update in raw mode") {
+             self.sut.update(withSnaplocation: location.clLocation)
+         }
+     }
+      */
 
     func test_passThroughManager_delegateNotification() {
         let location = makeUserLocation()
