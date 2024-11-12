@@ -54,7 +54,7 @@
 		930C5C4AFBCBE90A662DA243 /* XCTestCase+Additions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "XCTestCase+Additions.swift"; sourceTree = "<group>"; };
 		9BEE112FA7A7DEC6C5B724D2 /* CalculateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculateTests.swift; sourceTree = "<group>"; };
 		CD34C5962C0B3CEB006DCDBA /* BackendService */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = BackendService; sourceTree = "<group>"; };
-		CDAE05442B681261003E5196 /* HudHud Maps.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "HudHud Maps.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CDAE05442B681261003E5196 /* HudHud.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HudHud.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05542B681263003E5196 /* HudHudTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudHudTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CDAE05582B681263003E5196 /* HudHudTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudHudTests.swift; sourceTree = "<group>"; };
 		CDAE055E2B681263003E5196 /* HudHudUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HudHudUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,7 +70,7 @@
 				"Fonts/IBMPlexSansArabic-Regular.ttf",
 				Info.plist,
 			);
-			target = CDAE05432B681261003E5196 /* HudHud Maps */;
+			target = CDAE05432B681261003E5196 /* HudHud */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -150,7 +150,7 @@
 		CDAE05452B681261003E5196 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CDAE05442B681261003E5196 /* HudHud Maps.app */,
+				CDAE05442B681261003E5196 /* HudHud.app */,
 				CDAE05542B681263003E5196 /* HudHudTests.xctest */,
 				CDAE055E2B681263003E5196 /* HudHudUITests.xctest */,
 			);
@@ -205,9 +205,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CDAE05432B681261003E5196 /* HudHud Maps */ = {
+		CDAE05432B681261003E5196 /* HudHud */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CDAE05682B681263003E5196 /* Build configuration list for PBXNativeTarget "HudHud Maps" */;
+			buildConfigurationList = CDAE05682B681263003E5196 /* Build configuration list for PBXNativeTarget "HudHud" */;
 			buildPhases = (
 				CDAE05402B681261003E5196 /* Sources */,
 				CDAE05412B681261003E5196 /* Frameworks */,
@@ -234,7 +234,7 @@
 				0C9A5B432CDF357B00988B68 /* Supporting Files */,
 				0C9A5B672CDF35A900988B68 /* Preview Content */,
 			);
-			name = "HudHud Maps";
+			name = HudHud;
 			packageProductDependencies = (
 				CDAE05EB2B6A87B4003E5196 /* SwiftLocation */,
 				CD8C5A1F2BA342A5002EBE8A /* SimpleToast */,
@@ -256,7 +256,7 @@
 				13BBDACFCBF0023DD01B7FA6 /* APIClient */,
 			);
 			productName = HudHud;
-			productReference = CDAE05442B681261003E5196 /* HudHud Maps.app */;
+			productReference = CDAE05442B681261003E5196 /* HudHud.app */;
 			productType = "com.apple.product-type.application";
 		};
 		CDAE05532B681263003E5196 /* HudHudTests */ = {
@@ -353,7 +353,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CDAE05432B681261003E5196 /* HudHud Maps */,
+				CDAE05432B681261003E5196 /* HudHud */,
 				CDAE05532B681263003E5196 /* HudHudTests */,
 				CDAE055D2B681263003E5196 /* HudHudUITests */,
 			);
@@ -452,12 +452,12 @@
 		};
 		CDAE05562B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CDAE05432B681261003E5196 /* HudHud Maps */;
+			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE05552B681263003E5196 /* PBXContainerItemProxy */;
 		};
 		CDAE05602B681263003E5196 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CDAE05432B681261003E5196 /* HudHud Maps */;
+			target = CDAE05432B681261003E5196 /* HudHud */;
 			targetProxy = CDAE055F2B681263003E5196 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -604,6 +604,7 @@
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "HudHud Maps";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -638,6 +639,7 @@
 				DEVELOPMENT_TEAM = YN76B7J2LN;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "HudHud/Supporting Files/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "HudHud Maps";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Allows HudHud to show your location on the map";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -674,7 +676,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HudHud.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HudHud Maps";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HudHud.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HudHud";
 			};
 			name = Debug;
 		};
@@ -693,7 +695,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HudHud.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HudHud Maps";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/HudHud.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/HudHud";
 			};
 			name = Release;
 		};
@@ -745,7 +747,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CDAE05682B681263003E5196 /* Build configuration list for PBXNativeTarget "HudHud Maps" */ = {
+		CDAE05682B681263003E5196 /* Build configuration list for PBXNativeTarget "HudHud" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CDAE05692B681263003E5196 /* Debug */,

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1610"
+   LastUpgradeVersion = "1540"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "CDAE05432B681261003E5196"
-               BuildableName = "HudHud Maps.app"
-               BlueprintName = "HudHud Maps"
+               BuildableName = "HudHud.app"
+               BlueprintName = "HudHud"
                ReferencedContainer = "container:HudHud.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,6 +48,17 @@
                ReferencedContainer = "container:HudHud.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "CDAE055D2B681263003E5196"
+               BuildableName = "HudHudUITests.xctest"
+               BlueprintName = "HudHudUITests"
+               ReferencedContainer = "container:HudHud.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
@@ -65,11 +76,22 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CDAE05432B681261003E5196"
-            BuildableName = "HudHud Maps.app"
-            BlueprintName = "HudHud Maps"
+            BuildableName = "HudHud.app"
+            BlueprintName = "HudHud"
             ReferencedContainer = "container:HudHud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "OS_ACTIVITY_MODE"
+            value = "disable"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
+      <LocationScenarioReference
+         identifier = "../../HudHud/Preview Content/Riyadh.gpx"
+         referenceType = "0">
+      </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -82,8 +104,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "CDAE05432B681261003E5196"
-            BuildableName = "HudHud Maps.app"
-            BlueprintName = "HudHud Maps"
+            BuildableName = "HudHud.app"
+            BlueprintName = "HudHud"
             ReferencedContainer = "container:HudHud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

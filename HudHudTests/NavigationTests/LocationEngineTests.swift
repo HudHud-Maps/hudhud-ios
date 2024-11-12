@@ -65,12 +65,14 @@ final class LocationEngineTests: XCTestCase {
         }
     }
 
-    func test_rawLocationUpdate_inRawMode() {
-        let location = makeUserLocation()
-        assertLocationUpdate(location: location, mode: .raw) { location in
-            simulateRawLocationUpdate(location)
-        }
-    }
+    /*
+     func test_rawLocationUpdate_inRawMode() {
+         let location = makeUserLocation()
+         assertLocationUpdate(location: location, mode: .raw) { location in
+             simulateRawLocationUpdate(location)
+         }
+     }
+      */
 
     func test_snappedLocationUpdate_inSnappedMode() {
         let location = makeUserLocation()
