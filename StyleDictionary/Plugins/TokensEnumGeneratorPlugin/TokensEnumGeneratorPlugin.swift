@@ -35,7 +35,7 @@ import XcodeProjectPlugin
 extension TokensEnumGeneratorPlugin: XcodeBuildToolPlugin {
 
 	func createBuildCommands(context: XcodePluginContext, target: XcodeTarget) throws -> [Command] {
-		let inputPath = context.xcodeProject.directoryURL.appending(path: target.displayName).appending(path: "Supporting Files").appending(path: "typography-design-tokens.json")
+		let inputPath = context.xcodeProject.directoryURL.appending(path: "HudHud").appending(path: "Supporting Files").appending(path: "typography-design-tokens.json")
 		let templatePath = context.xcodeProject.directoryURL.appending(path: "StyleDictionary").appending(path: "customTemplate.stencil")
 		let output = context.pluginWorkDirectoryURL.appending(path: "GeneratedSources").appending(path: "TextStyles.swift")
 
