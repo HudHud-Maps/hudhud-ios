@@ -130,6 +130,7 @@ struct MapViewContainer: View {
                         self.mapStore.camera = .automotiveNavigation()
                     }
                     self.sheetStore.isShown.value = false
+                    self.sheetStore.popToRoot()
                 case .stopNavigation:
                     self.navigationStore.execute(.stopNavigation)
                 }

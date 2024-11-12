@@ -35,8 +35,8 @@ struct RouteCardsView: View {
                 LazyHStack {
                     ForEach(self.routes) { route in
                         RouteCardView(route: route)
-                            .padding(.horizontal)
-                            .frame(width: geometry.frame(in: .global).width - 50)
+                            .padding(self.routeCardPadding(for: route))
+                            .frame(width: self.routeCardWidth(using: geometry))
                     }
                 }
                 .scrollTargetLayout()
@@ -45,6 +45,27 @@ struct RouteCardsView: View {
             .scrollPosition(id: self.$selectedRoute)
         }
         .frame(height: 80)
+    }
+
+    // MARK: Functions
+
+    func routeCardPadding(for route: RouteViewData) -> Edge.Set {
+        if self.routes.count <= 1 {
+            .horizontal
+        } else if self.routes.last == route {
+            .horizontal
+        } else {
+            .leading
+        }
+    }
+
+    func routeCardWidth(using geometry: GeometryProxy) -> CGFloat {
+        if self.routes.count > 1 {
+            return geometry.frame(in: .global).width - 50
+        } else {
+            print(geometry.frame(in: .global).width)
+            return geometry.frame(in: .global).width
+        }
     }
 }
 
