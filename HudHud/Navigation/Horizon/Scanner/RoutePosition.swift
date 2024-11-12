@@ -30,4 +30,12 @@ struct RoutePosition: Equatable {
     func isBefore(_ other: RoutePosition) -> Bool {
         self.index < other.index
     }
+
+    func isAfter(_ other: RoutePosition) -> Bool {
+        if self.index != other.index {
+            return self.index > other.index
+        }
+
+        return self.projectedDistance > other.projectedDistance
+    }
 }

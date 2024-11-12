@@ -30,4 +30,5 @@ extension Logger {
     static let userRegistration = Logger(subsystem: subsystem, category: "userRegistration")
     static let diagnostics = Logger(subsystem: subsystem, category: "Diagnostics")
     static let locationEngine = Logger(subsystem: subsystem, category: "LocationEngine")
+    static let navigationEngine = Logger(subsystem: subsystem, category: "NavigationEngine")
 }

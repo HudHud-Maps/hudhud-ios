@@ -29,6 +29,7 @@ enum NavigationEvent {
     case speedLimitChanged(Measurement<UnitSpeed>?)
     case snappedLocationUpdated(CLLocation)
     case error(NavigationError)
+    case pathProgressUpdated(PathTraversalProgress)
 }
 
 // MARK: - NavigationEngine
@@ -50,6 +51,7 @@ final class NavigationEngine {
 
     private let configuration: NavigationConfig
     private let horizonEngine: HorizonEngine
+    private let routeTracker: RouteProgressTracker
 
     @ObservationIgnored
     @Feature(.safetyCamsAndAlerts) private var enbaleSafetyCamsAndAccidents: Bool
@@ -80,13 +82,11 @@ final class NavigationEngine {
         self.spokenInstructionObserver = .initAVSpeechSynthesizer(isMuted: false)
         self.locationEngine = configuration.locationEngine
         self.horizonEngine = HorizonEngine(configuration: configuration)
-
-        self.ferrostarCore = FerrostarCore(
-            customRouteProvider: configuration.routeProvider,
-            locationProvider: self.locationEngine.locationProvider,
-            navigationControllerConfig: configuration.toFerrostarConfig(),
-            annotation: self.annotationPublisher
-        )
+        self.routeTracker = RouteProgressTracker()
+        self.ferrostarCore = FerrostarCore(customRouteProvider: configuration.routeProvider,
+                                           locationProvider: self.locationEngine.locationProvider,
+                                           navigationControllerConfig: configuration.toFerrostarConfig(),
+                                           annotation: self.annotationPublisher)
 
         self.setupFerrostarCore()
         self.observeFerrostarState()
@@ -97,6 +97,9 @@ final class NavigationEngine {
 
     func startNavigation(route: Route) throws {
         self.activeRoute = route
+        self.routeTracker.update(coordinates: route.geometry.clLocationCoordinate2Ds,
+                                 totalDistance: route.distance)
+
         try self.ferrostarCore.startNavigation(route: route)
         self.locationEngine.swithcMode(to: .snapped)
         self.eventsSubject.send(.navigationStarted)
@@ -109,6 +112,7 @@ final class NavigationEngine {
         self.ferrostarCore.stopNavigation()
         self.activeRoute = nil
         self.state = nil
+        self.routeTracker.flush()
         self.eventsSubject.send(.navigationEnded)
         self.locationEngine.swithcMode(to: .raw)
 
@@ -123,11 +127,22 @@ final class NavigationEngine {
 }
 
 private extension NavigationEngine {
+
     func onStateChange(_ newState: NavigationState) {
-        if let snappedLocation = newState.tripState.navigationInfo?.location {
+        if let navigationInfo = newState.tripState.navigationInfo {
+            let snappedLocation = navigationInfo.location
             self.useSnappedLocation(snappedLocation.clLocation)
             self.horizonEngine.processLocation(snappedLocation.clLocation)
+
+            let totalDistance = self.activeRoute?.distance ?? 0
+            let remainingDistance = navigationInfo.progress.distanceRemaining
+            let drivenDistance = totalDistance - remainingDistance
+
+            let progress = self.routeTracker.calcualteProgress(from: snappedLocation.clLocation,
+                                                               and: drivenDistance)
+            self.eventsSubject.send(.pathProgressUpdated(progress))
         }
+
         self.eventsSubject.send(.stateChanged(newState))
     }
 
@@ -178,12 +193,10 @@ private extension NavigationEngine {
             Logger.locationEngine.debug("Location engine mode changed to \(String(describing: newMode))")
         case let .providerChanged(newType):
             Logger.locationEngine.debug("Location engine mode changed to \(String(describing: newType))")
-            self.ferrostarCore = FerrostarCore(
-                customRouteProvider: self.configuration.routeProvider,
-                locationProvider: self.locationEngine.locationProvider,
-                navigationControllerConfig: self.configuration.toFerrostarConfig(),
-                annotation: self.annotationPublisher
-            )
+            self.ferrostarCore = FerrostarCore(customRouteProvider: self.configuration.routeProvider,
+                                               locationProvider: self.locationEngine.locationProvider,
+                                               navigationControllerConfig: self.configuration.toFerrostarConfig(),
+                                               annotation: self.annotationPublisher)
             self.setupFerrostarCore()
         }
     }

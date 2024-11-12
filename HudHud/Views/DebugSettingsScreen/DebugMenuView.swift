@@ -29,7 +29,7 @@ struct DebugMenuView: View {
                 self.baseURLSection
                 self.experimentalFeaturesSection
                 self.networkDebuggerButton
-                self.simulationSection
+                self.navigationSection
                 self.touchesSection
                 self.sfsymbolsSection
                 self.streetViewQualitySection
@@ -80,10 +80,14 @@ struct DebugMenuView: View {
         }
     }
 
-    var simulationSection: some View {
-        Section(header: Text("Simulation")) {
+    var navigationSection: some View {
+        Section(header: Text("Navigation")) {
             Toggle(isOn: self.$debugSettings.simulateRide) {
                 Text("Simulate Ride during Navigation")
+            }
+
+            Toggle(isOn: self.$debugSettings.showDrivenPartOfTheRoute) {
+                Text("Show Driven Part of the Route")
             }
         }
     }
