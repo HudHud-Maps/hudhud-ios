@@ -99,7 +99,7 @@ final class MapStore {
         }
     }
 
-    var camera: MapViewCamera = .center(.riyadh, zoom: 10) {
+    var camera: MapViewCamera = .center(.theGarage, zoom: 10) {
         didSet {
             switch self.camera.lastReasonForChange {
             case .gesturePan:
@@ -152,7 +152,7 @@ final class MapStore {
 
     // MARK: Lifecycle
 
-    init(camera: MapViewCamera = .center(.riyadh, zoom: 10), userLocationStore: UserLocationStore) {
+    init(camera: MapViewCamera = .center(.theGarage, zoom: 10), userLocationStore: UserLocationStore) {
         self.camera = camera
         self.userLocationStore = userLocationStore
         self.selectedItem = CurrentValueSubject(nil)
@@ -188,13 +188,11 @@ final class MapStore {
     }
 
     func getCameraPitch() -> Double {
-        if case let .centered(
-            onCoordinate: _,
-            zoom: _,
-            pitch: pitch,
-            pitchRange: _,
-            direction: _
-        ) = camera.state {
+        if case let .centered(onCoordinate: _,
+                              zoom: _,
+                              pitch: pitch,
+                              pitchRange: _,
+                              direction: _) = camera.state {
             return pitch
         }
         return 0
@@ -248,7 +246,7 @@ final class MapStore {
         case .mapItems:
             self.handleMapItems()
         default:
-            self.camera = MapViewCamera.center(.riyadh, zoom: 16)
+            self.camera = MapViewCamera.center(.theGarage, zoom: 16)
         }
     }
 
@@ -270,7 +268,8 @@ final class MapStore {
     }
 
     func isSFSymbolLayerPresent() -> Bool {
-        return self.mapStyle?.layers.contains(where: { $0.identifier == MapLayerIdentifier.restaurants || $0.identifier == MapLayerIdentifier.shops }) ?? false
+        return self.mapStyle?.layers
+            .contains(where: { $0.identifier == MapLayerIdentifier.restaurants || $0.identifier == MapLayerIdentifier.shops }) ?? false
     }
 }
 
@@ -336,13 +335,11 @@ private extension MapStore {
     }
 
     func getCameraCoordinate() -> CLLocationCoordinate2D {
-        if case let .centered(
-            onCoordinate: onCoordinate,
-            zoom: _,
-            pitch: _,
-            pitchRange: _,
-            direction: _
-        ) = camera.state {
+        if case let .centered(onCoordinate: onCoordinate,
+                              zoom: _,
+                              pitch: _,
+                              pitchRange: _,
+                              direction: _) = camera.state {
             return onCoordinate
         }
         return CLLocationCoordinate2D(latitude: 0, longitude: 0)

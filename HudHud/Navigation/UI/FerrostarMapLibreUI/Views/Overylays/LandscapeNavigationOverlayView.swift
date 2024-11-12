@@ -13,11 +13,9 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import SwiftUI
 
-struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView {
+struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     // MARK: Properties
-
-    @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
 
     var topCenter: (() -> AnyView)?
     var topTrailing: (() -> AnyView)?
@@ -34,32 +32,25 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
     var showCentering: Bool
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
-
     let showMute: Bool
     let isMuted: Bool
     let onMute: () -> Void
 
-    private let navigationState: NavigationState?
-
-    @State private var isInstructionViewExpanded: Bool = false
+    var overlayStore: OverlayContentStore
 
     // MARK: Lifecycle
 
-    init(
-        navigationState: NavigationState?,
-        speedLimit: Measurement<UnitSpeed>? = nil,
-        isMuted: Bool,
-        showMute: Bool = true,
-        onMute: @escaping () -> Void,
-        showZoom: Bool = false,
-        onZoomIn: @escaping () -> Void = {},
-        onZoomOut: @escaping () -> Void = {},
-        showCentering: Bool = false,
-        onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil
-    ) {
-        self.navigationState = navigationState
+    init(overlayStore: OverlayContentStore,
+         speedLimit: Measurement<UnitSpeed>? = nil,
+         isMuted: Bool,
+         showMute: Bool = true,
+         onMute: @escaping () -> Void,
+         showZoom: Bool = false,
+         onZoomIn: @escaping () -> Void = {},
+         onZoomOut: @escaping () -> Void = {},
+         showCentering: Bool = false,
+         onCenter: @escaping () -> Void = {}) {
+        self.overlayStore = overlayStore
         self.speedLimit = speedLimit
         self.isMuted = isMuted
         self.onMute = onMute
@@ -69,7 +60,6 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
-        self.onTapExit = onTapExit
     }
 
     // MARK: Content
@@ -79,25 +69,13 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
             ZStack(alignment: .top) {
                 VStack {
                     Spacer()
-                    if case .navigating = self.navigationState?.tripState,
-                       let progress = navigationState?.currentProgress {
-                        ArrivalView(
-                            progress: progress,
-                            onTapExit: self.onTapExit
-                        )
+                    if let progressView = overlayStore.content[.tripProgress] {
+                        progressView()
                     }
                 }
-                if case .navigating = self.navigationState?.tripState,
-                   let visualInstruction = navigationState?.currentVisualInstruction,
-                   let progress = navigationState?.currentProgress,
-                   let remainingSteps = navigationState?.remainingSteps {
-                    InstructionsView(
-                        visualInstruction: visualInstruction,
-                        distanceFormatter: self.formatterCollection.distanceFormatter,
-                        distanceToNextManeuver: progress.distanceToNextManeuver,
-                        remainingSteps: remainingSteps,
-                        isExpanded: self.$isInstructionViewExpanded
-                    )
+
+                if let instrcutionsView = overlayStore.content[.instructions] {
+                    instrcutionsView()
                 }
             }
 
@@ -107,28 +85,26 @@ struct LandscapeNavigationOverlayView: View, CustomizableNavigatingInnerGridView
             // when both the visualInstructions and progress are nil.
             // It will automatically reduce height if and when either
             // view appears
-            NavigatingInnerGridView(
-                speedLimit: self.speedLimit,
-                isMuted: self.isMuted,
-                showMute: self.showMute,
-                onMute: self.onMute,
-                showZoom: self.showZoom,
-                onZoomIn: self.onZoomIn,
-                onZoomOut: self.onZoomOut,
-                showCentering: self.showCentering,
-                onCenter: self.onCenter
-            )
-            .innerGrid {
-                self.topCenter?()
-            } topTrailing: {
-                self.topTrailing?()
-            } midLeading: {
-                self.midLeading?()
-            } bottomTrailing: {
-                self.bottomTrailing?()
-            } bottomLeading: {
-                self.bottomLeading?()
-            }
+            NavigatingInnerGridView(speedLimit: self.speedLimit,
+                                    isMuted: self.isMuted,
+                                    showMute: self.showMute,
+                                    onMute: self.onMute,
+                                    showZoom: self.showZoom,
+                                    onZoomIn: self.onZoomIn,
+                                    onZoomOut: self.onZoomOut,
+                                    showCentering: self.showCentering,
+                                    onCenter: self.onCenter)
+                .innerGrid {
+                    self.topCenter?()
+                } topTrailing: {
+                    self.topTrailing?()
+                } midLeading: {
+                    self.midLeading?()
+                } bottomTrailing: {
+                    self.bottomTrailing?()
+                } bottomLeading: {
+                    self.bottomLeading?()
+                }
         }
     }
 }

@@ -7,7 +7,9 @@
 //
 
 import Foundation
-import OSLog
+import os
+
+typealias Logger = os.Logger // we dont need to import OSLog everywhere in the app
 
 extension Logger {
     private static let subsystem = Bundle.main.bundleIdentifier! // swiftlint:disable:this force_unwrapping
@@ -27,4 +29,5 @@ extension Logger {
     static let panoramaView = Logger(subsystem: subsystem, category: "panoramaView")
     static let userRegistration = Logger(subsystem: subsystem, category: "userRegistration")
     static let diagnostics = Logger(subsystem: subsystem, category: "Diagnostics")
+    static let locationEngine = Logger(subsystem: subsystem, category: "LocationEngine")
 }

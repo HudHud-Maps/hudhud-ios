@@ -125,6 +125,7 @@ struct POIOverviewView: View {
                 ShowMoreButtonView {
                     self.selectedTab = .about
                 }
+                .padding(.horizontal)
             }
         }
         .padding(.vertical)
@@ -146,12 +147,10 @@ struct SectionView: View {
 
     // MARK: Lifecycle
 
-    init(
-        image: ImageResource? = nil,
-        sfSymbol: SFSymbol? = nil,
-        title: String? = nil,
-        description: String
-    ) {
+    init(image: ImageResource? = nil,
+         sfSymbol: SFSymbol? = nil,
+         title: String? = nil,
+         description: String) {
         self.image = image
         self.sfSymbol = sfSymbol
         self.title = title
@@ -327,8 +326,7 @@ struct CircularIconView: View {
                 .padding(12)
                 .background(Circle()
                     .fill(Color.Colors.General._03LightGrey)
-                    .frame(width: 40, height: 40)
-                )
+                    .frame(width: 40, height: 40))
         }
     }
 }

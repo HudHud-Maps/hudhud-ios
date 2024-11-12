@@ -22,39 +22,44 @@ final class CameraStore {
     var isCameraPermissionGranted = false
     var isShowingCamera = false
     var showAlert = false
-
-    // MARK: Lifecycle
-
-    init() {
-        self.checkCameraPermission()
-    }
+    var showAddPhotoConfirmation = false
 
     // MARK: Functions
-
-    // Request camera permissions
-    func checkCameraPermission() {
-        switch AVCaptureDevice.authorizationStatus(for: .video) {
-        case .authorized:
-            self.isCameraPermissionGranted = true
-        case .notDetermined:
-            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
-                guard let self else { return }
-                DispatchQueue.main.async {
-                    self.isCameraPermissionGranted = granted
-                }
-            }
-        case .denied, .restricted:
-            self.isCameraPermissionGranted = false
-        @unknown default:
-            break
-        }
-    }
 
     func openCamera() {
         if self.isCameraPermissionGranted {
             self.isShowingCamera = true
         } else {
-            self.showAlert = true
+            self.checkCameraPermission { granted in
+                if granted {
+                    self.isShowingCamera = true
+                } else {
+                    self.showAlert = true
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Private
+
+private extension CameraStore {
+
+    // Request camera permissions
+    func checkCameraPermission(completion: @escaping (Bool) -> Void) {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            completion(true)
+        case .notDetermined:
+            AVCaptureDevice.requestAccess(for: .video) { granted in
+                DispatchQueue.main.async {
+                    completion(granted)
+                }
+            }
+        case .denied, .restricted:
+            completion(false)
+        @unknown default:
+            break
         }
     }
 }
@@ -111,5 +116,41 @@ class Coordinator: NSObject, UINavigationControllerDelegate, UIImagePickerContro
 
     func imagePickerControllerDidCancel(_: UIImagePickerController) {
         self.presentationMode.wrappedValue.dismiss()
+    }
+}
+
+// MARK: - CameraAccessModifier
+
+struct CameraAccessModifier: ViewModifier {
+
+    // MARK: Properties
+
+    @Bindable var cameraStore: CameraStore
+    let onImageCaptured: (UIImage) -> Void
+
+    // MARK: Content
+
+    func body(content: Content) -> some View {
+        content
+            .fullScreenCover(isPresented: self.$cameraStore.isShowingCamera) {
+                AccessCameraView(cameraStore: self.cameraStore)
+                    .background(.black)
+                    .onDisappear {
+                        if let image = cameraStore.capturedImage {
+                            self.onImageCaptured(image)
+                        }
+                    }
+            }
+            .alert(isPresented: self.$cameraStore.showAlert) {
+                Alert(title: Text("Camera Access Required"),
+                      message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
+                      dismissButton: .default(Text("OK")))
+            }
+    }
+}
+
+extension View {
+    func withCameraAccess(cameraStore: CameraStore, onImageCaptured: @escaping (UIImage) -> Void) -> some View {
+        self.modifier(CameraAccessModifier(cameraStore: cameraStore, onImageCaptured: onImageCaptured))
     }
 }
