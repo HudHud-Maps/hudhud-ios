@@ -4,30 +4,30 @@
 import PackageDescription
 
 let package = Package(
-	name: "TokensEnumGenerator",
-	products: [
-		.plugin(name: "TokensEnumGeneratorPlugin", targets: ["TokensEnumGeneratorPlugin"]),
-	],
-	dependencies: [
-		.package(url: "https://github.com/stencilproject/Stencil.git", from: "0.14.0"),
-		.package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0")
-	],
-	targets: [
-		.executableTarget(
-			name: "TokensEnumGenerator",
-			dependencies: [
-				"Stencil",
-				.product(name: "ArgumentParser", package: "swift-argument-parser")
-			]
-		),
-		.plugin(
-			name: "TokensEnumGeneratorPlugin",
-			capability: .buildTool(),
-			dependencies: ["TokensEnumGenerator"]
-		),
-		.testTarget(
-			name: "TokensEnumGeneratorTests",
-			dependencies: ["TokensEnumGenerator"]
-		),
-	]
+    name: "TokensEnumGenerator",
+    products: [
+        .plugin(name: "TokensEnumGeneratorPlugin", targets: ["TokensEnumGeneratorPlugin"])
+    ],
+    dependencies: [
+        .package(url: "https://github.com/stencilproject/Stencil.git", from: "0.14.0"),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0")
+    ],
+    targets: [
+        .executableTarget(
+            name: "TokensEnumGenerator",
+            dependencies: [
+                "Stencil",
+                .product(name: "ArgumentParser", package: "swift-argument-parser")
+            ]
+        ),
+        .plugin(
+            name: "TokensEnumGeneratorPlugin",
+            capability: .buildTool(),
+            dependencies: ["TokensEnumGenerator"]
+        ),
+        .testTarget(
+            name: "TokensEnumGeneratorTests",
+            dependencies: ["TokensEnumGenerator"]
+        )
+    ]
 )
