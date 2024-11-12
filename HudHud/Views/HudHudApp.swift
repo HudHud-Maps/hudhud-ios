@@ -6,11 +6,20 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
+import APIClient
 import Nuke
 import OSLog
+import Pulse
 import SwiftLocation
 import SwiftUI
 import TypographyKit
+
+// MARK: - AppDpendencies
+
+enum AppDpendencies {
+    static let navigationEngine = NavigationEngine(configuration: .default)
+    static let locationEngine = LocationEngine()
+}
 
 // MARK: - HudHudApp
 
@@ -26,19 +35,21 @@ struct HudHudApp: App {
     @State private var sheetStore: SheetStore
     @State private var mapViewStore: MapViewStore
     @State private var isScreenCaptured = UIScreen.main.isCaptured
+    @State private var routesPlanMapDrawer: RoutesPlanMapDrawer
+    @State private var navigationStore: NavigationStore
 
     // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
-            ContentView(
-                searchStore: self.searchStore,
-                mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore
-            )
-            .onAppear {
-                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-            }
+            ContentView(searchViewStore: self.searchStore,
+                        mapViewStore: self.mapViewStore,
+                        sheetStore: self.sheetStore,
+                        routesPlanMapDrawer: self.routesPlanMapDrawer,
+                        navigationStore: self.navigationStore)
+                .onAppear {
+                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+                }
         }
     }
 
@@ -47,20 +58,27 @@ struct HudHudApp: App {
     init() {
         let sheetStore = SheetStore(emptySheetType: .search)
         self.sheetStore = sheetStore
+
+        let routesPlanMapDrawer = RoutesPlanMapDrawer()
+        self.routesPlanMapDrawer = routesPlanMapDrawer
+
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
         let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
-        let routingStore = RoutingStore(mapStore: mapStore)
+        let routingStore = RoutingStore(mapStore: mapStore, routesPlanMapDrawer: routesPlanMapDrawer)
         self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
-        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared,
+                                           mode: .live(provider: .hudhud))
         self.mapStore = mapStore
 
+        self.navigationStore = NavigationStore(navigationEngine: AppDpendencies.navigationEngine,
+                                               locationEngine: AppDpendencies.locationEngine,
+                                               routesPlanMapDrawer: routesPlanMapDrawer)
+
         // Create a custom URLCache to store images on disk
-        let diskCache = URLCache(
-            memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
-            diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
-            diskPath: "sa.hudhud.hudhud.imageCache"
-        )
+        let diskCache = URLCache(memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
+                                 diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
+                                 diskPath: "sa.hudhud.hudhud.imageCache")
 
         // Create a DataLoader with custom URLCache
         let dataLoader = DataLoader(configuration: {
@@ -68,6 +86,8 @@ struct HudHudApp: App {
             configuration.urlCache = diskCache
             return configuration
         }())
+
+        dataLoader.delegate = URLSessionProxyDelegate()
 
         // Configure the pipeline with the custom DataLoader and cache
         let pipeline = ImagePipeline {

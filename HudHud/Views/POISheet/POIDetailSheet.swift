@@ -38,16 +38,17 @@ struct POIDetailSheet: View {
     @State var selectedTab: POIOverviewView.Tab = .overview
     @Namespace var animation
     @State var showTabView: Bool = true
-
     @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
     @ObservedObject var routingStore: RoutingStore
-
     @EnvironmentObject var notificationQueue: NotificationQueue
 
     let formatter = Formatters()
 
+    @State private var selectedMedia: URL?
+    @State private var cameraStore = CameraStore()
+    @State private var photoStore = PhotoStore()
     private let displayPlaceholderReviews = true // we are waiting for the backend to implement reviews
 
     @Environment(\.dismiss) private var dismiss
@@ -57,7 +58,8 @@ struct POIDetailSheet: View {
 
     private var shouldShowButton: Bool {
         let maxCharacters = 30
-        return (self.pointOfInterestStore.pointOfInterest.subtitle ?? self.pointOfInterestStore.pointOfInterest.coordinate.formatted()).count > maxCharacters
+        return (self.pointOfInterestStore.pointOfInterest.subtitle ?? self.pointOfInterestStore.pointOfInterest.coordinate.formatted())
+            .count > maxCharacters
     }
 
     private var currentWeekday: HudHudPOI.OpeningHours.WeekDay {
@@ -67,14 +69,12 @@ struct POIDetailSheet: View {
 
     // MARK: Lifecycle
 
-    init(
-        pointOfInterestStore: PointOfInterestStore,
-        sheetStore: SheetStore,
-        routingStore: RoutingStore,
-        didDenyLocationPermission: Bool,
-        onStart: @escaping ([Route]?) -> Void,
-        onDismiss: @escaping () -> Void
-    ) {
+    init(pointOfInterestStore: PointOfInterestStore,
+         sheetStore: SheetStore,
+         routingStore: RoutingStore,
+         didDenyLocationPermission: Bool,
+         onStart: @escaping ([Route]?) -> Void,
+         onDismiss: @escaping () -> Void) {
         self.pointOfInterestStore = pointOfInterestStore
         self.sheetStore = sheetStore
         self.onStart = onStart
@@ -85,8 +85,6 @@ struct POIDetailSheet: View {
 
     // MARK: Content
 
-    // MARK: - View
-
     var body: some View {
         VStack(alignment: .leading, spacing: 0.0) {
             HStack(alignment: .top) {
@@ -95,8 +93,20 @@ struct POIDetailSheet: View {
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(self.sheetStore.sheetHeight < 220 ? 1 : 2)
-                        .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    if self.pointOfInterestStore.pointOfInterest.title == "Dropped Pin" {
+                        HStack {
+                            Text(self.pointOfInterestStore.pointOfInterest.coordinate.formatted())
+                                .hudhudFont(.subheadline)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                                .lineLimit(1)
+                            Text(" · ")
+                                .hudhudFont(.subheadline)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                            self.routeInformationView
+                        }
+                        .padding(.vertical, 5)
+                    }
                     self.categoryView
                     if self.sheetStore.sheetHeight >= POISheetViewMetrics.compactSheetHeight {
                         HStack(spacing: 0.0) {
@@ -135,81 +145,69 @@ struct POIDetailSheet: View {
 
             if self.sheetStore.sheetHeight > POISheetViewMetrics.expandedSheetHeight {
                 self.tabView
-
                 ScrollView {
                     VStack {
                         // Switch between views based on the selected tab
                         switch self.selectedTab {
                         case .overview:
                             // Show all content in the Overview tab
-                            POIOverviewView(
-                                poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
-                                selectedTab: self.$selectedTab
-                            )
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding()
-                            .background(Color.Colors.General._05WhiteBackground)
-                            .cornerRadius(14)
-
-                            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
-                                RatingSectionView(
-                                    store: RatingStore(
-                                        staticRating: rating,
-                                        ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
-                                        interactiveRating: 0
-                                    )
-                                )
-                                .padding()
+                            POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
+                                            selectedTab: self.$selectedTab)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
                                 .background(Color.Colors.General._05WhiteBackground)
                                 .cornerRadius(14)
+
+                            if let rating = self.pointOfInterestStore.pointOfInterest.rating {
+                                RatingSectionView(store: RatingStore(staticRating: rating,
+                                                                     ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
+                                                                     interactiveRating: 0))
+                                    .padding(.vertical)
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
                             }
 
                             if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
 
                             if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
-                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest)
+                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab,
+                                                 photoStore: self.photoStore, cameraStore: self.cameraStore)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
+                                    .padding(.vertical)
                             }
 
                         case .photos:
-                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest)
+                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest, selectedMedia: self.$selectedMedia)
                                 .padding(-10)
 
                         case .review:
                             if let rating = self.pointOfInterestStore.pointOfInterest.rating {
-                                RatingSectionView(
-                                    store: RatingStore(
-                                        staticRating: rating,
-                                        ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
-                                        interactiveRating: 0
-                                    )
-                                )
-                                .padding()
-                                .background(Color.Colors.General._05WhiteBackground)
-                                .cornerRadius(14)
+                                RatingSectionView(store: RatingStore(staticRating: rating,
+                                                                     ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
+                                                                     interactiveRating: 0))
+                                    .padding(.vertical)
+                                    .background(Color.Colors.General._05WhiteBackground)
+                                    .cornerRadius(14)
                             }
 
                             if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
-                                    .padding()
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
 
                         case .about:
-                            POIOverviewView(
-                                poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
-                                selectedTab: self.$selectedTab
-                            )
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
-                            .padding()
-                            .background(Color.Colors.General._05WhiteBackground)
-                            .cornerRadius(14)
+                            POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
+                                            selectedTab: self.$selectedTab)
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .background(Color.Colors.General._05WhiteBackground)
+                                .cornerRadius(14)
 
                         case .similar:
                             Text("Similar")
@@ -218,35 +216,67 @@ struct POIDetailSheet: View {
                     .padding(10)
                     .padding(.bottom, 100)
                 }
+                .scrollIndicators(.hidden)
                 .background(Color.Colors.General._03LightGrey)
+                .overlay(alignment: .bottomTrailing) {
+                    if self.selectedTab == .photos {
+                        Button(action: {
+                            self.cameraStore.showAddPhotoConfirmation.toggle()
+                        }, label: {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.Colors.General._06DarkGreen)
+                                    .frame(width: 56, height: 56)
+                                Image(.addPhoto)
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(Color.Colors.General._05WhiteBackground)
+                            }
+                        })
+                        .padding(.bottom, 100)
+                        .padding(.trailing, 16)
+                    }
+                }
+                .sheet(item: self.$selectedMedia) { mediaURL in
+                    FullPageImage(mediaURL: mediaURL,
+                                  mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
+                }
             }
             Spacer()
         }
+        .addPhotoConfirmationDialog(isPresented: self.$cameraStore.showAddPhotoConfirmation, onCameraAction: {
+            self.cameraStore.openCamera()
+        }, onLibraryAction: {
+            self.photoStore.openLibrary()
+        })
+        .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
+            self.photoStore.reduce(action: .addImageFromCamera(capturedImage))
+        }
+        .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(get: { self.photoStore.state.selection },
+                                                                                    set: { self.photoStore.reduce(action: .addImages($0)) }))
         .overlay(alignment: .bottom) {
             VStack(spacing: 0) {
                 Rectangle() // Top divider
                     .fill(Color.black.opacity(0.025))
                     .frame(height: 3)
 
-                POIBottomToolbar(
-                    item: self.pointOfInterestStore.pointOfInterest,
-                    duration: self.routes?.first?.duration != nil ? self.formatter.formatDuration(duration: self.routes?.first?.duration ?? 0) : nil,
-                    onStart: self.onStart,
-                    onDismiss: self.onDismiss,
-                    didDenyLocationPermission: self.didDenyLocationPermission,
-                    routes: self.routes
-                )
-                .padding(.bottom)
-                .padding(.vertical)
-                .padding(.horizontal, 20)
-                .background(Color.white)
+                POIBottomToolbar(item: self.pointOfInterestStore.pointOfInterest,
+                                 duration: self.routes?.first?.duration != nil ? self.formatter
+                                     .formatDuration(duration: self.routes?.first?.duration ?? 0) : nil,
+                                 onStart: self.onStart,
+                                 onDismiss: self.onDismiss,
+                                 didDenyLocationPermission: self.didDenyLocationPermission,
+                                 routes: self.routes)
+                    .padding(.bottom)
+                    .padding(.vertical)
+                    .padding(.horizontal, 20)
+                    .background(Color.white)
             }
         }
         .ignoresSafeArea()
-        .alert(
-            "Location Needed",
-            isPresented: self.$askToEnableLocation
-        ) {
+        .alert("Location Needed",
+               isPresented: self.$askToEnableLocation) {
             Button("Enable location in permissions") {
                 self.openURL(URL(string: UIApplication.openSettingsURLString)!) // swiftlint:disable:this force_unwrapping
             }
@@ -308,7 +338,13 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var categoryView: some View { // Category · Subcategory
+}
+
+// MARK: - Private
+
+private extension POIDetailSheet {
+
+    var categoryView: some View { // Category · Subcategory
         Group {
             if let category = pointOfInterestStore.pointOfInterest.category {
                 Text("\(category)\(self.pointOfInterestStore.pointOfInterest.subCategory.map { " · \($0)" } ?? "")")
@@ -321,7 +357,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var ratingView: some View { // e.g. 4 ***** · (500)
+    var ratingView: some View { // e.g. 4 ***** · (500)
         Group {
             if let rating = pointOfInterestStore.pointOfInterest.rating {
                 HStack(spacing: 4) {
@@ -354,7 +390,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var priceRangeView: some View { // · $$$
+    var priceRangeView: some View { // · $$$
         Group {
             if let priceRangeValue = pointOfInterestStore.pointOfInterest.priceRange,
                let priceRange = HudHudPOI.PriceRange(rawValue: priceRangeValue) {
@@ -365,7 +401,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var accessibilityView: some View { // Wheelchair
+    var accessibilityView: some View { // Wheelchair
         Group {
             if let wheelchairAccessible = self.pointOfInterestStore.pointOfInterest.isWheelchairAccessible, wheelchairAccessible {
                 HStack {
@@ -378,7 +414,7 @@ struct POIDetailSheet: View {
         .foregroundStyle(Color.Colors.General._02Grey)
     }
 
-    private var openStatusView: some View {
+    var openStatusView: some View {
         Group {
             if let isOpen = self.pointOfInterestStore.pointOfInterest.isOpen,
                let openingHoursToday = self.pointOfInterestStore.pointOfInterest.openingHours?.first(where: { $0.day == currentWeekday }) {
@@ -391,7 +427,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private var routeInformationView: some View {
+    var routeInformationView: some View {
         Group {
             if let route = routes?.first {
                 HStack {
@@ -402,13 +438,12 @@ struct POIDetailSheet: View {
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
                 }
             }
         }
     }
 
-    private var openiningHoursView: some View {
+    var openiningHoursView: some View {
         Group {
             if let openingHoursList = self.pointOfInterestStore.pointOfInterest.openingHours {
                 ForEach(HudHudPOI.OpeningHours.WeekDay.allCases, id: \.self) { day in
@@ -431,9 +466,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    // MARK: Functions
-
-    private func nextAvailableTime(isOpen: Bool, hours: [HudHudPOI.OpeningHours.TimeRange]) -> String {
+    func nextAvailableTime(isOpen: Bool, hours: [HudHudPOI.OpeningHours.TimeRange]) -> String {
         let nextTime = isOpen ? hours.last?.end : hours.first?.start
         if let nextHour = nextTime {
             return self.formatHour(nextHour)
@@ -442,7 +475,7 @@ struct POIDetailSheet: View {
         }
     }
 
-    private func formatHour(_ hour: Int) -> String {
+    func formatHour(_ hour: Int) -> String {
         var components = DateComponents()
         components.hour = hour
         let calendar = Calendar.current
@@ -455,12 +488,6 @@ struct POIDetailSheet: View {
             return "Invalid Time"
         }
     }
-
-}
-
-// MARK: - Private
-
-private extension POIDetailSheet {
 
     func calculateRoute(for item: ResolvedItem) async {
         do {
@@ -478,13 +505,4 @@ private extension POIDetailSheet {
             // we do not show an error in all other cases
         }
     }
-}
-
-// MARK: - Preview
-
-#Preview(traits: .sizeThatFitsLayout) {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    ContentView(searchStore: searchViewStore,
-                mapViewStore: .storeSetUpForPreviewing,
-                sheetStore: .storeSetUpForPreviewingPOI)
 }

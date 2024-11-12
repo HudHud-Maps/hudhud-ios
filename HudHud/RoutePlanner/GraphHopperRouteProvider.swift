@@ -29,10 +29,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
 
     // MARK: Functions
 
-    func getRoutes(
-        userLocation: FerrostarCoreFFI.UserLocation,
-        waypoints: [FerrostarCoreFFI.Waypoint]
-    ) async throws -> [FerrostarCoreFFI.Route] {
+    func getRoutes(userLocation: FerrostarCoreFFI.UserLocation, waypoints: [FerrostarCoreFFI.Waypoint]) async throws -> [FerrostarCoreFFI.Route] {
         guard !waypoints.isEmpty else { return [] }
         var waypoints = waypoints
         guard let lastWaypoint = waypoints.popLast() else {
@@ -47,11 +44,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         )
     }
 
-    func calculateRoute(
-        from start: Waypoint,
-        to end: Waypoint,
-        passingBy waypoints: [Waypoint]
-    ) async throws -> [Route] {
+    func calculateRoute(from start: Waypoint, to end: Waypoint, passingBy waypoints: [Waypoint]) async throws -> [Route] {
         let allWaypoints = [start] + waypoints + [end]
         let stops = allWaypoints.map { "\($0.coordinate.lng),\($0.coordinate.lat)" }.joined(separator: ";")
 
@@ -59,7 +52,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
 
         Logger.routing.debug("Requesting route from \(url)")
 
-        let (data, response) = try await URLSession.shared.data(from: url)
+        let (data, response) = try await APIClient.urlSession.data(from: url)
         try self.validateResponse(response, data: data)
 
         let json = try parseJSON(from: data)
@@ -67,8 +60,13 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
 
         return try self.osrmParser.parseResponse(response: data)
     }
+}
 
-    private func buildURL(for stops: String) throws -> URL {
+// MARK: - Private
+
+private extension GraphHopperRouteProvider {
+
+    func buildURL(for stops: String) throws -> URL {
         var components = URLComponents()
         components.scheme = "https"
         components.host = DebugStore().routingHost
@@ -81,7 +79,7 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         return url
     }
 
-    private func validateResponse(_ response: URLResponse, data: Data) throws {
+    func validateResponse(_ response: URLResponse, data: Data) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw RoutingError.network(.invalidResponseType)
         }
@@ -104,14 +102,14 @@ struct GraphHopperRouteProvider: CustomRouteProvider, RoutingService {
         }
     }
 
-    private func parseJSON(from data: Data) throws -> [String: Any] {
+    func parseJSON(from data: Data) throws -> [String: Any] {
         guard let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] else {
             throw RoutingError.parsing(.invalidJSON)
         }
         return json
     }
 
-    private func handleAPIStatus(from json: [String: Any]) throws {
+    func handleAPIStatus(from json: [String: Any]) throws {
         guard let apiStatusCode = json["code"] as? String,
               let apiMessage = json["message"] as? String else {
             return

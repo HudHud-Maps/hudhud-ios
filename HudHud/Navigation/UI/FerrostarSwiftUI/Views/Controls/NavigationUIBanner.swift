@@ -1,3 +1,11 @@
+//
+//  NavigationUIBanner.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 public struct NavigationUIBanner<Label: View>: View {
@@ -49,11 +57,11 @@ public struct NavigationUIBanner<Label: View>: View {
     @ViewBuilder func image(for severity: NavigationUIBanner.Severity) -> some View {
         switch severity {
         case .info:
-            Image(systemName: "info.circle.fill")
+            Image(systemSymbol: .infoCircleFill)
         case .error:
-            Image(systemName: "exclamationmark.triangle")
+            Image(systemSymbol: .exclamationmarkTriangle)
         case .loading:
-            Image(systemName: "hourglass.circle.fill")
+            Image(systemSymbol: .hourglassCircleFill)
         }
     }
 }

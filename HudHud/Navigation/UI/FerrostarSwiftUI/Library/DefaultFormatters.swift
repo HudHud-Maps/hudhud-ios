@@ -1,3 +1,11 @@
+//
+//  DefaultFormatters.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import Foundation
 import MapKit
 
@@ -25,7 +33,7 @@ public class DefaultFormatters {
     public static var durationFormat: DateComponentsFormatter {
         let formatter = DateComponentsFormatter()
         formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .abbreviated
+        formatter.unitsStyle = .brief
         formatter.zeroFormattingBehavior = .dropAll
         return formatter
     }

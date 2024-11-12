@@ -9,6 +9,8 @@
 import BackendService
 import BetterSafariView
 import CoreLocation
+import FerrostarCore
+import FerrostarCoreFFI
 import MapLibre
 import MapLibreSwiftDSL
 import MapLibreSwiftUI
@@ -16,6 +18,7 @@ import NavigationTransitions
 import OSLog
 import SFSafeSymbols
 import SimpleToast
+import SwiftLocation
 import SwiftUI
 import TouchVisualizer
 
@@ -33,13 +36,15 @@ struct ContentView: View {
     @StateObject var notificationManager = NotificationManager()
 
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
+    private let styleURL =
+        URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     private var mapStore: MapStore
     private var mapViewStore: MapViewStore
 
     @State private var streetViewStore: StreetViewStore
     @State private var sheetSize: CGSize = .zero
+    private var routesPlanMapDrawer: RoutesPlanMapDrawer
 
     @StateObject private var notificationQueue = NotificationQueue()
 
@@ -50,35 +55,44 @@ struct ContentView: View {
 
     @Bindable private var sheetStore: SheetStore
 
+    @Feature(.enableNewRoutePlanner) private var enableNewRoutePlanner: Bool
+
+    @State private var navigationStore: NavigationStore
+
     // MARK: Lifecycle
 
     @MainActor
-    init(searchStore: SearchViewStore, mapViewStore: MapViewStore, sheetStore: SheetStore) {
-        self.searchViewStore = searchStore
+    init(searchViewStore: SearchViewStore,
+         mapViewStore: MapViewStore,
+         sheetStore: SheetStore,
+         routesPlanMapDrawer: RoutesPlanMapDrawer,
+         navigationStore: NavigationStore) {
+        self.searchViewStore = searchViewStore
         self.sheetStore = sheetStore
-        self.mapStore = searchStore.mapStore
-        self.userLocationStore = searchStore.mapStore.userLocationStore
+        self.mapStore = searchViewStore.mapStore
+        self.userLocationStore = searchViewStore.mapStore.userLocationStore
         self.trendingStore = TrendingStore()
         self.mapLayerStore = HudHudMapLayerStore()
         self.mapViewStore = mapViewStore
-        self.streetViewStore = StreetViewStore(mapStore: searchStore.mapStore)
-        self.mapViewStore.streetViewStore = self.streetViewStore
+        self.routesPlanMapDrawer = routesPlanMapDrawer
+        self.streetViewStore = StreetViewStore(mapStore: searchViewStore.mapStore)
+        self.navigationStore = navigationStore
     }
 
     // MARK: Content
 
     var body: some View {
         ZStack {
-            MapViewContainer(
-                mapStore: self.mapStore,
-                debugStore: self.debugStore,
-                searchViewStore: self.searchViewStore,
-                userLocationStore: self.userLocationStore,
-                mapViewStore: self.mapViewStore,
-                routingStore: self.searchViewStore.routingStore,
-                sheetStore: self.sheetStore,
-                streetViewStore: self.streetViewStore
-            ) { sheetType in
+            MapViewContainer(mapStore: self.mapStore,
+                             navigationStore: self.navigationStore,
+                             debugStore: self.debugStore,
+                             searchViewStore: self.searchViewStore,
+                             userLocationStore: self.userLocationStore,
+                             mapViewStore: self.mapViewStore,
+                             routingStore: self.searchViewStore.routingStore,
+                             sheetStore: self.sheetStore,
+                             streetViewStore: self.streetViewStore,
+                             routesPlanMapDrawer: self.routesPlanMapDrawer) { sheetType in
                 switch sheetType {
                 case .mapStyle:
                     MapLayersView(mapStore: self.mapStore, sheetStore: self.sheetStore, hudhudMapLayerStore: self.mapLayerStore)
@@ -90,74 +104,67 @@ struct ContentView: View {
                             self.sheetStore.popToRoot()
                         })
                         .navigationBarBackButtonHidden()
-                case .navigationAddSearchView:
+                case let .navigationAddSearchView(onAddItem):
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
                     let freshSearchViewStore: SearchViewStore = {
-                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
-                        let tempStore = SearchViewStore(
-                            mapStore: freshMapStore,
-                            sheetStore: SheetStore(emptySheetType: .search),
-                            routingStore: freshRoutingStore,
-                            filterStore: self.searchViewStore.filterStore,
-                            mode: self.searchViewStore.mode
-                        )
-                        tempStore.searchType = .returnPOILocation(completion: { [routingStore = self.searchViewStore.routingStore] item in
-                            routingStore.add(item)
-                        })
+                        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
+                        let tempStore = SearchViewStore(mapStore: freshMapStore,
+                                                        sheetStore: SheetStore(emptySheetType: .search),
+                                                        routingStore: freshRoutingStore,
+                                                        filterStore: self.searchViewStore.filterStore,
+                                                        mode: self.searchViewStore.mode)
+                        tempStore.searchType = .returnPOILocation(completion: onAddItem)
                         return tempStore
                     }()
-                    SearchSheet(
-                        mapStore: freshSearchViewStore.mapStore,
-                        searchStore: freshSearchViewStore,
-                        trendingStore: self.trendingStore,
-                        sheetStore: self.sheetStore,
-                        filterStore: self.searchViewStore.filterStore
-                    )
-                    .navigationBarBackButtonHidden()
+                    SearchSheet(mapStore: freshSearchViewStore.mapStore,
+                                searchStore: freshSearchViewStore,
+                                trendingStore: self.trendingStore,
+                                sheetStore: self.sheetStore,
+                                filterStore: self.searchViewStore.filterStore)
+                        .navigationBarBackButtonHidden()
                 case .favorites:
                     // Initialize fresh instances of MapStore and SearchViewStore
                     let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore)
+                    let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
                     let freshSearchViewStore: SearchViewStore = {
-                        let tempStore = SearchViewStore(
-                            mapStore: freshMapStore,
-                            sheetStore: SheetStore(emptySheetType: .search),
-                            routingStore: freshRoutingStore,
-                            filterStore: self.searchViewStore.filterStore,
-                            mode: self.searchViewStore.mode
-                        )
+                        let tempStore = SearchViewStore(mapStore: freshMapStore,
+                                                        sheetStore: SheetStore(emptySheetType: .search),
+                                                        routingStore: freshRoutingStore,
+                                                        filterStore: self.searchViewStore.filterStore,
+                                                        mode: self.searchViewStore.mode)
                         tempStore.searchType = .favorites
                         return tempStore
                     }()
-                    SearchSheet(
-                        mapStore: freshSearchViewStore.mapStore,
-                        searchStore: freshSearchViewStore,
-                        trendingStore: self.trendingStore,
-                        sheetStore: SheetStore(emptySheetType: .search),
-                        filterStore: self.searchViewStore.filterStore
-                    )
+                    SearchSheet(mapStore: freshSearchViewStore.mapStore,
+                                searchStore: freshSearchViewStore,
+                                trendingStore: self.trendingStore,
+                                sheetStore: SheetStore(emptySheetType: .search),
+                                filterStore: self.searchViewStore.filterStore)
                 case .navigationPreview:
                     NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
                         .navigationBarBackButtonHidden()
                         .presentationCornerRadius(21)
                 case let .pointOfInterest(item):
-                    POIDetailSheet(
-                        pointOfInterestStore: PointOfInterestStore(
-                            pointOfInterest: item,
-                            mapStore: self.mapStore,
-                            sheetStore: self.sheetStore
-                        ), sheetStore: self.sheetStore,
-                        routingStore: self.searchViewStore.routingStore,
-                        didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission
-                    ) { routeIfAvailable in
+                    POIDetailSheet(pointOfInterestStore: PointOfInterestStore(pointOfInterest: item,
+                                                                              mapStore: self.mapStore,
+                                                                              sheetStore: self.sheetStore), sheetStore: self.sheetStore,
+                                   routingStore: self.searchViewStore.routingStore,
+                                   didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
+                        if self.enableNewRoutePlanner {
+                            self.sheetStore.show(.routePlanner(RoutePlannerStore(sheetStore: self.sheetStore,
+                                                                                 userLocationStore: self.userLocationStore,
+                                                                                 mapStore: self.mapStore,
+                                                                                 routingStore: self.searchViewStore.routingStore,
+                                                                                 routesPlanMapDrawer: self.routesPlanMapDrawer,
+                                                                                 destination: item)))
+                            return
+                        }
                         Task {
                             do {
-                                try await self.searchViewStore.routingStore.showRoutes(
-                                    to: item,
-                                    with: routeIfAvailable
-                                )
+                                try await self.searchViewStore.routingStore.showRoutes(to: item,
+                                                                                       with: routeIfAvailable)
                                 try await self.notificationManager.requestAuthorization()
                                 self.sheetStore.show(.navigationPreview)
                             } catch {
@@ -170,32 +177,27 @@ struct ContentView: View {
                         self.sheetStore.popSheet()
                     }
                     .navigationBarBackButtonHidden()
+                    .environmentObject(self.notificationQueue)
+                case let .routePlanner(store):
+                    RoutePlannerView(routePlannerStore: store)
                 case .favoritesViewMore:
-                    FavoritesViewMoreView(
-                        searchStore: self.searchViewStore,
-                        sheetStore: self.sheetStore,
-                        favoritesStore: self.favoritesStore
-                    )
-                case let .editFavoritesForm(
-                    item: item,
-                    favoriteItem: favoriteItem
-                ):
-                    EditFavoritesFormView(
-                        item: item,
-                        favoritesItem: favoriteItem,
-                        favoritesStore: self.favoritesStore,
-                        sheetStore: self.sheetStore
-                    )
+                    FavoritesViewMoreView(searchStore: self.searchViewStore,
+                                          sheetStore: self.sheetStore,
+                                          favoritesStore: self.favoritesStore)
+                case let .editFavoritesForm(item: item,
+                                            favoriteItem: favoriteItem):
+                    EditFavoritesFormView(item: item,
+                                          favoritesItem: favoriteItem,
+                                          favoritesStore: self.favoritesStore,
+                                          sheetStore: self.sheetStore)
                 case .search:
-                    SearchSheet(
-                        mapStore: self.mapStore,
-                        searchStore: self.searchViewStore,
-                        trendingStore: self.trendingStore,
-                        sheetStore: self.sheetStore,
-                        filterStore: self.searchViewStore.filterStore
-                    )
-                    .background(Color(.Colors.General._05WhiteBackground))
-                    .toolbar(.hidden)
+                    SearchSheet(mapStore: self.mapStore,
+                                searchStore: self.searchViewStore,
+                                trendingStore: self.trendingStore,
+                                sheetStore: self.sheetStore,
+                                filterStore: self.searchViewStore.filterStore)
+                        .background(Color(.Colors.General._05WhiteBackground))
+                        .toolbar(.hidden)
                 }
             }
             .task {
@@ -214,42 +216,41 @@ struct ContentView: View {
             .ignoresSafeArea()
             .edgesIgnoringSafeArea(.all)
             .safeAreaInset(edge: .bottom) {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == true || self.streetViewStore.streetViewScene != nil {
+                if self.navigationStore.state.isNavigating == true || self.streetViewStore.streetViewScene != nil {
                     // hide interface during navigation and streetview
 
                 } else {
                     HStack(alignment: .bottom) {
                         HStack(alignment: .bottom) {
-                            MapButtonsView(
-                                mapButtonsData: [
-                                    MapButtonData(sfSymbol: .icon(.map)) {
-                                        self.sheetStore.show(.mapStyle)
-                                    },
-                                    MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
-                                        switch self.searchViewStore.mode {
-                                        case let .live(provider):
-                                            self.searchViewStore.mode = .live(provider: provider.next())
-                                            Logger.searchView.info("Map Mode live")
-                                        case .preview:
-                                            self.searchViewStore.mode = .live(provider: .hudhud)
-                                            Logger.searchView.info("Map Mode toursprung")
-                                        }
-                                    },
-                                    MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
-                                        if self.mapStore.getCameraPitch() > 0 {
-                                            self.mapStore.camera.setPitch(0)
-                                        } else {
-                                            self.mapStore.camera.setZoom(17)
-                                            self.mapStore.camera.setPitch(60)
-                                        }
-                                    },
-                                    MapButtonData(sfSymbol: .icon(.terminal)) {
-                                        self.sheetStore.show(.debugView)
+                            MapButtonsView(mapButtonsData: [
+                                MapButtonData(sfSymbol: .icon(.map)) {
+                                    self.sheetStore.show(.mapStyle)
+                                },
+                                MapButtonData(sfSymbol: MapButtonData.buttonIcon(for: self.searchViewStore.mode)) {
+                                    switch self.searchViewStore.mode {
+                                    case let .live(provider):
+                                        self.searchViewStore.mode = .live(provider: provider.next())
+                                        Logger.searchView.info("Map Mode live")
+                                    case .preview:
+                                        self.searchViewStore.mode = .live(provider: .hudhud)
+                                        Logger.searchView.info("Map Mode toursprung")
                                     }
-                                ]
-                            )
+                                },
+                                MapButtonData(sfSymbol: self.mapStore.getCameraPitch() > 0 ? .icon(.diamond) : .icon(.cube)) {
+                                    if self.mapStore.getCameraPitch() > 0 {
+                                        self.mapStore.camera.setPitch(0)
+                                    } else {
+                                        self.mapStore.camera.setZoom(17)
+                                        self.mapStore.camera.setPitch(60)
+                                    }
+                                },
+                                MapButtonData(sfSymbol: .icon(.terminal)) {
+                                    self.sheetStore.show(.debugView)
+                                }
+                            ])
 
-                            if let item = self.streetViewStore.nearestStreetViewScene {
+                            if (self.mapStore.mapViewPort?.zoom ?? 0) > 10,
+                               let item = self.streetViewStore.nearestStreetViewScene {
                                 Button {
                                     self.streetViewStore.streetViewScene = item
                                     self.streetViewStore.zoomToStreetViewLocation()
@@ -298,7 +299,8 @@ struct ContentView: View {
             })
 
             VStack {
-                if self.searchViewStore.routingStore.ferrostarCore.isNavigating == false, self.streetViewStore.streetViewScene == nil, self.notificationQueue.currentNotification.isNil {
+                if self.navigationStore.state.isNavigating == false, self.streetViewStore.streetViewScene == nil,
+                   self.notificationQueue.currentNotification.isNil {
                     CategoriesBannerView(catagoryBannerData: CatagoryBannerData.cateoryBannerFakeData, searchStore: self.searchViewStore)
                         .presentationBackground(.thinMaterial)
                         .opacity(self.sheetStore.selectedDetent == .nearHalf ? 0 : 1)
@@ -326,7 +328,8 @@ struct ContentView: View {
                 let maxLatitude = boundingBox.northWest.latitude
 
                 Task {
-                    await self.streetViewStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude, maxLat: maxLatitude)
+                    await self.streetViewStore.loadNearestStreetView(minLon: minLongitude, minLat: minLatitude, maxLon: maxLongitude,
+                                                                     maxLat: maxLatitude)
                 }
             }
         }
@@ -352,7 +355,8 @@ private extension ContentView {
     func reloadPOITrending() async {
         do {
             let currentUserLocation = await self.userLocationStore.location(allowCached: true)?.coordinate
-            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: currentUserLocation, baseURL: DebugStore().baseURL)
+            let trendingPOI = try await trendingStore.getTrendingPOIs(page: 1, limit: 100, coordinates: currentUserLocation,
+                                                                      baseURL: DebugStore().baseURL)
             self.trendingStore.trendingPOIs = trendingPOI
         } catch {
             self.trendingStore.trendingPOIs = nil
@@ -392,57 +396,18 @@ private extension MapViewPort {
         let longitudeSpan = (spanX / 2) / (111_320.0 * cos(latInRad))
 
         // North-west (top-left) coordinate
-        let northWest = CLLocationCoordinate2D(
-            latitude: self.center.latitude + latitudeSpan,
-            longitude: self.center.longitude - longitudeSpan
-        )
+        let northWest = CLLocationCoordinate2D(latitude: self.center.latitude + latitudeSpan,
+                                               longitude: self.center.longitude - longitudeSpan)
 
         // South-east (bottom-right) coordinate
-        let southEast = CLLocationCoordinate2D(
-            latitude: self.center.latitude - latitudeSpan,
-            longitude: self.center.longitude + longitudeSpan
-        )
+        let southEast = CLLocationCoordinate2D(latitude: self.center.latitude - latitudeSpan,
+                                               longitude: self.center.longitude + longitudeSpan)
 
         return (northWest, southEast)
     }
 }
 
-#Preview("Main Map") {
-    ContentView(
-        searchStore: .storeSetUpForPreviewing,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-#Preview("Touch Testing") {
-    let store: SearchViewStore = .storeSetUpForPreviewing
-    store.searchText = "shops"
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-#Preview("NavigationPreview") {
-    let store: SearchViewStore = .storeSetUpForPreviewing
-
-    let poi = ResolvedItem(id: UUID().uuidString,
-                           title: "Pharmacy",
-                           subtitle: "Al-Olya - Riyadh",
-                           type: .hudhud,
-                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
-                           phone: "0503539560",
-                           website: URL(string: "https://hudhud.sa"))
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
-}
-
-extension Binding where Value == Bool {
+private extension Binding where Value == Bool {
 
     static func && (_ lhs: Binding<Bool>, _ rhs: Binding<Bool>) -> Binding<Bool> {
         return Binding<Bool>(get: { lhs.wrappedValue && rhs.wrappedValue },
@@ -450,16 +415,73 @@ extension Binding where Value == Bool {
     }
 
     static prefix func ! (_ binding: Binding<Bool>) -> Binding<Bool> {
-        return Binding<Bool>(
-            get: { !binding.wrappedValue },
-            set: { _ in }
-        )
+        return Binding<Bool>(get: { !binding.wrappedValue },
+                             set: { _ in })
     }
+}
+
+// MARK: - Previews
+
+#Preview("Main Map") {
+    ContentView(searchViewStore: .storeSetUpForPreviewing,
+                mapViewStore: .storeSetUpForPreviewing,
+                sheetStore: .storeSetUpForPreviewing,
+                routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                navigationStore: .storeSetUpForPreviewing)
+}
+
+#Preview("Touch Testing") {
+    let store: SearchViewStore = .storeSetUpForPreviewing
+    store.searchText = "shops"
+    return ContentView(searchViewStore: store,
+                       mapViewStore: .storeSetUpForPreviewing,
+                       sheetStore: .storeSetUpForPreviewing,
+                       routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                       navigationStore: .storeSetUpForPreviewing)
+}
+
+#Preview("NavigationPreview") {
+    let poi = ResolvedItem(id: UUID().uuidString,
+                           title: "Pharmacy",
+                           subtitle: "Al-Olya - Riyadh",
+                           type: .hudhud,
+                           coordinate: CLLocationCoordinate2D(latitude: 24.78796199972764, longitude: 46.69371856758005),
+                           phone: "0503539560",
+                           website: URL(string: "https://hudhud.sa"))
+
+    let userLocationStore = UserLocationStore(location: .storeSetUpForPreviewing)
+    let mapStore = MapStore(camera: .center(poi.coordinate, zoom: 14), userLocationStore: userLocationStore)
+    let sheetStore = SheetStore(emptySheetType: .pointOfInterest(poi))
+    let mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
+    let routesPlanMapDrawer = RoutesPlanMapDrawer()
+    let routingStore = RoutingStore(mapStore: mapStore, routesPlanMapDrawer: routesPlanMapDrawer)
+
+    let searchViewStore = SearchViewStore(mapStore: mapStore,
+                                          sheetStore: sheetStore,
+                                          routingStore: routingStore,
+                                          filterStore: FilterStore(),
+                                          mode: .preview)
+
+    let url = Bundle.main.url(forResource: "riyadh-pharmacy-route", withExtension: "json")! // swiftlint:disable:this force_unwrapping
+    let data = try! Data(contentsOf: url) // swiftlint:disable:this force_try
+    let parser = createOsrmResponseParser(polylinePrecision: 6)
+    let routes = try! parser.parseResponse(response: data) // swiftlint:disable:this force_try
+
+    if let route = routes.first {
+        routingStore.routes = routes
+        routingStore.selectRoute(withId: route.id)
+    }
+
+    return ContentView(searchViewStore: searchViewStore,
+                       mapViewStore: mapViewStore,
+                       sheetStore: sheetStore,
+                       routesPlanMapDrawer: routesPlanMapDrawer,
+                       navigationStore: .storeSetUpForPreviewing)
 }
 
 // MARK: - Preview
 
-#Preview("Itmes") {
+#Preview("Items") {
     let store: SearchViewStore = .storeSetUpForPreviewing
 
     let poi = ResolvedItem(id: UUID().uuidString,
@@ -485,19 +507,19 @@ extension Binding where Value == Bool {
                                 phone: "0503539560",
                                 website: URL(string: "https://hudhud.sa"))
     store.mapStore.displayableItems = [.resolvedItem(poi), .resolvedItem(artwork), .resolvedItem(pharmacy)]
-    return ContentView(
-        searchStore: store,
-        mapViewStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing
-    )
+    return ContentView(searchViewStore: store,
+                       mapViewStore: .storeSetUpForPreviewing,
+                       sheetStore: .storeSetUpForPreviewing,
+                       routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                       navigationStore: .storeSetUpForPreviewing)
 }
 
-extension MapLayerIdentifier {
-    nonisolated static let tapLayers: Set<String> = [
-        Self.restaurants,
-        Self.shops,
-        Self.simpleCircles,
-        Self.streetView,
-        Self.customPOI
-    ]
+// MARK: - NavigationStore + Previewable
+
+extension NavigationStore: Previewable {
+    static var storeSetUpForPreviewing: NavigationStore {
+        NavigationStore(navigationEngine: NavigationEngine(configuration: .default),
+                        locationEngine: LocationEngine(),
+                        routesPlanMapDrawer: RoutesPlanMapDrawer())
+    }
 }

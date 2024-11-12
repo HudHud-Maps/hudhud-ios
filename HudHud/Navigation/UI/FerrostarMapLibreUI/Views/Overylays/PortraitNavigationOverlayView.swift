@@ -1,3 +1,11 @@
+//
+//  PortraitNavigationOverlayView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import MapKit
 import MapLibre
@@ -5,8 +13,10 @@ import MapLibreSwiftDSL
 import MapLibreSwiftUI
 import SwiftUI
 
+// MARK: - PortraitNavigationOverlayView
+
 struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableObject>: View,
-CustomizableNavigatingInnerGridView {
+CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -27,33 +37,29 @@ CustomizableNavigatingInnerGridView {
     var showCentering: Bool
     var onCenter: () -> Void
 
-    var onTapExit: (() -> Void)?
-
     let showMute: Bool
     let isMuted: Bool
     let onMute: () -> Void
 
-    private let navigationState: NavigationState?
+    var overlayStore: OverlayContentStore
 
-    @State private var isInstructionViewExpanded: Bool = false
-    @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+    @State private var instrcutionViewHeight: CGFloat = 140
 
     // MARK: Lifecycle
 
-    init(
-        navigationState: NavigationState?,
-        speedLimit: Measurement<UnitSpeed>? = nil,
-        isMuted: Bool,
-        showMute: Bool = true,
-        onMute: @escaping () -> Void,
-        showZoom: Bool = false,
-        onZoomIn: @escaping () -> Void = {},
-        onZoomOut: @escaping () -> Void = {},
-        showCentering: Bool = false,
-        onCenter: @escaping () -> Void = {},
-        onTapExit: (() -> Void)? = nil
-    ) {
-        self.navigationState = navigationState
+    init(overlayStore: OverlayContentStore,
+         speedLimit: Measurement<UnitSpeed>? = nil,
+         isMuted: Bool,
+         showMute: Bool = true,
+         onMute: @escaping () -> Void,
+         showZoom: Bool = false,
+         onZoomIn: @escaping () -> Void = {},
+         onZoomOut: @escaping () -> Void = {},
+         showCentering: Bool = false,
+         onCenter: @escaping () -> Void = {}) {
+        self.overlayStore = overlayStore
         self.speedLimit = speedLimit
         self.isMuted = isMuted
         self.showMute = showMute
@@ -63,7 +69,6 @@ CustomizableNavigatingInnerGridView {
         self.onZoomOut = onZoomOut
         self.showCentering = showCentering
         self.onCenter = onCenter
-        self.onTapExit = onTapExit
     }
 
     // MARK: Content
@@ -72,56 +77,81 @@ CustomizableNavigatingInnerGridView {
         ZStack(alignment: .top) {
             VStack {
                 Spacer()
+                    .frame(height: self.instrcutionViewHeight + self.safeAreaInsets.top)
 
                 // The inner content is displayed vertically full screen
                 // when both the visualInstructions and progress are nil.
                 // It will automatically reduce height if and when either
                 // view appears
-                NavigatingInnerGridView(
-                    speedLimit: self.speedLimit,
-                    isMuted: self.isMuted,
-                    showMute: self.showMute,
-                    onMute: self.onMute,
-                    showZoom: self.showZoom,
-                    onZoomIn: self.onZoomIn,
-                    onZoomOut: self.onZoomOut,
-                    showCentering: self.showCentering,
-                    onCenter: self.onCenter
-                )
-                .innerGrid {
-                    self.topCenter?()
-                } topTrailing: {
-                    self.topTrailing?()
-                } midLeading: {
-                    self.midLeading?()
-                } bottomTrailing: {
-                    self.bottomTrailing?()
-                } bottomLeading: {
-                    self.bottomLeading?()
-                }
+                NavigatingInnerGridView(speedLimit: self.speedLimit,
+                                        isMuted: self.isMuted,
+                                        showMute: self.showMute,
+                                        onMute: self.onMute,
+                                        showZoom: self.showZoom,
+                                        onZoomIn: self.onZoomIn,
+                                        onZoomOut: self.onZoomOut,
+                                        showCentering: self.showCentering,
+                                        onCenter: self.onCenter)
+                    .innerGrid {
+                        self.topCenter?()
+                    } topTrailing: {
+                        self.topTrailing?()
+                    } midLeading: {
+                        self.midLeading?()
+                    } bottomTrailing: {
+                        self.bottomTrailing?()
+                    } bottomLeading: {
+                        self.bottomLeading?()
+                    }
+                    .padding(.horizontal, 16)
 
-                if case .navigating = self.navigationState?.tripState,
-                   let progress = navigationState?.currentProgress {
-                    ArrivalView(
-                        progress: progress,
-                        onTapExit: self.onTapExit
-                    )
+                if let progressView = overlayStore.content[.tripProgress] {
+                    progressView()
                 }
             }
-            .padding(.top, self.instructionsViewSizeWhenNotExpanded.height + 16)
 
-            if case .navigating = self.navigationState?.tripState,
-               let visualInstruction = navigationState?.currentVisualInstruction,
-               let progress = navigationState?.currentProgress,
-               let remainingSteps = navigationState?.remainingSteps {
-                InstructionsView(
-                    visualInstruction: visualInstruction,
-                    distanceFormatter: self.formatterCollection.distanceFormatter,
-                    distanceToNextManeuver: progress.distanceToNextManeuver,
-                    remainingSteps: remainingSteps,
-                    isExpanded: self.$isInstructionViewExpanded,
-                    sizeWhenNotExpanded: self.$instructionsViewSizeWhenNotExpanded
-                )
+            if let instructionsView = overlayStore.content[.instructions] {
+                instructionsView()
+            }
+        }
+        .ignoresSafeArea(.all)
+    }
+}
+
+// MARK: - LegacyInstructionsView
+
+struct LegacyInstructionsView: View {
+
+    // MARK: Properties
+
+    @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
+    let navigationState: NavigationState
+
+    @State private var isInstructionViewExpanded: Bool = false
+    @State private var instructionsViewSizeWhenNotExpanded: CGSize = .zero
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+    // MARK: Lifecycle
+
+    init(navigationState: NavigationState) {
+        self.navigationState = navigationState
+    }
+
+    // MARK: Content
+
+    var body: some View {
+        VStack {
+            if let visualInstruction = navigationState.currentVisualInstruction,
+               let progress = navigationState.currentProgress,
+               navigationState.isNavigating {
+                let remainingSteps = self.navigationState.remainingSteps
+
+                InstructionsView(visualInstruction: visualInstruction,
+                                 distanceFormatter: self.formatterCollection.distanceFormatter,
+                                 distanceToNextManeuver: progress.distanceToNextManeuver,
+                                 remainingSteps: remainingSteps,
+                                 isExpanded: self.$isInstructionViewExpanded,
+                                 sizeWhenNotExpanded: self.$instructionsViewSizeWhenNotExpanded)
             }
         }
     }

@@ -1,3 +1,11 @@
+//
+//  TestFixtureFactory.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 /// Various helpers that generate views for previews.
 
 import FerrostarCoreFFI
@@ -133,6 +141,6 @@ struct RoadNameFactory: TestFixtureFactory {
     public func build(_ n: Int = 0) -> String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .ordinal
-        return "\(numberFormatter.string(from: NSNumber(value: n + 1))!) \(self.baseNameBuilder(n))"
+        return "\(numberFormatter.string(from: NSNumber(value: n + 1))!) \(self.baseNameBuilder(n))" // swiftlint:disable:this force_unwrapping
     }
 }

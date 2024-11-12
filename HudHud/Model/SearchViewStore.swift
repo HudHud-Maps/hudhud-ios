@@ -23,7 +23,7 @@ final class SearchViewStore: ObservableObject {
     enum SearchType: Equatable {
 
         case selectPOI
-        case returnPOILocation(completion: ((ABCRouteConfigurationItem) -> Void)?)
+        case returnPOILocation(completion: (ResolvedItem) -> Void)
         case categories
         case favorites
 
@@ -117,6 +117,9 @@ final class SearchViewStore: ObservableObject {
     // MARK: Functions
 
     func didSelect(_ item: DisplayableRow) async {
+        if case .returnPOILocation = self.searchType {
+            return
+        }
         switch item {
         case let .resolvedItem(item), let .categoryItem(item):
             self.sheetStore.show(.pointOfInterest(item))

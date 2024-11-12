@@ -60,7 +60,9 @@ struct ABCRouteConfigurationView: View {
 
                 footer: {
                     Button {
-                        self.sheetStore.show(.navigationAddSearchView)
+                        self.sheetStore.show(.navigationAddSearchView { newDestination in
+                            self.routingStore.add(.waypoint(newDestination))
+                        })
                     } label: {
                         HStack {
                             Image(systemSymbol: .plus)

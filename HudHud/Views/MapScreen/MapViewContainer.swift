@@ -29,6 +29,8 @@ struct MapViewContainer<SheetContentView: View>: View {
     @ObservedObject var routingStore: RoutingStore
     let streetViewStore: StreetViewStore
     let mapViewStore: MapViewStore
+    let routesPlanMapDrawer: RoutesPlanMapDrawer
+    let navigationStore: NavigationStore
 
     @ViewBuilder let sheetToView: (SheetType) -> SheetContentView
 
@@ -44,18 +46,19 @@ struct MapViewContainer<SheetContentView: View>: View {
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        debugStore: DebugStore,
-        searchViewStore: SearchViewStore,
-        userLocationStore: UserLocationStore,
-        mapViewStore: MapViewStore,
-        routingStore: RoutingStore,
-        sheetStore: SheetStore,
-        streetViewStore: StreetViewStore,
-        @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView
-    ) {
+    init(mapStore: MapStore,
+         navigationStore: NavigationStore,
+         debugStore: DebugStore,
+         searchViewStore: SearchViewStore,
+         userLocationStore: UserLocationStore,
+         mapViewStore: MapViewStore,
+         routingStore: RoutingStore,
+         sheetStore: SheetStore,
+         streetViewStore: StreetViewStore,
+         routesPlanMapDrawer: RoutesPlanMapDrawer,
+         @ViewBuilder sheetToView: @escaping (SheetType) -> SheetContentView) {
         self.mapStore = mapStore
+        self.navigationStore = navigationStore
         self.debugStore = debugStore
         self.searchViewStore = searchViewStore
         self.userLocationStore = userLocationStore
@@ -63,6 +66,7 @@ struct MapViewContainer<SheetContentView: View>: View {
         self.streetViewStore = streetViewStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
+        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.sheetToView = sheetToView
     }
 
@@ -70,64 +74,95 @@ struct MapViewContainer<SheetContentView: View>: View {
 
     var body: some View {
         return NavigationStack {
-            DynamicallyOrientingNavigationView(
-                makeViewController: MapViewController(
-                    sheetStore: self.sheetStore,
-                    styleURL: self.mapStore.mapStyleUrl(),
-                    sheetToView: self.sheetToView
-                ),
-                locationManager: self.routingStore.locationManager,
-                styleURL: self.mapStore.mapStyleUrl(),
-                camera: self.$mapStore.camera,
-                navigationState: self.routingStore.ferrostarCore.state,
-                isMuted: self.routingStore.isMuted,
-                showZoom: false,
-                onTapMute: { self.routingStore.toggleMute() },
-                onTapExit: stopNavigation,
-                makeMapContent: makeMapContent,
-                mapViewModifiers: makeMapViewModifiers
-            )
-            .innerGrid(
-                topCenter: { ErrorBannerView(errorMessage: self.$errorMessage) },
-                bottomTrailing: { LocationInfoView(isNavigating: self.routingStore.ferrostarCore.isNavigating, label: self.locationLabel) },
-                bottomLeading: {
-                    if self.routingStore.ferrostarCore.isNavigating {
-                        SpeedView(speed: self.speed, speedLimit: self.speedLimit)
+            DynamicallyOrientingNavigationView(makeViewController: MapViewController(sheetStore: self.sheetStore,
+                                                                                     styleURL: self.mapStore.mapStyleUrl(),
+                                                                                     sheetToView: self.sheetToView),
+                                               locationManager: self.navigationStore.locationManager,
+                                               styleURL: self.mapStore.mapStyleUrl(),
+                                               camera: self.$mapStore.camera,
+                                               isNavigating: self.navigationStore.state.status == .navigating,
+                                               isMuted: self.navigationStore.state.isMuted,
+                                               showZoom: false,
+                                               onTapMute: { self.navigationStore.execute(.toggleMute) },
+                                               makeMapContent: makeMapContent,
+                                               mapViewModifiers: makeMapViewModifiers)
+                .withNavigationOverlay(.instructions) {
+                    if let navigationState = navigationStore.navigationState, navigationState.isNavigating {
+                        LegacyInstructionsView(navigationState: navigationState)
                     }
                 }
-            )
-            .gesture(trackingStateGesture)
-            .onAppear(perform: handleOnAppear)
-            .onChange(of: self.routingStore.selectedRoute) { oldValue, newValue in
-                handlePotentialRouteChange(oldValue, newValue)
-            }
-            .onChange(of: self.routingStore.navigatingRoute) { oldValue, newValue in
-                handleNavigatingRouteChange(oldValue, newValue)
-            }
-            .onChange(of: self.routingStore.ferrostarCore.state?.tripState) { oldValue, newValue in
-                handleTripStateChange(oldValue, newValue)
-            }
-            .task { handleInitialFocus() }
+                .withNavigationOverlay(.tripProgress) {
+                    if let progress = navigationStore.state.tripProgress,
+                       navigationStore.state.isNavigating {
+                        TripInfoContianerView(tripProgress: progress,
+                                              navigationAlert: self.navigationStore.state.navigationAlert) { actions in
+                            switch actions {
+                            case .exitNavigation:
+                                stopNavigation()
+                            case .switchToRoutePreviewMode:
+                                if let selectedRoute = routesPlanMapDrawer.selectedRoute {
+                                    self.mapStore.camera = .boundingBox(selectedRoute.bbox.mlnCoordinateBounds)
+                                }
+                            default:
+                                break
+                            }
+                        }
+                    }
+                }
+                .innerGrid(topCenter: { ErrorBannerView(errorMessage: self.$errorMessage) },
+                           bottomTrailing: { LocationInfoView(isNavigating: self.navigationStore.state.isNavigating, label: locationLabel) },
+                           bottomLeading: {
+                               if self.navigationStore.state.isNavigating {
+                                   SpeedView(speed: self.speed, speedLimit: speedLimit)
+                               }
+                           })
+                .gesture(trackingStateGesture)
+                .onAppear(perform: handleOnAppear)
+                .onChange(of: self.routingStore.selectedRoute) { oldValue, newValue in
+                    handlePotentialRouteChange(oldValue, newValue)
+                }
+                .onReceive(AppEvents.publisher, perform: { navigationEvent in
+                    switch navigationEvent {
+                    case .startNavigation:
+                        self.navigationStore.execute(.startNavigation)
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+                            self.mapStore.camera = .automotiveNavigation()
+                        }
+                        self.sheetStore.isShown.value = false
+                    case .stopNavigation:
+                        self.navigationStore.execute(.stopNavigation)
+                    }
+                })
+                .onChange(of: self.navigationStore.state) { _, newValue in
+                    switch newValue.status {
+                    case .idle, .navigating:
+                        break
+                    case .cancelled, .arrived, .failed:
+                        stopNavigation()
+                    }
+                }
+
+                .task { handleInitialFocus() }
         }
     }
 }
 
 extension MapViewContainer {
     private var locationLabel: String {
-        guard let location = searchViewStore.routingStore.locationProvider.lastLocation else {
-            return "No location - authed as \(self.routingStore.locationProvider.authorizationStatus)"
+        guard let location = navigationStore.lastKnownLocation else {
+            return "No location - authed as \(self.navigationStore.locationManager.authorizationStatus)"
         }
         return "±\(Int(location.horizontalAccuracy))m accuracy"
     }
 
     private var speed: Measurement<UnitSpeed>? {
-        self.routingStore.locationProvider.lastLocation?.speed.map {
+        self.navigationStore.lastKnownLocation?.userLocation.speed.map {
             Measurement(value: $0.value, unit: .metersPerSecond)
         }
     }
 
     private var speedLimit: Measurement<UnitSpeed>? {
-        return self.routingStore.ferrostarCore.annotation?.speedLimit
+        self.navigationStore.state.speedLimit
     }
 }
 
@@ -136,19 +171,20 @@ extension MapViewContainer {
 private extension MapViewContainer {
 
     func makeMapContent() -> [StyleLayerDefinition] {
-        guard !self.routingStore.ferrostarCore.isNavigating else { return [] }
+        guard !self.navigationStore.state.isNavigating else {
+            return self.makeNavigationConent()
+        }
 
         var layers: [StyleLayerDefinition] = []
 
         // Routes
         layers += makeAlternativeRouteLayers()
-        if let selectedRoute = routingStore.selectedRoute {
+        if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
             layers += makeSelectedRouteLayers(for: selectedRoute)
         }
 
         // Congestion
-        let allRoutes = self.routingStore.alternativeRoutes + [self.routingStore.selectedRoute].compactMap { $0 }
-        layers += makeCongestionLayers(for: allRoutes)
+        layers += makeCongestionLayers(for: self.routesPlanMapDrawer.routes)
 
         // Custom Symbols
         if shouldShowCustomSymbols {
@@ -161,6 +197,35 @@ private extension MapViewContainer {
         // Street View
         layers += makeStreetViewLayer()
 
+        return layers
+    }
+
+    func makeNavigationConent() -> [StyleLayerDefinition] {
+        guard self.navigationStore.state.isNavigating else { return [] }
+
+        var layers: [StyleLayerDefinition] = []
+
+        if let routePolyline = navigationStore.navigationState?.routePolyline {
+            layers += RouteStyleLayer(polyline: routePolyline,
+                                      identifier: "route-polyline",
+                                      style: TravelledRouteStyle())
+                .layers
+        }
+
+        if let remainingRoutePolyline = navigationStore.navigationState?.remainingRoutePolyline {
+            layers += RouteStyleLayer(polyline: remainingRoutePolyline,
+                                      identifier: "remaining-route-polyline").layers
+        }
+
+        if let alert = navigationStore.state.navigationAlert {
+            layers += [
+                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
+                                 source: ShapeSource(identifier: "alert") {
+                                     MLNPointFeature(coordinate: alert.alertType.coordinate)
+                                 })
+                                 .iconImage(alert.alertType.mapIcon)
+            ]
+        }
         return layers
     }
 
@@ -183,19 +248,16 @@ private extension MapViewContainer {
             .unsafeMapViewControllerModifier(configureMapViewController)
             .onTapMapGesture(on: tappableLayers) { context, features in
                 if let feature = features.first,
-                   let routeId = feature.attributes["routeId"] as? Int,
-                   let route = routingStore.alternativeRoutes.first(where: { $0.id == routeId }) {
-                    self.routingStore.selectRoute(withId: route.id)
+                   let routeID = feature.attributes["routeId"] as? Int {
+                    self.routesPlanMapDrawer.selectRoute(withID: routeID)
                 } else {
-                    if features.isEmpty, !self.routingStore.routes.isEmpty { return }
+                    if features.isEmpty, !self.routesPlanMapDrawer.routes.isEmpty { return }
                     self.mapViewStore.didTapOnMap(coordinates: context.coordinate, containing: features)
                 }
             }
             .expandClustersOnTapping(clusteredLayers: [
-                ClusterLayer(
-                    layerIdentifier: MapLayerIdentifier.simpleCirclesClustered,
-                    sourceIdentifier: MapSourceIdentifier.points
-                )
+                ClusterLayer(layerIdentifier: MapLayerIdentifier.simpleCirclesClustered,
+                             sourceIdentifier: MapSourceIdentifier.points)
             ])
             .cameraModifierDisabled(self.routingStore.navigatingRoute != nil)
             .onMapViewPortUpdate { self.mapStore.mapViewPort = $0 }
@@ -214,7 +276,6 @@ private extension MapViewContainer {
 
 // MARK: - Event Handlers
 
-// TODO: - Move it to its own store
 private extension MapViewContainer {
     var trackingStateGesture: some Gesture {
         DragGesture()
@@ -238,55 +299,6 @@ private extension MapViewContainer {
         self.mapStore.camera = .boundingBox(route.bbox.mlnCoordinateBounds)
     }
 
-    func handleNavigatingRouteChange(_: Route?, _ newValue: Route?) {
-        if let route = newValue {
-            do {
-                if DebugStore().simulateRide {
-                    if let simulated = routingStore.simulatedLocationProvider {
-                        try simulated.setSimulatedRoute(route, bias: .left(5))
-                    }
-                }
-                try self.routingStore.ferrostarCore.startNavigation(route: route)
-                self.routingStore.simulatedLocationProvider?.stopUpdating()
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                    self.routingStore.simulatedLocationProvider?.startUpdating()
-                }
-
-                self.sheetStore.isShown.value = false
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
-                    self.mapStore.camera = .automotiveNavigation()
-                }
-            } catch {
-                Logger.routing.error("Routing Error: \(error)")
-            }
-        } else {
-            stopNavigation()
-            if let simulated = routingStore.locationProvider as? SimulatedLocationProvider {
-                simulated.stopUpdating()
-            }
-        }
-    }
-
-    func handleTripStateChange(_ oldValue: TripState?, _ newValue: TripState?) {
-        if let newValue {
-            switch newValue {
-            case .idle:
-                UIApplication.shared.isIdleTimerDisabled = false
-            case .navigating:
-                UIApplication.shared.isIdleTimerDisabled = true
-            case .complete:
-                UIApplication.shared.isIdleTimerDisabled = false
-            }
-        }
-
-        guard let oldValue,
-              let newValue,
-              case .navigating = oldValue,
-              newValue == .complete else { return }
-        stopNavigation()
-    }
-
     @MainActor
     func handleInitialFocus() {
         guard !self.didFocusOnUser else { return }
@@ -295,15 +307,17 @@ private extension MapViewContainer {
 
     func handleLongPress(_ gesture: MapGestureContext) {
         guard self.mapStore.selectedItem.value == nil else { return }
-        let generatedPOI = ResolvedItem(
-            id: UUID().uuidString,
-            title: "Dropped Pin",
-            subtitle: nil,
-            type: .hudhud,
-            coordinate: gesture.coordinate,
-            color: .systemRed
-        )
+        let generatedPOI = ResolvedItem(id: UUID().uuidString,
+                                        title: "Dropped Pin",
+                                        subtitle: nil,
+                                        type: .hudhud,
+                                        coordinate: gesture.coordinate,
+                                        color: .systemRed)
         self.sheetStore.show(.pointOfInterest(generatedPOI))
+        self.sheetStore.currentSheet.detentData.value = DetentData(
+            selectedDetent: .height(140),
+            allowedDetents: [.height(140)]
+        )
     }
 
     func configureMapViewController(_ mapViewController: MapViewController) {
@@ -317,26 +331,26 @@ private extension MapViewContainer {
 
 // MARK: - Helper Functions
 
-// TODO: - Move it to its own store
 private extension MapViewContainer {
 
     @MainActor
     func stopNavigation() {
+        self.navigationStore.execute(.stopNavigation)
         self.searchViewStore.endTrip()
+        self.sheetStore.popToRoot()
         self.sheetStore.isShown.value = true
 
-        if let coordinates = routingStore.locationProvider.lastLocation?.coordinates {
+        if let coordinates = navigationStore.lastKnownLocation?.coordinate {
             self.resetCamera(to: coordinates)
         }
         self.routingStore.clearRoutes()
-        UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    func resetCamera(to coordinates: GeographicCoordinate) {
+    func resetCamera(to coordinates: CLLocationCoordinate2D) {
         // pitch is broken upstream again, so we use pitchRange for a split second to force to 0.
-        self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .fixed(0))
+        self.mapStore.camera = .center(coordinates, zoom: 14, pitch: 0, pitchRange: .fixed(0))
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.mapStore.camera = .center(coordinates.clLocationCoordinate2D, zoom: 14, pitch: 0, pitchRange: .free)
+            self.mapStore.camera = .center(coordinates, zoom: 14, pitch: 0, pitchRange: .free)
         }
     }
 
@@ -355,63 +369,14 @@ private extension MapViewContainer {
     }
 }
 
-extension RoutingStore {
-    var simulatedLocationProvider: SimulatedLocationProvider? {
-        self.locationProvider as? SimulatedLocationProvider
-    }
-}
+private extension MapLayerIdentifier {
 
-public extension FerrostarCore {
-
-    var isNavigating: Bool {
-        return self.state?.isNavigating ?? false
-    }
-}
-
-public extension NavigationState {
-    var isNavigating: Bool {
-        if case .navigating = tripState {
-            return true
-        } else {
-            return false
-        }
-    }
-}
-
-public extension Waypoint {
-    init(coordinate: CLLocationCoordinate2D, kind: WaypointKind = .via) {
-        self.init(coordinate: GeographicCoordinate(lat: coordinate.latitude, lng: coordinate.longitude), kind: kind)
-    }
-
-    var cLCoordinate: CLLocationCoordinate2D {
-        CLLocationCoordinate2D(latitude: self.coordinate.lat, longitude: self.coordinate.lng)
-    }
-}
-
-public extension Route {
-    var duration: TimeInterval {
-        // add together all routeStep durations
-        return self.steps.reduce(0) { $0 + $1.duration }
-    }
-}
-
-// MARK: - Route + Identifiable
-
-extension Route: Identifiable {
-    public var id: Int {
-        return self.hashValue
-    }
-
-}
-
-public extension BoundingBox {
-    var mlnCoordinateBounds: MLNCoordinateBounds {
-        return MLNCoordinateBounds(sw: self.sw.clLocationCoordinate2D, ne: self.ne.clLocationCoordinate2D)
-    }
-}
-
-public extension [GeographicCoordinate] {
-    var clLocationCoordinate2Ds: [CLLocationCoordinate2D] {
-        return self.map(\.clLocationCoordinate2D)
-    }
+    nonisolated static let tapLayers: Set<String> = [
+        Self.restaurants,
+        Self.shops,
+        Self.simpleCircles,
+        Self.streetView,
+        Self.customPOI,
+        Self.poiLevel1
+    ]
 }

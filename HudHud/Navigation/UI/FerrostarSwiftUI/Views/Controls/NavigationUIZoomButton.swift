@@ -1,3 +1,11 @@
+//
+//  NavigationUIZoomButton.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import SwiftUI
 
 public struct NavigationUIZoomButton: View {
@@ -14,7 +22,7 @@ public struct NavigationUIZoomButton: View {
             Button(
                 action: self.onZoomIn,
                 label: {
-                    Image(systemName: "plus")
+                    Image(systemSymbol: .plus)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 18, height: 18)
@@ -28,7 +36,7 @@ public struct NavigationUIZoomButton: View {
             Button(
                 action: self.onZoomOut,
                 label: {
-                    Image(systemName: "minus")
+                    Image(systemSymbol: .minus)
                         .resizable()
                         .aspectRatio(contentMode: .fit)
                         .frame(width: 18, height: 18)

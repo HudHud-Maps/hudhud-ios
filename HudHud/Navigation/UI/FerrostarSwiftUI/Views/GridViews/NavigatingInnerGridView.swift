@@ -1,3 +1,11 @@
+//
+//  NavigatingInnerGridView.swift
+//  HudHud
+//
+//  Created by Ali Hilal on 03.11.24.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
 import FerrostarCore
 import SwiftUI
 
@@ -15,6 +23,8 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
     public var midLeading: (() -> AnyView)?
     public var bottomTrailing: (() -> AnyView)?
     public var bottomLeading: (() -> AnyView)?
+
+    public var overlayContent: [NavigationOverlayZone: () -> AnyView] = [:]
 
     @Environment(\.navigationFormatterCollection) var formatterCollection: any FormatterCollection
 
@@ -53,17 +63,15 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
     /// user).
     ///   - showMute: Whether to show the provided mute toggle or not.
     ///   - spokenInstructionObserver: The spoken instruction observer (for driving mute button state).
-    public init(
-        speedLimit: Measurement<UnitSpeed>? = nil,
-        isMuted: Bool,
-        showMute: Bool = true,
-        onMute: @escaping () -> Void,
-        showZoom: Bool = false,
-        onZoomIn: @escaping () -> Void = {},
-        onZoomOut: @escaping () -> Void = {},
-        showCentering: Bool = false,
-        onCenter: @escaping () -> Void = {}
-    ) {
+    public init(speedLimit: Measurement<UnitSpeed>? = nil,
+                isMuted: Bool,
+                showMute: Bool = true,
+                onMute: @escaping () -> Void,
+                showZoom: Bool = false,
+                onZoomIn: @escaping () -> Void = {},
+                onZoomOut: @escaping () -> Void = {},
+                showCentering: Bool = false,
+                onCenter: @escaping () -> Void = {}) {
         self.speedLimit = speedLimit
         self.isMuted = isMuted
         self.showMute = showMute
@@ -78,8 +86,7 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
     // MARK: Content
 
     public var body: some View {
-        InnerGridView(
-            topLeading: {
+        InnerGridView(topLeading: {
 //                if let speedLimit, let speedLimitStyle {
 //                    SpeedLimitView(
 //                        speedLimit: speedLimit,
@@ -88,47 +95,46 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
 //                        unitFormatter: formatterCollection.speedWithUnitsFormatter
 //                    )
 //                }
-            },
-            topCenter: { self.topCenter?() },
-            topTrailing: {
-                if self.showMute {
-                    MuteUIButton(isMuted: self.isMuted, action: self.onMute)
-                        .shadow(radius: 8)
-                }
-            },
-            midLeading: { self.midLeading?() },
-            midCenter: {
-                // This view does not allow center content.
-                Spacer()
-            },
-            midTrailing: {
-                if self.showZoom {
-                    NavigationUIZoomButton(onZoomIn: self.onZoomIn, onZoomOut: self.onZoomOut)
-                        .shadow(radius: 8)
-                } else {
-                    Spacer()
-                }
-            },
-            bottomLeading: {
-                self.bottomLeading?()
-                if self.showCentering {
-                    NavigationUIButton(action: self.onCenter) {
-                        Image(systemName: "location.north.fill")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(width: 18, height: 18)
-                    }
-                    .shadow(radius: 8)
-                } else if self.bottomLeading == nil {
-                    Spacer()
-                }
-            },
-            bottomCenter: {
-                // This view does not allow center content to prevent overlaying the puck.
-                Spacer()
-            },
-            bottomTrailing: { self.bottomTrailing?() }
-        )
+                      },
+                      topCenter: { self.topCenter?() },
+                      topTrailing: {
+                          if self.showMute {
+                              MuteUIButton(isMuted: self.isMuted, action: self.onMute)
+                                  .shadow(radius: 8)
+                          }
+                      },
+                      midLeading: { self.midLeading?() },
+                      midCenter: {
+                          // This view does not allow center content.
+                          Spacer()
+                      },
+                      midTrailing: {
+                          if self.showZoom {
+                              NavigationUIZoomButton(onZoomIn: self.onZoomIn, onZoomOut: self.onZoomOut)
+                                  .shadow(radius: 8)
+                          } else {
+                              Spacer()
+                          }
+                      },
+                      bottomLeading: {
+                          self.bottomLeading?()
+                          if self.showCentering {
+                              NavigationUIButton(action: self.onCenter) {
+                                  Image(systemSymbol: .locationNorthFill)
+                                      .resizable()
+                                      .aspectRatio(contentMode: .fit)
+                                      .frame(width: 18, height: 18)
+                              }
+                              .shadow(radius: 8)
+                          } else if self.bottomLeading == nil {
+                              Spacer()
+                          }
+                      },
+                      bottomCenter: {
+                          // This view does not allow center content to prevent overlaying the puck.
+                          Spacer()
+                      },
+                      bottomTrailing: { self.bottomTrailing?() })
     }
 }
 
@@ -138,13 +144,11 @@ public struct NavigatingInnerGridView: View, CustomizableNavigatingInnerGridView
             .padding(.horizontal, 16)
             .frame(height: 128)
 
-        NavigatingInnerGridView(
-            speedLimit: .init(value: 55, unit: .milesPerHour),
-            isMuted: true,
-            showMute: true,
-            onMute: {}
-        )
-        .padding(.horizontal, 16)
+        NavigatingInnerGridView(speedLimit: Measurement(value: 55, unit: .milesPerHour),
+                                isMuted: true,
+                                showMute: true,
+                                onMute: {})
+            .padding(.horizontal, 16)
 
         RoundedRectangle(cornerRadius: 36)
             .padding(.horizontal, 16)

@@ -4,9 +4,6 @@
     "" : {
 
     },
-    " " : {
-
-    },
     " · " : {
 
     },
@@ -20,6 +17,9 @@
 
     },
     "..." : {
+
+    },
+    "·" : {
 
     },
     "(%lld)" : {
@@ -50,6 +50,16 @@
           "stringUnit" : {
             "state" : "new",
             "value" : "%1$@ %2$@"
+          }
+        }
+      }
+    },
+    "%@ in %lld m" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "%1$@ in %2$lld m"
           }
         }
       }
@@ -126,6 +136,15 @@
         }
       }
     },
+    "Add Photo" : {
+
+    },
+    "Add photos and videos" : {
+
+    },
+    "Add Stop" : {
+
+    },
     "Add Type" : {
 
     },
@@ -134,6 +153,17 @@
     },
     "Apply" : {
 
+    },
+    "Arrival" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Arrival"
+          }
+        }
+      }
     },
     "Back" : {
 
@@ -182,6 +212,12 @@
         }
       }
     },
+    "Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera" : {
+
+    },
+    "Camera Access Required" : {
+
+    },
     "Cancel" : {
 
     },
@@ -199,7 +235,7 @@
 
     },
     "Close" : {
-      "comment" : "Accessibility label instead of x",
+      "comment" : "Accessibility label instead of x\naccessibility label instead of x",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -213,6 +249,9 @@
 
     },
     "Create Account" : {
+
+    },
+    "Current Environment" : {
 
     },
     "Customers Rating" : {
@@ -245,8 +284,30 @@
     "Directions" : {
       "comment" : "navigation sheet header"
     },
+    "Distance" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Distance"
+          }
+        }
+      }
+    },
     "Done" : {
 
+    },
+    "Duration" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Duration"
+          }
+        }
+      }
     },
     "Edit" : {
 
@@ -261,6 +322,12 @@
 
     },
     "Enter your Verification Code" : {
+
+    },
+    "Environment" : {
+
+    },
+    "Experimental Features" : {
 
     },
     "Fastest" : {
@@ -283,10 +350,25 @@
         }
       }
     },
+    "Feature Toggles" : {
+
+    },
+    "Features" : {
+
+    },
     "Filters" : {
 
     },
+    "Finish" : {
+
+    },
     "From %@" : {
+
+    },
+    "From Camera" : {
+
+    },
+    "From Library" : {
 
     },
     "Go" : {
@@ -392,6 +474,12 @@
     "Name" : {
 
     },
+    "Navigation Settings" : {
+
+    },
+    "Navigation Settings Content" : {
+
+    },
     "Nearby Trending" : {
 
     },
@@ -444,6 +532,9 @@
 
     },
     "Quality" : {
+
+    },
+    "Rate and review" : {
 
     },
     "Rating" : {
@@ -510,6 +601,9 @@
     "Share" : {
 
     },
+    "Share your experience" : {
+
+    },
     "Show Less" : {
 
     },
@@ -537,6 +631,17 @@
     "Sort By" : {
 
     },
+    "Speed Limit" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speed Limit"
+          }
+        }
+      }
+    },
     "Start" : {
       "comment" : "get the navigation route",
       "extractionState" : "stale",
@@ -549,10 +654,19 @@
         }
       }
     },
+    "Start Trip" : {
+
+    },
     "StreetView Quality" : {
 
     },
+    "Submit" : {
+
+    },
     "Suggestions" : {
+
+    },
+    "There is no photo added yet! Be the first to add one." : {
 
     },
     "Touch Visualizer" : {
@@ -622,50 +736,6 @@
     },
     "You Have Arrived" : {
 
-    },
-    "Arrival" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Arrival"
-          }
-        }
-      }
-    },
-    "Distance" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Distance"
-          }
-        }
-      }
-    },
-    "Duration" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Duration"
-          }
-        }
-      }
-    },
-    "Speed Limit" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Speed Limit"
-          }
-        }
-      }
     }
   },
   "version" : "1.0"

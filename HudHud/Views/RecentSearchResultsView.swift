@@ -21,7 +21,6 @@ struct RecentSearchResultsView: View {
     let searchType: SearchViewStore.SearchType
 
     @ScaledMetric var imageSize = 24
-    @Environment(\.dismiss) var dismiss
     var sheetStore: SheetStore
 
     // MARK: Content
@@ -68,9 +67,9 @@ struct RecentSearchResultsView: View {
                 self.sheetStore.show(.pointOfInterest(item))
                 switch self.searchType {
                 case let .returnPOILocation(completion):
-                    if let selectedItem = self.searchStore.mapStore.selectedItem.value {
-                        completion?(.waypoint(selectedItem))
-                        self.dismiss()
+                    if self.searchStore.mapStore.selectedItem.value != nil {
+                        completion(item)
+                        self.sheetStore.popSheet()
                     }
                 case .selectPOI, .categories, .favorites:
                     break

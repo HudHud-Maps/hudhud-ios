@@ -20,8 +20,7 @@ import SwiftUI
 /// * the allowed detent
 /// * the sheet's visibility
 
-@Observable
-@MainActor
+@Observable @MainActor
 final class SheetStore {
 
     // MARK: Properties
@@ -103,15 +102,19 @@ final class SheetStore {
         self.sheets = []
         self.navigationCommands.send(.popToRoot(rootSheetData: self.emptySheetData))
     }
+}
 
-    private func computeSheetHeight() -> CGFloat {
+// MARK: - Private
+
+private extension SheetStore {
+
+    func computeSheetHeight() -> CGFloat {
         if self.isShown.value {
             self.rawSheetheight - self.safeAreaInsets.bottom
         } else {
             0
         }
     }
-
 }
 
 // MARK: - Previewable
@@ -159,25 +162,17 @@ enum NavigationCommand {
 
 // MARK: - SheetType
 
-enum SheetType: Hashable {
+enum SheetType {
     case search
     case mapStyle
     case debugView
-    case navigationAddSearchView
+    case navigationAddSearchView((ResolvedItem) -> Void)
     case favorites
     case navigationPreview
     case pointOfInterest(ResolvedItem)
+    case routePlanner(RoutePlannerStore)
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
-
-    // MARK: Nested Types
-
-    private enum POISheetHeights {
-        static let compact: CGFloat = 140
-        static let normal: CGFloat = 190
-        static let expanded: CGFloat = 600
-
-    }
 
     // MARK: Computed Properties
 
@@ -196,7 +191,9 @@ enum SheetType: Hashable {
         case .navigationPreview:
             DetentData(selectedDetent: .nearHalf, allowedDetents: [.height(150), .nearHalf])
         case .pointOfInterest:
-            DetentData(selectedDetent: .height(POISheetHeights.normal), allowedDetents: [.height(POISheetHeights.compact), .height(POISheetHeights.normal), .height(POISheetHeights.expanded), .large])
+            DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
+        case .routePlanner:
+            DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
         case .favoritesViewMore:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:

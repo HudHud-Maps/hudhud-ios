@@ -141,6 +141,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /p/labeled:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: List user labeled POIs
+      description: List user labeled POIs
+      operationId: listUserLabeledPOIs
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-ListUserLabeledPOIsResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
   /p/saved:
     get:
       tags:
@@ -152,6 +180,18 @@ paths:
         - name: Accept-Language
           in: header
           description: User language
+          schema:
+            type: string
+        - name: page_size
+          in: query
+          description: Page Size
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: page_token
+          in: query
+          description: Page Token
           schema:
             type: string
       responses:
@@ -354,6 +394,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: add POI to saved list request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPOIToSavedListRequest'
+        required: true
       responses:
         "200":
           description: Successful response
@@ -369,6 +416,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
         - BearerAuth: []
+      x-codegen-request-body-name: request
   /sv/nearby:
     get:
       tags:
@@ -1024,8 +1072,130 @@ paths:
       security:
         - BearerAuth: []
       x-codegen-request-body-name: request
+  /v1/metadata:
+    get:
+      tags:
+        - Search
+      summary: Get metadata for search
+      description: Return available filters, amenities and categories.
+      operationId: metadata
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/routes.MetadataResponse'
+  /v1/search:
+    post:
+      tags:
+        - Search
+      summary: Search for any place
+      description: Return places that match provided filters.
+      operationId: search
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+      requestBody:
+        description: Search request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        "401":
+          description: code=invalid_login_identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "422":
+          description: code=bad_request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      x-codegen-request-body-name: request
+  /v1/{type}/{id}:
+    get:
+      tags:
+        - Search
+      summary: Get a place by its type and ID
+      description: Return the corresponding place.
+      operationId: getPlace
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User current language
+          schema:
+            type: string
+        - name: type
+          in: path
+          description: string enums
+          required: true
+          schema:
+            type: string
+            enum:
+              - pois
+              - districts
+              - streets
+        - name: id
+          in: path
+          description: unique identifier of the place
+          required: true
+          schema:
+            type: string
+        - name: lat
+          in: query
+          description: Latitude
+          schema:
+            type: number
+        - name: lon
+          in: query
+          description: Longitude
+          schema:
+            type: number
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeoJSONFeature'
+        "401":
+          description: code=invalid_login_identity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        "404":
+          description: code=not_found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    AddPOIToSavedListRequest:
+      type: object
+      properties:
+        label:
+          type: string
+          enum:
+            - UNSPECIFIED
+            - HOME
+            - WORK
+            - SCHOOL
     AddPOIToSavedListResponse:
       type: object
     AndroidCategoryIcon:
@@ -1072,6 +1242,16 @@ components:
           description: |-
             Ok is a boolean that will always be present to indicate if the response is a successful response or error one
             in ErrorResponse it will always be false
+    GeoJSONFeature:
+      type: object
+      properties:
+        geometry:
+          $ref: '#/components/schemas/routes.GeoJSONGeometry'
+        properties:
+          $ref: '#/components/schemas/routes.Place'
+        type:
+          type: string
+          description: Type is Feature.
     GeoPoint:
       required:
         - lat
@@ -1113,6 +1293,16 @@ components:
             - systemCyan
         name:
           type: string
+    ListUserLabeledPOIsResponse:
+      type: object
+      properties:
+        labeled_pois:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Poi'
+          description: |-
+            LabeledPOIs is a map of saved item labels to the list of POIs that are labeled with that label.
+            The key is SavedItemLabel which is a string enum with values: HOME, WORK, SCHOOL
     Login:
       type: object
       properties:
@@ -1320,6 +1510,51 @@ components:
           type: string
           description: CanRequestOTPResendAt the time when the user can request for a resend of the OTP
           format: date-time
+    SearchRequest:
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        cuisines:
+          type: array
+          items:
+            type: string
+        is_open:
+          type: boolean
+        is_trending:
+          type: boolean
+        limit:
+          type: integer
+        location:
+          $ref: '#/components/schemas/GeoPoint'
+        offset:
+          type: integer
+        price_range:
+          type: array
+          items:
+            type: integer
+        q:
+          type: string
+        top_rated:
+          type: boolean
+    SearchResponse:
+      type: object
+      properties:
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/GeoJSONFeature'
+        limit:
+          type: integer
+        offset:
+          type: integer
+        type:
+          type: string
+          description: Type is FeatureCollection.
     StreetViewImageDetails:
       required:
         - id
@@ -1410,6 +1645,30 @@ components:
             The Data could be an object or an array
           allOf:
             - $ref: '#/components/schemas/EditUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-ListUserLabeledPOIsResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/ListUserLabeledPOIsResponse'
         next_page_token:
           type: string
           description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
@@ -1863,6 +2122,176 @@ components:
             RefreshToken JWT refresh token is a long-lived token that will be issued only if the otp verification was successful.
             The refresh token will be non-expired one
           format: base64
+    routes.Category:
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            type: string
+        filters:
+          type: array
+          items:
+            type: string
+        key:
+          type: string
+        name_ar:
+          type: string
+        name_en:
+          type: string
+    routes.Filter:
+      type: object
+      properties:
+        filter_options:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Option'
+        key:
+          type: string
+        name_ar:
+          type: string
+        name_en:
+          type: string
+        type:
+          type: string
+          enum:
+            - toggle
+            - multiple_choice
+            - single_choice
+    routes.GeoJSONGeometry:
+      type: object
+      properties:
+        coordinates:
+          type: array
+          items:
+            type: integer
+        type:
+          type: string
+          enum:
+            - Point
+            - MultiPoint
+            - LineString
+            - MultiLineString
+            - Polygon
+            - MultiPolygon
+            - GeometryCollection
+    routes.Hour:
+      type: object
+      properties:
+        close:
+          type: string
+          description: Close time in 24-hour format (HH:mm)
+        open:
+          type: string
+          description: Open time in 24-hour format (HH:mm)
+    routes.MetadataResponse:
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Filter'
+        categories:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Category'
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Filter'
+    routes.OpeningHours:
+      type: object
+      properties:
+        regular_hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.RegularHour'
+    routes.Option:
+      type: object
+      properties:
+        key:
+          type: string
+        name_ar:
+          type: string
+        name_en:
+          type: string
+    routes.Place:
+      required:
+        - id
+        - name
+        - point
+        - type
+      type: object
+      properties:
+        amenities:
+          type: array
+          items:
+            type: string
+        category:
+          type: string
+        category_key:
+          type: string
+        description:
+          type: string
+        distance:
+          type: number
+          format: double
+        email:
+          type: string
+        eta:
+          type: integer
+        floorno:
+          type: string
+        full_address:
+          type: string
+        id:
+          type: string
+        instagram:
+          type: string
+        is_open:
+          type: boolean
+        is_trending:
+          type: boolean
+        media:
+          type: array
+          items:
+            $ref: '#/components/schemas/MediaItem'
+        name:
+          type: string
+        opening_hours:
+          $ref: '#/components/schemas/routes.OpeningHours'
+        phone_number:
+          type: string
+        point:
+          $ref: '#/components/schemas/GeoPoint'
+        price_max:
+          type: integer
+        price_min:
+          type: integer
+        rating:
+          type: number
+        reviews_count:
+          type: integer
+        snapchat:
+          type: string
+        status:
+          type: string
+        subcategory:
+          type: string
+        subcategory_key:
+          type: string
+        tiktok:
+          type: string
+        type:
+          type: string
+          enum:
+            - poi
+            - district
+            - street
+        website:
+          type: string
+        x_link:
+          type: string
     routes.RefreshAccessTokenRequest:
       type: object
       properties:
@@ -1881,6 +2310,23 @@ components:
           type: string
           description: ExpiresAt the time when the access token will expire
           format: date-time
+    routes.RegularHour:
+      type: object
+      properties:
+        day:
+          type: string
+          enum:
+            - monday
+            - tuesday
+            - wednesday
+            - thursday
+            - friday
+            - saturday
+            - sunday
+        hours:
+          type: array
+          items:
+            $ref: '#/components/schemas/routes.Hour'
   securitySchemes:
     BearerAuth:
       type: apiKey

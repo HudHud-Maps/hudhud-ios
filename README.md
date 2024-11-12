@@ -5,6 +5,9 @@ Goal of this repo is to make a simple app that can:
 * Displaying POI information on MapLibre
 * Starting a navigation using MapLibre Navigation
 
+## Guides
+* [Experimental Features Guide](./guides/new_experimental_features.md)
+
 ## Setup
 
 - Clone this Repo
