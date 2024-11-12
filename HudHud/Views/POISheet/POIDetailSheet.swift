@@ -218,7 +218,7 @@ struct POIDetailSheet: View {
                 .overlay(alignment: .bottomTrailing) {
                     if self.selectedTab == .photos {
                         Button(action: {
-                            self.cameraStore.showAddPhotoConfirmation.toggle()
+                            self.cameraStore.showAddPhotoConfirmation = true
                         }, label: {
                             ZStack {
                                 Circle()
