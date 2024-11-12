@@ -18,6 +18,9 @@ final class FavoritesStore: ObservableObject {
     // MARK: Properties
 
     @Published var favoritesItems: [FavoritesItem] = []
+    @Published var showLoginSheet = false
+    @Published var isMarkedAsFavourite = false
+    @Published var labelMessage = ""
 
     @AppStorage("favorites") private var storedFavorites: String = ""
 
@@ -40,6 +43,7 @@ final class FavoritesStore: ObservableObject {
     func saveFavorites() {
         let favorites = FavoritesResolvedItems(items: favoritesItems)
         self.storedFavorites = favorites.rawValue
+        self.isMarkedAsFavourite = true
     }
 
     func isFavorites(item: ResolvedItem) -> Bool {
@@ -49,19 +53,29 @@ final class FavoritesStore: ObservableObject {
     func deleteSavedFavorite(item: ResolvedItem) {
         if let index = favoritesItems.firstIndex(where: { $0.item == item }) {
             self.favoritesItems.remove(at: index)
+            self.labelMessage = "Favorite location removed"
             self.saveFavorites()
         }
     }
 
     func saveChanges(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem, description: String, selectedType: String) {
-        let newFavoritesItem = self.createFavoritesItem(title: title, tintColor: tintColor, item: item, description: description, type: selectedType)
-
-        if let existingIndex = favoritesItems.firstIndex(where: { $0.item == newFavoritesItem.item }) {
-            self.updateExistingItem(at: existingIndex, with: newFavoritesItem)
-        } else {
-            self.handleNewItem(of: newFavoritesItem)
+        guard AuthProvider.shared.isLoggedIn() else {
+            self.showLoginSheet = true
+            return
         }
+
+        let newFavoriteItem = self.createFavoritesItem(title: title, tintColor: tintColor, item: item, description: description, type: selectedType)
+
+        if let existingIndex = favoritesItems.firstIndex(where: { $0.item == newFavoriteItem.item }) {
+            self.updateExistingItem(at: existingIndex, with: newFavoriteItem)
+        } else {
+            self.handleNewItem(of: newFavoriteItem)
+        }
+
+        self.isMarkedAsFavourite = true
+        self.labelMessage = "Saved to your favorites"
         self.saveFavorites()
+        self.showLoginSheet = false
     }
 
     func deleteFavorite(_ favorite: FavoritesItem) {
@@ -71,6 +85,7 @@ final class FavoritesStore: ObservableObject {
             } else {
                 self.favoritesItems.remove(at: index)
             }
+            self.labelMessage = "Favorite location removed"
             self.saveFavorites()
         }
     }
@@ -95,15 +110,14 @@ private extension FavoritesStore {
         }
     }
 
-    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?, type: String) -> FavoritesItem {
-        return FavoritesItem(
-            id: UUID(),
-            title: title,
-            tintColor: tintColor,
-            item: item,
-            description: description,
-            type: type
-        )
+    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?,
+                             type: String) -> FavoritesItem {
+        return FavoritesItem(id: UUID(),
+                             title: title,
+                             tintColor: tintColor,
+                             item: item,
+                             description: description,
+                             type: type)
     }
 
     func updateExistingItem(at index: Int, with newItem: FavoritesItem) {

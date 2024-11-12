@@ -18,28 +18,26 @@ struct SearchSheetProvider: SheetProvider {
     let streetViewStore: StreetViewStore
     let trendingStore: TrendingStore
     let navigationStore: NavigationStore
+    let favoritesStore: FavoritesStore
 
     // MARK: Content
 
     var sheetView: some View {
-        SearchSheet(
-            mapStore: self.searchViewStore.mapStore,
-            searchStore: self.searchViewStore,
-            trendingStore: self.trendingStore,
-            sheetStore: self.sheetStore,
-            filterStore: self.searchViewStore.filterStore
-        )
+        SearchSheet(mapStore: self.searchViewStore.mapStore,
+                    searchStore: self.searchViewStore,
+                    trendingStore: self.trendingStore,
+                    sheetStore: self.sheetStore,
+                    filterStore: self.searchViewStore.filterStore,
+                    favoritesStore: self.favoritesStore)
     }
 
     var mapOverlayView: some View {
-        SearchMapOverlay(
-            searchViewStore: self.searchViewStore,
-            streetViewStore: self.streetViewStore,
-            sheetStore: self.sheetStore,
-            trendingStore: self.trendingStore,
-            mapStore: self.searchViewStore.mapStore,
-            userLocationStore: self.searchViewStore.mapStore.userLocationStore,
-            navigationStore: self.navigationStore
-        )
+        SearchMapOverlay(searchViewStore: self.searchViewStore,
+                         streetViewStore: self.streetViewStore,
+                         sheetStore: self.sheetStore,
+                         trendingStore: self.trendingStore,
+                         mapStore: self.searchViewStore.mapStore,
+                         userLocationStore: self.searchViewStore.mapStore.userLocationStore,
+                         navigationStore: self.navigationStore)
     }
 }

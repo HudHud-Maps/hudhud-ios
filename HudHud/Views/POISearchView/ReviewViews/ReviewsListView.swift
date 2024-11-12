@@ -30,7 +30,7 @@ struct ReviewsListView: View {
                 }
             }
         }
-        .padding()
+        .padding(.horizontal)
         .background(Color.Colors.General._05WhiteBackground)
         .cornerRadius(14)
     }

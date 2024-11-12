@@ -36,7 +36,8 @@ struct ContentView: View {
     @StateObject var notificationManager = NotificationManager()
 
     // NOTE: As a workaround until Toursprung prvides us with an endpoint that services this file
-    private let styleURL = URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
+    private let styleURL =
+        URL(string: "https://static.maptoolkit.net/styles/hudhud/hudhud-default-v1.json?api_key=hudhud")! // swiftlint:disable:this force_unwrapping
 
     @State private var mapStore: MapStore
 
@@ -82,26 +83,21 @@ struct ContentView: View {
         let favoritesStore = FavoritesStore()
         self._favoritesStore = StateObject(wrappedValue: favoritesStore)
 
-        let navigationStore = NavigationStore(
-            navigationEngine: AppDpendencies.navigationEngine,
-            locationEngine: AppDpendencies.locationEngine
-        )
+        let navigationStore = NavigationStore(navigationEngine: AppDependencies.navigationEngine,
+                                              locationEngine: AppDependencies.locationEngine)
         self.navigationStore = navigationStore
 
-        let sheetStore = SheetStore(
-            emptySheetType: .search,
-            makeSheetProvider: sheetProviderBuilder(
-                userLocationStore: userLocationStore,
-                debugStore: debugStore,
-                mapStore: mapStore,
-                routesPlanMapDrawer: routesPlanMapDrawer,
-                hudhudMapLayerStore: mapLayerStore,
-                favoritesStore: favoritesStore,
-                routingStore: routingStore,
-                navigationStore: navigationStore,
-                streetViewStore: streetViewStore
-            )
-        )
+        let sheetStore = SheetStore(emptySheetType: .search,
+                                    makeSheetProvider: sheetProviderBuilder(userLocationStore: userLocationStore,
+                                                                            debugStore: debugStore,
+                                                                            mapStore: mapStore,
+                                                                            routesPlanMapDrawer: routesPlanMapDrawer,
+                                                                            hudhudMapLayerStore: mapLayerStore,
+                                                                            favoritesStore: favoritesStore,
+                                                                            routingStore: routingStore,
+                                                                            navigationStore: navigationStore,
+                                                                            navigationEngine: AppDependencies.navigationEngine,
+                                                                            streetViewStore: streetViewStore))
         self.sheetStore = sheetStore
 
         self.userLocationStore = userLocationStore
@@ -111,50 +107,49 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
-            MapViewContainer(
-                mapStore: self.mapStore,
-                navigationStore: self.navigationStore,
-                debugStore: self.debugStore,
-                userLocationStore: self.userLocationStore,
-                routingStore: self.routingStore,
-                sheetStore: self.sheetStore,
-                streetViewStore: self.streetViewStore,
-                routesPlanMapDrawer: self.routesPlanMapDrawer
-            )
-            .task {
-                do {
-                    let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
-                    self.mapLayerStore.hudhudMapLayers = mapLayers
-                    self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
-                } catch {
-                    self.mapLayerStore.hudhudMapLayers = nil
-                    Logger.searchView.error("\(error.localizedDescription)")
+            MapViewContainer(mapStore: self.mapStore,
+                             navigationStore: self.navigationStore,
+                             debugStore: self.debugStore,
+                             userLocationStore: self.userLocationStore,
+                             routingStore: self.routingStore,
+                             sheetStore: self.sheetStore,
+                             streetViewStore: self.streetViewStore,
+                             routesPlanMapDrawer: self.routesPlanMapDrawer)
+                .task {
+                    do {
+                        let mapLayers = try await mapLayerStore.getMaplayers(baseURL: DebugStore().baseURL)
+                        self.mapLayerStore.hudhudMapLayers = mapLayers
+                        self.mapStore.updateCurrentMapStyle(mapLayers: mapLayers)
+                    } catch {
+                        self.mapLayerStore.hudhudMapLayers = nil
+                        Logger.searchView.error("\(error.localizedDescription)")
+                    }
                 }
-            }
-            .ignoresSafeArea()
-            .edgesIgnoringSafeArea(.all)
-            .overlay {
-                MapOverlayView(mapOverlayStore: MapOverlayStore(sheetStore: self.sheetStore))
-            }
-            .safariView(item: self.$safariURL) { url in
-                SafariView(url: url)
-            }
-            .onOpenURL { url in
-                if let scheme = url.scheme, scheme == "https" || scheme == "http" {
-                    self.safariURL = url
-                    return .handled
+                .ignoresSafeArea()
+                .edgesIgnoringSafeArea(.all)
+                .overlay {
+                    MapOverlayView(mapOverlayStore: MapOverlayStore(sheetStore: self.sheetStore))
                 }
-                return .systemAction
-            }
-            .environmentObject(self.notificationQueue)
-            .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
-                self.notificationQueue.removeFirst()
-            }, content: {
-                if let notification = self.notificationQueue.currentNotification {
-                    NotificationBanner(notification: notification)
-                        .padding(.horizontal, 8)
+                .safariView(item: self.$safariURL) { url in
+                    SafariView(url: url)
                 }
-            })
+                .onOpenURL { url in
+                    if let scheme = url.scheme, scheme == "https" || scheme == "http" {
+                        self.safariURL = url
+                        return .handled
+                    }
+                    return .systemAction
+                }
+                .environmentObject(self.notificationQueue)
+                .simpleToast(item: self.$notificationQueue.currentNotification, options: .notification, onDismiss: {
+                    self.notificationQueue.removeFirst()
+                }, content: {
+                    if let notification = self.notificationQueue.currentNotification {
+                        NotificationBanner(notification: notification)
+                            .padding(.horizontal, 8)
+                    }
+                })
+                .environmentObject(self.notificationQueue)
         }
     }
 }
@@ -173,10 +168,8 @@ private extension Binding where Value == Bool {
     }
 
     static prefix func ! (_ binding: Binding<Bool>) -> Binding<Bool> {
-        return Binding<Bool>(
-            get: { !binding.wrappedValue },
-            set: { _ in }
-        )
+        return Binding<Bool>(get: { !binding.wrappedValue },
+                             set: { _ in })
     }
 }
 

@@ -62,11 +62,9 @@ final class SheetStore {
 
     init(emptySheetType: SheetType, makeSheetProvider: @escaping (SheetContext) -> any SheetProvider) {
         self.makeSheetProvider = makeSheetProvider
-        self.emptySheetData = SheetData(
-            sheetType: emptySheetType,
-            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData),
-            sheetProvider: EmptySheetProvider()
-        )
+        self.emptySheetData = SheetData(sheetType: emptySheetType,
+                                        detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData),
+                                        sheetProvider: EmptySheetProvider())
         self.emptySheetData = self.makeSheet(from: emptySheetType)
         self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
             guard let self else { return }
@@ -111,11 +109,9 @@ private extension SheetStore {
         let detentCurrentValueSubject = CurrentValueSubject<DetentData, Never>(sheetType.initialDetentData)
         let context = SheetContext(sheetStore: self, sheetType: sheetType, detentData: detentCurrentValueSubject)
         let sheetProvider = self.makeSheetProvider(context)
-        return SheetData(
-            sheetType: sheetType,
-            detentData: detentCurrentValueSubject,
-            sheetProvider: sheetProvider
-        )
+        return SheetData(sheetType: sheetType,
+                         detentData: detentCurrentValueSubject,
+                         sheetProvider: sheetProvider)
     }
 
     func computeSheetHeight() -> CGFloat {
@@ -130,34 +126,28 @@ private extension SheetStore {
 // MARK: - Previewable
 
 extension SheetStore: Previewable {
-    static let storeSetUpForPreviewing = SheetStore(
-        emptySheetType: .search,
-        makeSheetProvider: sheetProviderBuilder(
-            userLocationStore: .storeSetUpForPreviewing,
-            debugStore: DebugStore(),
-            mapStore: .storeSetUpForPreviewing,
-            routesPlanMapDrawer: RoutesPlanMapDrawer(),
-            hudhudMapLayerStore: HudHudMapLayerStore(),
-            favoritesStore: .storeSetUpForPreviewing,
-            routingStore: .storeSetUpForPreviewing,
-            navigationStore: .storeSetUpForPreviewing,
-            streetViewStore: .storeSetUpForPreviewing
-        )
-    )
-    static let storeSetUpForPreviewingPOI = SheetStore(
-        emptySheetType: .pointOfInterest(.ketchup),
-        makeSheetProvider: sheetProviderBuilder(
-            userLocationStore: .storeSetUpForPreviewing,
-            debugStore: DebugStore(),
-            mapStore: .storeSetUpForPreviewing,
-            routesPlanMapDrawer: RoutesPlanMapDrawer(),
-            hudhudMapLayerStore: HudHudMapLayerStore(),
-            favoritesStore: .storeSetUpForPreviewing,
-            routingStore: .storeSetUpForPreviewing,
-            navigationStore: .storeSetUpForPreviewing,
-            streetViewStore: .storeSetUpForPreviewing
-        )
-    )
+    static let storeSetUpForPreviewing = SheetStore(emptySheetType: .search,
+                                                    makeSheetProvider: sheetProviderBuilder(userLocationStore: .storeSetUpForPreviewing,
+                                                                                            debugStore: DebugStore(),
+                                                                                            mapStore: .storeSetUpForPreviewing,
+                                                                                            routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                                                                                            hudhudMapLayerStore: HudHudMapLayerStore(),
+                                                                                            favoritesStore: .storeSetUpForPreviewing,
+                                                                                            routingStore: .storeSetUpForPreviewing,
+                                                                                            navigationStore: .storeSetUpForPreviewing,
+                                                                                            navigationEngine: NavigationEngine(configuration: .default),
+                                                                                            streetViewStore: .storeSetUpForPreviewing))
+    static let storeSetUpForPreviewingPOI = SheetStore(emptySheetType: .pointOfInterest(.ketchup),
+                                                       makeSheetProvider: sheetProviderBuilder(userLocationStore: .storeSetUpForPreviewing,
+                                                                                               debugStore: DebugStore(),
+                                                                                               mapStore: .storeSetUpForPreviewing,
+                                                                                               routesPlanMapDrawer: RoutesPlanMapDrawer(),
+                                                                                               hudhudMapLayerStore: HudHudMapLayerStore(),
+                                                                                               favoritesStore: .storeSetUpForPreviewing,
+                                                                                               routingStore: .storeSetUpForPreviewing,
+                                                                                               navigationStore: .storeSetUpForPreviewing,
+                                                                                               navigationEngine: NavigationEngine(configuration: .default),
+                                                                                               streetViewStore: .storeSetUpForPreviewing))
 }
 
 // MARK: - Detent
@@ -219,6 +209,7 @@ enum SheetType {
     case routePlanner(RoutePlannerStore)
     case favoritesViewMore(searchViewStore: SearchViewStore)
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
+    case loginNeeded
 
     // MARK: Computed Properties
 
@@ -244,6 +235,8 @@ enum SheetType {
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .loginNeeded:
+            DetentData(selectedDetent: .third, allowedDetents: [.third])
         }
     }
 

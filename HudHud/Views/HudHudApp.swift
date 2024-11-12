@@ -14,9 +14,9 @@ import SwiftLocation
 import SwiftUI
 import TypographyKit
 
-// MARK: - AppDpendencies
+// MARK: - AppDependencies
 
-enum AppDpendencies {
+enum AppDependencies {
     static let navigationEngine = NavigationEngine(configuration: .default)
     static let locationEngine = LocationEngine()
 }
@@ -49,11 +49,9 @@ struct HudHudApp: App {
         self.userLocationStore = UserLocationStore(location: location)
 
         // Create a custom URLCache to store images on disk
-        let diskCache = URLCache(
-            memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
-            diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
-            diskPath: "sa.hudhud.hudhud.imageCache"
-        )
+        let diskCache = URLCache(memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
+                                 diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
+                                 diskPath: "sa.hudhud.hudhud.imageCache")
 
         // Create a DataLoader with custom URLCache
         let dataLoader = DataLoader(configuration: {

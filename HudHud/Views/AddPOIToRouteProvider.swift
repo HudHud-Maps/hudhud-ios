@@ -15,6 +15,8 @@ struct AddPOIToRouteProvider: SheetProvider {
     // MARK: Properties
 
     let sheetStore: SheetStore
+    let favoritesStore: FavoritesStore
+    let navigationEngine: NavigationEngine
     let sheetDetentPublisher: CurrentValueSubject<DetentData, Never>
     let onAddItem: (ResolvedItem) -> Void
 
@@ -23,23 +25,21 @@ struct AddPOIToRouteProvider: SheetProvider {
     var sheetView: some View {
         // Initialize fresh instances of MapStore and SearchViewStore
         let freshSearchViewStore: SearchViewStore = {
-            let tempStore = SearchViewStore(
-                mapStore: MapStore(userLocationStore: .storeSetUpForPreviewing),
-                sheetStore: self.sheetStore,
-                filterStore: .shared,
-                mode: .live(provider: .hudhud),
-                sheetDetentPublisher: self.sheetDetentPublisher
-            )
+            let tempStore = SearchViewStore(mapStore: MapStore(userLocationStore: .storeSetUpForPreviewing),
+                                            sheetStore: self.sheetStore,
+                                            filterStore: .shared,
+                                            mode: .live(provider: .hudhud),
+                                            navigationEngine: self.navigationEngine,
+                                            sheetDetentPublisher: self.sheetDetentPublisher)
             tempStore.searchType = .returnPOILocation(completion: self.onAddItem)
             return tempStore
         }()
-        return SearchSheet(
-            mapStore: freshSearchViewStore.mapStore,
-            searchStore: freshSearchViewStore,
-            trendingStore: TrendingStore(),
-            sheetStore: self.sheetStore,
-            filterStore: .shared
-        )
+        return SearchSheet(mapStore: freshSearchViewStore.mapStore,
+                           searchStore: freshSearchViewStore,
+                           trendingStore: TrendingStore(),
+                           sheetStore: self.sheetStore,
+                           filterStore: .shared,
+                           favoritesStore: self.favoritesStore)
     }
 
     var mapOverlayView: some View {

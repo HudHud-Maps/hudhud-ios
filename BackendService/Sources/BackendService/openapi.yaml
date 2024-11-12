@@ -141,6 +141,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+  /p/labeled:
+    get:
+      tags:
+        - Point Of Interests (POIs)
+      summary: List user labeled POIs
+      description: List user labeled POIs
+      operationId: listUserLabeledPOIs
+      parameters:
+        - name: Accept-Language
+          in: header
+          description: User language
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessResponse-ListUserLabeledPOIsResponse'
+        "500":
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - BearerAuth: []
   /p/saved:
     get:
       tags:
@@ -152,6 +180,18 @@ paths:
         - name: Accept-Language
           in: header
           description: User language
+          schema:
+            type: string
+        - name: page_size
+          in: query
+          description: Page Size
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: page_token
+          in: query
+          description: Page Token
           schema:
             type: string
       responses:
@@ -354,6 +394,13 @@ paths:
           required: true
           schema:
             type: string
+      requestBody:
+        description: add POI to saved list request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddPOIToSavedListRequest'
+        required: true
       responses:
         "200":
           description: Successful response
@@ -369,6 +416,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
       security:
         - BearerAuth: []
+      x-codegen-request-body-name: request
   /sv/nearby:
     get:
       tags:
@@ -1138,6 +1186,16 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
+    AddPOIToSavedListRequest:
+      type: object
+      properties:
+        label:
+          type: string
+          enum:
+            - UNSPECIFIED
+            - HOME
+            - WORK
+            - SCHOOL
     AddPOIToSavedListResponse:
       type: object
     AndroidCategoryIcon:
@@ -1235,6 +1293,16 @@ components:
             - systemCyan
         name:
           type: string
+    ListUserLabeledPOIsResponse:
+      type: object
+      properties:
+        labeled_pois:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/Poi'
+          description: |-
+            LabeledPOIs is a map of saved item labels to the list of POIs that are labeled with that label.
+            The key is SavedItemLabel which is a string enum with values: HOME, WORK, SCHOOL
     Login:
       type: object
       properties:
@@ -1577,6 +1645,30 @@ components:
             The Data could be an object or an array
           allOf:
             - $ref: '#/components/schemas/EditUserProfileResponse'
+        next_page_token:
+          type: string
+          description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data
+        ok:
+          type: boolean
+          description: |-
+            Ok is a boolean that will always be present to indicate if the response is a successful response or error one
+            in SuccessResponse it will always be true
+        total:
+          type: integer
+          description: Total (Optionally Present When the Data is an array) represent total number of items in Data
+    SuccessResponse-ListUserLabeledPOIsResponse:
+      required:
+        - data
+        - ok
+      type: object
+      properties:
+        data:
+          type: object
+          description: |-
+            Data is the response data if the status Ok is true
+            The Data could be an object or an array
+          allOf:
+            - $ref: '#/components/schemas/ListUserLabeledPOIsResponse'
         next_page_token:
           type: string
           description: NextPageToken (Optionally Present When the Data is an array) is a token to be used to fetch the next page of Data

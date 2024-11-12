@@ -63,7 +63,6 @@ struct RouteCardsView: View {
         if self.routes.count > 1 {
             return geometry.frame(in: .global).width - 50
         } else {
-            print(geometry.frame(in: .global).width)
             return geometry.frame(in: .global).width
         }
     }

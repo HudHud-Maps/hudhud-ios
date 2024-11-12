@@ -21,8 +21,9 @@ final class HudHudUITests: XCTestCase {
         // In UI tests it is usually best to stop immediately when a failure occurs.
         self.continueAfterFailure = false
 
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-        XCUIDevice.shared.location = XCUILocation(location: CLLocation(latitude: 24.65333, longitude: 46.71526))
+        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp
+        // method is a good place to do this.
+        XCUIDevice.shared.location = XCUILocation(location: .theGarage)
     }
 
     override func tearDownWithError() throws {
@@ -51,4 +52,18 @@ extension XCUIApplication {
         XCUIApplication.springboard.alerts[contains: "Hudhud"].waitForExists()
         XCUIApplication.springboard.alerts[contains: "Hudhud"].buttons.element(boundBy: 1).tap()
     }
+}
+
+extension CLLocation {
+
+    static func coordinate(_ coordinate: CLLocationCoordinate2D, altitude: CLLocationDistance = 0) -> CLLocation {
+        return CLLocation(coordinate: coordinate, altitude: altitude, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: .now)
+    }
+
+    static let theGarage: CLLocation = .coordinate(.theGarage, altitude: 647)
+}
+
+extension CLLocationCoordinate2D {
+
+    static let theGarage = CLLocationCoordinate2D(latitude: 24.7193306, longitude: 46.6468)
 }

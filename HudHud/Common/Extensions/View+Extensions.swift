@@ -36,10 +36,8 @@ struct ReadSizeModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .background(GeometryReader { proxy in
-                Color.clear.preference(
-                    key: SizePreferenceKey.self,
-                    value: proxy.size
-                )
+                Color.clear.preference(key: SizePreferenceKey.self,
+                                       value: proxy.size)
             })
             .onPreferenceChange(SizePreferenceKey.self, perform: self.onChange)
     }
@@ -55,7 +53,9 @@ extension View {
 
 private struct SafeAreaInsetsKey: EnvironmentKey {
     static var defaultValue: EdgeInsets {
-        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.swiftUiInsets ?? EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)
+        (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.windows.first?.safeAreaInsets.swiftUiInsets ?? EdgeInsets(top: 0, leading: 0,
+                                                                                                                                  bottom: 0,
+                                                                                                                                  trailing: 0)
     }
 }
 

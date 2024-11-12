@@ -78,6 +78,7 @@ final class SearchViewStore: ObservableObject {
     private let sheetStore: SheetStore
     private var task: Task<Void, Error>?
     private var hudhud = HudHudPOI()
+    private let navigationEngine: NavigationEngine
     private let sheetDetentPublisher: CurrentValueSubject<DetentData, Never>
     private var cancellables: Set<AnyCancellable> = []
 
@@ -92,26 +93,29 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        sheetStore: SheetStore,
-        filterStore: FilterStore,
-        mode: Mode,
-        sheetDetentPublisher: CurrentValueSubject<DetentData, Never>
-    ) {
+    init(mapStore: MapStore,
+         sheetStore: SheetStore,
+         filterStore: FilterStore,
+         mode: Mode,
+         navigationEngine: NavigationEngine,
+         sheetDetentPublisher: CurrentValueSubject<DetentData, Never>) {
         self.mapStore = mapStore
         self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.mode = mode
         self.sheetDetentPublisher = sheetDetentPublisher
+        self.navigationEngine = navigationEngine
 
         self.bindSearchAutoComplete()
         if case .preview = mode {
-            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
-            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
+            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh,
+                                       color: .systemRed)
+            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh,
+                                       color: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
         self.bindFilterSearch()
+        self.bindEndTrip()
     }
 
     // MARK: Functions
@@ -171,16 +175,14 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let currentUserLocation = await mapStore.userLocationStore.location(allowCached: true)
-            let items = try await hudhud.items(
-                for: category,
-                enterSearch: enterSearch,
-                topRated: self.filterStore.topRated,
-                priceRange: self.filterStore.priceSelection.hudHudPriceRange,
-                sortBy: self.filterStore.sortSelection.hudHudSortBy,
-                rating: Double(self.filterStore.ratingSelection.rawValue),
-                location: currentUserLocation?.coordinate,
-                baseURL: DebugStore().baseURL
-            )
+            let items = try await hudhud.items(for: category,
+                                               enterSearch: enterSearch,
+                                               topRated: self.filterStore.topRated,
+                                               priceRange: self.filterStore.priceSelection.hudHudPriceRange,
+                                               sortBy: self.filterStore.sortSelection.hudHudSortBy,
+                                               rating: Double(self.filterStore.ratingSelection.rawValue),
+                                               location: currentUserLocation?.coordinate,
+                                               baseURL: DebugStore().baseURL)
 
             var filteredItems = items
             // Apply 'open now' filter locally
@@ -194,10 +196,8 @@ final class SearchViewStore: ObservableObject {
             self.searchResults = displayableItems
             if !filteredItems.isEmpty {
                 self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
-                self.sheetDetentPublisher.value = DetentData(
-                    selectedDetent: .third,
-                    allowedDetents: [.third, .large]
-                )
+                self.sheetDetentPublisher.value = DetentData(selectedDetent: .third,
+                                                             allowedDetents: [.third, .large])
             }
         } catch {
             self.searchError = error
@@ -209,10 +209,8 @@ final class SearchViewStore: ObservableObject {
         self.searchText = ""
         self.searchResults = []
         self.mapStore.clearItems()
-        self.sheetDetentPublisher.value = DetentData(
-            selectedDetent: .third,
-            allowedDetents: [.small, .third, .large]
-        )
+        self.sheetDetentPublisher.value = DetentData(selectedDetent: .third,
+                                                     allowedDetents: [.small, .third, .large])
     }
 
     func applySearchResultsOnMapIfNeeded() {
@@ -372,8 +370,8 @@ private extension SearchViewStore {
     }
 
     func bindEndTrip() {
-        AppEvents.publisher
-            .filter { $0 == .stopNavigation }
+        self.navigationEngine.events
+            .filter { $0 == .navigationEnded }
             .sink { [weak self] _ in
                 self?.endTrip()
             }
@@ -385,11 +383,10 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(
-        mapStore: .storeSetUpForPreviewing,
-        sheetStore: .storeSetUpForPreviewing,
-        filterStore: .storeSetUpForPreviewing,
-        mode: .preview,
-        sheetDetentPublisher: CurrentValueSubject(SheetType.search.initialDetentData)
-    )
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing,
+                                                         sheetStore: .storeSetUpForPreviewing,
+                                                         filterStore: .storeSetUpForPreviewing,
+                                                         mode: .preview,
+                                                         navigationEngine: NavigationEngine(configuration: .default),
+                                                         sheetDetentPublisher: CurrentValueSubject(SheetType.search.initialDetentData))
 }

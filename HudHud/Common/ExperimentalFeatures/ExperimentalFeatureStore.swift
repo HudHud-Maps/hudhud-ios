@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 // MARK: - ExperimentalFeatureStore
 
@@ -19,42 +20,39 @@ final class ExperimentalFeatureStore {
 
     // MARK: Properties
 
-    var currentEnvironment: AppEnvironment = .inferred
+    var currentEnvironment: UIApplication.Environment = UIApplication.environment
 
-    private var features: [String: Any] = [:]
+    private var features: [String: Bool] = [:]
 
     // MARK: Lifecycle
 
     private init() {
-        loadFeatures()
+        self.loadFeatures()
     }
 
     // MARK: Functions
 
-    func getValue<T>(for feature: ExperimentalFeature) -> T? {
-        self.features[feature.rawValue] as? T
-    }
-
-    func setValue(_ value: some Any, for feature: ExperimentalFeature) {
-        self.features[feature.rawValue] = value
-        saveFeatures()
-    }
-
     func isEnabled(_ feature: ExperimentalFeature) -> Bool {
-        self.getValue(for: feature) ?? false
+        guard feature.isAllowed(for: self.currentEnvironment) else { return false }
+
+        return self.features[feature.featureDescription.description] ?? false
     }
 
     func setEnabled(_ enabled: Bool, for feature: ExperimentalFeature) {
-        self.setValue(enabled, for: feature)
+        self.features[feature.featureDescription.description] = enabled
+        self.saveFeatures()
     }
 }
 
+// MARK: - Private
+
 private extension ExperimentalFeatureStore {
+
     func saveFeatures() {
         UserDefaults.standard.set(self.features, forKey: "experimental_features")
     }
 
     func loadFeatures() {
-        self.features = UserDefaults.standard.dictionary(forKey: "experimental_features") ?? [:]
+        self.features = UserDefaults.standard.dictionary(forKey: "experimental_features") as? [String: Bool] ?? [:]
     }
 }

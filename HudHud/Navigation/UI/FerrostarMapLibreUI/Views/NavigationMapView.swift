@@ -56,18 +56,16 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     ///   - navigationState: The current ferrostar navigation state provided by ferrostar core.
     ///   - onStyleLoaded: The map's style has loaded and the camera can be manipulated (e.g. to user tracking).
     ///   - makeMapContent: Custom maplibre symbols to display on the map view.
-    public init(
-        makeViewController: @autoclosure @escaping () -> T,
-        locationManager: PassthroughLocationManager,
-        styleURL: URL,
-        camera: Binding<MapViewCamera>,
-        isNavigating: Bool,
-        onStyleLoaded: @escaping ((MLNStyle) -> Void),
-        @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] },
-        mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
-            transferView
-        }
-    ) {
+    public init(makeViewController: @autoclosure @escaping () -> T,
+                locationManager: PassthroughLocationManager,
+                styleURL: URL,
+                camera: Binding<MapViewCamera>,
+                isNavigating: Bool,
+                onStyleLoaded: @escaping ((MLNStyle) -> Void),
+                @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] },
+                mapViewModifiers: @escaping (_ view: MapView<T>, _ isNavigating: Bool) -> MapView<T> = { transferView, _ in
+                    transferView
+                }) {
         self.makeViewController = makeViewController
         self.locationManager = locationManager
         self.styleURL = styleURL
@@ -81,12 +79,10 @@ public struct NavigationMapView<T: MapViewHostViewController>: View {
     // MARK: Content
 
     public var body: some View {
-        MapView(
-            makeViewController: self.makeViewController(),
-            styleURL: self.styleURL,
-            camera: self.$camera,
-            locationManager: self.locationManager
-        ) {
+        MapView(makeViewController: self.makeViewController(),
+                styleURL: self.styleURL,
+                camera: self.$camera,
+                locationManager: self.locationManager) {
             self.userLayers
         }
 
