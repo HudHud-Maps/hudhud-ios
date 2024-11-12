@@ -19,7 +19,7 @@ final class FavoritesStore: ObservableObject {
 
     @Published var favoritesItems: [FavoritesItem] = []
     @Published var showLoginSheet = false
-    @Published var poisStatusChanged = false
+    @Published var isMarkedAsFavourite = false
     @Published var labelMessage = ""
 
     @AppStorage("favorites") private var storedFavorites: String = ""
@@ -43,7 +43,7 @@ final class FavoritesStore: ObservableObject {
     func saveFavorites() {
         let favorites = FavoritesResolvedItems(items: favoritesItems)
         self.storedFavorites = favorites.rawValue
-        self.poisStatusChanged = true
+        self.isMarkedAsFavourite = true
     }
 
     func isFavorites(item: ResolvedItem) -> Bool {
@@ -72,7 +72,7 @@ final class FavoritesStore: ObservableObject {
             self.handleNewItem(of: newFavoriteItem)
         }
 
-        self.poisStatusChanged = true
+        self.isMarkedAsFavourite = true
         self.labelMessage = "Saved to your favorites"
         self.saveFavorites()
         self.showLoginSheet = false
@@ -110,15 +110,14 @@ private extension FavoritesStore {
         }
     }
 
-    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?, type: String) -> FavoritesItem {
-        return FavoritesItem(
-            id: UUID(),
-            title: title,
-            tintColor: tintColor,
-            item: item,
-            description: description,
-            type: type
-        )
+    func createFavoritesItem(title: String, tintColor: FavoritesItem.TintColor, item: ResolvedItem?, description: String?,
+                             type: String) -> FavoritesItem {
+        return FavoritesItem(id: UUID(),
+                             title: title,
+                             tintColor: tintColor,
+                             item: item,
+                             description: description,
+                             type: type)
     }
 
     func updateExistingItem(at index: Int, with newItem: FavoritesItem) {

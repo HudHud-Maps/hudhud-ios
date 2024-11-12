@@ -294,7 +294,7 @@ struct POIDetailSheet: View {
             self.pointOfInterestStore.reApplyThePointOfInterestToTheMapIfNeeded()
         }
         // Displays a simple toast message when user tap save icon to save poi
-        .simpleToast(isPresented: self.$favoritesStore.poisStatusChanged,
+        .simpleToast(isPresented: self.$favoritesStore.isMarkedAsFavourite,
                      options: SimpleToastOptions(alignment: .bottom, hideAfter: 2, animation: .easeIn, modifierType: .fade), content: {
                          Label(self.favoritesStore.labelMessage, systemSymbol: .checkmarkCircleFill)
                              .padding(.vertical, 12)
