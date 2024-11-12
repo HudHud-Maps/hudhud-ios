@@ -228,11 +228,6 @@ private extension MapViewContainer {
                                      MLNPointFeature(coordinate: alert.alertType.coordinate)
                                  })
                                  .iconImage(alert.alertType.mapIcon)
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
-                                 source: ShapeSource(identifier: "alert") {
-                                     MLNPointFeature(coordinate: alert.alertType.coordinate)
-                                 })
-                                 .iconImage(alert.alertType.mapIcon)
             ]
         }
         return layers
