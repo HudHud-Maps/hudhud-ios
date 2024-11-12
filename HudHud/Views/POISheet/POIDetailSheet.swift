@@ -173,13 +173,10 @@ struct POIDetailSheet: View {
                                     .cornerRadius(14)
                             }
 
-                            if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
-                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab,
-                                                 photoStore: self.photoStore, cameraStore: self.cameraStore)
-                                    .background(Color.Colors.General._05WhiteBackground)
-                                    .cornerRadius(14)
-                                    .padding(.vertical)
-                            }
+                            PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab,
+                                             photoStore: self.photoStore, cameraStore: self.cameraStore)
+                                .background(Color.Colors.General._05WhiteBackground)
+                                .cornerRadius(14)
 
                         case .photos:
                             PhotoTabView(item: self.pointOfInterestStore.pointOfInterest, selectedMedia: self.$selectedMedia)
@@ -214,8 +211,8 @@ struct POIDetailSheet: View {
                         }
                     }
                     .padding(10)
-                    .padding(.bottom, 100)
                 }
+                .padding(.bottom, 80)
                 .scrollIndicators(.hidden)
                 .background(Color.Colors.General._03LightGrey)
                 .overlay(alignment: .bottomTrailing) {

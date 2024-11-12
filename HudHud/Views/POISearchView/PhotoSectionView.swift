@@ -86,13 +86,14 @@ private extension PhotoSectionView {
     @ViewBuilder
     func noImagesView() -> some View {
         Text("There is no photo added yet! Be the first to add one.")
-            .hudhudFontStyle(.labelXxsmall)
+            .hudhudFontStyle(.labelXsmall)
             .foregroundColor(Color.Colors.General._02Grey)
 
         HStack {
             Spacer()
             self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: true) {
                 // Action for Add Photo
+                self.cameraStore.showAddPhotoConfirmation.toggle()
             }
             Spacer()
         }
@@ -165,7 +166,7 @@ private extension PhotoSectionView {
                     self.selectedTab = .photos
                 }
             }
-            self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count > 5 ? true : false) {
+            self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count >= 5 ? true : false) {
                 // Action for add Photo
                 self.cameraStore.showAddPhotoConfirmation.toggle()
             }
