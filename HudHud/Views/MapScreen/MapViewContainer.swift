@@ -314,10 +314,8 @@ private extension MapViewContainer {
                                         coordinate: gesture.coordinate,
                                         color: .systemRed)
         self.sheetStore.show(.pointOfInterest(generatedPOI))
-        self.sheetStore.currentSheet.detentData.value = DetentData(
-            selectedDetent: .height(140),
-            allowedDetents: [.height(140)]
-        )
+        self.sheetStore.currentSheet.detentData.value = DetentData(selectedDetent: .height(140),
+                                                                   allowedDetents: [.height(140)])
     }
 
     func configureMapViewController(_ mapViewController: MapViewController) {

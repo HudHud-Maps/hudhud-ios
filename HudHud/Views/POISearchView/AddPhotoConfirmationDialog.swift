@@ -31,11 +31,9 @@ struct AddPhotoConfirmationDialog: ViewModifier {
 }
 
 extension View {
-    func addPhotoConfirmationDialog(
-        isPresented: Binding<Bool>,
-        onCameraAction: @escaping () -> Void,
-        onLibraryAction: @escaping () -> Void
-    ) -> some View {
+    func addPhotoConfirmationDialog(isPresented: Binding<Bool>,
+                                    onCameraAction: @escaping () -> Void,
+                                    onLibraryAction: @escaping () -> Void) -> some View {
         self.modifier(AddPhotoConfirmationDialog(isPresented: isPresented, onCameraAction: onCameraAction, onLibraryAction: onLibraryAction))
     }
 }

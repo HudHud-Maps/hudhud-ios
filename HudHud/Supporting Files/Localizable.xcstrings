@@ -424,7 +424,13 @@
     "Location Needed" : {
 
     },
+    "Log in to save this location" : {
+
+    },
     "Log Out" : {
+
+    },
+    "Login or Sign up" : {
 
     },
     "Map Details" : {
@@ -667,6 +673,9 @@
 
     },
     "There is no photo added yet! Be the first to add one." : {
+
+    },
+    "To save this location you need to log In or sign up." : {
 
     },
     "Touch Visualizer" : {

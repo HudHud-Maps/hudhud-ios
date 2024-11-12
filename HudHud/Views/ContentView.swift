@@ -121,7 +121,8 @@ struct ContentView: View {
                                 searchStore: freshSearchViewStore,
                                 trendingStore: self.trendingStore,
                                 sheetStore: self.sheetStore,
-                                filterStore: self.searchViewStore.filterStore)
+                                filterStore: self.searchViewStore.filterStore,
+                                favoritesStore: self.favoritesStore)
                         .navigationBarBackButtonHidden()
                 case .favorites:
                     // Initialize fresh instances of MapStore and SearchViewStore
@@ -140,7 +141,8 @@ struct ContentView: View {
                                 searchStore: freshSearchViewStore,
                                 trendingStore: self.trendingStore,
                                 sheetStore: SheetStore(emptySheetType: .search),
-                                filterStore: self.searchViewStore.filterStore)
+                                filterStore: self.searchViewStore.filterStore,
+                                favoritesStore: self.favoritesStore)
                 case .navigationPreview:
                     NavigationSheetView(routingStore: self.searchViewStore.routingStore, sheetStore: self.sheetStore)
                         .navigationBarBackButtonHidden()
@@ -148,7 +150,9 @@ struct ContentView: View {
                 case let .pointOfInterest(item):
                     POIDetailSheet(pointOfInterestStore: PointOfInterestStore(pointOfInterest: item,
                                                                               mapStore: self.mapStore,
-                                                                              sheetStore: self.sheetStore), sheetStore: self.sheetStore,
+                                                                              sheetStore: self.sheetStore),
+                                   sheetStore: self.sheetStore,
+                                   favoritesStore: self.favoritesStore,
                                    routingStore: self.searchViewStore.routingStore,
                                    didDenyLocationPermission: self.userLocationStore.permissionStatus.didDenyLocationPermission) { routeIfAvailable in
                         Logger.searchView.info("Start item \(item)")
@@ -195,9 +199,12 @@ struct ContentView: View {
                                 searchStore: self.searchViewStore,
                                 trendingStore: self.trendingStore,
                                 sheetStore: self.sheetStore,
-                                filterStore: self.searchViewStore.filterStore)
+                                filterStore: self.searchViewStore.filterStore,
+                                favoritesStore: self.favoritesStore)
                         .background(Color(.Colors.General._05WhiteBackground))
                         .toolbar(.hidden)
+                case .loginNeeded:
+                    LoginToSavePOIView(sheetStore: self.sheetStore)
                 }
             }
             .task {
