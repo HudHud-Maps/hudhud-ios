@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+// MARK: - RoutePlannerMapOverlayView
+
 struct RoutePlannerMapOverlayView: View {
 
     // MARK: Properties
@@ -47,7 +49,18 @@ struct RoutePlannerMapOverlayView: View {
             Spacer()
             RouteCardsView(
                 routes: (self.routePlannerStore.routePlan?.routes ?? []).map {
-                    RouteViewData(id: $0.id, distance: "\($0.distance)", duration: "\($0.duration)", summary: "some summary")
+                    RouteViewData(
+                        id: $0.id,
+                        distance: distanceFormatter.string(
+                            from: Measurement.meters($0.distance)
+                                .converted(to: .kilometers)
+                        ),
+                        duration: durationFormatter.string(
+                            from: Date(),
+                            to: Date(timeIntervalSinceNow: $0.duration)
+                        ) ?? "",
+                        summary: "A close destination"
+                    )
                 },
                 selectedRoute: Binding(
                     get: { self.routePlannerStore.routePlan?.selectedRoute.id },
@@ -67,3 +80,18 @@ struct RoutePlannerMapOverlayView: View {
 #Preview {
     RoutePlannerMapOverlayView(routePlannerStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
 }
+
+private let distanceFormatter: MeasurementFormatter = {
+    let distanceFormatter = MeasurementFormatter()
+    distanceFormatter.unitOptions = .providedUnit
+    distanceFormatter.unitStyle = .medium
+    return distanceFormatter
+}()
+
+private let durationFormatter: DateComponentsFormatter = {
+    let formatter = DateComponentsFormatter()
+    formatter.allowedUnits = [.hour, .minute]
+    formatter.unitsStyle = .brief
+    formatter.zeroFormattingBehavior = .dropAll
+    return formatter
+}()

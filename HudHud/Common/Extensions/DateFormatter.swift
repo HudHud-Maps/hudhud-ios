@@ -29,7 +29,7 @@ extension Double {
     }
 }
 
-let distanceFormatter: MeasurementFormatter = {
+private let distanceFormatter: MeasurementFormatter = {
     let distanceFormatter = MeasurementFormatter()
     distanceFormatter.unitOptions = .providedUnit
     distanceFormatter.unitStyle = .medium
