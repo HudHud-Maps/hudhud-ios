@@ -20,7 +20,9 @@ final class RoutePlannerStore {
 
     // MARK: Properties
 
-    private(set) var state: RoutePlanningState = .initialLoading
+    private(set) var routePlan: RoutePlan?
+    private(set) var isLoading = false
+    private(set) var routeFetchingError: RoutePlanningError?
 
     private let initialDestination: DestinationPointOfInterest
     private let sheetStore: SheetStore
@@ -40,6 +42,18 @@ final class RoutePlannerStore {
         didSet {
             updateHeight()
         }
+    }
+
+    var canSwap: Bool {
+        (self.routePlan?.waypoints.count ?? 0) == 2
+    }
+
+    var canRemove: Bool {
+        (self.routePlan?.waypoints.count ?? 0) > 2
+    }
+
+    var canMove: Bool {
+        (self.routePlan?.waypoints.count ?? 0) > 2
     }
 
     // MARK: Lifecycle
@@ -69,58 +83,74 @@ final class RoutePlannerStore {
     func addNewRoute() {
         self.sheetStore.show(
             .navigationAddSearchView { [weak self] newDestination in
-                guard let self else { return }
-                self.state.destinations.append(RouteWaypoint(
+                guard let self, var routePlan else { return }
+                routePlan.waypoints.append(RouteWaypoint(
                     type: .location(newDestination),
                     title: newDestination.title
                 ))
+                self.routePlan = routePlan
                 self.updateHeight()
                 Task {
-                    await self.fetchRoutePlan(for: self.state.destinations)
+                    await self.fetchRoutePlan(for: routePlan.waypoints)
                 }
             }
         )
     }
 
     func startNavigation() {
-        guard let selectedRoute = self.state.selectedRoute else { return }
+        guard let selectedRoute = self.routePlan?.selectedRoute else { return }
         self.routesPlanMapDrawer.clear()
         AppEvents.publisher.send(.startNavigation(selectedRoute))
     }
 
     func swap() async {
-        guard self.state.canSwap else { return }
-        self.state.destinations.reverse()
-        let destinations = self.state.destinations
-        self.state = .initialLoading
+        guard var routePlan, self.canSwap else { return }
+        routePlan.waypoints.reverse()
+        self.routePlan = routePlan
+        let destinations = routePlan.waypoints
         await self.fetchRoutePlan(for: destinations)
     }
 
     func remove(_ destination: RouteWaypoint) async {
-        self.state.destinations.removeAll(where: { $0 == destination })
+        guard var routePlan else { return }
+        routePlan.waypoints.removeAll(where: { $0 == destination })
+        self.routePlan = routePlan
         self.updateHeight()
-        await self.fetchRoutePlan(for: self.state.destinations)
+        await self.fetchRoutePlan(for: routePlan.waypoints)
     }
 
     func moveDestinations(fromOffsets: IndexSet, toOffset: Int) async {
-        guard self.state.canMove else { return }
-        self.state.destinations.move(fromOffsets: fromOffsets, toOffset: toOffset)
-        await self.fetchRoutePlan(for: self.state.destinations)
+        guard var routePlan, self.canMove else { return }
+        routePlan.waypoints.move(fromOffsets: fromOffsets, toOffset: toOffset)
+        await self.fetchRoutePlan(for: routePlan.waypoints)
+    }
+
+    func cancel() {
+        self.routesPlanMapDrawer.clear()
+        self.sheetStore.popSheet()
+    }
+
+    func selectRoute(withID routeID: Int) {
+        if var routePlan,
+           let newSelectedRoute = routePlan.routes.first(where: { $0.id == routeID }) {
+            routePlan.selectedRoute = newSelectedRoute
+            self.routePlan = routePlan
+            self.drawRoutes(in: routePlan)
+        }
     }
 }
 
 private extension RoutePlannerStore {
     func updateHeight() {
         let height: CGFloat
-        switch self.state {
-        case .initialLoading, .locationNotEnabled, .errorFetchignRoute:
-            height = 60
-        case let .loaded(plan):
+        if let routePlan {
             let buttonHeight: CGFloat = 56
-            let listHeight = CGFloat(plan.waypoints.count) * self.rowHeight
+            let listHeight = CGFloat(routePlan.waypoints.count) * self.rowHeight
             let addStopHeight = self.rowHeight
             let padding: CGFloat = 16
             height = buttonHeight + listHeight + addStopHeight + padding
+        } else {
+            height = 60
         }
         self.sheetDetentPublisher?.value = DetentData(
             selectedDetent: .height(height),
@@ -130,7 +160,7 @@ private extension RoutePlannerStore {
 
     func fetchRoutePlanForFirstTime() async {
         guard let userLocation = await self.userLocationStore.location(allowCached: false) else {
-            self.state = .locationNotEnabled
+            self.routeFetchingError = .locationNotEnabled
             return
         }
         let initialDestinations: [RouteWaypoint] = [
@@ -150,8 +180,12 @@ private extension RoutePlannerStore {
     }
 
     func fetchRoutePlan(for destinations: [RouteWaypoint]) async {
+        self.isLoading = true
+        self.updateHeight()
+        defer { self.isLoading = false }
+
         guard destinations.count > 1 else {
-            self.state = .errorFetchignRoute
+            self.routeFetchingError = .errorFetchingRoute
             return
         }
         defer { self.updateHeight() }
@@ -186,11 +220,11 @@ private extension RoutePlannerStore {
                 routes: routes,
                 selectedRoute: selectedRoute
             )
-            self.state = .loaded(plan: plan)
+            self.routePlan = plan
             self.drawRoutes(in: plan)
             self.updateHeight()
         } catch {
-            self.state = .errorFetchignRoute
+            self.routeFetchingError = .errorFetchingRoute
         }
     }
 
@@ -207,12 +241,7 @@ private extension RoutePlannerStore {
             guard let self else { return }
             switch event {
             case let .didSelectRoute(routeID):
-                if case var .loaded(plan) = self.state,
-                   let newSelectedRoute = plan.routes.first(where: { $0.id == routeID }) {
-                    plan.selectedRoute = newSelectedRoute
-                    self.state = .loaded(plan: plan)
-                    self.drawRoutes(in: plan)
-                }
+                self.selectRoute(withID: routeID)
             }
         }
     }

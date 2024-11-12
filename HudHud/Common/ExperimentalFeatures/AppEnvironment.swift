@@ -39,7 +39,7 @@ enum AppEnvironment: String, CaseIterable {
                 return .development
             }
 
-            return .appStore
+            return .production
         #endif
     }
 }

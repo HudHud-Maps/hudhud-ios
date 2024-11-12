@@ -85,7 +85,8 @@ func sheetProviderBuilder(
         case let .routePlanner(routePlannerStore):
             routePlannerStore.sheetDetentPublisher = context.detentData
             return RoutePlannerSheetProvider(
-                routePlannerStore: routePlannerStore
+                routePlannerStore: routePlannerStore,
+                sheetStore: context.sheetStore
             )
         case let .favoritesViewMore(searchViewStore):
             return FavoritesViewMoreSheetProvider(

@@ -19,10 +19,9 @@ struct RoutePlannerView: View {
     // MARK: Content
 
     var body: some View {
-        switch self.routePlannerStore.state {
-        case .initialLoading, .errorFetchignRoute, .locationNotEnabled:
+        if self.routePlannerStore.isLoading {
             ProgressView()
-        case .loaded:
+        } else {
             RoutePlanView(routePlannderStore: self.routePlannerStore)
         }
     }
@@ -45,7 +44,7 @@ struct RoutePlanView: View {
                 .frame(width: 36, height: 5)
             List {
                 Section {
-                    ForEach(self.routePlannderStore.state.destinations) { destination in
+                    ForEach(self.routePlannderStore.routePlan?.waypoints ?? []) { destination in
                         VStack(alignment: .destinationIconCenterAlignment, spacing: .zero) {
                             RoutePlannerRow(
                                 destination: destination,
@@ -64,7 +63,7 @@ struct RoutePlanView: View {
                             )
                         }
                     }
-                    .moveDisabled(!self.routePlannderStore.state.canMove)
+                    .moveDisabled(!self.routePlannderStore.canMove)
                     VStack(alignment: .destinationIconCenterAlignment, spacing: .zero) {
                         AddMoreRoute {
                             self.routePlannderStore.addNewRoute()
@@ -87,8 +86,8 @@ struct RoutePlanView: View {
     // MARK: Functions
 
     func swapActionIfCanSwap(for destination: RouteWaypoint) -> (() -> Void)? {
-        if self.routePlannderStore.state.destinations.first == destination,
-           self.routePlannderStore.state.canSwap {
+        if self.routePlannderStore.routePlan?.waypoints.first == destination,
+           self.routePlannderStore.canSwap {
             {
                 Task {
                     await self.routePlannderStore.swap()
@@ -100,7 +99,7 @@ struct RoutePlanView: View {
     }
 
     func deleteActionIfCanDelete(for destination: RouteWaypoint) -> (() -> Void)? {
-        if self.routePlannderStore.state.canRemove {
+        if self.routePlannderStore.canRemove {
             {
                 Task {
                     await self.routePlannderStore.remove(destination)
