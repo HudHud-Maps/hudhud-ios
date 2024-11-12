@@ -23,10 +23,8 @@ public class OverlayContentStore: ObservableObject {
 }
 
 public extension NavigationOverlayContent {
-    func withNavigationOverlay(
-        _ zone: NavigationOverlayZone,
-        @ViewBuilder content: @escaping () -> some View
-    ) -> Self {
+    func withNavigationOverlay(_ zone: NavigationOverlayZone,
+                               @ViewBuilder content: @escaping () -> some View) -> Self {
         let newSelf = self
         newSelf.overlayStore.content[zone] = { AnyView(content()) }
         return newSelf

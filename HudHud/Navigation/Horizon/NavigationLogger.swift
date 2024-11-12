@@ -14,7 +14,10 @@ enum NavigationLogger {
     // MARK: Nested Types
 
     enum LogLevel {
-        case debug, info, error, success
+        case debug
+        case info
+        case error
+        case success
 
         // MARK: Computed Properties
 

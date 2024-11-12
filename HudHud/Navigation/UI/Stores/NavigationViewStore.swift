@@ -80,12 +80,9 @@ final class NavigationStore {
 
     // MARK: Lifecycle
 
-    init(
-        navigationEngine: NavigationEngine,
-        locationEngine: LocationEngine,
-        routesPlanMapDrawer: RoutesPlanMapDrawer
-
-    ) {
+    init(navigationEngine: NavigationEngine,
+         locationEngine: LocationEngine,
+         routesPlanMapDrawer: RoutesPlanMapDrawer) {
         self.navigationEngine = navigationEngine
         self.locationEngine = locationEngine
         self.routesPlanMapDrawer = routesPlanMapDrawer
@@ -215,12 +212,10 @@ private extension NavigationStore {
             let progress = (1 - (distance.meters / speedCamAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
             withAnimation(.easeInOut(duration: 0.15)) {
-                self.state.navigationAlert = NavigationAlert(
-                    id: camera.id,
-                    progress: clampedProgress,
-                    alertType: .speedCamera(camera),
-                    alertDistance: Int(distance.meters)
-                )
+                self.state.navigationAlert = NavigationAlert(id: camera.id,
+                                                             progress: clampedProgress,
+                                                             alertType: .speedCamera(camera),
+                                                             alertDistance: Int(distance.meters))
             }
         case let .passedSpeedCamera(camera):
             if self.state.navigationAlert?.id == camera.id {
@@ -232,12 +227,10 @@ private extension NavigationStore {
             let incidentAlertDistance = TrafficIncidentAlertConfig.default.initialAlertDistance
             let progress = (1 - (distance.meters / incidentAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
-            self.state.navigationAlert = NavigationAlert(
-                id: incident.id,
-                progress: clampedProgress,
-                alertType: .carAccident(incident),
-                alertDistance: Int(distance.meters)
-            )
+            self.state.navigationAlert = NavigationAlert(id: incident.id,
+                                                         progress: clampedProgress,
+                                                         alertType: .carAccident(incident),
+                                                         alertDistance: Int(distance.meters))
         case let .passedTrafficIncident(incident):
             if self.state.navigationAlert?.id == incident.id {
                 self.state.navigationAlert = nil

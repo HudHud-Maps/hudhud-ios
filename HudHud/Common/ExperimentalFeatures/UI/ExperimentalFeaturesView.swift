@@ -64,14 +64,12 @@ struct FeatureToggleRow: View {
     // MARK: Content
 
     var body: some View {
-        Toggle(isOn: Binding(
-            get: { self.store.isEnabled(self.feature) },
-            set: { self.store.setEnabled($0, for: self.feature) }
-        ), label: {
-            Text(self.feature.featureDescription.description)
-        })
-        .toggleStyle(EnableableToggleStyle())
-        .enabled(self.feature.isAllowed(for: self.store.currentEnvironment))
+        Toggle(isOn: Binding(get: { self.store.isEnabled(self.feature) },
+                             set: { self.store.setEnabled($0, for: self.feature) }), label: {
+                Text(self.feature.featureDescription.description)
+            })
+            .toggleStyle(EnableableToggleStyle())
+            .enabled(self.feature.isAllowed(for: self.store.currentEnvironment))
     }
 }
 

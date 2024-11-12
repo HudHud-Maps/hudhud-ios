@@ -17,7 +17,8 @@ import SwiftUI
 
 /// A landscape orientation navigation view that includes the InstructionsView and ArrivalView on the
 /// leading half of the screen.
-public struct LandscapeNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost, NavigationOverlayContent {
+public struct LandscapeNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost,
+NavigationOverlayContent {
 
     // MARK: Properties
 
@@ -50,19 +51,17 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
 
     // MARK: Lifecycle
 
-    public init(
-        makeViewController: @escaping @autoclosure () -> T,
-        overlayStore: OverlayContentStore,
-        locationManager: PassthroughLocationManager,
-        styleURL: URL,
-        camera: Binding<MapViewCamera>,
-        navigationCamera: MapViewCamera = .automotiveNavigation(),
-        isNavigating: Bool,
-        isMuted: Bool,
-        minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
-        onTapMute: @escaping () -> Void,
-        @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }
-    ) {
+    public init(makeViewController: @escaping @autoclosure () -> T,
+                overlayStore: OverlayContentStore,
+                locationManager: PassthroughLocationManager,
+                styleURL: URL,
+                camera: Binding<MapViewCamera>,
+                navigationCamera: MapViewCamera = .automotiveNavigation(),
+                isNavigating: Bool,
+                isMuted: Bool,
+                minimumSafeAreaInsets: EdgeInsets = EdgeInsets(top: 16, leading: 16, bottom: 16, trailing: 16),
+                onTapMute: @escaping () -> Void,
+                @MapViewContentBuilder makeMapContent: () -> [StyleLayerDefinition] = { [] }) {
         self.makeViewController = makeViewController
         self.overlayStore = overlayStore
         self.locationManager = locationManager
@@ -81,41 +80,37 @@ public struct LandscapeNavigationView<T: MapViewHostViewController>: View, Custo
     public var body: some View {
         GeometryReader { geometry in
             ZStack {
-                NavigationMapView(
-                    makeViewController: self.makeViewController(),
-                    locationManager: self.locationManager,
-                    styleURL: self.styleURL,
-                    camera: self.$camera,
-                    isNavigating: self.isNavigating,
-                    onStyleLoaded: { _ in
-                        self.camera = self.navigationCamera
-                    }, makeMapContent: {
-                        self.userLayers
-                    }
-                )
-                .navigationMapViewContentInset(.landscape(within: geometry))
+                NavigationMapView(makeViewController: self.makeViewController(),
+                                  locationManager: self.locationManager,
+                                  styleURL: self.styleURL,
+                                  camera: self.$camera,
+                                  isNavigating: self.isNavigating,
+                                  onStyleLoaded: { _ in
+                                      self.camera = self.navigationCamera
+                                  }, makeMapContent: {
+                                      self.userLayers
+                                  })
+                                  .navigationMapViewContentInset(.landscape(within: geometry))
 
-                LandscapeNavigationOverlayView(
-                    overlayStore: self.overlayStore,
-                    speedLimit: self.speedLimit,
-                    isMuted: self.isMuted,
-                    showMute: true,
-                    onMute: self.onTapMute,
-                    showZoom: true,
-                    onZoomIn: { self.camera.incrementZoom(by: 1) },
-                    onZoomOut: { self.camera.incrementZoom(by: -1) },
-                    showCentering: !self.camera.isTrackingUserLocationWithCourse,
-                    onCenter: { self.camera = self.navigationCamera }
-                )
-                .innerGrid {
-                    self.topCenter?()
-                } topTrailing: {
-                    self.topTrailing?()
-                } midLeading: {
-                    self.midLeading?()
-                } bottomTrailing: {
-                    self.bottomTrailing?()
-                }.complementSafeAreaInsets(parentGeometry: geometry, minimumInsets: self.minimumSafeAreaInsets)
+                LandscapeNavigationOverlayView(overlayStore: self.overlayStore,
+                                               speedLimit: self.speedLimit,
+                                               isMuted: self.isMuted,
+                                               showMute: true,
+                                               onMute: self.onTapMute,
+                                               showZoom: true,
+                                               onZoomIn: { self.camera.incrementZoom(by: 1) },
+                                               onZoomOut: { self.camera.incrementZoom(by: -1) },
+                                               showCentering: !self.camera.isTrackingUserLocationWithCourse,
+                                               onCenter: { self.camera = self.navigationCamera })
+                    .innerGrid {
+                        self.topCenter?()
+                    } topTrailing: {
+                        self.topTrailing?()
+                    } midLeading: {
+                        self.midLeading?()
+                    } bottomTrailing: {
+                        self.bottomTrailing?()
+                    }.complementSafeAreaInsets(parentGeometry: geometry, minimumInsets: self.minimumSafeAreaInsets)
             }
         }
     }

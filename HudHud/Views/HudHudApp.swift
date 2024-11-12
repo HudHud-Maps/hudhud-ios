@@ -42,16 +42,14 @@ struct HudHudApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView(
-                searchViewStore: self.searchStore,
-                mapViewStore: self.mapViewStore,
-                sheetStore: self.sheetStore,
-                routesPlanMapDrawer: self.routesPlanMapDrawer,
-                navigationStore: self.navigationStore
-            )
-            .onAppear {
-                self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
-            }
+            ContentView(searchViewStore: self.searchStore,
+                        mapViewStore: self.mapViewStore,
+                        sheetStore: self.sheetStore,
+                        routesPlanMapDrawer: self.routesPlanMapDrawer,
+                        navigationStore: self.navigationStore)
+                .onAppear {
+                    self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
+                }
         }
     }
 
@@ -69,21 +67,18 @@ struct HudHudApp: App {
         let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
         let routingStore = RoutingStore(mapStore: mapStore, routesPlanMapDrawer: routesPlanMapDrawer)
         self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
-        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared, mode: .live(provider: .hudhud))
+        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared,
+                                           mode: .live(provider: .hudhud))
         self.mapStore = mapStore
 
-        self.navigationStore = NavigationStore(
-            navigationEngine: AppDpendencies.navigationEngine,
-            locationEngine: AppDpendencies.locationEngine,
-            routesPlanMapDrawer: routesPlanMapDrawer
-        )
+        self.navigationStore = NavigationStore(navigationEngine: AppDpendencies.navigationEngine,
+                                               locationEngine: AppDpendencies.locationEngine,
+                                               routesPlanMapDrawer: routesPlanMapDrawer)
 
         // Create a custom URLCache to store images on disk
-        let diskCache = URLCache(
-            memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
-            diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
-            diskPath: "sa.hudhud.hudhud.imageCache"
-        )
+        let diskCache = URLCache(memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache
+                                 diskCapacity: 1000 * 1024 * 1024, // 1 GB disk cache
+                                 diskPath: "sa.hudhud.hudhud.imageCache")
 
         // Create a DataLoader with custom URLCache
         let dataLoader = DataLoader(configuration: {

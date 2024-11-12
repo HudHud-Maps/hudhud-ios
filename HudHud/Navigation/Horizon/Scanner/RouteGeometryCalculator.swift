@@ -80,11 +80,9 @@ final class RouteGeometryCalculator {
         return newPosition
     }
 
-    func calculateDistanceAlongRoute(
-        from userLocation: CLLocationCoordinate2D,
-        to featureLocation: CLLocationCoordinate2D,
-        featureId: String
-    ) -> CLLocationDistance {
+    func calculateDistanceAlongRoute(from userLocation: CLLocationCoordinate2D,
+                                     to featureLocation: CLLocationCoordinate2D,
+                                     featureId: String) -> CLLocationDistance {
         let userPosition = self.findPosition(for: userLocation)
         let featurePosition = self.findPosition(for: featureLocation)
 
@@ -125,11 +123,9 @@ final class RouteGeometryCalculator {
         return distance
     }
 
-    func isMovingTowardsFeature(
-        userLocation: CLLocationCoordinate2D,
-        featureLocation: CLLocationCoordinate2D,
-        userCourse _: CLLocationDirection
-    ) -> Bool {
+    func isMovingTowardsFeature(userLocation: CLLocationCoordinate2D,
+                                featureLocation: CLLocationCoordinate2D,
+                                userCourse _: CLLocationDirection) -> Bool {
         let featurePosition = self.findPosition(for: featureLocation)
         let userPosition = self.findPosition(for: userLocation)
 
@@ -172,14 +168,12 @@ private extension RouteGeometryCalculator {
         for i in 0 ..< (self.geometry.count - 1) {
             let start = self.geometry[i]
             let end = self.geometry[i + 1]
-            let segment = RouteSegment(
-                startIndex: i,
-                endIndex: i + 1,
-                startPoint: start,
-                endPoint: end,
-                distance: start.distance(to: end),
-                bearing: start.bearing(to: end)
-            )
+            let segment = RouteSegment(startIndex: i,
+                                       endIndex: i + 1,
+                                       startPoint: start,
+                                       endPoint: end,
+                                       distance: start.distance(to: end),
+                                       bearing: start.bearing(to: end))
             self.cachedSegments.append(segment)
         }
     }
@@ -196,11 +190,9 @@ private extension RouteGeometryCalculator {
         return totalBearing / Double(segments.count)
     }
 
-    func distanceToLineSegment(
-        point: CLLocationCoordinate2D,
-        start: CLLocationCoordinate2D,
-        end: CLLocationCoordinate2D
-    ) -> (distance: CLLocationDistance, projectedDistance: CLLocationDistance) {
+    func distanceToLineSegment(point: CLLocationCoordinate2D,
+                               start: CLLocationCoordinate2D,
+                               end: CLLocationCoordinate2D) -> (distance: CLLocationDistance, projectedDistance: CLLocationDistance) {
         let startToPoint = CLLocation(latitude: point.latitude, longitude: point.longitude)
             .distance(from: CLLocation(latitude: start.latitude, longitude: start.longitude))
         let startToEnd = CLLocation(latitude: start.latitude, longitude: start.longitude)
@@ -230,11 +222,9 @@ private extension RouteGeometryCalculator {
         return (distance, projectedDistance)
     }
 
-    func dot(
-        _ point: CLLocationCoordinate2D,
-        _ start: CLLocationCoordinate2D,
-        _ end: CLLocationCoordinate2D
-    ) -> Double {
+    func dot(_ point: CLLocationCoordinate2D,
+             _ start: CLLocationCoordinate2D,
+             _ end: CLLocationCoordinate2D) -> Double {
         let px = point.longitude - start.longitude
         let py = point.latitude - start.latitude
         let ex = end.longitude - start.longitude
@@ -242,11 +232,9 @@ private extension RouteGeometryCalculator {
         return px * ex + py * ey
     }
 
-    func interpolate(
-        start: CLLocationCoordinate2D,
-        end: CLLocationCoordinate2D,
-        t: Double
-    ) -> CLLocationCoordinate2D {
+    func interpolate(start: CLLocationCoordinate2D,
+                     end: CLLocationCoordinate2D,
+                     t: Double) -> CLLocationCoordinate2D {
         let lat = start.latitude + (end.latitude - start.latitude) * t
         let lon = start.longitude + (end.longitude - start.longitude) * t
         return CLLocationCoordinate2D(latitude: lat, longitude: lon)
