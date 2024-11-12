@@ -40,37 +40,33 @@ struct TripInfoContianerView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(.white)
-                        .shadow(
-                            color: .black.opacity(0.05),
-                            radius: 8,
-                            x: 0,
-                            y: 4
-                        )
+                        .shadow(color: .black.opacity(0.05),
+                                radius: 8,
+                                x: 0,
+                                y: 4)
                         .ignoresSafeArea()
                 }
                 .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: self.isExpanded)
-                .gesture(
-                    DragGesture(minimumDistance: 5, coordinateSpace: .local)
-                        .onChanged { value in
-                            withAnimation(.interactiveSpring()) {
-                                self.dragOffset = value.translation.height
-                            }
+                .gesture(DragGesture(minimumDistance: 5, coordinateSpace: .local)
+                    .onChanged { value in
+                        withAnimation(.interactiveSpring()) {
+                            self.dragOffset = value.translation.height
                         }
-                        .onEnded { value in
-                            withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
-                                let translation = value.translation.height
-                                let velocity = value.predictedEndLocation.y - value.location.y
+                    }
+                    .onEnded { value in
+                        withAnimation(.interpolatingSpring(stiffness: 300, damping: 30)) {
+                            let translation = value.translation.height
+                            let velocity = value.predictedEndLocation.y - value.location.y
 
-                                if abs(velocity) > 100 {
-                                    self.isExpanded = velocity < 0
-                                } else if abs(translation) > 30 {
-                                    self.isExpanded = translation < 0
-                                }
-
-                                self.dragOffset = 0
+                            if abs(velocity) > 100 {
+                                self.isExpanded = velocity < 0
+                            } else if abs(translation) > 30 {
+                                self.isExpanded = translation < 0
                             }
+
+                            self.dragOffset = 0
                         }
-                )
+                    })
         }
     }
 }
@@ -86,24 +82,20 @@ private extension TripInfoContianerView {
                 .padding(.top, 8)
                 .padding(.bottom, 12)
             if let navigationAlert {
-                AlertView(
-                    tripProgress: self.tripProgress,
-                    info: navigationAlert,
-                    isExpanded: self.isExpanded,
-                    onAction: self.onAction
-                )
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .padding(.bottom, self.safeAreaInsets.bottom)
+                AlertView(tripProgress: self.tripProgress,
+                          info: navigationAlert,
+                          isExpanded: self.isExpanded,
+                          onAction: self.onAction)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .padding(.bottom, self.safeAreaInsets.bottom)
             } else {
-                TripProgressView(
-                    tripProgress: self.tripProgress,
-                    isExpanded: self.isExpanded,
-                    onAction: self.onAction
-                )
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .padding(.bottom, self.safeAreaInsets.bottom)
+                TripProgressView(tripProgress: self.tripProgress,
+                                 isExpanded: self.isExpanded,
+                                 onAction: self.onAction)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    .padding(.bottom, self.safeAreaInsets.bottom)
             }
         }
     }

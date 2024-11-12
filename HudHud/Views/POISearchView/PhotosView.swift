@@ -83,6 +83,7 @@ struct PhotosView<Content, Item, ID>: View where Content: View, ID: Hashable, It
                 }
             }
         }
+
         .frame(height: 250)
     }
 

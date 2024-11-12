@@ -15,8 +15,9 @@ struct SearchResultView: View {
 
     // MARK: Properties
 
-    @ObservedObject var favoritesStore = FavoritesStore()
+    @ObservedObject var favoritesStore: FavoritesStore
     let item: ResolvedItem
+    let sheetStore: SheetStore
     let directions: () -> Void
     var formatter = Formatters()
     @Environment(\.openURL) var openURL
@@ -32,10 +33,8 @@ struct SearchResultView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
                 HStack {
                     if let rating = item.rating, let ratingsCount = item.ratingsCount {
-                        RatingView(ratingStore: RatingStore(
-                            staticRating: rating,
-                            ratingsCount: ratingsCount
-                        ))
+                        RatingView(ratingStore: RatingStore(staticRating: rating,
+                                                            ratingsCount: ratingsCount))
                     }
                     if let priceRange = item.priceRange, let priceIcon = HudHudPOI.PriceRange(rawValue: priceRange) {
                         Text("•")
@@ -74,7 +73,7 @@ struct SearchResultView: View {
                     .padding(.top, 9)
                     .padding(.bottom, 16)
             }
-            POIBottomToolbar(item: self.item, directions: self.directions)
+            POIBottomToolbar(item: self.item, sheetStore: self.sheetStore, favoritesStore: self.favoritesStore, directions: self.directions)
                 .padding(.bottom, 10)
                 .padding(.leading, 10)
         }
@@ -120,5 +119,5 @@ private extension RatingView {
 }
 
 #Preview {
-    SearchResultView(item: .ketchup) {}
+    SearchResultView(favoritesStore: .storeSetUpForPreviewing, item: .ketchup, sheetStore: .storeSetUpForPreviewingPOI) {}
 }

@@ -25,12 +25,10 @@ struct AlertView: View {
 
     // MARK: Lifecycle
 
-    init(
-        tripProgress: TripProgress,
-        info: NavigationAlert,
-        isExpanded: Bool,
-        onAction: @escaping (ActiveTripInfoViewAction) -> Void
-    ) {
+    init(tripProgress: TripProgress,
+         info: NavigationAlert,
+         isExpanded: Bool,
+         onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
         self.tripProgress = tripProgress
         self.info = info
         self.onAction = onAction
@@ -115,30 +113,19 @@ struct AlertView: View {
 
 // MARK: - AlertType
 
-#Preview(
-    body: {
-        let id = UUID().uuidString
-        TripInfoContianerView(
-            tripProgress: TripProgress(
-                distanceToNextManeuver: 100,
-                distanceRemaining: 1000,
-                durationRemaining: 1500
-            ),
-            navigationAlert: NavigationAlert(
-                id: id,
-                progress: 10,
-                alertType: .speedCamera(
-                    SpeedCamera(
-                        id: id,
-                        speedLimit: .kilometersPerHour(120),
-                        type: .fixed,
-                        direction: .forward,
-                        captureRange: .kilometers(20),
-                        location: .riyadh
-                    )
-                ),
-                alertDistance: 900
-            )
-        ) { _ in
-        }
-    })
+#Preview(body: {
+    let id = UUID().uuidString
+    TripInfoContianerView(tripProgress: TripProgress(distanceToNextManeuver: 100,
+                                                     distanceRemaining: 1000,
+                                                     durationRemaining: 1500),
+                          navigationAlert: NavigationAlert(id: id,
+                                                           progress: 10,
+                                                           alertType: .speedCamera(SpeedCamera(id: id,
+                                                                                               speedLimit: .kilometersPerHour(120),
+                                                                                               type: .fixed,
+                                                                                               direction: .forward,
+                                                                                               captureRange: .kilometers(20),
+                                                                                               location: .riyadh)),
+                                                           alertDistance: 900)) { _ in
+    }
+})

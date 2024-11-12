@@ -64,10 +64,8 @@ final class SheetStore {
     // MARK: Lifecycle
 
     init(emptySheetType: SheetType) {
-        self.emptySheetData = SheetData(
-            sheetType: emptySheetType,
-            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
-        )
+        self.emptySheetData = SheetData(sheetType: emptySheetType,
+                                        detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData))
         self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
             guard let self else { return }
             self.sheetHeight = self.computeSheetHeight()
@@ -173,6 +171,7 @@ enum SheetType {
     case routePlanner(RoutePlannerStore)
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
+    case loginNeeded
 
     // MARK: Computed Properties
 
@@ -198,6 +197,8 @@ enum SheetType {
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .loginNeeded:
+            DetentData(selectedDetent: .third, allowedDetents: [.third])
         }
     }
 
