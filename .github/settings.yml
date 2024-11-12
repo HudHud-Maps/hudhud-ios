@@ -44,6 +44,23 @@ branches:
         squash_merge_commit_title: "PR_TITLE"
         squash_merge_commit_message: "PR_BODY"
         edit_mode: "DISABLED"
+  - name: bugfix/revert-formatting
+    protection:
+      required_pull_request_reviews:
+        required_approving_review_count: 1
+        dismiss_stale_reviews: true
+      required_status_checks:
+        strict: true
+      enforce_admins: true
+      required_linear_history: true
+      allow_squash_merge: true
+      allow_merge_commit: false
+      allow_rebase_merge: false
+      required_conversation_resolution: true
+      squash_merge_settings:
+        squash_merge_commit_title: "PR_TITLE"
+        squash_merge_commit_message: "PR_BODY"
+        edit_mode: "DISABLED"
 
 teams:
   - name: IOS
