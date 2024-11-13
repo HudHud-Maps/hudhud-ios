@@ -25,6 +25,12 @@ final class MapOverlayStore {
 
     init(sheetStore: SheetStore) {
         self.currentOverlay = AnyView(sheetStore.currentSheet.sheetProvider.mapOverlayView)
+        self.bindSheetNavigationToCurrentOverlay(sheetStore)
+    }
+}
+
+private extension MapOverlayStore {
+    func bindSheetNavigationToCurrentOverlay(_ sheetStore: SheetStore) {
         sheetStore.navigationCommands
             .map(\.sheetData)
             .sink { [weak self] sheetData in
