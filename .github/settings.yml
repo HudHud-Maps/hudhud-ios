@@ -20,8 +20,33 @@ branches:
       allow_squash_merge: true
       allow_merge_commit: false
       allow_rebase_merge: false
-
       required_conversation_resolution: true
+      # Add this section to restrict pushes and PRs to main
+      restrictions:
+        apps: []
+        users: []
+        teams: []
+      # Add this to specify allowed source branches
+      required_pull_request_reviews:
+        dismissal_restrictions:
+          users: []
+          teams: []
+      required_signatures: false
+      lock_branch: false
+      allow_fork_syncing: false
+      required_deployments: null
+      blocks_creations: false
+      allow_deletions: false
+      allow_force_pushes: false
+      required_linear_history: true
+      required_conversation_resolution: true
+      allows_deletions: false
+      allows_force_pushes: false
+      description: "Only allow PRs from develop branch"
+      pattern: "main"
+      rules_configuration:
+        - key: base_branch_pattern_matches
+          value: "^develop$"
       squash_merge_settings:
         squash_merge_commit_title: "PR_TITLE"
         squash_merge_commit_message: "PR_BODY"
@@ -44,6 +69,7 @@ branches:
         squash_merge_commit_title: "PR_TITLE"
         squash_merge_commit_message: "PR_BODY"
         edit_mode: "DISABLED"
+
   - name: bugfix/revert-formatting
     protection:
       required_pull_request_reviews:
