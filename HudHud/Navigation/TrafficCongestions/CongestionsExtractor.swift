@@ -29,10 +29,10 @@ extension Route {
             }
     }
 
-    func extractCongestionSegments() -> [CongestionSegment] {
+    func extractCongestionSegments(considering startIndex: Int?) -> [CongestionSegment] {
         var mergedSegments: [CongestionSegment] = []
         var currentSegment: CongestionSegment?
-        var currentIndex = 0
+        var currentIndex = startIndex ?? 0
 
         for annotation in self.annotations {
             guard let congestion = annotation.congestion else {

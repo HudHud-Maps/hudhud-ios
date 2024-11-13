@@ -184,7 +184,10 @@ private extension MapViewContainer {
         }
 
         // Congestion
-        layers += makeCongestionLayers(for: self.routesPlanMapDrawer.routes)
+        layers += makeCongestionLayers(
+            for: self.routesPlanMapDrawer.routes,
+            currentPositionIndex: self.navigationStore.state.routeGeometries.currentIndex
+        )
 
         // Custom Symbols
         if shouldShowCustomSymbols {
@@ -221,13 +224,20 @@ private extension MapViewContainer {
             }
         }
 
+        if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
+            layers += makeCongestionLayers(
+                for: [selectedRoute],
+                currentPositionIndex: self.navigationStore.state.routeGeometries.currentIndex
+            )
+        }
+
         if let alert = navigationStore.state.navigationAlert {
             layers += [
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
-                                 source: ShapeSource(identifier: "alert") {
-                                     MLNPointFeature(coordinate: alert.alertType.coordinate)
-                                 })
-                                 .iconImage(alert.alertType.mapIcon)
+                SymbolStyleLayer(
+                    identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
+                    source: ShapeSource(identifier: "alert") { MLNPointFeature(coordinate: alert.alertType.coordinate) }
+                )
+                .iconImage(alert.alertType.mapIcon)
             ]
         }
         return layers

@@ -72,9 +72,11 @@ final class HorizonEngine {
 
             NavigationLogger.log("Bearing: \(location.course)°")
 
-            let scanResult = self.scanner.scan(features: self.routeFeatures,
-                                               at: location.coordinate,
-                                               bearing: location.course)
+            let scanResult = self.scanner.scan(
+                features: self.routeFeatures,
+                at: location.coordinate,
+                bearing: location.course
+            )
 
             self.processFeatures(scanResult, at: location)
         }
@@ -91,10 +93,12 @@ private extension HorizonEngine {
         for feature in result.detectedFeatures {
             NavigationLogger.log("Detected: \(feature.id) (\(feature.type))")
             if self.activeFeatures[feature.id] == nil {
-                let state = ActiveFeatureState(feature: feature,
-                                               firstDetectedAt: Date(),
-                                               lastDistance: .meters(0),
-                                               hasAlerted: false)
+                let state = ActiveFeatureState(
+                    feature: feature,
+                    firstDetectedAt: Date(),
+                    lastDistance: .meters(0),
+                    hasAlerted: false
+                )
                 self.activeFeatures[feature.id] = state
             }
             NavigationLogger.endScope()
@@ -185,8 +189,10 @@ private extension HorizonEngine {
         }
     }
 
-    func isDistanceChangeSignificant(_ oldDistance: Measurement<UnitLength>,
-                                     _ newDistance: Measurement<UnitLength>) -> Bool {
+    func isDistanceChangeSignificant(
+        _ oldDistance: Measurement<UnitLength>,
+        _ newDistance: Measurement<UnitLength>
+    ) -> Bool {
         let change = abs(oldDistance.value - newDistance.value)
         let roundedChange = round(change * 10) / 10
         return roundedChange >= LocationConstants.significantDistanceChange
@@ -200,15 +206,19 @@ enum RouteFeatureExtractor {
         var features: [HorizonFeature] = []
 
         let incidentFeatures = route.incidents.map { incident in
-            HorizonFeature(id: incident.id,
-                           type: .trafficIncident(incident),
-                           coordinate: incident.location)
+            HorizonFeature(
+                id: incident.id,
+                type: .trafficIncident(incident),
+                coordinate: incident.location
+            )
         }
 
         let cameraFeatures = route.speedCameras.map { camera in
-            HorizonFeature(id: camera.id,
-                           type: .speedCamera(camera),
-                           coordinate: camera.location)
+            HorizonFeature(
+                id: camera.id,
+                type: .speedCamera(camera),
+                coordinate: camera.location
+            )
         }
 
         features.append(contentsOf: incidentFeatures)

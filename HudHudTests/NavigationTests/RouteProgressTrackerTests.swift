@@ -7,8 +7,8 @@
 //
 
 import CoreLocation
-import XCTest
 @testable import HudHud
+import XCTest
 
 final class RouteProgressTrackerTests: XCTestCase {
 

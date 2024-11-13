@@ -80,7 +80,7 @@ private extension RouteProgressTracker {
             let segment = CLLocation(latitude: start.latitude, longitude: start.longitude)
                 .distance(from: CLLocation(latitude: end.latitude, longitude: end.longitude))
 
-            let ratio = max(0, min(1, (position.distanceFromSegmentStart - 4) / segment))
+            let ratio = max(0, min(1, (position.distanceFromSegmentStart - 3) / segment))
 
             let currentPoint = self.spatialIndex.interpolate(start: start,
                                                              end: end,
