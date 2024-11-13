@@ -41,7 +41,7 @@ final class RoutePlannerStore {
 
     // MARK: Computed Properties
 
-    var sheetContext: SheetContext? {
+    var sheetContext: (detentData: CurrentValueSubject<DetentData, Never>, sheetEvents: any Publisher<SheetEvent, Never>)? {
         didSet {
             guard let sheetContext else { return }
             updateHeight()
