@@ -6,11 +6,11 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import XCTest
 @testable import BackendService
 @testable import FerrostarCoreFFI
 @testable import HudHud
 @testable import MapLibre
+import XCTest
 
 final class CalculateTests: XCTestCase {
 
