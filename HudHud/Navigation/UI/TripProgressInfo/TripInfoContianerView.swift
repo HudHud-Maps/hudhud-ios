@@ -40,10 +40,7 @@ struct TripInfoContianerView: View {
                 .background {
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(.white)
-                        .shadow(color: .black.opacity(0.05),
-                                radius: 8,
-                                x: 0,
-                                y: 4)
+                        .shadow(color: .black.opacity(0.05), radius: 8, x: 0, y: 4)
                         .ignoresSafeArea()
                 }
                 .animation(.interpolatingSpring(stiffness: 300, damping: 30), value: self.isExpanded)

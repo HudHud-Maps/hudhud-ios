@@ -53,11 +53,12 @@ private extension MainFiltersView {
                 .hudhudFont(size: 12, fontWeight: .semiBold)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 11)
-                .foregroundStyle(self.filterStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(self.filterStore.selectedFilters.contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines), lineWidth: 1)
-                )
+                .foregroundStyle(self.filterStore.selectedFilters
+                    .contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._01Black))
+                .overlay(RoundedRectangle(cornerRadius: 10)
+                    .stroke(self.filterStore.selectedFilters
+                        .contains(filter) ? Color(.Colors.General._10GreenMain) : Color(.Colors.General._04GreyForLines),
+                        lineWidth: 1))
         }
     }
 }

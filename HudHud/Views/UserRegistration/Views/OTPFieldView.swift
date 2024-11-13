@@ -38,38 +38,32 @@ struct OTPFieldView: View {
     var body: some View {
         HStack(spacing: 15) {
             ForEach(0 ..< self.numberOfFields, id: \.self) { index in
-                CustomOTPTextFieldRepresentable(
-                    text: Binding(
-                        get: { self.pins[index] },
-                        set: { newValue in
-                            self.pins[index] = String(newValue.prefix(1))
-                            self.updateOTP()
-                            if !newValue.isEmpty, index < self.numberOfFields - 1 {
-                                self.focusedField = index + 1
-                            }
-                        }
-                    ),
-                    isFocused: Binding(
-                        get: { self.focusedField == index },
-                        set: { _ in }
-                    ),
-                    onBackspace: {
-                        if index > 0 {
-                            self.pins[index - 1] = ""
-                            self.updateOTP()
-                            self.focusedField = index - 1
-                        }
-                    },
-                    onPasteOrAutofill: { text in
-                        self.handlePasteOrAutofill(text)
-                    },
-                    isLastField: index == self.numberOfFields - 1,
-                    allFieldsFilled: self.allFieldsFilled
-                )
-                .frame(width: 40, height: 50)
-                .background(self.bottomBorder(for: index), alignment: .bottom)
-                .focused(self.$focusedField, equals: index)
-                .textContentType(.oneTimeCode)
+                CustomOTPTextFieldRepresentable(text: Binding(get: { self.pins[index] },
+                                                              set: { newValue in
+                                                                  self.pins[index] = String(newValue.prefix(1))
+                                                                  self.updateOTP()
+                                                                  if !newValue.isEmpty, index < self.numberOfFields - 1 {
+                                                                      self.focusedField = index + 1
+                                                                  }
+                                                              }),
+                                                isFocused: Binding(get: { self.focusedField == index },
+                                                                   set: { _ in }),
+                                                onBackspace: {
+                                                    if index > 0 {
+                                                        self.pins[index - 1] = ""
+                                                        self.updateOTP()
+                                                        self.focusedField = index - 1
+                                                    }
+                                                },
+                                                onPasteOrAutofill: { text in
+                                                    self.handlePasteOrAutofill(text)
+                                                },
+                                                isLastField: index == self.numberOfFields - 1,
+                                                allFieldsFilled: self.allFieldsFilled)
+                    .frame(width: 40, height: 50)
+                    .background(self.bottomBorder(for: index), alignment: .bottom)
+                    .focused(self.$focusedField, equals: index)
+                    .textContentType(.oneTimeCode)
             }
         }
         .onAppear {

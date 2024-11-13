@@ -23,10 +23,8 @@ struct LocationInfoView: View {
                 .font(.caption)
                 .padding(.all, 8)
                 .foregroundColor(.white)
-                .background(
-                    Color.black.opacity(0.7)
-                        .clipShape(.buttonBorder, style: FillStyle())
-                )
+                .background(Color.black.opacity(0.7)
+                    .clipShape(.buttonBorder, style: FillStyle()))
         }
     }
 }

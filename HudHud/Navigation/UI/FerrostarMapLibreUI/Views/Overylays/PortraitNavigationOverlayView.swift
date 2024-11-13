@@ -16,7 +16,7 @@ import SwiftUI
 // MARK: - PortraitNavigationOverlayView
 
 struct PortraitNavigationOverlayView<T: SpokenInstructionObserver & ObservableObject>: View,
-CustomizableNavigatingInnerGridView, NavigationOverlayContent {
+    CustomizableNavigatingInnerGridView, NavigationOverlayContent {
 
     // MARK: Properties
 

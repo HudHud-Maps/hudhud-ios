@@ -27,13 +27,11 @@ public extension CustomizableNavigatingInnerGridView {
     ///   - midLeading: The mid leading view content.
     ///   - bottomTrailing: The bottom trailing view content.
     /// - Returns: The modified view.
-    func innerGrid(
-        @ViewBuilder topCenter: @escaping () -> some View = { Spacer() },
-        @ViewBuilder topTrailing: @escaping () -> some View = { Spacer() },
-        @ViewBuilder midLeading: @escaping () -> some View = { Spacer() },
-        @ViewBuilder bottomTrailing: @escaping () -> some View = { Spacer() },
-        @ViewBuilder bottomLeading: @escaping () -> some View = { Spacer() }
-    ) -> Self {
+    func innerGrid(@ViewBuilder topCenter: @escaping () -> some View = { Spacer() },
+                   @ViewBuilder topTrailing: @escaping () -> some View = { Spacer() },
+                   @ViewBuilder midLeading: @escaping () -> some View = { Spacer() },
+                   @ViewBuilder bottomTrailing: @escaping () -> some View = { Spacer() },
+                   @ViewBuilder bottomLeading: @escaping () -> some View = { Spacer() }) -> Self {
         var newSelf = self
         newSelf.topCenter = { AnyView(topCenter()) }
         newSelf.topTrailing = { AnyView(topTrailing()) }

@@ -92,13 +92,7 @@ final class SearchViewStore: ObservableObject {
 
     // MARK: Lifecycle
 
-    init(
-        mapStore: MapStore,
-        sheetStore: SheetStore,
-        routingStore: RoutingStore,
-        filterStore: FilterStore,
-        mode: Mode
-    ) {
+    init(mapStore: MapStore, sheetStore: SheetStore, routingStore: RoutingStore, filterStore: FilterStore, mode: Mode) {
         self.mapStore = mapStore
         self.routingStore = routingStore
         self.sheetStore = sheetStore
@@ -107,8 +101,18 @@ final class SearchViewStore: ObservableObject {
 
         self.bindSearchAutoComplete()
         if case .preview = mode {
-            let itemOne = ResolvedItem(id: "1", title: "Starbucks", subtitle: "Main Street 1", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
-            let itemTwo = ResolvedItem(id: "2", title: "Motel One", subtitle: "Main Street 2", type: .appleResolved, coordinate: .riyadh, color: .systemRed)
+            let itemOne = ResolvedItem(id: "1",
+                                       title: "Starbucks",
+                                       subtitle: "Main Street 1",
+                                       type: .appleResolved,
+                                       coordinate: .riyadh,
+                                       color: .systemRed)
+            let itemTwo = ResolvedItem(id: "2",
+                                       title: "Motel One",
+                                       subtitle: "Main Street 2",
+                                       type: .appleResolved,
+                                       coordinate: .riyadh,
+                                       color: .systemRed)
             self.recentViewedItem = [itemOne, itemTwo]
         }
         self.bindFilterSearch()
@@ -121,7 +125,8 @@ final class SearchViewStore: ObservableObject {
             return
         }
         switch item {
-        case let .resolvedItem(item), let .categoryItem(item):
+        case let .resolvedItem(item),
+             let .categoryItem(item):
             self.sheetStore.show(.pointOfInterest(item))
         case let .category(category):
             await self.fetch(category: category.name)
@@ -171,16 +176,14 @@ final class SearchViewStore: ObservableObject {
         defer { isSheetLoading = false }
         do {
             let currentUserLocation = await mapStore.userLocationStore.location(allowCached: true)
-            let items = try await hudhud.items(
-                for: category,
-                enterSearch: enterSearch,
-                topRated: self.filterStore.topRated,
-                priceRange: self.filterStore.priceSelection.hudHudPriceRange,
-                sortBy: self.filterStore.sortSelection.hudHudSortBy,
-                rating: Double(self.filterStore.ratingSelection.rawValue),
-                location: currentUserLocation?.coordinate,
-                baseURL: DebugStore().baseURL
-            )
+            let items = try await hudhud.items(for: category,
+                                               enterSearch: enterSearch,
+                                               topRated: self.filterStore.topRated,
+                                               priceRange: self.filterStore.priceSelection.hudHudPriceRange,
+                                               sortBy: self.filterStore.sortSelection.hudHudSortBy,
+                                               rating: Double(self.filterStore.ratingSelection.rawValue),
+                                               location: currentUserLocation?.coordinate,
+                                               baseURL: DebugStore().baseURL)
 
             var filteredItems = items
             // Apply 'open now' filter locally
@@ -194,10 +197,8 @@ final class SearchViewStore: ObservableObject {
             self.searchResults = displayableItems
             if !filteredItems.isEmpty {
                 self.mapStore.replaceItemsAndFocusCamera(on: displayableItems)
-                self.sheetStore.currentSheet.detentData.value = DetentData(
-                    selectedDetent: .third,
-                    allowedDetents: [.third, .large]
-                )
+                self.sheetStore.currentSheet.detentData.value = DetentData(selectedDetent: .third,
+                                                                           allowedDetents: [.third, .large])
             }
         } catch {
             self.searchError = error
@@ -209,10 +210,8 @@ final class SearchViewStore: ObservableObject {
         self.searchText = ""
         self.searchResults = []
         self.mapStore.clearItems()
-        self.sheetStore.currentSheet.detentData.value = DetentData(
-            selectedDetent: .third,
-            allowedDetents: [.small, .third, .large]
-        )
+        self.sheetStore.currentSheet.detentData.value = DetentData(selectedDetent: .third,
+                                                                   allowedDetents: [.small, .third, .large])
     }
 
     func applySearchResultsOnMapIfNeeded() {
@@ -377,5 +376,9 @@ private extension SearchViewStore {
 
 extension SearchViewStore: Previewable {
 
-    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, routingStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, mode: .preview)
+    static let storeSetUpForPreviewing = SearchViewStore(mapStore: .storeSetUpForPreviewing,
+                                                         sheetStore: .storeSetUpForPreviewing,
+                                                         routingStore: .storeSetUpForPreviewing,
+                                                         filterStore: .storeSetUpForPreviewing,
+                                                         mode: .preview)
 }

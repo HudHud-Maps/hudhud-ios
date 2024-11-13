@@ -54,25 +54,17 @@ final class RoutePlannerStore {
 
     func didChangeHeight(to height: CGFloat) {
         let height: Detent = .height(height)
-        self.sheetStore.currentSheet.detentData.value = DetentData(
-            selectedDetent: height,
-            allowedDetents: [height]
-        )
+        self.sheetStore.currentSheet.detentData.value = DetentData(selectedDetent: height, allowedDetents: [height])
     }
 
     func addNewRoute() {
-        self.sheetStore.show(
-            .navigationAddSearchView { [weak self] newDestination in
-                guard let self else { return }
-                self.state.destinations.append(RouteWaypoint(
-                    type: .location(newDestination),
-                    title: newDestination.title
-                ))
-                Task {
-                    await self.fetchRoutePlan(for: self.state.destinations)
-                }
+        self.sheetStore.show(.navigationAddSearchView { [weak self] newDestination in
+            guard let self else { return }
+            self.state.destinations.append(RouteWaypoint(type: .location(newDestination), title: newDestination.title))
+            Task {
+                await self.fetchRoutePlan(for: self.state.destinations)
             }
-        )
+        })
     }
 
     func startNavigation() {
@@ -105,17 +97,10 @@ private extension RoutePlannerStore {
             return
         }
         let initialDestinations: [RouteWaypoint] = [
-            RouteWaypoint(
-                type: .userLocation(Coordinates(
-                    latitude: userLocation.coordinate.latitude,
-                    longitude: userLocation.coordinate.longitude
-                )),
-                title: "User Location"
-            ),
-            RouteWaypoint(
-                type: .location(self.initialDestination),
-                title: self.initialDestination.title
-            )
+            RouteWaypoint(type: .userLocation(Coordinates(latitude: userLocation.coordinate.latitude, longitude: userLocation.coordinate.longitude)),
+                          title: "User Location"),
+            RouteWaypoint(type: .location(self.initialDestination),
+                          title: self.initialDestination.title)
         ]
         await self.fetchRoutePlan(for: initialDestinations)
     }
@@ -132,30 +117,17 @@ private extension RoutePlannerStore {
             case let .userLocation(coordinates):
                 coordinates.clLocationCoordinate2D
             }
-            return Waypoint(
-                coordinate: GeographicCoordinate(
-                    cl: location
-                ),
-                kind: .break
-            )
+            return Waypoint(coordinate: GeographicCoordinate(cl: location), kind: .break)
         }
         do {
             let fromWaypoint = waypoints.removeFirst()
             let destinationWaypoint = waypoints.removeLast()
 
-            let routes = try await self.routePlanner.planRoutes(
-                from: fromWaypoint,
-                to: destinationWaypoint,
-                waypoints: waypoints
-            )
+            let routes = try await self.routePlanner.planRoutes(from: fromWaypoint, to: destinationWaypoint, waypoints: waypoints)
             guard let selectedRoute = routes.first else {
                 throw RoutingError.routing(.noRoute(message: "No route found"))
             }
-            let plan = RoutePlan(
-                waypoints: destinations,
-                routes: routes,
-                selectedRoute: selectedRoute
-            )
+            let plan = RoutePlan(waypoints: destinations, routes: routes, selectedRoute: selectedRoute)
             self.state = .loaded(plan: plan)
             self.drawRoutes(in: plan)
         } catch {
@@ -164,11 +136,7 @@ private extension RoutePlannerStore {
     }
 
     func drawRoutes(in plan: RoutePlan) {
-        self.routesPlanMapDrawer.drawRoutes(
-            routes: plan.routes,
-            selectedRoute: plan.selectedRoute,
-            waypoints: plan.waypoints
-        )
+        self.routesPlanMapDrawer.drawRoutes(routes: plan.routes, selectedRoute: plan.selectedRoute, waypoints: plan.waypoints)
     }
 
     func bindMapEvents() {

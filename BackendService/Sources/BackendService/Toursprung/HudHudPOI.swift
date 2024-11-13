@@ -75,9 +75,11 @@ public enum DisplayableRow: Hashable, Identifiable {
 
     public var resolvedItem: ResolvedItem? {
         switch self {
-        case .category, .predictionItem:
+        case .category,
+             .predictionItem:
             nil
-        case let .resolvedItem(resolvedItem), let .categoryItem(resolvedItem):
+        case let .resolvedItem(resolvedItem),
+             let .categoryItem(resolvedItem):
             resolvedItem
         }
     }
@@ -162,19 +164,32 @@ public struct HudHudPOI: POIServiceProtocol {
         // MARK: Nested Types
 
         public enum WeekDay: String, CaseIterable, Codable {
-            case sunday, monday, tuesday, wednesday, thursday, friday, saturday
+            case sunday
+            case monday
+            case tuesday
+            case wednesday
+            case thursday
+            case friday
+            case saturday
 
             // MARK: Computed Properties
 
             public var displayValue: String {
                 switch self {
-                case .sunday: return NSLocalizedString("Sunday", bundle: .module, comment: "Weekday for opening hours table")
-                case .monday: return NSLocalizedString("Monday", bundle: .module, comment: "Weekday for opening hours table")
-                case .tuesday: return NSLocalizedString("Tuesday", bundle: .module, comment: "Weekday for opening hours table")
-                case .wednesday: return NSLocalizedString("Wednesday", bundle: .module, comment: "Weekday for opening hours table")
-                case .thursday: return NSLocalizedString("Thursday", bundle: .module, comment: "Weekday for opening hours table")
-                case .friday: return NSLocalizedString("Friday", bundle: .module, comment: "Weekday for opening hours table")
-                case .saturday: return NSLocalizedString("Saturday", bundle: .module, comment: "Weekday for opening hours table")
+                case .sunday:
+                    return NSLocalizedString("Sunday", bundle: .module, comment: "Weekday for opening hours table")
+                case .monday:
+                    return NSLocalizedString("Monday", bundle: .module, comment: "Weekday for opening hours table")
+                case .tuesday:
+                    return NSLocalizedString("Tuesday", bundle: .module, comment: "Weekday for opening hours table")
+                case .wednesday:
+                    return NSLocalizedString("Wednesday", bundle: .module, comment: "Weekday for opening hours table")
+                case .thursday:
+                    return NSLocalizedString("Thursday", bundle: .module, comment: "Weekday for opening hours table")
+                case .friday:
+                    return NSLocalizedString("Friday", bundle: .module, comment: "Weekday for opening hours table")
+                case .saturday:
+                    return NSLocalizedString("Saturday", bundle: .module, comment: "Weekday for opening hours table")
                 }
             }
         }
@@ -231,18 +246,24 @@ public struct HudHudPOI: POIServiceProtocol {
 
             // Assign the time ranges based on the current day
             switch self.day {
-            case .sunday: backendOpeningHours.sunday = timeRanges
-            case .monday: backendOpeningHours.monday = timeRanges
-            case .tuesday: backendOpeningHours.tuesday = timeRanges
-            case .wednesday: backendOpeningHours.wednesday = timeRanges
-            case .thursday: backendOpeningHours.thursday = timeRanges
-            case .friday: backendOpeningHours.friday = timeRanges
-            case .saturday: backendOpeningHours.saturday = timeRanges
+            case .sunday:
+                backendOpeningHours.sunday = timeRanges
+            case .monday:
+                backendOpeningHours.monday = timeRanges
+            case .tuesday:
+                backendOpeningHours.tuesday = timeRanges
+            case .wednesday:
+                backendOpeningHours.wednesday = timeRanges
+            case .thursday:
+                backendOpeningHours.thursday = timeRanges
+            case .friday:
+                backendOpeningHours.friday = timeRanges
+            case .saturday:
+                backendOpeningHours.saturday = timeRanges
             }
 
             return backendOpeningHours
         }
-
     }
 
     public enum PriceRange: Int {
@@ -314,7 +335,8 @@ public struct HudHudPOI: POIServiceProtocol {
     // MARK: Functions
 
     public func lookup(id: String, prediction _: Any, baseURL: String) async throws -> [ResolvedItem] {
-        let response = try await Client.makeClient(using: baseURL).getPoi(path: .init(id: id), headers: .init(Accept_hyphen_Language: self.currentLanguage))
+        let response = try await Client.makeClient(using: baseURL).getPoi(path: .init(id: id),
+                                                                          headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -372,7 +394,9 @@ public struct HudHudPOI: POIServiceProtocol {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
 
-        let response = try await Client.makeClient(using: baseURL).getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude), headers: .init(Accept_hyphen_Language: self.currentLanguage))
+        let response = try await Client.makeClient(using: baseURL)
+            .getTypeahead(query: .init(query: term, lat: coordinates?.latitude, lon: coordinates?.longitude),
+                          headers: .init(Accept_hyphen_Language: self.currentLanguage))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {
@@ -384,26 +408,23 @@ public struct HudHudPOI: POIServiceProtocol {
                     switch somethingElse._type {
                     case .category:
                         hasCategory = true
-                        return .category(Category(
-                            name: somethingElse.name,
-                            icon: icon,
-                            color: SystemColor(color: somethingElse.ios_category_icon.color)
-                        ))
+                        return .category(Category(name: somethingElse.name,
+                                                  icon: icon,
+                                                  color: SystemColor(color: somethingElse.ios_category_icon.color)))
                     case .poi:
                         if let id = somethingElse.id,
                            let subtitle = somethingElse.address,
                            let latitude = somethingElse.coordinates?.lat,
                            let longitude = somethingElse.coordinates?.lon {
-                            return .resolvedItem(ResolvedItem(
-                                id: id,
-                                title: somethingElse.name,
-                                subtitle: subtitle,
-                                category: somethingElse.category,
-                                symbol: icon,
-                                type: .hudhud,
-                                coordinate: CLLocationCoordinate2D(latitude: latitude, longitude: longitude),
-                                color: SystemColor(color: somethingElse.ios_category_icon.color)
-                            ))
+                            return .resolvedItem(ResolvedItem(id: id,
+                                                              title: somethingElse.name,
+                                                              subtitle: subtitle,
+                                                              category: somethingElse.category,
+                                                              symbol: icon,
+                                                              type: .hudhud,
+                                                              coordinate: CLLocationCoordinate2D(latitude: latitude,
+                                                                                                 longitude: longitude),
+                                                              color: SystemColor(color: somethingElse.ios_category_icon.color)))
                         } else {
                             assertionFailure("should have all the data here")
                         }
@@ -425,21 +446,28 @@ public struct HudHudPOI: POIServiceProtocol {
     }
 
     // list pois /p
-    public func items(for category: String, enterSearch: Bool, topRated: Bool? = nil, priceRange: PriceRange? = nil, sortBy: SortBy? = nil, rating: Double? = nil, location: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
+    public func items(for category: String,
+                      enterSearch: Bool,
+                      topRated: Bool? = nil,
+                      priceRange: PriceRange? = nil,
+                      sortBy: SortBy? = nil,
+                      rating: Double? = nil,
+                      location: CLLocationCoordinate2D?,
+                      baseURL: String) async throws -> [ResolvedItem] {
         try await Task.sleep(nanoseconds: 190 * NSEC_PER_MSEC)
         try Task.checkCancellation()
         var query: Operations.listPois.Input.Query
         let sortBy = sortBy?.backendValue
         if enterSearch {
-            query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, text: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
+            query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, text: category,
+                                                    lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
         } else {
-            query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, category: category, lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
+            query = Operations.listPois.Input.Query(sort_by: sortBy, price_range: priceRange?.backendValue, rating: rating, category: category,
+                                                    lat: location?.latitude, lon: location?.longitude, top_rated: topRated)
         }
 
-        let response = try await Client.makeClient(using: baseURL).listPois(
-            query: query,
-            headers: .init(Accept_hyphen_Language: self.currentLanguage)
-        )
+        let response = try await Client.makeClient(using: baseURL).listPois(query: query,
+                                                                            headers: .init(Accept_hyphen_Language: self.currentLanguage))
 
         switch response {
         case let .ok(success):
@@ -447,25 +475,23 @@ public struct HudHudPOI: POIServiceProtocol {
             return body.data.map { item -> ResolvedItem in
                 let caseInsensitiveCategory = item.category.lowercased()
                 let resolvedPriceRange = PriceRange(rawValue: item.price_range ?? 0)
-                return ResolvedItem(
-                    id: item.id,
-                    title: item.name,
-                    subtitle: "",
-                    category: item.category,
-                    symbol: categorySymbol[caseInsensitiveCategory] ?? .pin,
-                    type: .hudhud,
-                    coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
-                    color: categoryColor[caseInsensitiveCategory] ?? .systemRed,
-                    phone: item.phone_number,
-                    website: URL(string: item.website ?? ""),
-                    rating: item.rating,
-                    ratingsCount: item.ratings_count,
-                    isOpen: item.is_open,
-                    mediaURLs: item.media_urls?.compactMap { URL(string: $0.url) } ?? [],
-                    distance: item.distance,
-                    driveDuration: item.duration,
-                    priceRange: resolvedPriceRange?.rawValue
-                )
+                return ResolvedItem(id: item.id,
+                                    title: item.name,
+                                    subtitle: "",
+                                    category: item.category,
+                                    symbol: categorySymbol[caseInsensitiveCategory] ?? .pin,
+                                    type: .hudhud,
+                                    coordinate: .init(latitude: item.coordinates.lat, longitude: item.coordinates.lon),
+                                    color: categoryColor[caseInsensitiveCategory] ?? .systemRed,
+                                    phone: item.phone_number,
+                                    website: URL(string: item.website ?? ""),
+                                    rating: item.rating,
+                                    ratingsCount: item.ratings_count,
+                                    isOpen: item.is_open,
+                                    mediaURLs: item.media_urls?.compactMap { URL(string: $0.url) } ?? [],
+                                    distance: item.distance,
+                                    driveDuration: item.duration,
+                                    priceRange: resolvedPriceRange?.rawValue)
             }
         case let .undocumented(statusCode: statusCode, payload):
             let bodyString: String? = if let body = payload.body {

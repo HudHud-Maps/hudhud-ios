@@ -31,10 +31,8 @@ final class MapViewController: UIViewController, MapViewHostViewController {
          sheetToView: @escaping (SheetType) -> some View) {
         self.mapView = MLNMapView(frame: .zero, styleURL: styleURL)
         self.sheetStore = sheetStore
-        self.sheetViewController = SheetContainerViewController(
-            sheetStore: sheetStore,
-            sheetToView: sheetToView
-        )
+        self.sheetViewController = SheetContainerViewController(sheetStore: sheetStore,
+                                                                sheetToView: sheetToView)
 
         super.init(nibName: nil, bundle: nil)
     }

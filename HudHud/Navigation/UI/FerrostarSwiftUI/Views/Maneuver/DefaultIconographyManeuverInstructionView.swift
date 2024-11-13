@@ -38,14 +38,12 @@ public struct DefaultIconographyManeuverInstructionView: View {
     ///   - distanceFormatter: The formatter which controls distance localization.
     ///   - distanceToNextManeuver: A string that should represent the localized distance remaining.
     ///   - theme: The instruction row theme specifies attributes like colors and fonts for the row.
-    public init(
-        text: String,
-        maneuverType: ManeuverType?,
-        maneuverModifier: ManeuverModifier?,
-        distanceFormatter: Formatter,
-        distanceToNextManeuver: CLLocationDistance? = nil,
-        theme: InstructionRowTheme = DefaultInstructionRowTheme()
-    ) {
+    public init(text: String,
+                maneuverType: ManeuverType?,
+                maneuverModifier: ManeuverModifier?,
+                distanceFormatter: Formatter,
+                distanceToNextManeuver: CLLocationDistance? = nil,
+                theme: InstructionRowTheme = DefaultInstructionRowTheme()) {
         self.text = text
         self.maneuverType = maneuverType
         self.maneuverModifier = maneuverModifier
@@ -57,33 +55,27 @@ public struct DefaultIconographyManeuverInstructionView: View {
     // MARK: Content
 
     public var body: some View {
-        ManeuverInstructionView(
-            text: self.text,
-            distanceFormatter: self.distanceFormatter,
-            distanceToNextManeuver: self.distanceToNextManeuver,
-            theme: self.theme
-        ) {
+        ManeuverInstructionView(text: self.text,
+                                distanceFormatter: self.distanceFormatter,
+                                distanceToNextManeuver: self.distanceToNextManeuver,
+                                theme: self.theme) {
             if let maneuverType {
-                ManeuverImage(
-                    maneuverType: maneuverType,
-                    maneuverModifier: self.maneuverModifier
-                )
-                .frame(maxWidth: 48)
-                // REVIEW: without this, the first image in the vstack was rendering very small. Curiously subsequent items in the vstack looked reasonable.
-                .aspectRatio(contentMode: .fill)
+                ManeuverImage(maneuverType: maneuverType,
+                              maneuverModifier: self.maneuverModifier)
+                    .frame(maxWidth: 48)
+                    // REVIEW: without this, the first image in the vstack was rendering very small. Curiously subsequent items in the vstack looked reasonable.
+                    .aspectRatio(contentMode: .fill)
             }
         }
     }
 }
 
 #Preview("Default formatter") {
-    DefaultIconographyManeuverInstructionView(
-        text: "Merge Left onto Something",
-        maneuverType: .merge,
-        maneuverModifier: .left,
-        distanceFormatter: MKDistanceFormatter(),
-        distanceToNextManeuver: 1500.0
-    )
+    DefaultIconographyManeuverInstructionView(text: "Merge Left onto Something",
+                                              maneuverType: .merge,
+                                              maneuverModifier: .left,
+                                              distanceFormatter: MKDistanceFormatter(),
+                                              distanceToNextManeuver: 1500.0)
 }
 
 #Preview("Custom formatter (US Imperial)") {
@@ -91,13 +83,11 @@ public struct DefaultIconographyManeuverInstructionView: View {
     formatter.locale = Locale(identifier: "en-US")
     formatter.units = .imperial
 
-    return DefaultIconographyManeuverInstructionView(
-        text: "Merge Left onto Something",
-        maneuverType: .merge,
-        maneuverModifier: .left,
-        distanceFormatter: formatter,
-        distanceToNextManeuver: 1500.0
-    )
+    return DefaultIconographyManeuverInstructionView(text: "Merge Left onto Something",
+                                                     maneuverType: .merge,
+                                                     maneuverModifier: .left,
+                                                     distanceFormatter: formatter,
+                                                     distanceToNextManeuver: 1500.0)
 }
 
 #Preview("Custom formatter (DE)") {
@@ -105,13 +95,11 @@ public struct DefaultIconographyManeuverInstructionView: View {
     formatter.locale = Locale(identifier: "de-DE")
     formatter.units = .metric
 
-    return DefaultIconographyManeuverInstructionView(
-        text: "Merge Left onto Something",
-        maneuverType: .merge,
-        maneuverModifier: .left,
-        distanceFormatter: formatter,
-        distanceToNextManeuver: 1500.0
-    )
+    return DefaultIconographyManeuverInstructionView(text: "Merge Left onto Something",
+                                                     maneuverType: .merge,
+                                                     maneuverModifier: .left,
+                                                     distanceFormatter: formatter,
+                                                     distanceToNextManeuver: 1500.0)
 }
 
 #Preview("Custom formatter (UK)") {
@@ -119,11 +107,9 @@ public struct DefaultIconographyManeuverInstructionView: View {
     formatter.locale = Locale(identifier: "en-GB")
     formatter.units = .imperialWithYards
 
-    return DefaultIconographyManeuverInstructionView(
-        text: "Merge Left onto Something",
-        maneuverType: .merge,
-        maneuverModifier: .left,
-        distanceFormatter: formatter,
-        distanceToNextManeuver: 300.0
-    )
+    return DefaultIconographyManeuverInstructionView(text: "Merge Left onto Something",
+                                                     maneuverType: .merge,
+                                                     maneuverModifier: .left,
+                                                     distanceFormatter: formatter,
+                                                     distanceToNextManeuver: 300.0)
 }

@@ -72,12 +72,10 @@ final class SheetContainerViewController<Content: View>: UINavigationController,
     override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
 
-        self.sheetStore.safeAreaInsets = EdgeInsets(
-            top: self.view.safeAreaInsets.top,
-            leading: self.view.safeAreaInsets.left,
-            bottom: self.view.safeAreaInsets.bottom,
-            trailing: self.view.safeAreaInsets.right
-        )
+        self.sheetStore.safeAreaInsets = EdgeInsets(top: self.view.safeAreaInsets.top,
+                                                    leading: self.view.safeAreaInsets.left,
+                                                    bottom: self.view.safeAreaInsets.bottom,
+                                                    trailing: self.view.safeAreaInsets.right)
     }
 
     // MARK: Functions
@@ -142,7 +140,8 @@ private extension SheetContainerViewController {
         self.observeChanges(in: rootSheetData.detentData, andApplyIn: sheetPresentationController)
     }
 
-    func observeChanges(in detentPublisher: CurrentValueSubject<DetentData, Never>, andApplyIn sheetPresentationController: UISheetPresentationController) {
+    func observeChanges(in detentPublisher: CurrentValueSubject<DetentData, Never>,
+                        andApplyIn sheetPresentationController: UISheetPresentationController) {
         self.currentDetentPublisher = detentPublisher
         self.sheetSubscription = detentPublisher.dropFirst().removeDuplicates().sink { [weak self] detentData in
             guard let self, !self.isDetentUpdatingFromUI else { return }

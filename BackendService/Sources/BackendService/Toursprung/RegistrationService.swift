@@ -24,12 +24,8 @@ public struct RegistrationService {
     // MARK: Functions
 
     public func login(loginInput: String, baseURL: String) async throws -> RegistrationResponse {
-        let body = Operations.login.Input.Body.json(
-            Components.Schemas.LoginRequest(login_identity: loginInput)
-        )
-        let headers = Operations.login.Input.Headers(
-            Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"
-        )
+        let body = Operations.login.Input.Body.json(Components.Schemas.LoginRequest(login_identity: loginInput))
+        let headers = Operations.login.Input.Headers(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
         let response = try await Client.makeClient(using: baseURL).login(headers: headers, body: body)
 
         switch response {

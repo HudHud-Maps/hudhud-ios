@@ -129,18 +129,12 @@ private extension FloatingLabelInputField {
     dateFormatter.dateStyle = .medium
 
     return VStack {
-        FloatingLabelInputField(
-            placeholder: "Email Address",
-            inputType: .text(text: .constant("user@hudhud.sa"))
-        )
-        FloatingLabelInputField(
-            placeholder: "Gender",
-            inputType: .dropdown(choice: .constant(""), options: ["Male", "Female"])
-        )
-        FloatingLabelInputField(
-            placeholder: "Date of Birth",
-            inputType: .datePicker(date: .constant(Date()), dateFormatter: dateFormatter)
-        )
+        FloatingLabelInputField(placeholder: "Email Address",
+                                inputType: .text(text: .constant("user@hudhud.sa")))
+        FloatingLabelInputField(placeholder: "Gender",
+                                inputType: .dropdown(choice: .constant(""), options: ["Male", "Female"]))
+        FloatingLabelInputField(placeholder: "Date of Birth",
+                                inputType: .datePicker(date: .constant(Date()), dateFormatter: dateFormatter))
     }
     .padding(.horizontal)
 }

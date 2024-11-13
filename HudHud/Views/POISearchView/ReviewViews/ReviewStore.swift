@@ -24,45 +24,51 @@ struct Review: Identifiable {
 }
 
 extension Review {
-    static var reviewForPreview = Review(
-        username: "Ahmad Kamal",
-        userType: "Trip Advisor",
-        userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL(),
-        rating: 4,
-        date: "12 September 2024",
-        reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
-        images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL()],
-        isUseful: false,
-        usefulCount: 15
-    )
+    static var reviewForPreview = Review(username: "Ahmad Kamal",
+                                         userType: "Trip Advisor",
+                                         userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                                             defaultImageURL(),
+                                         rating: 4,
+                                         date: "12 September 2024",
+                                         reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
+                                         images: [
+                                             URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                                                 defaultImageURL()
+                                         ],
+                                         isUseful: false,
+                                         usefulCount: 15)
 
     static var listOfReviewsForPreview: [Review] = [
-        Review(
-            username: "Ahmad Kamal",
-            userType: "Trip Advisor",
-            userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL(),
-            rating: 4,
-            date: "12 September 2024",
-            reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
-            images: [URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL()],
-            isUseful: false,
-            usefulCount: 15
-        ),
-        Review(
-            username: "Noura Ahmed",
-            userType: "Trip Advisor",
-            userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL(),
-            rating: 4,
-            date: "12 September 2024",
-            reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
-            images: [
-                URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL(),
-                URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL(),
-                URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ?? defaultImageURL()
-            ],
-            isUseful: false,
-            usefulCount: 15
-        )
+        Review(username: "Ahmad Kamal",
+               userType: "Trip Advisor",
+               userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                   defaultImageURL(),
+               rating: 4,
+               date: "12 September 2024",
+               reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
+               images: [
+                   URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                       defaultImageURL()
+               ],
+               isUseful: false,
+               usefulCount: 15),
+        Review(username: "Noura Ahmed",
+               userType: "Trip Advisor",
+               userImage: URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                   defaultImageURL(),
+               rating: 4,
+               date: "12 September 2024",
+               reviewText: "Amazing blend of authentic Moroccan flavors with warm hospitality, making for an unforgettable dining experience.",
+               images: [
+                   URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                       defaultImageURL(),
+                   URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                       defaultImageURL(),
+                   URL(string: "https://img.freepik.com/free-photo/delicious-arabic-fast-food-skewers-black-plate_23-2148651145.jpg?w=740&t=st=1708506411~exp=1708507011~hmac=e3381fe61b2794e614de83c3f559ba6b712fd8d26941c6b49471d500818c9a77") ??
+                       defaultImageURL()
+               ],
+               isUseful: false,
+               usefulCount: 15)
     ]
 
     private static func defaultImageURL() -> URL {

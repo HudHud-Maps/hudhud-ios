@@ -32,7 +32,8 @@ struct MapButtonData: Identifiable, Equatable {
         return lhs.id == rhs.id
     }
 
-    @MainActor static func buttonIcon(for mode: SearchViewStore.Mode) -> MapButtonData.IconStyle {
+    @MainActor
+    static func buttonIcon(for mode: SearchViewStore.Mode) -> MapButtonData.IconStyle {
         switch mode {
         case .live(.apple):
             .icon(.appleLogo)

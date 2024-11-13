@@ -25,10 +25,7 @@ struct AlertView: View {
 
     // MARK: Lifecycle
 
-    init(tripProgress: TripProgress,
-         info: NavigationAlert,
-         isExpanded: Bool,
-         onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
+    init(tripProgress: TripProgress, info: NavigationAlert, isExpanded: Bool, onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
         self.tripProgress = tripProgress
         self.info = info
         self.onAction = onAction
@@ -60,7 +57,6 @@ struct AlertView: View {
             .lineLimit(1)
             .foregroundStyle(Color.Colors.General._02Grey)
             .multilineTextAlignment(.center)
-//            .padding(.top, 16)
 
             GeometryReader { geometry in
                 Rectangle()
@@ -76,11 +72,9 @@ struct AlertView: View {
 
             HStack(spacing: 8) {
                 self.info.alertType.icon
-//                    .foregroundColor(.white)
-                        .font(.system(size: 20))
-                        .frame(width: 40, height: 40)
-//                    .background(self.info.alertType.color)
-                        .cornerRadius(8)
+                    .font(.system(size: 20))
+                    .frame(width: 40, height: 40)
+                    .cornerRadius(8)
 
                 Text("\(self.info.alertType.title) in \(self.info.alertDistance) m")
                     .hudhudFont(.title3)
@@ -113,19 +107,17 @@ struct AlertView: View {
 
 // MARK: - AlertType
 
-#Preview(body: {
+#Preview {
     let id = UUID().uuidString
-    TripInfoContianerView(tripProgress: TripProgress(distanceToNextManeuver: 100,
-                                                     distanceRemaining: 1000,
-                                                     durationRemaining: 1500),
-                          navigationAlert: NavigationAlert(id: id,
-                                                           progress: 10,
-                                                           alertType: .speedCamera(SpeedCamera(id: id,
-                                                                                               speedLimit: .kilometersPerHour(120),
-                                                                                               type: .fixed,
-                                                                                               direction: .forward,
-                                                                                               captureRange: .kilometers(20),
-                                                                                               location: .riyadh)),
-                                                           alertDistance: 900)) { _ in
+    let tripProgress = TripProgress(distanceToNextManeuver: 100, distanceRemaining: 1000, durationRemaining: 1500)
+    let camera = SpeedCamera(id: id,
+                             speedLimit: .kilometersPerHour(120),
+                             type: .fixed,
+                             direction: .forward,
+                             captureRange: .kilometers(20),
+                             location: .riyadh)
+    let alert = NavigationAlert(id: id, progress: 10, alertType: .speedCamera(camera), alertDistance: 900)
+
+    TripInfoContianerView(tripProgress: tripProgress, navigationAlert: alert) { _ in
     }
-})
+}

@@ -57,11 +57,9 @@ struct FavoriteCategoriesView: View {
                     .minimumScaleFactor(0.5)
                 Spacer()
                 NavigationLink {
-                    FavoritesViewMoreView(
-                        searchStore: .storeSetUpForPreviewing,
-                        sheetStore: .storeSetUpForPreviewing,
-                        favoritesStore: .storeSetUpForPreviewing
-                    )
+                    FavoritesViewMoreView(searchStore: .storeSetUpForPreviewing,
+                                          sheetStore: .storeSetUpForPreviewing,
+                                          favoritesStore: .storeSetUpForPreviewing)
                 } label: {
                     HStack {
                         Text("View More")

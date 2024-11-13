@@ -19,30 +19,26 @@ public struct NavigationUIZoomButton: View {
 
     public var body: some View {
         VStack(spacing: 0) {
-            Button(
-                action: self.onZoomIn,
-                label: {
-                    Image(systemSymbol: .plus)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 18, height: 18)
-                }
-            )
-            .padding()
+            Button(action: self.onZoomIn,
+                   label: {
+                       Image(systemSymbol: .plus)
+                           .resizable()
+                           .aspectRatio(contentMode: .fit)
+                           .frame(width: 18, height: 18)
+                   })
+                   .padding()
 
             Divider()
                 .frame(width: 52)
 
-            Button(
-                action: self.onZoomOut,
-                label: {
-                    Image(systemSymbol: .minus)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(width: 18, height: 18)
-                }
-            )
-            .padding()
+            Button(action: self.onZoomOut,
+                   label: {
+                       Image(systemSymbol: .minus)
+                           .resizable()
+                           .aspectRatio(contentMode: .fit)
+                           .frame(width: 18, height: 18)
+                   })
+                   .padding()
         }
         .foregroundColor(.primary)
         .background(Color(.systemBackground))
@@ -52,10 +48,8 @@ public struct NavigationUIZoomButton: View {
 
 #Preview {
     VStack {
-        NavigationUIZoomButton(
-            onZoomIn: {},
-            onZoomOut: {}
-        )
+        NavigationUIZoomButton(onZoomIn: {},
+                               onZoomOut: {})
     }
     .padding()
     .background(Color.green)

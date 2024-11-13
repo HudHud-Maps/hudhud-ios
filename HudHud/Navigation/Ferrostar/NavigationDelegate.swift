@@ -29,20 +29,12 @@ class NavigationDelegate: FerrostarCoreDelegate {
             do {
                 // Most implementations will probably reuse existing configs (the default implementation does),
                 // but we provide devs with flexibility here.
-                let config = SwiftNavigationControllerConfig(
-                    stepAdvance: .relativeLineStringDistance(
-                        minimumHorizontalAccuracy: 32,
-                        automaticAdvanceDistance: 10
-                    ),
-                    routeDeviationTracking: .staticThreshold(
-                        minimumHorizontalAccuracy: 25,
-                        maxAcceptableDeviation: 20
-                    ), snappedLocationCourseFiltering: .snapToRoute
-                )
-                try core.startNavigation(
-                    route: route,
-                    config: config
-                )
+                let config = SwiftNavigationControllerConfig(stepAdvance: .relativeLineStringDistance(minimumHorizontalAccuracy: 32,
+                                                                                                      automaticAdvanceDistance: 10),
+                                                             routeDeviationTracking: .staticThreshold(minimumHorizontalAccuracy: 25,
+                                                                                                      maxAcceptableDeviation: 20),
+                                                             snappedLocationCourseFiltering: .snapToRoute)
+                try core.startNavigation(route: route, config: config)
             } catch {
                 // Users of the framework my develop their own responses here, such as notifying the user if appropriate
                 Logger.routing.error("alternate routes error: \(error.localizedDescription)")

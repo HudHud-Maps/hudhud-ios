@@ -96,19 +96,17 @@ struct StarInteractionView: View {
                         }
                         self.navigateToRateAndReview()
                     }
-                    .gesture(
-                        DragGesture(minimumDistance: 0)
-                            .onChanged { value in
-                                let starIndex = Int((value.location.x / 50).rounded(.down))
-                                let newRating = max(1, min(starIndex + 1, 5))
-                                withAnimation {
-                                    self.store.reduce(action: .setInteractiveRating(newRating))
-                                }
+                    .gesture(DragGesture(minimumDistance: 0)
+                        .onChanged { value in
+                            let starIndex = Int((value.location.x / 50).rounded(.down))
+                            let newRating = max(1, min(starIndex + 1, 5))
+                            withAnimation {
+                                self.store.reduce(action: .setInteractiveRating(newRating))
                             }
-                            .onEnded { _ in
-                                self.navigateToRateAndReview()
-                            }
-                    )
+                        }
+                        .onEnded { _ in
+                            self.navigateToRateAndReview()
+                        })
             }
             Spacer()
 

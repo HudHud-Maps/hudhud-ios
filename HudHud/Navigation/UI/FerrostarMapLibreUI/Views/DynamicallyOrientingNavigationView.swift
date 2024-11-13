@@ -17,7 +17,7 @@ import SwiftUI
 
 /// A navigation view that dynamically switches between portrait and landscape orientations.
 public struct DynamicallyOrientingNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost,
-NavigationOverlayContent {
+    NavigationOverlayContent {
 
     // MARK: Properties
 

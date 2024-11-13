@@ -27,7 +27,11 @@ struct DirectionModePickerData: Identifiable, Equatable {
 
 enum DirectionMode: Identifiable {
 
-    case car, walk, bus, metro, bicycle
+    case car
+    case walk
+    case bus
+    case metro
+    case bicycle
 
     // MARK: Computed Properties
 

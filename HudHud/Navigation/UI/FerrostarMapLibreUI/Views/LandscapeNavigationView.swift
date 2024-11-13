@@ -18,7 +18,7 @@ import SwiftUI
 /// A landscape orientation navigation view that includes the InstructionsView and ArrivalView on the
 /// leading half of the screen.
 public struct LandscapeNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost,
-NavigationOverlayContent {
+    NavigationOverlayContent {
 
     // MARK: Properties
 

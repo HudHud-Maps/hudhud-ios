@@ -293,7 +293,7 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
     public init?(rawValue: String) {
         guard let data = rawValue.data(using: .utf8),
               let result = try? JSONDecoder()
-                  .decode([ResolvedItem].self, from: data) else {
+              .decode([ResolvedItem].self, from: data) else {
             return nil
         }
         self = result

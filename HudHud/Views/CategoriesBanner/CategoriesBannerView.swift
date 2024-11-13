@@ -27,10 +27,8 @@ struct CategoriesBannerView: View {
                         }
                     }
                     .frame(minWidth: 44, minHeight: 44) // needed to make the button easier to tap
-                    .buttonStyle(IconButton(
-                        backgroundColor: category.buttonColor ?? .white,
-                        foregroundColor: category.textColor ?? .black
-                    ))
+                    .buttonStyle(IconButton(backgroundColor: category.buttonColor ?? .white,
+                                            foregroundColor: category.textColor ?? .black))
                 }
             }
             .padding(.horizontal)

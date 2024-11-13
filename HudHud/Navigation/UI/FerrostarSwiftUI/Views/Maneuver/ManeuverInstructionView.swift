@@ -39,13 +39,11 @@ public struct ManeuverInstructionView<ManeuverView: View>: View {
     ///   - maneuverView: The custom view representing the maneuver.
     ///   - distanceFormatter: The formatter which controls distance localization.
     ///   - theme: The instruction row theme specifies attributes like colors and fonts for the row.
-    public init(
-        text: String,
-        distanceFormatter: Formatter,
-        distanceToNextManeuver: CLLocationDistance? = nil,
-        theme: InstructionRowTheme = DefaultInstructionRowTheme(),
-        @ViewBuilder maneuverView: () -> ManeuverView = { EmptyView() }
-    ) {
+    public init(text: String,
+                distanceFormatter: Formatter,
+                distanceToNextManeuver: CLLocationDistance? = nil,
+                theme: InstructionRowTheme = DefaultInstructionRowTheme(),
+                @ViewBuilder maneuverView: () -> ManeuverView = { EmptyView() }) {
         self.text = text
         self.distanceToNextManeuver = distanceToNextManeuver
         self.distanceFormatter = distanceFormatter
@@ -85,11 +83,9 @@ public struct ManeuverInstructionView<ManeuverView: View>: View {
     arabicFormatter.locale = Locale(identifier: "ar-SA")
 
     return VStack {
-        ManeuverInstructionView(
-            text: "Turn Right on Road Ave.",
-            distanceFormatter: MKDistanceFormatter(),
-            distanceToNextManeuver: 24140.16
-        ) {
+        ManeuverInstructionView(text: "Turn Right on Road Ave.",
+                                distanceFormatter: MKDistanceFormatter(),
+                                distanceToNextManeuver: 24140.16) {
             Image(systemSymbol: .carCircleFill)
                 .symbolRenderingMode(.multicolor)
                 .resizable()
@@ -98,22 +94,18 @@ public struct ManeuverInstructionView<ManeuverView: View>: View {
         }
         .font(.title)
 
-        ManeuverInstructionView(
-            text: "Merge Left",
-            distanceFormatter: MKDistanceFormatter(),
-            distanceToNextManeuver: 152.4
-        ) {
+        ManeuverInstructionView(text: "Merge Left",
+                                distanceFormatter: MKDistanceFormatter(),
+                                distanceToNextManeuver: 152.4) {
             ManeuverImage(maneuverType: .merge, maneuverModifier: .left)
                 .frame(width: 24)
         }
         .font(.body)
         .foregroundColor(.blue)
 
-        ManeuverInstructionView(
-            text: "Make a legal u-turn",
-            distanceFormatter: MKDistanceFormatter(),
-            distanceToNextManeuver: 152.4
-        ) {
+        ManeuverInstructionView(text: "Make a legal u-turn",
+                                distanceFormatter: MKDistanceFormatter(),
+                                distanceToNextManeuver: 152.4) {
             ManeuverImage(maneuverType: .turn, maneuverModifier: .uTurn)
                 .frame(width: 24)
         }
@@ -121,11 +113,9 @@ public struct ManeuverInstructionView<ManeuverView: View>: View {
         .foregroundColor(.blue)
 
         // Demonstrate a Right to Left
-        ManeuverInstructionView(
-            text: "ادمج يسارًا",
-            distanceFormatter: arabicFormatter,
-            distanceToNextManeuver: 100
-        ) {
+        ManeuverInstructionView(text: "ادمج يسارًا",
+                                distanceFormatter: arabicFormatter,
+                                distanceToNextManeuver: 100) {
             ManeuverImage(maneuverType: .merge, maneuverModifier: .left)
                 .frame(width: 24)
         }

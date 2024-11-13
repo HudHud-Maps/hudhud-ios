@@ -17,7 +17,7 @@ import SwiftUI
 
 /// A portrait orientation navigation view that includes the InstructionsView at the top.
 public struct PortraitNavigationView<T: MapViewHostViewController>: View, CustomizableNavigatingInnerGridView, SpeedLimitViewHost,
-NavigationOverlayContent {
+    NavigationOverlayContent {
 
     // MARK: Properties
 

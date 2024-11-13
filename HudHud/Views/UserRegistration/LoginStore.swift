@@ -26,7 +26,8 @@ final class LoginStore {
     }
 
     enum UserInput {
-        case phone, email
+        case phone
+        case email
     }
 
     enum Gender: String, CaseIterable {

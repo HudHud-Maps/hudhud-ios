@@ -28,10 +28,9 @@ public class TrendingStore: ObservableObject {
     // MARK: Functions
 
     public func getTrendingPOIs(page _: Int, limit _: Int, coordinates: CLLocationCoordinate2D?, baseURL: String) async throws -> [ResolvedItem] {
-        let response = try await Client.makeClient(using: baseURL).listTrendingPois(
-            query: .init(lat: coordinates?.latitude, lon: coordinates?.longitude),
-            headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US")
-        )
+        let client = Client.makeClient(using: baseURL)
+        let response = try await client.listTrendingPois(query: .init(lat: coordinates?.latitude, lon: coordinates?.longitude),
+                                                         headers: .init(Accept_hyphen_Language: Locale.preferredLanguages.first ?? "en-US"))
         switch response {
         case let .ok(okResponse):
             switch okResponse.body {

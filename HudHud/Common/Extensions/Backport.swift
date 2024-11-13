@@ -28,7 +28,8 @@ public struct Backport<Content> {
 
 extension Backport where Content: View {
 
-    @ViewBuilder func buttonSafeArea(length: CGFloat) -> some View {
+    @ViewBuilder
+    func buttonSafeArea(length: CGFloat) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad {
             self.content.safeAreaPadding(.leading, length)
         } else {
@@ -37,11 +38,9 @@ extension Backport where Content: View {
     }
 
     @ViewBuilder
-    func sheet(
-        isPresented: Binding<Bool>,
-        onDismiss: (() -> Void)? = nil,
-        @ViewBuilder content: @escaping () -> some View
-    ) -> some View {
+    func sheet(isPresented: Binding<Bool>,
+               onDismiss: (() -> Void)? = nil,
+               @ViewBuilder content: @escaping () -> some View) -> some View {
         if UIDevice.current.userInterfaceIdiom == .pad, isPresented.wrappedValue {
             self.content.overlay(alignment: .topLeading) {
                 PadSheetGesture {
@@ -59,11 +58,9 @@ extension Backport where Content: View {
     }
 
     @ViewBuilder
-    func sheet<Item>(
-        item: Binding<Item?>,
-        onDismiss: (() -> Void)? = nil,
-        @ViewBuilder content: @escaping (Item) -> some View
-    ) -> some View where Item: Identifiable {
+    func sheet<Item>(item: Binding<Item?>,
+                     onDismiss: (() -> Void)? = nil,
+                     @ViewBuilder content: @escaping (Item) -> some View) -> some View where Item: Identifiable {
         if UIDevice.current.userInterfaceIdiom == .pad, let wrappedValue = item.wrappedValue {
             self.content.overlay(alignment: .bottomLeading) {
                 PadSheetGesture {
