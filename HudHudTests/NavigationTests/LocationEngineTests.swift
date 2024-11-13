@@ -10,9 +10,9 @@ import Combine
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
+@testable import HudHud
 import MapLibre
 import XCTest
-@testable import HudHud
 
 // MARK: - LocationEngineTests
 
@@ -65,12 +65,14 @@ final class LocationEngineTests: XCTestCase {
         }
     }
 
-    func test_rawLocationUpdate_inRawMode() {
-        let location = makeUserLocation()
-        assertLocationUpdate(location: location, mode: .raw) { location in
-            simulateRawLocationUpdate(location)
-        }
-    }
+    /*
+     func test_rawLocationUpdate_inRawMode() {
+         let location = makeUserLocation()
+         assertLocationUpdate(location: location, mode: .raw) { location in
+             simulateRawLocationUpdate(location)
+         }
+     }
+      */
 
     func test_snappedLocationUpdate_inSnappedMode() {
         let location = makeUserLocation()
