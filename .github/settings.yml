@@ -1,11 +1,20 @@
 repository:
-  has_wiki: false
+  name: hudhud-ios
+  description: HudHud Proof of Concept App
+  homepage: ""
+  topics: ios, maps
+  private: false
+  has_issues: true
   has_projects: true
-  has_downloads: false
-  default_branch: develop 
-
-  enable_vulnerability_alerts: true
+  has_wiki: true
+  has_downloads: true
+  default_branch: develop
+  allow_squash_merge: true
+  allow_merge_commit: false
+  allow_rebase_merge: false
+  delete_branch_on_merge: true
   enable_automated_security_fixes: true
+  enable_vulnerability_alerts: true
 
 branches:
   - name: main
@@ -13,80 +22,48 @@ branches:
       required_pull_request_reviews:
         required_approving_review_count: 1
         dismiss_stale_reviews: true
-      required_status_checks:
-        strict: true
-      enforce_admins: true
-      required_linear_history: true
-      allow_squash_merge: true
-      allow_merge_commit: false
-      allow_rebase_merge: false
-      required_conversation_resolution: true
-      # Add this section to restrict pushes and PRs to main
-      restrictions:
-        apps: []
-        users: []
-        teams: []
-      # Add this to specify allowed source branches
-      required_pull_request_reviews:
+        require_code_owner_reviews: true
         dismissal_restrictions:
           users: []
           teams: []
-      required_signatures: false
-      lock_branch: false
-      allow_fork_syncing: false
-      required_deployments: null
-      blocks_creations: false
-      allow_deletions: false
-      allow_force_pushes: false
+      required_status_checks:
+        strict: true
+        contexts: []
+      enforce_admins: true
       required_linear_history: true
-      required_conversation_resolution: true
-      allows_deletions: false
-      allows_force_pushes: false
-      description: "Only allow PRs from develop branch"
-      pattern: "main"
-      rules_configuration:
-        - key: base_branch_pattern_matches
-          value: "^develop$"
-      squash_merge_settings:
-        squash_merge_commit_title: "PR_TITLE"
-        squash_merge_commit_message: "PR_BODY"
-        edit_mode: "DISABLED"
+      restrictions: null
 
   - name: develop
     protection:
       required_pull_request_reviews:
         required_approving_review_count: 1
         dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        dismissal_restrictions:
+          users: []
+          teams: []
       required_status_checks:
         strict: true
+        contexts: []
       enforce_admins: true
       required_linear_history: true
-      allow_squash_merge: true
-      allow_merge_commit: false
-      allow_rebase_merge: false
-      required_conversation_resolution: true
-      squash_merge_settings:
-        squash_merge_commit_title: "PR_TITLE"
-        squash_merge_commit_message: "PR_BODY"
-        edit_mode: "DISABLED"
+      restrictions: null
 
   - name: bugfix/revert-formatting
     protection:
       required_pull_request_reviews:
         required_approving_review_count: 1
         dismiss_stale_reviews: true
+        require_code_owner_reviews: true
+        dismissal_restrictions:
+          users: []
+          teams: []
       required_status_checks:
         strict: true
+        contexts: []
       enforce_admins: true
       required_linear_history: true
-      allow_squash_merge: true
-      allow_merge_commit: false
-      allow_rebase_merge: false
-      required_conversation_resolution: true
-      squash_merge_settings:
-        squash_merge_commit_title: "PR_TITLE"
-        squash_merge_commit_message: "PR_BODY"
-        edit_mode: "DISABLED"
+      restrictions: null
 
 teams:
   - name: IOS
