@@ -25,10 +25,7 @@ struct AlertView: View {
 
     // MARK: Lifecycle
 
-    init(tripProgress: TripProgress,
-         info: NavigationAlert,
-         isExpanded: Bool,
-         onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
+    init(tripProgress: TripProgress, info: NavigationAlert, isExpanded: Bool, onAction: @escaping (ActiveTripInfoViewAction) -> Void) {
         self.tripProgress = tripProgress
         self.info = info
         self.onAction = onAction
@@ -60,7 +57,6 @@ struct AlertView: View {
             .lineLimit(1)
             .foregroundStyle(Color.Colors.General._02Grey)
             .multilineTextAlignment(.center)
-//            .padding(.top, 16)
 
             GeometryReader { geometry in
                 Rectangle()
@@ -111,15 +107,17 @@ struct AlertView: View {
 
 // MARK: - AlertType
 
-#Preview(body: {
+#Preview {
     let id = UUID().uuidString
-    let speedCamera = SpeedCamera(id: id,
-                                  speedLimit: .kilometersPerHour(120),
-                                  type: .fixed,
-                                  direction: .forward,
-                                  captureRange: .kilometers(20),
-                                  location: .riyadh)
-    TripInfoContianerView(tripProgress: TripProgress(distanceToNextManeuver: 100, distanceRemaining: 1000, durationRemaining: 1500),
-                          navigationAlert: NavigationAlert(id: id, progress: 10, alertType: .speedCamera(speedCamera), alertDistance: 900)) { _ in
+    let tripProgress = TripProgress(distanceToNextManeuver: 100, distanceRemaining: 1000, durationRemaining: 1500)
+    let camera = SpeedCamera(id: id,
+                             speedLimit: .kilometersPerHour(120),
+                             type: .fixed,
+                             direction: .forward,
+                             captureRange: .kilometers(20),
+                             location: .riyadh)
+    let alert = NavigationAlert(id: id, progress: 10, alertType: .speedCamera(camera), alertDistance: 900)
+
+    TripInfoContianerView(tripProgress: tripProgress, navigationAlert: alert) { _ in
     }
-})
+}

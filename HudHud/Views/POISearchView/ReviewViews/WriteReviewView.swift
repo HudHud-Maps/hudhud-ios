@@ -19,8 +19,8 @@ struct WriteReviewView: View {
 
     @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
-    @State private var cameraStore = CameraStore()
     @State var textEditorHeight: CGFloat = 128
+    var cameraStore: CameraStore
     let item: ResolvedItem
     var store: RatingStore
     let sheetStore: SheetStore
@@ -127,20 +127,8 @@ struct WriteReviewView: View {
                     .padding(24)
                     .background(Color.Colors.General._05WhiteBackground)
                     .cornerRadius(10)
-                }
-                .fullScreenCover(isPresented: self.$cameraStore.isShowingCamera) {
-                    AccessCameraView(cameraStore: self.cameraStore)
-                        .background(.black)
-                        .onDisappear {
-                            if let image = cameraStore.capturedImage {
-                                self.store.addImagesFromCamera(newImage: image)
-                            }
-                        }
-                }
-                .alert(isPresented: self.$cameraStore.showAlert) {
-                    Alert(title: Text("Camera Access Required"),
-                          message: Text("Camera access is required to take photos. Please enable it in Settings > HudHud app > Camera"),
-                          dismissButton: .default(Text("OK")))
+                }.withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
+                    self.store.addImagesFromCamera(newImage: capturedImage)
                 }
 
                 PhotosPicker(selection: Binding(get: { self.store.state.selection },
@@ -219,6 +207,8 @@ private extension WriteReviewView {
 }
 
 #Preview {
-    WriteReviewView(item: .artwork, store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0),
+    WriteReviewView(cameraStore: CameraStore(),
+                    item: .artwork,
+                    store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0),
                     sheetStore: SheetStore(emptySheetType: .search))
 }

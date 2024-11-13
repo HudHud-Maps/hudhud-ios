@@ -208,15 +208,17 @@ private extension RoutingStore {
             if routes.isEmpty {
                 self.routesPlanMapDrawer.clear()
             } else if let selectedRoute = selectedRoute ?? routes.first {
-                self.routesPlanMapDrawer.drawRoutes(routes: routes, selectedRoute: selectedRoute, waypoints: (self.waypoints ?? []).map { waypoint in
-                    switch waypoint {
-                    case let .myLocation(waypoint):
-                        RouteWaypoint(type: .userLocation(Coordinates(waypoint.cLCoordinate)),
-                                      title: "User Location")
-                    case let .waypoint(item):
-                        RouteWaypoint(type: .location(item), title: item.title)
-                    }
-                })
+                self.routesPlanMapDrawer.drawRoutes(routes: routes,
+                                                    selectedRoute: selectedRoute,
+                                                    waypoints: (self.waypoints ?? []).map { waypoint in
+                                                        switch waypoint {
+                                                        case let .myLocation(waypoint):
+                                                            RouteWaypoint(type: .userLocation(Coordinates(waypoint.cLCoordinate)),
+                                                                          title: "User Location")
+                                                        case let .waypoint(item):
+                                                            RouteWaypoint(type: .location(item), title: item.title)
+                                                        }
+                                                    })
             }
         }
         .store(in: &self.routePlanSubscriptions)

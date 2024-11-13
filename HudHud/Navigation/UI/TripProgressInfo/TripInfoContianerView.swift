@@ -79,12 +79,17 @@ private extension TripInfoContianerView {
                 .padding(.top, 8)
                 .padding(.bottom, 12)
             if let navigationAlert {
-                AlertView(tripProgress: self.tripProgress, info: navigationAlert, isExpanded: self.isExpanded, onAction: self.onAction)
+                AlertView(tripProgress: self.tripProgress,
+                          info: navigationAlert,
+                          isExpanded: self.isExpanded,
+                          onAction: self.onAction)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .padding(.bottom, self.safeAreaInsets.bottom)
             } else {
-                TripProgressView(tripProgress: self.tripProgress, isExpanded: self.isExpanded, onAction: self.onAction)
+                TripProgressView(tripProgress: self.tripProgress,
+                                 isExpanded: self.isExpanded,
+                                 onAction: self.onAction)
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
                     .padding(.bottom, self.safeAreaInsets.bottom)

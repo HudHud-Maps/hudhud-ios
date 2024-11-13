@@ -135,12 +135,9 @@ struct MapViewContainer<SheetContentView: View>: View {
                 })
                 .onChange(of: self.navigationStore.state) { _, newValue in
                     switch newValue.status {
-                    case .idle,
-                         .navigating:
+                    case .idle, .navigating:
                         break
-                    case .cancelled,
-                         .arrived,
-                         .failed:
+                    case .cancelled, .arrived, .failed:
                         stopNavigation()
                     }
                 }
@@ -317,6 +314,8 @@ private extension MapViewContainer {
                                         coordinate: gesture.coordinate,
                                         color: .systemRed)
         self.sheetStore.show(.pointOfInterest(generatedPOI))
+        self.sheetStore.currentSheet.detentData.value = DetentData(selectedDetent: .height(140),
+                                                                   allowedDetents: [.height(140)])
     }
 
     func configureMapViewController(_ mapViewController: MapViewController) {

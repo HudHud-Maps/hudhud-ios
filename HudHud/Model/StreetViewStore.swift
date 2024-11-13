@@ -57,12 +57,8 @@ final class StreetViewStore {
 
     // MARK: Lifecycle
 
-    init(streetViewScene: StreetViewScene? = nil,
-         nearestStreetViewScene: StreetViewScene? = nil,
-         fullScreenStreetView: Bool = false,
-         mapStore: MapStore,
-         streetViewClient: StreetViewClient = StreetViewClient(),
-         debugStore: DebugStore = DebugStore(),
+    init(streetViewScene: StreetViewScene? = nil, nearestStreetViewScene: StreetViewScene? = nil, fullScreenStreetView: Bool = false,
+         mapStore: MapStore, streetViewClient: StreetViewClient = StreetViewClient(), debugStore: DebugStore = DebugStore(),
          cachedScenes: [Int: StreetViewScene] = [Int: StreetViewScene]()) {
         self.streetViewScene = streetViewScene
         self.nearestStreetViewScene = nearestStreetViewScene
@@ -134,8 +130,7 @@ final class StreetViewStore {
         do {
             // This is not working as `getStreetView` doesn't return a scene but the older format
             // This means we could show the streetView Image but not navigate around
-            self.streetViewScene = try await self.streetViewClient.getStreetView(lat: coordinate.latitude,
-                                                                                 lon: coordinate.longitude,
+            self.streetViewScene = try await self.streetViewClient.getStreetView(lat: coordinate.latitude, lon: coordinate.longitude,
                                                                                  baseURL: DebugStore().baseURL)
             self.errorMsg = nil
         } catch {

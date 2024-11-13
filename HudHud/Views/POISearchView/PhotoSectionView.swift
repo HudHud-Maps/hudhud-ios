@@ -28,6 +28,9 @@ struct PhotoSectionView: View {
     let item: ResolvedItem
 
     @State private var selectedMedia: URL?
+    @Binding var selectedTab: POIOverviewView.Tab
+    @Bindable var photoStore: PhotoStore
+    @Bindable var cameraStore: CameraStore
 
     // MARK: Content
 
@@ -62,7 +65,17 @@ struct PhotoSectionView: View {
                 }
                 .scrollIndicators(.hidden)
             }
-        }
+        }.padding()
+            .addPhotoConfirmationDialog(isPresented: self.$cameraStore.showAddPhotoConfirmation, onCameraAction: {
+                self.cameraStore.openCamera()
+            }, onLibraryAction: {
+                self.photoStore.openLibrary()
+            })
+            .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
+                self.photoStore.reduce(action: .addImageFromCamera(capturedImage))
+            }
+            .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(get: { self.photoStore.state.selection },
+                                                                                        set: { self.photoStore.reduce(action: .addImages($0)) }))
     }
 }
 
@@ -73,13 +86,14 @@ private extension PhotoSectionView {
     @ViewBuilder
     func noImagesView() -> some View {
         Text("There is no photo added yet! Be the first to add one.")
-            .hudhudFontStyle(.labelXxsmall)
+            .hudhudFontStyle(.labelXsmall)
             .foregroundColor(Color.Colors.General._02Grey)
 
         HStack {
             Spacer()
             self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: true) {
                 // Action for Add Photo
+                self.cameraStore.showAddPhotoConfirmation = true
             }
             Spacer()
         }
@@ -103,7 +117,6 @@ private extension PhotoSectionView {
 
             self.imageView(for: self.item.mediaURLs[4], label: self.item.title, size: ImageSizes.small)
         }
-        .padding()
     }
 
     @ViewBuilder
@@ -150,10 +163,12 @@ private extension PhotoSectionView {
             if self.item.mediaURLs.count >= 5 {
                 self.actionButton(title: "View All", imageName: "photoLibrary", isSmallButton: true) {
                     // Action for View All
+                    self.selectedTab = .photos
                 }
             }
-            self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count > 5 ? true : false) {
+            self.actionButton(title: "Add Photo", imageName: "addPhoto", isSmallButton: self.item.mediaURLs.count >= 5 ? true : false) {
                 // Action for add Photo
+                self.cameraStore.showAddPhotoConfirmation = true
             }
         }
     }
@@ -180,6 +195,7 @@ private extension PhotoSectionView {
                             .hudhudFontStyle(.labelSmall)
                             .padding(.horizontal, 8)
                             .padding(.vertical, 4)
+                            .frame(width: 80, height: 24)
                             .background(Color.Colors.General._01Black.opacity(0.5))
                             .foregroundColor(Color.Colors.General._05WhiteBackground)
                             .clipShape(.rect(topLeadingRadius: 8, bottomTrailingRadius: 15))
@@ -222,5 +238,8 @@ private extension PhotoSectionView {
 }
 
 #Preview {
-    PhotoSectionView(item: .artwork).padding(.horizontal)
+    @Previewable @State var about: POIOverviewView.Tab = .about
+
+    PhotoSectionView(item: .ketchup,
+                     selectedTab: $about, photoStore: PhotoStore(), cameraStore: CameraStore())
 }

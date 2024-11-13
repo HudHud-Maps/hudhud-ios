@@ -171,6 +171,7 @@ enum SheetType {
     case routePlanner(RoutePlannerStore)
     case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
+    case loginNeeded
 
     // MARK: Computed Properties
 
@@ -196,6 +197,8 @@ enum SheetType {
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
+        case .loginNeeded:
+            DetentData(selectedDetent: .third, allowedDetents: [.third])
         }
     }
 

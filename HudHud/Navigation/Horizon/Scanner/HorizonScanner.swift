@@ -45,7 +45,9 @@ final class HorizonScanner {
         self.routerGeometryCalculator.update(with: geometry)
     }
 
-    func scan(features: [HorizonFeature], at location: CLLocationCoordinate2D, bearing: CLLocationDirection) -> ScanResult {
+    func scan(features: [HorizonFeature],
+              at location: CLLocationCoordinate2D,
+              bearing: CLLocationDirection) -> ScanResult {
         defer { lastLocation = location }
 
         NavigationLogger.beginFrame("Horizon Scan at (\(location.latitude), \(location.longitude))")
@@ -66,7 +68,10 @@ final class HorizonScanner {
             NavigationLogger.log("Feature Position - index: \(featurePosition.index), distance: \(featurePosition.projectedDistance)")
             NavigationLogger.log("Route Distance: \(distance)m")
 
-            if self.isFeaturePassed(feature, userPosition: userPosition, featurePosition: featurePosition, distance: distance) {
+            if self.isFeaturePassed(feature,
+                                    userPosition: userPosition,
+                                    featurePosition: featurePosition,
+                                    distance: distance) {
                 NavigationLogger.log("Feature passed", level: .debug)
                 self.activeFeatures.removeValue(forKey: id)
                 exitedFeatures.append(feature)
@@ -109,7 +114,8 @@ final class HorizonScanner {
                     self.activeFeatures[feature.id] = feature
                     detectedFeatures.append(feature)
                 }
-                let featureDistance = FeatureDistance(feature: feature, distance: measurement)
+                let featureDistance = FeatureDistance(feature: feature,
+                                                      distance: measurement)
                 approachingFeatures.append(featureDistance)
                 NavigationLogger.log("Added to approaching features")
             }
@@ -117,19 +123,25 @@ final class HorizonScanner {
         }
         NavigationLogger.endScope()
 
-        return ScanResult(detectedFeatures: detectedFeatures, approachingFeatures: approachingFeatures, exitedFeatures: exitedFeatures)
+        return ScanResult(detectedFeatures: detectedFeatures,
+                          approachingFeatures: approachingFeatures,
+                          exitedFeatures: exitedFeatures)
     }
 }
 
 private extension HorizonScanner {
-
-    func isFeaturePassed(_: HorizonFeature, userPosition: RoutePosition, featurePosition: RoutePosition, distance: CLLocationDistance) -> Bool {
+    func isFeaturePassed(_: HorizonFeature,
+                         userPosition: RoutePosition,
+                         featurePosition: RoutePosition,
+                         distance: CLLocationDistance) -> Bool {
         guard userPosition.isValid, featurePosition.isValid else { return false }
         return featurePosition.isBefore(userPosition) &&
             distance < LocationConstants.closeProximityThreshold
     }
 
-    func calculateRouteDistance(from: CLLocationCoordinate2D, to: CLLocationCoordinate2D, featureId: String) -> CLLocationDistance {
+    func calculateRouteDistance(from: CLLocationCoordinate2D,
+                                to: CLLocationCoordinate2D,
+                                featureId: String) -> CLLocationDistance {
         NavigationLogger.beginScope("Calculate Route Distance")
         defer { NavigationLogger.endScope() }
 
@@ -160,7 +172,9 @@ private extension HorizonScanner {
         }
     }
 
-    func isFeatureRelevant(_ feature: HorizonFeature, userLocation: CLLocationCoordinate2D, userBearing: CLLocationDirection) -> FeatureRelevance {
+    func isFeatureRelevant(_ feature: HorizonFeature,
+                           userLocation: CLLocationCoordinate2D,
+                           userBearing: CLLocationDirection) -> FeatureRelevance {
         switch feature.type {
         case let .speedCamera(camera):
             let currentLocation = self.lastLocation ?? userLocation
@@ -180,9 +194,7 @@ private extension HorizonScanner {
                           userCourse: CLLocationDirection,
                           distance: CLLocationDistance) -> FeatureRelevance {
         NavigationLogger.beginScope("Camera Relevance Check")
-        defer {
-            NavigationLogger.endScope()
-        }
+        defer { NavigationLogger.endScope() }
 
         NavigationLogger.log("Camera ID: \(camera.id)")
         NavigationLogger.log("Camera Direction: \(camera.direction)")

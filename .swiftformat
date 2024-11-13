@@ -29,7 +29,7 @@
 --extensionmark "MARK: - %t + %c"
 --fractiongrouping disabled
 --fragment false
---funcattributes prev-line
+--funcattributes preserve
 --generictypes 
 --groupedextension "MARK: - %c"
 --guardelse same-line
@@ -37,7 +37,7 @@
 --hexgrouping 4,8
 --hexliteralcase uppercase
 --ifdef indent
---importgrouping testable-last
+--importgrouping alpha
 --indent 4
 --indentcase false
 --indentstrings false
@@ -48,7 +48,7 @@
 --markcategories true
 --markextensions always
 --marktypes always
---maxwidth 150
+--maxwidth none
 --modifierorder 
 --nevertrailing 
 --nilinit remove
@@ -72,19 +72,19 @@
 --storedvarattrs preserve
 --stripunusedargs always
 --structthreshold 0
---swiftversion 5.10
+--swiftversion 5.9
 --tabwidth 4
 --throwcapturing 
 --timezone system
 --trailingclosures 
 --trimwhitespace always
---typeattributes prev-line
+--typeattributes preserve
 --typeblanklines preserve
 --typedelimiter space-after
 --typemark "MARK: - %t"
 --voidtype void
---wraparguments after-first
---wrapcollections before-first
+--wraparguments preserve
+--wrapcollections preserve
 --wrapconditions preserve
 --wrapeffects preserve
 --wrapenumcases always
@@ -95,4 +95,4 @@
 --xcodeindentation disabled
 --yodaswap always
 --disable redundantReturn,wrapMultilineStatementBraces
---enable blankLinesBetweenImports,isEmpty,markTypes,organizeDeclarations,wrapEnumCases
+--enable blankLinesBetweenImports,isEmpty,markTypes,organizeDeclarations

@@ -30,7 +30,7 @@ struct POIDetailSheet: View {
 
     @State var pointOfInterestStore: PointOfInterestStore
     let sheetStore: SheetStore
-
+    @ObservedObject var favoritesStore: FavoritesStore
     let didDenyLocationPermission: Bool
     let onStart: ([Route]?) -> Void
     let onDismiss: () -> Void
@@ -38,16 +38,17 @@ struct POIDetailSheet: View {
     @State var selectedTab: POIOverviewView.Tab = .overview
     @Namespace var animation
     @State var showTabView: Bool = true
-
     @State var routes: [Route]?
     @State var viewMore: Bool = false
     @State var askToEnableLocation = false
     @ObservedObject var routingStore: RoutingStore
-
     @EnvironmentObject var notificationQueue: NotificationQueue
 
     let formatter = Formatters()
 
+    @State private var selectedMedia: URL?
+    @State private var cameraStore = CameraStore()
+    @State private var photoStore = PhotoStore()
     private let displayPlaceholderReviews = true // we are waiting for the backend to implement reviews
 
     @Environment(\.dismiss) private var dismiss
@@ -70,6 +71,7 @@ struct POIDetailSheet: View {
 
     init(pointOfInterestStore: PointOfInterestStore,
          sheetStore: SheetStore,
+         favoritesStore: FavoritesStore,
          routingStore: RoutingStore,
          didDenyLocationPermission: Bool,
          onStart: @escaping ([Route]?) -> Void,
@@ -80,6 +82,7 @@ struct POIDetailSheet: View {
         self.onDismiss = onDismiss
         self.routingStore = routingStore
         self.didDenyLocationPermission = didDenyLocationPermission
+        self.favoritesStore = favoritesStore
     }
 
     // MARK: Content
@@ -92,8 +95,20 @@ struct POIDetailSheet: View {
                         .hudhudFont(.title)
                         .foregroundStyle(Color.Colors.General._01Black)
                         .lineLimit(self.sheetStore.sheetHeight < 220 ? 1 : 2)
-                        .minimumScaleFactor(0.6)
                         .frame(maxWidth: .infinity, alignment: .leading)
+                    if self.pointOfInterestStore.pointOfInterest.title == "Dropped Pin" {
+                        HStack {
+                            Text(self.pointOfInterestStore.pointOfInterest.coordinate.formatted())
+                                .hudhudFont(.subheadline)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                                .lineLimit(1)
+                            Text(" · ")
+                                .hudhudFont(.subheadline)
+                                .foregroundStyle(Color.Colors.General._02Grey)
+                            self.routeInformationView
+                        }
+                        .padding(.vertical, 5)
+                    }
                     self.categoryView
                     if self.sheetStore.sheetHeight >= POISheetViewMetrics.compactSheetHeight {
                         HStack(spacing: 0.0) {
@@ -132,7 +147,6 @@ struct POIDetailSheet: View {
 
             if self.sheetStore.sheetHeight > POISheetViewMetrics.expandedSheetHeight {
                 self.tabView
-
                 ScrollView {
                     VStack {
                         // Switch between views based on the selected tab
@@ -142,7 +156,6 @@ struct POIDetailSheet: View {
                             POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
                                             selectedTab: self.$selectedTab)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .padding()
                                 .background(Color.Colors.General._05WhiteBackground)
                                 .cornerRadius(14)
 
@@ -150,25 +163,25 @@ struct POIDetailSheet: View {
                                 RatingSectionView(store: RatingStore(staticRating: rating,
                                                                      ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
                                                                      interactiveRating: 0))
-                                    .padding()
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
 
                             if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
 
-                            if !self.pointOfInterestStore.pointOfInterest.mediaURLs.isEmpty {
-                                PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest)
-                                    .background(Color.Colors.General._05WhiteBackground)
-                                    .cornerRadius(14)
-                            }
+                            PhotoSectionView(item: self.pointOfInterestStore.pointOfInterest, selectedTab: self.$selectedTab,
+                                             photoStore: self.photoStore, cameraStore: self.cameraStore)
+                                .background(Color.Colors.General._05WhiteBackground)
+                                .cornerRadius(14)
 
                         case .photos:
-                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest)
+                            PhotoTabView(item: self.pointOfInterestStore.pointOfInterest, selectedMedia: self.$selectedMedia)
                                 .padding(-10)
 
                         case .review:
@@ -176,14 +189,14 @@ struct POIDetailSheet: View {
                                 RatingSectionView(store: RatingStore(staticRating: rating,
                                                                      ratingsCount: self.pointOfInterestStore.pointOfInterest.ratingsCount ?? 0,
                                                                      interactiveRating: 0))
-                                    .padding()
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
 
                             if self.displayPlaceholderReviews {
                                 ReviewsListView(reviews: Review.listOfReviewsForPreview)
-                                    .padding()
+                                    .padding(.vertical)
                                     .background(Color.Colors.General._05WhiteBackground)
                                     .cornerRadius(14)
                             }
@@ -192,7 +205,6 @@ struct POIDetailSheet: View {
                             POIOverviewView(poiData: POISheetStore(item: self.pointOfInterestStore.pointOfInterest),
                                             selectedTab: self.$selectedTab)
                                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                                .padding()
                                 .background(Color.Colors.General._05WhiteBackground)
                                 .cornerRadius(14)
 
@@ -201,12 +213,47 @@ struct POIDetailSheet: View {
                         }
                     }
                     .padding(10)
-                    .padding(.bottom, 100)
                 }
+                .padding(.bottom, 80)
+                .scrollIndicators(.hidden)
                 .background(Color.Colors.General._03LightGrey)
+                .overlay(alignment: .bottomTrailing) {
+                    if self.selectedTab == .photos {
+                        Button(action: {
+                            self.cameraStore.showAddPhotoConfirmation = true
+                        }, label: {
+                            ZStack {
+                                Circle()
+                                    .fill(Color.Colors.General._06DarkGreen)
+                                    .frame(width: 56, height: 56)
+                                Image(.addPhoto)
+                                    .resizable()
+                                    .renderingMode(.template)
+                                    .frame(width: 24, height: 24)
+                                    .foregroundColor(Color.Colors.General._05WhiteBackground)
+                            }
+                        })
+                        .padding(.bottom, 100)
+                        .padding(.trailing, 16)
+                    }
+                }
+                .sheet(item: self.$selectedMedia) { mediaURL in
+                    FullPageImage(mediaURL: mediaURL,
+                                  mediaURLs: self.pointOfInterestStore.pointOfInterest.mediaURLs)
+                }
             }
             Spacer()
         }
+        .addPhotoConfirmationDialog(isPresented: self.$cameraStore.showAddPhotoConfirmation, onCameraAction: {
+            self.cameraStore.openCamera()
+        }, onLibraryAction: {
+            self.photoStore.openLibrary()
+        })
+        .withCameraAccess(cameraStore: self.cameraStore) { capturedImage in
+            self.photoStore.reduce(action: .addImageFromCamera(capturedImage))
+        }
+        .photosPicker(isPresented: self.$photoStore.showLibrary, selection: Binding(get: { self.photoStore.state.selection },
+                                                                                    set: { self.photoStore.reduce(action: .addImages($0)) }))
         .overlay(alignment: .bottom) {
             VStack(spacing: 0) {
                 Rectangle() // Top divider
@@ -219,7 +266,8 @@ struct POIDetailSheet: View {
                                  onStart: self.onStart,
                                  onDismiss: self.onDismiss,
                                  didDenyLocationPermission: self.didDenyLocationPermission,
-                                 routes: self.routes)
+                                 routes: self.routes, sheetStore: self.sheetStore,
+                                 favoritesStore: self.favoritesStore)
                     .padding(.bottom)
                     .padding(.vertical)
                     .padding(.horizontal, 20)
@@ -242,6 +290,16 @@ struct POIDetailSheet: View {
         .onAppear {
             self.pointOfInterestStore.reApplyThePointOfInterestToTheMapIfNeeded()
         }
+        // Displays a simple toast message when user tap save icon to save poi
+        .simpleToast(isPresented: self.$favoritesStore.isMarkedAsFavourite,
+                     options: SimpleToastOptions(alignment: .bottom, hideAfter: 2, animation: .easeIn, modifierType: .fade), content: {
+                         Label(self.favoritesStore.labelMessage, systemSymbol: .checkmarkCircleFill)
+                             .padding(.vertical, 12)
+                             .padding(.horizontal, 12)
+                             .background(Color.Colors.General._01Black)
+                             .foregroundColor(Color.white)
+                             .cornerRadius(10)
+                     })
     }
 
     var tabView: some View {
@@ -390,7 +448,6 @@ private extension POIDetailSheet {
                         .hudhudFont(.subheadline)
                         .foregroundStyle(Color.Colors.General._02Grey)
                         .lineLimit(1)
-                        .minimumScaleFactor(0.5)
                 }
             }
         }

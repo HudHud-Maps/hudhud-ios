@@ -222,7 +222,9 @@ private extension RouteGeometryCalculator {
         return (distance, projectedDistance)
     }
 
-    func dot(_ point: CLLocationCoordinate2D, _ start: CLLocationCoordinate2D, _ end: CLLocationCoordinate2D) -> Double {
+    func dot(_ point: CLLocationCoordinate2D,
+             _ start: CLLocationCoordinate2D,
+             _ end: CLLocationCoordinate2D) -> Double {
         let px = point.longitude - start.longitude
         let py = point.latitude - start.latitude
         let ex = end.longitude - start.longitude
@@ -230,7 +232,9 @@ private extension RouteGeometryCalculator {
         return px * ex + py * ey
     }
 
-    func interpolate(start: CLLocationCoordinate2D, end: CLLocationCoordinate2D, t: Double) -> CLLocationCoordinate2D {
+    func interpolate(start: CLLocationCoordinate2D,
+                     end: CLLocationCoordinate2D,
+                     t: Double) -> CLLocationCoordinate2D {
         let lat = start.latitude + (end.latitude - start.latitude) * t
         let lon = start.longitude + (end.longitude - start.longitude) * t
         return CLLocationCoordinate2D(latitude: lat, longitude: lon)

@@ -12,6 +12,7 @@ import MapKit
 import MapLibre
 import MapLibreSwiftUI
 import OSLog
+import SimpleToast
 import SwiftUI
 
 // MARK: - SearchSheet
@@ -26,6 +27,7 @@ struct SearchSheet: View {
     @Bindable var sheetStore: SheetStore
     @ObservedObject var filterStore: FilterStore
     @State var loginShown: Bool = false
+    @ObservedObject var favoritesStore: FavoritesStore
 
     @State private var showAlert = false
 
@@ -33,12 +35,14 @@ struct SearchSheet: View {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore, filterStore: FilterStore) {
+    init(mapStore: MapStore, searchStore: SearchViewStore, trendingStore: TrendingStore, sheetStore: SheetStore, filterStore: FilterStore,
+         favoritesStore: FavoritesStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
         self.trendingStore = trendingStore
         self.sheetStore = sheetStore
         self.filterStore = filterStore
+        self.favoritesStore = favoritesStore
         self.searchIsFocused = false
     }
 
@@ -141,7 +145,7 @@ struct SearchSheet: View {
                                 Button {
                                     self.sheetStore.show(.pointOfInterest(item))
                                 } label: {
-                                    SearchResultView(item: item) {
+                                    SearchResultView(favoritesStore: self.favoritesStore, item: item, sheetStore: self.sheetStore) {
                                         self.sheetStore.show(.pointOfInterest(item))
                                     }
                                 }
@@ -214,6 +218,16 @@ struct SearchSheet: View {
                 }
                 .scrollIndicators(.hidden)
                 .listStyle(.plain)
+                // Displays a simple toast message when user tap save icon to save poi
+                .simpleToast(isPresented: self.$favoritesStore.isMarkedAsFavourite,
+                             options: SimpleToastOptions(alignment: .bottom, hideAfter: 1, animation: .easeIn, modifierType: .fade)) {
+                    Label(self.favoritesStore.labelMessage, systemSymbol: .checkmarkCircleFill)
+                        .padding(.vertical, 12)
+                        .padding(.horizontal, 12)
+                        .background(Color.Colors.General._01Black)
+                        .foregroundColor(Color.white)
+                        .cornerRadius(10)
+                }
             }
         }
         .onChange(of: self.searchStore.searchText) { _, _ in
@@ -298,5 +312,5 @@ extension [ResolvedItem]: @retroactive RawRepresentable {
 #Preview {
     let trendingStroe = TrendingStore()
     SearchSheet(mapStore: .storeSetUpForPreviewing, searchStore: .storeSetUpForPreviewing, trendingStore: trendingStroe,
-                sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing)
+                sheetStore: .storeSetUpForPreviewing, filterStore: .storeSetUpForPreviewing, favoritesStore: FavoritesStore())
 }

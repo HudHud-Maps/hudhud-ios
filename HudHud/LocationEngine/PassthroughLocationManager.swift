@@ -33,7 +33,9 @@ public final class PassthroughLocationManager: NSObject, MLNLocationManager, @un
 
     // MARK: Lifecycle
 
-    init(authorizationStatus: CLAuthorizationStatus, headingOrientation: CLDeviceOrientation, lastLocation: CLLocation? = nil) {
+    init(authorizationStatus: CLAuthorizationStatus,
+         headingOrientation: CLDeviceOrientation,
+         lastLocation: CLLocation? = nil) {
         self.authorizationStatus = authorizationStatus
         self.headingOrientation = headingOrientation
         self.lastLocation = lastLocation

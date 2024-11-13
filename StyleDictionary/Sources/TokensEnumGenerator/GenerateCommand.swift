@@ -20,10 +20,10 @@ struct GenerateCommand: ParsableCommand {
 
     // MARK: Properties
 
-    @Option(help: "path to tokens.json file")
+    @Option(help: "")
     var inputFile: URL
 
-    @Option(help: "path to custom stencil template")
+    @Option(help: "")
     var template: URL?
 
     @Option(help: "Output directory where the generated files are written.")

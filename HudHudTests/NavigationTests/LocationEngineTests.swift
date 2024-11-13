@@ -10,9 +10,9 @@ import Combine
 import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
+@testable import HudHud
 import MapLibre
 import XCTest
-@testable import HudHud
 
 // MARK: - LocationEngineTests
 

@@ -6,8 +6,8 @@
 //
 
 import Stencil
-import XCTest
 @testable import TokensEnumGenerator
+import XCTest
 
 final class TokensEnumGeneratorTests: XCTestCase {
 
@@ -38,24 +38,7 @@ final class TokensEnumGeneratorTests: XCTestCase {
 
     func testGenerateEnumCode() throws {
         // Prepare the context
-        let context = [
-            "enumCases": [
-                "heading.xxLarge",
-                "heading.xLarge",
-                "heading.large",
-                "heading.medium",
-                "heading.xSmall",
-                "label.large",
-                "label.medium",
-                "label.small",
-                "label.smallExtraBold",
-                "label.xSmall",
-                "label.xxSmall",
-                "paragraph.large",
-                "paragraph.medium",
-                "paragraph.small",
-                "paragraph.xSmall"]
-        ]
+        let context = ["enumCases": ["heading.xxLarge", "heading.xLarge", "heading.large", "heading.medium", "heading.xSmall", "label.large", "label.medium", "label.small", "label.smallExtraBold", "label.xSmall", "label.xxSmall", "paragraph.large", "paragraph.medium", "paragraph.small", "paragraph.xSmall"]]
 
         // Define the template inline for testing
         let template = """

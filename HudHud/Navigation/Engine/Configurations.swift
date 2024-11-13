@@ -52,24 +52,29 @@ struct NavigationConfig {
 
 enum StepAdvanceConfig {
     case manual
-    case distanceToEndOfStep(distance: UInt16, minimumHorizontalAccuracy: UInt16)
-    case relativeLineString(minimumHorizontalAccuracy: UInt16, automaticAdvanceDistance: UInt16?)
+    case distanceToEndOfStep(distance: UInt16,
+                             minimumHorizontalAccuracy: UInt16)
+    case relativeLineString(minimumHorizontalAccuracy: UInt16,
+                            automaticAdvanceDistance: UInt16?)
 
     // MARK: Static Properties
 
-    static let `default` = StepAdvanceConfig.relativeLineString(minimumHorizontalAccuracy: 32, automaticAdvanceDistance: 10)
+    static let `default` = StepAdvanceConfig.relativeLineString(minimumHorizontalAccuracy: 32,
+                                                                automaticAdvanceDistance: 10)
 }
 
 // MARK: - DeviationConfig
 
 enum DeviationConfig {
     case none
-    case staticThreshold(minimumHorizontalAccuracy: UInt16, maxAcceptableDeviation: Double)
+    case staticThreshold(minimumHorizontalAccuracy: UInt16,
+                         maxAcceptableDeviation: Double)
     case custom(detector: RouteDeviationDetector)
 
     // MARK: Static Properties
 
-    static let `default` = DeviationConfig.staticThreshold(minimumHorizontalAccuracy: 25, maxAcceptableDeviation: 20)
+    static let `default` = DeviationConfig.staticThreshold(minimumHorizontalAccuracy: 25,
+                                                           maxAcceptableDeviation: 20)
 }
 
 // MARK: - FeatureAlertConfig
@@ -78,7 +83,9 @@ struct FeatureAlertConfig {
 
     // MARK: Static Properties
 
-    static let `default` = FeatureAlertConfig(speedCameraConfig: .default, trafficIncidentConfig: .default, roadworkConfig: .default)
+    static let `default` = FeatureAlertConfig(speedCameraConfig: .default,
+                                              trafficIncidentConfig: .default,
+                                              roadworkConfig: .default)
 
     // MARK: Properties
 
@@ -93,7 +100,9 @@ struct SpeedCameraAlertConfig {
 
     // MARK: Static Properties
 
-    static let `default` = SpeedCameraAlertConfig(initialAlertDistance: .kilometers(1), finalAlertDistance: .meters(200), alertRepeatInterval: 30)
+    static let `default` = SpeedCameraAlertConfig(initialAlertDistance: .kilometers(1),
+                                                  finalAlertDistance: .meters(200),
+                                                  alertRepeatInterval: 30)
 
     // MARK: Properties
 
@@ -108,7 +117,9 @@ struct TrafficIncidentAlertConfig {
 
     // MARK: Static Properties
 
-    static let `default` = TrafficIncidentAlertConfig(initialAlertDistance: .kilometers(1), finalAlertDistance: .meters(500), alertRepeatInterval: 45)
+    static let `default` = TrafficIncidentAlertConfig(initialAlertDistance: .kilometers(1),
+                                                      finalAlertDistance: .meters(500),
+                                                      alertRepeatInterval: 45)
 
     // MARK: Properties
 
@@ -123,7 +134,9 @@ struct RoadworkAlertConfig {
 
     // MARK: Static Properties
 
-    static let `default` = RoadworkAlertConfig(initialAlertDistance: .kilometers(3), finalAlertDistance: .kilometers(1), alertRepeatInterval: 60)
+    static let `default` = RoadworkAlertConfig(initialAlertDistance: .kilometers(3),
+                                               finalAlertDistance: .kilometers(1),
+                                               alertRepeatInterval: 60)
 
     // MARK: Properties
 
@@ -138,9 +151,11 @@ private extension NavigationConfig {
         case .manual:
             return .manual
         case let .distanceToEndOfStep(distance, accuracy):
-            return .distanceToEndOfStep(distance: distance, minimumHorizontalAccuracy: accuracy)
+            return .distanceToEndOfStep(distance: distance,
+                                        minimumHorizontalAccuracy: accuracy)
         case let .relativeLineString(accuracy, distance):
-            return .relativeLineStringDistance(minimumHorizontalAccuracy: accuracy, automaticAdvanceDistance: distance)
+            return .relativeLineStringDistance(minimumHorizontalAccuracy: accuracy,
+                                               automaticAdvanceDistance: distance)
         }
     }
 
@@ -149,7 +164,8 @@ private extension NavigationConfig {
         case .none:
             return .none
         case let .staticThreshold(accuracy, deviation):
-            return .staticThreshold(minimumHorizontalAccuracy: accuracy, maxAcceptableDeviation: deviation)
+            return .staticThreshold(minimumHorizontalAccuracy: accuracy,
+                                    maxAcceptableDeviation: deviation)
         case .custom:
             return .none
         }
