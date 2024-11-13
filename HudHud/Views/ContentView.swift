@@ -184,10 +184,6 @@ struct ContentView: View {
                     .environmentObject(self.notificationQueue)
                 case let .routePlanner(store):
                     RoutePlannerView(routePlannerStore: store)
-                case .favoritesViewMore:
-                    FavoritesViewMoreView(searchStore: self.searchViewStore,
-                                          sheetStore: self.sheetStore,
-                                          favoritesStore: self.favoritesStore)
                 case let .editFavoritesForm(item: item,
                                             favoriteItem: favoriteItem):
                     EditFavoritesFormView(item: item,

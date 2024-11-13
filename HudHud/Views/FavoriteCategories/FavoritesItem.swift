@@ -58,15 +58,13 @@ struct FavoritesResolvedItems: RawRepresentable {
 }
 
 extension FavoritesItem {
-    static var favoriteForPreview = FavoritesItem(id: UUID(), title: "School",
-                                                  tintColor: TintColor.entertainmentLeisure, item: .pharmacy, description: " ", type: "School")
+    static var favoriteForPreview = FavoritesItem(id: UUID(), title: "Home",
+                                                  tintColor: TintColor.entertainmentLeisure, item: .pharmacy, description: " ", type: "Work")
     static var favoritesInit = [
         FavoritesItem(id: UUID(), title: "Home",
                       tintColor: TintColor.personalShopping, type: Types.home),
         FavoritesItem(id: UUID(), title: "Work",
-                      tintColor: TintColor.personalShopping, type: Types.work),
-        FavoritesItem(id: UUID(), title: "School",
-                      tintColor: TintColor.entertainmentLeisure, type: Types.school)
+                      tintColor: TintColor.personalShopping, type: Types.work)
     ]
 }
 

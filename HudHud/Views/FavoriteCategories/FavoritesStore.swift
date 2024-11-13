@@ -21,6 +21,10 @@ final class FavoritesStore: ObservableObject {
     @Published var showLoginSheet = false
     @Published var isMarkedAsFavourite = false
     @Published var labelMessage = ""
+    @Published var favoritesShown: Bool = false
+    @Published var editFavoriteMenu: Bool = false
+
+    private var recentlyDeletedFavorite: FavoritesItem? // Store the deleted item temporarily
 
     @AppStorage("favorites") private var storedFavorites: String = ""
 
@@ -35,8 +39,6 @@ final class FavoritesStore: ObservableObject {
     func loadFavorites() {
         if let favorites = FavoritesResolvedItems(rawValue: storedFavorites) {
             self.favoritesItems = favorites.favoritesItems
-        } else {
-            self.favoritesItems = FavoritesItem.favoritesInit
         }
     }
 
@@ -47,11 +49,12 @@ final class FavoritesStore: ObservableObject {
     }
 
     func isFavorites(item: ResolvedItem) -> Bool {
-        return self.favoritesItems.contains(where: { $0.item == item })
+        return self.favoritesItems.contains(where: { $0.item?.id == item.id })
     }
 
     func deleteSavedFavorite(item: ResolvedItem) {
         if let index = favoritesItems.firstIndex(where: { $0.item == item }) {
+            self.recentlyDeletedFavorite = self.favoritesItems[index]
             self.favoritesItems.remove(at: index)
             self.labelMessage = "Favorite location removed"
             self.saveFavorites()
@@ -80,6 +83,7 @@ final class FavoritesStore: ObservableObject {
 
     func deleteFavorite(_ favorite: FavoritesItem) {
         if let index = favoritesItems.firstIndex(where: { $0 == favorite }) {
+            self.recentlyDeletedFavorite = self.favoritesItems[index]
             if self.isUpdatableType(favorite.type) {
                 self.clearItem(at: index)
             } else {
@@ -87,6 +91,14 @@ final class FavoritesStore: ObservableObject {
             }
             self.labelMessage = "Favorite location removed"
             self.saveFavorites()
+        }
+    }
+
+    func undoDelete() {
+        // Restore the deleted item if it exists
+        if let favorite = recentlyDeletedFavorite {
+            self.favoritesItems.append(favorite)
+            self.recentlyDeletedFavorite = nil
         }
     }
 }
@@ -141,7 +153,7 @@ private extension FavoritesStore {
     }
 
     func isUpdatableType(_ type: String) -> Bool {
-        return ["Home", "School", "Work"].contains(type)
+        return ["Home", "Work"].contains(type)
     }
 
 }

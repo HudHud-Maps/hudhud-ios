@@ -32,6 +32,7 @@ struct LoginToSavePOIView: View {
                 }
                 .contentShape(Circle())
             }
+            .padding(.top, 2)
             .padding(.trailing)
             .tint(.secondary)
             .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
@@ -56,12 +57,9 @@ struct LoginToSavePOIView: View {
                 } label: {
                     Text("Login or Sign up")
                 }
-                .buttonStyle(
-                    LargeButtonStyle(
-                        isLoading: .constant(false),
-                        backgroundColor: Color.Colors.General._06DarkGreen,
-                        foregroundColor: .white
-                    ))
+                .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                              backgroundColor: Color.Colors.General._06DarkGreen,
+                                              foregroundColor: .white))
                 .padding(.horizontal, 24)
             }
             .padding(.top)
