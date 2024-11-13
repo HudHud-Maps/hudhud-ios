@@ -64,6 +64,7 @@ final class SheetStore {
         self.makeSheetProvider = makeSheetProvider
         self.emptySheetData = SheetData(sheetType: emptySheetType,
                                         detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData),
+                                        events: PassthroughSubject(),
                                         sheetProvider: EmptySheetProvider())
         self.emptySheetData = self.makeSheet(from: emptySheetType)
         self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
@@ -107,10 +108,12 @@ private extension SheetStore {
 
     func makeSheet(from sheetType: SheetType) -> SheetData {
         let detentCurrentValueSubject = CurrentValueSubject<DetentData, Never>(sheetType.initialDetentData)
-        let context = SheetContext(sheetStore: self, sheetType: sheetType, detentData: detentCurrentValueSubject)
+        let events = PassthroughSubject<SheetEvent, Never>()
+        let context = SheetContext(sheetStore: self, sheetType: sheetType, detentData: detentCurrentValueSubject, sheetEvents: events)
         let sheetProvider = self.makeSheetProvider(context)
         return SheetData(sheetType: sheetType,
                          detentData: detentCurrentValueSubject,
+                         events: events,
                          sheetProvider: sheetProvider)
     }
 
@@ -256,6 +259,7 @@ struct SheetContext {
     let sheetStore: SheetStore
     let sheetType: SheetType
     let detentData: CurrentValueSubject<DetentData, Never>
+    let sheetEvents: any Publisher<SheetEvent, Never>
 }
 
 // MARK: - SheetData
@@ -263,6 +267,7 @@ struct SheetContext {
 struct SheetData {
     let sheetType: SheetType
     let detentData: CurrentValueSubject<DetentData, Never>
+    let events: PassthroughSubject<SheetEvent, Never>
     let sheetProvider: any SheetProvider
 }
 
@@ -271,6 +276,14 @@ struct SheetData {
 struct DetentData: Hashable {
     var selectedDetent: Detent
     let allowedDetents: [Detent]
+}
+
+// MARK: - SheetEvent
+
+enum SheetEvent: Hashable {
+    case willShow
+    case willPresentOtherSheetOnTop
+    case willRemove
 }
 
 // MARK: - EmptySheetProvider

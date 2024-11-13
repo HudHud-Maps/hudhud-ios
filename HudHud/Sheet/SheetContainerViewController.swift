@@ -20,7 +20,7 @@ final class SheetContainerViewController: UINavigationController, UISheetPresent
     private var sheetSubscription: AnyCancellable?
     private var sheetUpdatesSubscription: AnyCancellable?
     private let sheetStore: SheetStore
-    private var currentDetentPublisher: CurrentValueSubject<DetentData, Never>?
+    private var currentSheetData: SheetData?
     /// when the detent is being updated from the user, we do not want to do animation and change the detent again
     private var isDetentUpdatingFromUI = false
 
@@ -58,8 +58,8 @@ final class SheetContainerViewController: UINavigationController, UISheetPresent
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.sheetPresentationController?.delegate = self
-        guard let currentDetentPublisher, let sheetPresentationController else { return }
-        self.updateDetents(with: currentDetentPublisher.value, in: sheetPresentationController)
+        guard let currentSheetData, let sheetPresentationController else { return }
+        self.updateDetents(with: currentSheetData.detentData.value, in: sheetPresentationController)
     }
 
     override func viewDidLayoutSubviews() {
@@ -86,13 +86,13 @@ final class SheetContainerViewController: UINavigationController, UISheetPresent
 
     func sheetPresentationControllerDidChangeSelectedDetentIdentifier(_ sheetPresentationController: UISheetPresentationController) {
         guard let selectedDetentIdentifier = sheetPresentationController.selectedDetentIdentifier,
-              let currentDetentPublisher else { return }
+              let currentSheetData else { return }
         self.isDetentUpdatingFromUI = true
         defer { self.isDetentUpdatingFromUI = false }
-        guard let selectedDetent = currentDetentPublisher.value
+        guard let selectedDetent = currentSheetData.detentData.value
             .allowedDetents
             .first(where: { $0.identifier == selectedDetentIdentifier }) else { return }
-        currentDetentPublisher.value.selectedDetent = selectedDetent
+        currentSheetData.detentData.value.selectedDetent = selectedDetent
     }
 }
 
@@ -110,7 +110,10 @@ private extension SheetContainerViewController {
         sheetPresentationController.animateChanges {
             self.updateDetents(with: sheet.detentData.value, in: sheetPresentationController)
             self.setNavigationTransition(sheet.sheetType.transition)
+            self.currentSheetData?.events.send(.willPresentOtherSheetOnTop)
+            sheet.events.send(.willShow)
             self.pushViewController(viewController, animated: true)
+            self.currentSheetData = sheet
         }
         self.observeChanges(in: sheet.detentData, andApplyIn: sheetPresentationController)
     }
@@ -122,7 +125,10 @@ private extension SheetContainerViewController {
         }
         sheetPresentationController.animateChanges {
             self.updateDetents(with: destinationSheetData.detentData.value, in: sheetPresentationController)
+            self.currentSheetData?.events.send(.willRemove)
+            destinationSheetData.events.send(.willShow)
             self.popViewController(animated: true)
+            self.currentSheetData = destinationSheetData
             self.setNavigationTransition(destinationSheetData.sheetType.transition)
         }
         self.observeChanges(in: destinationSheetData.detentData, andApplyIn: sheetPresentationController)
@@ -135,14 +141,16 @@ private extension SheetContainerViewController {
         }
         sheetPresentationController.animateChanges {
             self.updateDetents(with: rootSheetData.detentData.value, in: sheetPresentationController)
+            self.currentSheetData?.events.send(.willRemove)
+            rootSheetData.events.send(.willShow)
             self.popToRootViewController(animated: true)
+            self.currentSheetData = rootSheetData
             self.setNavigationTransition(rootSheetData.sheetType.transition)
         }
         self.observeChanges(in: rootSheetData.detentData, andApplyIn: sheetPresentationController)
     }
 
     func observeChanges(in detentPublisher: CurrentValueSubject<DetentData, Never>, andApplyIn sheetPresentationController: UISheetPresentationController) {
-        self.currentDetentPublisher = detentPublisher
         self.sheetSubscription = detentPublisher.dropFirst().removeDuplicates().sink { [weak self] detentData in
             guard let self, !self.isDetentUpdatingFromUI else { return }
             sheetPresentationController.animateChanges {

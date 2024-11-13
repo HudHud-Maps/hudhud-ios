@@ -45,7 +45,7 @@ struct ContentView: View {
 
     @State private var streetViewStore: StreetViewStore
     @State private var sheetSize: CGSize = .zero
-    private var routesPlanMapDrawer: RoutesPlanMapDrawer
+    @State private var routesPlanMapDrawer: RoutesPlanMapDrawer
 
     @StateObject private var notificationQueue = NotificationQueue()
 

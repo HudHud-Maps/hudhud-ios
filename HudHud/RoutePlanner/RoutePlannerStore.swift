@@ -11,6 +11,7 @@ import Combine
 import CoreLocation
 import FerrostarCoreFFI
 import Foundation
+import SwiftUI
 
 // MARK: - RoutePlannerStore
 
@@ -36,11 +37,15 @@ final class RoutePlannerStore {
     private var routeMapEventSubscription: AnyCancellable?
     private let rowHeight: CGFloat = 56 + 6
 
+    private var subscriptions: Set<AnyCancellable> = []
+
     // MARK: Computed Properties
 
-    var sheetDetentPublisher: CurrentValueSubject<DetentData, Never>? {
+    var sheetContext: SheetContext? {
         didSet {
+            guard let sheetContext else { return }
             updateHeight()
+            bindMapDrawing(to: sheetContext.sheetEvents)
         }
     }
 
@@ -88,7 +93,9 @@ final class RoutePlannerStore {
                     type: .location(newDestination),
                     title: newDestination.title
                 ))
-                self.routePlan = routePlan
+                withAnimation {
+                    self.routePlan = routePlan
+                }
                 self.updateHeight()
                 Task {
                     await self.fetchRoutePlan(for: routePlan.waypoints)
@@ -106,7 +113,9 @@ final class RoutePlannerStore {
     func swap() async {
         guard var routePlan, self.canSwap else { return }
         routePlan.waypoints.reverse()
-        self.routePlan = routePlan
+        withAnimation {
+            self.routePlan = routePlan
+        }
         let destinations = routePlan.waypoints
         await self.fetchRoutePlan(for: destinations)
     }
@@ -114,7 +123,9 @@ final class RoutePlannerStore {
     func remove(_ destination: RouteWaypoint) async {
         guard var routePlan else { return }
         routePlan.waypoints.removeAll(where: { $0 == destination })
-        self.routePlan = routePlan
+        withAnimation {
+            self.routePlan = routePlan
+        }
         self.updateHeight()
         await self.fetchRoutePlan(for: routePlan.waypoints)
     }
@@ -122,6 +133,9 @@ final class RoutePlannerStore {
     func moveDestinations(fromOffsets: IndexSet, toOffset: Int) async {
         guard var routePlan, self.canMove else { return }
         routePlan.waypoints.move(fromOffsets: fromOffsets, toOffset: toOffset)
+        withAnimation {
+            self.routePlan = routePlan
+        }
         await self.fetchRoutePlan(for: routePlan.waypoints)
     }
 
@@ -134,7 +148,9 @@ final class RoutePlannerStore {
         if var routePlan,
            let newSelectedRoute = routePlan.routes.first(where: { $0.id == routeID }) {
             routePlan.selectedRoute = newSelectedRoute
-            self.routePlan = routePlan
+            withAnimation {
+                self.routePlan = routePlan
+            }
             self.drawRoutes(in: routePlan)
         }
     }
@@ -152,10 +168,26 @@ private extension RoutePlannerStore {
         } else {
             height = 60
         }
-        self.sheetDetentPublisher?.value = DetentData(
+        self.sheetContext?.detentData.value = DetentData(
             selectedDetent: .height(height),
             allowedDetents: [.height(height)]
         )
+    }
+
+    func bindMapDrawing(to sheetEventsPublisher: any Publisher<SheetEvent, Never>) {
+        sheetEventsPublisher.sink { [weak self] event in
+            guard let self else { return }
+            switch event {
+            case .willPresentOtherSheetOnTop, .willRemove:
+                self.routeMapEventSubscription?.cancel()
+                self.routesPlanMapDrawer.clear()
+            case .willShow:
+                guard let routePlan else { return }
+                self.drawRoutes(in: routePlan)
+                self.bindMapEvents()
+            }
+        }
+        .store(in: &self.subscriptions)
     }
 
     func fetchRoutePlanForFirstTime() async {
@@ -220,7 +252,9 @@ private extension RoutePlannerStore {
                 routes: routes,
                 selectedRoute: selectedRoute
             )
-            self.routePlan = plan
+            withAnimation {
+                self.routePlan = plan
+            }
             self.drawRoutes(in: plan)
             self.updateHeight()
         } catch {
@@ -229,6 +263,7 @@ private extension RoutePlannerStore {
     }
 
     func drawRoutes(in plan: RoutePlan) {
+        guard !self.sheetContext.isNil else { return }
         self.routesPlanMapDrawer.drawRoutes(
             routes: plan.routes,
             selectedRoute: plan.selectedRoute,
