@@ -194,7 +194,9 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(sheetStore: self.sheetStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore, favoritesStore: self.favoritesStore)
+                            } onViewMore: {
+                                self.favoritesStore.favoritesShown = true
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)
@@ -203,6 +205,8 @@ struct SearchSheet: View {
                         if let trendingPOIs = self.trendingStore.trendingPOIs, !trendingPOIs.isEmpty {
                             SearchSectionView(title: "Nearby Trending") {
                                 PoiTileGridView(trendingPOIs: self.trendingStore)
+                            } onViewMore: {
+                                // view more for Trending
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)
@@ -211,6 +215,8 @@ struct SearchSheet: View {
                             RecentSearchResultsView(searchStore: self.searchStore,
                                                     searchType: self.searchStore.searchType,
                                                     sheetStore: self.sheetStore)
+                        } onViewMore: {
+                            // view more for Recents
                         }
                         .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                         .listRowSeparator(.hidden)
@@ -220,7 +226,7 @@ struct SearchSheet: View {
                 .listStyle(.plain)
                 // Displays a simple toast message when user tap save icon to save poi
                 .simpleToast(isPresented: self.$favoritesStore.isMarkedAsFavourite,
-                             options: SimpleToastOptions(alignment: .bottom, hideAfter: 1, animation: .easeIn, modifierType: .fade)) {
+                             options: SimpleToastOptions(alignment: .bottom, hideAfter: 1.5, animation: .easeIn, modifierType: .fade)) {
                     Label(self.favoritesStore.labelMessage, systemSymbol: .checkmarkCircleFill)
                         .padding(.vertical, 12)
                         .padding(.horizontal, 12)
@@ -237,6 +243,10 @@ struct SearchSheet: View {
         .fullScreenCover(isPresented: self.$loginShown) {
             UserLoginView(loginStore: LoginStore())
                 .toolbarRole(.editor)
+        }
+        .fullScreenCover(isPresented: self.$favoritesStore.favoritesShown) {
+            FavoritesViewMoreView(sheetStore: self.sheetStore,
+                                  favoritesStore: self.favoritesStore)
         }
         .alert(isPresented: self.$showAlert) {
             Alert(title: Text("Already Logged In"),

@@ -64,10 +64,8 @@ final class SheetStore {
     // MARK: Lifecycle
 
     init(emptySheetType: SheetType) {
-        self.emptySheetData = SheetData(
-            sheetType: emptySheetType,
-            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
-        )
+        self.emptySheetData = SheetData(sheetType: emptySheetType,
+                                        detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData))
         self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
             guard let self else { return }
             self.sheetHeight = self.computeSheetHeight()
@@ -171,7 +169,6 @@ enum SheetType {
     case navigationPreview
     case pointOfInterest(ResolvedItem)
     case routePlanner(RoutePlannerStore)
-    case favoritesViewMore
     case editFavoritesForm(item: ResolvedItem, favoriteItem: FavoritesItem? = nil)
     case loginNeeded
 
@@ -195,8 +192,6 @@ enum SheetType {
             DetentData(selectedDetent: .height(190), allowedDetents: [.height(140), .height(190), .height(600), .large])
         case .routePlanner:
             DetentData(selectedDetent: .height(100), allowedDetents: [.height(100)])
-        case .favoritesViewMore:
-            DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .editFavoritesForm:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .loginNeeded:
@@ -206,7 +201,7 @@ enum SheetType {
 
     var transition: AnyNavigationTransition {
         switch self {
-        case .favoritesViewMore, .editFavoritesForm, .favorites:
+        case .editFavoritesForm, .favorites:
             .default
         default:
             .fade(.cross)

@@ -18,14 +18,14 @@ struct FavoriteCategoriesView: View {
 
     var sheetStore: SheetStore
 
-    @ObservedObject var favoritesStore = FavoritesStore()
+    @ObservedObject var favoritesStore: FavoritesStore
 
     // MARK: Content
 
     var body: some View {
         ScrollView(.horizontal) {
             HStack {
-                ForEach(self.favoritesStore.favoritesItems.prefix(4)) { favorite in
+                ForEach(FavoritesItem.favoritesInit) { favorite in
                     Button {
                         if let item = favorite.item {
                             self.sheetStore.show(.pointOfInterest(item))
@@ -36,11 +36,6 @@ struct FavoriteCategoriesView: View {
                     }
                     .buttonStyle(FavoriteCategoriesButton(sfSymbol: favorite.getSymbol(type: favorite.type), tintColor: favorite.tintColor.POI))
                 }
-                Button("Add") {
-                    self.sheetStore.show(.favoritesViewMore)
-                }
-                .hudhudFont(size: 12, fontWeight: .medium)
-                .buttonStyle(FavoriteCategoriesButton(sfSymbol: .plusCircleFill, tintColor: Color.Colors.General._10GreenMain))
             }
             Spacer()
         }
@@ -57,11 +52,8 @@ struct FavoriteCategoriesView: View {
                     .minimumScaleFactor(0.5)
                 Spacer()
                 NavigationLink {
-                    FavoritesViewMoreView(
-                        searchStore: .storeSetUpForPreviewing,
-                        sheetStore: .storeSetUpForPreviewing,
-                        favoritesStore: .storeSetUpForPreviewing
-                    )
+                    FavoritesViewMoreView(sheetStore: .storeSetUpForPreviewing,
+                                          favoritesStore: .storeSetUpForPreviewing)
                 } label: {
                     HStack {
                         Text("View More")
@@ -76,7 +68,7 @@ struct FavoriteCategoriesView: View {
                     }
                 }
             }
-            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing)
+            FavoriteCategoriesView(sheetStore: .storeSetUpForPreviewing, favoritesStore: FavoritesStore())
         }
         .padding()
     }

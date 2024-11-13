@@ -16,7 +16,7 @@
     " %@" : {
 
     },
-    "..." : {
+    " | " : {
 
     },
     "·" : {
@@ -507,6 +507,9 @@
     "No Results" : {
 
     },
+    "No Saved Locations" : {
+
+    },
     "Note: Changing the URL requires restarting the app for the changes to take effect." : {
 
     },
@@ -575,6 +578,9 @@
 
     },
     "Routing URL" : {
+
+    },
+    "Saved Locations" : {
 
     },
     "School" : {
@@ -669,9 +675,6 @@
     "Submit" : {
 
     },
-    "Suggestions" : {
-
-    },
     "There is no photo added yet! Be the first to add one." : {
 
     },
@@ -679,6 +682,9 @@
 
     },
     "Touch Visualizer" : {
+
+    },
+    "Undo" : {
 
     },
     "Unit Testing in progress" : {
@@ -697,6 +703,9 @@
 
     },
     "Verify" : {
+
+    },
+    "View More" : {
 
     },
     "Visualize taps in screen recordings to help understand your bug reports" : {
@@ -744,6 +753,9 @@
 
     },
     "You Have Arrived" : {
+
+    },
+    "Your saved locations will appear here" : {
 
     }
   },

@@ -9,6 +9,7 @@
 import BackendService
 import MapKit
 import MapLibreSwiftUI
+import SimpleToast
 import SwiftUI
 
 // MARK: - FavoritesViewMoreView
@@ -17,123 +18,133 @@ struct FavoritesViewMoreView: View {
 
     // MARK: Properties
 
-    @ObservedObject var searchStore: SearchViewStore
+    @Environment(\.dismiss) var dismiss
     @Bindable var sheetStore: SheetStore
-    @State var actionSheetShown: Bool = false
-    @State var searchSheetShown: Bool = false
-    @State var clickedFavorite: FavoritesItem = .favoriteForPreview
-    @ObservedObject var favoritesStore: FavoritesStore
-    @StateObject var filterStore = FilterStore()
+    @StateObject var favoritesStore: FavoritesStore
 
     // MARK: Content
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading) {
-                VStack {
-                    switch self.searchStore.searchType {
-                    case .returnPOILocation, .favorites:
-                        Button("Cancel") {
-                            self.sheetStore.popSheet()
+            Divider()
+            ZStack {
+                ScrollView {
+                    VStack(alignment: .leading) {
+                        Section {
+                            // Display Static "Home" and "Work" Favorites
+                            ForEach(FavoritesItem.favoritesInit, id: \.id) { favorite in
+                                FavoriteItemView(favorite: favorite, favoritesStore: self.favoritesStore)
+                                    .onTapGesture {
+                                        // currently, nothing will show ... but in the next ticket ..we will implement saving location for home and
+                                        // work.
+                                        if let item = favorite.item {
+                                            self.sheetStore.show(.pointOfInterest(item))
+                                        }
+                                    }
+                            }
                         }
-                        .foregroundColor(.gray)
-                        .padding(.trailing)
-                    case .selectPOI, .categories:
-                        EmptyView()
-                    }
-                }
-                .background(.thickMaterial)
-                .cornerRadius(12)
-
-                Section { // show my favorites
-                    ForEach(self.favoritesStore.favoritesItems) { favorite in
-                        if favorite.item != nil {
-                            HStack {
-                                FavoriteItemView(favorite: favorite)
-                                Spacer()
-                                Button {
-                                    self.actionSheetShown = true
-                                    self.clickedFavorite = favorite
-                                } label: {
-                                    Text("...")
-                                        .foregroundStyle(Color(UIColor.label))
+                        Divider()
+                            .padding(.vertical)
+                        // Display user's saved favorites or a no saved location view if there are none
+                        if self.favoritesStore.favoritesItems.isEmpty {
+                            Spacer()
+                        } else {
+                            Section {
+                                ForEach(self.favoritesStore.favoritesItems) { favorite in
+                                    if favorite.item != nil {
+                                        FavoriteItemView(favorite: favorite, favoritesStore: self.favoritesStore)
+                                            .background(.white)
+                                            .onTapGesture {
+                                                if let item = favorite.item {
+                                                    self.dismiss()
+                                                    self.sheetStore.show(.pointOfInterest(item))
+                                                }
+                                            }
+                                    }
+                                }
+                                .confirmationDialog("action", isPresented: self.$favoritesStore.editFavoriteMenu) {
+                                    Button("Edit") {
+                                        // Edti action for edting home/work
+                                    }
+                                    Button("Delete", role: .destructive) {
+                                        // Delete action for Deleting home/work
+                                    }
                                 }
                             }
                         }
                     }
-                    .confirmationDialog("action", isPresented: self.$actionSheetShown) {
-                        Button("Edit") {
-                            guard let item = self.clickedFavorite.item else { return }
-                            self.sheetStore.show(.editFavoritesForm(
-                                item: item,
-                                favoriteItem: self.clickedFavorite
-                            ))
-                        }
-                        Button("Delete", role: .destructive) {
-                            self.favoritesStore.deleteFavorite(self.clickedFavorite)
-                        }
+                }
+                if self.favoritesStore.favoritesItems.isEmpty {
+                    NoSavedLocationsView()
+                }
+            }
+            .padding(.top)
+            .padding(.horizontal)
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("Saved Locations")
+            .navigationBarItems(leading: Button {
+                self.dismiss()
+            } label: {
+                Image(systemSymbol: .chevronBackward)
+                    .resizable()
+                    .frame(width: 12, height: 20)
+                    .accentColor(Color.Colors.General._01Black)
+                    .shadow(radius: 26)
+                    .accessibilityLabel("Go Back")
+            })
+            // Displays a simple toast message when user tap save icon to save poi
+            .simpleToast(isPresented: self.$favoritesStore.isMarkedAsFavourite,
+                         options: SimpleToastOptions(alignment: .bottom, hideAfter: 2)) {
+                HStack {
+                    Label(self.favoritesStore.labelMessage, systemSymbol: .checkmarkCircleFill)
+                    Text(" | ")
+                        .foregroundColor(Color.Colors.General._02Grey)
+                    Button {
+                        self.favoritesStore.undoDelete()
+                    } label: {
+                        Text("Undo")
+                            .hudhudFontStyle(.labelSmall)
+                            .foregroundColor(Color.Colors.General._10GreenMain)
                     }
                 }
-
-                Section("Suggestions") {
-                    RecentSearchResultsView(
-                        searchStore: self.searchStore,
-                        searchType: .favorites,
-                        sheetStore: self.sheetStore
-                    )
-                    Spacer()
-                }
-                Spacer()
+                .padding(.vertical, 12)
+                .padding(.horizontal, 12)
+                .background(Color.Colors.General._01Black)
+                .foregroundColor(Color.white)
+                .cornerRadius(10)
             }
-            .padding(.horizontal)
-            .padding(.top)
-            .navigationTitle("Favorites")
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading: Button {
-                    self.sheetStore.popSheet()
-                } label: {
-                    Image(systemSymbol: .arrowBackward)
-                },
-                trailing: Button {
-                    self.sheetStore.show(.favorites)
-                } label: {
-                    Image(systemSymbol: .plus)
-                }
-            )
         }
     }
+}
 
-    func searchSheetView() -> some View {
-        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
-        let freshSheetStore = SheetStore(emptySheetType: .search)
-        let freshSearchViewStore = SearchViewStore(
-            mapStore: freshMapStore,
-            sheetStore: freshSheetStore,
-            routingStore: freshRoutingStore,
-            filterStore: FilterStore(),
-            mode: self.searchStore.mode
-        )
-        freshSearchViewStore.searchType = .favorites
-        return SearchSheet(
-            mapStore: freshMapStore,
-            searchStore: freshSearchViewStore,
-            trendingStore: TrendingStore(),
-            sheetStore: freshSheetStore,
-            filterStore: FilterStore(),
-            favoritesStore: self.favoritesStore
-        )
+// MARK: - NoSavedLocationsView
+
+struct NoSavedLocationsView: View {
+    var body: some View {
+        VStack(alignment: .center, spacing: 24) {
+            Image(uiImage: .POI_PIN)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 64, height: 64)
+
+            VStack(spacing: 12) {
+                Text("No Saved Locations")
+                    .hudhudFontStyle(.labelMedium)
+                    .foregroundStyle(Color.Colors.General._01Black)
+
+                Text("Your saved locations will appear here")
+                    .hudhudFontStyle(.paragraphMedium)
+                    .foregroundStyle(Color.Colors.General._02Grey)
+            }
+        }
+        .padding(.top)
     }
 }
 
 #Preview {
     NavigationStack {
-        FavoritesViewMoreView(
-            searchStore: .storeSetUpForPreviewing,
-            sheetStore: .storeSetUpForPreviewing,
-            favoritesStore: .storeSetUpForPreviewing
-        )
+        FavoritesViewMoreView(sheetStore: .storeSetUpForPreviewing,
+                              favoritesStore: .storeSetUpForPreviewing)
     }
 }
 
@@ -142,11 +153,8 @@ struct FavoritesViewMoreView: View {
     return NavigationStack {
         Text("root view")
             .navigationDestination(isPresented: $isLinkActive) {
-                FavoritesViewMoreView(
-                    searchStore: .storeSetUpForPreviewing,
-                    sheetStore: .storeSetUpForPreviewing,
-                    favoritesStore: .storeSetUpForPreviewing
-                )
+                FavoritesViewMoreView(sheetStore: .storeSetUpForPreviewing,
+                                      favoritesStore: .storeSetUpForPreviewing)
             }
     }
 }
