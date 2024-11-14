@@ -137,7 +137,7 @@ final class RouteGeometryCalculator {
     }
 }
 
-private extension RouteGeometryCalculator {
+extension RouteGeometryCalculator {
 
     func findClosestSegment(for point: CLLocationCoordinate2D) -> RoutePosition {
         var minDistance = Double.infinity

@@ -480,6 +480,9 @@
     "Name" : {
 
     },
+    "Navigation" : {
+
+    },
     "Navigation Settings" : {
 
     },
@@ -610,6 +613,9 @@
     "Share your experience" : {
 
     },
+    "Show Driven Part of the Route" : {
+
+    },
     "Show Less" : {
 
     },
@@ -626,9 +632,6 @@
       "comment" : "Similar Places Tab in POI Details"
     },
     "Simulate Ride during Navigation" : {
-
-    },
-    "Simulation" : {
 
     },
     "Size:" : {

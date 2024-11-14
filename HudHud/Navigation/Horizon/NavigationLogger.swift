@@ -33,7 +33,7 @@ enum NavigationLogger {
 
     // MARK: Static Properties
 
-    static var isEnabled = true
+    static var isEnabled = false
 
     private static var indentationLevel = 0
     private static let indentationString = "│   "

@@ -7,9 +7,9 @@
 //
 
 import CoreFoundation
+@testable import HudHud
 import Testing
 import UIKit
-@testable import HudHud
 
 struct SizeCalculatorTests {
 

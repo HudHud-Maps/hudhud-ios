@@ -184,7 +184,10 @@ private extension MapViewContainer {
         }
 
         // Congestion
-        layers += makeCongestionLayers(for: self.routesPlanMapDrawer.routes)
+        layers += makeCongestionLayers(
+            for: self.routesPlanMapDrawer.routes,
+            currentPositionIndex: self.navigationStore.state.routeGeometries.userPosition
+        )
 
         // Custom Symbols
         if shouldShowCustomSymbols {
@@ -205,27 +208,38 @@ private extension MapViewContainer {
 
         var layers: [StyleLayerDefinition] = []
 
-        if let routePolyline = navigationStore.navigationState?.routePolyline {
-            layers += RouteStyleLayer(polyline: routePolyline,
-                                      identifier: "route-polyline",
-                                      style: TravelledRouteStyle())
-                .layers
-        }
+        let remainingRoutePolyline = MLNPolylineFeature(coordinates: navigationStore.state.routeGeometries.remaining)
 
-        if let remainingRoutePolyline = navigationStore.navigationState?.remainingRoutePolyline {
-            layers += RouteStyleLayer(polyline: remainingRoutePolyline,
-                                      identifier: "remaining-route-polyline").layers
+        layers += RouteStyleLayer(polyline: remainingRoutePolyline,
+                                  identifier: "route-polyline").layers
+
+        if self.debugStore.showDrivenPartOfTheRoute {
+            let drivenRoutePolylineGeometry = self.navigationStore.state.routeGeometries.driven
+            if !drivenRoutePolylineGeometry.isEmpty {
+                let drivenRoutePolyline = MLNPolylineFeature(coordinates: drivenRoutePolylineGeometry)
+
+                layers += RouteStyleLayer(polyline: drivenRoutePolyline,
+                                          identifier: "remaining-route-polyline",
+                                          style: TravelledRouteStyle()).layers
+            }
+        }
+        if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
+            layers += makeCongestionLayers(
+                for: [selectedRoute],
+                currentPositionIndex: self.navigationStore.state.routeGeometries.userPosition
+            )
         }
 
         if let alert = navigationStore.state.navigationAlert {
             layers += [
-                SymbolStyleLayer(identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
-                                 source: ShapeSource(identifier: "alert") {
-                                     MLNPointFeature(coordinate: alert.alertType.coordinate)
-                                 })
-                                 .iconImage(alert.alertType.mapIcon)
+                SymbolStyleLayer(
+                    identifier: MapLayerIdentifier.simpleSymbolsRoute + "horizon",
+                    source: ShapeSource(identifier: "alert") { MLNPointFeature(coordinate: alert.alertType.coordinate) }
+                )
+                .iconImage(alert.alertType.mapIcon)
             ]
         }
+
         return layers
     }
 

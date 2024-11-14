@@ -10,5 +10,7 @@ import CoreLocation
 
 struct CongestionSegment {
     let level: String
-    let geometry: [CLLocationCoordinate2D]
+    let startIndex: Int
+    let endIndex: Int
+    let points: [CLLocationCoordinate2D]
 }

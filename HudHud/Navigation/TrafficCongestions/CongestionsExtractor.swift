@@ -10,91 +10,129 @@ import CoreLocation
 import FerrostarCore
 import FerrostarCoreFFI
 
-// MARK: - CongestionSegment
+// MARK: - RouteTrafficManager
 
-extension Route {
+private enum RouteTrafficManager {
 
-    var annotations: [ValhallaOsrmAnnotation] {
-        let decoder = JSONDecoder()
+    // MARK: Static Properties
 
-        return steps
-            .compactMap(\.annotations)
-            .flatMap { annotations in
-                annotations.compactMap { annotationString in
-                    guard let data = annotationString.data(using: .utf8) else {
-                        return nil
+    private static var annotationsCache: [Int: [ValhallaOsrmAnnotation]] = [:]
+    private static var lastExactPosition: [Int: ExactRoutePosition] = [:]
+
+    // MARK: Static Functions
+
+    static func setRoute(_ route: Route) {
+        guard self.annotationsCache[route.id] == nil else { return }
+
+        var annotations: [ValhallaOsrmAnnotation] {
+            let decoder = JSONDecoder()
+            return route.steps
+                .compactMap(\.annotations)
+                .flatMap { annotations in
+                    annotations.compactMap { annotationString in
+                        guard let data = annotationString.data(using: .utf8) else {
+                            return nil
+                        }
+                        return try? decoder.decode(ValhallaOsrmAnnotation.self, from: data)
                     }
-                    return try? decoder.decode(ValhallaOsrmAnnotation.self, from: data)
                 }
-            }
+        }
+
+        self.annotationsCache[route.id] = annotations
     }
 
-    func extractCongestionSegments() -> [CongestionSegment] {
-        var mergedSegments: [CongestionSegment] = []
-        var currentSegment: CongestionSegment?
-        var currentIndex = 0
+    // swiftlint:disable:next cyclomatic_complexity
+    static func extractCongestionSegments(from route: Route, considering currentPosition: ExactRoutePosition) -> [CongestionSegment] {
+        guard let annotations = annotationsCache[route.hashValue] else {
+            return []
+        }
 
-        for annotation in self.annotations {
-            guard let congestion = annotation.congestion else {
+        self.lastExactPosition[route.id] = currentPosition
+
+        var segments = [CongestionSegment]()
+        var currentPoints: [CLLocationCoordinate2D] = []
+        var segmentStartIndex = currentPosition.coordinateIndex
+        var lastCongestion: String?
+
+        let startPoint = route.geometry[currentPosition.coordinateIndex].clLocationCoordinate2D
+        let endPoint = route.geometry[currentPosition.coordinateIndex + 1].clLocationCoordinate2D
+
+        // calculate a point a bit behind the exact position to make it look like below the chevron
+        let behindProgress = max(0.0, currentPosition.percentageAlongSegment - 0.025)
+        let behindPoint = CLLocationCoordinate2D(
+            latitude: startPoint.latitude + (endPoint.latitude - startPoint.latitude) * behindProgress,
+            longitude: startPoint.longitude + (endPoint.longitude - startPoint.longitude) * behindProgress
+        )
+
+        currentPoints.append(behindPoint)
+        currentPoints.append(currentPosition.exactCoordinate)
+
+        var currentCoordinateIndex = currentPosition.coordinateIndex
+        while currentCoordinateIndex < min(annotations.count, route.geometry.count) {
+            guard let congestion = annotations[currentCoordinateIndex].congestion else {
+                currentCoordinateIndex += 1
                 continue
             }
 
-            let startIndex = currentIndex
-            let endIndex = startIndex + 1
-
-            if endIndex >= geometry.count {
-                break
+            if lastCongestion == nil {
+                lastCongestion = congestion
             }
 
-            let segmentGeometry = Array(geometry[startIndex ... endIndex])
-
-            if let current = currentSegment,
-               current.level == congestion,
-               let lastSegment = current.geometry.last {
-                currentSegment = CongestionSegment(
-                    level: congestion,
-                    geometry: current.geometry + [lastSegment]
-                )
-            } else {
-                if let current = currentSegment {
-                    mergedSegments.append(current)
+            if congestion == lastCongestion {
+                if currentCoordinateIndex == currentPosition.coordinateIndex {
+                    // only add next point if we're not at the end
+                    if currentPosition.percentageAlongSegment < 1.0 {
+                        currentPoints.append(endPoint)
+                    }
+                } else {
+                    currentPoints.append(route.geometry[currentCoordinateIndex].clLocationCoordinate2D)
+                    if currentCoordinateIndex + 1 < route.geometry.count {
+                        currentPoints.append(route.geometry[currentCoordinateIndex + 1].clLocationCoordinate2D)
+                    }
                 }
-                currentSegment = CongestionSegment(
-                    level: congestion,
-                    geometry: segmentGeometry.map(\.clLocationCoordinate2D)
-                )
+            } else {
+                if let level = lastCongestion {
+                    segments.append(CongestionSegment(
+                        level: level,
+                        startIndex: segmentStartIndex,
+                        endIndex: currentCoordinateIndex,
+                        points: currentPoints
+                    ))
+                }
+
+                segmentStartIndex = currentCoordinateIndex
+                lastCongestion = congestion
+                currentPoints = [route.geometry[currentCoordinateIndex].clLocationCoordinate2D]
+                if currentCoordinateIndex + currentCoordinateIndex < route.geometry.count {
+                    currentPoints.append(route.geometry[currentCoordinateIndex + 1].clLocationCoordinate2D)
+                }
             }
 
-            currentIndex = endIndex
+            currentCoordinateIndex += 1
         }
 
-        if let lastSegment = currentSegment {
-            mergedSegments.append(lastSegment)
+        if let level = lastCongestion, !currentPoints.isEmpty {
+            segments.append(CongestionSegment(
+                level: level,
+                startIndex: segmentStartIndex,
+                endIndex: min(annotations.count, route.geometry.count),
+                points: currentPoints
+            ))
         }
-        return mergedSegments
+
+        return segments
+    }
+
+    static func cleanup() {
+        self.annotationsCache.removeAll(keepingCapacity: true)
+        self.lastExactPosition.removeAll()
     }
 }
 
-// MARK: - Private
+extension Route {
+    func extractCongestionSegments(considering userPosition: ExactRoutePosition) -> [CongestionSegment] {
+        RouteTrafficManager.setRoute(self)
 
-private extension Route {
-
-    func findEndIndex(startingFrom startIndex: Int, distance: Double) -> Int {
-        var remainingDistance = distance
-        var currentIndex = startIndex
-
-        while currentIndex < geometry.count - 1, remainingDistance > 0 {
-            let segmentDistance = geometry[currentIndex]
-                .clLocationCoordinate2D
-                .distance(to: geometry[currentIndex + 1].clLocationCoordinate2D)
-            if remainingDistance >= segmentDistance {
-                remainingDistance -= segmentDistance
-                currentIndex += 1
-            } else {
-                break
-            }
-        }
-
-        return currentIndex
+        return RouteTrafficManager.extractCongestionSegments(from: self, considering: userPosition)
     }
 }

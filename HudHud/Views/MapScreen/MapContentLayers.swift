@@ -109,10 +109,10 @@ extension MapViewContainer {
     }
 
     @MapViewContentBuilder
-    func makeCongestionLayers(for routes: [Route]) -> [StyleLayerDefinition] {
+    func makeCongestionLayers(for routes: [Route], currentPositionIndex: ExactRoutePosition) -> [StyleLayerDefinition] {
         let congestionLevels = ["moderate", "heavy", "severe"]
         routes.enumerated().flatMap { index, route in
-            let segments = route.extractCongestionSegments()
+            let segments = route.extractCongestionSegments(considering: currentPositionIndex)
             return congestionLevels.flatMap { level in
                 let source = self.congestionSource(for: level, segments: segments, id: route.id)
                 return [self.congestionLayer(for: level, source: source, index: index)]
@@ -216,7 +216,7 @@ private extension MapViewContainer {
     func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
         ShapeSource(identifier: "congestion-\(level)-\(id)") {
             segments.filter { $0.level == level }.map { segment in
-                MLNPolylineFeature(coordinates: segment.geometry)
+                MLNPolylineFeature(coordinates: segment.points)
             }
         }
     }
@@ -228,13 +228,11 @@ private extension MapViewContainer {
             .lineColor(self.colorForCongestionLevel(level))
             .lineWidth(
                 interpolatedBy: .zoomLevel,
-                curveType: .linear,
+                curveType: .exponential,
                 parameters: NSExpression(forConstantValue: 1.5),
                 stops: NSExpression(forConstantValue: [
-                    14: 6,
-                    16: 7,
-                    18: 9,
-                    20: 16
+                    14: 2,
+                    18: 12
                 ])
             )
     }

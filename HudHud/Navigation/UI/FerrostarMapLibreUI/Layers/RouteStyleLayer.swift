@@ -43,8 +43,8 @@ public struct TravelledRouteStyle: RouteStyle {
 
     // MARK: Properties
 
-    public var color: UIColor = .systemGray
-    public var casingColor: UIColor?
+    public var color: UIColor = .systemBlue.withAlphaComponent(0.5)
+    public var casingColor: UIColor? = .white.withAlphaComponent(0.5)
     public let lineCap: LineCap = .round
     public let lineJoin: LineJoin = .round
 

@@ -13,6 +13,14 @@ import Foundation
 import SwiftUI
 import UIKit
 
+// MARK: - RouteGeometries
+
+struct RouteGeometries: Equatable {
+    let userPosition: ExactRoutePosition
+    let driven: [CLLocationCoordinate2D]
+    let remaining: [CLLocationCoordinate2D]
+}
+
 extension NavigationStore.State {
     var isNavigating: Bool {
         status == .navigating
@@ -44,13 +52,13 @@ final class NavigationStore {
         var status: Status
         var speedLimit: Measurement<UnitSpeed>?
         var navigationAlert: NavigationAlert?
-
+        var routeGeometries = RouteGeometries(userPosition: .empty, driven: [], remaining: [])
         var isMuted: Bool = false
         var tripProgress: TripProgress?
     }
 
     enum Action {
-        case startNavigation //
+        case startNavigation
         case stopNavigation
         case toggleMute
     }
@@ -133,6 +141,7 @@ private extension NavigationStore {
             try self.decideWhichLocationProviderToUse(route: route) {
                 try self.navigationEngine.startNavigation(route: route)
                 self.state.status = .navigating
+                self.state.routeGeometries = RouteGeometries(userPosition: .empty, driven: [], remaining: route.geometry.clLocationCoordinate2Ds)
             }
         } catch {
             self.state.status = .failed
@@ -182,6 +191,10 @@ private extension NavigationStore {
         case .complete:
             self.state.status = .arrived
         }
+        if newState.tripState.distanceRemaining == 0 {
+            self.state.status = .arrived
+            return
+        }
     }
 
     func handleNavigationEvent(_ event: NavigationEvent) {
@@ -202,6 +215,12 @@ private extension NavigationStore {
             break
         case .error:
             self.state.status = .failed
+        case let .pathProgressUpdated(progress):
+            self.state.routeGeometries = RouteGeometries(
+                userPosition: progress.lastPosition,
+                driven: progress.drivenCoordinates,
+                remaining: progress.remainingCoordinates
+            )
         }
     }
 
@@ -212,10 +231,12 @@ private extension NavigationStore {
             let progress = (1 - (distance.meters / speedCamAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
             withAnimation(.easeInOut(duration: 0.15)) {
-                self.state.navigationAlert = NavigationAlert(id: camera.id,
-                                                             progress: clampedProgress,
-                                                             alertType: .speedCamera(camera),
-                                                             alertDistance: Int(distance.meters))
+                self.state.navigationAlert = NavigationAlert(
+                    id: camera.id,
+                    progress: clampedProgress,
+                    alertType: .speedCamera(camera),
+                    alertDistance: Int(distance.meters)
+                )
             }
         case let .passedSpeedCamera(camera):
             if self.state.navigationAlert?.id == camera.id {
@@ -227,10 +248,12 @@ private extension NavigationStore {
             let incidentAlertDistance = TrafficIncidentAlertConfig.default.initialAlertDistance
             let progress = (1 - (distance.meters / incidentAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
-            self.state.navigationAlert = NavigationAlert(id: incident.id,
-                                                         progress: clampedProgress,
-                                                         alertType: .carAccident(incident),
-                                                         alertDistance: Int(distance.meters))
+            self.state.navigationAlert = NavigationAlert(
+                id: incident.id,
+                progress: clampedProgress,
+                alertType: .carAccident(incident),
+                alertDistance: Int(distance.meters)
+            )
         case let .passedTrafficIncident(incident):
             if self.state.navigationAlert?.id == incident.id {
                 self.state.navigationAlert = nil

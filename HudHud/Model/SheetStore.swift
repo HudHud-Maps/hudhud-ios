@@ -64,10 +64,8 @@ final class SheetStore {
     // MARK: Lifecycle
 
     init(emptySheetType: SheetType) {
-        self.emptySheetData = SheetData(
-            sheetType: emptySheetType,
-            detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData)
-        )
+        self.emptySheetData = SheetData(sheetType: emptySheetType,
+                                        detentData: CurrentValueSubject<DetentData, Never>(emptySheetType.initialDetentData))
         self.updateSheetHeightSubscription = self.isShown.sink { [weak self] _ in
             guard let self else { return }
             self.sheetHeight = self.computeSheetHeight()

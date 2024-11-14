@@ -29,20 +29,21 @@ final class HorizonScanner {
     private var activeFeatures: [String: HorizonFeature] = [:]
     private var lastLocation: CLLocationCoordinate2D?
     private var routeGeometry: [CLLocationCoordinate2D] = []
-    private let routerGeometryCalculator = RouteGeometryCalculator(geometry: [])
+    private let spatialIndex: RouteGeometrySpatialIndex
 
     // MARK: Lifecycle
 
     init(scanRange: Measurement<UnitLength>, alertConfig: FeatureAlertConfig) {
         self.alertConfig = alertConfig
         self.scanRange = scanRange
+        self.spatialIndex = RouteGeometrySpatialIndex(coordinates: [], positionFindingMode: .relaxed)
     }
 
     // MARK: Functions
 
     func updateRouteGeometry(_ geometry: [CLLocationCoordinate2D]) {
         self.routeGeometry = geometry
-        self.routerGeometryCalculator.update(with: geometry)
+        self.spatialIndex.reindex(using: geometry)
     }
 
     func scan(features: [HorizonFeature],
@@ -60,16 +61,15 @@ final class HorizonScanner {
         for (id, feature) in self.activeFeatures {
             NavigationLogger.beginScope("Feature: \(id)")
 
-            let userPosition = self.routerGeometryCalculator.findPosition(for: location)
-            let featurePosition = self.routerGeometryCalculator.findPosition(for: feature.coordinate)
+            let userPosition = self.spatialIndex.findExactPosition(for: location)
+            let featurePosition = self.spatialIndex.findExactPosition(for: feature.coordinate)
             let distance = self.calculateRouteDistance(from: location, to: feature.coordinate, featureId: feature.id)
 
-            NavigationLogger.log("User Position - index: \(userPosition.index), distance: \(userPosition.projectedDistance)")
-            NavigationLogger.log("Feature Position - index: \(featurePosition.index), distance: \(featurePosition.projectedDistance)")
+            NavigationLogger.log("User Position - index: \(userPosition.coordinateIndex), distance: \(userPosition.distanceFromStart)")
+            NavigationLogger.log("Feature Position - index: \(featurePosition.coordinateIndex), distance: \(featurePosition.distanceFromStart)")
             NavigationLogger.log("Route Distance: \(distance)m")
 
-            if self.isFeaturePassed(feature,
-                                    userPosition: userPosition,
+            if self.isFeaturePassed(userPosition: userPosition,
                                     featurePosition: featurePosition,
                                     distance: distance) {
                 NavigationLogger.log("Feature passed", level: .debug)
@@ -130,18 +130,19 @@ final class HorizonScanner {
 }
 
 private extension HorizonScanner {
-    func isFeaturePassed(_: HorizonFeature,
-                         userPosition: RoutePosition,
-                         featurePosition: RoutePosition,
+    func isFeaturePassed(userPosition _: ExactRoutePosition,
+                         featurePosition _: ExactRoutePosition,
                          distance: CLLocationDistance) -> Bool {
-        guard userPosition.isValid, featurePosition.isValid else { return false }
-        return featurePosition.isBefore(userPosition) &&
-            distance < LocationConstants.closeProximityThreshold
+        // if distance is negatif we already passed it
+        if distance < 0 {
+            return true
+        }
+        return false
     }
 
     func calculateRouteDistance(from: CLLocationCoordinate2D,
                                 to: CLLocationCoordinate2D,
-                                featureId: String) -> CLLocationDistance {
+                                featureId _: String) -> CLLocationDistance {
         NavigationLogger.beginScope("Calculate Route Distance")
         defer { NavigationLogger.endScope() }
 
@@ -150,7 +151,7 @@ private extension HorizonScanner {
 
         if !self.routeGeometry.isEmpty {
             NavigationLogger.log("Using route geometry with \(self.routeGeometry.count) points")
-            let distance = self.routerGeometryCalculator.calculateDistanceAlongRoute(from: from, to: to, featureId: featureId)
+            let distance = self.spatialIndex.calculateDistanceAlongRoute(from: from, to: to)
             NavigationLogger.log("Route distance: \(distance)m", level: .debug)
             return distance
         }
@@ -205,18 +206,18 @@ private extension HorizonScanner {
         switch camera.direction {
         case .forward:
             NavigationLogger.beginScope("Forward Camera Check")
-            let isGoingTowardsCamera = self.routerGeometryCalculator.isMovingTowardsFeature(userLocation: userLocation,
-                                                                                            featureLocation: camera.location,
-                                                                                            userCourse: userCourse)
+            let isGoingTowardsCamera = self.spatialIndex.isMovingTowardsFeature(userLocation: userLocation,
+                                                                                featureLocation: camera.location,
+                                                                                userCourse: userCourse)
             NavigationLogger.log("Going Towards Camera: \(isGoingTowardsCamera)")
             NavigationLogger.endScope()
             return isGoingTowardsCamera ? .relevant(distance: distance) : .notRelevant
 
         case .backward:
             NavigationLogger.beginScope("Backward Camera Check")
-            let isMovingAwayFromCamera = !self.routerGeometryCalculator.isMovingTowardsFeature(userLocation: userLocation,
-                                                                                               featureLocation: camera.location,
-                                                                                               userCourse: userCourse)
+            let isMovingAwayFromCamera = !self.spatialIndex.isMovingTowardsFeature(userLocation: userLocation,
+                                                                                   featureLocation: camera.location,
+                                                                                   userCourse: userCourse)
             NavigationLogger.log("Moving Away From Camera: \(isMovingAwayFromCamera)")
             NavigationLogger.endScope()
             return isMovingAwayFromCamera ? .relevant(distance: distance) : .notRelevant

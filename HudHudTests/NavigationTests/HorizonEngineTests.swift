@@ -10,8 +10,8 @@ import Combine
 import CoreLocation
 import FerrostarCoreFFI
 import Foundation
-import XCTest
 @testable import HudHud
+import XCTest
 
 // MARK: - EventRecorder
 
