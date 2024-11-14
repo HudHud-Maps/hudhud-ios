@@ -182,7 +182,7 @@ enum SheetType {
         case .search:
             DetentData(selectedDetent: .third, allowedDetents: [.small, .third, .large])
         case .mapStyle:
-            DetentData(selectedDetent: .medium, allowedDetents: [.medium])
+            DetentData(selectedDetent: .third, allowedDetents: [.third])
         case .debugView:
             DetentData(selectedDetent: .large, allowedDetents: [.large])
         case .navigationAddSearchView:

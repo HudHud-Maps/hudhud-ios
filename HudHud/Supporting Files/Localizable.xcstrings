@@ -412,6 +412,7 @@
 
     },
     "Layers" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -443,6 +444,9 @@
           }
         }
       }
+    },
+    "Map Layers" : {
+
     },
     "Map Type" : {
       "extractionState" : "stale",

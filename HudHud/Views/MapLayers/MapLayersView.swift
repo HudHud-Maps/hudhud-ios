@@ -13,48 +13,70 @@ import SwiftUI
 
 struct MapLayersView: View {
 
+    // MARK: Nested Types
+
+    // Define an enum for button types
+    enum ButtonType: String {
+        case road, streetView, traffic, saved
+    }
+
     // MARK: Properties
 
     var mapStore: MapStore
     var sheetStore: SheetStore
     var hudhudMapLayerStore: HudHudMapLayerStore
 
+    @State private var selectedButtons: Set<ButtonType> = []
+
     // MARK: Content
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
-                        let groupedLayers = Dictionary(grouping: mapLayers, by: { $0.type.rawValue })
-                        let sortedTypes = groupedLayers.keys.sorted {
-                            $0 == "map_type" ? true : $1 == "map_details"
-                        }
-                        VStack(alignment: .center, spacing: 15) {
-                            ForEach(sortedTypes, id: \.self) { key in
-                                if let layers = groupedLayers[key] {
-                                    self.mapLayerView(mapLayers: layers)
-                                }
-                            }
-                        }
-                    } else {
-                        ContentUnavailableView {
-                            Label("No Map Layers Available", systemSymbol: .globeCentralSouthAsiaFill)
-                        } description: {
-                            Text("No Content To be Shown Here.")
-                        }
+            VStack(alignment: .leading, spacing: 24) {
+                if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
+                    self.mapLayerView(mapLayers: mapLayers)
+                } else {
+                    ContentUnavailableView {
+                        Label("No Map Layers Available", systemSymbol: .globeCentralSouthAsiaFill)
+                    } description: {
+                        Text("No Content To be Shown Here.")
                     }
                 }
+                HStack(alignment: .center) {
+                    Spacer()
+                    self.buttonView(for: .traffic, imageName: .traffic, label: "Traffic")
+                    Spacer()
+                    self.buttonView(for: .saved, imageName: .saveIconFill, label: "Saved")
+                    Spacer()
+                    self.buttonView(for: .streetView, imageName: .signpost, label: "Street View")
+                    Spacer()
+                    self.buttonView(for: .road, imageName: .road, label: "Road Alerts")
+                    Spacer()
+                }
+                .padding(.horizontal)
             }
-            .navigationTitle("Layers")
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(
+                leading:
+                Text("Map Layers")
+                    .hudhudFontStyle(.labelLarge),
+
                 trailing: Button {
                     self.sheetStore.popSheet()
                 } label: {
-                    Image(systemSymbol: .xmark)
-                        .foregroundColor(Color.Colors.General._02Grey)
+                    ZStack {
+                        Circle()
+                            .fill(Color.Colors.General._03LightGrey)
+                            .frame(width: 30, height: 30)
+                        Image(systemSymbol: .xmark)
+                            .font(.system(size: 12, weight: .regular, design: .rounded))
+                            .foregroundStyle(Color.Colors.General._01Black)
+                    }
+                    .padding(4)
+                    .contentShape(Circle())
                 }
+                .buttonStyle(PlainButtonStyle())
+                .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
             )
         }
     }
@@ -63,11 +85,7 @@ struct MapLayersView: View {
 
     func mapLayerView(mapLayers: [HudHudMapLayer]) -> some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text(mapLayers.first?.type.description ?? "")
-                .hudhudFont(.footnote)
-                .foregroundStyle(Color.Colors.General._02Grey)
-                .padding(.leading, 10)
-            if mapLayers.count > 2 {
+            if mapLayers.count > 3 {
                 ScrollView(.horizontal) {
                     self.layersView(mapLayers: mapLayers)
                 }.scrollIndicators(.hidden)
@@ -76,21 +94,17 @@ struct MapLayersView: View {
                 self.layersView(mapLayers: mapLayers)
                     .padding(.horizontal)
             }
-        }
+        }.frame(height: 100)
     }
 
     func layersView(mapLayers: [HudHudMapLayer]) -> some View {
         HStack {
             ForEach(mapLayers, id: \.self) { layer in
                 HStack {
-                    if mapLayers.last?.type.description != layer.type.description {
-                        Divider()
-                    }
                     VStack(alignment: .center, spacing: 10) {
                         Button {
                             self.mapStore.shouldShowCustomSymbols = false
                             self.mapStore.mapStyleLayer = layer
-                            Logger().info("\(layer.name) selected as map Style | url:\(layer.styleUrl)")
                         } label: {
                             LazyImage(url: layer.thumbnailUrl) { state in
                                 if let image = state.image {
@@ -113,16 +127,44 @@ struct MapLayersView: View {
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
+                                    .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._06DarkGreen : .clear, lineWidth: 2)
                             )
                         }
                         Text(layer.name)
                             .hudhudFont(.footnote)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .foregroundStyle(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : Color.Colors.General._02Grey)
+                            .foregroundStyle(Color.Colors.General._01Black)
                     }
                 }
             }
+        }
+    }
+
+    func buttonView(for type: ButtonType, imageName: ImageResource, label: String) -> some View {
+        VStack(alignment: .center, spacing: 8) {
+            Button {
+                // It should connect to the backend to trigger the action
+                // Toggle the buttons selected state
+                if self.selectedButtons.contains(type) {
+                    self.selectedButtons.remove(type)
+                } else {
+                    self.selectedButtons.insert(type)
+                }
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(self.selectedButtons.contains(type) ? Color.Colors.General._11GreenLight : Color.Colors.General._03LightGrey)
+                        .frame(width: 48, height: 48)
+                    Image(imageName)
+                        .renderingMode(.template)
+                        .font(.system(size: 15, weight: .regular, design: .rounded))
+                        .foregroundColor(self.selectedButtons.contains(type) ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
+                }
+                .padding(4)
+                .contentShape(Circle())
+            }
+            Text(label)
+                .hudhudFontStyle(.labelSmall)
+                .foregroundColor(Color.Colors.General._01Black)
         }
     }
 }
