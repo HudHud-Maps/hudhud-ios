@@ -73,7 +73,8 @@ func sheetProviderBuilder(userLocationStore: UserLocationStore,
         case let .routePlanner(routePlannerStore):
             routePlannerStore.sheetContext = (context.detentData, context.sheetEvents)
             return RoutePlannerSheetProvider(routePlannerStore: routePlannerStore,
-                                             sheetStore: context.sheetStore)
+                                             sheetStore: context.sheetStore,
+                                             mapStore: mapStore)
         case let .favoritesViewMore(searchViewStore):
             return FavoritesViewMoreSheetProvider(searchViewStore: searchViewStore,
                                                   favoritesStore: favoritesStore,

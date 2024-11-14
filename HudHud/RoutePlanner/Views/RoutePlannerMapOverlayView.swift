@@ -16,12 +16,13 @@ struct RoutePlannerMapOverlayView: View {
 
     let routePlannerStore: RoutePlannerStore
     let sheetStore: SheetStore
+    let mapStore: MapStore
 
     // MARK: Computed Properties
 
     private var routeCardsOffset: CGFloat {
         if self.routePlannerStore.isLoading {
-            self.sheetStore.sheetHeight - self.sheetStore.sheetHeight
+            self.sheetStore.sheetHeight
         } else {
             -(self.sheetStore.sheetHeight + 8)
         }
@@ -39,6 +40,17 @@ struct RoutePlannerMapOverlayView: View {
                 Spacer()
             }
             Spacer()
+            HStack {
+                Spacer()
+                OverlayButton(icon: .locateMeIcon) {
+                    Task {
+                        await self.locateMe()
+                    }
+                }
+                .padding(.trailing)
+                .padding(.bottom, 4)
+            }
+            .offset(y: -self.sheetStore.sheetHeight)
             RouteCardsView(
                 routes: self.routePlannerStore.routePlan?.routes ?? [],
                 selectedRoute: Binding(
@@ -52,6 +64,15 @@ struct RoutePlannerMapOverlayView: View {
             )
             .offset(y: self.routeCardsOffset)
         }
+    }
+}
+
+private extension RoutePlannerMapOverlayView {
+    func locateMe() async {
+        guard let userLocation = await self.mapStore.userLocationStore.location() else {
+            return
+        }
+        self.mapStore.updateCamera(state: .userLocation(userLocation.coordinate))
     }
 }
 
@@ -80,5 +101,5 @@ struct OverlayButton: View {
 }
 
 #Preview {
-    RoutePlannerMapOverlayView(routePlannerStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
+    RoutePlannerMapOverlayView(routePlannerStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing, mapStore: .storeSetUpForPreviewing)
 }

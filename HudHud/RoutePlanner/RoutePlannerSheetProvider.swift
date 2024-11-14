@@ -14,6 +14,7 @@ struct RoutePlannerSheetProvider: SheetProvider {
 
     let routePlannerStore: RoutePlannerStore
     let sheetStore: SheetStore
+    let mapStore: MapStore
 
     // MARK: Content
 
@@ -24,7 +25,8 @@ struct RoutePlannerSheetProvider: SheetProvider {
     var mapOverlayView: some View {
         RoutePlannerMapOverlayView(
             routePlannerStore: self.routePlannerStore,
-            sheetStore: self.sheetStore
+            sheetStore: self.sheetStore,
+            mapStore: self.mapStore
         )
     }
 }
