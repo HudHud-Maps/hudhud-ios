@@ -13,20 +13,11 @@ import SwiftUI
 
 struct MapLayersView: View {
 
-    // MARK: Nested Types
-
-    // Define an enum for button types
-    enum ButtonType: String {
-        case road, streetView, traffic, saved
-    }
-
     // MARK: Properties
 
     var mapStore: MapStore
     var sheetStore: SheetStore
-    var hudhudMapLayerStore: HudHudMapLayerStore
-
-    @State private var selectedButtons: Set<ButtonType> = []
+    @StateObject var hudhudMapLayerStore: HudHudMapLayerStore
 
     // MARK: Content
 
@@ -35,6 +26,14 @@ struct MapLayersView: View {
             VStack(alignment: .leading, spacing: 24) {
                 if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
                     self.mapLayerView(mapLayers: mapLayers)
+                    HStack {
+                        Spacer()
+                        ForEach(self.hudhudMapLayerStore.mapStyleTypes, id: \.self) { type in
+                            self.mapLayerButtons(for: type, label: type.title)
+                            Spacer()
+                        }
+                    }
+                    .padding(.horizontal)
                 } else {
                     ContentUnavailableView {
                         Label("No Map Layers Available", systemSymbol: .globeCentralSouthAsiaFill)
@@ -42,18 +41,6 @@ struct MapLayersView: View {
                         Text("No Content To be Shown Here.")
                     }
                 }
-                HStack(alignment: .center) {
-                    Spacer()
-                    self.buttonView(for: .traffic, imageName: .traffic, label: "Traffic")
-                    Spacer()
-                    self.buttonView(for: .saved, imageName: .saveIconFill, label: "Saved")
-                    Spacer()
-                    self.buttonView(for: .streetView, imageName: .signpost, label: "Street View")
-                    Spacer()
-                    self.buttonView(for: .road, imageName: .road, label: "Road Alerts")
-                    Spacer()
-                }
-                .padding(.horizontal)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -144,25 +131,24 @@ struct MapLayersView: View {
         }
     }
 
-    func buttonView(for type: ButtonType, imageName: ImageResource, label: String) -> some View {
+    func mapLayerButtons(for type: HudHudMapLayerStore.mapStyleType, label: String) -> some View {
         VStack(alignment: .center, spacing: 8) {
             Button {
                 // It should connect to the backend to trigger the action
                 // Toggle the buttons selected state
-                if self.selectedButtons.contains(type) {
-                    self.selectedButtons.remove(type)
-                } else {
-                    self.selectedButtons.insert(type)
+                self.hudhudMapLayerStore.buttonStyleAction(for: type)
+                if let selectedLayer = hudhudMapLayerStore.layer(for: type) {
+                    self.mapStore.mapStyleLayer = selectedLayer
                 }
             } label: {
                 ZStack {
                     Circle()
-                        .fill(self.selectedButtons.contains(type) ? Color.Colors.General._11GreenLight : Color.Colors.General._03LightGrey)
+                        .fill(self.hudhudMapLayerStore.selectedStyle.contains(type) ? Color.Colors.General._11GreenLight : Color.Colors.General._03LightGrey)
                         .frame(width: 48, height: 48)
-                    Image(imageName)
+                    self.getCustomImage(for: type)
                         .renderingMode(.template)
                         .font(.system(size: 15, weight: .regular, design: .rounded))
-                        .foregroundColor(self.selectedButtons.contains(type) ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
+                        .foregroundColor(self.hudhudMapLayerStore.selectedStyle.contains(type) ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
                 }
                 .padding(4)
                 .contentShape(Circle())
@@ -170,6 +156,21 @@ struct MapLayersView: View {
             Text(label)
                 .hudhudFontStyle(.labelSmall)
                 .foregroundColor(Color.Colors.General._01Black)
+        }
+    }
+
+    // MARK: Functions
+
+    func getCustomImage(for type: HudHudMapLayerStore.mapStyleType) -> Image {
+        switch type {
+        case .traffic:
+            return Image(.traffic)
+        case .saved:
+            return Image(.saveIconFill)
+        case .streetView:
+            return Image(.signpost)
+        case .road:
+            return Image(.road)
         }
     }
 }

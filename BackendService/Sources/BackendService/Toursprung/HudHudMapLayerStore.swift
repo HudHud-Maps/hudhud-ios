@@ -17,10 +17,37 @@ import OSLog
 @MainActor
 public class HudHudMapLayerStore: ObservableObject {
 
+    // MARK: Nested Types
+
+    // Define an enum for button mapStyleTypes
+    public enum mapStyleType: String {
+        case road, streetView, traffic, saved
+
+        // MARK: Computed Properties
+
+        public var title: String {
+            switch self {
+            case .road:
+                return "Road Alerts"
+            case .streetView:
+                return "Street View"
+            case .traffic:
+                return "Traffic"
+            case .saved:
+                return "Saved"
+            }
+        }
+    }
+
     // MARK: Properties
 
     @Published public var hudhudMapLayers: [HudHudMapLayer]?
     @Published public var lastError: Error?
+    // This select the buttons under the layer
+    @Published public var selectedStyle: Set<mapStyleType> = []
+    // This select layer of the map
+    @Published public var selectedLayer: Set<HudHudMapLayer> = []
+    public let mapStyleTypes: [mapStyleType] = [.traffic, .saved, .streetView, .road]
 
     // MARK: Lifecycle
 
@@ -55,6 +82,35 @@ public class HudHudMapLayerStore: ObservableObject {
             throw OpenAPIClientError.undocumentedAnswer(status: statusCode, body: bodyString)
         case let .internalServerError(error):
             throw try HudHudClientError.internalServerError(error.body.json.message)
+        }
+    }
+
+    public func layer(for type: mapStyleType) -> HudHudMapLayer? {
+        guard let hudhudMapLayers else { return nil }
+        switch type {
+        case .traffic:
+            return hudhudMapLayers.first { $0.name == "Traffic" }
+        case .saved:
+            break
+        //  return hudhudMapLayers?.first { $0.name == "Saved" }
+        case .streetView:
+            return hudhudMapLayers.first { $0.name == "Street View" }
+        case .road:
+            break
+            // return hudhudMapLayers?.first { $0.name == "Road Alerts" }
+        }
+        return nil
+    }
+
+    public func buttonStyleAction(for type: mapStyleType) {
+        // Toggle the button's selected state
+        if self.selectedStyle.contains(type) {
+            self.selectedStyle.remove(type)
+        } else {
+            self.selectedStyle.insert(type)
+            if let selectedLayer = self.layer(for: type) {
+                self.selectedLayer.insert(selectedLayer)
+            }
         }
     }
 
