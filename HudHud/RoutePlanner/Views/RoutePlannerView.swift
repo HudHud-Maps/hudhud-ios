@@ -51,6 +51,7 @@ struct RoutePlanView: View {
                                 onSwap: self.swapActionIfCanSwap(for: destination),
                                 onDelete: self.deleteActionIfCanDelete(for: destination)
                             )
+                            .padding(.leading, 4)
                         }
                         .listRowSeparator(.hidden)
                         .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 6, trailing: 0))
@@ -68,6 +69,7 @@ struct RoutePlanView: View {
                         AddMoreRoute {
                             self.routePlannderStore.addNewRoute()
                         }
+                        .padding(.leading, 4)
                     }
                     .listRowSeparator(.hidden)
                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -165,7 +167,7 @@ struct RoutePlannerRow: View {
                                 Image(.swapIcon)
                                     .padding(6)
                                     .background(Circle().fill(Color(red: 242 / 255, green: 242 / 255, blue: 242 / 255)))
-                                    .padding(.trailing)
+                                    .padding(.trailing, 24)
                             }
                         }
                     }
