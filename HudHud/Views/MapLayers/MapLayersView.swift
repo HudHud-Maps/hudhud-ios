@@ -56,28 +56,32 @@ struct MapLayersView: View {
                 .padding(.horizontal)
             }
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                leading:
-                Text("Map Layers")
-                    .hudhudFontStyle(.labelLarge),
-
-                trailing: Button {
-                    self.sheetStore.popSheet()
-                } label: {
-                    ZStack {
-                        Circle()
-                            .fill(Color.Colors.General._03LightGrey)
-                            .frame(width: 30, height: 30)
-                        Image(systemSymbol: .xmark)
-                            .font(.system(size: 12, weight: .regular, design: .rounded))
-                            .foregroundStyle(Color.Colors.General._01Black)
-                    }
-                    .padding(4)
-                    .contentShape(Circle())
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Map Layers")
+                        .hudhudFontStyle(.labelLarge)
+                        .padding(.top)
                 }
-                .buttonStyle(PlainButtonStyle())
-                .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
-            )
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        self.sheetStore.popSheet()
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color.Colors.General._03LightGrey)
+                                .frame(width: 30, height: 30)
+                            Image(systemSymbol: .xmark)
+                                .font(.system(size: 12, weight: .regular, design: .rounded))
+                                .foregroundStyle(Color.Colors.General._01Black)
+                        }
+                        .padding(4)
+                        .contentShape(Circle())
+                    }
+                    .padding(.top)
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
+                }
+            }
         }
     }
 
@@ -94,7 +98,8 @@ struct MapLayersView: View {
                 self.layersView(mapLayers: mapLayers)
                     .padding(.horizontal)
             }
-        }.frame(height: 100)
+        }
+        .padding(.top, 20)
     }
 
     func layersView(mapLayers: [HudHudMapLayer]) -> some View {
