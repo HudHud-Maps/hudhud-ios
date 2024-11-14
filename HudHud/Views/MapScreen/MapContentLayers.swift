@@ -109,7 +109,7 @@ extension MapViewContainer {
     }
 
     @MapViewContentBuilder
-    func makeCongestionLayers(for routes: [Route], currentPositionIndex: Int) -> [StyleLayerDefinition] {
+    func makeCongestionLayers(for routes: [Route], currentPositionIndex: ExactRoutePosition) -> [StyleLayerDefinition] {
         let congestionLevels = ["moderate", "heavy", "severe"]
         routes.enumerated().flatMap { index, route in
             let segments = route.extractCongestionSegments(considering: currentPositionIndex)
@@ -216,7 +216,7 @@ private extension MapViewContainer {
     func congestionSource(for level: String, segments: [CongestionSegment], id: Int) -> ShapeSource {
         ShapeSource(identifier: "congestion-\(level)-\(id)") {
             segments.filter { $0.level == level }.map { segment in
-                MLNPolylineFeature(coordinates: segment.geometry)
+                MLNPolylineFeature(coordinates: segment.points)
             }
         }
     }

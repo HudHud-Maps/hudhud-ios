@@ -16,7 +16,7 @@ import UIKit
 // MARK: - RouteGeometries
 
 struct RouteGeometries: Equatable {
-    let currentIndex: Int
+    let userPosition: ExactRoutePosition
     let driven: [CLLocationCoordinate2D]
     let remaining: [CLLocationCoordinate2D]
 }
@@ -52,7 +52,7 @@ final class NavigationStore {
         var status: Status
         var speedLimit: Measurement<UnitSpeed>?
         var navigationAlert: NavigationAlert?
-        var routeGeometries = RouteGeometries(currentIndex: 0, driven: [], remaining: [])
+        var routeGeometries = RouteGeometries(userPosition: .empty, driven: [], remaining: [])
         var isMuted: Bool = false
         var tripProgress: TripProgress?
     }
@@ -141,7 +141,7 @@ private extension NavigationStore {
             try self.decideWhichLocationProviderToUse(route: route) {
                 try self.navigationEngine.startNavigation(route: route)
                 self.state.status = .navigating
-                self.state.routeGeometries = RouteGeometries(currentIndex: 0, driven: [], remaining: route.geometry.clLocationCoordinate2Ds)
+                self.state.routeGeometries = RouteGeometries(userPosition: .empty, driven: [], remaining: route.geometry.clLocationCoordinate2Ds)
             }
         } catch {
             self.state.status = .failed
@@ -191,6 +191,10 @@ private extension NavigationStore {
         case .complete:
             self.state.status = .arrived
         }
+        if newState.tripState.distanceRemaining == 0 {
+            self.state.status = .arrived
+            return
+        }
     }
 
     func handleNavigationEvent(_ event: NavigationEvent) {
@@ -213,7 +217,7 @@ private extension NavigationStore {
             self.state.status = .failed
         case let .pathProgressUpdated(progress):
             self.state.routeGeometries = RouteGeometries(
-                currentIndex: progress.lastPosition.coordinateIndex,
+                userPosition: progress.lastPosition,
                 driven: progress.drivenCoordinates,
                 remaining: progress.remainingCoordinates
             )

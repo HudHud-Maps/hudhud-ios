@@ -97,8 +97,10 @@ final class NavigationEngine {
 
     func startNavigation(route: Route) throws {
         self.activeRoute = route
-        self.routeTracker.update(coordinates: route.geometry.clLocationCoordinate2Ds,
-                                 totalDistance: route.distance)
+        self.routeTracker.setRoute(
+            coordinates: route.geometry.clLocationCoordinate2Ds,
+            totalDistance: route.distance
+        )
 
         try self.ferrostarCore.startNavigation(route: route)
         self.locationEngine.swithcMode(to: .snapped)
@@ -138,8 +140,10 @@ private extension NavigationEngine {
             let remainingDistance = navigationInfo.progress.distanceRemaining
             let drivenDistance = totalDistance - remainingDistance
 
-            let progress = self.routeTracker.calcualteProgress(from: snappedLocation.clLocation,
-                                                               and: drivenDistance)
+            let progress = self.routeTracker.calcualteProgress(
+                from: snappedLocation.clLocation,
+                and: drivenDistance
+            )
             self.eventsSubject.send(.pathProgressUpdated(progress))
         }
 

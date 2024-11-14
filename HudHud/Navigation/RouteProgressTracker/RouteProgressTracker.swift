@@ -30,32 +30,40 @@ final class RouteProgressTracker {
 
     // MARK: Functions
 
-    func update(coordinates: [CLLocationCoordinate2D], totalDistance: CLLocationDistance) {
+    func setRoute(coordinates: [CLLocationCoordinate2D], totalDistance: CLLocationDistance) {
         self.routeCoordinates = coordinates
         self.totalDistance = totalDistance
         self.spatialIndex.reindex(using: coordinates)
         self.isActive = !coordinates.isEmpty
     }
 
-    func calcualteProgress(from location: CLLocation,
-                           and distanceFromStart: CLLocationDistance) -> PathTraversalProgress {
+    func calcualteProgress(
+        from location: CLLocation,
+        and distanceFromStart: CLLocationDistance
+    ) -> PathTraversalProgress {
         guard self.isActive else {
-            return PathTraversalProgress(totalDistance: 0,
-                                         drivenDistance: 0,
-                                         lastPosition: .empty,
-                                         drivenCoordinates: [],
-                                         remainingCoordinates: [])
+            return PathTraversalProgress(
+                totalDistance: 0,
+                drivenDistance: 0,
+                lastPosition: .empty,
+                drivenCoordinates: [],
+                remainingCoordinates: []
+            )
         }
 
         let currentPosition = self.spatialIndex.findExactPosition(for: location.coordinate)
-        let (driven, remaining) = splitCoordinates(at: currentPosition,
-                                                   from: routeCoordinates)
+        let (driven, remaining) = splitCoordinates(
+            at: currentPosition,
+            from: routeCoordinates
+        )
 
-        return PathTraversalProgress(totalDistance: self.totalDistance,
-                                     drivenDistance: distanceFromStart,
-                                     lastPosition: currentPosition,
-                                     drivenCoordinates: driven,
-                                     remainingCoordinates: remaining)
+        return PathTraversalProgress(
+            totalDistance: self.totalDistance,
+            drivenDistance: distanceFromStart,
+            lastPosition: currentPosition,
+            drivenCoordinates: driven,
+            remainingCoordinates: remaining
+        )
     }
 
     func flush() {
@@ -68,9 +76,16 @@ final class RouteProgressTracker {
 
 private extension RouteProgressTracker {
 
-    func splitCoordinates(at position: ExactRoutePosition,
-                          from coordinates: [CLLocationCoordinate2D]) -> (driven: [CLLocationCoordinate2D], remaining: [CLLocationCoordinate2D]) {
-        guard position.index < coordinates.count else { return (coordinates, []) }
+    func splitCoordinates(
+        at position: ExactRoutePosition,
+        from coordinates: [CLLocationCoordinate2D]
+    ) -> (
+        driven: [CLLocationCoordinate2D],
+        remaining: [CLLocationCoordinate2D]
+    ) {
+        guard position.index < coordinates.count else {
+            return (coordinates, [])
+        }
 
         let driven = position.index > 0 ? Array(coordinates[0 ... (position.index - 1)]) : []
 
@@ -82,15 +97,19 @@ private extension RouteProgressTracker {
 
             let ratio = max(0, min(1, (position.distanceFromSegmentStart - 3) / segment))
 
-            let currentPoint = self.spatialIndex.interpolate(start: start,
-                                                             end: end,
-                                                             t: ratio)
+            let currentPoint = self.spatialIndex.interpolate(
+                start: start,
+                end: end,
+                t: ratio
+            )
 
-            let beforePoint = self.spatialIndex.interpolate(start: start,
-                                                            end: currentPoint,
-                                                            t: 0.95)
-
-            return (driven + [start, beforePoint, currentPoint],
+            let beforeRatio = max(0, (position.distanceFromSegmentStart - 6) / segment)
+            let beforePoint = self.spatialIndex.interpolate(
+                start: start,
+                end: end,
+                t: beforeRatio
+            )
+            return (driven + [start, beforePoint],
                     [currentPoint] + Array(coordinates[(position.index + 1)...]))
         }
 
@@ -101,15 +120,5 @@ private extension RouteProgressTracker {
 private extension ExactRoutePosition {
     var index: Int {
         coordinateIndex
-    }
-
-    static var empty: ExactRoutePosition {
-        ExactRoutePosition(coordinateIndex: 0,
-                           nextCoordinateIndex: 0,
-                           segmentIndex: 0,
-                           exactCoordinate: .theGarage,
-                           distanceFromStart: 0,
-                           distanceFromSegmentStart: 0,
-                           percentageAlongSegment: 0)
     }
 }

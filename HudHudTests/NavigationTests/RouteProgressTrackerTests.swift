@@ -68,7 +68,7 @@ final class RouteProgressTrackerTests: XCTestCase {
     func testUpdateWithNewRoute() {
         self.tracker = RouteProgressTracker()
 
-        self.tracker.update(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
+        self.tracker.setRoute(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
 
         let progress = self.tracker.calcualteProgress(from: CLLocation(latitude: self.sampleCoordinates[0].latitude,
                                                                        longitude: self.sampleCoordinates[0].longitude),
@@ -79,7 +79,7 @@ final class RouteProgressTrackerTests: XCTestCase {
     }
 
     func testProgressAtStart() {
-        self.tracker.update(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
+        self.tracker.setRoute(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
 
         let progress = self.tracker.calcualteProgress(from: CLLocation(latitude: self.sampleCoordinates[0].latitude,
                                                                        longitude: self.sampleCoordinates[0].longitude),
@@ -92,7 +92,7 @@ final class RouteProgressTrackerTests: XCTestCase {
     }
 
     func testProgressAtMiddle() {
-        self.tracker.update(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
+        self.tracker.setRoute(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
 
         let middlePoint = self.sampleCoordinates[1]
         let progress = self.tracker.calcualteProgress(from: CLLocation(latitude: middlePoint.latitude,
@@ -106,12 +106,13 @@ final class RouteProgressTrackerTests: XCTestCase {
     }
 
     func testProgressAtEnd() throws {
-        self.tracker.update(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
+        self.tracker.setRoute(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
 
         let endPoint = try XCTUnwrap(sampleCoordinates.last)
-        let progress = self.tracker.calcualteProgress(from: CLLocation(latitude: endPoint.latitude,
-                                                                       longitude: endPoint.longitude),
-                                                      and: self.sampleDistance)
+        let progress = self.tracker.calcualteProgress(
+            from: CLLocation(latitude: endPoint.latitude, longitude: endPoint.longitude),
+            and: self.sampleDistance
+        )
 
         XCTAssertEqual(progress.totalDistance, self.sampleDistance)
         XCTAssertEqual(progress.drivenDistance, self.sampleDistance)
@@ -120,7 +121,7 @@ final class RouteProgressTrackerTests: XCTestCase {
     }
 
     func testProgressWithOffRouteLocation() {
-        self.tracker.update(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
+        self.tracker.setRoute(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
 
         let offRouteLocation = CLLocation(latitude: 26.0, longitude: 56.0)
         let progress = self.tracker.calcualteProgress(from: offRouteLocation,
@@ -133,7 +134,7 @@ final class RouteProgressTrackerTests: XCTestCase {
     }
 
     func testFlush() {
-        self.tracker.update(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
+        self.tracker.setRoute(coordinates: self.sampleCoordinates, totalDistance: self.sampleDistance)
         let initialProgress = self.tracker.calcualteProgress(from: CLLocation(latitude: self.sampleCoordinates[0].latitude,
                                                                               longitude: self.sampleCoordinates[0].longitude),
                                                              and: 0)
@@ -154,30 +155,30 @@ final class RouteProgressTrackerTests: XCTestCase {
         XCTAssertEqual(progress.lastPosition.distanceFromSegmentStart, 0)
     }
 
-    func testPerformanceWithLargeRoute() {
-        _ = XCTSkip("No need to run on CI, only for local testing")
-        let cityRoute = (0 ..< 250).map { i in
-            CLLocationCoordinate2D(latitude: 25.0 + Double(i) * 0.001,
-                                   longitude: 55.0 + Double(i) * 0.001)
-        }
-
-        // Long route ~1000km: ~2500 points (based on real data)
-        let longRoute = (0 ..< 2408).map { i in
-            CLLocationCoordinate2D(latitude: 25.0 + Double(i) * 0.001,
-                                   longitude: 55.0 + Double(i) * 0.001)
-        }
-
-        let options = XCTMeasureOptions()
-        options.iterationCount = 5
-
-        measure(options: options) {
-            self.tracker.update(coordinates: cityRoute, totalDistance: 30000)
-            _ = self.tracker.calcualteProgress(from: CLLocation(latitude: 25.15, longitude: 55.15),
-                                               and: 15000)
-
-            self.tracker.update(coordinates: longRoute, totalDistance: 1_000_000)
-            _ = self.tracker.calcualteProgress(from: CLLocation(latitude: 25.5, longitude: 55.5),
-                                               and: 500_000)
-        }
-    }
+//    func testPerformanceWithLargeRoute() {
+//        _ = XCTSkip("No need to run on CI, only for local testing")
+//        let cityRoute = (0 ..< 250).map { i in
+//            CLLocationCoordinate2D(latitude: 25.0 + Double(i) * 0.001,
+//                                   longitude: 55.0 + Double(i) * 0.001)
+//        }
+//
+//        // Long route ~1000km: ~2500 points (based on real data)
+//        let longRoute = (0 ..< 2408).map { i in
+//            CLLocationCoordinate2D(latitude: 25.0 + Double(i) * 0.001,
+//                                   longitude: 55.0 + Double(i) * 0.001)
+//        }
+//
+//        let options = XCTMeasureOptions()
+//        options.iterationCount = 5
+//
+//        measure(options: options) {
+//            self.tracker.setRoute(coordinates: cityRoute, totalDistance: 30000)
+//            _ = self.tracker.calcualteProgress(from: CLLocation(latitude: 25.15, longitude: 55.15),
+//                                               and: 15000)
+//
+//            self.tracker.setRoute(coordinates: longRoute, totalDistance: 1_000_000)
+//            _ = self.tracker.calcualteProgress(from: CLLocation(latitude: 25.5, longitude: 55.5),
+//                                               and: 500_000)
+//        }
+//    }
 }

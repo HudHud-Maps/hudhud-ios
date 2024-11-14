@@ -186,7 +186,7 @@ private extension MapViewContainer {
         // Congestion
         layers += makeCongestionLayers(
             for: self.routesPlanMapDrawer.routes,
-            currentPositionIndex: self.navigationStore.state.routeGeometries.currentIndex
+            currentPositionIndex: self.navigationStore.state.routeGeometries.userPosition
         )
 
         // Custom Symbols
@@ -223,11 +223,10 @@ private extension MapViewContainer {
                                           style: TravelledRouteStyle()).layers
             }
         }
-
         if let selectedRoute = self.routesPlanMapDrawer.selectedRoute {
             layers += makeCongestionLayers(
                 for: [selectedRoute],
-                currentPositionIndex: self.navigationStore.state.routeGeometries.currentIndex
+                currentPositionIndex: self.navigationStore.state.routeGeometries.userPosition
             )
         }
 
@@ -240,6 +239,7 @@ private extension MapViewContainer {
                 .iconImage(alert.alertType.mapIcon)
             ]
         }
+
         return layers
     }
 

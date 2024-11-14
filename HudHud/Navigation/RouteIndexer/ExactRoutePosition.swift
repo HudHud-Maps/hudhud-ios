@@ -10,7 +10,7 @@ import CoreLocation
 
 // MARK: - ExactRoutePosition
 
-struct ExactRoutePosition {
+struct ExactRoutePosition: Equatable {
     /// Actual coordinate index in the route
     let coordinateIndex: Int
 
@@ -42,5 +42,19 @@ extension ExactRoutePosition {
             return self.distanceFromSegmentStart > other.distanceFromSegmentStart
         }
         return self.coordinateIndex > other.coordinateIndex
+    }
+}
+
+extension ExactRoutePosition {
+    static var empty: ExactRoutePosition {
+        ExactRoutePosition(
+            coordinateIndex: 0,
+            nextCoordinateIndex: 0,
+            segmentIndex: 0,
+            exactCoordinate: .theGarage,
+            distanceFromStart: 0,
+            distanceFromSegmentStart: 0,
+            percentageAlongSegment: 0
+        )
     }
 }
