@@ -103,28 +103,6 @@ struct FavoritesViewMoreView: View {
             )
         }
     }
-
-    func searchSheetView() -> some View {
-        let freshMapStore = MapStore(userLocationStore: .storeSetUpForPreviewing)
-        let freshRoutingStore = RoutingStore(mapStore: freshMapStore, routesPlanMapDrawer: RoutesPlanMapDrawer())
-        let freshSheetStore = SheetStore(emptySheetType: .search)
-        let freshSearchViewStore = SearchViewStore(
-            mapStore: freshMapStore,
-            sheetStore: freshSheetStore,
-            routingStore: freshRoutingStore,
-            filterStore: FilterStore(),
-            mode: self.searchStore.mode
-        )
-        freshSearchViewStore.searchType = .favorites
-        return SearchSheet(
-            mapStore: freshMapStore,
-            searchStore: freshSearchViewStore,
-            trendingStore: TrendingStore(),
-            sheetStore: freshSheetStore,
-            filterStore: FilterStore(),
-            favoritesStore: self.favoritesStore
-        )
-    }
 }
 
 #Preview {

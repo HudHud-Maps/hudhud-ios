@@ -14,9 +14,9 @@ import SwiftLocation
 import SwiftUI
 import TypographyKit
 
-// MARK: - AppDpendencies
+// MARK: - AppDependencies
 
-enum AppDpendencies {
+enum AppDependencies {
     static let navigationEngine = NavigationEngine(configuration: .default)
     static let locationEngine = LocationEngine()
 }
@@ -28,25 +28,13 @@ struct HudHudApp: App {
     // MARK: Properties
 
     @ObservedObject var touchVisualizerManager = TouchManager.shared
-
-    @State var mapStore: MapStore
-
-    private let searchStore: SearchViewStore
-    @State private var sheetStore: SheetStore
-    @State private var mapViewStore: MapViewStore
-    @State private var isScreenCaptured = UIScreen.main.isCaptured
-    @State private var routesPlanMapDrawer: RoutesPlanMapDrawer
-    @State private var navigationStore: NavigationStore
+    @State var userLocationStore: UserLocationStore
 
     // MARK: Computed Properties
 
     var body: some Scene {
         WindowGroup {
-            ContentView(searchViewStore: self.searchStore,
-                        mapViewStore: self.mapViewStore,
-                        sheetStore: self.sheetStore,
-                        routesPlanMapDrawer: self.routesPlanMapDrawer,
-                        navigationStore: self.navigationStore)
+            ContentView(userLocationStore: self.userLocationStore)
                 .onAppear {
                     self.touchVisualizerManager.updateVisualizer(isScreenRecording: UIScreen.main.isCaptured)
                 }
@@ -56,24 +44,9 @@ struct HudHudApp: App {
     // MARK: Lifecycle
 
     init() {
-        let sheetStore = SheetStore(emptySheetType: .search)
-        self.sheetStore = sheetStore
-
-        let routesPlanMapDrawer = RoutesPlanMapDrawer()
-        self.routesPlanMapDrawer = routesPlanMapDrawer
-
         let location = Location() // swiftlint:disable:this location_usage
         location.accuracy = .threeKilometers
-        let mapStore = MapStore(userLocationStore: UserLocationStore(location: location))
-        let routingStore = RoutingStore(mapStore: mapStore, routesPlanMapDrawer: routesPlanMapDrawer)
-        self.mapViewStore = MapViewStore(mapStore: mapStore, sheetStore: sheetStore)
-        self.searchStore = SearchViewStore(mapStore: mapStore, sheetStore: sheetStore, routingStore: routingStore, filterStore: .shared,
-                                           mode: .live(provider: .hudhud))
-        self.mapStore = mapStore
-
-        self.navigationStore = NavigationStore(navigationEngine: AppDpendencies.navigationEngine,
-                                               locationEngine: AppDpendencies.locationEngine,
-                                               routesPlanMapDrawer: routesPlanMapDrawer)
+        self.userLocationStore = UserLocationStore(location: location)
 
         // Create a custom URLCache to store images on disk
         let diskCache = URLCache(memoryCapacity: 100 * 1024 * 1024, // 100 MB memory cache

@@ -27,13 +27,11 @@ final class MapViewController: UIViewController, MapViewHostViewController {
     // MARK: Lifecycle
 
     init(sheetStore: SheetStore,
-         styleURL: URL,
-         sheetToView: @escaping (SheetType) -> some View) {
+         styleURL: URL) {
         self.mapView = MLNMapView(frame: .zero, styleURL: styleURL)
         self.sheetStore = sheetStore
         self.sheetViewController = SheetContainerViewController(
-            sheetStore: sheetStore,
-            sheetToView: sheetToView
+            sheetStore: sheetStore
         )
 
         super.init(nibName: nil, bundle: nil)

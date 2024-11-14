@@ -64,29 +64,19 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		0C9A5B5A2CDF357B00988B68 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		9EFA16A52CE22B9C00C00A47 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				"Fonts/IBMPlexSansArabic-Regular.ttf",
-				Info.plist,
+				"Supporting Files/Fonts/IBMPlexSansArabic-Regular.ttf",
+				"Supporting Files/Info.plist",
 			);
 			target = CDAE05432B681261003E5196 /* HudHud */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		0C9A57452CDF31BF00988B68 /* Navigation */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Navigation; sourceTree = "<group>"; };
-		0C9A579A2CDF31E300988B68 /* RoutePlanner */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = RoutePlanner; sourceTree = "<group>"; };
-		0C9A57AD2CDF31E300988B68 /* LocationEngine */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = LocationEngine; sourceTree = "<group>"; };
-		0C9A57CD2CDF31E300988B68 /* Common */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Common; sourceTree = "<group>"; };
-		0C9A57F22CDF31E300988B68 /* Model */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Model; sourceTree = "<group>"; };
-		0C9A58052CDF31E300988B68 /* UIStyle */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = UIStyle; sourceTree = "<group>"; };
-		0C9A580D2CDF31E300988B68 /* Enums */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Enums; sourceTree = "<group>"; };
-		0C9A58142CDF31E300988B68 /* Classes */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Classes; sourceTree = "<group>"; };
-		0C9A5AE12CDF354C00988B68 /* Views */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Views; sourceTree = "<group>"; };
-		0C9A5B432CDF357B00988B68 /* Supporting Files */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (0C9A5B5A2CDF357B00988B68 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = "Supporting Files"; sourceTree = "<group>"; };
 		0C9A5B5D2CDF358400988B68 /* NavigationTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = NavigationTests; sourceTree = "<group>"; };
-		0C9A5B672CDF35A900988B68 /* Preview Content */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "Preview Content"; sourceTree = "<group>"; };
+		9EFA15A22CE22B9C00C00A47 /* HudHud */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (9EFA16A52CE22B9C00C00A47 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = HudHud; sourceTree = "<group>"; };
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,7 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				CD34C5962C0B3CEB006DCDBA /* BackendService */,
-				CDAE05462B681261003E5196 /* HudHud */,
+				9EFA15A22CE22B9C00C00A47 /* HudHud */,
 				CDAE05572B681263003E5196 /* HudHudTests */,
 				CDAE05612B681263003E5196 /* HudHudUITests */,
 				CDAE05452B681261003E5196 /* Products */,
@@ -155,24 +145,6 @@
 				CDAE055E2B681263003E5196 /* HudHudUITests.xctest */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		CDAE05462B681261003E5196 /* HudHud */ = {
-			isa = PBXGroup;
-			children = (
-				0C9A57AD2CDF31E300988B68 /* LocationEngine */,
-				0C9A58052CDF31E300988B68 /* UIStyle */,
-				0C9A5B672CDF35A900988B68 /* Preview Content */,
-				0C9A5AE12CDF354C00988B68 /* Views */,
-				0C9A57F22CDF31E300988B68 /* Model */,
-				0C9A5B432CDF357B00988B68 /* Supporting Files */,
-				0C9A580D2CDF31E300988B68 /* Enums */,
-				0C9A58142CDF31E300988B68 /* Classes */,
-				0C9A57CD2CDF31E300988B68 /* Common */,
-				0C9A579A2CDF31E300988B68 /* RoutePlanner */,
-				0C9A57452CDF31BF00988B68 /* Navigation */,
-			);
-			path = HudHud;
 			sourceTree = "<group>";
 		};
 		CDAE05572B681263003E5196 /* HudHudTests */ = {
@@ -222,17 +194,7 @@
 				8901798B9586A659D2EFC8E0 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				0C9A57452CDF31BF00988B68 /* Navigation */,
-				0C9A579A2CDF31E300988B68 /* RoutePlanner */,
-				0C9A57AD2CDF31E300988B68 /* LocationEngine */,
-				0C9A57CD2CDF31E300988B68 /* Common */,
-				0C9A57F22CDF31E300988B68 /* Model */,
-				0C9A58052CDF31E300988B68 /* UIStyle */,
-				0C9A580D2CDF31E300988B68 /* Enums */,
-				0C9A58142CDF31E300988B68 /* Classes */,
-				0C9A5AE12CDF354C00988B68 /* Views */,
-				0C9A5B432CDF357B00988B68 /* Supporting Files */,
-				0C9A5B672CDF35A900988B68 /* Preview Content */,
+				9EFA15A22CE22B9C00C00A47 /* HudHud */,
 			);
 			name = HudHud;
 			packageProductDependencies = (
@@ -527,7 +489,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -587,7 +549,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -664,7 +626,6 @@
 		CDAE056C2B681263003E5196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -683,7 +644,6 @@
 		CDAE056D2B681263003E5196 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -702,7 +662,6 @@
 		CDAE056F2B681263003E5196 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YN76B7J2LN;
@@ -720,7 +679,6 @@
 		CDAE05702B681263003E5196 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = YN76B7J2LN;

@@ -53,10 +53,5 @@ struct POISheetButtonStyle: ButtonStyle {
 }
 
 #Preview(traits: .sizeThatFitsLayout) {
-    let searchViewStore: SearchViewStore = .storeSetUpForPreviewing
-    ContentView(searchViewStore: searchViewStore,
-                mapViewStore: .storeSetUpForPreviewing,
-                sheetStore: .storeSetUpForPreviewing,
-                routesPlanMapDrawer: RoutesPlanMapDrawer(),
-                navigationStore: .storeSetUpForPreviewing)
+    ContentView(userLocationStore: .storeSetUpForPreviewing)
 }

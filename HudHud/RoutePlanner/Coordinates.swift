@@ -9,6 +9,8 @@
 import CoreLocation
 import Foundation
 
+// MARK: - Coordinates
+
 struct Coordinates: Hashable {
 
     // MARK: Properties

@@ -14,7 +14,7 @@ import SwiftUI
 
 // MARK: - ApplePOI
 
-public actor ApplePOI: POIServiceProtocol {
+public final class ApplePOI: POIServiceProtocol {
 
     // MARK: Static Properties
 
@@ -35,9 +35,7 @@ public actor ApplePOI: POIServiceProtocol {
         self.completer = MKLocalSearchCompleter()
         self.delegate = DelegateWrapper()
         self.delegate.apple = self
-        Task {
-            await self.completer.delegate = self.delegate
-        }
+        self.completer.delegate = self.delegate
     }
 
     // MARK: Functions

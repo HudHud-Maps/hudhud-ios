@@ -56,12 +56,9 @@ struct LoginToSavePOIView: View {
                 } label: {
                     Text("Login or Sign up")
                 }
-                .buttonStyle(
-                    LargeButtonStyle(
-                        isLoading: .constant(false),
-                        backgroundColor: Color.Colors.General._06DarkGreen,
-                        foregroundColor: .white
-                    ))
+                .buttonStyle(LargeButtonStyle(isLoading: .constant(false),
+                                              backgroundColor: Color.Colors.General._06DarkGreen,
+                                              foregroundColor: .white))
                 .padding(.horizontal, 24)
             }
             .padding(.top)

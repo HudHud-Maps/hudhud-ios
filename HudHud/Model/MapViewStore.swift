@@ -20,7 +20,7 @@ final class MapViewStore {
 
     // MARK: Properties
 
-    var streetViewStore: StreetViewStore?
+    let streetViewStore: StreetViewStore
 
     private let mapActionHandler: MapActionHandler
     private let mapStore: MapStore
@@ -29,9 +29,10 @@ final class MapViewStore {
 
     // MARK: Lifecycle
 
-    init(mapStore: MapStore, sheetStore: SheetStore) {
+    init(mapStore: MapStore, streetViewStore: StreetViewStore, sheetStore: SheetStore) {
         self.mapActionHandler = MapActionHandler(mapStore: mapStore, sheetStore: sheetStore)
         self.mapStore = mapStore
+        self.streetViewStore = streetViewStore
         self.sheetStore = sheetStore
     }
 
@@ -40,10 +41,10 @@ final class MapViewStore {
     // MARK: - Internal
 
     func didTapOnMap(coordinates: CLLocationCoordinate2D, containing features: [any MLNFeature]) {
-        if self.streetViewStore?.streetViewScene != nil {
+        if self.streetViewStore.streetViewScene != nil {
             // handle streetView tap
             Task {
-                await self.streetViewStore?.loadNearestStreetView(for: coordinates)
+                await self.streetViewStore.loadNearestStreetView(for: coordinates)
             }
             return
         }
@@ -61,5 +62,5 @@ final class MapViewStore {
 // MARK: - Previewable
 
 extension MapViewStore: Previewable {
-    static let storeSetUpForPreviewing = MapViewStore(mapStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
+    static let storeSetUpForPreviewing = MapViewStore(mapStore: .storeSetUpForPreviewing, streetViewStore: .storeSetUpForPreviewing, sheetStore: .storeSetUpForPreviewing)
 }

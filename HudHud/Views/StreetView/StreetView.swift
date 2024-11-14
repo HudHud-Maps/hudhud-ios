@@ -20,7 +20,6 @@ struct StreetView: View {
     // MARK: Properties
 
     var store: StreetViewStore
-    @ObservedObject var debugStore: DebugStore
 
     // MARK: Content
 

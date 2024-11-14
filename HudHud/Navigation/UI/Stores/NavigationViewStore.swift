@@ -50,7 +50,7 @@ final class NavigationStore {
     }
 
     enum Action {
-        case startNavigation //
+        case startNavigation(Route)
         case stopNavigation
         case toggleMute
     }
@@ -62,7 +62,6 @@ final class NavigationStore {
     private var cancellables = Set<AnyCancellable>()
     private let navigationEngine: NavigationEngine
     private let locationEngine: LocationEngine
-    private let routesPlanMapDrawer: RoutesPlanMapDrawer
 
     // MARK: Computed Properties
 
@@ -80,12 +79,12 @@ final class NavigationStore {
 
     // MARK: Lifecycle
 
-    init(navigationEngine: NavigationEngine,
-         locationEngine: LocationEngine,
-         routesPlanMapDrawer: RoutesPlanMapDrawer) {
+    init(
+        navigationEngine: NavigationEngine,
+        locationEngine: LocationEngine
+    ) {
         self.navigationEngine = navigationEngine
         self.locationEngine = locationEngine
-        self.routesPlanMapDrawer = routesPlanMapDrawer
         self.setupSubscriptions()
     }
 
@@ -93,8 +92,8 @@ final class NavigationStore {
 
     func execute(_ action: Action) {
         switch action {
-        case .startNavigation:
-            satrtNavigation()
+        case let .startNavigation(route):
+            satrtNavigation(route)
 
         case .stopNavigation:
             stopNavigation()
@@ -124,11 +123,7 @@ private extension NavigationStore {
         UIApplication.shared.isIdleTimerDisabled = false
     }
 
-    func satrtNavigation() {
-        guard let route = routesPlanMapDrawer.selectedRoute else {
-            return
-        }
-
+    func satrtNavigation(_ route: Route) {
         do {
             try self.decideWhichLocationProviderToUse(route: route) {
                 try self.navigationEngine.startNavigation(route: route)
@@ -212,10 +207,12 @@ private extension NavigationStore {
             let progress = (1 - (distance.meters / speedCamAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
             withAnimation(.easeInOut(duration: 0.15)) {
-                self.state.navigationAlert = NavigationAlert(id: camera.id,
-                                                             progress: clampedProgress,
-                                                             alertType: .speedCamera(camera),
-                                                             alertDistance: Int(distance.meters))
+                self.state.navigationAlert = NavigationAlert(
+                    id: camera.id,
+                    progress: clampedProgress,
+                    alertType: .speedCamera(camera),
+                    alertDistance: Int(distance.meters)
+                )
             }
         case let .passedSpeedCamera(camera):
             if self.state.navigationAlert?.id == camera.id {
@@ -227,10 +224,12 @@ private extension NavigationStore {
             let incidentAlertDistance = TrafficIncidentAlertConfig.default.initialAlertDistance
             let progress = (1 - (distance.meters / incidentAlertDistance.meters)) * 100
             let clampedProgress = max(0, min(100, progress))
-            self.state.navigationAlert = NavigationAlert(id: incident.id,
-                                                         progress: clampedProgress,
-                                                         alertType: .carAccident(incident),
-                                                         alertDistance: Int(distance.meters))
+            self.state.navigationAlert = NavigationAlert(
+                id: incident.id,
+                progress: clampedProgress,
+                alertType: .carAccident(incident),
+                alertDistance: Int(distance.meters)
+            )
         case let .passedTrafficIncident(incident):
             if self.state.navigationAlert?.id == incident.id {
                 self.state.navigationAlert = nil
@@ -240,5 +239,16 @@ private extension NavigationStore {
         case .exitedSpeedZone:
             break
         }
+    }
+}
+
+// MARK: - Previewable
+
+extension NavigationStore: Previewable {
+    static var storeSetUpForPreviewing: NavigationStore {
+        NavigationStore(
+            navigationEngine: NavigationEngine(configuration: .default),
+            locationEngine: LocationEngine()
+        )
     }
 }

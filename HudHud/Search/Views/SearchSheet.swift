@@ -23,7 +23,7 @@ struct SearchSheet: View {
 
     var mapStore: MapStore
     @ObservedObject var searchStore: SearchViewStore
-    @ObservedObject var trendingStore: TrendingStore
+    @StateObject var trendingStore = TrendingStore()
     @Bindable var sheetStore: SheetStore
     @ObservedObject var filterStore: FilterStore
     @State var loginShown: Bool = false
@@ -39,7 +39,7 @@ struct SearchSheet: View {
          favoritesStore: FavoritesStore) {
         self.mapStore = mapStore
         self.searchStore = searchStore
-        self.trendingStore = trendingStore
+        self._trendingStore = StateObject(wrappedValue: trendingStore)
         self.sheetStore = sheetStore
         self.filterStore = filterStore
         self.favoritesStore = favoritesStore
@@ -153,23 +153,21 @@ struct SearchSheet: View {
                                 .listRowSpacing(0)
                             case .predictionItem, .category, .resolvedItem:
                                 Button {
+                                    if case let .returnPOILocation(completion) = self.searchStore.searchType {
+                                        switch item {
+                                        case let .categoryItem(resolvedItem), let .resolvedItem(resolvedItem):
+                                            completion(resolvedItem)
+                                            self.sheetStore.popSheet()
+                                            return
+                                        case .category, .predictionItem:
+                                            break
+                                        }
+                                    }
                                     Task {
                                         self.searchIsFocused = false
                                         await self.searchStore.didSelect(item)
                                         if let resolvedItem = self.mapStore.selectedItem.value {
                                             self.storeRecent(item: resolvedItem)
-                                        }
-                                        switch self.searchStore.searchType {
-                                        case let .returnPOILocation(completion):
-                                            switch item {
-                                            case let .categoryItem(resolvedItem), let .resolvedItem(resolvedItem):
-                                                completion(resolvedItem)
-                                                self.sheetStore.popSheet()
-                                            case .category, .predictionItem:
-                                                break
-                                            }
-                                        case .selectPOI, .categories, .favorites:
-                                            break
                                         }
                                     }
                                 } label: {
@@ -194,7 +192,9 @@ struct SearchSheet: View {
                     } else {
                         if self.searchStore.searchType != .favorites {
                             SearchSectionView(title: "Favorites") {
-                                FavoriteCategoriesView(sheetStore: self.sheetStore)
+                                FavoriteCategoriesView(sheetStore: self.sheetStore) {
+                                    self.sheetStore.show(.favoritesViewMore(searchViewStore: self.searchStore))
+                                }
                             }
                             .listRowInsets(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 8))
                             .listRowSeparator(.hidden)

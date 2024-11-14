@@ -14,6 +14,7 @@ import SwiftUI
 
 // MARK: - POIServiceProtocol
 
+@MainActor
 public protocol POIServiceProtocol {
 
     static var serviceName: String { get }

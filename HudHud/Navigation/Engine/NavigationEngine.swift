@@ -14,13 +14,13 @@ import Foundation
 
 // MARK: - NavigationError
 
-enum NavigationError: Error {
+enum NavigationError: Error, Equatable {
     case invalidState
 }
 
 // MARK: - NavigationEvent
 
-enum NavigationEvent {
+enum NavigationEvent: Equatable {
     case navigationStarted
     case navigationEnded
     case stateChanged(NavigationState)

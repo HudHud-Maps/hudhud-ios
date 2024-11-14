@@ -6,7 +6,6 @@
 //  Copyright © 2024 HudHud. All rights reserved.
 //
 
-import OSLog
 import SwiftUI
 
 // MARK: - RoutePlannerView
@@ -20,24 +19,10 @@ struct RoutePlannerView: View {
     // MARK: Content
 
     var body: some View {
-        Group {
-            switch self.routePlannerStore.state {
-            case .initialLoading, .errorFetchignRoute, .locationNotEnabled:
-                ProgressView()
-            case .loaded:
-                RoutePlanView(routePlannderStore: self.routePlannerStore)
-            }
-        }
-        .padding(.vertical)
-        .padding(.top)
-        .background {
-            /// according to the design the sheet height must match the view's height
-            /// so we compute the height and report it to the sheet to adjust its height
-            GeometryReader { geometry in
-                Color.clear.onAppear {
-                    self.routePlannerStore.didChangeHeight(to: geometry.size.height)
-                }
-            }
+        if self.routePlannerStore.isLoading {
+            ProgressView()
+        } else {
+            RoutePlanView(routePlannderStore: self.routePlannerStore)
         }
     }
 }
@@ -54,31 +39,57 @@ struct RoutePlanView: View {
 
     var body: some View {
         VStack {
-            VStack(alignment: .destinationIconCenterAlignment) {
-                ForEach(self.routePlannderStore.state.destinations, id: \.self) { destination in
-                    RoutePlannerRow(
-                        destination: destination,
-                        onSwap: self.swapActionIfCanSwap(for: destination),
-                        onDelete: self.deleteActionIfCanDelete(for: destination)
-                    )
-                    .animation(.bouncy, value: destination)
-                }
-                AddMoreRoute {
-                    self.routePlannderStore.addNewRoute()
+            RoundedRectangle(cornerRadius: 2)
+                .fill(Color.Colors.General._02Grey)
+                .frame(width: 36, height: 5)
+            List {
+                Section {
+                    ForEach(self.routePlannderStore.routePlan?.waypoints ?? []) { destination in
+                        VStack(alignment: .destinationIconCenterAlignment, spacing: .zero) {
+                            RoutePlannerRow(
+                                destination: destination,
+                                onSwap: self.swapActionIfCanSwap(for: destination),
+                                onDelete: self.deleteActionIfCanDelete(for: destination)
+                            )
+                            .padding(.leading, 4)
+                        }
+                        .listRowSeparator(.hidden)
+                        .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 6, trailing: 0))
+                    }
+                    .onMove { fromOffsets, toOffset in
+                        Task {
+                            await self.routePlannderStore.moveDestinations(
+                                fromOffsets: fromOffsets,
+                                toOffset: toOffset
+                            )
+                        }
+                    }
+                    .moveDisabled(!self.routePlannderStore.canMove)
+                    VStack(alignment: .destinationIconCenterAlignment, spacing: .zero) {
+                        AddMoreRoute {
+                            self.routePlannderStore.addNewRoute()
+                        }
+                        .padding(.leading, 4)
+                    }
+                    .listRowSeparator(.hidden)
+                    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                 }
             }
+            .scrollIndicators(.hidden)
+            .listStyle(.plain)
             StartNavigationButton {
                 self.routePlannderStore.startNavigation()
             }
             .padding(.horizontal)
         }
+        .padding(.top)
     }
 
     // MARK: Functions
 
     func swapActionIfCanSwap(for destination: RouteWaypoint) -> (() -> Void)? {
-        if self.routePlannderStore.state.destinations.first == destination,
-           self.routePlannderStore.state.canSwap {
+        if self.routePlannderStore.routePlan?.waypoints.first == destination,
+           self.routePlannderStore.canSwap {
             {
                 Task {
                     await self.routePlannderStore.swap()
@@ -90,7 +101,7 @@ struct RoutePlanView: View {
     }
 
     func deleteActionIfCanDelete(for destination: RouteWaypoint) -> (() -> Void)? {
-        if self.routePlannderStore.state.canRemove {
+        if self.routePlannderStore.canRemove {
             {
                 Task {
                     await self.routePlannderStore.remove(destination)
@@ -124,12 +135,8 @@ struct RoutePlannerRow: View {
                     .foregroundStyle(Color.Colors.General._01Black)
                 Spacer()
                 if let onDelete {
-                    Button {
-                        Logger.navigationPath.notice("drag and drop")
-                    } label: {
-                        Image(systemSymbol: .line3Horizontal)
-                            .tint(Color.gray)
-                    }
+                    Image(systemSymbol: .line3Horizontal)
+                        .tint(Color.gray)
                     Divider()
                     Button(action: onDelete) {
                         Image(systemSymbol: .xmark)
@@ -160,7 +167,7 @@ struct RoutePlannerRow: View {
                                 Image(.swapIcon)
                                     .padding(6)
                                     .background(Circle().fill(Color(red: 242 / 255, green: 242 / 255, blue: 242 / 255)))
-                                    .padding(.trailing)
+                                    .padding(.trailing, 24)
                             }
                         }
                     }
@@ -214,30 +221,43 @@ struct AddMoreRoute: View {
     var body: some View {
         Button(action: self.onClick) {
             VStack(alignment: .destinationIconCenterAlignment) {
-                Label {
+                HStack {
+                    Image(.addStopIcon)
+                        .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                     HStack {
                         Text("Add Stop")
                             .hudhudFontStyle(.labelMedium)
                             .foregroundStyle(Color(.secondaryLabel))
                         Spacer()
                     }
-                } icon: {
-                    Image(.addStopIcon)
-                        .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
                 }
-                Label {
-                    Rectangle()
-                        .fill(Color.black.opacity(0.1))
-                        .frame(width: .infinity, height: 1)
-                } icon: {
+                HStack {
                     Circle()
                         .fill(.white)
                         .frame(width: 4)
                         .alignmentGuide(.destinationIconCenterAlignment) { $0[HorizontalAlignment.center] }
+                    Rectangle()
+                        .fill(Color.black.opacity(0.1))
+                        .frame(width: .infinity, height: 1)
                 }
             }
-            .padding([.leading, .trailing])
+            .padding(.horizontal)
         }
+    }
+}
+
+// MARK: - HeightPreferenceKey
+
+struct HeightPreferenceKey: PreferenceKey {
+
+    // MARK: Static Properties
+
+    static var defaultValue: CGFloat = 0
+
+    // MARK: Static Functions
+
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

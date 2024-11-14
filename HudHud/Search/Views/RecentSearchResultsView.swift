@@ -88,7 +88,7 @@ struct RecentSearchResultsView: View {
         RecentSearchResultsView(
             searchStore: .storeSetUpForPreviewing,
             searchType: .favorites,
-            sheetStore: SheetStore(emptySheetType: .search)
+            sheetStore: .storeSetUpForPreviewing
         )
     }
 }

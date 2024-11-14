@@ -31,16 +31,14 @@ struct POIBottomToolbar: View {
     // MARK: Lifecycle
 
     // Main initializer with most parameters (for POIDetailSheet)
-    init(
-        item: ResolvedItem,
-        duration: String?,
-        onStart: (([Route]?) -> Void)?,
-        onDismiss: @escaping () -> Void,
-        didDenyLocationPermission: Bool?,
-        routes: [Route]?,
-        sheetStore: SheetStore,
-        favoritesStore: FavoritesStore
-    ) {
+    init(item: ResolvedItem,
+         duration: String?,
+         onStart: (([Route]?) -> Void)?,
+         onDismiss: @escaping () -> Void,
+         didDenyLocationPermission: Bool?,
+         routes: [Route]?,
+         sheetStore: SheetStore,
+         favoritesStore: FavoritesStore) {
         self.item = item
         self.duration = duration
         self.onStart = onStart
@@ -53,12 +51,10 @@ struct POIBottomToolbar: View {
     }
 
     // Secondary initializer with only item and directions (for SearchResultView)
-    init(
-        item: ResolvedItem,
-        sheetStore: SheetStore,
-        favoritesStore: FavoritesStore,
-        directions: @escaping () -> Void
-    ) {
+    init(item: ResolvedItem,
+         sheetStore: SheetStore,
+         favoritesStore: FavoritesStore,
+         directions: @escaping () -> Void) {
         self.item = item
         self.duration = nil
         self.onStart = nil
@@ -75,12 +71,10 @@ struct POIBottomToolbar: View {
     var body: some View {
         ScrollView(.horizontal) {
             HStack(spacing: 10) {
-                CategoryIconButton(
-                    icon: .arrowrightCircleIconFill,
-                    title: self.duration ?? "Directions",
-                    foregroundColor: .white,
-                    backgroundColor: Color.Colors.General._06DarkGreen
-                ) {
+                CategoryIconButton(icon: .arrowrightCircleIconFill,
+                                   title: self.duration ?? "Directions",
+                                   foregroundColor: .white,
+                                   backgroundColor: Color.Colors.General._06DarkGreen) {
                     if self.didDenyLocationPermission == true {
                         self.askToEnableLocation = true
                     } else {
@@ -90,54 +84,44 @@ struct POIBottomToolbar: View {
                 }
 
                 if let phone = item.phone, let url = URL(string: "tel://\(phone)") {
-                    CategoryIconButton(
-                        icon: .phoneIcon,
-                        title: "Call",
-                        foregroundColor: Color.Colors.General._06DarkGreen,
-                        backgroundColor: Color.Colors.General._03LightGrey
-                    ) {
+                    CategoryIconButton(icon: .phoneIcon,
+                                       title: "Call",
+                                       foregroundColor: Color.Colors.General._06DarkGreen,
+                                       backgroundColor: Color.Colors.General._03LightGrey) {
                         self.openURL(url)
                     }
                 }
 
                 if let website = item.website {
-                    CategoryIconButton(
-                        icon: .websiteIconFill,
-                        title: nil,
-                        foregroundColor: Color.Colors.General._06DarkGreen,
-                        backgroundColor: Color.Colors.General._03LightGrey
-                    ) {
+                    CategoryIconButton(icon: .websiteIconFill,
+                                       title: nil,
+                                       foregroundColor: Color.Colors.General._06DarkGreen,
+                                       backgroundColor: Color.Colors.General._03LightGrey) {
                         self.openURL(website)
                     }
                 }
 
-                CategoryIconButton(
-                    icon: self.favoritesStore.isFavorites(item: self.item) ? .saveIconFill : .saveIcon,
-                    title: nil,
-                    foregroundColor: Color.Colors.General._06DarkGreen,
-                    backgroundColor: Color.Colors.General._03LightGrey
-                ) {
+                CategoryIconButton(icon: self.favoritesStore.isFavorites(item: self.item) ? .saveIconFill : .saveIcon,
+                                   title: nil,
+                                   foregroundColor: Color.Colors.General._06DarkGreen,
+                                   backgroundColor: Color.Colors.General._03LightGrey) {
                     if self.favoritesStore.isFavorites(item: self.item) { self.favoritesStore.deleteSavedFavorite(item: self.item)
                     } else {
-                        self.favoritesStore.saveChanges(
-                            title: self.item.title,
-                            tintColor: .personalShopping,
-                            item: self.item,
-                            description: self.item.description,
-                            selectedType: self.item.category ?? "Other"
-                        )
+                        self.favoritesStore.saveChanges(title: self.item.title,
+                                                        tintColor: .personalShopping,
+                                                        item: self.item,
+                                                        description: self.item.description,
+                                                        selectedType: self.item.category ?? "Other")
                     }
                     if self.favoritesStore.showLoginSheet {
                         self.sheetStore.show(.loginNeeded)
                     }
                 }
 
-                CategoryIconButton(
-                    icon: .shareIcon,
-                    title: nil,
-                    foregroundColor: Color.Colors.General._06DarkGreen,
-                    backgroundColor: Color.Colors.General._03LightGrey
-                ) {
+                CategoryIconButton(icon: .shareIcon,
+                                   title: nil,
+                                   foregroundColor: Color.Colors.General._06DarkGreen,
+                                   backgroundColor: Color.Colors.General._03LightGrey) {
                     // action
                     //  self.openURL()
                 }

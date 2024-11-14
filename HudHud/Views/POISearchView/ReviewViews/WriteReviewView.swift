@@ -210,5 +210,5 @@ private extension WriteReviewView {
     WriteReviewView(cameraStore: CameraStore(),
                     item: .artwork,
                     store: RatingStore(staticRating: 4.1, ratingsCount: 508, interactiveRating: 0),
-                    sheetStore: SheetStore(emptySheetType: .search))
+                    sheetStore: .storeSetUpForPreviewing)
 }

@@ -13,7 +13,7 @@ typealias DestinationPointOfInterest = ResolvedItem
 
 // MARK: - RouteWaypoint
 
-struct RouteWaypoint: Hashable {
+struct RouteWaypoint: Hashable, Identifiable {
 
     // MARK: Nested Types
 
@@ -24,6 +24,7 @@ struct RouteWaypoint: Hashable {
 
     // MARK: Properties
 
+    let id = UUID()
     let type: RouteWaypointType
     let title: String
 }

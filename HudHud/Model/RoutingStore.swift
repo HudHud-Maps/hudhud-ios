@@ -17,8 +17,8 @@ import OSLog
 
 // MARK: - AppEvents
 
-enum AppEvents {
-    case startNavigation
+enum AppEvents: Hashable {
+    case startNavigation(Route)
     case stopNavigation
 
     // MARK: Static Properties
@@ -91,8 +91,8 @@ final class RoutingStore: ObservableObject {
     // MARK: Functions
 
     func startNavigation() {
-        self.navigatingRoute = self.selectedRoute
-        AppEvents.publisher.send(.startNavigation) // to mitigate the issue until we find a proper solution
+        guard let route = self.selectedRoute else { return }
+        AppEvents.publisher.send(.startNavigation(route)) // to mitigate the issue until we find a proper solution
     }
 
     func startNavigation(to route: Route) {

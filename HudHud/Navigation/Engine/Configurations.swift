@@ -18,7 +18,7 @@ struct NavigationConfig {
     // MARK: Static Properties
 
     static let `default` = NavigationConfig(routeProvider: GraphHopperRouteProvider(),
-                                            locationEngine: AppDpendencies.locationEngine,
+                                            locationEngine: AppDependencies.locationEngine,
                                             stepAdvanceConfig: .default,
                                             deviationConfig: .default,
                                             courseFiltering: .snapToRoute,

@@ -1,0 +1,32 @@
+//
+//  RoutePlannerSheetProvider.swift
+//  HudHud
+//
+//  Created by Naif Alrashed on 10/11/2024.
+//  Copyright © 2024 HudHud. All rights reserved.
+//
+
+import SwiftUI
+
+struct RoutePlannerSheetProvider: SheetProvider {
+
+    // MARK: Properties
+
+    let routePlannerStore: RoutePlannerStore
+    let sheetStore: SheetStore
+    let mapStore: MapStore
+
+    // MARK: Content
+
+    var sheetView: some View {
+        RoutePlannerView(routePlannerStore: self.routePlannerStore)
+    }
+
+    var mapOverlayView: some View {
+        RoutePlannerMapOverlayView(
+            routePlannerStore: self.routePlannerStore,
+            sheetStore: self.sheetStore,
+            mapStore: self.mapStore
+        )
+    }
+}
