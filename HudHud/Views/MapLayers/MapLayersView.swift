@@ -17,45 +17,58 @@ struct MapLayersView: View {
 
     var mapStore: MapStore
     var sheetStore: SheetStore
-    var hudhudMapLayerStore: HudHudMapLayerStore
+    @StateObject var hudhudMapLayerStore: HudHudMapLayerStore
 
     // MARK: Content
 
     var body: some View {
         NavigationStack {
-            VStack(alignment: .leading, spacing: 10) {
-                HStack {
-                    if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
-                        let groupedLayers = Dictionary(grouping: mapLayers, by: { $0.type.rawValue })
-                        let sortedTypes = groupedLayers.keys.sorted {
-                            $0 == "map_type" ? true : $1 == "map_details"
+            VStack(alignment: .leading, spacing: 24) {
+                if let mapLayers = self.hudhudMapLayerStore.hudhudMapLayers {
+                    self.mapLayerView(mapLayers: mapLayers)
+                    HStack {
+                        Spacer()
+                        ForEach(self.hudhudMapLayerStore.mapStyleTypes, id: \.self) { type in
+                            self.mapLayerButtons(for: type, label: type.title)
+                            Spacer()
                         }
-                        VStack(alignment: .center, spacing: 15) {
-                            ForEach(sortedTypes, id: \.self) { key in
-                                if let layers = groupedLayers[key] {
-                                    self.mapLayerView(mapLayers: layers)
-                                }
-                            }
-                        }
-                    } else {
-                        ContentUnavailableView {
-                            Label("No Map Layers Available", systemSymbol: .globeCentralSouthAsiaFill)
-                        } description: {
-                            Text("No Content To be Shown Here.")
-                        }
+                    }
+                    .padding(.horizontal)
+                } else {
+                    ContentUnavailableView {
+                        Label("No Map Layers Available", systemSymbol: .globeCentralSouthAsiaFill)
+                    } description: {
+                        Text("No Content To be Shown Here.")
                     }
                 }
             }
-            .navigationTitle("Layers")
             .navigationBarTitleDisplayMode(.inline)
-            .navigationBarItems(
-                trailing: Button {
-                    self.sheetStore.popSheet()
-                } label: {
-                    Image(systemSymbol: .xmark)
-                        .foregroundColor(Color.Colors.General._02Grey)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Map Layers")
+                        .hudhudFontStyle(.labelLarge)
+                        .padding(.top)
                 }
-            )
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        self.sheetStore.popSheet()
+                    } label: {
+                        ZStack {
+                            Circle()
+                                .fill(Color.Colors.General._03LightGrey)
+                                .frame(width: 30, height: 30)
+                            Image(systemSymbol: .xmark)
+                                .font(.system(size: 12, weight: .regular, design: .rounded))
+                                .foregroundStyle(Color.Colors.General._01Black)
+                        }
+                        .padding(4)
+                        .contentShape(Circle())
+                    }
+                    .padding(.top)
+                    .buttonStyle(PlainButtonStyle())
+                    .accessibilityLabel(Text("Close", comment: "Accessibility label instead of x"))
+                }
+            }
         }
     }
 
@@ -63,11 +76,7 @@ struct MapLayersView: View {
 
     func mapLayerView(mapLayers: [HudHudMapLayer]) -> some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text(mapLayers.first?.type.description ?? "")
-                .hudhudFont(.footnote)
-                .foregroundStyle(Color.Colors.General._02Grey)
-                .padding(.leading, 10)
-            if mapLayers.count > 2 {
+            if mapLayers.count > 3 {
                 ScrollView(.horizontal) {
                     self.layersView(mapLayers: mapLayers)
                 }.scrollIndicators(.hidden)
@@ -77,20 +86,17 @@ struct MapLayersView: View {
                     .padding(.horizontal)
             }
         }
+        .padding(.top, 20)
     }
 
     func layersView(mapLayers: [HudHudMapLayer]) -> some View {
         HStack {
             ForEach(mapLayers, id: \.self) { layer in
                 HStack {
-                    if mapLayers.last?.type.description != layer.type.description {
-                        Divider()
-                    }
                     VStack(alignment: .center, spacing: 10) {
                         Button {
                             self.mapStore.shouldShowCustomSymbols = false
                             self.mapStore.mapStyleLayer = layer
-                            Logger().info("\(layer.name) selected as map Style | url:\(layer.styleUrl)")
                         } label: {
                             LazyImage(url: layer.thumbnailUrl) { state in
                                 if let image = state.image {
@@ -113,16 +119,58 @@ struct MapLayersView: View {
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
-                                    .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : .clear, lineWidth: 2)
+                                    .stroke(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._06DarkGreen : .clear, lineWidth: 2)
                             )
                         }
                         Text(layer.name)
                             .hudhudFont(.footnote)
-                            .foregroundStyle(Color.Colors.General._02Grey)
-                            .foregroundStyle(self.mapStore.mapStyleLayer == layer ? Color.Colors.General._07BlueMain : Color.Colors.General._02Grey)
+                            .foregroundStyle(Color.Colors.General._01Black)
                     }
                 }
             }
+        }
+    }
+
+    func mapLayerButtons(for type: HudHudMapLayerStore.mapStyleType, label: String) -> some View {
+        VStack(alignment: .center, spacing: 8) {
+            Button {
+                // It should connect to the backend to trigger the action
+                // Toggle the buttons selected state
+                self.hudhudMapLayerStore.buttonStyleAction(for: type)
+                if let selectedLayer = hudhudMapLayerStore.layer(for: type) {
+                    self.mapStore.mapStyleLayer = selectedLayer
+                }
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(self.hudhudMapLayerStore.selectedStyle.contains(type) ? Color.Colors.General._11GreenLight : Color.Colors.General._03LightGrey)
+                        .frame(width: 48, height: 48)
+                    self.getCustomImage(for: type)
+                        .renderingMode(.template)
+                        .font(.system(size: 15, weight: .regular, design: .rounded))
+                        .foregroundColor(self.hudhudMapLayerStore.selectedStyle.contains(type) ? Color.Colors.General._06DarkGreen : Color.Colors.General._02Grey)
+                }
+                .padding(4)
+                .contentShape(Circle())
+            }
+            Text(label)
+                .hudhudFontStyle(.labelSmall)
+                .foregroundColor(Color.Colors.General._01Black)
+        }
+    }
+
+    // MARK: Functions
+
+    func getCustomImage(for type: HudHudMapLayerStore.mapStyleType) -> Image {
+        switch type {
+        case .traffic:
+            return Image(.traffic)
+        case .saved:
+            return Image(.saveIconFill)
+        case .streetView:
+            return Image(.signpost)
+        case .road:
+            return Image(.road)
         }
     }
 }
