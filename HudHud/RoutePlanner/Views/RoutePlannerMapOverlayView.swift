@@ -21,7 +21,7 @@ struct RoutePlannerMapOverlayView: View {
 
     private var routeCardsOffset: CGFloat {
         if self.routePlannerStore.isLoading {
-            0
+            self.sheetStore.sheetHeight - self.sheetStore.sheetHeight
         } else {
             -(self.sheetStore.sheetHeight + 8)
         }
@@ -32,16 +32,8 @@ struct RoutePlannerMapOverlayView: View {
     var body: some View {
         VStack {
             HStack {
-                Button {
+                OverlayButton(icon: .arrowBack) {
                     self.routePlannerStore.cancel()
-                } label: {
-                    Image(.arrowBack)
-                        .padding()
-                        .background {
-                            Circle()
-                                .fill(.white)
-                        }
-                        .frame(minWidth: 44, minHeight: 44)
                 }
                 .padding(.leading)
                 Spacer()
@@ -59,7 +51,30 @@ struct RoutePlannerMapOverlayView: View {
                 )
             )
             .offset(y: self.routeCardsOffset)
-            .animation(.easeInOut(duration: 0.2), value: self.routeCardsOffset)
+        }
+    }
+}
+
+// MARK: - OverlayButton
+
+struct OverlayButton: View {
+
+    // MARK: Properties
+
+    let icon: ImageResource
+    let onClick: () -> Void
+
+    // MARK: Content
+
+    var body: some View {
+        Button(action: self.onClick) {
+            Image(self.icon)
+                .padding()
+                .background {
+                    Circle()
+                        .fill(.white)
+                }
+                .frame(minWidth: 44, minHeight: 44)
         }
     }
 }

@@ -159,7 +159,7 @@ final class RoutePlannerStore {
 private extension RoutePlannerStore {
     func updateHeight() {
         let height: CGFloat
-        if let routePlan {
+        if let routePlan, self.isLoading == false {
             let buttonHeight: CGFloat = 56
             let listHeight = CGFloat(routePlan.waypoints.count) * self.rowHeight
             let addStopHeight = self.rowHeight
@@ -212,15 +212,10 @@ private extension RoutePlannerStore {
     }
 
     func fetchRoutePlan(for destinations: [RouteWaypoint]) async {
-        self.isLoading = true
-        self.updateHeight()
-        defer { self.isLoading = false }
-
         guard destinations.count > 1 else {
             self.routeFetchingError = .errorFetchingRoute
             return
         }
-        defer { self.updateHeight() }
         var waypoints = destinations.map { destination in
             let location = switch destination.type {
             case let .location(destinationItem):
@@ -234,6 +229,14 @@ private extension RoutePlannerStore {
                 ),
                 kind: .break
             )
+        }
+        self.isLoading = true
+        self.updateHeight()
+        defer {
+            withAnimation {
+                self.isLoading = false
+                self.updateHeight()
+            }
         }
         do {
             let fromWaypoint = waypoints.removeFirst()
@@ -256,7 +259,6 @@ private extension RoutePlannerStore {
                 self.routePlan = plan
             }
             self.drawRoutes(in: plan)
-            self.updateHeight()
         } catch {
             self.routeFetchingError = .errorFetchingRoute
         }

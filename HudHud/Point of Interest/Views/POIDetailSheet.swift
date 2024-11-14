@@ -51,7 +51,6 @@ struct POIDetailSheet: View {
     @State private var photoStore = PhotoStore()
     private let displayPlaceholderReviews = true // we are waiting for the backend to implement reviews
 
-    @Environment(\.dismiss) private var dismiss
     @Environment(\.openURL) private var openURL
 
     // MARK: Computed Properties
@@ -126,7 +125,6 @@ struct POIDetailSheet: View {
                 }
                 // Close Button
                 Button {
-                    self.dismiss()
                     self.onDismiss()
                 } label: {
                     ZStack {
