@@ -9,15 +9,6 @@
 import FerrostarCoreFFI
 import SwiftUI
 
-// MARK: - RouteViewData
-
-struct RouteViewData: Hashable, Identifiable {
-    let id: Int
-    let distance: String
-    let duration: String
-    let summary: String
-}
-
 // MARK: - RouteCardsView
 
 struct RouteCardsView: View {
@@ -98,16 +89,8 @@ struct RouteCardView: View {
         }
         .padding()
         .background(.white)
-        .cornerRadius(16)
+        .clipShape(
+            RoundedRectangle(cornerSize: CGSize(width: 12, height: 3), style: .circular)
+        )
     }
-}
-
-#Preview {
-    @Previewable @State var selectedRoute: Int?
-    let routes: [RouteViewData] = [
-        RouteViewData(id: 1, distance: "20 km", duration: "50 mins", summary: "some summary"),
-        RouteViewData(id: 2, distance: "30 km", duration: "60 mins", summary: "some summary"),
-        RouteViewData(id: 3, distance: "15 km", duration: "30 mins", summary: "some summary")
-    ]
-    RouteCardsView(routes: routes, selectedRoute: $selectedRoute)
 }

@@ -147,7 +147,7 @@ final class RoutePlannerStore {
     func selectRoute(withID routeID: Int) {
         if var routePlan,
            let newSelectedRoute = routePlan.routes.first(where: { $0.id == routeID }) {
-            routePlan.selectedRoute = newSelectedRoute
+            routePlan.selectedRoute = newSelectedRoute.model
             withAnimation {
                 self.routePlan = routePlan
             }
@@ -249,7 +249,7 @@ private extension RoutePlannerStore {
             }
             let plan = RoutePlan(
                 waypoints: destinations,
-                routes: routes,
+                routes: routes.map(RouteViewData.init),
                 selectedRoute: selectedRoute
             )
             withAnimation {
@@ -265,7 +265,7 @@ private extension RoutePlannerStore {
     func drawRoutes(in plan: RoutePlan) {
         guard !self.sheetContext.isNil else { return }
         self.routesPlanMapDrawer.drawRoutes(
-            routes: plan.routes,
+            routes: plan.routes.map(\.model),
             selectedRoute: plan.selectedRoute,
             waypoints: plan.waypoints
         )
